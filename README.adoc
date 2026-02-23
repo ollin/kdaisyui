@@ -1,0 +1,154 @@
+= kdaisyUI
+:toc: macro
+:toclevels: 2
+
+A small Kotlin DSL on top of https://github.com/Kotlin/kotlinx.html[kotlinx.html] for generating https://daisyui.com/[DaisyUI] component markup.
+
+This project currently ships a first component (`daisyButton`) and the foundations for adding more components.
+
+toc::[]
+
+== Tutorial
+
+=== 1. Add the library to your build
+
+Publishing coordinates are not configured yet, so the easiest way to try it is as a source dependency.
+
+==== Option A: Gradle composite build (recommended for local dev)
+
+. Clone `kdaisyUI` next to your project.
+. In your project’s `settings.gradle.kts`:
++
+[source,kotlin]
+----
+includeBuild("../kdaisyUI")
+----
++
+. In your project’s `build.gradle.kts`:
++
+[source,kotlin]
+----
+dependencies {
+    implementation(project(":lib"))
+}
+----
+
+==== Option B: Git submodule
+
+. Add `kdaisyUI` as a submodule.
+. Include it as a normal Gradle subproject (depends on your repo layout).
+
+=== 2. Render your first component
+
+[source,kotlin]
+----
+import kdaisyui.components.ButtonVariant
+import kdaisyui.components.daisyButton
+import kotlinx.html.div
+import kotlinx.html.stream.createHTML
+
+val html = createHTML().div {
+    daisyButton(
+        text = "Hello",
+        variant = ButtonVariant.Primary,
+        disabled = false,
+    )
+}
+----
+
+== How-to guides
+
+=== Add custom attributes or nested content
+
+Use `attrs` for attributes and `content` for nested content.
+
+[source,kotlin]
+----
+createHTML().div {
+    daisyButton(
+        variant = ButtonVariant.Secondary,
+        attrs = {
+            id = "save"
+        },
+        content = {
+            +"Save"
+        }
+    )
+}
+----
+
+=== Add extra CSS classes
+
+[source,kotlin]
+----
+createHTML().div {
+    daisyButton(
+        text = "Wide",
+        extraClasses = "my-custom-class",
+        wide = true,
+    )
+}
+----
+
+== Reference
+
+=== Module
+
+- `:lib` (Kotlin/JVM library)
+
+=== Requirements
+
+- JDK toolchain: **25**
+- Kotlin: **2.3.10**
+- Dependency: `org.jetbrains.kotlinx:kotlinx-html-jvm` **0.12.0**
+
+=== API: `daisyButton`
+
+Package: `kdaisyui.components`
+
+[source,kotlin]
+----
+fun FlowContent.daisyButton(
+    text: String? = null,
+    variant: ButtonVariant? = null,
+    size: ButtonSize? = null,
+    outline: Boolean = false,
+    wide: Boolean = false,
+    block: Boolean = false,
+    circle: Boolean = false,
+    square: Boolean = false,
+    disabled: Boolean = false,
+    type: ButtonType? = null,
+    extraClasses: String? = null,
+    attrs: (BUTTON.() -> Unit)? = null,
+    content: (BUTTON.() -> Unit)? = null,
+)
+----
+
+Variants:
+
+- `Neutral`, `Primary`, `Secondary`, `Accent`, `Ghost`, `Link`, `Info`, `Success`, `Warning`, `Error`
+
+Sizes:
+
+- `Xs`, `Sm`, `Md`, `Lg`
+
+== Explanation
+
+=== Why kdaisyUI exists
+
+DaisyUI is a CSS component library, but in Kotlin server-side rendering you typically want:
+
+- Type-safe HTML building (via `kotlinx.html`)
+- A small, composable DSL that maps directly to DaisyUI’s class-based API
+- Consistent class merging (so `class` attributes don’t get duplicated or overwritten)
+
+`kdaisyUI` aims to provide small extension functions (like `FlowContent.daisyButton`) that add the right DaisyUI class tokens while still letting you use normal `kotlinx.html` attributes and content.
+
+== Development
+
+This project is developed by Ollin together with Cascade (an AI pair-programming assistant).
+
+== License
+
+MIT. See link:LICENSE[LICENSE].

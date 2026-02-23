@@ -20,8 +20,7 @@ Provide consistent patterns for building a DaisyUI-flavoured DSL on top of `kotl
 ### Entry points
 Prefer extension functions on `FlowContent` so usage looks like native kotlinx.html:
 
-- `FlowContent.daisyButton(...) { ... }` if we need to avoid clashing with `button {}`
-- Otherwise `FlowContent.button(...)` can be used only if we intentionally shadow/replace the default.
+- `FlowContent.daisyButton(...) { ... }` to avoid clashing with the default `button {}`
 
 ### Class handling
 - Always include required DaisyUI base classes (e.g. `btn`).

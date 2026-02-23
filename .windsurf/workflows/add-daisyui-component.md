@@ -11,7 +11,7 @@ Add a new DaisyUI component to this repository in a consistent way (API, tests, 
 
 # Steps
 1. Decide the **API surface**
-   - Choose the entry function name (e.g. `button(...)`, `daisyButton(...)` if conflict).
+   - Choose the entry function name (e.g. `daisyButton(...)` with `FlowContent` prefix to avoid conflicts).
    - Decide whether the component is:
      - an extension on `FlowContent`/`TagConsumer` (preferred for kotlinx.html DSL)
      - or a dedicated builder object

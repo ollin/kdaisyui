@@ -3,7 +3,7 @@ package kdaisyui.components
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
-import kotlin.test.assertTrue
+import kotlin.test.assertEquals
 
 class ButtonTest {
     @Test
@@ -12,8 +12,12 @@ class ButtonTest {
             daisyButton("Hello")
         }
 
-        assertTrue(html.contains("<button"))
-        assertTrue(html.contains("class=\"btn\"") || html.contains("class=\"btn "))
+        assertEquals(
+            expected = """
+                <div><button class="btn">Hello</button></div>
+            """.trimIndent(),
+            actual = html
+        )
     }
 
     @Test
@@ -22,7 +26,11 @@ class ButtonTest {
             daisyButton("Hello", variant = ButtonVariant.Primary, disabled = true)
         }
 
-        assertTrue(html.contains("btn-primary"))
-        assertTrue(html.contains("disabled"))
+        assertEquals(
+            expected = """
+                <div><button class="btn btn-primary" disabled="disabled">Hello</button></div>
+            """.trimIndent(),
+            actual = html
+        )
     }
 }

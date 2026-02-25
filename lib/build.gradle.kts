@@ -15,8 +15,25 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    main {
+        kotlin.srcDir("build/generated/sources/kdaisyui")
+    }
+}
+
 dependencies {
     api("org.jetbrains.kotlinx:kotlinx-html-jvm:${project.property("versions.kotlinx-html")}")
+
+    implementation("org.webjars:webjars-locator-core:${project.property("versions.webjar-locator-core")}")
+    implementation("org.webjars.npm:daisyui:${project.property("versions.webjar.daisyui")}")
+}
+
+tasks.named("compileKotlin") {
+    dependsOn(":codegen:generateComponents")
+}
+
+tasks.named("compileTestKotlin") {
+    dependsOn(":codegen:generateComponents")
 }
 
 testing {

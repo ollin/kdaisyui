@@ -7,4 +7,6 @@ build
 # Ignore Kotlin plugin data
 .kotlin
 
-
+# Ignore npm dependencies
+node_modules/
+package-lock.json

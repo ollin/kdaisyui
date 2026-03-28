@@ -208,3 +208,7 @@ Output:
 ## Next steps
 
 Now that you can render components, let's build a real application. Continue with [Build a dashboard with Ktor and htmx](build-a-dashboard.md) to serve these components from a web server with progressive loading.
+
+Here is what a full dashboard built with kdaisyUI looks like:
+
+![Full dashboard built with kdaisyUI](../screenshots/dashboard-overview.png)

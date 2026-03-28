@@ -159,6 +159,8 @@ body("drawer lg:drawer-open min-h-screen") {
 
 The drawer is responsive: on large screens (`lg:drawer-open`) the sidebar is always visible. On mobile, the checkbox toggle shows/hides it.
 
+![Sidebar layout with DaisyUI drawer](../screenshots/sidebar.png)
+
 ## Use htmx for partial loading
 
 Split your page into a shell (loaded immediately) and fragments (loaded on demand).

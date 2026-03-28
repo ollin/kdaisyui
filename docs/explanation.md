@@ -159,3 +159,7 @@ Browser ──── htmx ────► Ktor server ──── kotlinx.html 
 4. **htmx** on the client triggers requests and swaps HTML fragments
 
 The server is the single source of truth for all UI rendering. There is no client-side state, no client-side routing, no JavaScript build step. The browser receives HTML and displays it.
+
+The result is a fully styled, interactive dashboard — rendered entirely on the server:
+
+![Dashboard rendered by Ktor + kdaisyUI + htmx](screenshots/dashboard-full.png)

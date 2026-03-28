@@ -18,6 +18,8 @@ An admin dashboard with:
 - Data tables and charts (loaded after a short delay)
 - Forms and payment section (loaded when scrolled into view)
 
+![Finished dashboard](../screenshots/dashboard-overview.png)
+
 ## 1. Create the project
 
 Create a new Gradle module (or a standalone project) with these dependencies.
@@ -205,6 +207,8 @@ section("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full
 
 Refresh the page. You should see the stats section.
 
+![Stats section rendered](../screenshots/stats.png)
+
 ## 7. Move stats to a fragment
 
 Now let's introduce htmx. The idea: instead of rendering the stats inside the shell, we create a separate endpoint that returns just the stats HTML. The browser fetches it automatically after the page loads.
@@ -332,6 +336,16 @@ Open http://localhost:8080 and watch the network tab. You will see:
 2. `/fragments/stats` loads immediately
 3. `/fragments/cards-row1` loads after 100ms
 4. Lower sections load as you scroll
+
+![Stats and transactions loaded](../screenshots/dashboard-overview.png)
+
+Scrolling down reveals the forms section:
+
+![Forms section](../screenshots/forms-section.png)
+
+And further down, the payment section:
+
+![Payment section](../screenshots/payment-section.png)
 
 ## What you learned
 

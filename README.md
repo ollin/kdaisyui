@@ -4,6 +4,8 @@ Type-safe [DaisyUI](https://daisyui.com/) components for [kotlinx.html](https://
 
 Write DaisyUI markup in Kotlin with autocompletion, compile-time checks, and zero class-name typos.
 
+![kdaisyUI dashboard example](docs/screenshots/dashboard-overview.png)
+
 ```kotlin
 createHTML().div {
     daisyCard(extraClasses = "bg-base-100 shadow-xs") {

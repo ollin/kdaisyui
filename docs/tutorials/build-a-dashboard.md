@@ -106,9 +106,9 @@ fun HTML.shellPage() {
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
 
         // DaisyUI + Tailwind CSS from CDN
+        link { rel = "stylesheet"; href = "https://cdn.jsdelivr.net/npm/daisyui@5/daisyui.css" }
         link { rel = "stylesheet"; href = "https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" }
-        link { rel = "stylesheet"; href = "https://cdn.jsdelivr.net/npm/daisyui@5/full.css" }
-        link { rel = "stylesheet"; href = "https://cdn.jsdelivr.net/npm/tailwindcss@4" }
+        script { src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" }
 
         // htmx from CDN
         script { src = "https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js" }

@@ -97,3 +97,9 @@ val html = createHTML().div {
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Credits
+
+The example dashboard is based on the [HTML Dashboard](https://daisyui.com/store/html-dashboard/) template from the [DaisyUI store](https://daisyui.com/store/) by [Pouya Saadeghi](https://github.com/saadeghi). A license was purchased for this project.
+
+DaisyUI is the reason this library exists — making Tailwind CSS semantic is genuinely great work. See [CREDITS.md](CREDITS.md) for full acknowledgements.

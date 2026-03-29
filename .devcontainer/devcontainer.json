@@ -1,6 +1,6 @@
 {
   "name": "kdaisyUI",
-  "image": "mcr.microsoft.com/devcontainers/java:21-bookworm",
+  "image": "mcr.microsoft.com/devcontainers/java:25-bookworm",
 
   "features": {
     "ghcr.io/devcontainers/features/node:1": {

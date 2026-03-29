@@ -21,4 +21,4 @@ plugins {
 rootProject.name = "kdaisyUI"
 
 include("lib")
-include("codegen")
+include("example-app")

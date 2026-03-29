@@ -8,7 +8,7 @@
   "reviewers": ["ollin"],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
-  "schedule": ["before 6am on Monday"],
+  "schedule": ["at any time"],
   "timezone": "Europe/Berlin",
   "semanticCommits": "enabled",
   "commitMessagePrefix": "chore(deps):",

@@ -100,6 +100,4 @@ MIT. See [LICENSE](LICENSE).
 
 ## Acknowledgements
 
-DaisyUI is the reason this library exists — making Tailwind CSS semantic is genuinely great work.
-
-The example app (`example-app/`) is a DevTrack dashboard — a fictional developer tools SaaS — demonstrating progressive loading with htmx, sidebar navigation, stats, tables, forms, and team management, all rendered server-side with Ktor and kdaisyUI.
+[DaisyUI](https://daisyui.com/) by [Pouya Saadeghi](https://github.com/saadeghi) is the reason this library exists — making Tailwind CSS semantic is genuinely great work. See [CREDITS.md](CREDITS.md) for full acknowledgements of all projects this library builds on.

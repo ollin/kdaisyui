@@ -1,0 +1,116 @@
+name: Version consistency
+
+on:
+  push:
+    paths:
+      - 'gradle.properties'
+      - '.tool-versions'
+      - 'gradle/wrapper/gradle-wrapper.properties'
+      - 'example-app/build.gradle.kts'
+      - 'docs/**'
+      - 'README.md'
+  pull_request:
+    paths:
+      - 'gradle.properties'
+      - '.tool-versions'
+      - 'gradle/wrapper/gradle-wrapper.properties'
+      - 'example-app/build.gradle.kts'
+      - 'docs/**'
+      - 'README.md'
+
+jobs:
+  check-versions:
+    name: Check version consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read source-of-truth versions
+        id: versions
+        run: |
+          KOTLIN=$(grep '^versions.kotlin=' gradle.properties | cut -d= -f2)
+          KOTLINX_HTML=$(grep '^versions.kotlinx-html=' gradle.properties | cut -d= -f2)
+          GRADLE=$(grep '^distributionUrl=' gradle/wrapper/gradle-wrapper.properties \
+            | grep -oP 'gradle-\K[0-9]+\.[0-9]+(\.[0-9]+)?(?=-)')
+          JAVA=$(grep '^java ' .tool-versions | awk '{print $2}')
+          NODE=$(grep '^nodejs ' .tool-versions | awk '{print $2}')
+          KTOR=$(grep 'val ktorVersion' example-app/build.gradle.kts \
+            | grep -oP '"[0-9]+\.[0-9]+\.[0-9]+"' | tr -d '"')
+
+          echo "kotlin=$KOTLIN"         >> "$GITHUB_OUTPUT"
+          echo "kotlinx_html=$KOTLINX_HTML" >> "$GITHUB_OUTPUT"
+          echo "gradle=$GRADLE"         >> "$GITHUB_OUTPUT"
+          echo "java=$JAVA"             >> "$GITHUB_OUTPUT"
+          echo "node=$NODE"             >> "$GITHUB_OUTPUT"
+          echo "ktor=$KTOR"             >> "$GITHUB_OUTPUT"
+
+          echo "### Source-of-truth versions" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Key | Value |"              >> "$GITHUB_STEP_SUMMARY"
+          echo "|-----|-------|"              >> "$GITHUB_STEP_SUMMARY"
+          echo "| Kotlin | $KOTLIN |"        >> "$GITHUB_STEP_SUMMARY"
+          echo "| kotlinx-html | $KOTLINX_HTML |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Gradle | $GRADLE |"        >> "$GITHUB_STEP_SUMMARY"
+          echo "| Java | $JAVA |"            >> "$GITHUB_STEP_SUMMARY"
+          echo "| Node | $NODE |"            >> "$GITHUB_STEP_SUMMARY"
+          echo "| Ktor | $KTOR |"            >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check docs do not contain stale hardcoded versions
+        run: |
+          KOTLIN="${{ steps.versions.outputs.kotlin }}"
+          KOTLINX_HTML="${{ steps.versions.outputs.kotlinx_html }}"
+          GRADLE="${{ steps.versions.outputs.gradle }}"
+          KTOR="${{ steps.versions.outputs.ktor }}"
+
+          FAILED=0
+
+          check_stale() {
+            local VERSION="$1"
+            local LABEL="$2"
+            # Find occurrences outside of source-of-truth files and .github/
+            HITS=$(grep -rn "$VERSION" docs/ README.md \
+              --include="*.md" 2>/dev/null || true)
+            if [ -n "$HITS" ]; then
+              echo "::warning::Hardcoded $LABEL ($VERSION) found in docs — consider linking to the source file instead:"
+              echo "$HITS"
+            fi
+          }
+
+          check_stale "$KOTLIN"      "Kotlin version"
+          check_stale "$KOTLINX_HTML" "kotlinx-html version"
+          check_stale "$GRADLE"      "Gradle version"
+          check_stale "$KTOR"        "Ktor version"
+
+          # Hard failure: docs must not reference a version that does NOT match
+          # the source of truth (catches copy-paste of old version numbers)
+          check_wrong() {
+            local CURRENT="$1"
+            local PATTERN="$2"
+            local LABEL="$3"
+            # Find version-like strings matching the pattern that differ from current
+            WRONG=$(grep -rEn "$PATTERN" docs/ README.md --include="*.md" 2>/dev/null \
+              | grep -v "$CURRENT" \
+              | grep -v '«' \
+              | grep -v 'see ' \
+              | grep -v 'gradle.properties' \
+              | grep -v 'tool-versions' \
+              | grep -v 'build.gradle' \
+              || true)
+            if [ -n "$WRONG" ]; then
+              echo "::error::Wrong $LABEL version in docs (expected $CURRENT):"
+              echo "$WRONG"
+              FAILED=1
+            fi
+          }
+
+          check_wrong "$KOTLIN"      'kotlin\("jvm"\) version "[0-9]+\.[0-9]+\.[0-9]+"' "Kotlin plugin"
+          check_wrong "$KOTLINX_HTML" 'kotlinx-html-jvm:[0-9]+\.[0-9]+\.[0-9]+'         "kotlinx-html"
+          check_wrong "$KTOR"        'ktor-server-core:[0-9]+\.[0-9]+\.[0-9]+'           "Ktor"
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo ""
+            echo "Fix: update the version in the doc to match the source of truth,"
+            echo "or replace the hardcoded version with a link to the source file."
+            exit 1
+          fi
+
+          echo "Version consistency check passed." >> "$GITHUB_STEP_SUMMARY"

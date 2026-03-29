@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
 
 export default defineConfig({
   testDir: './tests',
@@ -18,8 +19,8 @@ export default defineConfig({
   ],
   // Start the Ktor server before tests, stop after
   webServer: {
-    command: '../gradlew :example-app:run --no-daemon',
-    cwd: '..',
+    command: './gradlew :example-app:run --no-daemon',
+    cwd: path.resolve(__dirname, '..'),
     url: 'http://localhost:8080',
     reuseExistingServer: !process.env['CI'],
     timeout: 120_000,

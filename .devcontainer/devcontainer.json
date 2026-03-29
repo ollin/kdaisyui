@@ -1,0 +1,39 @@
+{
+  "name": "kdaisyUI",
+  "image": "mcr.microsoft.com/devcontainers/java:21-bookworm",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    },
+    "ghcr.io/devcontainers/features/gradle:1": {
+      "version": "9.3.1"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "fwcd.kotlin",
+        "vscjava.vscode-gradle",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current",
+        "kotlin.languageServer.enabled": true
+      }
+    }
+  },
+
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "DevTrack example app",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "postCreateCommand": "npm install --prefix e2e-tests && npx --prefix e2e-tests playwright install chromium",
+
+  "remoteUser": "vscode"
+}

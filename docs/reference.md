@@ -134,7 +134,7 @@ Every component accepts these escape-hatch parameters:
 
 ## Requirements
 
-- JDK: **21** (toolchain — see [`buildSrc/.../kdaisyui.kotlin-library-conventions.gradle.kts`](../buildSrc/src/main/kotlin/kdaisyui.kotlin-library-conventions.gradle.kts))
+- JDK: see [`.tool-versions`](../.tool-versions) → `java` (toolchain configured in [`buildSrc/.../kdaisyui.kotlin-library-conventions.gradle.kts`](../buildSrc/src/main/kotlin/kdaisyui.kotlin-library-conventions.gradle.kts))
 - Kotlin: see [`gradle.properties`](../gradle.properties) → `versions.kotlin`
 - kotlinx-html: see [`gradle.properties`](../gradle.properties) → `versions.kotlinx-html`
 

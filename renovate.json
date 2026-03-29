@@ -1,0 +1,70 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": ["dependencies"],
+  "assignees": ["ollin"],
+  "reviewers": ["ollin"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "schedule": ["before 6am on Monday"],
+  "timezone": "Europe/Berlin",
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "chore(deps):",
+
+  "packageRules": [
+    {
+      "description": "Group all Ktor updates into one PR",
+      "matchPackagePrefixes": ["io.ktor"],
+      "groupName": "Ktor",
+      "groupSlug": "ktor"
+    },
+    {
+      "description": "Group all webjars updates into one PR",
+      "matchPackagePrefixes": ["org.webjars"],
+      "groupName": "webjars",
+      "groupSlug": "webjars"
+    },
+    {
+      "description": "Group all Kotlin-related updates into one PR",
+      "matchPackageNames": [
+        "org.jetbrains.kotlin.jvm",
+        "org.jetbrains.kotlinx:kotlinx-html-jvm"
+      ],
+      "groupName": "Kotlin",
+      "groupSlug": "kotlin"
+    },
+    {
+      "description": "Automerge patch updates for Playwright",
+      "matchPackageNames": ["@playwright/test"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "description": "Pin GitHub Actions to digest for security",
+      "matchManagers": ["github-actions"],
+      "pinDigests": false
+    }
+  ],
+
+  "gradle": {
+    "enabled": true,
+    "fileMatch": [
+      "(^|/)build\\.gradle\\.kts$",
+      "(^|/)settings\\.gradle\\.kts$",
+      "(^|/)gradle\\.properties$",
+      "(^|/)buildSrc/.+\\.gradle\\.kts$"
+    ]
+  },
+
+  "npm": {
+    "enabled": true,
+    "fileMatch": ["(^|/)e2e-tests/package\\.json$"]
+  },
+
+  "github-actions": {
+    "enabled": true,
+    "fileMatch": ["^\\.github/workflows/[^/]+\\.ya?ml$"]
+  }
+}

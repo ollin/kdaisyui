@@ -1,21 +1,17 @@
 component: Radio
 htmlElement: INPUT
-htmlTag: input
 fixedInputType: radio
 noContent: true
 extras:
   - name: name
     type: "String?"
     default: "null"
-    imports: []
     apply: "if (name != null) this.name = name"
   - name: checked
     type: "Boolean"
     default: "false"
-    imports: []
     apply: "if (checked) this.checked = true"
   - name: disabled
     type: "Boolean"
     default: "false"
-    imports: []
     apply: "if (disabled) this.disabled = true"

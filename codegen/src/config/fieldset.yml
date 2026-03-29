@@ -3,16 +3,13 @@ functions:
   - name: daisyFieldset
     cssClass: fieldset
     htmlElement: FIELDSET
-    htmlTag: fieldSet
   - name: daisyFieldsetLegend
     cssClass: fieldset-legend
     receiver: FIELDSET
     htmlElement: LEGEND
-    htmlTag: legend
     textParam: true
   - name: daisyFieldsetLabel
     cssClass: fieldset-label
     receiver: FIELDSET
     htmlElement: SPAN
-    htmlTag: span
     textParam: true

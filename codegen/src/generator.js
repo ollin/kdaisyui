@@ -19,6 +19,11 @@ function readCss(cssDir, cssSource) {
   return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : ''
 }
 
+function htmlTagFor(htmlElement) {
+  const exceptions = { FIELDSET: 'fieldSet' }
+  return exceptions[htmlElement] ?? htmlElement.toLowerCase()
+}
+
 function generateEnumBlock(enumName, prefix, values) {
   if (values.length === 0) return ''
   const entries = values.map(v => `    ${toPascalCase(v)}("${prefix}-${v}"),`).join('\n')
@@ -75,7 +80,7 @@ function generateFunctionBody(fn, prefix, variants, sizes, booleans, indent = ' 
 function generateFunction(fn, prefix, variants, sizes, booleans, componentName) {
   const fnName = fn.name ?? `daisy${componentName}`
   const htmlEl = fn.htmlElement
-  const htmlTag = fn.htmlTag
+  const htmlTag = fn.htmlTag ?? htmlTagFor(fn.htmlElement)
   const receiver = fn.receiver ?? 'FlowContent'
 
   const extraNames = new Set((fn.extras ?? []).map(e => e.name))
@@ -133,7 +138,7 @@ export function generateComponent(config, cssDir) {
 
     if (variants.length > 0 || sizes.length > 0 || !config.noContent) {
       allImports.add(`kotlinx.html.${config.htmlElement}`)
-      allImports.add(`kotlinx.html.${config.htmlTag}`)
+      allImports.add(`kotlinx.html.${config.htmlTag ?? htmlTagFor(config.htmlElement)}`)
     }
     addRoleImportIfNeeded(config)
     if (config.fixedInputType) allImports.add('kotlinx.html.InputType')
@@ -161,7 +166,7 @@ export function generateComponent(config, cssDir) {
 
     for (const fn of fns) {
       allImports.add(`kotlinx.html.${fn.htmlElement}`)
-      allImports.add(`kotlinx.html.${fn.htmlTag}`)
+      allImports.add(`kotlinx.html.${fn.htmlTag ?? htmlTagFor(fn.htmlElement)}`)
       if (fn.receiver && fn.receiver !== 'FlowContent') allImports.add(`kotlinx.html.${fn.receiver}`)
       addRoleImportIfNeeded(fn)
       if (fn.fixedInputType) allImports.add('kotlinx.html.InputType')

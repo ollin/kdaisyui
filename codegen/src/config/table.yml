@@ -1,5 +1,4 @@
 component: Table
 htmlElement: TABLE
-htmlTag: table
 additionalBooleans:
   - pin-rows

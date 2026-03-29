@@ -1,31 +1,25 @@
 component: Range
 htmlElement: INPUT
-htmlTag: input
 fixedInputType: range
 noContent: true
 extras:
   - name: min
     type: "String?"
     default: "null"
-    imports: []
     apply: "if (min != null) this.min = min"
   - name: max
     type: "String?"
     default: "null"
-    imports: []
     apply: "if (max != null) this.max = max"
   - name: value
     type: "String?"
     default: "null"
-    imports: []
     apply: "if (value != null) this.value = value"
   - name: step
     type: "String?"
     default: "null"
-    imports: []
     apply: "if (step != null) this.step = step"
   - name: disabled
     type: "Boolean"
     default: "false"
-    imports: []
     apply: "if (disabled) this.disabled = true"

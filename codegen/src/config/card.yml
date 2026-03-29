@@ -3,13 +3,10 @@ functions:
   - name: daisyCard
     cssClass: card
     htmlElement: DIV
-    htmlTag: div
   - name: daisyCardBody
     cssClass: card-body
     htmlElement: DIV
-    htmlTag: div
   - name: daisyCardTitle
     cssClass: card-title
     htmlElement: H2
-    htmlTag: h2
     textParam: true

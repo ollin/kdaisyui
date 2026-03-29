@@ -3,7 +3,6 @@ functions:
   - name: daisyDrawer
     cssClass: drawer
     htmlElement: DIV
-    htmlTag: div
     extras:
       - name: drawerId
         type: "String"
@@ -19,32 +18,26 @@ functions:
   - name: daisyDrawerContent
     cssClass: drawer-content
     htmlElement: DIV
-    htmlTag: div
   - name: daisyDrawerSide
     cssClass: drawer-side
     htmlElement: DIV
-    htmlTag: div
   - name: daisyDrawerOverlay
     cssClass: drawer-overlay
     htmlElement: LABEL
-    htmlTag: label
     noContent: true
     extras:
       - name: drawerId
         type: "String"
         default: '"my-drawer"'
-        imports: []
         apply: 'attributes["for"] = drawerId'
         position: before_classes
   - name: daisyDrawerButton
     cssClass: drawer-button
     htmlElement: LABEL
-    htmlTag: label
     textParam: true
     extras:
       - name: drawerId
         type: "String"
         default: '"my-drawer"'
-        imports: []
         apply: 'attributes["for"] = drawerId'
         position: before_classes

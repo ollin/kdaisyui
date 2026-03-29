@@ -3,11 +3,9 @@ functions:
   - name: daisyDropdown
     cssClass: dropdown
     htmlElement: DIV
-    htmlTag: div
   - name: daisyDropdownContent
     cssClass: dropdown-content
     baseClasses:
       - "menu"
       - "dropdown-content"
     htmlElement: UL
-    htmlTag: ul

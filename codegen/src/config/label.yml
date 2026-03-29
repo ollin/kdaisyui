@@ -3,10 +3,8 @@ functions:
   - name: daisyLabel
     cssClass: label
     htmlElement: LABEL
-    htmlTag: label
     textParam: true
   - name: daisyLabelText
     cssClass: label-text
     htmlElement: SPAN
-    htmlTag: span
     textOnly: true

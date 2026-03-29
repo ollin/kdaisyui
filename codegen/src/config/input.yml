@@ -1,6 +1,5 @@
 component: Input
 htmlElement: INPUT
-htmlTag: input
 noContent: true
 extras:
   - name: type
@@ -13,15 +12,12 @@ extras:
   - name: placeholder
     type: "String?"
     default: "null"
-    imports: []
     apply: "if (placeholder != null) this.placeholder = placeholder"
   - name: value
     type: "String?"
     default: "null"
-    imports: []
     apply: "if (value != null) this.value = value"
   - name: disabled
     type: "Boolean"
     default: "false"
-    imports: []
     apply: "if (disabled) this.disabled = true"

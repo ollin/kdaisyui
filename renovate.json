@@ -3,12 +3,13 @@
   "extends": [
     "config:recommended"
   ],
+  "automerge": true,
   "labels": ["dependencies"],
   "assignees": ["ollin"],
   "reviewers": ["ollin"],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
-  "schedule": ["before 6am on Monday"],
+  "schedule": ["at any time"],
   "timezone": "Europe/Berlin",
   "dryRun": null,
   "semanticCommits": "enabled",

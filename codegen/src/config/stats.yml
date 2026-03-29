@@ -1,0 +1,30 @@
+component: Stats
+cssSource: stat
+functions:
+  - name: daisyStats
+    cssClass: stats
+    htmlElement: DIV
+    htmlTag: div
+  - name: daisyStat
+    cssClass: stat
+    htmlElement: DIV
+    htmlTag: div
+  - name: daisyStatTitle
+    cssClass: stat-title
+    htmlElement: DIV
+    htmlTag: div
+    textOnly: true
+  - name: daisyStatValue
+    cssClass: stat-value
+    htmlElement: DIV
+    htmlTag: div
+    textOnly: true
+  - name: daisyStatDesc
+    cssClass: stat-desc
+    htmlElement: DIV
+    htmlTag: div
+    textOnly: true
+  - name: daisyStatFigure
+    cssClass: stat-figure
+    htmlElement: DIV
+    htmlTag: div

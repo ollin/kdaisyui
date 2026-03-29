@@ -31,12 +31,10 @@ class InputTest {
     @Test
     fun rendersGhostInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(ghost = true, size = InputSize.Xs, extraClasses = "w-10 text-center") {
-                value = "1"
-            }
+            daisyInput(variant = InputVariant.Ghost, size = InputSize.Xs, value = "1", extraClasses = "w-10 text-center")
         }
         assertEquals(
-            expected = """<div><input type="text" class="input input-xs input-ghost w-10 text-center" value="1"></div>""",
+            expected = """<div><input type="text" class="input input-ghost input-xs w-10 text-center" value="1"></div>""",
             actual = html.trim(),
         )
     }

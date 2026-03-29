@@ -39,7 +39,7 @@ private fun TagConsumer<*>.createRepositoryFormSection() {
         }
         daisyFieldset {
             daisyLabel("Default branch")
-            daisyInput(extraClasses = "w-full") { value = "main" }
+            daisyInput(extraClasses = "w-full", value = "main")
         }
         daisyFieldset {
             label("flex cursor-pointer justify-between py-2") {

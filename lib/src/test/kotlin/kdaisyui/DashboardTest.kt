@@ -263,7 +263,7 @@ class DashboardTest {
             }
             daisyFieldset {
                 daisyLabel("Default branch")
-                daisyInput(extraClasses = "w-full") { value = "main" }
+                daisyInput(extraClasses = "w-full", value = "main")
             }
             daisyFieldset {
                 label("flex cursor-pointer justify-between py-2") {
@@ -486,7 +486,7 @@ class DashboardTest {
                     }
                     daisyJoin {
                         daisyButton("Prev", size = ButtonSize.Sm, extraClasses = "join-item")
-                        daisyInput(size = InputSize.Sm, extraClasses = "join-item w-24 text-center") { value = "2" }
+                        daisyInput(size = InputSize.Sm, extraClasses = "join-item w-24 text-center", value = "2")
                         daisyButton("Next", size = ButtonSize.Sm, extraClasses = "join-item")
                     }
                 }

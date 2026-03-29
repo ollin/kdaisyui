@@ -1,21 +1,25 @@
+// GENERATED — DO NOT EDIT
+// Source: codegen/src/config/stats.yml + daisyui stat.css
+// Regenerate: ./gradlew generateComponents
+
 package kdaisyui.components
 
 import kdaisyui.core.addClassNames
+import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.div
 
 fun FlowContent.daisyStats(
-    vertical: Boolean = false,
     horizontal: Boolean = false,
+    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 ) {
     div {
         addClassNames("stats")
-        if (vertical) addClassNames("stats-vertical")
         if (horizontal) addClassNames("stats-horizontal")
+        if (vertical) addClassNames("stats-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -23,12 +27,14 @@ fun FlowContent.daisyStats(
 }
 
 fun FlowContent.daisyStat(
+    actions: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 ) {
     div {
         addClassNames("stat")
+        if (actions) addClassNames("stat-actions")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -65,5 +71,18 @@ fun FlowContent.daisyStatDesc(
         addClassNames("stat-desc")
         addClassNames(extraClasses)
         +text
+    }
+}
+
+fun FlowContent.daisyStatFigure(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        addClassNames("stat-figure")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
     }
 }

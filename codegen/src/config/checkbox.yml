@@ -1,0 +1,16 @@
+component: Checkbox
+htmlElement: INPUT
+htmlTag: input
+fixedInputType: checkBox
+noContent: true
+extras:
+  - name: checked
+    type: "Boolean"
+    default: "false"
+    imports: []
+    apply: "if (checked) this.checked = true"
+  - name: disabled
+    type: "Boolean"
+    default: "false"
+    imports: []
+    apply: "if (disabled) this.disabled = true"

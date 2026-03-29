@@ -1,9 +1,13 @@
+// GENERATED — DO NOT EDIT
+// Source: codegen/src/config/join.yml + daisyui join.css
+// Regenerate: ./gradlew generateComponents
+
 package kdaisyui.components
 
 import kdaisyui.core.addClassNames
+import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.div
 
 fun FlowContent.daisyJoin(
     vertical: Boolean = false,

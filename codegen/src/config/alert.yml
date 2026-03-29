@@ -1,0 +1,5 @@
+component: Alert
+htmlElement: DIV
+htmlTag: div
+role: alert
+textParam: false

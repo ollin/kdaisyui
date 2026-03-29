@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-03-29T15:48:24.225Z",
+  "project_id": "31ebe6da-973a-43ea-b294-320b041a6550",
+  "project_path": "/home/ollin/dev/src/github.com/ollin/kdaisyUI",
+  "standards": {
+    "logging": {
+      "console-logging": {
+        "preferred": "console.log/error/warn",
+        "usage_count": 1,
+        "files": [
+          "codegen/src/index.js"
+        ],
+        "confidence": "low",
+        "rationale": "Pattern found in 1 files across the project.",
+        "example": "const cssDir = findCssDir()\nconsole.log(`Using DaisyUI CSS from: ${cssDir}`)",
+        "alternatives": []
+      }
+    },
+    "testing": {
+      "assertions": {
+        "preferred": "expect().toBe/toEqual assertions",
+        "usage_count": 4,
+        "files": [
+          "e2e-tests/tests/dashboard.spec.ts"
+        ],
+        "confidence": "high",
+        "rationale": "Pattern found in 4 files across the project.",
+        "example": "const body = await response.text();\n    expect(body).toContain('stat-title');\n    expect(body).toContain('Active Repositories');",
+        "alternatives": []
+      }
+    }
+  }
+}

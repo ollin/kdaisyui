@@ -1,0 +1,27 @@
+component: Input
+htmlElement: INPUT
+htmlTag: input
+noContent: true
+extras:
+  - name: type
+    type: "InputType"
+    default: "InputType.text"
+    imports:
+      - "kotlinx.html.InputType"
+    apply: "this.type = type"
+    position: before_classes
+  - name: placeholder
+    type: "String?"
+    default: "null"
+    imports: []
+    apply: "if (placeholder != null) this.placeholder = placeholder"
+  - name: value
+    type: "String?"
+    default: "null"
+    imports: []
+    apply: "if (value != null) this.value = value"
+  - name: disabled
+    type: "Boolean"
+    default: "false"
+    imports: []
+    apply: "if (disabled) this.disabled = true"

@@ -1,0 +1,17 @@
+component: Button
+cssPrefix: btn
+htmlElement: BUTTON
+htmlTag: button
+textParam: true
+extras:
+  - name: disabled
+    type: "Boolean"
+    default: "false"
+    imports: []
+    apply: "if (disabled) this.disabled = true"
+  - name: type
+    type: "ButtonType?"
+    default: "null"
+    imports:
+      - "kotlinx.html.ButtonType"
+    apply: "if (type != null) this.type = type"

@@ -1,16 +1,24 @@
+// GENERATED — DO NOT EDIT
+// Source: codegen/src/config/drawer.yml + daisyui drawer.css
+// Regenerate: ./gradlew generateComponents
+
 package kdaisyui.components
 
 import kdaisyui.core.addClassNames
+import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.InputType
-import kotlinx.html.LABEL
-import kotlinx.html.div
 import kotlinx.html.id
 import kotlinx.html.input
+import kotlinx.html.INPUT
+import kotlinx.html.InputType
 import kotlinx.html.label
+import kotlinx.html.LABEL
 
 fun FlowContent.daisyDrawer(
+    end: Boolean = false,
+    open: Boolean = false,
+    toggle: Boolean = false,
     drawerId: String = "my-drawer",
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -18,13 +26,16 @@ fun FlowContent.daisyDrawer(
 ) {
     div {
         addClassNames("drawer")
-        addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        if (end) addClassNames("drawer-end")
+        if (open) addClassNames("drawer-open")
+        if (toggle) addClassNames("drawer-toggle")
         input {
             this.id = drawerId
             type = InputType.checkBox
             addClassNames("drawer-toggle")
         }
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
         content()
     }
 }
@@ -58,17 +69,16 @@ fun FlowContent.daisyDrawerSide(
 fun FlowContent.daisyDrawerOverlay(
     drawerId: String = "my-drawer",
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
 ) {
     label {
         attributes["for"] = drawerId
         addClassNames("drawer-overlay")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
     }
 }
 
 fun FlowContent.daisyDrawerButton(
+    text: String? = null,
     drawerId: String = "my-drawer",
     extraClasses: String? = null,
     attrs: (LABEL.() -> Unit)? = null,
@@ -76,9 +86,12 @@ fun FlowContent.daisyDrawerButton(
 ) {
     label {
         attributes["for"] = drawerId
-        addClassNames("btn btn-square btn-ghost drawer-button")
+        addClassNames("drawer-button")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        if (content != null) content()
+        when {
+            content != null -> content()
+            text != null -> +text
+        }
     }
 }

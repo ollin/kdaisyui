@@ -99,8 +99,9 @@ The container provides JDK, Gradle, Node, and Playwright Chromium pre-installed 
 ```bash
 git clone https://github.com/ollin/kdaisyUI
 cd kdaisyUI
-asdf install          # reads .tool-versions — exact versions pinned there
-./gradlew :lib:test   # run unit tests
+asdf install   # reads .tool-versions — installs JDK, Gradle, Node, just
+just test      # run unit tests
+just dev       # start dev server → http://localhost:8080
 ```
 
 ### Option C — Any JDK 21+
@@ -118,12 +119,20 @@ Exact versions are the single source of truth in these files:
 | Gradle wrapper | [`gradle/wrapper/gradle-wrapper.properties`](gradle/wrapper/gradle-wrapper.properties) |
 | Ktor, webjars | [`example-app/build.gradle.kts`](example-app/build.gradle.kts) |
 
-## Run the example
+## Common tasks
 
-```bash
-./gradlew :example-app:run
-# → http://localhost:8080
-```
+This project uses [`just`](https://just.systems/) as a task runner. Run `just` to list all recipes.
+
+| Command | What it does |
+|---|---|
+| `just dev` | Start the example app → http://localhost:8080 |
+| `just test` | Run library unit tests |
+| `just e2e` | Run Playwright E2E tests (server managed automatically) |
+| `just test-all` | Run unit tests + E2E tests |
+| `just build` | Build all Gradle modules |
+| `just clean` | Remove all build artifacts |
+
+`just` is included in [`.tool-versions`](.tool-versions) and installed automatically with `asdf install`. The raw Gradle commands still work if you prefer them directly.
 
 ## License
 

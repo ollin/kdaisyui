@@ -1,0 +1,10 @@
+component: Link
+htmlElement: A
+htmlTag: a
+textParam: true
+extras:
+  - name: href
+    type: "String?"
+    default: "null"
+    imports: []
+    apply: "if (href != null) this.href = href"

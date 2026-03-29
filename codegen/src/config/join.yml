@@ -1,0 +1,5 @@
+component: Join
+htmlElement: DIV
+htmlTag: div
+additionalBooleans:
+  - vertical

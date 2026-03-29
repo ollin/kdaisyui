@@ -1,0 +1,9 @@
+component: Select
+htmlElement: SELECT
+htmlTag: select
+extras:
+  - name: disabled
+    type: "Boolean"
+    default: "false"
+    imports: []
+    apply: "if (disabled) this.disabled = true"

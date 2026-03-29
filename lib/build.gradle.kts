@@ -22,6 +22,20 @@ testing {
     }
 }
 
+val generateComponents = tasks.register<Exec>("generateComponents") {
+    group = "codegen"
+    description = "Regenerate Kotlin components from DaisyUI CSS source"
+    workingDir = rootProject.file("codegen")
+    commandLine("sh", "-c", "npm install --silent && node src/index.js")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    outputs.dir(layout.projectDirectory.dir("src/main/kotlin/kdaisyui/components"))
+}
+
+tasks.named("compileKotlin") {
+    dependsOn(generateComponents)
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {

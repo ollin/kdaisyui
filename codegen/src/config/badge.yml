@@ -1,0 +1,4 @@
+component: Badge
+htmlElement: SPAN
+htmlTag: span
+textParam: true

@@ -1,4 +1,4 @@
 java temurin-25.0.2+10.0.LTS
 gradle 9.3.1
 nodejs 24.14.1
-just 1.48.1
+just 1.49.0

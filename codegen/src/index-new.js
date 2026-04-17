@@ -5,7 +5,7 @@ import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.js'
 import { classifyFromFrontmatter } from './classifier.js'
 import { generateKotlinFile } from './generator-new.js'
 
-const OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/src/main/kotlin/com/github/ollin/kdaisyui/components')
+const OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/src/main/kotlin/io/github/ollin/kdaisyui/components')
 const CONFIG_PATH = path.resolve(import.meta.dirname, '../codegen-config.json')
 
 function loadConfig() {

@@ -4,7 +4,7 @@ Type-safe [DaisyUI](https://daisyui.com/) components for [kotlinx.html](https://
 All components are extension functions on `FlowContent`:
 
 ```kotlin
-import com.github.ollin.kdaisyui.components.*
+import io.github.ollin.kdaisyui.components.*
 ```
 
 ---
@@ -951,7 +951,7 @@ Use `open = true` to show the modal. The `daisyModalBackdrop` provides the click
 
 ## Core utility
 
-### `addClassNames` — `com.github.ollin.kdaisyui.core`
+### `addClassNames` — `io.github.ollin.kdaisyui.core`
 
 ```kotlin
 fun Tag.addClassNames(vararg classNames: String)

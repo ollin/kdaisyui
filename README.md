@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.ollin.kdaisyui:kdaisyui:5.5.19-1")
+    implementation("io.github.ollin.kdaisyui:kdaisyui:5.5.19-1")
 }
 ```
 
@@ -66,7 +66,7 @@ dependencies {
 ### 2. Render your first component
 
 ```kotlin
-import com.github.ollin.kdaisyui.components.*
+import io.github.ollin.kdaisyui.components.*
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 

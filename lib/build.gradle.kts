@@ -6,6 +6,8 @@ plugins {
 version = project.findProperty("version")?.toString() ?: "0.0.1-SNAPSHOT"
 group = "com.github.ollin.kdaisyui"
 
+base.archivesName.set("kdaisyui")
+
 repositories {
     mavenCentral()
 }

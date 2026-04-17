@@ -1,11 +1,15 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/menu.yml + daisyui menu.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/menu/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
 import kdaisyui.core.addClassNames
+import kotlinx.html.div
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.h2
+import kotlinx.html.H2
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -22,11 +26,9 @@ fun FlowContent.daisyMenu(
     size: MenuSize? = null,
     active: Boolean = false,
     disabled: Boolean = false,
-    dropdown: Boolean = false,
-    dropdownToggle: Boolean = false,
+    dropdownShow: Boolean = false,
     focus: Boolean = false,
     horizontal: Boolean = false,
-    title: Boolean = false,
     vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
@@ -37,12 +39,53 @@ fun FlowContent.daisyMenu(
         if (size != null) addClassNames(size.className)
         if (active) addClassNames("menu-active")
         if (disabled) addClassNames("menu-disabled")
-        if (dropdown) addClassNames("menu-dropdown")
-        if (dropdownToggle) addClassNames("menu-dropdown-toggle")
+        if (dropdownShow) addClassNames("menu-dropdown-show")
         if (focus) addClassNames("menu-focus")
         if (horizontal) addClassNames("menu-horizontal")
-        if (title) addClassNames("menu-title")
         if (vertical) addClassNames("menu-vertical")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+fun FlowContent.daisyMenuTitle(
+    text: String? = null,
+    extraClasses: String? = null,
+    attrs: (H2.() -> Unit)? = null,
+    content: (H2.() -> Unit)? = null,
+) {
+    h2 {
+        addClassNames("menu-title")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        when {
+            content != null -> content()
+            text != null -> +text
+        }
+    }
+}
+
+fun FlowContent.daisyMenuDropdown(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        addClassNames("menu-dropdown")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+fun FlowContent.daisyMenuDropdownToggle(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        addClassNames("menu-dropdown-toggle")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

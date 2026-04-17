@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/card.yml + daisyui card.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/card/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -22,9 +22,9 @@ enum class CardSize(internal val className: String) {
 
 fun FlowContent.daisyCard(
     size: CardSize? = null,
-    actions: Boolean = false,
     border: Boolean = false,
     dash: Boolean = false,
+    imageFull: Boolean = false,
     side: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -33,23 +33,10 @@ fun FlowContent.daisyCard(
     div {
         addClassNames("card")
         if (size != null) addClassNames(size.className)
-        if (actions) addClassNames("card-actions")
         if (border) addClassNames("card-border")
         if (dash) addClassNames("card-dash")
+        if (imageFull) addClassNames("card-image-full")
         if (side) addClassNames("card-side")
-        addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
-    }
-}
-
-fun FlowContent.daisyCardBody(
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-) {
-    div {
-        addClassNames("card-body")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -70,5 +57,31 @@ fun FlowContent.daisyCardTitle(
             content != null -> content()
             text != null -> +text
         }
+    }
+}
+
+fun FlowContent.daisyCardBody(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        addClassNames("card-body")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+fun FlowContent.daisyCardActions(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        addClassNames("card-actions")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
     }
 }

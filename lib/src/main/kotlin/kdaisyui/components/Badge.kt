@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/badge.yml + daisyui badge.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/badge/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -10,15 +10,14 @@ import kotlinx.html.span
 import kotlinx.html.SPAN
 
 enum class BadgeVariant(internal val className: String) {
-    Accent("badge-accent"),
-    Error("badge-error"),
-    Ghost("badge-ghost"),
-    Info("badge-info"),
     Neutral("badge-neutral"),
     Primary("badge-primary"),
     Secondary("badge-secondary"),
+    Accent("badge-accent"),
+    Info("badge-info"),
     Success("badge-success"),
     Warning("badge-warning"),
+    Error("badge-error"),
 }
 
 enum class BadgeSize(internal val className: String) {
@@ -35,6 +34,7 @@ fun FlowContent.daisyBadge(
     variant: BadgeVariant? = null,
     size: BadgeSize? = null,
     dash: Boolean = false,
+    ghost: Boolean = false,
     outline: Boolean = false,
     soft: Boolean = false,
     extraClasses: String? = null,
@@ -46,6 +46,7 @@ fun FlowContent.daisyBadge(
         if (variant != null) addClassNames(variant.className)
         if (size != null) addClassNames(size.className)
         if (dash) addClassNames("badge-dash")
+        if (ghost) addClassNames("badge-ghost")
         if (outline) addClassNames("badge-outline")
         if (soft) addClassNames("badge-soft")
         addClassNames(extraClasses)

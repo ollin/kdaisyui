@@ -1,0 +1,199 @@
+{
+  "skip": ["accordion", "pagination"],
+  "textParams": ["button", "badge", "link", "kbd", "label", "card-title", "stat-value", "stat-desc"],
+  "noContent": ["range", "toggle", "checkbox", "radio", "file-input", "theme-controller", "input"],
+  "roles": {
+    "alert": "alert",
+    "status": "status"
+  },
+  "inputTypes": {
+    "checkbox": "checkBox",
+    "radio": "radio",
+    "toggle": "checkBox",
+    "range": "range"
+  },
+  "extras": {
+    "button": [
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (disabled) this.disabled = true"
+      },
+      {
+        "name": "type",
+        "type": "ButtonType?",
+        "default": "null",
+        "apply": "if (type != null) this.type = type",
+        "imports": ["kotlinx.html.ButtonType"]
+      }
+    ],
+    "range": [
+      {
+        "name": "min",
+        "type": "String?",
+        "default": "null",
+        "apply": "if (min != null) this.min = min"
+      },
+      {
+        "name": "max",
+        "type": "String?",
+        "default": "null",
+        "apply": "if (max != null) this.max = max"
+      },
+      {
+        "name": "value",
+        "type": "String?",
+        "default": "null",
+        "apply": "if (value != null) this.value = value"
+      },
+      {
+        "name": "step",
+        "type": "String?",
+        "default": "null",
+        "apply": "if (step != null) this.step = step"
+      },
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (disabled) this.disabled = true"
+      }
+    ],
+    "toggle": [
+      {
+        "name": "checked",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (checked) this.checked = true"
+      },
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (disabled) this.disabled = true"
+      }
+    ],
+    "checkbox": [
+      {
+        "name": "checked",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (checked) this.checked = true"
+      },
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (disabled) this.disabled = true"
+      }
+    ],
+    "radio": [
+      {
+        "name": "name",
+        "type": "String?",
+        "default": "null",
+        "apply": "if (name != null) this.name = name"
+      },
+      {
+        "name": "checked",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (checked) this.checked = true"
+      },
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (disabled) this.disabled = true"
+      }
+    ],
+    "input": [
+      {
+        "name": "type",
+        "type": "InputType",
+        "default": "InputType.text",
+        "apply": "this.type = type",
+        "imports": ["kotlinx.html.InputType"],
+        "position": "before_classes"
+      },
+      {
+        "name": "placeholder",
+        "type": "String?",
+        "default": "null",
+        "apply": "if (placeholder != null) this.placeholder = placeholder"
+      },
+      {
+        "name": "value",
+        "type": "String?",
+        "default": "null",
+        "apply": "if (value != null) this.value = value"
+      },
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (disabled) this.disabled = true"
+      }
+    ],
+    "select": [
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (disabled) this.disabled = true"
+      }
+    ],
+    "dropdown": [
+      {
+        "name": "end",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (end) addClassNames(\"dropdown-end\")"
+      },
+      {
+        "name": "start",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (start) addClassNames(\"dropdown-start\")"
+      },
+      {
+        "name": "top",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (top) addClassNames(\"dropdown-top\")"
+      },
+      {
+        "name": "bottom",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (bottom) addClassNames(\"dropdown-bottom\")"
+      },
+      {
+        "name": "left",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (left) addClassNames(\"dropdown-left\")"
+      },
+      {
+        "name": "right",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (right) addClassNames(\"dropdown-right\")"
+      },
+      {
+        "name": "center",
+        "type": "Boolean",
+        "default": "false",
+        "apply": "if (center) addClassNames(\"dropdown-center\")"
+      }
+    ]
+  },
+  "additionalBooleans": {
+    "join": ["vertical"]
+  },
+  "subComponentElements": {
+    "card-title": "H2",
+    "card-actions": "DIV"
+  }
+}

@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/join.yml + daisyui join.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/join/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -10,6 +10,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.daisyJoin(
+    horizontal: Boolean = false,
     vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -17,6 +18,7 @@ fun FlowContent.daisyJoin(
 ) {
     div {
         addClassNames("join")
+        if (horizontal) addClassNames("join-horizontal")
         if (vertical) addClassNames("join-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

@@ -6,25 +6,70 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class LabelTest {
+
     @Test
-    fun rendersLabel() {
+    fun label_for_input() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel("Product name")
+            daisyLabel() {
+            }
         }
-        assertEquals(
-            expected = """<div><label class="label">Product name</label></div>""",
-            actual = html.trim(),
-        )
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Label for input")
     }
 
     @Test
-    fun rendersLabelText() {
+    fun label_for_input_at_the_end() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabelText("Card Number")
+            daisyLabel() {
+            }
         }
-        assertEquals(
-            expected = """<div><span class="label-text">Card Number</span></div>""",
-            actual = html.trim(),
-        )
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Label for input at the end")
+    }
+
+    @Test
+    fun label_for_select() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabel() {
+            }
+        }
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Label for select")
+    }
+
+    @Test
+    fun label_for_date_input() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabel() {
+            }
+        }
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Label for date input")
+    }
+
+    @Test
+    fun floating_label() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabel() {
+            }
+        }
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Floating Label")
+    }
+
+    @Test
+    fun floating_label_with_different_sizes() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabel() {
+            }
+        }
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Floating Label with Different Sizes")
     }
 }

@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/stats.yml + daisyui stat.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/stat/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -9,7 +9,7 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-fun FlowContent.daisyStats(
+fun FlowContent.daisyStat(
     horizontal: Boolean = false,
     vertical: Boolean = false,
     extraClasses: String? = null,
@@ -26,61 +26,90 @@ fun FlowContent.daisyStats(
     }
 }
 
-fun FlowContent.daisyStat(
-    actions: Boolean = false,
+fun FlowContent.daisyStatStat(
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 ) {
     div {
         addClassNames("stat")
-        if (actions) addClassNames("stat-actions")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
 }
 
-fun FlowContent.daisyStatTitle(
-    text: String,
+fun FlowContent.daisyStatStatTitle(
+    text: String? = null,
     extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit)? = null,
 ) {
     div {
         addClassNames("stat-title")
         addClassNames(extraClasses)
-        +text
+        if (attrs != null) attrs()
+        when {
+            content != null -> content()
+            text != null -> +text
+        }
     }
 }
 
-fun FlowContent.daisyStatValue(
-    text: String,
+fun FlowContent.daisyStatStatValue(
+    text: String? = null,
     extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit)? = null,
 ) {
     div {
         addClassNames("stat-value")
         addClassNames(extraClasses)
-        +text
+        if (attrs != null) attrs()
+        when {
+            content != null -> content()
+            text != null -> +text
+        }
     }
 }
 
-fun FlowContent.daisyStatDesc(
-    text: String,
+fun FlowContent.daisyStatStatDesc(
+    text: String? = null,
     extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit)? = null,
 ) {
     div {
         addClassNames("stat-desc")
         addClassNames(extraClasses)
-        +text
+        if (attrs != null) attrs()
+        when {
+            content != null -> content()
+            text != null -> +text
+        }
     }
 }
 
-fun FlowContent.daisyStatFigure(
+fun FlowContent.daisyStatStatFigure(
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 ) {
     div {
         addClassNames("stat-figure")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+fun FlowContent.daisyStatStatActions(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        addClassNames("stat-actions")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

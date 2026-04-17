@@ -9,11 +9,11 @@ class StatsTest {
     @Test
     fun rendersStats() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats {
-                daisyStat {
-                    daisyStatTitle("Page Views")
-                    daisyStatValue("89,400")
-                    daisyStatDesc("21% more than last month")
+            daisyStat {
+                daisyStatStat {
+                    daisyStatStatTitle("Page Views")
+                    daisyStatStatValue("89,400")
+                    daisyStatStatDesc("21% more than last month")
                 }
             }
         }
@@ -26,10 +26,10 @@ class StatsTest {
     @Test
     fun rendersVerticalAndHorizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats(vertical = true, extraClasses = "bg-base-100") {
-                daisyStat {
-                    daisyStatTitle("Views")
-                    daisyStatValue("100")
+            daisyStat(vertical = true, extraClasses = "bg-base-100") {
+                daisyStatStat {
+                    daisyStatStatTitle("Views")
+                    daisyStatStatValue("100")
                 }
             }
         }

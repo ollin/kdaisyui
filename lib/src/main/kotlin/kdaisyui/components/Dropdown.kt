@@ -1,43 +1,43 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/dropdown.yml + daisyui dropdown.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/dropdown/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
 import kdaisyui.core.addClassNames
+import kotlinx.html.details
+import kotlinx.html.DETAILS
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.ul
-import kotlinx.html.UL
 
 fun FlowContent.daisyDropdown(
-    bottom: Boolean = false,
-    center: Boolean = false,
     close: Boolean = false,
-    end: Boolean = false,
     hover: Boolean = false,
-    left: Boolean = false,
     open: Boolean = false,
-    right: Boolean = false,
+    end: Boolean = false,
     start: Boolean = false,
     top: Boolean = false,
+    bottom: Boolean = false,
+    left: Boolean = false,
+    right: Boolean = false,
+    center: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (DETAILS.() -> Unit)? = null,
+    content: (DETAILS.() -> Unit),
 ) {
-    div {
+    details {
         addClassNames("dropdown")
-        if (bottom) addClassNames("dropdown-bottom")
-        if (center) addClassNames("dropdown-center")
         if (close) addClassNames("dropdown-close")
-        if (end) addClassNames("dropdown-end")
         if (hover) addClassNames("dropdown-hover")
-        if (left) addClassNames("dropdown-left")
         if (open) addClassNames("dropdown-open")
-        if (right) addClassNames("dropdown-right")
+        if (end) addClassNames("dropdown-end")
         if (start) addClassNames("dropdown-start")
         if (top) addClassNames("dropdown-top")
+        if (bottom) addClassNames("dropdown-bottom")
+        if (left) addClassNames("dropdown-left")
+        if (right) addClassNames("dropdown-right")
+        if (center) addClassNames("dropdown-center")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -46,11 +46,11 @@ fun FlowContent.daisyDropdown(
 
 fun FlowContent.daisyDropdownContent(
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 ) {
-    ul {
-        addClassNames("menu dropdown-content")
+    div {
+        addClassNames("dropdown-content")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

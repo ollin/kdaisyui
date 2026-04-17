@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "generate": "node src/index.js"
+    "generate": "node src/index-new.js",
+    "generate:old": "node src/index.js"
   },
   "dependencies": {
-    "daisyui": "^5.0.0",
     "js-yaml": "^4.1.0"
   }
 }

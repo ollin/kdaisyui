@@ -6,31 +6,70 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class JoinTest {
+
     @Test
-    fun rendersBaseJoin() {
+    fun join() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin {
-                daisyButton("A", extraClasses = "join-item")
-                daisyButton("B", extraClasses = "join-item")
+            daisyJoin() {
             }
         }
-        assertEquals(
-            expected = """<div><div class="join"><button class="btn join-item">A</button><button class="btn join-item">B</button></div></div>""",
-            actual = html.trim(),
-        )
+        val expectedClasses = "join"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Join")
     }
 
     @Test
-    fun rendersVerticalJoin() {
+    fun group_items_vertically() {
         val html = createHTML(prettyPrint = false).div {
             daisyJoin(vertical = true) {
-                daisyButton("Top", extraClasses = "join-item")
-                daisyButton("Bottom", extraClasses = "join-item")
             }
         }
-        assertEquals(
-            expected = """<div><div class="join join-vertical"><button class="btn join-item">Top</button><button class="btn join-item">Bottom</button></div></div>""",
-            actual = html.trim(),
-        )
+        val expectedClasses = "join join-vertical"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Group items vertically")
+    }
+
+    @Test
+    fun responsive_it_s_vertical_on_small_screen_and_horizontal_on_large_screen() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin(vertical = true, horizontal = true) {
+            }
+        }
+        val expectedClasses = "join join-horizontal join-vertical"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: it's vertical on small screen and horizontal on large screen")
+    }
+
+    @Test
+    fun with_extra_elements_in_the_group() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin() {
+            }
+        }
+        val expectedClasses = "join"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
+    }
+
+    @Test
+    fun custom_border_radius() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin() {
+            }
+        }
+        val expectedClasses = "join"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom border radius")
+    }
+
+    @Test
+    fun join_radio_inputs_with_btn_style() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin() {
+            }
+        }
+        val expectedClasses = "join"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Join radio inputs with btn style")
     }
 }

@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/indicator.yml + daisyui indicator.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/indicator/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -28,6 +28,19 @@ fun FlowContent.daisyIndicator(
         if (middle) addClassNames("indicator-middle")
         if (start) addClassNames("indicator-start")
         if (top) addClassNames("indicator-top")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+fun FlowContent.daisyIndicatorItem(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        addClassNames("indicator-item")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

@@ -80,11 +80,13 @@ class DashboardTest {
                 }
                 daisyDropdownContent(extraClasses = "rounded-box bg-base-100 mt-3 w-80 p-2 shadow-2xl") {
                     attributes["tabindex"] = "0"
-                    li { a { +"Pipeline failed on frontend/feat/auth" } }
-                    li { a { +"PR #1204 merged into main" } }
+                    ul {
+                        li { a { +"Pipeline failed on frontend/feat/auth" } }
+                        li { a { +"PR #1204 merged into main" } }
+                    }
                 }
             }
-            daisyDropdown(end = true, extraClasses = "z-10") {
+            daisyDropdown(extraClasses = "z-10") {
                 div {
                     attributes["tabindex"] = "0"
                     classes = setOf("avatar", "btn", "btn-circle", "btn-ghost")
@@ -92,8 +94,10 @@ class DashboardTest {
                 }
                 daisyDropdownContent(extraClasses = "rounded-box bg-base-100 mt-3 w-52 p-2 shadow-2xl") {
                     attributes["tabindex"] = "0"
-                    li { a { +"Profile" } }
-                    li { a { +"Settings" } }
+                    ul {
+                        li { a { +"Profile" } }
+                        li { a { +"Settings" } }
+                    }
                 }
             }
         }
@@ -109,10 +113,10 @@ class DashboardTest {
     }
 
     private fun SECTION.stat(title: String, value: String, desc: String) {
-        daisyStat {
-            daisyStatTitle(title)
-            daisyStatValue(value)
-            daisyStatDesc(desc)
+        daisyStatStat {
+            daisyStatStatTitle(title)
+            daisyStatStatValue(value)
+            daisyStatStatDesc(desc)
         }
     }
 

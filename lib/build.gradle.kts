@@ -24,11 +24,13 @@ testing {
 
 val generateComponents = tasks.register<Exec>("generateComponents") {
     group = "codegen"
-    description = "Regenerate Kotlin components from DaisyUI CSS source"
+    description = "Regenerate Kotlin components from DaisyUI source (git submodule)"
     workingDir = rootProject.file("codegen")
-    commandLine("sh", "-c", "npm install --silent && node src/index.js")
+    commandLine("sh", "-c", "npm install --silent && node src/index-new.js")
     inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/codegen-config.json"))
     outputs.dir(layout.projectDirectory.dir("src/main/kotlin/kdaisyui/components"))
 }
 

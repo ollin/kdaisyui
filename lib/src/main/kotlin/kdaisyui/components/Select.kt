@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/select.yml + daisyui select.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/select/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -10,15 +10,14 @@ import kotlinx.html.select
 import kotlinx.html.SELECT
 
 enum class SelectVariant(internal val className: String) {
-    Accent("select-accent"),
-    Error("select-error"),
-    Ghost("select-ghost"),
-    Info("select-info"),
     Neutral("select-neutral"),
     Primary("select-primary"),
     Secondary("select-secondary"),
+    Accent("select-accent"),
+    Info("select-info"),
     Success("select-success"),
     Warning("select-warning"),
+    Error("select-error"),
 }
 
 enum class SelectSize(internal val className: String) {
@@ -33,6 +32,7 @@ enum class SelectSize(internal val className: String) {
 fun FlowContent.daisySelect(
     variant: SelectVariant? = null,
     size: SelectSize? = null,
+    ghost: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
     attrs: (SELECT.() -> Unit)? = null,
@@ -42,6 +42,7 @@ fun FlowContent.daisySelect(
         addClassNames("select")
         if (variant != null) addClassNames(variant.className)
         if (size != null) addClassNames(size.className)
+        if (ghost) addClassNames("select-ghost")
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
         if (attrs != null) attrs()

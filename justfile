@@ -12,6 +12,9 @@ default:
 build:
     ./gradlew build
 
+generate:
+    cd codegen && npm install && npm run generate
+
 # Clean all build artifacts
 clean:
     ./gradlew clean

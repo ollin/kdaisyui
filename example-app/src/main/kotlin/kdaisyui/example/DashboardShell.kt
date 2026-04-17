@@ -79,7 +79,7 @@ private fun FlowContent.shellHeader() {
                 extraClasses = "rounded-full max-sm:w-24",
             )
         }
-        daisyDropdown(end = true, extraClasses = "z-10") {
+        div("dropdown dropdown-end z-10") {
             div {
                 attributes["tabindex"] = "0"
                 classes = setOf("avatar", "btn", "btn-circle", "btn-ghost")
@@ -87,8 +87,9 @@ private fun FlowContent.shellHeader() {
                     img(src = "https://picsum.photos/80/80?5")
                 }
             }
-            daisyDropdownContent(extraClasses = "rounded-box bg-base-100 mt-3 w-52 p-2 shadow-2xl") {
+            ul {
                 attributes["tabindex"] = "0"
+                classes = setOf("menu", "dropdown-content", "rounded-box", "bg-base-100", "mt-3", "w-52", "p-2", "shadow-2xl")
                 li { a { +"Profile" } }
                 li {
                     a {

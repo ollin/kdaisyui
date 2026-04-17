@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/radio.yml + daisyui radio.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/radio/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -11,14 +11,14 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
 enum class RadioVariant(internal val className: String) {
-    Accent("radio-accent"),
-    Error("radio-error"),
-    Info("radio-info"),
     Neutral("radio-neutral"),
     Primary("radio-primary"),
     Secondary("radio-secondary"),
+    Accent("radio-accent"),
     Success("radio-success"),
     Warning("radio-warning"),
+    Info("radio-info"),
+    Error("radio-error"),
 }
 
 enum class RadioSize(internal val className: String) {
@@ -37,6 +37,7 @@ fun FlowContent.daisyRadio(
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
+    attrs: (INPUT.() -> Unit)? = null,
 ) {
     input {
         type = InputType.radio
@@ -47,5 +48,6 @@ fun FlowContent.daisyRadio(
         if (checked) this.checked = true
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
+        if (attrs != null) attrs()
     }
 }

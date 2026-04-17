@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/alert.yml + daisyui alert.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/alert/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -11,10 +11,10 @@ import kotlinx.html.FlowContent
 import kotlinx.html.role
 
 enum class AlertVariant(internal val className: String) {
-    Error("alert-error"),
     Info("alert-info"),
     Success("alert-success"),
     Warning("alert-warning"),
+    Error("alert-error"),
 }
 
 

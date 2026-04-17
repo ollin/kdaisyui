@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/checkbox.yml + daisyui checkbox.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/checkbox/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -11,14 +11,14 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
 enum class CheckboxVariant(internal val className: String) {
-    Accent("checkbox-accent"),
-    Error("checkbox-error"),
-    Info("checkbox-info"),
-    Neutral("checkbox-neutral"),
     Primary("checkbox-primary"),
     Secondary("checkbox-secondary"),
+    Accent("checkbox-accent"),
+    Neutral("checkbox-neutral"),
     Success("checkbox-success"),
     Warning("checkbox-warning"),
+    Info("checkbox-info"),
+    Error("checkbox-error"),
 }
 
 enum class CheckboxSize(internal val className: String) {
@@ -36,6 +36,7 @@ fun FlowContent.daisyCheckbox(
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
+    attrs: (INPUT.() -> Unit)? = null,
 ) {
     input {
         type = InputType.checkBox
@@ -45,5 +46,6 @@ fun FlowContent.daisyCheckbox(
         if (checked) this.checked = true
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
+        if (attrs != null) attrs()
     }
 }

@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/range.yml + daisyui range.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/range/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -11,14 +11,14 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
 enum class RangeVariant(internal val className: String) {
-    Accent("range-accent"),
-    Error("range-error"),
-    Info("range-info"),
     Neutral("range-neutral"),
     Primary("range-primary"),
     Secondary("range-secondary"),
+    Accent("range-accent"),
     Success("range-success"),
     Warning("range-warning"),
+    Info("range-info"),
+    Error("range-error"),
 }
 
 enum class RangeSize(internal val className: String) {
@@ -39,6 +39,7 @@ fun FlowContent.daisyRange(
     step: String? = null,
     disabled: Boolean = false,
     extraClasses: String? = null,
+    attrs: (INPUT.() -> Unit)? = null,
 ) {
     input {
         type = InputType.range
@@ -51,5 +52,6 @@ fun FlowContent.daisyRange(
         if (step != null) this.step = step
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
+        if (attrs != null) attrs()
     }
 }

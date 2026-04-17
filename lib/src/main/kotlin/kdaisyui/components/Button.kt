@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/button.yml + daisyui button.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/button/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -11,16 +11,14 @@ import kotlinx.html.ButtonType
 import kotlinx.html.FlowContent
 
 enum class ButtonVariant(internal val className: String) {
-    Accent("btn-accent"),
-    Error("btn-error"),
-    Ghost("btn-ghost"),
-    Info("btn-info"),
-    Link("btn-link"),
     Neutral("btn-neutral"),
     Primary("btn-primary"),
     Secondary("btn-secondary"),
+    Accent("btn-accent"),
+    Info("btn-info"),
     Success("btn-success"),
     Warning("btn-warning"),
+    Error("btn-error"),
 }
 
 enum class ButtonSize(internal val className: String) {
@@ -40,6 +38,8 @@ fun FlowContent.daisyButton(
     block: Boolean = false,
     circle: Boolean = false,
     dash: Boolean = false,
+    ghost: Boolean = false,
+    link: Boolean = false,
     outline: Boolean = false,
     soft: Boolean = false,
     square: Boolean = false,
@@ -58,6 +58,8 @@ fun FlowContent.daisyButton(
         if (block) addClassNames("btn-block")
         if (circle) addClassNames("btn-circle")
         if (dash) addClassNames("btn-dash")
+        if (ghost) addClassNames("btn-ghost")
+        if (link) addClassNames("btn-link")
         if (outline) addClassNames("btn-outline")
         if (soft) addClassNames("btn-soft")
         if (square) addClassNames("btn-square")

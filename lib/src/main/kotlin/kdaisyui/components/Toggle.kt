@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/toggle.yml + daisyui toggle.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/toggle/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -11,14 +11,14 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
 enum class ToggleVariant(internal val className: String) {
-    Accent("toggle-accent"),
-    Error("toggle-error"),
-    Info("toggle-info"),
-    Neutral("toggle-neutral"),
     Primary("toggle-primary"),
     Secondary("toggle-secondary"),
+    Accent("toggle-accent"),
+    Neutral("toggle-neutral"),
     Success("toggle-success"),
     Warning("toggle-warning"),
+    Info("toggle-info"),
+    Error("toggle-error"),
 }
 
 enum class ToggleSize(internal val className: String) {
@@ -36,6 +36,7 @@ fun FlowContent.daisyToggle(
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
+    attrs: (INPUT.() -> Unit)? = null,
 ) {
     input {
         type = InputType.checkBox
@@ -45,5 +46,6 @@ fun FlowContent.daisyToggle(
         if (checked) this.checked = true
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
+        if (attrs != null) attrs()
     }
 }

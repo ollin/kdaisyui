@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/avatar.yml + daisyui avatar.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/avatar/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -10,7 +10,6 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.daisyAvatar(
-    group: Boolean = false,
     offline: Boolean = false,
     online: Boolean = false,
     placeholder: Boolean = false,
@@ -20,7 +19,6 @@ fun FlowContent.daisyAvatar(
 ) {
     div {
         addClassNames("avatar")
-        if (group) addClassNames("avatar-group")
         if (offline) addClassNames("avatar-offline")
         if (online) addClassNames("avatar-online")
         if (placeholder) addClassNames("avatar-placeholder")

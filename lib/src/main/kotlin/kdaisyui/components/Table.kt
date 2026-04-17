@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/table.yml + daisyui table.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/table/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 

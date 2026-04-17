@@ -1,6 +1,6 @@
 // GENERATED — DO NOT EDIT
-// Source: codegen/src/config/link.yml + daisyui link.css
-// Regenerate: ./gradlew generateComponents
+// Source: daisyui/packages/docs/src/routes/(routes)/components/link/+page.md
+// Regenerate: cd codegen && npm run generate
 
 package kdaisyui.components
 
@@ -10,14 +10,14 @@ import kotlinx.html.A
 import kotlinx.html.FlowContent
 
 enum class LinkVariant(internal val className: String) {
-    Accent("link-accent"),
-    Error("link-error"),
-    Info("link-info"),
     Neutral("link-neutral"),
     Primary("link-primary"),
     Secondary("link-secondary"),
+    Accent("link-accent"),
     Success("link-success"),
+    Info("link-info"),
     Warning("link-warning"),
+    Error("link-error"),
 }
 
 
@@ -25,7 +25,6 @@ fun FlowContent.daisyLink(
     text: String? = null,
     variant: LinkVariant? = null,
     hover: Boolean = false,
-    href: String? = null,
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit)? = null,
@@ -34,7 +33,6 @@ fun FlowContent.daisyLink(
         addClassNames("link")
         if (variant != null) addClassNames(variant.className)
         if (hover) addClassNames("link-hover")
-        if (href != null) this.href = href
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         when {

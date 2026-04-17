@@ -48,7 +48,7 @@ Run `./gradlew build` to verify everything resolves.
 Create `src/main/kotlin/Main.kt`:
 
 ```kotlin
-import kdaisyui.components.*
+import com.github.ollin.kdaisyui.components.*
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
 

@@ -208,7 +208,7 @@ function stripClassPrefix(prefix, className) {
 
 function collectImports(classified, element, config) {
   const imports = new Set([
-    'kdaisyui.core.addClassNames',
+    'com.github.ollin.kdaisyui.core.addClassNames',
     'kotlinx.html.FlowContent',
   ])
   
@@ -251,7 +251,7 @@ export function generateKotlinFile(classified, elementRules, config) {
     `// Source: daisyui/packages/docs/src/routes/(routes)/components/${componentName}/+page.md`,
     `// Regenerate: cd codegen && npm run generate`,
     ``,
-    `package kdaisyui.components`,
+    `package com.github.ollin.kdaisyui.components`,
     ``,
     ...imports.map(i => `import ${i}`),
   ].join('\n')

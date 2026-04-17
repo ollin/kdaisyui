@@ -49,22 +49,24 @@ This project follows the [Diátaxis](https://diataxis.fr/) documentation framewo
 
 ### 1. Add the dependency
 
-No published artifacts yet — use a Gradle composite build:
-
 ```kotlin
-// settings.gradle.kts
-includeBuild("../kdaisyUI")
-
 // build.gradle.kts
+repositories {
+    mavenCentral()
+    maven("https://maven.pkg.github.com/ollin/kdaisyUI")
+}
+
 dependencies {
-    implementation(project(":lib"))
+    implementation("com.github.ollin.kdaisyui:kdaisyui:5.5.19-1")
 }
 ```
+
+> **Note:** Published to GitHub Packages. Maven Central coming soon.
 
 ### 2. Render your first component
 
 ```kotlin
-import kdaisyui.components.*
+import com.github.ollin.kdaisyui.components.*
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 

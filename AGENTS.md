@@ -12,8 +12,8 @@ Type-safe DaisyUI component DSL for Kotlin server-rendered HTML. Wraps Tailwind 
 ```
 kdaisyUI/
 ├── lib/                    # Core DSL library (publishable)
-│   └── src/main/kotlin/kdaisyui/
-│       ├── components/     # 22 DaisyUI component wrappers
+│   └── src/main/kotlin/com/github/ollin/kdaisyui/
+│       ├── components/     # 63 DaisyUI component wrappers
 │       └── core/           # ClassNames utility
 ├── example-app/            # Ktor demo server (port 8080)
 ├── e2e-tests/              # Playwright E2E tests
@@ -25,9 +25,9 @@ kdaisyUI/
 
 | Task | Location |
 |------|----------|
-| Add new component | `lib/src/main/kotlin/kdaisyui/components/` |
-| Fix component bug | `lib/src/main/kotlin/kdaisyui/components/<Component>.kt` |
-| Add tests | `lib/src/test/kotlin/kdaisyui/components/` |
+| Add new component | `lib/src/main/kotlin/com/github/ollin/kdaisyui/components/` |
+| Fix component bug | `lib/src/main/kotlin/com/github/ollin/kdaisyui/components/<Component>.kt` |
+| Add tests | `lib/src/test/kotlin/com/github/ollin/kdaisyui/components/` |
 | Demo app routes | `example-app/src/main/kotlin/kdaisyui/example/` |
 | E2E tests | `e2e-tests/tests/` |
 | Build config | `buildSrc/`, `gradle.properties`, `settings.gradle.kts` |
@@ -72,22 +72,25 @@ cd e2e-tests && npm test         # E2E tests (Playwright config handles server l
 
 ## RELEASE WORKFLOW
 
-**Maven coordinates:** `com.nautsch.kdaisyui:kdaisyui` (published to GitHub Packages)
+**Maven coordinates:** `com.github.ollin.kdaisyui:kdaisyui` (published to GitHub Packages)
+
+**Versioning scheme (Debian-style):** `<daisyui-version>-<local-revision>`
+
+Example: `5.5.19-1` means DaisyUI 5.5.19, first release of our wrapper.
 
 Versioning is fully automated via [release-please](https://github.com/googleapis/release-please) + conventional commits:
 
 | Step | Trigger | What happens |
 |------|---------|-------------|
 | 1. Open PR | — | `pr-conventional-commits.yml` validates PR title against Conventional Commits spec |
-| 2. Merge PR to `main` | push to `main` | `release-please.yml` opens/updates a Release PR with SemVer bump + CHANGELOG |
-| 3. Merge Release PR | push to `main` | release-please creates git tag (`v0.x.y`) + GitHub Release |
-| 4. Publish | GitHub Release created | `publish.yml` runs `./gradlew :lib:publish -Pversion=0.x.y` |
+| 2. Merge PR to `main` | push to `main` | `release-please.yml` opens/updates a Release PR with version bump + CHANGELOG |
+| 3. Merge Release PR | push to `main` | release-please creates git tag (`v5.5.19-1`) + GitHub Release |
+| 4. Publish | GitHub Release created | `publish.yml` runs `./gradlew :lib:publish -Pversion=5.5.19-1` |
 
 **Version bump rules (conventional commits):**
-- `fix:` → patch (`0.1.0` → `0.1.1`)
-- `feat:` → minor (`0.1.0` → `0.2.0`)
-- `feat!:` or `BREAKING CHANGE:` → major (`0.1.0` → `1.0.0`)
-- `chore:`, `ci:`, `docs:`, `refactor:` → no release
+- `fix:` → local revision bump (`5.5.19-1` → `5.5.19-2`)
+- `feat:` → local revision bump (`5.5.19-1` → `5.5.19-2`)
+- DaisyUI version updates → manual version update in `gradle.properties`
 
 **Key files:**
 - `release-please-config.json` — release type (`java`), component name

@@ -80,7 +80,7 @@ The variant is an enum — the compiler rejects invalid values. The IDE autocomp
 
 ## How class merging works
 
-The core utility function `addClassNames` (in `kdaisyui.core`) manages the `class` attribute safely:
+The core utility function `addClassNames` (in `com.github.ollin.kdaisyui.core`) manages the `class` attribute safely:
 
 1. Reads the existing `class` attribute
 2. Splits it into tokens

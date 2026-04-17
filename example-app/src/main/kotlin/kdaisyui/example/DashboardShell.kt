@@ -1,7 +1,7 @@
 package kdaisyui.example
 
-import kdaisyui.components.*
-import kdaisyui.core.addClassNames
+import com.github.ollin.kdaisyui.components.*
+import com.github.ollin.kdaisyui.core.addClassNames
 import kotlinx.html.*
 
 fun HTML.dashboardShell() {

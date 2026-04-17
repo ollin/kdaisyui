@@ -72,7 +72,7 @@ cd e2e-tests && npm test         # E2E tests (Playwright config handles server l
 
 ## RELEASE WORKFLOW
 
-**Maven coordinates:** `com.github.ollin.kdaisyui:kdaisyui` (published to GitHub Packages)
+**Maven coordinates:** `io.github.ollin.kdaisyui:kdaisyui` (published to GitHub Packages)
 
 **Versioning scheme (Debian-style):** `<daisyui-version>-<local-revision>`
 

@@ -88,8 +88,8 @@ import io.ktor.http.*
 import io.ktor.server.html.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import com.github.ollin.kdaisyui.components.*
-import com.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.components.*
+import io.github.ollin.kdaisyui.core.addClassNames
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 

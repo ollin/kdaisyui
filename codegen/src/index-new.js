@@ -5,7 +5,18 @@ import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.js'
 import { classifyFromFrontmatter } from './classifier.js'
 import { generateKotlinFile } from './generator-new.js'
 
-const OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/src/main/kotlin/io/github/ollin/kdaisyui/components')
+const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/src/main/kotlin/io/github/ollin/kdaisyui/components')
+
+function parseOutputDir() {
+  for (const arg of process.argv) {
+    if (arg.startsWith('--output-dir=')) {
+      return arg.slice('--output-dir='.length)
+    }
+  }
+  return DEFAULT_OUTPUT_DIR
+}
+
+const OUTPUT_DIR = parseOutputDir()
 const CONFIG_PATH = path.resolve(import.meta.dirname, '../codegen-config.json')
 
 function loadConfig() {

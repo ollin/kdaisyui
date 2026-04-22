@@ -12,6 +12,20 @@ repositories {
     mavenCentral()
 }
 
+// --- Generated sources from DaisyUI codegen ---
+
+val generatedMainDir = layout.buildDirectory.dir("generated/sources/kotlin/main")
+val generatedTestDir = layout.buildDirectory.dir("generated/sources/kotlin/test")
+
+sourceSets {
+    main {
+        kotlin.srcDir(generatedMainDir)
+    }
+    test {
+        kotlin.srcDir(generatedTestDir)
+    }
+}
+
 dependencies {
     api("org.jetbrains.kotlinx:kotlinx-html-jvm:${project.property("versions.kotlinx-html")}")
 }
@@ -28,16 +42,37 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     group = "codegen"
     description = "Regenerate Kotlin components from DaisyUI source (git submodule)"
     workingDir = rootProject.file("codegen")
-    commandLine("sh", "-c", "npm install --silent && node src/index-new.js")
+    val outputDir = generatedMainDir.map { it.dir("io/github/ollin/kdaisyui/components") }
+    doFirst { outputDir.get().asFile.mkdirs() }
+    commandLine("sh", "-c", "npm install --silent && node src/index-new.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
-    outputs.dir(layout.projectDirectory.dir("src/main/kotlin/kdaisyui/components"))
+    outputs.dir(outputDir)
+}
+
+val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
+    group = "codegen"
+    description = "Regenerate Kotlin component tests from DaisyUI source (git submodule)"
+    workingDir = rootProject.file("codegen")
+    val outputDir = generatedTestDir.map { it.dir("io/github/ollin/kdaisyui/components") }
+    doFirst { outputDir.get().asFile.mkdirs() }
+    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    dependsOn(generateComponents)
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("daisyui/packages/docs"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/codegen-config.json"))
+    outputs.dir(outputDir)
 }
 
 tasks.named("compileKotlin") {
     dependsOn(generateComponents)
+}
+
+tasks.named("compileTestKotlin") {
+    dependsOn(generateComponentTests)
 }
 
 // Sources JAR for Maven Central

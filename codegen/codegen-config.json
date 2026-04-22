@@ -18,7 +18,7 @@
         "name": "disabled",
         "type": "Boolean",
         "default": "false",
-        "apply": "if (disabled) this.disabled = true"
+        "apply": "if (disabled) { this.disabled = true; addClassNames(\"btn-disabled\") }"
       },
       {
         "name": "type",

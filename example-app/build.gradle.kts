@@ -10,7 +10,7 @@ application {
 dependencies {
     implementation(project(":lib"))
 
-    val ktorVersion = "3.4.2"
+    val ktorVersion = "3.4.3"
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-html-builder:$ktorVersion")

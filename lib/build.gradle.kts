@@ -1,5 +1,3 @@
-import java.time.Instant
-
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
@@ -36,8 +34,6 @@ abstract class GitHashValueSource : ValueSource<String, GitHashValueSource.Param
 
 // --- JAR manifest attributes ---
 
-val buildTimestamp = Instant.now().toString()
-
 tasks.withType<Jar> {
     manifest {
         attributes(
@@ -48,7 +44,6 @@ tasks.withType<Jar> {
             "SCM-Revision" to gitHash,
             "DaisyUI-Version" to daisyuiVersion,
             "Kotlin-Version" to project.property("versions.kotlin").toString(),
-            "Build-Timestamp" to buildTimestamp,
             "Created-By" to "Gradle ${gradle.gradleVersion}",
         )
     }

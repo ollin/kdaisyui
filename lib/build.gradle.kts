@@ -1,3 +1,5 @@
+import java.time.Instant
+
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
@@ -8,13 +10,53 @@ group = "io.github.ollin.kdaisyui"
 
 base.archivesName.set("kdaisyui")
 
-repositories {
-    mavenCentral()
-}
-
 // --- DaisyUI submodule tag checkout ---
 
 val daisyuiVersion = project.property("daisyui.version").toString()
+
+// --- Git hash for manifest (lazy, configuration-cache safe) ---
+
+val gitHash: Provider<String> = providers.of(GitHashValueSource::class) {
+    parameters.rootDir.set(rootProject.layout.projectDirectory)
+}
+
+abstract class GitHashValueSource : ValueSource<String, GitHashValueSource.Parameters> {
+    interface Parameters : ValueSourceParameters {
+        val rootDir: DirectoryProperty
+    }
+
+    override fun obtain(): String {
+        val dir = parameters.rootDir.get().asFile
+        val process = ProcessBuilder("git", "rev-parse", "HEAD")
+            .directory(dir)
+            .start()
+        return process.inputStream.bufferedReader().readLine()?.trim() ?: "unknown"
+    }
+}
+
+// --- JAR manifest attributes ---
+
+val buildTimestamp = Instant.now().toString()
+
+tasks.withType<Jar> {
+    manifest {
+        attributes(
+            "Implementation-Title" to "io.github.ollin.kdaisyui:kdaisyui",
+            "Implementation-Version" to project.version,
+            "Implementation-Vendor" to "ollin",
+            "Implementation-URL" to "https://github.com/ollin/kdaisyui",
+            "SCM-Revision" to gitHash,
+            "DaisyUI-Version" to daisyuiVersion,
+            "Kotlin-Version" to project.property("versions.kotlin").toString(),
+            "Build-Timestamp" to buildTimestamp,
+            "Created-By" to "Gradle ${gradle.gradleVersion}",
+        )
+    }
+}
+
+repositories {
+    mavenCentral()
+}
 
 abstract class CheckoutDaisyuiTag : DefaultTask() {
     @get:Inject

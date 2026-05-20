@@ -43,7 +43,7 @@ abstract class PlaywrightSpec : FunSpec() {
             _page?.let { p ->
                 try {
                     val specName = testCase.spec::class.simpleName ?: "UnknownSpec"
-                    val sanitized = testCase.name.testName.replace(Regex("[^a-zA-Z0-9._-]"), "_")
+                    val sanitized = testCase.name.name.replace(Regex("[^a-zA-Z0-9._-]"), "_")
                     val dir = Path.of("build/screenshots/$specName")
                     Files.createDirectories(dir)
                     p.screenshot(

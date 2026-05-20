@@ -95,6 +95,7 @@ function generateMainFunction(classified, element, config) {
 
   const params = []
   if (hasTextParam) params.push('    text: String? = null,')
+  params.push('    id: HtmlId? = null,')
   if (classified.colors.length > 0) {
     params.push(`    variant: ${componentName}Variant? = null,`)
   }
@@ -138,6 +139,7 @@ function generateFunctionKdoc(classified, element, options) {
   if (hasTextParam) {
     lines.push('@param text — Shortcut for inline text content (mutually exclusive with [content])')
   }
+  lines.push('@param id — Type-safe HTML id attribute from [HtmlId] hierarchy')
   if (classified.colors.length > 0) {
     lines.push(`@param variant — Color variant`)
   }
@@ -173,6 +175,7 @@ function generateFunctionBody(classified, element, options) {
   const { extras, role, fixedInputType, hasTextParam, booleans, noContent } = options
   const lines = []
   
+  lines.push(`        if (id != null) attributes["id"] = id.id`)
   if (role) lines.push(`        role = "${role}"`)
   if (fixedInputType) lines.push(`        type = InputType.${fixedInputType}`)
   
@@ -236,6 +239,7 @@ function generatePartFunction(classified, partClass, element, config) {
 
   const params = []
   if (hasTextParam) params.push('    text: String? = null,')
+  params.push('    id: HtmlId? = null,')
   params.push('    extraClasses: String? = null,')
   params.push(`    attrs: (${element}.() -> Unit)? = null,`)
   if (hasTextParam) {
@@ -245,6 +249,7 @@ function generatePartFunction(classified, partClass, element, config) {
   }
   
   const body = []
+  body.push(`        if (id != null) attributes["id"] = id.id`)
   body.push(`        addClassNames("${partClass}")`)
   body.push(`        addClassNames(extraClasses)`)
   body.push(`        if (attrs != null) attrs()`)
@@ -270,6 +275,7 @@ function stripClassPrefix(prefix, className) {
 
 function collectImports(classified, element, config) {
   const imports = new Set([
+    'io.github.ollin.kdaisyui.core.HtmlId',
     'io.github.ollin.kdaisyui.core.addClassNames',
     'kotlinx.html.FlowContent',
   ])

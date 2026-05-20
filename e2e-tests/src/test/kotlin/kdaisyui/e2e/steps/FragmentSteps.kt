@@ -8,6 +8,7 @@ import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import kdaisyui.e2e.SharedInfrastructure
+import kdaisyui.example.Dashboard
 import java.util.concurrent.atomic.AtomicInteger
 
 class FragmentSteps(private val world: PlaywrightWorld) {
@@ -45,14 +46,14 @@ class FragmentSteps(private val world: PlaywrightWorld) {
     @When("the select dropdown is loaded within {int} seconds")
     fun selectDropdownLoaded(seconds: Int) {
         world.page.waitForSelector(
-            "select.select",
+            Dashboard.Repo.Form.Gitignore().target,
             com.microsoft.playwright.Page.WaitForSelectorOptions().setTimeout((seconds * 1000).toDouble())
         )
     }
 
     @Then("the second select dropdown contains the option {string}")
     fun secondSelectContainsOption(optionText: String) {
-        val select = world.page.locator("select.select").nth(1)
+        val select = world.page.locator(Dashboard.Repo.Form.Gitignore().target)
         assertThat(select).isVisible()
         val options = select.locator("option").allTextContents()
         check(options.contains(optionText)) { "Expected option '$optionText' in $options" }

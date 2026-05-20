@@ -12,6 +12,7 @@ kotlin {
 
 dependencies {
     val ktorVersion = project.property("versions.ktor").toString()
+    testImplementation(project(":lib"))
     testImplementation(project(":example-app"))
     testImplementation("io.ktor:ktor-server-core:$ktorVersion")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")

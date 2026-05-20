@@ -2,6 +2,7 @@ package kdaisyui.example.fragments
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import kdaisyui.example.Dashboard
 import kotlinx.html.*
 
 fun TagConsumer<*>.formsFragment() {
@@ -20,6 +21,7 @@ private fun TagConsumer<*>.formsHeader() {
 
 private fun TagConsumer<*>.createRepositoryFormSection() {
     section {
+        id = Dashboard.Repo.Form().id
         addClassNames("col-span-12 xl:col-span-4")
         daisyFieldset {
             daisyLabel("Repository name")

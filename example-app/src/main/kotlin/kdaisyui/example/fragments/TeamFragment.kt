@@ -2,6 +2,7 @@ package kdaisyui.example.fragments
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import kdaisyui.example.Dashboard
 import kotlinx.html.*
 
 fun TagConsumer<*>.teamFragment() {
@@ -12,6 +13,7 @@ fun TagConsumer<*>.teamFragment() {
 
 private fun TagConsumer<*>.teamHeader() {
     header {
+        id = Dashboard.Team().id
         addClassNames("col-span-12 flex items-center gap-2 lg:gap-4")
         div("grow") { h1("font-light lg:text-2xl") { +"Team management" } }
     }
@@ -21,6 +23,7 @@ private fun TagConsumer<*>.inviteTeamMemberForm() {
     section {
         addClassNames("card bg-base-100 col-span-12 xl:col-span-5")
         form(classes = "card-body") {
+            id = Dashboard.Team.Invite.Form().id
             action = ""
             daisyAlert(variant = AlertVariant.Success) {
                 span { +"Invitation sent successfully" }
@@ -56,6 +59,7 @@ private fun TagConsumer<*>.inviteTeamMemberForm() {
 
 private fun TagConsumer<*>.activeTeamMembersTable() {
     section {
+        id = Dashboard.Team.Table().id
         addClassNames("card bg-base-100 col-span-12 overflow-hidden shadow-xs xl:col-span-7")
         daisyCardBody(extraClasses = "grow-0") {
             daisyCardTitle("Active team members")

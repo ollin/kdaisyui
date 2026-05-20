@@ -2,6 +2,7 @@ package kdaisyui.example.fragments
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import kdaisyui.example.Dashboard
 import kotlinx.html.*
 
 fun TagConsumer<*>.cardsRow2Fragment() {
@@ -12,6 +13,7 @@ fun TagConsumer<*>.cardsRow2Fragment() {
 
 private fun TagConsumer<*>.repositoryActivityCard() {
     section {
+        id = Dashboard.CardsRow2().id
         addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Repository Activity")

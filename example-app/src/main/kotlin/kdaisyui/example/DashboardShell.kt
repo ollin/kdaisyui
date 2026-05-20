@@ -2,6 +2,7 @@ package kdaisyui.example
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.*
 
 fun HTML.dashboardShell() {
@@ -24,8 +25,9 @@ fun HTML.dashboardShell() {
         }
     }
     body("drawer bg-base-200 lg:drawer-open min-h-screen") {
+        val drawerId: HtmlId = Dashboard.Drawer()
         input {
-            id = "my-drawer"
+            id = drawerId.id
             type = InputType.checkBox
             classes = setOf("drawer-toggle")
         }
@@ -42,7 +44,7 @@ fun HTML.dashboardShell() {
         }
         aside("drawer-side z-10") {
             label {
-                htmlFor = "my-drawer"
+                htmlFor = drawerId.id
                 classes = setOf("drawer-overlay")
             }
             shellSidebar()
@@ -65,7 +67,7 @@ private fun FlowContent.htmxPlaceholder(url: String, trigger: String, extraClass
 private fun FlowContent.shellHeader() {
     header("col-span-12 flex items-center gap-2 lg:gap-4") {
         label {
-            htmlFor = "my-drawer"
+            htmlFor = Dashboard.Drawer().id
             classes = setOf("btn", "btn-square", "btn-ghost", "drawer-button", "lg:hidden")
             +"☰"
         }
@@ -74,6 +76,7 @@ private fun FlowContent.shellHeader() {
         }
         div {
             daisyInput(
+                id = Dashboard.Search(),
                 size = InputSize.Sm,
                 placeholder = "Search",
                 extraClasses = "rounded-full max-sm:w-24",

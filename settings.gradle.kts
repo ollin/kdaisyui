@@ -21,4 +21,5 @@ plugins {
 rootProject.name = "kdaisyui"
 
 include("lib")
+include("ktor-integration")
 include("example-app")

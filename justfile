@@ -30,7 +30,7 @@ sync-heroicons:
 # Clean all build artifacts
 clean:
     ./gradlew clean
-    rm -rf e2e-tests/playwright-report e2e-tests/test-results
+    rm -rf e2e-tests/build
 
 # ── Testing ──────────────────────────────────────────────────────────────────
 
@@ -38,9 +38,9 @@ clean:
 test:
     ./gradlew :lib:test
 
-# Run E2E tests (Playwright starts and stops the Ktor server automatically)
+# Run E2E tests (Playwright + in-process Ktor server via Gradle)
 e2e:
-    cd e2e-tests && npm install --silent && npm test
+    ./gradlew :e2e-tests:test
 
 # Run all tests: unit + E2E
 test-all: test e2e

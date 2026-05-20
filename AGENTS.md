@@ -30,7 +30,7 @@ kdaisyui/
 │   └── codegen-config.json             ← extras, textParams, roles, skip
 ├── ktor-integration/                   ← Ktor Resources integration (Resolvable, context parameters)
 ├── example-app/                        ← Ktor demo server (port 8080)
-├── e2e-tests/                          ← Playwright E2E tests
+├── e2e-tests/                          ← Playwright E2E tests (Kotlin + JUnit 5)
 ├── buildSrc/                           ← Gradle convention plugins
 ├── docs/                               ← Diátaxis documentation
 │   ├── explanation.md
@@ -131,7 +131,7 @@ DaisyUI YAML frontmatter (daisyui/packages/docs/src/routes/(routes)/components/x
 | Type-safe IDs | `lib/src/main/kotlin/io/github/ollin/kdaisyui/core/TagId.kt` |
 | Ktor integration | `ktor-integration/src/main/kotlin/io/github/ollin/kdaisyui/ktor/` |
 | Demo app routes | `example-app/src/main/kotlin/kdaisyui/example/` |
-| E2E tests | `e2e-tests/tests/` |
+| E2E tests | `e2e-tests/src/test/kotlin/kdaisyui/e2e/` |
 | Build config | `buildSrc/`, `gradle.properties`, `settings.gradle.kts` |
 | Version pins | `gradle.properties`, `.tool-versions` |
 | Release config | `release-please-config.json`, `.release-please-manifest.json` |
@@ -141,7 +141,8 @@ DaisyUI YAML frontmatter (daisyui/packages/docs/src/routes/(routes)/components/x
 
 - **Component pattern**: Each component = one file with `FlowContent.daisyXxx()` extension function
 - **Enum variants**: `XxxVariant`, `XxxSize` enums with `internal val className`
-- **Testing**: KotlinTest with `createHTML().div { }` assertions
+- **Unit testing**: KotlinTest with `createHTML().div { }` assertions
+- **E2E testing**: Playwright Java + JUnit 5, in-process Ktor server
 - **Build**: Gradle Kotlin DSL, convention plugin in `buildSrc/`
 - **Code style**: `kotlin.code.style=official`
 - **Pr titles**: Must follow Conventional Commits spec (CI validates)
@@ -161,7 +162,7 @@ Prefer `just` recipes — they are the canonical entry points for all tasks:
 
 ```bash
 just test            # Unit tests (lib)
-just e2e             # E2E tests — Playwright starts/stops the Ktor server automatically
+just e2e             # E2E tests — Playwright + in-process Ktor server via Gradle
 just test-all        # Unit tests + E2E (full suite)
 just dev             # Demo server → http://localhost:8080
 just build           # Build all Gradle modules
@@ -175,7 +176,7 @@ Raw Gradle commands (what just recipes call under the hood):
 ```bash
 ./gradlew :lib:test              # Unit tests
 ./gradlew :example-app:run       # Demo server (localhost:8080)
-cd e2e-tests && npm test         # E2E tests (Playwright config handles server lifecycle)
+./gradlew :e2e-tests:test        # E2E tests (Playwright + in-process Ktor server)
 ```
 
 ## RELEASE WORKFLOW

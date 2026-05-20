@@ -3,6 +3,7 @@ package kdaisyui.example.fragments
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
 import kdaisyui.example.Dashboard
+import kdaisyui.example.components.*
 import kotlinx.html.*
 
 fun TagConsumer<*>.teamFragment() {
@@ -28,31 +29,10 @@ private fun TagConsumer<*>.inviteTeamMemberForm() {
             daisyAlert(variant = AlertVariant.Success) {
                 span { +"Invitation sent successfully" }
             }
-            daisyFieldset {
-                daisyLabel("Email")
-                daisyInput(placeholder = "new.member@devtrack.io", extraClasses = "w-full")
-            }
-            daisyFieldset {
-                daisyLabel("Role")
-                daisySelect(extraClasses = "w-full") {
-                    option { +"Owner" }
-                    option { +"Maintainer" }
-                    option { +"Developer" }
-                    option { +"Reporter" }
-                }
-            }
-            daisyFieldset {
-                daisyLabel("Repositories")
-                daisySelect(extraClasses = "w-full") {
-                    option { +"All" }
-                    option { +"Specific" }
-                }
-            }
-            daisyFieldset {
-                div("flex items-end py-4") {
-                    daisyButton("Send invitation", variant = ButtonVariant.Primary, extraClasses = "grow")
-                }
-            }
+            teamEmailField()
+            teamRoleSelect()
+            teamReposSelect()
+            teamInviteButton()
         }
     }
 }

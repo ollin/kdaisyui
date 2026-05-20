@@ -3,6 +3,7 @@ package kdaisyui.example.fragments
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
 import kdaisyui.example.Dashboard
+import kdaisyui.example.components.*
 import kotlinx.html.*
 
 fun TagConsumer<*>.formsFragment() {
@@ -23,43 +24,12 @@ private fun TagConsumer<*>.createRepositoryFormSection() {
     section {
         id = Dashboard.Repo.Form().id
         addClassNames("col-span-12 xl:col-span-4")
-        daisyFieldset {
-            daisyLabel("Repository name")
-            daisyInput(placeholder = "devtrack/api-gateway", extraClasses = "w-full")
-        }
-        daisyFieldset {
-            daisyLabel("Visibility")
-            daisySelect(extraClasses = "w-full") {
-                option { +"Public" }
-                option { +"Private" }
-                option { +"Internal" }
-            }
-        }
-        daisyFieldset {
-            daisyLabel("Description")
-            daisyInput(placeholder = "Core API gateway service", extraClasses = "w-full")
-        }
-        daisyFieldset {
-            daisyLabel("Default branch")
-            daisyInput(extraClasses = "w-full", value = "main")
-        }
-        daisyFieldset {
-            label("flex cursor-pointer justify-between py-2") {
-                span("label") { +"Initialize with README" }
-                daisyToggle(size = ToggleSize.Sm, checked = true)
-            }
-        }
-        daisyFieldset {
-            daisyLabel("Add .gitignore")
-            daisySelect(extraClasses = "w-full") {
-                option { +"None" }
-                option { +"Kotlin" }
-                option { +"Java" }
-                option { +"Node" }
-                option { +"Python" }
-                option { +"Go" }
-            }
-        }
+        repoNameField()
+        repoVisibilitySelect()
+        repoDescriptionField()
+        repoBranchField()
+        repoReadmeToggle()
+        repoGitignoreSelect()
     }
 }
 

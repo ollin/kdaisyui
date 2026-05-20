@@ -19,9 +19,19 @@ dependencies {
 
     testImplementation("com.microsoft.playwright:playwright:1.60.0")
 
+    // Kotest (existing tests)
     testImplementation("io.kotest:kotest-runner-junit5:6.1.11")
     testImplementation("io.kotest:kotest-assertions-core:6.1.11")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Cucumber BDD
+    val cucumberVersion = "7.34.3"
+    testImplementation("io.cucumber:cucumber-java:$cucumberVersion")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine:$cucumberVersion")
+    testImplementation("io.cucumber:cucumber-picocontainer:$cucumberVersion")
+
+    testImplementation("org.junit.platform:junit-platform-suite:1.12.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.12.2")
 
     testImplementation("ch.qos.logback:logback-classic:1.5.32")
 }
@@ -33,6 +43,9 @@ tasks.test {
         showStandardStreams = true
     }
     dependsOn(":example-app:classes")
+
+    // Cucumber naming strategy for disambiguating scenarios in Gradle output
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
 
     environment("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD", "1")
     val chromiumPath = providers.environmentVariable("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH")

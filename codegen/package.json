@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "generate": "node src/index-new.js",
+    "generate:heroicons": "node src/index-heroicons.js",
     "generate:old": "node src/index.js"
   },
   "dependencies": {

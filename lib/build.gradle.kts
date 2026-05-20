@@ -11,6 +11,7 @@ base.archivesName.set("kdaisyui")
 // --- DaisyUI submodule tag checkout ---
 
 val daisyuiVersion = project.property("daisyui.version").toString()
+val heroiconsVersion = project.property("heroicons.version").toString()
 
 // --- Git hash for manifest (lazy, configuration-cache safe) ---
 
@@ -86,6 +87,39 @@ val checkoutDaisyuiTag = tasks.register<CheckoutDaisyuiTag>("checkoutDaisyuiTag"
     daisyuiDir.set(rootProject.layout.projectDirectory.dir("daisyui"))
 }
 
+abstract class CheckoutHeroiconsTag : DefaultTask() {
+    @get:Inject
+    abstract val execOperations: ExecOperations
+
+    @get:Input
+    abstract val targetTag: Property<String>
+
+    @get:InputDirectory
+    abstract val heroiconsDir: DirectoryProperty
+
+    @TaskAction
+    fun checkout() {
+        val tag = targetTag.get()
+        logger.lifecycle("Ensuring Heroicons submodule is on tag $tag...")
+        execOperations.exec {
+            workingDir = heroiconsDir.get().asFile
+            commandLine("git", "fetch", "--tags", "--quiet")
+        }
+        execOperations.exec {
+            workingDir = heroiconsDir.get().asFile
+            commandLine("git", "checkout", tag, "--quiet")
+        }
+        logger.lifecycle("Heroicons submodule is on tag $tag")
+    }
+}
+
+val checkoutHeroiconsTag = tasks.register<CheckoutHeroiconsTag>("checkoutHeroiconsTag") {
+    group = "heroicons"
+    description = "Checkout Heroicons git submodule to tag v$heroiconsVersion"
+    targetTag.set("v$heroiconsVersion")
+    heroiconsDir.set(rootProject.layout.projectDirectory.dir("heroicons"))
+}
+
 // --- Generated sources from DaisyUI codegen ---
 
 val generatedMainDir = layout.buildDirectory.dir("generated/sources/kotlin/main")
@@ -143,8 +177,23 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     outputs.dir(outputDir)
 }
 
+val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
+    group = "codegen"
+    description = "Regenerate Kotlin icon functions from Heroicons SVG source (git submodule)"
+    dependsOn(checkoutHeroiconsTag)
+    workingDir = rootProject.file("codegen")
+    val outputDir = generatedMainDir.map { it.dir("io/github/ollin/kdaisyui/icons") }
+    doFirst { outputDir.get().asFile.mkdirs() }
+    commandLine("sh", "-c", "npm install --silent && node src/index-heroicons.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("heroicons/src"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    outputs.dir(outputDir)
+}
+
 tasks.named("compileKotlin") {
     dependsOn(generateComponents)
+    dependsOn(generateHeroicons)
 }
 
 tasks.named("compileTestKotlin") {
@@ -154,6 +203,7 @@ tasks.named("compileTestKotlin") {
 // Sources JAR for Maven Central
 val sourcesJar by tasks.registering(Jar::class) {
     dependsOn(tasks.named("generateComponents"))
+    dependsOn(tasks.named("generateHeroicons"))
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }

@@ -87,6 +87,7 @@ private fun FlowContent.shellHeader() {
             )
         }
         div("dropdown dropdown-end z-10") {
+            id = Dashboard.Header.Avatar().id
             div {
                 attributes["tabindex"] = "0"
                 classes = setOf("avatar", "btn", "btn-circle", "btn-ghost")
@@ -115,7 +116,7 @@ private fun FlowContent.shellSidebar() {
     nav("bg-base-100 flex min-h-screen w-72 flex-col gap-2 overflow-y-auto px-6 py-10") {
         id = Dashboard.Sidebar().id
         div("mx-4 flex items-center gap-2 font-black") { +"DevTrack" }
-        daisyMenu(extraClasses = "w-full") {
+        daisyMenu(id = Dashboard.Sidebar.Menu(), extraClasses = "w-full") {
             li { a("menu-active") { +"Overview" } }
             sidebarSubmenu("Repositories", listOf("All Repos", "New Repository", "Archived"))
             li { a { +"Issues" } }

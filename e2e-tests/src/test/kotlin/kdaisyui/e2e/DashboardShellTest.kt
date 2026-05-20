@@ -7,6 +7,7 @@ import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.options.AriaRole
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldNotBeEmpty
+import kdaisyui.example.Dashboard
 
 class DashboardShellTest : PlaywrightSpec() {
 
@@ -22,7 +23,7 @@ class DashboardShellTest : PlaywrightSpec() {
         test("sidebar navigation items are present") {
             page.navigate("/")
 
-            val sidebar = page.locator("aside.drawer-side nav")
+            val sidebar = page.locator(Dashboard.Sidebar().target)
             assertThat(sidebar.locator("a", LocatorOptions().setHasText("Overview")).first()).isAttached()
             assertThat(sidebar.locator("summary", LocatorOptions().setHasText("Repositories"))).isAttached()
             assertThat(sidebar.locator("a", LocatorOptions().setHasText("Issues"))).isAttached()
@@ -34,7 +35,7 @@ class DashboardShellTest : PlaywrightSpec() {
         test("sidebar submenu expands on click") {
             page.navigate("/")
 
-            val sidebar = page.locator("aside.drawer-side nav")
+            val sidebar = page.locator(Dashboard.Sidebar().target)
             sidebar.locator("summary").filter(FilterOptions().setHasText("Repositories")).click()
 
             assertThat(sidebar.locator("a", LocatorOptions().setHasText("All Repos"))).isVisible()
@@ -44,7 +45,7 @@ class DashboardShellTest : PlaywrightSpec() {
         test("CSS is loaded - DaisyUI classes are applied") {
             page.navigate("/")
 
-            val sidebar = page.locator("nav").first()
+            val sidebar = page.locator(Dashboard.Sidebar().target)
             val bgColor = sidebar.evaluate("el => window.getComputedStyle(el).backgroundColor") as String
             bgColor shouldNotBe "rgba(0, 0, 0, 0)"
             bgColor.shouldNotBeEmpty()

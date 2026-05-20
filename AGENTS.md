@@ -142,7 +142,7 @@ DaisyUI YAML frontmatter (daisyui/packages/docs/src/routes/(routes)/components/x
 - **Component pattern**: Each component = one file with `FlowContent.daisyXxx()` extension function
 - **Enum variants**: `XxxVariant`, `XxxSize` enums with `internal val className`
 - **Unit testing**: KotlinTest with `createHTML().div { }` assertions
-- **E2E testing**: Playwright Java + JUnit 5, in-process Ktor server
+- **E2E testing**: Playwright Java + Kotest 5.9.1 FunSpec, in-process Ktor server, screenshots on every test
 - **Build**: Gradle Kotlin DSL, convention plugin in `buildSrc/`
 - **Code style**: `kotlin.code.style=official`
 - **Pr titles**: Must follow Conventional Commits spec (CI validates)

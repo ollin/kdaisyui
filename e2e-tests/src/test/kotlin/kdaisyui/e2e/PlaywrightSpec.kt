@@ -5,42 +5,64 @@ import com.microsoft.playwright.BrowserContext
 import com.microsoft.playwright.BrowserType
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
+import io.kotest.core.spec.style.FunSpec
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kdaisyui.example.configureRouting
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import java.net.HttpURLConnection
 import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
- * Base class for Playwright E2E tests.
+ * Base spec for Playwright E2E tests.
  *
- * Shares a single Ktor server and Chromium browser across ALL test classes
+ * Shares a single Ktor server and Chromium browser across ALL specs
  * via [SharedInfrastructure]. Each test gets a fresh [BrowserContext] and [Page].
+ * Screenshots are captured after every test to build/screenshots/{specName}/{testName}.png.
  */
-abstract class PlaywrightTestBase {
+abstract class PlaywrightSpec : FunSpec() {
+
+    private var _context: BrowserContext? = null
+    private var _page: Page? = null
+
+    protected val context: BrowserContext get() = _context!!
+    protected val page: Page get() = _page!!
+
+    init {
+        beforeTest {
+            val browser = SharedInfrastructure.browser
+            _context = browser.newContext(
+                Browser.NewContextOptions().setBaseURL(BASE_URL)
+            )
+            _context!!.setDefaultTimeout(10_000.0)
+            _page = _context!!.newPage()
+        }
+
+        afterTest { (testCase, _) ->
+            _page?.let { p ->
+                try {
+                    val specName = testCase.spec::class.simpleName ?: "UnknownSpec"
+                    val sanitized = testCase.name.testName.replace(Regex("[^a-zA-Z0-9._-]"), "_")
+                    val dir = Path.of("build/screenshots/$specName")
+                    Files.createDirectories(dir)
+                    p.screenshot(
+                        Page.ScreenshotOptions()
+                            .setPath(dir.resolve("$sanitized.png"))
+                            .setFullPage(true)
+                    )
+                } catch (e: Exception) {
+                    System.err.println("Screenshot capture failed: ${e.message}")
+                }
+            }
+            _context?.close()
+            _context = null
+            _page = null
+        }
+    }
 
     companion object {
         const val BASE_URL = "http://localhost:8080"
-    }
-
-    protected lateinit var context: BrowserContext
-    protected lateinit var page: Page
-
-    @BeforeEach
-    fun createContextAndPage() {
-        val browser = SharedInfrastructure.browser
-        context = browser.newContext(
-            Browser.NewContextOptions().setBaseURL(BASE_URL)
-        )
-        context.setDefaultTimeout(10_000.0)
-        page = context.newPage()
-    }
-
-    @AfterEach
-    fun closeContext() {
-        if (::context.isInitialized) context.close()
     }
 }
 

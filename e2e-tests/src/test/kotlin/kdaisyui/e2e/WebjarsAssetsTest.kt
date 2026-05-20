@@ -1,29 +1,27 @@
 package kdaisyui.e2e
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 
-class WebjarsAssetsTest : PlaywrightTestBase() {
+class WebjarsAssetsTest : PlaywrightSpec() {
 
-    @Test
-    fun `DaisyUI CSS is served from webjars`() {
-        val response = page.request().get("$BASE_URL/webjars/daisyui/daisyui.css")
-        assertEquals(200, response.status())
-        assertTrue(response.headers()["content-type"]!!.contains("text/css"))
-    }
+    init {
+        test("DaisyUI CSS is served from webjars") {
+            val response = page.request().get("$BASE_URL/webjars/daisyui/daisyui.css")
+            response.status() shouldBe 200
+            response.headers()["content-type"]!! shouldContain "text/css"
+        }
 
-    @Test
-    fun `htmx JS is served from webjars`() {
-        val response = page.request().get("$BASE_URL/webjars/htmx.org/dist/htmx.min.js")
-        assertEquals(200, response.status())
-        assertTrue(response.headers()["content-type"]!!.contains("javascript"))
-    }
+        test("htmx JS is served from webjars") {
+            val response = page.request().get("$BASE_URL/webjars/htmx.org/dist/htmx.min.js")
+            response.status() shouldBe 200
+            response.headers()["content-type"]!! shouldContain "javascript"
+        }
 
-    @Test
-    fun `Tailwind browser JS is served from webjars`() {
-        val response = page.request().get("$BASE_URL/webjars/tailwindcss__browser/dist/index.global.js")
-        assertEquals(200, response.status())
-        assertTrue(response.headers()["content-type"]!!.contains("javascript"))
+        test("Tailwind browser JS is served from webjars") {
+            val response = page.request().get("$BASE_URL/webjars/tailwindcss__browser/dist/index.global.js")
+            response.status() shouldBe 200
+            response.headers()["content-type"]!! shouldContain "javascript"
+        }
     }
 }

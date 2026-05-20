@@ -19,8 +19,8 @@ dependencies {
 
     testImplementation("com.microsoft.playwright:playwright:1.60.0")
 
-    testImplementation(platform("org.junit:junit-bom:5.12.2"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.9.1")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:5.9.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testImplementation("ch.qos.logback:logback-classic:1.5.32")

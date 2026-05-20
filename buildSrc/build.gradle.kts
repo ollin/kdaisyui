@@ -28,4 +28,5 @@ fun getVersion(key: String): String =
 
 dependencies {
     implementation("org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:${getVersion("versions.kotlin")}")
+    implementation("org.jetbrains.kotlin:kotlin-serialization:${getVersion("versions.kotlin")}")
 }

@@ -1,5 +1,6 @@
 plugins {
     id("kdaisyui.kotlin-library-conventions")
+    kotlin("plugin.serialization")
     application
 }
 
@@ -7,8 +8,15 @@ application {
     mainClass.set("kdaisyui.example.ApplicationKt")
 }
 
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-parameters")
+    }
+}
+
 dependencies {
     implementation(project(":lib"))
+    implementation(project(":ktor-integration"))
 
     val ktorVersion = "3.5.0"
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -16,6 +24,7 @@ dependencies {
     implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
     implementation("io.ktor:ktor-server-webjars:$ktorVersion")
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    implementation("io.ktor:ktor-server-resources:$ktorVersion")
 
     // Webjars — served at /webjars/{name}/{file}
     implementation("org.webjars.npm:daisyui:5.5.19")

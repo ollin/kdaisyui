@@ -3,9 +3,11 @@ package kdaisyui.example
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
+import io.ktor.server.application.Application
+import io.ktor.server.resources.href
 import kotlinx.html.*
 
-fun HTML.dashboardShell() {
+fun HTML.dashboardShell(application: Application) {
     lang = "en"
     head {
         meta { charset = "utf-8" }
@@ -34,12 +36,12 @@ fun HTML.dashboardShell() {
         main("drawer-content") {
             div("grid grid-cols-12 grid-rows-[min-content] gap-y-12 p-4 lg:gap-x-12 lg:p-10") {
                 shellHeader()
-                htmxPlaceholder("/fragments/stats", "load", "col-span-12")
-                htmxPlaceholder("/fragments/cards-row1", "load delay:100ms", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder("/fragments/cards-row2", "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder("/fragments/forms", "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder("/fragments/form-sections", "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder("/fragments/team", "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+                htmxPlaceholder(application.href(Fragments.Stats()), "load", "col-span-12")
+                htmxPlaceholder(application.href(Fragments.CardsRow1()), "load delay:100ms", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+                htmxPlaceholder(application.href(Fragments.CardsRow2()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+                htmxPlaceholder(application.href(Fragments.Forms()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+                htmxPlaceholder(application.href(Fragments.FormSections()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+                htmxPlaceholder(application.href(Fragments.Team()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
             }
         }
         aside("drawer-side z-10") {

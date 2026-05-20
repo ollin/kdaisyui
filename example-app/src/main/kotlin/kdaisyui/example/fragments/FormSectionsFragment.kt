@@ -2,6 +2,7 @@ package kdaisyui.example.fragments
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import kdaisyui.example.Dashboard
 import kotlinx.html.*
 
 fun TagConsumer<*>.formSectionsFragment() {
@@ -13,6 +14,7 @@ fun TagConsumer<*>.formSectionsFragment() {
 
 private fun TagConsumer<*>.formSectionsHeader() {
     header {
+        id = Dashboard.FormSections().id
         addClassNames("col-span-12 flex items-center gap-2 lg:gap-4")
         div("grow") { h1("font-light lg:text-2xl") { +"Team and repository settings" } }
     }

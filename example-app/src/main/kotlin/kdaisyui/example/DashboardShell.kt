@@ -34,6 +34,7 @@ fun HTML.dashboardShell(application: Application) {
             classes = setOf("drawer-toggle")
         }
         main("drawer-content") {
+            id = Dashboard.Content().id
             div("grid grid-cols-12 grid-rows-[min-content] gap-y-12 p-4 lg:gap-x-12 lg:p-10") {
                 shellHeader()
                 htmxPlaceholder(application.href(Fragments.Stats()), "load", "col-span-12")
@@ -68,6 +69,7 @@ private fun FlowContent.htmxPlaceholder(url: String, trigger: String, extraClass
 
 private fun FlowContent.shellHeader() {
     header("col-span-12 flex items-center gap-2 lg:gap-4") {
+        id = Dashboard.Header().id
         label {
             htmlFor = Dashboard.Drawer().id
             classes = setOf("btn", "btn-square", "btn-ghost", "drawer-button", "lg:hidden")
@@ -111,6 +113,7 @@ private fun FlowContent.shellHeader() {
 
 private fun FlowContent.shellSidebar() {
     nav("bg-base-100 flex min-h-screen w-72 flex-col gap-2 overflow-y-auto px-6 py-10") {
+        id = Dashboard.Sidebar().id
         div("mx-4 flex items-center gap-2 font-black") { +"DevTrack" }
         daisyMenu(extraClasses = "w-full") {
             li { a("menu-active") { +"Overview" } }

@@ -2,6 +2,7 @@ package kdaisyui.example.fragments
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import kdaisyui.example.Dashboard
 import kotlinx.html.*
 
 fun TagConsumer<*>.cardsRow1Fragment() {
@@ -11,6 +12,7 @@ fun TagConsumer<*>.cardsRow1Fragment() {
 
 private fun TagConsumer<*>.recentPipelineRunsCard() {
     section {
+        id = Dashboard.Pipelines().id
         addClassNames("card bg-base-100 col-span-12 overflow-hidden shadow-xs xl:col-span-6")
         daisyCardBody(extraClasses = "grow-0") {
             daisyCardTitle { daisyLink("Recent Pipeline Runs", hover = true) }
@@ -57,6 +59,7 @@ private fun TBODY.pipelineRow(repository: String, branch: String, status: String
 
 private fun TagConsumer<*>.openIssuesCard() {
     section {
+        id = Dashboard.Issues().id
         addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-6")
         daisyCardBody {
             daisyCardTitle("Open Issues")

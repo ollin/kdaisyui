@@ -2,11 +2,14 @@ package kdaisyui.example.fragments
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import kdaisyui.example.Dashboard
 import kotlinx.html.TagConsumer
+import kotlinx.html.id
 import kotlinx.html.section
 
 fun TagConsumer<*>.statsFragment() {
     section {
+        id = Dashboard.Stats().id
         addClassNames("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full shadow-xs")
         val stats = listOf(
             Triple("Active Repositories", "142", "Across all organizations"),

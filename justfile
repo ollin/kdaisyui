@@ -8,16 +8,24 @@ default:
 
 # ── Build ────────────────────────────────────────────────────────────────────
 
-# Build all Gradle modules
+# Build all Gradle modules and publish to Maven Local
 build:
-    ./gradlew build
+    ./gradlew build :lib:publishToMavenLocal
 
 generate:
     cd codegen && npm install && npm run generate
 
+# Regenerate Heroicons Kotlin source from Heroicons SVG submodule
+generate-heroicons:
+    cd codegen && npm install && npm run generate:heroicons
+
 # Sync DaisyUI submodule to the tag matching daisyui.version in gradle.properties
 sync-daisyui:
     ./gradlew :lib:checkoutDaisyuiTag
+
+# Sync Heroicons submodule to the tag matching heroicons.version in gradle.properties
+sync-heroicons:
+    ./gradlew :lib:checkoutHeroiconsTag
 
 # Clean all build artifacts
 clean:

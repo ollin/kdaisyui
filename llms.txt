@@ -41,13 +41,39 @@ val html = createHTML().div {
 
 ## Common parameters
 
-Every component accepts these escape-hatch parameters:
+Every component accepts these parameters:
 
 | Parameter | Type | Description |
 |---|---|---|
+| `id` | `HtmlId?` | Type-safe HTML id from `HtmlId` hierarchy |
 | `extraClasses` | `String?` | Additional CSS classes, merged safely (no duplicates) |
 | `attrs` | `(TAG.() -> Unit)?` | Direct access to the underlying kotlinx.html tag |
 | `content` | `(TAG.() -> Unit)?` | Nested HTML content (some components require this) |
+
+## Type-safe HTML IDs
+
+Define a hierarchy of IDs as nested classes extending `AnnotatedIdBase`:
+
+```kotlin
+import io.github.ollin.kdaisyui.core.AnnotatedIdBase
+import io.github.ollin.kdaisyui.core.htmlId
+
+class Dashboard : AnnotatedIdBase("dashboard") {
+    class Sidebar(parent: Dashboard = Dashboard()) : AnnotatedIdBase("sidebar", parent)
+    class Header(parent: Dashboard = Dashboard()) : AnnotatedIdBase("header", parent)
+}
+
+// Usage in components:
+daisyButton("Save", id = Dashboard.Sidebar())
+// → <button id="dashboard-sidebar" class="btn">Save</button>
+
+// String literal IDs also work:
+daisyButton("Save", id = htmlId("my-button"))
+// → <button id="my-button" class="btn">Save</button>
+
+// CSS target selector for anchor links:
+Dashboard.Sidebar().target  // → "#dashboard-sidebar"
+```
 
 ## Naming conventions
 

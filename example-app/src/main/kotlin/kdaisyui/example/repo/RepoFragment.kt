@@ -1,19 +1,18 @@
-package kdaisyui.example.fragments
+package kdaisyui.example.repo
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
 import kdaisyui.example.Dashboard
-import kdaisyui.example.components.*
 import kotlinx.html.*
 
-fun TagConsumer<*>.formsFragment() {
-    formsHeader()
+fun TagConsumer<*>.repoFragment() {
+    repoHeader()
     createRepositoryFormSection()
     recentEventsCard()
     quickStatsCard()
 }
 
-private fun TagConsumer<*>.formsHeader() {
+private fun TagConsumer<*>.repoHeader() {
     header {
         addClassNames("col-span-12 flex items-center gap-2 lg:gap-4")
         div("grow") { h1("font-light lg:text-2xl") { +"Repository management" } }

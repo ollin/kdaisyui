@@ -1,4 +1,4 @@
-package kdaisyui.example.fragments
+package kdaisyui.example.dashboard
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames

@@ -1,0 +1,133 @@
+= Example App — Package Structure
+:toc:
+
+== Principle: Domain Cohesion
+
+This example app organizes code by *domain* (what it's about), not by technical role.
+The goal is *cohesion*: when a feature changes, all related files live in the same package and change together.
+
+== Package Overview
+
+[source]
+----
+kdaisyui.example/
+├── team/                      ← everything about teams
+│   ├── TeamFragment.kt
+│   └── TeamFormFields.kt
+├── repo/                      ← everything about repositories
+│   ├── RepoFragment.kt
+│   └── RepoFormFields.kt
+├── dashboard/                 ← cross-cutting overview fragments
+│   ├── StatsFragment.kt
+│   ├── CardsRow1Fragment.kt
+│   ├── CardsRow2Fragment.kt
+│   └── FormSectionsFragment.kt
+├── Application.kt             ← shared infrastructure (see below)
+├── DashboardRoutes.kt
+├── DashboardShell.kt
+├── DashboardResources.kt
+├── Ids.kt
+└── HtmxUtil.kt
+----
+
+== Example: The `team` Package
+
+The `team` package contains two files that always change together:
+
+[cols="1,3"]
+|===
+| File | Responsibility
+
+| `TeamFragment.kt`
+| The HTMX fragment composing the team management page: header, invite form, members table.
+
+| `TeamFormFields.kt`
+| Reusable form field functions (`teamEmailField()`, `teamRoleSelect()`, etc.) used by `TeamFragment`.
+|===
+
+Both files share the package `kdaisyui.example.team` and import each other's functions directly — no cross-package dependency for team-related code.
+
+[source,kotlin]
+----
+// TeamFragment.kt
+package kdaisyui.example.team
+
+fun TagConsumer<*>.teamFragment() {
+    teamHeader()
+    inviteTeamMemberForm()       // calls teamEmailField(), teamRoleSelect() etc.
+    activeTeamMembersTable()
+}
+----
+
+[source,kotlin]
+----
+// TeamFormFields.kt
+package kdaisyui.example.team
+
+fun FlowContent.teamEmailField() { /* ... */ }
+fun FlowContent.teamRoleSelect() { /* ... */ }
+fun FlowContent.teamReposSelect() { /* ... */ }
+fun FlowContent.teamInviteButton() { /* ... */ }
+----
+
+When adding a new field to the team invite form, you edit `TeamFormFields.kt` and `TeamFragment.kt` — both in the same package.
+
+== The `dashboard` Package
+
+Fragments that aggregate data across multiple domains (stats, pipeline runs, issue counts, team activity cards) live in `kdaisyui.example.dashboard`.
+These are *cross-cutting overview* fragments — they don't belong to a single domain.
+
+== Shared Infrastructure
+
+Files at the `kdaisyui.example` root are shared across all domains:
+
+[cols="1,3"]
+|===
+| File | Purpose
+
+| `Application.kt`
+| Ktor server entry point and plugin setup.
+
+| `DashboardRoutes.kt`
+| Route definitions mapping URL paths to fragment functions from all domain packages.
+
+| `DashboardResources.kt`
+| Ktor Resources (`@Resource`) definitions for type-safe routing.
+
+| `DashboardShell.kt`
+| The outer HTML shell (layout, sidebar, header) loaded on initial page request.
+
+| `Ids.kt`
+| Type-safe HTML ID hierarchy (`Dashboard.Team.Invite.Form.Email()`).
+
+| `HtmxUtil.kt`
+| HTMX helper extension functions (`hxGet`, `hxTrigger`, `hxSwap`).
+|===
+
+== Naming Convention
+
+File names use a *domain prefix* + *technical suffix* pattern:
+
+- `Team**Fragment**.kt` — an HTMX fragment (page section loaded via `hx-get`)
+- `Team**FormFields**.kt` — reusable form field functions
+
+The domain prefix (`Team`, `Repo`) groups by subject.
+The technical suffix (`Fragment`, `FormFields`) communicates the file's role.
+Together with the domain package, this makes every file self-locating:
+
+> `kdaisyui.example.team.TeamFormFields` — team domain, form field functions.
+
+== Anti-Pattern: Technical Layering
+
+Avoid organizing packages by technical role such as `fragments/`, `components/`, or `services/`.
+This scatters related code across packages and forces cross-package changes for every feature touch:
+
+[source]
+----
+# DON'T — technical layering
+example.fragments/     ← TeamFragment + RepoFragment + StatsFragment ...
+example.components/    ← TeamFormFields + RepoFormFields ...
+----
+
+A change to "Team" now spans two packages.
+The domain-based structure above keeps it in one place.

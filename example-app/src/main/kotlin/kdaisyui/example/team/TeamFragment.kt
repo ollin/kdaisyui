@@ -1,9 +1,8 @@
-package kdaisyui.example.fragments
+package kdaisyui.example.team
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
 import kdaisyui.example.Dashboard
-import kdaisyui.example.components.*
 import kotlinx.html.*
 
 fun TagConsumer<*>.teamFragment() {

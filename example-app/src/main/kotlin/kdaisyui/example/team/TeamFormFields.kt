@@ -1,4 +1,4 @@
-package kdaisyui.example.components
+package kdaisyui.example.team
 
 import io.github.ollin.kdaisyui.components.*
 import kotlinx.html.*

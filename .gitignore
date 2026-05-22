@@ -20,5 +20,11 @@ node_modules/
 # Ignore generated DaisyUI components (built from git submodule at compile time)
 lib/src/main/kotlin/io/github/ollin/kdaisyui/components/
 lib/src/test/kotlin/io/github/ollin/kdaisyui/components/
+
+# Ignore generated Heroicons icon files (built from git submodule at compile time)
+# Keep hand-written enums: HeroIconVariant.kt and HeroIconSize.kt
+lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/*
+!lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/HeroIconVariant.kt
+!lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/HeroIconSize.kt
 **/.classpath
 **/.project

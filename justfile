@@ -17,7 +17,7 @@ generate:
 
 # Regenerate Heroicons Kotlin source from Heroicons SVG submodule
 generate-heroicons:
-    cd codegen && npm install && npm run generate:heroicons
+    ./gradlew :lib:generateHeroicons
 
 # Sync DaisyUI submodule to the tag matching daisyui.version in gradle.properties
 sync-daisyui:

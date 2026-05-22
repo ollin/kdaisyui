@@ -31,8 +31,8 @@ dependencies {
     testImplementation("io.cucumber:cucumber-junit-platform-engine:$cucumberVersion")
     testImplementation("io.cucumber:cucumber-picocontainer:$cucumberVersion")
 
-    testImplementation("org.junit.platform:junit-platform-suite:1.14.4")
-    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.14.4")
+    testImplementation("org.junit.platform:junit-platform-suite:6.1.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:6.1.0")
 
     testImplementation("ch.qos.logback:logback-classic:1.5.32")
 }

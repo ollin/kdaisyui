@@ -266,6 +266,36 @@ function generatePartFunction(classified, partClass, element, config) {
   return `${kdoc}fun FlowContent.daisy${componentName}${partPascal}(\n${params.join('\n')}\n) {\n    ${htmlTag} {\n${body.join('\n')}\n    }\n}`
 }
 
+function generateCustomPartFunction(classified, part) {
+  const componentName = classified.componentName
+  const element = part.element
+  const htmlTag = htmlTagFor(element)
+  const cssClass = part.cssClass
+  const receiver = part.receiver || 'FlowContent'
+
+  const kdocLine = cssClass
+    ? `Renders \`<${htmlTag} class="${cssClass} ...">\`.`
+    : `Structural wrapper. Renders \`<${htmlTag}>\`.`
+  const kdoc = `/** ${kdocLine} */\n`
+
+  const params = []
+  params.push('    id: HtmlId? = null,')
+  params.push('    extraClasses: String? = null,')
+  params.push(`    attrs: (${element}.() -> Unit)? = null,`)
+  params.push(`    content: (${element}.() -> Unit),`)
+
+  const body = []
+  body.push(`        if (id != null) attributes["id"] = id.id`)
+  if (cssClass) {
+    body.push(`        addClassNames("${cssClass}")`)
+  }
+  body.push(`        addClassNames(extraClasses)`)
+  body.push(`        if (attrs != null) attrs()`)
+  body.push(`        content()`)
+
+  return `${kdoc}fun ${receiver}.daisy${componentName}${part.name}(\n${params.join('\n')}\n) {\n    ${htmlTag} {\n${body.join('\n')}\n    }\n}`
+}
+
 function stripClassPrefix(prefix, className) {
   if (className.startsWith(prefix + '-')) {
     return className.slice(prefix.length + 1)
@@ -302,6 +332,15 @@ function collectImports(classified, element, config) {
     imports.add(`kotlinx.html.${htmlTagFor(partElement)}`)
   }
   
+  const customParts = config?.customParts?.[classified.componentName.toLowerCase()] || []
+  for (const part of customParts) {
+    imports.add(`kotlinx.html.${part.element}`)
+    imports.add(`kotlinx.html.${htmlTagFor(part.element)}`)
+    if (part.receiver && part.receiver !== 'FlowContent') {
+      imports.add(`kotlinx.html.${part.receiver}`)
+    }
+  }
+  
   return [...imports].sort((a, b) => {
     if (a.startsWith('kdaisyui') && !b.startsWith('kdaisyui')) return -1
     if (!a.startsWith('kdaisyui') && b.startsWith('kdaisyui')) return 1
@@ -336,7 +375,10 @@ export function generateKotlinFile(classified, elementRules, config) {
     return generatePartFunction(classified, partClass, partElement, config)
   })
   
-  const body = [enums, mainFn, ...partFns].filter(Boolean).join('\n\n')
+  const customParts = config?.customParts?.[classified.componentName.toLowerCase()] || []
+  const customPartFns = customParts.map(part => generateCustomPartFunction(classified, part))
+  
+  const body = [enums, mainFn, ...partFns, ...customPartFns].filter(Boolean).join('\n\n')
   
   return `${header}\n\n${body}\n`
 }

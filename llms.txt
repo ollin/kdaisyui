@@ -91,7 +91,7 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 | Alert | `daisyAlert` | Status messages and notifications | Info, Success, Warning, Error | — |
 | Avatar | `daisyAvatar` | User and entity representations | — | — |
 | Badge | `daisyBadge` | Labels, counts, and status tags | 8 colors | Xs–Xl |
-| Breadcrumbs | `daisyBreadcrumbs` | Navigation trail | — | — |
+| Breadcrumbs | `daisyBreadcrumbs`, `daisyBreadcrumbsItems`, `daisyBreadcrumbsItem` | Navigation trail | — | — |
 | Button | `daisyButton` | Actions and triggers | 8 colors | Xs–Xl |
 | Calendar | `daisyCalendar` | Date picker | — | — |
 | Card | `daisyCard`, `daisyCardTitle`, `daisyCardBody`, `daisyCardActions` | Content containers | — | Xs–Xl |
@@ -234,6 +234,36 @@ fun FlowContent.daisyBadge(
 
 daisyBadge("Passing", variant = BadgeVariant.Success)
 daisyBadge("3", variant = BadgeVariant.Error, size = BadgeSize.Sm)
+```
+
+### Breadcrumbs
+
+```kotlin
+fun FlowContent.daisyBreadcrumbs(
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+)
+
+fun FlowContent.daisyBreadcrumbsItems(     // structural <ul> wrapper
+    extraClasses: String? = null,
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
+)
+
+fun UL.daisyBreadcrumbsItem(               // structural <li> wrapper (scoped to UL)
+    extraClasses: String? = null,
+    attrs: (LI.() -> Unit)? = null,
+    content: (LI.() -> Unit),
+)
+
+// Usage:
+daisyBreadcrumbs(extraClasses = "text-sm") {
+    daisyBreadcrumbsItems {
+        daisyBreadcrumbsItem { a { href = "/persons"; +"Persons" } }
+        daisyBreadcrumbsItem { +"Birthdays" }   // terminal item (no link)
+    }
+}
 ```
 
 ### Button

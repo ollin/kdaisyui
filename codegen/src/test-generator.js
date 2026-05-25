@@ -154,16 +154,76 @@ function mapClassesToParams(classes, classToParam) {
   return params
 }
 
-function generateKotlinTest(componentName, testCases, frontmatter) {
+function generateCustomPartTests(className, customParts) {
+  if (!customParts || customParts.length === 0) return ''
+
+  let kotlin = ''
+  for (const part of customParts) {
+    const funcName = `custom_part_${part.name.toLowerCase()}_renders_${part.element.toLowerCase()}`
+    const tag = part.element.toLowerCase()
+    const receiver = part.receiver || 'FlowContent'
+    
+    // Determine wrapping context based on receiver type
+    const wrapperTag = receiver === 'FlowContent' ? 'div' : receiver.toLowerCase()
+    const wrapperFn = htmlTagFnFor(wrapperTag)
+    
+    if (part.cssClass) {
+      kotlin += `
+    @Test
+    fun ${funcName}() {
+        val html = createHTML(prettyPrint = false).${wrapperFn} {
+            daisy${className}${part.name} {
+            }
+        }
+        assertTrue(html.contains("<${tag}"))
+        assertTrue(html.contains("class=\\"${part.cssClass}"))
+    }
+`
+    } else {
+      kotlin += `
+    @Test
+    fun ${funcName}() {
+        val html = createHTML(prettyPrint = false).${wrapperFn} {
+            daisy${className}${part.name} {
+            }
+        }
+        assertTrue(html.contains("<${tag}"))
+    }
+`
+    }
+  }
+  return kotlin
+}
+
+function htmlTagFnFor(tag) {
+  const exceptions = { fieldset: 'fieldSet', textarea: 'textArea' }
+  return exceptions[tag] ?? tag
+}
+
+function generateKotlinTest(componentName, testCases, frontmatter, config) {
   const className = toClassName(componentName)
   const { allowedClasses, classToParam, paramToGeneratedClass, componentClass } = buildClassMappings(frontmatter, componentName)
+  const customParts = config?.customParts?.[componentName] || []
+  const hasCustomParts = customParts.length > 0
+  
+  const extraImports = new Set()
+  if (hasCustomParts) {
+    extraImports.add('import kotlin.test.assertTrue')
+    for (const part of customParts) {
+      const receiver = part.receiver || 'FlowContent'
+      if (receiver !== 'FlowContent') {
+        extraImports.add(`import kotlinx.html.${htmlTagFnFor(receiver.toLowerCase())}`)
+      }
+    }
+  }
+  const extraImportLines = [...extraImports].sort().join('\n')
   
   let kotlin = `package io.github.ollin.kdaisyui.components
 
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertEquals${extraImportLines ? '\n' + extraImportLines : ''}
 
 class ${className}Test {
 `
@@ -216,13 +276,15 @@ class ${className}Test {
 `
   }
   
+  kotlin += generateCustomPartTests(className, customParts)
+  
   kotlin += `}
 `
   
   return kotlin
 }
 
-function generateForComponent(componentName) {
+function generateForComponent(componentName, config) {
   const pageFile = path.join(DOCS_DIR, componentName, '+page.md')
   
   if (!fs.existsSync(pageFile)) {
@@ -241,7 +303,7 @@ function generateForComponent(componentName) {
     return { success: false, error: 'No test cases' }
   }
   
-  const kotlin = generateKotlinTest(componentName, testCases, frontmatter)
+  const kotlin = generateKotlinTest(componentName, testCases, frontmatter, config)
   const className = toClassName(componentName)
   const outFile = path.join(OUTPUT_DIR, `${className}Test.kt`)
   
@@ -268,7 +330,7 @@ function main() {
         continue
       }
       
-      const result = generateForComponent(componentName)
+      const result = generateForComponent(componentName, config)
       
       if (result.success) {
         console.log(`  ✓ ${componentName}: ${result.testCount} tests`)
@@ -286,7 +348,7 @@ function main() {
       process.exit(1)
     }
     
-    const result = generateForComponent(mode)
+    const result = generateForComponent(mode, config)
     
     if (result.success) {
       console.log(`Generated ${result.testCount} tests for ${mode}`)

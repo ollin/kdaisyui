@@ -1,7 +1,7 @@
 {
   "skip": ["accordion", "pagination"],
   "textParams": ["button", "badge", "link", "kbd", "label", "card-title", "stat-value", "stat-desc"],
-  "noContent": ["range", "toggle", "checkbox", "radio", "file-input", "theme-controller", "input"],
+  "noContent": ["range", "toggle", "checkbox", "radio", "file-input", "theme-controller", "input", "validator"],
   "roles": {
     "alert": "alert",
     "status": "status"
@@ -195,5 +195,11 @@
   "subComponentElements": {
     "card-title": "H2",
     "card-actions": "DIV"
+  },
+  "customParts": {
+    "breadcrumbs": [
+      { "name": "Items", "element": "UL", "cssClass": null },
+      { "name": "Item", "element": "LI", "cssClass": null, "receiver": "UL" }
+    ]
   }
 }

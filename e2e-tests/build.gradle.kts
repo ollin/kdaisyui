@@ -34,7 +34,7 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-suite:6.1.0")
     testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:6.1.0")
 
-    testImplementation("ch.qos.logback:logback-classic:1.5.32")
+    testImplementation("ch.qos.logback:logback-classic:1.5.33")
 }
 
 tasks.test {

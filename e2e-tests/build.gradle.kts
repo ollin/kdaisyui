@@ -21,7 +21,7 @@ dependencies {
     testImplementation("com.microsoft.playwright:playwright:1.60.0")
 
     // Kotest (existing tests)
-    testImplementation("io.kotest:kotest-runner-junit5:6.2.0")
+    testImplementation("io.kotest:kotest-runner-junit5:6.2.1")
     testImplementation("io.kotest:kotest-assertions-core:6.2.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 

@@ -8,6 +8,6 @@
     "generate:old": "node src/index.js"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^5.0.0"
   }
 }

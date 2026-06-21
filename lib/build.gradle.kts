@@ -13,40 +13,12 @@ base.archivesName.set("kdaisyui")
 val daisyuiVersion = libs.versions.daisyui.get()
 val heroiconsVersion = libs.versions.heroicons.get()
 
-// --- Git hash for manifest (lazy, configuration-cache safe) ---
-
-val gitHash: Provider<String> = providers.of(GitHashValueSource::class) {
-    parameters.rootDir.set(rootProject.layout.projectDirectory)
-}
-
-abstract class GitHashValueSource : ValueSource<String, GitHashValueSource.Parameters> {
-    interface Parameters : ValueSourceParameters {
-        val rootDir: DirectoryProperty
-    }
-
-    override fun obtain(): String {
-        val dir = parameters.rootDir.get().asFile
-        val process = ProcessBuilder("git", "rev-parse", "HEAD")
-            .directory(dir)
-            .start()
-        return process.inputStream.bufferedReader().readLine()?.trim() ?: "unknown"
-    }
-}
-
-// --- JAR manifest attributes ---
+// --- JAR manifest: shared attributes come from the convention plugin; only the
+// DaisyUI version is module-specific to lib. ---
 
 tasks.withType<Jar> {
     manifest {
-        attributes(
-            "Implementation-Title" to "io.github.ollin.kdaisyui:kdaisyui",
-            "Implementation-Version" to project.version,
-            "Implementation-Vendor" to "ollin",
-            "Implementation-URL" to "https://github.com/ollin/kdaisyui",
-            "SCM-Revision" to gitHash,
-            "DaisyUI-Version" to daisyuiVersion,
-            "Kotlin-Version" to libs.versions.kotlin.get(),
-            "Created-By" to "Gradle ${gradle.gradleVersion}",
-        )
+        attributes("DaisyUI-Version" to daisyuiVersion)
     }
 }
 

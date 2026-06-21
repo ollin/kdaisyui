@@ -2,6 +2,7 @@ plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
     alias(libs.plugins.kover)
+    kotlin("plugin.serialization")
 }
 
 group = "io.github.ollin.kdaisyui"

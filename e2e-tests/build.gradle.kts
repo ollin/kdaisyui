@@ -58,6 +58,15 @@ tasks.test {
                 }
         })
     chromiumPath.orNull?.let { environment("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH", it) }
+
+    doLast {
+        listOf("playwright-report", "test-results").forEach { name ->
+            val dir = projectDir.resolve(name)
+            if (dir.isDirectory && dir.walkBottomUp().all { it.isDirectory }) {
+                dir.deleteRecursively()
+            }
+        }
+    }
 }
 
 

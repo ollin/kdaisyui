@@ -53,6 +53,29 @@ kover {
         total {
             html { onCheck = true }
             xml { onCheck = true }
+            // The hard gate (added LAST per the staged rollout, design.md D5):
+            // 100% LINE and 100% BRANCH for the aggregated in-scope modules, or
+            // the build fails. Bound to `check` via onCheck, so `./gradlew check`
+            // (locally and in CI) fails on any shortfall — no separately named task.
+            verify {
+                onCheck = true
+                rule("100% line coverage") {
+                    bound {
+                        minValue = 100
+                        coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+                        aggregationForGroup =
+                            kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+                rule("100% branch coverage") {
+                    bound {
+                        minValue = 100
+                        coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.BRANCH
+                        aggregationForGroup =
+                            kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
         }
     }
 }

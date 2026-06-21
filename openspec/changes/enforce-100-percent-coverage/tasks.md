@@ -68,7 +68,7 @@
 
 ## 14. Sharpen the hard gate (LAST — build now fails below 100%)
 
-- [ ] 14.1 Add the two verify rules (LINE `minValue=100`, BRANCH `minValue=100`, `AggregationType.COVERED_PERCENTAGE`) under `kover { reports { total { verify { ... } } } }` in root AND set `verify { onCheck = true }` (feature; the gate goes hard, run `./gradlew check` — must pass at 100%, fail if any line reverted)
+- [x] 14.1 Add the two verify rules (LINE `minValue=100`, BRANCH `minValue=100`, `AggregationType.COVERED_PERCENTAGE`) under `kover { reports { total { verify { ... } } } }` in root AND set `verify { onCheck = true }` (feature; the gate goes hard, run `./gradlew check` — must pass at 100%, fail if any line reverted)
 - [ ] 14.2 Confirm `./gradlew check` fails when coverage is artificially dropped (delete one assertion, expect non-zero exit) then restore (feature-test; proves the gate bites)
 
 ## 15. CI + docs

@@ -17,6 +17,9 @@ node_modules/
 # Ignore CodeSeeker index
 .codeseeker/
 
+# Ignore local scratch directory
+tmp/
+
 # Ignore generated DaisyUI components (built from git submodule at compile time)
 lib/src/main/kotlin/io/github/ollin/kdaisyui/components/
 lib/src/test/kotlin/io/github/ollin/kdaisyui/components/

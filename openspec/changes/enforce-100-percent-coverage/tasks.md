@@ -73,5 +73,5 @@
 
 ## 15. CI + docs
 
-- [ ] 15.1 Confirm `.github/workflows/ci.yml` runs a task that triggers `check`/`koverVerify` so CI enforces the gate; adjust if the unit-test job calls a narrower task (refactoring; CI wiring)
-- [ ] 15.2 Document the 100% coverage gate + how to run the report locally in `AGENTS.md` (documentation)
+- [x] 15.1 Confirm `.github/workflows/ci.yml` runs a task that triggers `check`/`koverVerify` so CI enforces the gate; adjust if the unit-test job calls a narrower task (refactoring; CI wiring)
+- [x] 15.2 Document the 100% coverage gate + how to run the report locally in `AGENTS.md` (documentation)

@@ -83,41 +83,33 @@ class ResolvableTest {
     }
 
     @Test
-    fun contextAsResolvableCoversAllBranches() = testApplication {
-        lateinit var app: Application
-        application {
-            install(Resources)
-            app = this
-        }
-        startApplication()
-
-        with(ApplicationResolution(app)) {
-            val existing: Resolvable = StringResolvable("/dashboard")
-            assertEquals(existing, resolveAnyViaContext(existing))
-            assertEquals("#submit", resolveAnyViaContext(htmlId("submit")).href)
-            assertEquals("/custom", resolveAnyViaContext("/custom").href)
-            assertFails { resolveAnyViaContext(Any()) }
-            assertEquals("/dashboard", DashboardResource().asResolvable().href)
-        }
+    fun contextAsResolvableCoversAllBranches() = withResolutionContext {
+        val existing: Resolvable = StringResolvable("/dashboard")
+        assertEquals(existing, resolveAnyViaContext(existing))
+        assertEquals("#submit", resolveAnyViaContext(htmlId("submit")).href)
+        assertEquals("/custom", resolveAnyViaContext("/custom").href)
+        assertFails { resolveAnyViaContext(Any()) }
+        assertEquals("/dashboard", DashboardResource().asResolvable().href)
     }
 
     @Test
-    fun contextHrefCoversAllBranches() = testApplication {
-        lateinit var app: Application
-        application {
-            install(Resources)
-            app = this
-        }
-        startApplication()
-
-        with(ApplicationResolution(app)) {
-            assertEquals("/dashboard", hrefOfAnyViaContext(StringResolvable("/dashboard")))
-            assertEquals("#submit", hrefOfAnyViaContext(htmlId("submit")))
-            assertEquals("/custom", hrefOfAnyViaContext("/custom"))
-            assertFails { hrefOfAnyViaContext(Any()) }
-            assertEquals("/dashboard", DashboardResource().href)
-        }
+    fun contextHrefCoversAllBranches() = withResolutionContext {
+        assertEquals("/dashboard", hrefOfAnyViaContext(StringResolvable("/dashboard")))
+        assertEquals("#submit", hrefOfAnyViaContext(htmlId("submit")))
+        assertEquals("/custom", hrefOfAnyViaContext("/custom"))
+        assertFails { hrefOfAnyViaContext(Any()) }
+        assertEquals("/dashboard", DashboardResource().href)
     }
+}
+
+private fun withResolutionContext(assertions: ApplicationResolution.() -> Unit) = testApplication {
+    lateinit var app: Application
+    application {
+        install(Resources)
+        app = this
+    }
+    startApplication()
+    ApplicationResolution(app).assertions()
 }
 
 context(appResolution: ApplicationResolution)

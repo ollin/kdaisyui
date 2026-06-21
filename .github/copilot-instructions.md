@@ -7,7 +7,7 @@
 - **Components are GENERATED** by codegen (`just generate`). Do NOT edit files in `lib/build/generated/`.
 - Package is `io.github.ollin.kdaisyui.components` (NOT `com.github...`)
 - Conventional commits required for PR titles (CI validates)
-- Version managed by release-please — NEVER manually bump `gradle.properties`
+- Project version (SemVer) lives in `gradle.properties` → `version=`; bump it there, then tag `v<version>` to release via JReleaser
 
 ## Quick Reference
 

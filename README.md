@@ -1,5 +1,7 @@
 # kdaisyui
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.ollin.kdaisyui/kdaisyui?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.ollin.kdaisyui/kdaisyui)
+
 Type-safe [DaisyUI](https://daisyui.com/) components for [kotlinx.html](https://github.com/Kotlin/kotlinx.html).
 
 Write DaisyUI markup in Kotlin with autocompletion, compile-time checks, and zero class-name typos.
@@ -45,7 +47,7 @@ This project follows the [Diátaxis](https://diataxis.fr/) documentation framewo
 - **Need a specific recipe?** Check the [How-to guides](docs/how-to.md)
 - **Looking up an API?** See the [Component reference](docs/reference.md)
 
-> **🚧 Not yet published.** A few things need to be finalized before the first artifact is available on GitHub Packages. Until then, you can build from source with `just build`.
+> Published to [Maven Central](https://central.sonatype.com/artifact/io.github.ollin.kdaisyui/kdaisyui). Use the latest version shown on the badge above (or build from source with `just build`).
 
 ## Quick start
 
@@ -55,15 +57,18 @@ This project follows the [Diátaxis](https://diataxis.fr/) documentation framewo
 // build.gradle.kts
 repositories {
     mavenCentral()
-    maven("https://maven.pkg.github.com/ollin/kdaisyui")
 }
 
 dependencies {
-    implementation("io.github.ollin.kdaisyui:kdaisyui:5.5.19-1")
+    // Import the BOM once (replace VERSION with the latest release), then declare
+    // the artifacts without versions — the BOM keeps them aligned.
+    implementation(platform("io.github.ollin.kdaisyui:kdaisyui-bom:VERSION"))
+    implementation("io.github.ollin.kdaisyui:kdaisyui")
+    implementation("io.github.ollin.kdaisyui:kdaisyui-ktor-integration") // optional: Ktor Resources integration
 }
 ```
 
-> **Note:** Published to GitHub Packages. Maven Central coming soon.
+> **Note:** Released to Maven Central via JReleaser. The latest version is shown on the badge at the top of this README.
 
 ### 2. Render your first component
 
@@ -82,7 +87,9 @@ val html = createHTML().div {
 
 | Module | Description |
 |---|---|
-| `:lib` | Core library — DSL component wrappers |
+| `:lib` | Core library — DSL component wrappers (published as `kdaisyui`) |
+| `:ktor-integration` | Ktor Resources integration; brings DaisyUI/Tailwind/htmx webjars transitively (published as `kdaisyui-ktor-integration`) |
+| `:bom` | Bill of Materials aligning the two artifact versions (published as `kdaisyui-bom`) |
 | `:example-app` | Ktor + htmx demo dashboard |
 
 ## Development environment

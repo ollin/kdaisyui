@@ -8,30 +8,32 @@
 import fs from 'fs'
 import path from 'path'
 
-// DaisyUI 5.5.20+ replaced the static llms.txt with per-component skill files
-// that its own llms.txt route concatenates at build time; we read them directly.
-const COMPONENT_SKILLS_DIR = path.resolve(import.meta.dirname, '../../../daisyui/skills/daisyui/components')
+const DAISYUI_ROOT = path.resolve(import.meta.dirname, '../../../daisyui')
+const STATIC_LLMS_TXT = path.join(DAISYUI_ROOT, 'packages/docs/static/llms.txt')
+const COMPONENT_SKILLS_DIR = path.join(DAISYUI_ROOT, 'skills/daisyui/components')
+
+function readElementRuleSource() {
+  if (fs.existsSync(STATIC_LLMS_TXT)) {
+    return fs.readFileSync(STATIC_LLMS_TXT, 'utf8')
+  }
+  if (fs.existsSync(COMPONENT_SKILLS_DIR)) {
+    return fs.readdirSync(COMPONENT_SKILLS_DIR)
+      .filter((name) => name.endsWith('.md'))
+      .sort()
+      .map((name) => fs.readFileSync(path.join(COMPONENT_SKILLS_DIR, name), 'utf8'))
+      .join('\n')
+  }
+  throw new Error(
+    `DaisyUI layout changed: found neither ${STATIC_LLMS_TXT} nor ${COMPONENT_SKILLS_DIR}. ` +
+    `Check the pinned daisyui version and the codegen path.`
+  )
+}
 
 /**
  * @returns {Map<string, ElementRule>}
  */
 export function parseLlmsTxt() {
-  const files = fs.readdirSync(COMPONENT_SKILLS_DIR)
-    .filter((name) => name.endsWith('.md'))
-    .sort()
-
-  if (files.length === 0) {
-    throw new Error(
-      `DaisyUI layout changed: no component skill files found in ${COMPONENT_SKILLS_DIR}. ` +
-      `Check the pinned daisyui.version and the codegen path.`
-    )
-  }
-
-  const content = files
-    .map((name) => fs.readFileSync(path.join(COMPONENT_SKILLS_DIR, name), 'utf8'))
-    .join('\n')
-
-  return parseLlmsTxtContent(content)
+  return parseLlmsTxtContent(readElementRuleSource())
 }
 
 function parseLlmsTxtContent(content) {

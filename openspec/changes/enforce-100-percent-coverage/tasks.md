@@ -14,7 +14,7 @@
 
 - [ ] 3.1 Add tests for `core/ClassNames.kt` covering all line+branch paths AND assert results (feature-test; small, run `:lib:test`)
 - [ ] 3.2 Add tests for `core/TagId.kt` (the HtmlId hierarchy) covering all paths AND assert (feature-test; small) — extend existing `HtmlIdTest.kt`
-- [ ] 3.3 Add tests for `icons/HeroIconSize.kt` + `icons/HeroIconVariant.kt` enums (feature-test; small)
+- [x] 3.3 Add tests for `icons/HeroIconSize.kt` + `icons/HeroIconVariant.kt` enums (feature-test; small)
 - [ ] 3.4 Add tests for the generated heroicons source covering each variant/size path (feature-test; small)
 
 ## 4. Cover generated components — batch A (Alert–Carousel)

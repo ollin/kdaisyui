@@ -1,9 +1,9 @@
 ## 1. Wire Kover (build stays green — no gate yet)
 
-- [ ] 1.1 Add `kover = "0.9.8"` to `[versions]` and the `kover` plugin to `[plugins]` in `gradle/libs.versions.toml` (refactoring; catalog only, no behavior)
-- [ ] 1.2 Apply `alias(libs.plugins.kover)` to root `build.gradle.kts` and declare `kover(project(":lib"))` + `kover(project(":ktor-integration"))` in root `dependencies` (refactoring; wiring, run `./gradlew help`)
-- [ ] 1.3 Apply `alias(libs.plugins.kover)` to `lib/build.gradle.kts` and `ktor-integration/build.gradle.kts` (refactoring; wiring)
-- [ ] 1.4 Add `kover { reports { total { html { onCheck = true }; xml { onCheck = true } } } }` to root (no verify rule yet) (refactoring; reports only, run `./gradlew koverHtmlReport`)
+- [x] 1.1 Add `kover = "0.9.8"` to `[versions]` and the `kover` plugin to `[plugins]` in `gradle/libs.versions.toml` (refactoring; catalog only, no behavior)
+- [x] 1.2 Apply `alias(libs.plugins.kover)` to root `build.gradle.kts` and declare `kover(project(":lib"))` + `kover(project(":ktor-integration"))` in root `dependencies` (refactoring; wiring, run `./gradlew help`)
+- [x] 1.3 Apply `alias(libs.plugins.kover)` to `lib/build.gradle.kts` and `ktor-integration/build.gradle.kts` (refactoring; wiring)
+- [x] 1.4 Add `kover { reports { total { html { onCheck = true }; xml { onCheck = true } } } }` to root (no verify rule yet) (refactoring; reports only, run `./gradlew koverHtmlReport`)
 
 ## 2. Baseline measurement
 

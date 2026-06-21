@@ -1,9 +1,30 @@
 plugins {
     base
     alias(libs.plugins.jreleaser)
+    alias(libs.plugins.kover)
 }
 
 group = "io.github.ollin.kdaisyui"
+
+// Root-level coverage aggregation: merge the published library modules into one
+// report. Only :lib and :ktor-integration are measured; :example-app, :e2e-tests,
+// and :bom are intentionally out of scope (demo / test code / no code).
+dependencies {
+    kover(project(":lib"))
+    kover(project(":ktor-integration"))
+}
+
+// Aggregated coverage reports. The hard verify rule is added LAST (see the
+// staged rollout in design.md D5) — until then the build stays green: Kover is
+// present and reports are produced, but nothing fails on a shortfall.
+kover {
+    reports {
+        total {
+            html { onCheck = true }
+            xml { onCheck = true }
+        }
+    }
+}
 
 jreleaser {
     project {

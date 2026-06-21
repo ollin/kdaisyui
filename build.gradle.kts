@@ -26,6 +26,30 @@ dependencies {
 // present and reports are produced, but nothing fails on a shortfall.
 kover {
     reports {
+        // Exclude the synthetic `$DefaultImpls` interface-default bridge classes
+        // (design.md D4: an exclusion is explicit + justified, never silent).
+        //
+        // Kotlin 2.4 compiles interface default methods (HtmlId.target /
+        // targetGlobal) with `-jvm-default=enable` by default. The real method
+        // bodies live in the interface and ARE measured at 100% (HtmlId.getTarget
+        // / getTargetGlobal). In ENABLE mode the compiler ADDITIONALLY emits a
+        // static `HtmlId$DefaultImpls` class holding binary-compatibility bridge
+        // stubs. Those bridges are only ever invoked by consumers compiled against
+        // the legacy (disable-mode) ABI; every current-ABI Kotlin/Java caller —
+        // including a `super<HtmlId>.target` super-call (tested) — routes to the
+        // interface default directly, NEVER the bridge. They are therefore
+        // provably unreachable from any source-level test (2 lines, 2 methods).
+        //
+        // We exclude them rather than (a) faking coverage, or (b) switching :lib
+        // to `-Xjvm-default=no-compatibility` — which would remove the bridges but
+        // is an ABI change to a published Maven Central artifact, contradicting the
+        // proposal's "no impact on published artifacts" constraint. The exclusion
+        // is ABI-neutral and reversible.
+        filters {
+            excludes {
+                classes("*\$DefaultImpls")
+            }
+        }
         total {
             html { onCheck = true }
             xml { onCheck = true }

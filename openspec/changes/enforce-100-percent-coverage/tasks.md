@@ -63,8 +63,8 @@
 
 ## 13. Close residual gaps + document exclusions
 
-- [ ] 13.1 Regenerate the aggregated report; for every remaining uncovered branch, either add a targeted test OR add a documented `kover { reports { filters { excludes { ... } } } }` entry with a written justification (feature-test/refactoring; iterate until report shows 100/100)
-- [ ] 13.2 Verify the aggregated report reads exactly 100% LINE and 100% BRANCH before sharpening the gate (documentation; evidence captured)
+- [x] 13.1 Regenerate the aggregated report; for every remaining uncovered branch, either add a targeted test OR add a documented `kover { reports { filters { excludes { ... } } } }` entry with a written justification (feature-test/refactoring; iterate until report shows 100/100)
+- [x] 13.2 Verify the aggregated report reads exactly 100% LINE and 100% BRANCH before sharpening the gate (documentation; evidence captured)
 
 ## 14. Sharpen the hard gate (LAST — build now fails below 100%)
 

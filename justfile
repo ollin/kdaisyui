@@ -12,8 +12,9 @@ default:
 build:
     ./gradlew build :lib:publishToMavenLocal
 
+# Regenerate Kotlin components + their tests from the DaisyUI submodule
 generate:
-    cd codegen && npm install && npm run generate
+    ./gradlew :lib:generateComponents :lib:generateComponentTests
 
 # Regenerate Heroicons Kotlin source from Heroicons SVG submodule
 generate-heroicons:

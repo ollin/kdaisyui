@@ -7,8 +7,8 @@
 
 ## 2. Baseline measurement
 
-- [ ] 2.1 Run `./gradlew koverHtmlReport koverXmlReport` and record the aggregated baseline line% and branch% for `:lib` + `:ktor-integration` into the change README/notes (documentation; no code)
-- [ ] 2.2 From the report, list the uncovered classes/branches grouped by component batch below, to confirm the batch ordering matches reality (documentation; no code)
+- [x] 2.1 Run `./gradlew koverHtmlReport koverXmlReport` and record the aggregated baseline line% and branch% for `:lib` + `:ktor-integration` into the change README/notes (documentation; no code)
+- [x] 2.2 From the report, list the uncovered classes/branches grouped by component batch below, to confirm the batch ordering matches reality (documentation; no code)
 
 ## 3. Cover hand-written :lib core + icons
 

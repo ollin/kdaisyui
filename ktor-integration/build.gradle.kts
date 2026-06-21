@@ -22,6 +22,11 @@ dependencies {
     api(project(":lib"))
 
     api(libs.ktor.server.resources)
+
+    // DaisyUI CSS + Tailwind + htmx assets, served via Ktor's Webjars plugin.
+    // Exposed transitively so Ktor consumers get the matching asset versions.
+    api(libs.ktor.server.webjars)
+    api(libs.bundles.webjars)
 }
 
 testing {

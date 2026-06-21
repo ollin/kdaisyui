@@ -3,7 +3,6 @@ plugins {
     `maven-publish`
 }
 
-version = project.findProperty("version")?.toString() ?: "0.0.1-SNAPSHOT"
 group = "io.github.ollin.kdaisyui"
 
 base.archivesName.set("kdaisyui-ktor-integration")
@@ -77,7 +76,7 @@ publishing {
                 developers {
                     developer {
                         id.set("ollin")
-                        name.set("ollin")
+                        name.set("Oliver Nautsch")
                         email.set("ollin@users.noreply.github.com")
                     }
                 }
@@ -92,12 +91,8 @@ publishing {
     }
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ollin/kdaisyui")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
+            name = "staging"
+            url = rootProject.layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
         }
     }
 }

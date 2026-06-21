@@ -133,8 +133,10 @@ DaisyUI YAML frontmatter (daisyui/packages/docs/src/routes/(routes)/components/x
 | Demo app routes | `example-app/src/main/kotlin/kdaisyui/example/` |
 | E2E tests | `e2e-tests/src/test/kotlin/kdaisyui/e2e/` |
 | Build config | `buildSrc/`, `gradle.properties`, `settings.gradle.kts` |
-| Version pins | `gradle.properties`, `.tool-versions` |
-| Release config | `release-please-config.json`, `.release-please-manifest.json` |
+| Dependency/plugin/submodule versions | `gradle/libs.versions.toml` |
+| Project version (SemVer) | `gradle.properties` → `version=` |
+| Tooling versions | `.tool-versions` |
+| Release config | `build.gradle.kts` (`jreleaser {}`) |
 | CI workflows | `.github/workflows/` |
 
 ## CONVENTIONS
@@ -151,10 +153,9 @@ DaisyUI YAML frontmatter (daisyui/packages/docs/src/routes/(routes)/components/x
 
 - **NEVER** hand-edit files in `lib/build/generated/` — modify codegen instead
 - **NEVER** hardcode CSS class strings — use enum variants
-- **NEVER** manually bump `version=` in `gradle.properties` — release-please owns that
 - **NEVER** skip E2E tests for UI changes
 - **NEVER** use `com.github.ollin` package — correct package is `io.github.ollin`
-- **NEVER** manually set `-Pversion=` in workflows
+- **NEVER** hardcode dependency versions in build files — add them to `gradle/libs.versions.toml`
 
 ## COMMANDS
 
@@ -181,30 +182,35 @@ Raw Gradle commands (what just recipes call under the hood):
 
 ## RELEASE WORKFLOW
 
-**Maven coordinates:** `io.github.ollin.kdaisyui:kdaisyui` (published to GitHub Packages)
+**Published artifacts (Maven Central):**
+- `io.github.ollin.kdaisyui:kdaisyui` — core DSL
+- `io.github.ollin.kdaisyui:kdaisyui-ktor-integration` — Ktor integration
+- `io.github.ollin.kdaisyui:kdaisyui-bom` — BOM (java-platform) aligning the two
 
-**Versioning scheme (Debian-style):** `<daisyui-version>-<local-revision>`
+**Versioning:** plain SemVer (`MAJOR.MINOR.PATCH`), set in ONE central place — the
+`version` property in the root `gradle.properties`. All modules and JReleaser read it.
+It is independent of the DaisyUI/Tailwind versions (those live in `libs.versions.toml`).
 
-Example: `5.5.19-1` means DaisyUI 5.5.19, first release of our wrapper.
-
-Versioning is fully automated via [release-please](https://github.com/googleapis/release-please) + conventional commits:
+Releases use [JReleaser](https://jreleaser.org): it signs the artifacts (GPG), deploys all
+three modules to Maven Central, creates the GitHub Release with a changelog, and tags the
+git history. No tool edits repo content to bump the version — you set it in
+`gradle.properties` and push a matching `v<version>` tag.
 
 | Step | Trigger | What happens |
 |------|---------|-------------|
-| 1. Open PR | — | `pr-conventional-commits.yml` validates PR title against Conventional Commits spec |
-| 2. Merge PR to `main` | push to `main` | `release-please.yml` opens/updates a Release PR with version bump + CHANGELOG |
-| 3. Merge Release PR | push to `main` | release-please creates git tag (`v5.5.19-1`) + GitHub Release |
-| 4. Publish | GitHub Release created | `publish.yml` runs `./gradlew :lib:publish -Pversion=5.5.19-1` |
+| 1. Open PR | — | `pr-conventional-commits.yml` validates the PR title against Conventional Commits |
+| 2. Set version + merge | push to `main` | bump `version=` in `gradle.properties`, merge |
+| 3. Tag + push | `git tag v<version> && git push origin v<version>` | the tag triggers `release.yml` |
+| 4. Release | `v*` tag pushed | `release.yml` stages all modules, then JReleaser signs + deploys to Maven Central + creates the GitHub Release |
 
-**Version bump rules (conventional commits):**
-- `fix:` → local revision bump (`5.5.19-1` → `5.5.19-2`)
-- `feat:` → local revision bump (`5.5.19-1` → `5.5.19-2`)
-- DaisyUI version updates → manual version update in `gradle.properties`
+Maintainer one-time setup (manual): a Sonatype Central account, verification of the
+`io.github.ollin` namespace, the GPG signing key published to a keyserver, and the CI
+secrets (`JRELEASER_GPG_*`, `JRELEASER_MAVENCENTRAL_*`).
 
 **Key files:**
-- `release-please-config.json` — release type (`java`), component name
-- `.release-please-manifest.json` — current version tracked by release-please
-- `gradle.properties` → `version=` property — updated automatically by release-please on each release
+- `build.gradle.kts` (root) — the `jreleaser { }` config (release, signing, Maven Central deploy)
+- `.github/workflows/release.yml` — runs JReleaser on a `v*` tag
+- `gradle.properties` → `version=` — the single source of the project version
 
 ## AI SUPPORT
 
@@ -222,8 +228,11 @@ This project ships AI-ready context files for different audiences and tools:
 
 ## NOTES
 
-- Kotlin version split: `gradle.properties` (2.3.10) vs `libs.versions.toml` (2.3.20) — reconcile if issues
-- Missing root `build.gradle.kts` — config in subprojects only
+- All versions are centralized in `gradle/libs.versions.toml` (deps/plugins/submodule tags)
+  and `gradle.properties` (the project `version`). buildSrc reads the catalog via its own
+  `settings.gradle.kts` import; `settings.gradle.kts` reads the Kotlin version from the
+  catalog TOML directly (pluginManagement runs before the catalog exists).
+- The root `build.gradle.kts` hosts the JReleaser config; module config lives in subprojects.
 
 
 ## IntelliJ MCP Server - AVAILABLE AND PREFERRED

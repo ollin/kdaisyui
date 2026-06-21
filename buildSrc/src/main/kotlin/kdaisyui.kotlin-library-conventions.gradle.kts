@@ -37,7 +37,7 @@ tasks.withType<Jar>().configureEach {
         attributes(
             "Implementation-Title" to "${project.group}:${base.archivesName.get()}",
             "Implementation-Version" to project.version,
-            "Implementation-Vendor" to "ollin",
+            "Implementation-Vendor" to "Oliver Nautsch",
             "Implementation-URL" to "https://github.com/ollin/kdaisyui",
             "SCM-Revision" to gitHash.get(),
             "Kotlin-Version" to kotlinVersion,

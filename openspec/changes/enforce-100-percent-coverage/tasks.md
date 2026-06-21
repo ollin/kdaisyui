@@ -59,7 +59,7 @@
 
 ## 12. Cover :ktor-integration
 
-- [ ] 12.1 Add tests for `Resolvable.kt` covering all line+branch paths AND assert (feature-test; extend `ResolvableTest.kt`)
+- [x] 12.1 Add tests for `Resolvable.kt` covering all line+branch paths AND assert (feature-test; extend `ResolvableTest.kt`)
 
 ## 13. Close residual gaps + document exclusions
 

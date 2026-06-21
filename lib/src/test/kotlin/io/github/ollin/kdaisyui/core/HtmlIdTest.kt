@@ -2,7 +2,9 @@ package io.github.ollin.kdaisyui.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
 class HtmlIdTest {
 
@@ -11,6 +13,9 @@ class HtmlIdTest {
             class Nav(parent: Sidebar = Sidebar()) : AnnotatedIdBase("nav", parent)
 
             class Item(name: String, parent: Sidebar = Sidebar()) : NamedAnnotatedIdBase("item", name, parent)
+
+            class HtmlIdNamed(name: HtmlId, parent: Sidebar = Sidebar()) :
+                NamedAnnotatedIdBase("item", name, parent)
         }
 
         class Content(parent: AppIds = AppIds()) : AnnotatedIdBase("content", parent)
@@ -137,5 +142,73 @@ class HtmlIdTest {
     fun htmlIdToStringReturnsIdString() {
         val id = htmlId("test-id")
         assertEquals("test-id", id.toString())
+    }
+
+    @Test
+    fun annotatedIdEqualsItself() {
+        val nav = AppIds.Sidebar.Nav()
+        assertTrue(nav.equals(nav))
+    }
+
+    @Test
+    fun annotatedIdNotEqualToNonHtmlId() {
+        val nav = AppIds.Sidebar.Nav()
+        assertFalse(nav.equals("app-sidebar-nav"))
+    }
+
+    @Test
+    fun namedIdSecondaryConstructorAcceptsHtmlId() {
+        val item = AppIds.Sidebar.HtmlIdNamed(htmlId("x"))
+        assertEquals("app-sidebar-item-x", item.id)
+    }
+
+    @Test
+    fun namedIdEqualsItself() {
+        val item = AppIds.Sidebar.Item("1")
+        assertTrue(item.equals(item))
+    }
+
+    @Test
+    fun namedIdNotEqualToNonHtmlId() {
+        val item = AppIds.Sidebar.Item("1")
+        assertFalse(item.equals("app-sidebar-item-1"))
+    }
+
+    @Test
+    fun namedIdsWithDifferentIdsAreNotEqual() {
+        val item1 = AppIds.Sidebar.Item("a")
+        val item2 = AppIds.Sidebar.Item("b")
+        assertNotEquals<HtmlId>(item1, item2)
+    }
+
+    @Test
+    fun namedIdHashCodeMatchesIdHashCode() {
+        val item = AppIds.Sidebar.Item("1")
+        assertEquals(item.id.hashCode(), item.hashCode())
+    }
+
+    @Test
+    fun stringHtmlIdsWithSameValueAreEqual() {
+        assertEquals(htmlId("dup"), htmlId("dup"))
+        assertEquals(htmlId("dup").hashCode(), htmlId("dup").hashCode())
+    }
+
+    @Test
+    fun unboxedStringHtmlIdUsesValueClassTargetImpl() {
+        val id = StringHtmlId("widget")
+        assertEquals("#widget", id.target)
+        assertEquals("global #widget", id.targetGlobal)
+    }
+
+    class SuperCallingId(override val id: String) : HtmlId {
+        fun inheritedTarget(): String = super.target
+        fun inheritedTargetGlobal(): String = super.targetGlobal
+    }
+
+    @Test
+    fun defaultTargetReachableViaSuperCall() {
+        val id = SuperCallingId("widget")
+        assertEquals("#widget", id.inheritedTarget())
+        assertEquals("global #widget", id.inheritedTargetGlobal())
     }
 }

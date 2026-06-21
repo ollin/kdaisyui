@@ -39,7 +39,8 @@ This file provides project metadata for CodeSeeker's code analysis. For everythi
 | `example-app/src/main/kotlin/kdaisyui/example/` | Ktor demo server |
 | `e2e-tests/tests/` | Playwright E2E tests |
 | `buildSrc/` | Gradle convention plugins |
-| `gradle.properties` | Version pins (Kotlin 2.3.10, kotlinx-html 0.12.0, DaisyUI 5.5.19) |
+| `gradle.properties` | Project version (SemVer) |
+| `gradle/libs.versions.toml` | Dependency/plugin/submodule versions (Kotlin 2.4.0, kotlinx-html 0.12.0, DaisyUI 5.5.20, Ktor 3.5.0) |
 
 ## CodeSeeker Instructions
 

@@ -20,8 +20,7 @@ dependencies {
 
     implementation(libs.bundles.ktor.server.app)
 
-    // Webjars — served at /webjars/{name}/{file}
-    implementation(libs.bundles.webjars)
+    // Webjar assets (daisyui, tailwind, htmx) come transitively from :ktor-integration.
 
     implementation(libs.logback.classic)
 }

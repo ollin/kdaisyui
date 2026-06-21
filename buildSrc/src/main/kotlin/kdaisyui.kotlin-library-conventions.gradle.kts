@@ -1,9 +1,17 @@
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
     `java-library`
 }
+
+// Precompiled script plugins cannot use the generated `libs.*` type-safe
+// accessors, so resolve the catalog via VersionCatalogsExtension instead.
+val kotlinVersion = extensions
+    .getByType(VersionCatalogsExtension::class.java)
+    .named("libs")
+    .findVersion("kotlin").get().requiredVersion
 
 repositories {
     mavenCentral()
@@ -27,7 +35,7 @@ java {
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
-            useKotlinTest(project.property("versions.kotlin").toString())
+            useKotlinTest(kotlinVersion)
         }
     }
 }

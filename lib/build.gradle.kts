@@ -10,8 +10,8 @@ base.archivesName.set("kdaisyui")
 
 // --- DaisyUI submodule tag checkout ---
 
-val daisyuiVersion = project.property("daisyui.version").toString()
-val heroiconsVersion = project.property("heroicons.version").toString()
+val daisyuiVersion = libs.versions.daisyui.get()
+val heroiconsVersion = libs.versions.heroicons.get()
 
 // --- Git hash for manifest (lazy, configuration-cache safe) ---
 
@@ -44,7 +44,7 @@ tasks.withType<Jar> {
             "Implementation-URL" to "https://github.com/ollin/kdaisyui",
             "SCM-Revision" to gitHash,
             "DaisyUI-Version" to daisyuiVersion,
-            "Kotlin-Version" to project.property("versions.kotlin").toString(),
+            "Kotlin-Version" to libs.versions.kotlin.get(),
             "Created-By" to "Gradle ${gradle.gradleVersion}",
         )
     }
@@ -135,13 +135,13 @@ sourceSets {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-html-jvm:${project.property("versions.kotlinx-html")}")
+    api(libs.kotlinx.html.jvm)
 }
 
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
-            useKotlinTest(project.property("versions.kotlin").toString())
+            useKotlinTest(libs.versions.kotlin.get())
         }
     }
 }

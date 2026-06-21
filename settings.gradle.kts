@@ -7,7 +7,17 @@
  */
 
 pluginManagement {
-    val kotlinVersion = providers.gradleProperty("versions.kotlin").get()
+    // `pluginManagement` runs before the version catalog (`libs`) exists, so the
+    // type-safe `libs.*` accessors are not available here. Read the Kotlin version
+    // directly from the catalog TOML to keep libs.versions.toml the single source
+    // of truth. The `[versions] kotlin = "x.y.z"` line is matched with a minimal,
+    // dependency-free parser (JDK only).
+    val catalog = file("gradle/libs.versions.toml").readLines()
+    val kotlinVersion = catalog
+        .firstNotNullOfOrNull { line ->
+            Regex("""^\s*kotlin\s*=\s*"([^"]+)"\s*$""").find(line)?.groupValues?.get(1)
+        }
+        ?: error("Could not find `kotlin` version in gradle/libs.versions.toml")
     plugins {
         id("org.jetbrains.kotlin.jvm") version kotlinVersion
     }

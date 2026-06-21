@@ -1,6 +1,7 @@
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
+    alias(libs.plugins.kover)
 }
 
 group = "io.github.ollin.kdaisyui"

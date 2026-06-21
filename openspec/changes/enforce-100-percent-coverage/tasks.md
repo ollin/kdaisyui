@@ -19,43 +19,43 @@
 
 ## 4. Cover generated components — batch A (Alert–Carousel)
 
-- [ ] 4.1 Add render tests asserting HTML output for Alert, Avatar, Badge, Breadcrumbs, Button (feature-test; one test file/batch, `:lib:test`)
-- [ ] 4.2 Add render tests for Calendar, Card, Carousel incl. all variant/size/boolean-modifier branches (feature-test)
+- [x] 4.1 Add render tests asserting HTML output for Alert, Avatar, Badge, Breadcrumbs, Button (feature-test; one test file/batch, `:lib:test`)
+- [x] 4.2 Add render tests for Calendar, Card, Carousel incl. all variant/size/boolean-modifier branches (feature-test)
 
 ## 5. Cover generated components — batch B (Chat–Drawer)
 
-- [ ] 5.1 Add render tests for Chat, Checkbox, Collapse, Countdown, Diff (feature-test)
-- [ ] 5.2 Add render tests for Divider, Dock, Drawer incl. all branches (feature-test)
+- [x] 5.1 Add render tests for Chat, Checkbox, Collapse, Countdown, Diff (feature-test)
+- [x] 5.2 Add render tests for Divider, Dock, Drawer incl. all branches (feature-test)
 
 ## 6. Cover generated components — batch C (Dropdown–Hero)
 
-- [ ] 6.1 Add render tests for Dropdown, Fab, Fieldset, FileInput, Filter (feature-test)
-- [ ] 6.2 Add render tests for Footer, Hero incl. all branches (feature-test)
+- [x] 6.1 Add render tests for Dropdown, Fab, Fieldset, FileInput, Filter (feature-test)
+- [x] 6.2 Add render tests for Footer, Hero incl. all branches (feature-test)
 
 ## 7. Cover generated components — batch D (Hover3d–List)
 
-- [ ] 7.1 Add render tests for Hover3d, HoverGallery, Indicator, Input, Join (feature-test)
-- [ ] 7.2 Add render tests for Kbd, Label, Link, List incl. all branches (feature-test)
+- [x] 7.1 Add render tests for Hover3d, HoverGallery, Indicator, Input, Join (feature-test)
+- [x] 7.2 Add render tests for Kbd, Label, Link, List incl. all branches (feature-test)
 
 ## 8. Cover generated components — batch E (Loading–Modal)
 
-- [ ] 8.1 Add render tests for Loading, Mask, Menu (feature-test)
-- [ ] 8.2 Add render tests for MockupBrowser, MockupCode, MockupPhone, MockupWindow, Modal (feature-test)
+- [x] 8.1 Add render tests for Loading, Mask, Menu (feature-test)
+- [x] 8.2 Add render tests for MockupBrowser, MockupCode, MockupPhone, MockupWindow, Modal (feature-test)
 
 ## 9. Cover generated components — batch F (Navbar–Rating)
 
-- [ ] 9.1 Add render tests for Navbar, Progress, RadialProgress, Radio (feature-test)
-- [ ] 9.2 Add render tests for Range, Rating incl. all branches (feature-test)
+- [x] 9.1 Add render tests for Navbar, Progress, RadialProgress, Radio (feature-test)
+- [x] 9.2 Add render tests for Range, Rating incl. all branches (feature-test)
 
 ## 10. Cover generated components — batch G (Select–Steps)
 
-- [ ] 10.1 Add render tests for Select, Skeleton, Stack, Stat (feature-test)
-- [ ] 10.2 Add render tests for Status, Steps incl. all branches (feature-test)
+- [x] 10.1 Add render tests for Select, Skeleton, Stack, Stat (feature-test)
+- [x] 10.2 Add render tests for Status, Steps incl. all branches (feature-test)
 
 ## 11. Cover generated components — batch H (Swap–Validator)
 
-- [ ] 11.1 Add render tests for Swap, Tab, Table, Textarea (feature-test)
-- [ ] 11.2 Add render tests for TextRotate, ThemeController, Timeline, Toast, Toggle, Tooltip, Validator (feature-test)
+- [x] 11.1 Add render tests for Swap, Tab, Table, Textarea (feature-test)
+- [x] 11.2 Add render tests for TextRotate, ThemeController, Timeline, Toast, Toggle, Tooltip, Validator (feature-test)
 
 ## 12. Cover :ktor-integration
 

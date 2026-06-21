@@ -1,5 +1,3 @@
-import java.util.Properties
-
 repositories {
     gradlePluginPortal()
     mavenCentral()
@@ -19,14 +17,8 @@ java {
     }
 }
 
-val parentProps = file("../gradle.properties").inputStream().use {
-    Properties().apply { load(it) }
-}
-
-fun getVersion(key: String): String =
-    parentProps.getProperty(key) ?: error("Version '$key' not found in gradle.properties")
-
 dependencies {
-    implementation("org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:${getVersion("versions.kotlin")}")
-    implementation("org.jetbrains.kotlin:kotlin-serialization:${getVersion("versions.kotlin")}")
+    val kotlinVersion = libs.versions.kotlin.get()
+    implementation("org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
 }

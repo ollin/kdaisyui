@@ -21,20 +21,18 @@ kotlin {
 dependencies {
     api(project(":lib"))
 
-    val ktorVersion = project.property("versions.ktor").toString()
-    api("io.ktor:ktor-server-resources:$ktorVersion")
+    api(libs.ktor.server.resources)
 }
 
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
-            useKotlinTest(project.property("versions.kotlin").toString())
+            useKotlinTest(libs.versions.kotlin.get())
 
             dependencies {
-                val ktorVersion = project.property("versions.ktor").toString()
-                implementation("io.ktor:ktor-server-test-host:$ktorVersion")
-                implementation("io.ktor:ktor-server-core:$ktorVersion")
-                implementation("io.ktor:ktor-server-resources:$ktorVersion")
+                implementation(libs.ktor.server.test.host)
+                implementation(libs.ktor.server.core)
+                implementation(libs.ktor.server.resources)
             }
         }
     }

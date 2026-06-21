@@ -34,9 +34,9 @@ jobs:
 
       - name: Stage artifacts and run JReleaser
         run: >-
-          ./gradlew --no-daemon
+          ./gradlew --no-daemon --no-configuration-cache
           -Pversion=${{ steps.version.outputs.version }}
-          publish jreleaserFullRelease
+          clean jreleaserFullRelease
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}

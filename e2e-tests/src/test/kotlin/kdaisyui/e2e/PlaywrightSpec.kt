@@ -3,6 +3,7 @@ package kdaisyui.e2e
 import com.microsoft.playwright.Browser
 import com.microsoft.playwright.BrowserContext
 import com.microsoft.playwright.Page
+import com.microsoft.playwright.Tracing
 import io.kotest.core.spec.style.FunSpec
 import java.nio.file.Files
 import java.nio.file.Path
@@ -22,14 +23,17 @@ abstract class PlaywrightSpec : FunSpec() {
                 Browser.NewContextOptions().setBaseURL(BASE_URL)
             )
             _context!!.setDefaultTimeout(10_000.0)
+            _context!!.tracing().start(
+                Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true)
+            )
             _page = _context!!.newPage()
         }
 
         afterTest { (testCase, _) ->
+            val specName = testCase.spec::class.simpleName ?: "UnknownSpec"
+            val sanitized = testCase.name.name.replace(Regex("[^a-zA-Z0-9._-]"), "_")
             _page?.let { p ->
                 try {
-                    val specName = testCase.spec::class.simpleName ?: "UnknownSpec"
-                    val sanitized = testCase.name.name.replace(Regex("[^a-zA-Z0-9._-]"), "_")
                     val dir = Path.of("build/screenshots/$specName")
                     Files.createDirectories(dir)
                     p.screenshot(
@@ -39,6 +43,17 @@ abstract class PlaywrightSpec : FunSpec() {
                     )
                 } catch (e: Exception) {
                     System.err.println("Screenshot capture failed: ${e.message}")
+                }
+            }
+            _context?.let { ctx ->
+                try {
+                    val traceDir = Path.of("build/reports/playwright/$specName")
+                    Files.createDirectories(traceDir)
+                    ctx.tracing().stop(
+                        Tracing.StopOptions().setPath(traceDir.resolve("$sanitized.zip"))
+                    )
+                } catch (e: Exception) {
+                    System.err.println("Trace capture failed: ${e.message}")
                 }
             }
             _context?.close()

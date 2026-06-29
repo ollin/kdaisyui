@@ -2,14 +2,23 @@ package io.github.ollin.kdaisyui.ktor
 
 import io.github.ollin.kdaisyui.core.AnnotatedIdBase
 import io.github.ollin.kdaisyui.core.htmlId
+import io.ktor.resources.Resource
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.resources.Resources
+import io.ktor.server.testing.testApplication
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 import kotlin.test.assertIs
 
 class AppIds : AnnotatedIdBase("app") {
     class Sidebar(parent: AppIds = AppIds()) : AnnotatedIdBase("sidebar", parent)
     class Content(parent: AppIds = AppIds()) : AnnotatedIdBase("content", parent)
 }
+
+@Resource("/dashboard")
+class DashboardResource
 
 class ResolvableTest {
 
@@ -72,4 +81,39 @@ class ResolvableTest {
         val sidebar = AppIds.Sidebar()
         assertEquals(sidebar.target, sidebar.asResolvable().href)
     }
+
+    @Test
+    fun contextAsResolvableCoversAllBranches() = withResolutionContext {
+        val existing: Resolvable = StringResolvable("/dashboard")
+        assertEquals(existing, resolveAnyViaContext(existing))
+        assertEquals("#submit", resolveAnyViaContext(htmlId("submit")).href)
+        assertEquals("/custom", resolveAnyViaContext("/custom").href)
+        assertFails { resolveAnyViaContext(Any()) }
+        assertEquals("/dashboard", DashboardResource().asResolvable().href)
+    }
+
+    @Test
+    fun contextHrefCoversAllBranches() = withResolutionContext {
+        assertEquals("/dashboard", hrefOfAnyViaContext(StringResolvable("/dashboard")))
+        assertEquals("#submit", hrefOfAnyViaContext(htmlId("submit")))
+        assertEquals("/custom", hrefOfAnyViaContext("/custom"))
+        assertFails { hrefOfAnyViaContext(Any()) }
+        assertEquals("/dashboard", DashboardResource().href)
+    }
 }
+
+private fun withResolutionContext(assertions: ApplicationResolution.() -> Unit) = testApplication {
+    lateinit var app: Application
+    application {
+        install(Resources)
+        app = this
+    }
+    startApplication()
+    ApplicationResolution(app).assertions()
+}
+
+context(appResolution: ApplicationResolution)
+private fun resolveAnyViaContext(value: Any): Resolvable = value.asResolvable()
+
+context(appResolution: ApplicationResolution)
+private fun hrefOfAnyViaContext(value: Any): String = value.href

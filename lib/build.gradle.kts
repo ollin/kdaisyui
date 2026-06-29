@@ -1,6 +1,7 @@
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
+    alias(libs.plugins.kover)
 }
 
 group = "io.github.ollin.kdaisyui"
@@ -148,6 +149,20 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     outputs.dir(outputDir)
 }
 
+val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
+    group = "codegen"
+    description = "Regenerate exhaustive Kotlin icon render tests from Heroicons SVG source (git submodule)"
+    dependsOn(checkoutHeroiconsTag)
+    workingDir = rootProject.file("codegen")
+    val outputDir = generatedTestDir.map { it.dir("io/github/ollin/kdaisyui/icons") }
+    doFirst { outputDir.get().asFile.mkdirs() }
+    commandLine("sh", "-c", "npm install --silent && node src/test-generator-heroicons.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("heroicons/src"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    outputs.dir(outputDir)
+}
+
 val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     group = "codegen"
     description = "Regenerate Kotlin icon functions from Heroicons SVG source (git submodule)"
@@ -169,6 +184,7 @@ tasks.named("compileKotlin") {
 
 tasks.named("compileTestKotlin") {
     dependsOn(generateComponentTests)
+    dependsOn(generateHeroiconTests)
 }
 
 // Sources JAR for Maven Central

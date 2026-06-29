@@ -311,6 +311,299 @@ function generateForComponent(componentName, config) {
   return { success: true, testCount: testCases.length }
 }
 
+// Exhaustive branch-coverage tests: parse each generated component source and
+// drive every branch of every function with assertions on the rendered HTML.
+
+const GENERATED_MAIN_DIR = path.resolve(
+  import.meta.dirname,
+  '../../lib/build/generated/sources/kotlin/main/io/github/ollin/kdaisyui/components',
+)
+
+// Enum types from kotlinx.html (not declared in the source): arms can't be
+// enumerated, so the `!= null` branch is driven once with a known value.
+const EXTERNAL_ENUM_VALUES = { ButtonType: 'ButtonType.button' }
+const EXTERNAL_ENUM_IMPORTS = { ButtonType: 'import kotlinx.html.ButtonType' }
+
+function lowerFirst(s) {
+  return s.charAt(0).toLowerCase() + s.slice(1)
+}
+
+/** Walk from an opening delimiter to its matching close, respecting nesting. */
+function matchDelimiter(str, openIdx, open, close) {
+  let depth = 0
+  for (let i = openIdx; i < str.length; i++) {
+    if (str[i] === open) depth++
+    else if (str[i] === close && --depth === 0) return i
+  }
+  throw new Error(`Unbalanced ${open} from index ${openIdx}`)
+}
+
+/** Map enumTypeName -> [{ entry, css }] for class-mapping enums in the file. */
+function parseEnumDefinitions(content) {
+  const enums = {}
+  const re = /enum class (\w+)\(internal val className: String\)\s*\{([\s\S]*?)\n\}/g
+  let m
+  while ((m = re.exec(content)) !== null) {
+    const entries = []
+    const entryRe = /^\s*(\w+)\("([^"]+)"\),?\s*$/gm
+    let em
+    while ((em = entryRe.exec(m[2])) !== null) {
+      entries.push({ entry: em[1], css: em[2] })
+    }
+    enums[m[1]] = entries
+  }
+  return enums
+}
+
+/** Extract every generated `fun <Receiver>.daisy<Name>(...) { ... }` block. */
+function findFunctions(content) {
+  const funcs = []
+  const headerRe = /fun\s+(\w+)\.daisy(\w+)\s*\(/g
+  let m
+  while ((m = headerRe.exec(content)) !== null) {
+    const parenStart = headerRe.lastIndex - 1
+    const parenEnd = matchDelimiter(content, parenStart, '(', ')')
+    const braceStart = content.indexOf('{', parenEnd)
+    const braceEnd = matchDelimiter(content, braceStart, '{', '}')
+    funcs.push({
+      receiver: m[1],
+      name: m[2],
+      paramBlock: content.slice(parenStart + 1, parenEnd),
+      body: content.slice(braceStart + 1, braceEnd),
+    })
+    headerRe.lastIndex = braceEnd
+  }
+  return funcs
+}
+
+/** Split a param block on top-level commas (parens protect lambda types). */
+function splitParams(block) {
+  const parts = []
+  let depth = 0
+  let last = 0
+  for (let i = 0; i < block.length; i++) {
+    const ch = block[i]
+    if (ch === '(') depth++
+    else if (ch === ')') depth--
+    else if (ch === ',' && depth === 0) {
+      parts.push(block.slice(last, i))
+      last = i + 1
+    }
+  }
+  const tail = block.slice(last)
+  if (tail.trim()) parts.push(tail)
+  return parts.map((p) => p.trim()).filter(Boolean)
+}
+
+const PARAM_KIND_RULES = [
+  [(c) => c.baseType === 'Boolean', 'boolean'],
+  [(c) => c.name === 'id', 'id'],
+  [(c) => c.name === 'extraClasses', 'extraClasses'],
+  [(c) => c.name === 'attrs', 'attrs'],
+  [(c) => c.name === 'content', (c) => (c.nullable ? 'contentOptional' : 'contentRequired')],
+  [(c) => c.name === 'text' && c.baseType === 'String', 'text'],
+  [(c) => c.nullable && c.baseType === 'String', 'nullableString'],
+  [(c) => c.nullable && c.enums[c.baseType], 'enumClass'],
+  [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
+  [(c) => !c.nullable && c.hasDefault, 'presetNonNull'],
+]
+
+function paramKind(ctx) {
+  for (const [matches, kind] of PARAM_KIND_RULES) {
+    if (matches(ctx)) return typeof kind === 'function' ? kind(ctx) : kind
+  }
+  return 'other'
+}
+
+function classifyParam(raw, enums) {
+  const colon = raw.indexOf(':')
+  const name = raw.slice(0, colon).trim()
+  const rest = raw.slice(colon + 1).trim()
+  const eq = rest.indexOf('=')
+  const type = (eq >= 0 ? rest.slice(0, eq) : rest).trim()
+  const nullable = type.endsWith('?')
+  const baseType = (nullable ? type.slice(0, -1) : type).trim()
+  const kind = paramKind({ name, baseType, nullable, hasDefault: eq >= 0, enums })
+  return { name, type, baseType, nullable, hasDefault: eq >= 0, kind, enumEntries: kind === 'enumClass' ? enums[baseType] : null }
+}
+
+/** The single unguarded `addClassNames("...")` that names this element. */
+function parseBaseClass(body) {
+  const m = body.match(/^\s*addClassNames\("([^"]+)"\)\s*$/m)
+  return m ? m[1] : null
+}
+
+/** CSS class(es) a boolean modifier adds via `if (param) addClassNames("...")`. */
+function boolClassesFor(body, param) {
+  const line = body.match(new RegExp(`^\\s*if \\(${param}\\)(.*)$`, 'm'))
+  if (!line) return []
+  const css = []
+  const re = /addClassNames\("([^"]+)"\)/g
+  let m
+  while ((m = re.exec(line[1])) !== null) css.push(m[1])
+  return css
+}
+
+function sortedClasses(arr) {
+  return [...new Set(arr.filter(Boolean))].sort().join(' ')
+}
+
+const ACTUAL_CLASSES =
+  'val actualClasses = html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" ")'
+
+function renderTest(funcName, wrapperFn, callArgs, asserts) {
+  const argStr = callArgs.length ? `\n${callArgs.map((a) => `                ${a},`).join('\n')}\n            ` : ''
+  return `
+    @Test
+    fun ${funcName}() {
+        val html = createHTML(prettyPrint = false).${wrapperFn} {
+            daisy${''}REPLACE(${argStr})
+        }
+${asserts.map((a) => `        ${a}`).join('\n')}
+    }
+`
+}
+
+function coverageContext(fn, enums) {
+  const params = splitParams(fn.paramBlock).map((raw) => classifyParam(raw, enums))
+  return {
+    params,
+    body: fn.body,
+    base: parseBaseClass(fn.body) || '',
+    wrapperFn: fn.receiver === 'FlowContent' ? 'div' : htmlTagFnFor(fn.receiver.toLowerCase()),
+    fnBase: lowerFirst(fn.name),
+    daisyName: fn.name,
+    required: params.find((p) => p.kind === 'contentRequired'),
+    hasContent: params.some((p) => p.kind === 'contentRequired' || p.kind === 'contentOptional'),
+    textParam: params.find((p) => p.kind === 'text'),
+  }
+}
+
+function wrapTest(ctx, tname, args, asserts) {
+  return renderTest(tname, ctx.wrapperFn, args, asserts).replace(`daisyREPLACE`, `daisy${ctx.daisyName}`)
+}
+
+function defaultsTest(ctx) {
+  const args = ctx.required ? ['content = { }'] : []
+  const asserts = ctx.base
+    ? [ACTUAL_CLASSES, `assertEquals("${ctx.base}", actualClasses, "${ctx.daisyName} defaults")`]
+    : [`assertTrue(!html.contains("class=\\""), "${ctx.daisyName} defaults emits no class")`]
+  return wrapTest(ctx, `${ctx.fnBase}_defaults`, args, asserts)
+}
+
+function allFlagsArgs(ctx, boolCss) {
+  const args = ['id = htmlId("x-cov-id")']
+  for (const b of ctx.params.filter((p) => p.kind === 'boolean')) {
+    args.push(`${b.name} = true`)
+    boolCss.push(...boolClassesFor(ctx.body, b.name))
+  }
+  for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
+  for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
+  args.push('extraClasses = "zz-extra"', 'attrs = { attributes["data-attrs"] = "yes" }')
+  if (ctx.hasContent) args.push('content = { attributes["data-content"] = "yes" }')
+  return args
+}
+
+function allFlagsAsserts(ctx, boolCss) {
+  const asserts = [
+    ACTUAL_CLASSES,
+    `assertEquals("${sortedClasses([ctx.base, ...boolCss, 'zz-extra'])}", actualClasses, "${ctx.daisyName} all flags")`,
+    `assertTrue(html.contains("id=\\"x-cov-id\\""), "${ctx.daisyName} id")`,
+    `assertTrue(html.contains("data-attrs=\\"yes\\""), "${ctx.daisyName} attrs")`,
+  ]
+  if (ctx.hasContent) asserts.push(`assertTrue(html.contains("data-content=\\"yes\\""), "${ctx.daisyName} content")`)
+  for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
+    asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)
+  }
+  return asserts
+}
+
+function allFlagsTest(ctx) {
+  const boolCss = []
+  const args = allFlagsArgs(ctx, boolCss)
+  return wrapTest(ctx, `${ctx.fnBase}_all_flags`, args, allFlagsAsserts(ctx, boolCss))
+}
+
+function enumArmTests(ctx) {
+  let tests = ''
+  for (const e of ctx.params.filter((p) => p.kind === 'enumClass')) {
+    for (const { entry, css } of e.enumEntries) {
+      const args = ctx.required ? [`${e.name} = ${e.baseType}.${entry}`, 'content = { }'] : [`${e.name} = ${e.baseType}.${entry}`]
+      const asserts = [ACTUAL_CLASSES, `assertEquals("${sortedClasses([ctx.base, css])}", actualClasses, "${ctx.daisyName} ${e.name} ${entry}")`]
+      tests += wrapTest(ctx, `${ctx.fnBase}_${e.name}_${entry.toLowerCase()}`, args, asserts)
+    }
+  }
+  return tests
+}
+
+function textArmTest(ctx) {
+  if (!ctx.textParam) return ''
+  const asserts = [
+    ACTUAL_CLASSES,
+    `assertEquals("${ctx.base}", actualClasses, "${ctx.daisyName} text")`,
+    `assertTrue(html.contains("txtmark"), "${ctx.daisyName} text content")`,
+  ]
+  return wrapTest(ctx, `${ctx.fnBase}_text`, ['text = "txtmark"'], asserts)
+}
+
+function buildCoverageTests(fn, enums) {
+  const ctx = coverageContext(fn, enums)
+  return defaultsTest(ctx) + allFlagsTest(ctx) + enumArmTests(ctx) + textArmTest(ctx)
+}
+
+function generateCoverageForFile(fileName) {
+  const filePath = path.join(GENERATED_MAIN_DIR, fileName)
+  const content = fs.readFileSync(filePath, 'utf8')
+  const className = fileName.replace(/\.kt$/, '')
+  const enums = parseEnumDefinitions(content)
+  const funcs = findFunctions(content)
+  if (funcs.length === 0) return { success: false, error: 'No functions' }
+
+  const imports = new Set([
+    'import io.github.ollin.kdaisyui.core.htmlId',
+    'import kotlinx.html.div',
+    'import kotlinx.html.stream.createHTML',
+    'import kotlin.test.Test',
+    'import kotlin.test.assertEquals',
+    'import kotlin.test.assertTrue',
+  ])
+  for (const fn of funcs) {
+    if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(fn.receiver.toLowerCase())}`)
+    for (const raw of splitParams(fn.paramBlock)) {
+      const p = classifyParam(raw, enums)
+      if (p.kind === 'enumExternal' && EXTERNAL_ENUM_IMPORTS[p.baseType]) imports.add(EXTERNAL_ENUM_IMPORTS[p.baseType])
+    }
+  }
+
+  let body = ''
+  for (const fn of funcs) body += buildCoverageTests(fn, enums)
+
+  const kotlin = `package io.github.ollin.kdaisyui.components
+
+${[...imports].sort().join('\n')}
+
+class ${className}CoverageTest {
+${body}}
+`
+  fs.writeFileSync(path.join(OUTPUT_DIR, `${className}CoverageTest.kt`), kotlin)
+  return { success: true, funcCount: funcs.length }
+}
+
+function generateAllCoverage() {
+  if (!fs.existsSync(GENERATED_MAIN_DIR)) {
+    console.error(`  ⚠ generated component sources not found at ${GENERATED_MAIN_DIR}; skipping coverage tests`)
+    return
+  }
+  const files = fs.readdirSync(GENERATED_MAIN_DIR).filter((f) => f.endsWith('.kt')).sort()
+  let generated = 0
+  for (const file of files) {
+    const result = generateCoverageForFile(file)
+    if (result.success) generated++
+    else console.log(`  ⊘ coverage ${file}: ${result.error}`)
+  }
+  console.log(`Generated coverage tests for ${generated} component files`)
+}
+
 function main() {
   const args = process.argv.slice(2)
   const mode = args[0]
@@ -342,6 +635,7 @@ function main() {
     }
     
     console.log(`\nGenerated tests for ${generated} components, skipped ${skipped}`)
+    generateAllCoverage()
   } else if (mode) {
     if (config.skip?.includes(mode)) {
       console.error(`Error: ${mode} is skipped (alias)`)

@@ -1,9 +1,84 @@
 plugins {
     base
     alias(libs.plugins.jreleaser)
+    alias(libs.plugins.kover)
 }
 
 group = "io.github.ollin.kdaisyui"
+
+// The root aggregates coverage at build time, so it must resolve Kover's own
+// runtime artifacts (the JVM coverage agent + reporter). The measured modules
+// declare their own repositories; the root needs its own for the Kover toolchain.
+repositories {
+    mavenCentral()
+}
+
+// Root-level coverage aggregation: merge the published library modules into one
+// report. Only :lib and :ktor-integration are measured; :example-app, :e2e-tests,
+// and :bom are intentionally out of scope (demo / test code / no code).
+dependencies {
+    kover(project(":lib"))
+    kover(project(":ktor-integration"))
+}
+
+// Aggregated coverage reports. The hard verify rule is added LAST (see the
+// staged rollout in design.md D5) — until then the build stays green: Kover is
+// present and reports are produced, but nothing fails on a shortfall.
+kover {
+    reports {
+        // Exclude the synthetic `$DefaultImpls` interface-default bridge classes
+        // (design.md D4: an exclusion is explicit + justified, never silent).
+        //
+        // Kotlin 2.4 compiles interface default methods (HtmlId.target /
+        // targetGlobal) with `-jvm-default=enable` by default. The real method
+        // bodies live in the interface and ARE measured at 100% (HtmlId.getTarget
+        // / getTargetGlobal). In ENABLE mode the compiler ADDITIONALLY emits a
+        // static `HtmlId$DefaultImpls` class holding binary-compatibility bridge
+        // stubs. Those bridges are only ever invoked by consumers compiled against
+        // the legacy (disable-mode) ABI; every current-ABI Kotlin/Java caller —
+        // including a `super<HtmlId>.target` super-call (tested) — routes to the
+        // interface default directly, NEVER the bridge. They are therefore
+        // provably unreachable from any source-level test (2 lines, 2 methods).
+        //
+        // We exclude them rather than (a) faking coverage, or (b) switching :lib
+        // to `-Xjvm-default=no-compatibility` — which would remove the bridges but
+        // is an ABI change to a published Maven Central artifact, contradicting the
+        // proposal's "no impact on published artifacts" constraint. The exclusion
+        // is ABI-neutral and reversible.
+        filters {
+            excludes {
+                classes("*\$DefaultImpls")
+            }
+        }
+        total {
+            html { onCheck = true }
+            xml { onCheck = true }
+            // The hard gate (added LAST per the staged rollout, design.md D5):
+            // 100% LINE and 100% BRANCH for the aggregated in-scope modules, or
+            // the build fails. Bound to `check` via onCheck, so `./gradlew check`
+            // (locally and in CI) fails on any shortfall — no separately named task.
+            verify {
+                onCheck = true
+                rule("100% line coverage") {
+                    bound {
+                        minValue = 100
+                        coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+                        aggregationForGroup =
+                            kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+                rule("100% branch coverage") {
+                    bound {
+                        minValue = 100
+                        coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.BRANCH
+                        aggregationForGroup =
+                            kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
+        }
+    }
+}
 
 jreleaser {
     project {

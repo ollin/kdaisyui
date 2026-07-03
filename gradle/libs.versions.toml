@@ -14,7 +14,7 @@ kover = "0.9.8"
 # Codegen submodule tags (drive `git checkout` of the daisyui/heroicons submodules).
 # daisyui must stay at a version that also has a published webjar (see webjar-daisyui
 # library below), so generated components never reference CSS absent from the webjar.
-daisyui = "5.6.3"
+daisyui = "5.6.10"
 heroicons = "2.2.0"
 
 # DaisyUI 5 is a Tailwind v4 plugin; this is the exact tailwind version the pinned

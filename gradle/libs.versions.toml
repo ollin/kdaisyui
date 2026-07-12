@@ -26,7 +26,7 @@ webjar-htmx = "2.0.10"
 playwright = "1.61.0"
 kotest = "6.2.2"
 cucumber = "7.34.4"
-junit-platform = "6.1.1"
+junit-platform = "6.1.2"
 
 [libraries]
 kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kotlinx-html" }

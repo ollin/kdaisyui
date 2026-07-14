@@ -4,7 +4,7 @@
 # at release time; local builds fall back to the value in each module's build script.
 
 [versions]
-kotlin = "2.4.0"
+kotlin = "2.4.10"
 kotlinx-html = "0.12.0"
 ktor = "3.5.1"
 logback = "1.5.38"

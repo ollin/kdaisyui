@@ -24,7 +24,7 @@ webjar-htmx = "2.0.10"
 
 # E2E test stack
 playwright = "1.61.0"
-kotest = "6.2.2"
+kotest = "6.2.3"
 cucumber = "7.34.4"
 junit-platform = "6.1.2"
 

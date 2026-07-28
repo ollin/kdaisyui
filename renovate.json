@@ -51,6 +51,23 @@
       "description": "Pin GitHub Actions to digest for security",
       "matchManagers": ["github-actions"],
       "pinDigests": false
+    },
+    {
+      "description": "A DaisyUI bump moves the submodule tag and regenerates every component — always review. Capped at 5.5.22: DaisyUI 5.5.23 removed the static packages/docs/static/llms.txt that codegen/src/parser/llms-txt.js reads, so anything above breaks :lib:generateComponents. Lift this cap only together with a reworked parser.",
+      "matchDepNames": ["org.webjars.npm:daisyui"],
+      "automerge": false,
+      "allowedVersions": "<=5.5.22"
+    }
+  ],
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "daisyui.version in gradle.properties is the single source of truth for the submodule tag, the codegen input and the served webjar. Tracked against the webjar on Maven Central so a version is only ever offered when the CSS artifact actually exists.",
+      "managerFilePatterns": ["/(^|/)gradle\\.properties$/"],
+      "matchStrings": ["daisyui\\.version=(?<currentValue>.+)"],
+      "depNameTemplate": "org.webjars.npm:daisyui",
+      "datasourceTemplate": "maven"
     }
   ],
 

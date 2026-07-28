@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.ollin.kdaisyui:kdaisyui:5.5.19-1")
+    implementation("io.github.ollin.kdaisyui:kdaisyui:5.5.20-1")
 }
 ```
 
@@ -133,11 +133,10 @@ This project ships AI-ready context files so AI tools can work with kdaisyui eff
 
 | Audience | File | Purpose |
 |---|---|---|
-| Contributors (all AI tools) | [`AGENTS.md`](AGENTS.md) | Single source of truth: conventions, codegen, anti-patterns |
-| Claude Code | [`CLAUDE.md`](CLAUDE.md) | Points to AGENTS.md + Claude-specific tips |
-| GitHub Copilot Agent | [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Links to AGENTS.md + quick reference |
-| CodeSeeker | [`CODESEEKER.md`](CODESEEKER.md) | Project metadata for code analysis |
-| Library users (any AI) | [`llms.txt`](llms.txt) | API reference — all 63 components, usage examples |
+| Contributors (all AI tools) | [`AGENTS.md`](AGENTS.md) | Single source of truth: conventions, codegen, tooling, anti-patterns |
+| Claude Code | [`CLAUDE.md`](CLAUDE.md) | Thin pointer to AGENTS.md |
+| GitHub Copilot Agent | [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin pointer to AGENTS.md |
+| Library users (any AI) | [`llms.txt`](llms.txt) | API reference for consuming the library |
 
 If you're using kdaisyui as a dependency and want AI assistance, point your AI tool to [`llms.txt`](llms.txt).
 

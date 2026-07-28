@@ -57,24 +57,24 @@
   "gradle": {
     "enabled": true,
     "managerFilePatterns": [
-      "/(^|/)build\.gradle\.kts$/",
-      "/(^|/)settings\.gradle\.kts$/",
-      "/(^|/)gradle\.properties$/",
-      "/(^|/)buildSrc/.+\.gradle\.kts$/"
+      "/(^|/)build\\.gradle\\.kts$/",
+      "/(^|/)settings\\.gradle\\.kts$/",
+      "/(^|/)gradle\\.properties$/",
+      "/(^|/)buildSrc/.+\\.gradle\\.kts$/"
     ]
   },
 
   "npm": {
     "enabled": true,
     "managerFilePatterns": [
-      "/(^|/)e2e-tests/package\.json$/"
+      "/(^|/)e2e-tests/package\\.json$/"
     ]
   },
 
   "github-actions": {
     "enabled": true,
     "managerFilePatterns": [
-      "/^\.github/workflows/[^/]+\.ya?ml$/"
+      "/^\\.github/workflows/[^/]+\\.ya?ml$/"
     ]
   }
 }

@@ -70,6 +70,26 @@ preserve build determinism:
    network-dependent and non-reproducible, which is exactly what the single-source-of-truth
    setup exists to prevent
 
+## Component shape
+
+Every generated component follows this shape:
+
+```kotlin
+fun FlowContent.daisyButton(
+    text: String? = null,
+    id: HtmlId? = null,                  // type-safe id from TagId.kt
+    variant: ButtonVariant? = null,      // btn-primary, btn-secondary, …
+    size: ButtonSize? = null,            // btn-sm, btn-lg, …
+    outline: Boolean = false,            // plain modifier → btn-outline
+    extraClasses: String? = null,        // escape hatch: raw classes
+    attrs: (BUTTON.() -> Unit)? = null,  // escape hatch: raw tag access
+    content: (BUTTON.() -> Unit)? = null,
+)
+```
+
+CSS class → Kotlin: `btn-primary` → `ButtonVariant.Primary`; plain modifiers become booleans.
+Consumers never hardcode class strings — they use the enums, or `extraClasses` when nothing fits.
+
 ## Never edit generated files
 
 `lib/build/generated/**` is build output and is overwritten on every compile. Change the
@@ -115,11 +135,15 @@ daisyui/packages/docs/src/routes/(routes)/components/<name>/+page.md   (YAML fro
 
 Heroicons runs a separate path: `parser/svg-heroicons.js` → `generator-heroicons.js`.
 
-## Legacy files
+## Dead files — do not edit, do not revive
 
-`codegen/src/index.js`, `generator.js` and `classify.js` appear superseded by the `*-new.js`
-pair — nothing in `lib/build.gradle.kts` references them. Verify before assuming they are live,
-and do not edit them expecting an effect.
+`codegen/src/index.js`, `generator.js` and `classify.js` are superseded by the `*-new.js` pair.
+Nothing references them: `lib/build.gradle.kts` invokes only `index-new.js`,
+`index-heroicons.js` and `test-generator.js`, and `test-generator.js` imports `./classifier.js`
+— not `classify.js`. They are pending deletion; editing them has no effect.
+
+Delete them and this section together. `codegen/src` is a declared input of the generate tasks,
+so a `:lib:generateComponents` run after the deletion proves nothing depended on them.
 
 ## Verifying a codegen change
 

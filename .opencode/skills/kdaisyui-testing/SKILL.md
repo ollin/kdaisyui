@@ -33,13 +33,15 @@ Style: render with `createHTML().div { … }` and assert against the produced HT
 ## 3. End-to-end — `:e2e-tests:test`
 
 Two styles coexist in one module, both on the JUnit Platform, both in the same `test` task.
+Exact Kotest, Cucumber and Playwright versions live in `e2e-tests/build.gradle.kts` — read them
+there rather than restating them here.
 
-**Kotest 6.1.11** specs:
+**Kotest** specs:
 `PlaywrightSpec.kt`, `SharedInfrastructure.kt`, `DashboardShellTest.kt`,
 `CardsRow1FragmentTest.kt`, `FormsFragmentTest.kt`, `HtmxProgressiveLoadingTest.kt`,
 `StatsFragmentTest.kt`, `TeamFragmentTest.kt`, `WebjarsAssetsTest.kt`
 
-**Cucumber BDD 7.34.3**:
+**Cucumber BDD**:
 - features: `e2e-tests/src/test/resources/kdaisyui/e2e/steps/*.feature` (7 files)
 - steps: `e2e-tests/src/test/kotlin/kdaisyui/e2e/steps/` — `CucumberHooks.kt`,
   `FragmentSteps.kt`, `NavigationSteps.kt`, `PlaywrightWorld.kt`
@@ -49,7 +51,7 @@ Two styles coexist in one module, both on the JUnit Platform, both in the same `
 
 ### Environment
 
-- **Playwright Java** 1.60.0 — not the Node runner, so there is no `npx playwright`
+- **Playwright Java** — not the Node runner, so there is no `npx playwright`
 - `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`: the build reuses a **system Chromium**, autodetected
   from `chromium`, `chromium-browser`, `google-chrome-stable`, `google-chrome`. Override with
   `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`.
@@ -59,17 +61,35 @@ Two styles coexist in one module, both on the JUnit Platform, both in the same `
 
 ## Running tests
 
-Terminal is disabled in this repo. Use run configurations or the Gradle MCP:
+Terminal is disabled in this repo — drive Gradle through the Gradle MCP, or use an IDE run
+configuration.
 
-| Want | Use |
+| Want | Gradle task |
 |---|---|
-| Unit tests | run config `kdaisyUI [:lib:test]`, or `mcp_Gradle_gradle` → `:lib:test` |
-| E2E | `mcp_Gradle_gradle` → `:e2e-tests:test` |
-| A single Playwright spec | run config `Dashboard shell` |
-| Demo server | run config `kdaisyui [:example-app:run]` or `ApplicationKt` |
+| Unit tests | `:lib:test` |
+| E2E | `:e2e-tests:test` |
+| Regenerate components | `:lib:generateComponents` |
+| Demo server | `:example-app:run` |
 
-For failures use `mcp_Gradle_inspect_build` with `testName` and `mode="details"` — it returns
+For failures query the Gradle MCP build result with the `testName` and full detail — it returns
 the stack trace and captured output. Do not re-read raw console logs.
+
+### IDE run configurations
+
+`kdaisyUI [:lib:test]` · `kdaisyUI [:lib:generateComponents]` · `kdaisyui [:example-app:run]` ·
+`ApplicationKt` (Ktor) · `Dashboard shell` (Playwright)
+
+These are **not committed** — there is no `.run/` and no `.idea/runConfigurations/`, so a fresh
+checkout will not have them. Fall back to the Gradle tasks above.
+
+### just recipes
+
+`test` · `e2e` · `test-all` · `dev` · `build` (also runs `publishToMavenLocal`) · `generate` ·
+`generate-heroicons` · `sync-daisyui` · `sync-heroicons` · `clean` (also removes
+`e2e-tests/build`)
+
+`just generate` is a *separate* npm path. A normal Gradle build already regenerates, because
+`compileKotlin dependsOn generateComponents, generateHeroicons`.
 
 ## CI
 

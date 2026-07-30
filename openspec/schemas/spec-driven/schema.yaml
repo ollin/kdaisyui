@@ -246,6 +246,21 @@ apply:
     Read context files, work through pending tasks, mark complete as you go.
     Pause if you hit blockers or need clarification.
 
+    DONE MEANS THE FULL SUITE. This schema is for work whose answer was knowable in
+    advance, so the bar is the ordinary one and there is no situational discount:
+
+    - a repo-wide compile of production AND test sources;
+    - `./gradlew :lib:test` AND `./gradlew :e2e-tests:test`. A scoped run is not
+      green - it hides cross-module ripple;
+    - the e2e layer is never optional. It boots an in-process Ktor server and drives
+      a real Chromium through Playwright, so it is the only layer that catches boot
+      and rendering defects. Confirm the reports under `e2e-tests/build/reports/`
+      exist rather than trusting an exit code.
+
+    A red test here is a defect to fix, not a finding. That is the difference from a
+    probe: this plan claimed to know what the system should do, so a failure means
+    the implementation is wrong - or the claim was.
+
     If implementation reveals that the information this plan assumed to exist does
     not in fact exist, stop and return to gate.md. That is a demotion to a probe,
     not a failure of the plan.

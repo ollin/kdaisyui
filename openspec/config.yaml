@@ -62,13 +62,9 @@ rules:
 operations:
   apply:
     guidance:
-      - "Green means the FULL suite, not a scoped run - ./gradlew :lib:test AND
-        ./gradlew :e2e-tests:test, plus a repo-wide compile of production and test
-        sources. A scoped run hides cross-module ripple."
-      - "The e2e layer is never optional. It boots an in-process Ktor server and drives
-        a real Chromium through Playwright, so it is the only layer that catches boot
-        and rendering defects. Confirm the reports under e2e-tests/build/reports/
-        actually exist instead of trusting an exit code."
+      - "What counts as DONE depends on the schema and is defined in that schema's
+        apply instruction - a full green suite for spec-driven, a usable signal for
+        probe-driven. Do not apply one schema's bar to the other."
       - "If Chromium is missing, run ./gradlew :e2e-tests:playwrightInstall first."
       - "Never edit lib/build/generated/** to make something pass. Change the codegen
         under codegen/ and regenerate with ./gradlew :lib:generateComponents."

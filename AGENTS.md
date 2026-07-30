@@ -47,6 +47,21 @@ comment and in `kdaisyui-codegen`.
 | Any test work, run configurations, `just` recipes, E2E wiring, Cucumber | `kdaisyui-testing` |
 | Versioning, publishing, what CI does | `kdaisyui-release` |
 
+## Planning changes — OpenSpec
+
+Non-trivial changes are planned as OpenSpec changes under `openspec/changes/<name>/`
+(proposal → specs → design → tasks). Slash commands: `/opsx-propose`, `/opsx-apply`,
+`/opsx-archive`.
+
+**`openspec/config.yaml` carries the planning rules** — the project context, per-artifact
+rules, and the guidance served when implementation or archival starts (what "green" means
+here, the commit cadence, archive-on-the-implementation-branch). Read it rather than
+guessing.
+
+A change with no spec-level behaviour delta — pure tooling, refactoring or docs — sets
+`skip_specs: true` in its `.openspec.yaml`. Never invent a requirement just to satisfy
+`openspec validate`; that puts a false statement into `openspec/specs/`.
+
 ## Anti-patterns
 
 - Editing `lib/build/generated/**`

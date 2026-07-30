@@ -52,23 +52,45 @@ comment and in `kdaisyui-codegen`.
 Non-trivial changes are planned as OpenSpec changes under `openspec/changes/<name>/`.
 Slash commands: `/opsx-propose`, `/opsx-apply`, `/opsx-archive`.
 
-**Two schemas, and they are stages rather than alternatives.** Pick by one question:
-*do we already know what to build?*
+**Every change enters through `gate.md`** — the first artifact of both schemas. It asks one
+question, and refuses a yes/no answer:
 
-| | Schema | Artifacts |
+> **Name the source and the cost.** Where exactly does the information live, and what does
+> it take to fetch it?
+
+Can you name both? Then the answer already exists — **complicated** — go get it and use
+`spec-driven`. Can you not name a source? Then you have no research ahead of you, only a
+guess — **complex** — use `probe-driven`. "Probably findable" and "we could analyse it" are
+not sources.
+
+**The default is complex.** Complicated has to be earned by naming a source; undecided
+counts as complex. The two errors cost differently: treating complex work as complicated
+produces confident plans that are wrong and expensive to unwind, while treating complicated
+work as complex costs about twenty minutes before someone reads the manual.
+
+**The agent does not decide the gate alone.** It lays out both sides with evidence and
+stops; Oliver decides; the reasoning is recorded, not just the verdict.
+
+| | Schema | Artifacts after the gate |
 |---|---|---|
-| Yes — the answer is knowable, analysis will find it | `spec-driven` | proposal → specs → design → tasks |
-| No — we find out by doing | `probe-driven` | hypothesis → probe → observations → learning |
+| complicated | `spec-driven` | proposal → specs → design → tasks |
+| complex | `probe-driven` | hypothesis → probe → observations → learning |
 
-`probe-driven` (`openspec/schemas/probe-driven/`) is for complex work, where treating an
-unknown as if it were merely unresearched produces confident plans that turn out wrong. It
-starts from coherence rather than justification, requires the amplify **and** dampen signals
-to be written before the probe runs, and treats a probe that fails as a successful probe —
-it bought information cheaply. Set it with `schema: probe-driven` in the change's
-`.openspec.yaml`.
+`probe-driven` starts from coherence rather than justification, requires the amplify **and**
+dampen signals to be written before the probe runs, and treats a probe that fails as a
+successful probe — it bought information cheaply.
 
-When a probe reveals a stable, repeatable pattern, that pattern has moved into knowable
-territory: `learning.md` names it, and a `spec-driven` change records it.
+In `spec-driven`, every requirement must name its provenance: **Given** (decided outside
+this project, with a citation) or **Earned** (a probe established it). **Assumed is not
+allowed** — a guess written as SHALL gets cited, defended and generates work.
+
+The gate is a checkpoint, not a lock. A plan that stalls because its assumed information
+does not exist is **demoted** to a probe; a probe that reveals a stable pattern is
+**promoted** to a spec. Both are appended to `gate.md` as dated entries. Neither is a
+failure — being unsure at the start is the normal case.
+
+`openspec new change` always scaffolds `spec-driven`; set `schema: probe-driven` in the
+change's `.openspec.yaml` when the gate says so.
 
 **`openspec/config.yaml` carries the planning rules** — the project context, per-artifact
 rules, and the guidance served when implementation or archival starts (what "green" means

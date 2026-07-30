@@ -56,14 +56,22 @@ rules:
     - Give each task its intended Arlo prefix, and for anything bug-related make
       the first step the failing reproducing test.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+# Per-operation guidance, served when implementation or archival starts.
+# Advisory: it reduces the chance a step is forgotten, it does not enforce anything.
+# CI remains the enforcement point.
+operations:
+  apply:
+    guidance:
+      - "Green means the FULL suite, not a scoped run - ./gradlew :lib:test AND
+        ./gradlew :e2e-tests:test, plus a repo-wide compile of production and test
+        sources. A scoped run hides cross-module ripple."
+      - "The e2e layer is never optional. It boots an in-process Ktor server and drives
+        a real Chromium through Playwright, so it is the only layer that catches boot
+        and rendering defects. Confirm the reports under e2e-tests/build/reports/
+        actually exist instead of trusting an exit code."
+      - "If Chromium is missing, run ./gradlew :e2e-tests:playwrightInstall first."
+      - "Never edit lib/build/generated/** to make something pass. Change the codegen
+        under codegen/ and regenerate with ./gradlew :lib:generateComponents."
+      - "Commit after every completed task, never as one batch at the end. Each task is
+        one Risk-Aware (Arlo) commit; never inflate a risk code to make a log look
+        tidy."

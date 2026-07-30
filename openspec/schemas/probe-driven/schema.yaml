@@ -3,6 +3,49 @@ version: 1
 description: For complex work - hypothesis → probe → observations → learning. Knowledge is the output, not the input.
 
 artifacts:
+  - id: gate
+    generates: gate.md
+    description: Complicated or complex? Decided together, with the reasoning recorded
+    template: gate.md
+    instruction: |
+      Decide TOGETHER whether this work is complicated or complex, and record why.
+
+      - **Complicated**: the answer exists and can be found. Analysis, expertise or
+        research will produce it.
+      - **Complex**: the answer does not exist yet. It emerges from acting, and no
+        amount of research produces it in advance.
+
+      THE FORCING QUESTION - do not answer it yes or no, answer it with evidence:
+
+        Name the source and the cost. Where exactly does the information live, and
+        what does it cost to fetch?
+
+      If you can name both, this is complicated: go fetch it, then convert this
+      change to spec-driven. If you cannot name a source, you do not have research
+      ahead of you - you have a guess, and a guess is complex.
+
+      "Probably findable somewhere" is not a source. "We could analyse it" is not a
+      source. A source is a document, a person, a measurement you can actually take.
+
+      THE DEFAULT IS COMPLEX. Complicated has to be earned by naming a source;
+      undecided counts as complex. The two errors are not equally expensive:
+      treating complex work as complicated produces confident plans that turn out
+      wrong and are expensive to unwind, while treating complicated work as complex
+      costs about twenty minutes before someone notices and reads the manual.
+
+      THIS IS NOT THE AGENT'S DECISION TO MAKE ALONE. Lay out both sides with
+      evidence and STOP. The agent's own failure mode is confident analysis, which
+      is exactly the bias this gate exists to catch - so the agent presents, the
+      human decides. Record the reasoning, not just the verdict: a later re-entry
+      needs to know what was believed, not what was concluded.
+
+      RE-ENTRY. This is a checkpoint, not a lock. A spec-driven change that stalls
+      because the information turned out not to exist is DEMOTED to a probe. A probe
+      that reveals a stable, repeatable pattern is PROMOTED to a spec. Append both as
+      dated entries here. Neither is a failure - starting out unsure which domain you
+      are in is the normal case, not a mistake.
+    requires: []
+
   - id: hypothesis
     generates: hypothesis.md
     description: What we believe, why it is plausible, and what we do not know
@@ -32,7 +75,8 @@ artifacts:
 
       Keep it short. Half a page is normal. A long hypothesis usually means
       analysis is being smuggled in where evidence is needed.
-    requires: []
+    requires:
+      - gate
 
   - id: probe
     generates: probe.md

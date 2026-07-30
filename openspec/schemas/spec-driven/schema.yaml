@@ -94,6 +94,19 @@ artifacts:
 
       A spec is a behavior contract, not an implementation plan.
 
+      PROVENANCE - every requirement must be able to name where it came from:
+      - **Given**: decided outside this project, with a citation (an upstream API,
+        a standard, DaisyUI's own documentation).
+      - **Earned**: a probe established it, and that change's learning.md says so.
+      - **Assumed**: NOT ALLOWED HERE. An assumption in SHALL form is a guess
+        wearing the authority of a contract, and once written it gets cited,
+        defended and generates work of its own. It belongs in a probe-driven
+        hypothesis.md, where it can still turn out to be wrong.
+
+      If you cannot say which of the three a requirement is, it is not ready to be
+      a spec. openspec/specs/ stays trustworthy only while everything in it has
+      earned its place.
+
       Good spec content:
       - Observable behavior users or downstream systems rely on
       - Inputs, outputs, and error conditions

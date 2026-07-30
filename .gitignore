@@ -28,3 +28,11 @@ lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/*
 !lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/HeroIconSize.kt
 **/.classpath
 **/.project
+**/.settings/
+**/bin/
+
+# Ignore AI/tool scratch dirs
+.omo/
+.junie/
+.playwright-mcp/
+.air/

@@ -33,15 +33,28 @@ context: |
   Deeper conventions: AGENTS.md and the .opencode/skills/kdaisyui-* skills
   (kdaisyui-codegen, kdaisyui-testing, kdaisyui-release).
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+# Per-artifact rules.
+rules:
+  proposal:
+    - State the subtractive option next to the additive one. Ask what can be REMOVED
+      or SIMPLIFIED, not only what can be added; people systematically overlook
+      subtractive changes.
+    - Name explicitly what is deliberately out of scope and which change owns it
+      instead. A renovation sequence only works if each change refuses the others'
+      work.
+  design:
+    - Record the alternatives considered for each decision and why they lost. A
+      decision without its rejected alternative cannot be revisited later.
+    - Separate ENABLERS (behaviour-preserving, provable by diff) from DESIRED
+      CHANGES. Do not present a second desired change as preparation.
+  tasks:
+    - Size every task so it becomes exactly ONE Risk-Aware (Arlo) commit - one
+      behaviour, or zero for a refactoring, with its test included.
+    - A behaviour change larger than 8 lines of code including tests is too big.
+      Split it into the enabling refactoring tasks plus the small behaviour task,
+      in that order.
+    - Give each task its intended Arlo prefix, and for anything bug-related make
+      the first step the failing reproducing test.
 
 # Per-operation guidance (optional)
 # Add advisory guidance for how apply and archive work should be conducted.

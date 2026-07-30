@@ -1,13 +1,37 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Project context — shown to whoever writes an artifact.
+# Only facts that are true OF THIS REPOSITORY and cannot be learned elsewhere.
+# Conventions for writing code live in AGENTS.md; do not duplicate them here.
+context: |
+  kdaisyui is a type-safe DaisyUI component DSL for Kotlin server-rendered HTML,
+  wrapping Tailwind/DaisyUI class strings into compile-time-checked kotlinx.html
+  extension functions.
+
+  Most of this library is GENERATED. 63 components, 324 Heroicon functions and
+  63 component test files are produced by the codegen from the daisyui and
+  heroicons git submodules into lib/build/generated/**. Never propose editing
+  generated output — change the codegen instead. Hand-written Kotlin is roughly
+  200 lines: lib/.../core/ (ClassNames.kt, TagId.kt), the two icon enums, and
+  ktor-integration/.../Resolvable.kt.
+
+  The package is io.github.ollin.kdaisyui — never com.github.ollin.
+
+  gradle.properties is the single source of truth for every version:
+  daisyui.version drives the submodule tag, the codegen input AND the webjar CSS
+  at once. It carries a documented upper bound. Never hardcode a version
+  elsewhere.
+
+  Four modules: lib (the library), ktor-integration (Resolvable, context
+  parameters), example-app (Ktor + htmx dashboard on port 8080) and e2e-tests
+  (Kotest + Playwright + Cucumber). There is no root build.gradle.kts;
+  configuration lives in the subprojects and in buildSrc.
+
+  There is NO release automation. Do not assume a release plugin owns the
+  version, and do not plan work that depends on one existing.
+
+  Deeper conventions: AGENTS.md and the .opencode/skills/kdaisyui-* skills
+  (kdaisyui-codegen, kdaisyui-testing, kdaisyui-release).
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.

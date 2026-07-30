@@ -75,3 +75,14 @@ operations:
       - "Commit after every completed task, never as one batch at the end. Each task is
         one Risk-Aware (Arlo) commit; never inflate a risk code to make a log look
         tidy."
+  archive:
+    guidance:
+      - "Archive on the implementation branch and commit the archival there. The
+        archived state must travel in the SAME pull request as the code it documents,
+        never in a follow-up afterwards."
+      - "The pull request title is a Conventional Commit, enforced by
+        .github/workflows/pr-conventional-commits.yml. The Arlo commits underneath it
+        stay untouched - never squash, because squashing replaces every risk
+        attestation with a single line."
+      - "A change that declared skip_specs: true archives without spec updates. That is
+        expected, not an error to work around."

@@ -49,9 +49,26 @@ comment and in `kdaisyui-codegen`.
 
 ## Planning changes — OpenSpec
 
-Non-trivial changes are planned as OpenSpec changes under `openspec/changes/<name>/`
-(proposal → specs → design → tasks). Slash commands: `/opsx-propose`, `/opsx-apply`,
-`/opsx-archive`.
+Non-trivial changes are planned as OpenSpec changes under `openspec/changes/<name>/`.
+Slash commands: `/opsx-propose`, `/opsx-apply`, `/opsx-archive`.
+
+**Two schemas, and they are stages rather than alternatives.** Pick by one question:
+*do we already know what to build?*
+
+| | Schema | Artifacts |
+|---|---|---|
+| Yes — the answer is knowable, analysis will find it | `spec-driven` | proposal → specs → design → tasks |
+| No — we find out by doing | `probe-driven` | hypothesis → probe → observations → learning |
+
+`probe-driven` (`openspec/schemas/probe-driven/`) is for complex work, where treating an
+unknown as if it were merely unresearched produces confident plans that turn out wrong. It
+starts from coherence rather than justification, requires the amplify **and** dampen signals
+to be written before the probe runs, and treats a probe that fails as a successful probe —
+it bought information cheaply. Set it with `schema: probe-driven` in the change's
+`.openspec.yaml`.
+
+When a probe reveals a stable, repeatable pattern, that pattern has moved into knowable
+territory: `learning.md` names it, and a `spec-driven` change records it.
 
 **`openspec/config.yaml` carries the planning rules** — the project context, per-artifact
 rules, and the guidance served when implementation or archival starts (what "green" means

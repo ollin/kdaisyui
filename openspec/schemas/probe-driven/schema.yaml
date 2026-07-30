@@ -102,8 +102,13 @@ artifacts:
         commitment.
       - **How we throw it away**: the concrete discard path - a branch to delete,
         a directory to remove. Name it, so abandoning stays a real option.
+      - **What must still work**: the blast radius, declared now rather than judged
+        later. Either "nothing outside the discard path" (a probe confined to a
+        throwaway branch or directory - broken code inside it is fine), or the named
+        parts that must still build and pass because this probe touches shared
+        config, dependencies or existing source.
 
-      Write amplify and dampen BEFORE running anything. Afterwards you will find
+      Write amplify, dampen and the blast radius BEFORE running anything. Afterwards you will find
       the result obvious in hindsight and will not be able to reconstruct what you
       genuinely expected.
 
@@ -179,3 +184,30 @@ apply:
     dampen signal doing its job.
 
     When the probe is done or the timebox expires, write learning.md.
+
+    WHAT "DONE" MEANS HERE IS NOT WHAT IT MEANS FOR A SPEC-DRIVEN CHANGE.
+
+    A probe is done when it has produced a SIGNAL. A signal that refutes the
+    hypothesis is a good outcome, not a failure - it bought the information
+    cheaply, which is the entire point of probing. Never repair a probe to turn a
+    dampen signal into an amplify signal; that destroys the only thing the probe
+    was for.
+
+    The one real failure is NO SIGNAL: the probe could not run at all, so nothing
+    was learned. That is a defect in the probe's design, not evidence about the
+    hypothesis - do not report it as "the idea did not work". Say so plainly in
+    observations.md and cut the probe smaller.
+
+    WHAT MUST STILL WORK scales with blast radius, not with the probe's ambition:
+
+    - Probe confined to a throwaway branch or directory: nothing needs to be green
+      except the discard path named in probe.md. Broken code inside the probe is
+      acceptable - it is being thrown away, and demanding a clean build of it is
+      how a cheap probe turns into an expensive commitment.
+    - Probe touching shared build config, dependencies, or existing source: the
+      untouched parts must still build and their tests must still pass. You changed
+      something others rely on, so you owe evidence that you did not break it.
+
+    Declare which of the two applies in probe.md BEFORE running, next to the
+    amplify and dampen signals. Deciding it afterwards is how "situational" becomes
+    rationalisation.

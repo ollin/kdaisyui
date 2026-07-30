@@ -23,3 +23,11 @@
 
 <!-- The concrete discard path: a branch to delete, a directory to remove. Naming
      it keeps abandoning a real option. -->
+
+## What must still work
+
+<!-- The blast radius, declared NOW rather than judged afterwards. Either:
+     - "Nothing outside the discard path" — the probe lives in a throwaway branch or
+       directory, and broken code inside it is fine; or
+     - the named parts that must still build and pass, because this probe touches
+       shared config, dependencies or existing source. -->

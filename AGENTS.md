@@ -80,6 +80,13 @@ stops; Oliver decides; the reasoning is recorded, not just the verdict.
 dampen signals to be written before the probe runs, and treats a probe that fails as a
 successful probe — it bought information cheaply.
 
+**"Done" means different things and each schema defines its own** (in its `apply`
+instruction — `openspec/config.yaml` only holds what is true either way). Under
+`spec-driven` it is the full suite including e2e, and a red test is a defect. Under
+`probe-driven` it is a usable signal, and a signal that refutes the hypothesis is a good
+outcome; the only real failure is **no** signal, which is a defect in the probe's design.
+How much must still work scales with blast radius, declared in `probe.md` before running.
+
 In `spec-driven`, every requirement must name its provenance: **Given** (decided outside
 this project, with a citation) or **Earned** (a probe established it). **Assumed is not
 allowed** — a guess written as SHALL gets cited, defended and generates work.

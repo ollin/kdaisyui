@@ -16,10 +16,9 @@ import com.squareup.kotlinpoet.UNIT
 object Emitter {
 
     private const val PACKAGE = "io.github.ollin.kdaisyui.components"
-    private val HTML = "kotlinx.html"
+    private const val HTML = "kotlinx.html"
     private val FLOW_CONTENT = ClassName(HTML, "FlowContent")
     private val HTML_ID = ClassName("io.github.ollin.kdaisyui.core", "HtmlId")
-    private val ADD_CLASS_NAMES = com.squareup.kotlinpoet.MemberName("io.github.ollin.kdaisyui.core", "addClassNames")
 
     fun emit(component: Component): FileSpec {
         val element = ClassName(HTML, component.element)

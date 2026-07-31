@@ -1,5 +1,6 @@
 package io.github.ollin.kdaisyui.codegen
 
+import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -123,6 +124,4 @@ object Emitter {
     private fun String.pascalCase() = split('-').joinToString("") { it.replaceFirstChar(Char::uppercase) }
 
     private fun String.camelCase() = pascalCase().replaceFirstChar(Char::lowercase)
-
-    private val BOOLEAN = com.squareup.kotlinpoet.BOOLEAN
 }

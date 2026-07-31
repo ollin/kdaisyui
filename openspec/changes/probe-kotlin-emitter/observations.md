@@ -63,6 +63,26 @@ number a tool prints about itself is not evidence.
 none in the model or the emitter. That is worth carrying into any estimate: the cost of this
 port is likely dominated by build plumbing, not by translation.
 
+## What writing the tests found, after the probe said it worked
+
+The probe was declared done and "amplify" before a single test existed. Adding 21 tests
+afterwards found **a defect that generating two components had not**:
+
+`Emitter` derived the kotlinx.html builder function by lowercasing the element name. That is
+correct for `BUTTON` and `DIV` — the two components the probe generated — and wrong for
+`TEXTAREA` and `FIELDSET`, which kotlinx.html spells `textArea` and `fieldSet`. Any component
+on those elements would have emitted Kotlin that does not compile. The JavaScript generator
+has carried the exception table since generator-new.js:10-15; I did not look.
+
+**A probe that only demonstrates success on the cases it chose under-reports its own risk.**
+Two green components read as "the model generalises"; they were also two components that
+happened to miss the assumption. Tooltip proved generalisation across *axes* and said nothing
+about generalisation across *elements*.
+
+The second defect was the parameter count the probe printed about itself — 14 where 13 were
+emitted, because the model duplicated knowledge the emitter owns. Also invisible until
+something checked it.
+
 ## What it cost
 
 One session, comfortably inside the timebox, including the three failures. Roughly 350 lines

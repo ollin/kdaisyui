@@ -34,6 +34,18 @@ count, and reading KotlinPoet's `` `open` `` escaping as a caught bug — and bo
 on checking. Both would have survived if the probe had only had an amplify signal to satisfy.
 Writing the dampen list first is what made them checkable.
 
+**A probe is not exempt from tests, and this one proves why.** I wrote 350 lines with none,
+declared amplify, and only then added 21 tests — which immediately found a defect two
+generated components had hidden: the emitter derived the kotlinx.html builder function by
+lowercasing the element, which breaks on `TEXTAREA` and `FIELDSET`. Tooltip had proved the
+model generalises across *axes*; nothing had tested generalisation across *elements*, and I
+read the first as evidence for the second.
+
+The correction to the workflow: **a probe's evidence is only as broad as the cases it chose,
+and choosing them after seeing what works is how a probe flatters itself.** Tests are what
+make the chosen cases visible as choices. This belongs in `probe-driven` — a probe that
+produces code produces it under the same discipline as any other code.
+
 ## What is now specifiable
 
 **Nothing yet, and that is the honest answer.** The rule "DaisyUI's `color`, `size`, `style`,

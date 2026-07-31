@@ -65,23 +65,25 @@ class EmitterTest {
     }
 
     @Test
-    fun `reports the number of parameters it actually emits`() {
-        val component = button()
-
-        assertEquals(component.parameterCount, emittedParameterCount(emit(component)))
+    fun `emits choices first, then flags, then the fixed parameters`() {
+        assertEquals(
+            listOf("style", "active", "disabled", "text", "id", "extraClasses", "content"),
+            emittedParameterNames(emitButton()),
+        )
     }
 
     private fun emitButton() = emit(button())
 
     private fun emit(component: Component) = Emitter.emit(component).toString()
 
-    /** Counts the parameters of the emitted `daisy…` function. */
-    private fun emittedParameterCount(source: String): Int =
+    /** Parameter names of the emitted `daisy…` function, in order. */
+    private fun emittedParameterNames(source: String): List<String> =
         source.substringAfter("public fun FlowContent.daisy")
             .substringAfter("(")
             .substringBefore("\n) {")
             .lines()
-            .count { it.isNotBlank() }
+            .filter { it.isNotBlank() }
+            .map { it.trim().substringBefore(":") }
 
     private fun button(vararg extraAxes: Axis) = Component(
         name = "Button",

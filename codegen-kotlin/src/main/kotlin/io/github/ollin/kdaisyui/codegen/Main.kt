@@ -21,7 +21,7 @@ fun main() {
         val component = Frontmatter.parseFile(docs / name / "+page.md", element)
         Emitter.emit(component).writeTo(out)
 
-        println("$name -> ${component.parameterCount} parameters")
+        println(component.name)
         component.axes.forEach { axis ->
             val kind = if (axis is Axis.Choice) "choice" else "flags "
             println("  $kind ${axis.category.padEnd(10)} ${axis.options.size}")

@@ -61,13 +61,4 @@ data class Component(
 ) {
     val choices: List<Axis.Choice> get() = axes.filterIsInstance<Axis.Choice>()
     val flags: List<Axis.Flags> get() = axes.filterIsInstance<Axis.Flags>()
-
-    /** Number of parameters the emitted function will carry, for comparison with today's. */
-    val parameterCount: Int
-        get() = choices.size + flags.sumOf { it.options.size } + FIXED_PARAMETERS
-
-    private companion object {
-        /** text, id, extraClasses, content */
-        const val FIXED_PARAMETERS = 4
-    }
 }

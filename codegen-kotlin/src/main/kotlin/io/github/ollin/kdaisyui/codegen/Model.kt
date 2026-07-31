@@ -67,7 +67,7 @@ data class Component(
         get() = choices.size + flags.sumOf { it.options.size } + FIXED_PARAMETERS
 
     private companion object {
-        /** text, id, extraClasses, attrs, content */
-        const val FIXED_PARAMETERS = 5
+        /** text, id, extraClasses, content */
+        const val FIXED_PARAMETERS = 4
     }
 }

@@ -18,7 +18,7 @@ fun main() {
     val out = Path.of("codegen-kotlin/build/probe-output").also { it.createDirectories() }
 
     listOf("button" to "BUTTON", "tooltip" to "DIV").forEach { (name, element) ->
-        val component = Frontmatter.parse(docs / name / "+page.md", element)
+        val component = Frontmatter.parseFile(docs / name / "+page.md", element)
         Emitter.emit(component).writeTo(out)
 
         println("$name -> ${component.parameterCount} parameters")

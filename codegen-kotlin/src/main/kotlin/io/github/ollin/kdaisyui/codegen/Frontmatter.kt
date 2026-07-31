@@ -20,13 +20,15 @@ object Frontmatter {
 
     private val FENCE = Regex("^---\\s*$\\n(.*?)^---\\s*$", setOf(RegexOption.MULTILINE, RegexOption.DOT_MATCHES_ALL))
 
-    fun parse(page: Path, element: String): Component {
-        val raw = FENCE.find(page.readText())?.groupValues?.get(1)
-            ?: error("No YAML frontmatter fence in $page")
+    fun parseFile(page: Path, element: String): Component = parse(page.readText(), element)
+
+    fun parse(page: String, element: String): Component {
+        val raw = FENCE.find(page)?.groupValues?.get(1)
+            ?: error("No YAML frontmatter fence")
 
         val doc = yaml.decodeFromString(Page.serializer(), raw)
         val base = doc.classnames[COMPONENT_CATEGORY]?.firstOrNull()?.cssClass
-            ?: error("No `component` class in $page")
+            ?: error("No `component` class for ${doc.title}")
 
         return Component(
             name = doc.title,

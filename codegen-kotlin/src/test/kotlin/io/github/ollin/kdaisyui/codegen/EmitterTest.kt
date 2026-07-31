@@ -36,7 +36,7 @@ class EmitterTest {
 
     @Test
     fun `a multi word suffix becomes one PascalCase constant`() {
-        val component = button(Axis.Choice("size", listOf(option("btn-extra-large"))))
+        val component = button(extraAxes = arrayOf(Axis.Choice("size", listOf(option("btn-extra-large")))))
 
         assertContains(emit(component), """ExtraLarge("btn-extra-large")""")
     }
@@ -65,6 +65,13 @@ class EmitterTest {
     }
 
     @Test
+    fun `uses the kotlinx html tag function, which is not always the lowercased element`() {
+        // kotlinx.html spells these camelCase; `textarea` and `fieldset` do not exist.
+        assertContains(emit(button(element = "TEXTAREA")), "textArea(classes =")
+        assertContains(emit(button(element = "FIELDSET")), "fieldSet(classes =")
+    }
+
+    @Test
     fun `emits choices first, then flags, then the fixed parameters`() {
         assertEquals(
             listOf("style", "active", "disabled", "text", "id", "extraClasses", "content"),
@@ -85,11 +92,11 @@ class EmitterTest {
             .filter { it.isNotBlank() }
             .map { it.trim().substringBefore(":") }
 
-    private fun button(vararg extraAxes: Axis) = Component(
+    private fun button(element: String = "BUTTON", vararg extraAxes: Axis) = Component(
         name = "Button",
         baseClass = "btn",
         description = "Buttons.",
-        element = "BUTTON",
+        element = element,
         axes = listOf(
             Axis.Choice("style", listOf(option("btn-outline"), option("btn-ghost"))),
             Axis.Flags("behavior", listOf(option("btn-active"), option("btn-disabled"))),

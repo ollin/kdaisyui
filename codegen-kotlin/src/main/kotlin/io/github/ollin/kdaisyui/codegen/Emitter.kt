@@ -102,13 +102,26 @@ object Emitter {
         body.endControlFlow()
 
         return body
-            .beginControlFlow("%L(classes = classes.joinToString(%S))", component.element.lowercase(), " ")
+            .beginControlFlow("%L(classes = classes.joinToString(%S))", tagFunctionFor(component.element), " ")
             .addStatement("id?.let { this.id = it.value }")
             .addStatement("text?.let { +it }")
             .addStatement("content?.invoke(this)")
             .endControlFlow()
             .build()
     }
+
+    /**
+     * The kotlinx.html builder function for an element. Usually the lowercased name, but
+     * kotlinx.html spells a few of them camelCase — `textarea` and `fieldset` do not exist.
+     */
+    private fun tagFunctionFor(element: String) =
+        CAMEL_CASE_TAGS[element] ?: element.lowercase()
+
+    private val CAMEL_CASE_TAGS = mapOf(
+        "TEXTAREA" to "textArea",
+        "FIELDSET" to "fieldSet",
+        "OPTGROUP" to "optGroup",
+    )
 
     private fun enumName(component: Component, axis: Axis.Choice) =
         component.name + axis.category.replaceFirstChar(Char::uppercase)

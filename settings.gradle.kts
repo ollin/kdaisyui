@@ -10,6 +10,8 @@ pluginManagement {
     val kotlinVersion = providers.gradleProperty("versions.kotlin").get()
     plugins {
         id("org.jetbrains.kotlin.jvm") version kotlinVersion
+        // PROBE — openspec/changes/probe-kotlin-emitter, for :codegen-kotlin only.
+        id("org.jetbrains.kotlin.plugin.serialization") version kotlinVersion
     }
 }
 
@@ -24,3 +26,7 @@ include("lib")
 include("ktor-integration")
 include("example-app")
 include("e2e-tests")
+
+// PROBE — openspec/changes/probe-kotlin-emitter. Remove this line and the directory
+// to discard the experiment.
+include("codegen-kotlin")

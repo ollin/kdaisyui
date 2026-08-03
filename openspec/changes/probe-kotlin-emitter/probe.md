@@ -8,17 +8,17 @@ Button first, because it exercises every axis DaisyUI has: `color` (8), `size` (
 `style` (5, mutually exclusive), `modifier` (4), `behavior` (2) — plus `text`, `id`,
 `extraClasses`, `attrs` and `content`.
 
-- [ ] 1 Add a `codegen-kotlin` module with KotlinPoet 2.3.0. One `include` line in
+- [x] 1 Add a `codegen-kotlin` module with KotlinPoet 2.3.0. One `include` line in
       `settings.gradle.kts`; nothing else in the existing build is touched
-- [ ] 2 Define the typed component model — the five axes as distinct types rather than one
+- [x] 2 Define the typed component model — the five axes as distinct types rather than one
       bag of booleans. This is where the parameter shape becomes a decision instead of a
       side effect
-- [ ] 3 Parse Button's frontmatter into that model, using a real YAML library rather than a
+- [x] 3 Parse Button's frontmatter into that model, using a real YAML library rather than a
       hand-rolled parser
-- [ ] 4 Emit `Button.kt` with KotlinPoet into `codegen-kotlin/build/probe-output/`
-- [ ] 5 Put it side by side with today's `lib/build/generated/.../components/Button.kt` and
+- [x] 4 Emit `Button.kt` with KotlinPoet into `codegen-kotlin/build/probe-output/`
+- [x] 5 Put it side by side with today's `lib/build/generated/.../components/Button.kt` and
       with `codegen/src/generator-new.js`, and write down what we actually see
-- [ ] 6 Push until it breaks or until the timebox: try a second, differently-shaped
+- [x] 6 Push until it breaks or until the timebox: try a second, differently-shaped
       component (`Tooltip` — `placement` axis) to find out whether Button was a lucky case
 
 ## Timebox

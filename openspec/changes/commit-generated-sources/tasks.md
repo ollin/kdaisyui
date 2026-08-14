@@ -86,7 +86,8 @@ Enabler. Same bytes, different path; provable by diffing against the section 1 b
       tree (itself equal to baseline `0b7ddefd…`); `:lib:test` 566 green compiled from the
       new root with `build/generated` deleted, so the classes cannot have come from it
 - [x] 4.3 `. f` Commit the generated sources — 450 files, the exact bytes verified in 4.2
-- [ ] 4.4 `. d` Add `.gitattributes` marking the generated root `linguist-generated`
+- [x] 4.4 `. d` Add `.gitattributes` marking the generated root `linguist-generated` —
+      deliberately without `-diff`, since reviewable diffs are justification (2)
 
 ## 5. Decouple the build
 

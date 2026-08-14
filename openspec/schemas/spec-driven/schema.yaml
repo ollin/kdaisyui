@@ -50,18 +50,27 @@ artifacts:
 
       A spec is a behavior contract, not an implementation plan.
 
-      PROVENANCE - every requirement must be able to name where it came from:
-      - **Given**: decided outside this project, with a citation (an upstream API,
-        a standard, DaisyUI's own documentation).
-      - **Earned**: a probe established it, and that change's learning.md says so.
-      - **Assumed**: NOT ALLOWED HERE. An assumption in SHALL form is a guess
-        wearing the authority of a contract, and once written it gets cited,
-        defended and generates work of its own. It belongs in a probe-driven
-        hypothesis.md, where it can still turn out to be wrong.
+      PROVENANCE - every requirement is an assumption until something checked it.
+      Mark each one:
 
-      If you cannot say which of the three a requirement is, it is not ready to be
-      a spec. openspec/specs/ stays trustworthy only while everything in it has
-      earned its place.
+      - **Verified**: we checked it, and the mark says how - the document quoted
+        with a line reference, the measurement taken, the probe whose learning.md
+        established it. "It is in the upstream docs" is only Verified once someone
+        has actually opened them; an uncited citation is an assumption about a
+        citation.
+      - **Assumed**: not checked yet. This is ALLOWED, and pretending otherwise is
+        what used to push guesses into SHALL form unmarked. It carries one
+        obligation: say WHAT WOULD SHOW US IT IS WRONG. An assumption nobody can
+        falsify is a guess wearing the authority of a contract.
+
+      An Assumed requirement is a debt, and the interest is paid in tasks.md: the
+      task that verifies it goes EARLY, before work is built on top of it. When
+      verification refutes it, revise the change - that is the process working, not
+      a failure of the plan.
+
+      If you cannot say which of the two a requirement is, you have not thought
+      about it yet. openspec/specs/ stays trustworthy while every requirement in it
+      says how much weight it can bear.
 
       Good spec content:
       - Observable behavior users or downstream systems rely on

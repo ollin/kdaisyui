@@ -1,0 +1,43 @@
+# TEMPORARY — task 1.4 of openspec/changes/commit-generated-sources.
+# Regenerates on a clean runner and prints an aggregate hash over the generated
+# tree, to be compared against the locally measured baseline. Delete this file
+# and the scratch/determinism-probe branch once the answer is recorded.
+name: determinism-probe
+
+on:
+  push:
+    branches: [scratch/determinism-probe]
+
+jobs:
+  hash:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Report the environment being measured
+        run: |
+          echo "node    $(node --version)"
+          echo "npm     $(npm --version)"
+          echo "LANG    ${LANG:-<unset>}"
+          echo "LC_ALL  ${LC_ALL:-<unset>}"
+          node -e "console.log('icu     ' + process.config.variables.icu_ver_l10n + ' / ' + (process.versions.icu ?? 'none'))"
+          node -e "console.log('collate ' + ['io.a','kotlinx.B','kotlinx.b','io.B'].sort((x,y)=>x.localeCompare(y)).join(' '))"
+
+      - name: Regenerate
+        run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons --rerun-tasks --no-daemon
+
+      - name: Aggregate hash over the generated tree
+        run: |
+          cd lib/build/generated
+          echo "file count: $(find . -type f | wc -l)"
+          find . -type f | sed 's|^\./||' | LC_ALL=C sort \
+            | while read -r f; do echo "$f:$(sha256sum "$f" | cut -d' ' -f1)"; done \
+            | sha256sum

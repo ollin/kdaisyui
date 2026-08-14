@@ -177,6 +177,17 @@ artifacts:
     instruction: |
       Create the task list that breaks down the implementation work.
 
+      ORDER BY UNCERTAINTY FIRST, DEPENDENCY SECOND. Every requirement marked
+      Assumed gets a task that verifies it, and those tasks come first - before
+      anything is built on top of them. A wrong assumption found in task 1.2 costs
+      a rewritten plan; the same assumption found in task 7.4 costs the code as
+      well. Dependency still wins where it must: a task that is impossible before
+      another follows it, however uncertain it is.
+
+      This is the whole reason the plan is allowed to rest on assumptions at all.
+      Order the shakiest first and the plan is cheap to be wrong about; order them
+      last and it is not a plan, it is a bet.
+
       Before writing tasks, check design.md for Open Questions. If any of them
       would change what gets built, resolve them with the user first - do not
       bake an unstated assumption into the task list.
@@ -188,7 +199,7 @@ artifacts:
       - Group related tasks under ## numbered headings
       - Each task MUST be a checkbox: `- [ ] X.Y Task description`
       - Tasks should be small enough to complete in one session
-      - Order tasks by dependency (what must be done first?)
+      - Order tasks by uncertainty, then by dependency (see above)
 
       Example:
       ```

@@ -48,6 +48,10 @@ rules:
     - Separate ENABLERS (behaviour-preserving, provable by diff) from DESIRED
       CHANGES. Do not present a second desired change as preparation.
   tasks:
+    - Put the tasks that verify the change's Assumed requirements FIRST. Being
+      wrong is expected; being wrong after six tasks were built on top is what
+      costs. Dependency order applies only where a task is genuinely impossible
+      earlier.
     - Size every task so it becomes exactly ONE Risk-Aware (Arlo) commit - one
       behaviour, or zero for a refactoring, with its test included.
     - A behaviour change larger than 8 lines of code including tests is too big.

@@ -28,13 +28,11 @@ This is the precondition for the rest of the renovation, so it goes first.
   `generateComponentTests`. A fresh clone builds and tests with **no Node, no npm and no git
   submodules** — regeneration becomes an explicit, opt-in task run when DaisyUI or Heroicons
   is bumped.
-- Regeneration is made **deterministic**: byte-identical output for identical inputs. This
-  requires fixing the import ordering, whose `startsWith('kdaisyui')` branch never matches
-  (`io.github.ollin.kdaisyui…`) so every import falls through to `localeCompare`
-  (`generator-new.js:344-348`, repeated at `generator.js:216-219`). That is not byte order —
-  it is *locale-collated* order, which depends on the machine's default locale, so the
-  misfire is a candidate source of the very cross-machine drift the CI check relies on
-  not existing.
+- Regeneration is confirmed **deterministic** rather than made so — measured, not assumed
+  (see Assumptions 1). The `startsWith('kdaisyui')` branches at `generator-new.js:344-348`
+  and `generator.js:216-219` never match the real package prefix, but they are dead code, not
+  a defect: the alphabetical order they fall through to already produces the grouping they
+  intended. They are deleted for clarity, changing no output.
 - CI gains a **drift check**: regenerate, then fail if the working tree is dirty. This is what
   keeps the committed sources honest and replaces the guarantee the build dependency used to
   give.
@@ -69,11 +67,13 @@ Carried over from this change's `gate.md`, which the gate-free workflow retired.
 names what would show it is wrong; `tasks.md` orders their verification first.
 
 1. **Regeneration is byte-identical across machines, locales and Node versions.** Everything
-   the CI drift check is worth rests on this. *Wrong if:* regenerating under two different
-   `LANG` values, or on the CI runner versus locally, produces a non-empty diff. Cheap to
-   check and therefore first. Known risk: the `localeCompare` fall-through above.
-   `codegen/package-lock.json` **is** committed (verified, since `c7b85cc`), so npm
-   resolution is not a variance source.
+   the CI drift check is worth rests on this. **Partly verified 2026-08-14** (tasks 1.1-1.3):
+   450 files, byte-identical across two consecutive runs and across `LANG=C` and
+   `LANG=de_DE.UTF-8`. The `localeCompare` fall-through is real but harmless for pure-ASCII
+   identifiers, and the two branches feeding it turned out to be unreachable dead code that
+   changes no output. `codegen/package-lock.json` **is** committed (verified, since
+   `c7b85cc`), so npm resolution is not a variance source. *Still open:* a second machine —
+   *wrong if:* the CI runner diffs against the local baseline (task 1.4).
 2. **A committed baseline is the only practical way to verify the codegen port.** *Wrong if:*
    a throwaway copy of `lib/build/generated/**` diffed against the port's output serves
    equally well — in which case justification (3) does not need this change at all, and the

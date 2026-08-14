@@ -58,16 +58,20 @@ Running the generators twice against identical inputs SHALL produce byte-identic
 independently of the machine, the filesystem's directory order, the active locale and the
 Node.js minor version.
 
-**Assumed**: we believe the generators are already deterministic — every directory read is
-sorted before use (`codegen/src/parser/frontmatter.js:218-223`,
-`codegen/src/index-heroicons.js:47`), no timestamps or absolute paths are emitted, and
-`codegen/package-lock.json` is committed so npm resolution cannot drift.
+**Verified, in part** (measured 2026-08-14, task 1.1-1.3): regenerating all 450 files twice
+on one machine produced a byte-identical result, as did regenerating under `LANG=C` and
+`LANG=de_DE.UTF-8`. The locale dimension is settled, and the test was not vacuous — the
+emitted import order is demonstrably ICU-collated rather than byte-ordered
+(`addClassNames` before `HtmlId`; `button` before `BUTTON`), so `localeCompare` really is
+deciding the order; it simply decides it the same way in every locale tried, because the
+identifiers are pure ASCII.
 
-*Wrong if:* regenerating twice under two different `LANG` values, or on the CI runner versus
-locally, produces a non-empty diff. One known candidate: the import comparator at
-`codegen/src/generator-new.js:344-348` (repeated at `generator.js:216-219`) tests
-`startsWith('kdaisyui')`, which never matches the real package prefix, so every import falls
-through to `localeCompare` — locale-collated order, not byte order.
+**Assumed, for the remainder**: that the same holds across machines, ICU builds and Node
+versions. Nothing here has been checked on a second machine.
+
+*Wrong if:* the CI runner produces a diff against the local baseline (task 1.4). The residual
+risk is a Node built against a different ICU version, or a small-icu build, collating these
+ASCII identifiers differently — not the locale, which is now measured.
 
 #### Scenario: Regenerating twice on one machine
 

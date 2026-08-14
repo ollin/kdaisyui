@@ -12,14 +12,20 @@ matches its inputs is rejected" is unbuildable as written, and the change either
 committed baseline with the build still coupled, or gives way to assumption 2's throwaway
 baseline. Revise proposal, specs and these tasks before continuing.*
 
-- [ ] 1.1 `. r` Capture a reference copy of `lib/build/generated/**` after a clean
-      regeneration, under `./tmp/` so it is never committed
-- [ ] 1.2 `. r` Regenerate a second time into a separate directory and diff against 1.1 —
-      same machine, same locale. Record the result in this file
-- [ ] 1.3 `. r` Regenerate under a different `LANG` (e.g. `LANG=C` vs `LANG=de_DE.UTF-8`)
-      and diff against 1.1. This is the one the `localeCompare` fall-through threatens
+- [x] 1.1 `. r` Capture a reference copy of `lib/build/generated/**` after a clean
+      regeneration — 450 files (63 components, 63 tests, 324 icons), hashed in memory
+      rather than copied, so nothing was written into the repository
+- [x] 1.2 `. r` Regenerate a second time and diff against 1.1 — same machine, same locale.
+      **Identical**: 0 files added, 0 removed, 0 differing
+- [x] 1.3 `. r` Regenerate under `LANG=C` and under `LANG=de_DE.UTF-8`, diff against 1.1.
+      **Identical in both cases.** The test has power: the emitted order is demonstrably
+      ICU-collated rather than byte-ordered (`addClassNames` precedes `HtmlId`, `button`
+      precedes `BUTTON` — byte order would reverse both), so the fall-through is real. It
+      simply does not vary across these locales for pure-ASCII identifiers
 - [ ] 1.4 `. r` Regenerate on the CI runner and diff against the local 1.1 baseline, via a
-      temporary workflow on a scratch branch. Delete the workflow afterwards
+      temporary workflow on a scratch branch. Delete the workflow afterwards. **This is now
+      the only unverified part of the assumption** — the residual risk is the ICU build and
+      Node version, not the locale
 - [ ] 1.5 `. d` Record the outcome on the "Regeneration is deterministic" requirement:
       change **Assumed** to **Verified**, naming the diffs, or revise the change
 
@@ -34,16 +40,22 @@ smaller case and may not carry ~450 committed files.*
 - [ ] 2.2 `. d` Record the answer in proposal.md — either strike justification (3) or state
       what makes the committed form necessary
 
-## 3. Make the ordering deterministic
+## 3. Remove the dead comparator branches
 
-Enabler. Behaviour-preserving in the sense that matters: output changes exactly once, and is
-stable afterwards. Depends on section 1 having found the cause.
+**Revised after section 1** (2026-08-14). This was "fix the comparator before capturing the
+baseline, so a later fix does not bury the signal in noise". Section 1 refuted the premise:
+the fix would produce **no diff at all**, so it is neither urgent nor a blocker, and it is a
+deletion rather than a fix.
 
-- [ ] 3.1 `^ b` Fix the import comparator in `codegen/src/generator-new.js:344-348` so its
-      predicate matches the real package prefix, with a test pinning the emitted order
-- [ ] 3.2 `^ b` Apply the same fix to the duplicate at `codegen/src/generator.js:216-219`
-- [ ] 3.3 `. r` Regenerate and review the resulting diff — it is expected and should be
-      import lines only
+Measured: all 1911 import lines across the generated output fall under exactly three roots —
+`io`, `kotlin`, `kotlinx`. Since `io` sorts before both, the grouping the branches intend
+("kdaisyui imports first") is already produced by plain alphabetical order. Zero imports
+begin with the literal `kdaisyui` the predicate tests, so the branches cannot fire, and
+removing them cannot change the output.
+
+- [ ] 3.1 `. r` Delete the two unreachable branches in `codegen/src/generator-new.js:344-348`
+      and `codegen/src/generator.js:216-219`, leaving the `localeCompare` they fall through
+      to. Confirm by regenerating that the output is unchanged
 
 ## 4. Move the sources into the repository
 

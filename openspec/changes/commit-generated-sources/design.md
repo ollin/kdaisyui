@@ -33,20 +33,21 @@ against a local baseline.
 non-determinism in CI. Rejected because a drift job that fails on its first real run teaches
 everyone to ignore it, and the failure would arrive after ~450 files are already in history.
 
-### Fix the import comparator before capturing the baseline, not after
+### ~~Fix the import comparator before capturing the baseline~~ — refuted 2026-08-14
 
-`generator-new.js:344-348` never matches its own predicate, so ordering is decided by
-`localeCompare`. Whether or not the fall-through is the *cause* of any drift, the baseline
-should be captured from a comparator that means what it says — otherwise the first later fix
-produces a large diff that is pure noise and buries the signal.
+This decision said the comparator had to be fixed first, so that a later fix would not
+produce a large noise diff that buried the signal. Section 1 measured the premise and it is
+false: **the fix produces no diff.** All 1911 generated import lines fall under `io`,
+`kotlin` and `kotlinx`; `io` already sorts first, so the intended grouping is what plain
+alphabetical order gives, and the branches — which test for a literal `kdaisyui` prefix that
+zero imports have — cannot fire.
 
-*Alternative rejected:* leave it and treat the resulting order as the contract. Rejected
-because the contract would then be "whatever this machine's collation does", which is not a
-contract.
+What survives is smaller and differently shaped: two unreachable branches to **delete**, at
+no ordering cost, sequenced wherever convenient. Recorded as task 3.1.
 
-*Alternative rejected:* fix it as part of `daisyui-taxonomy-api` later. Rejected because
-that change is about the emitted API; this is about the emitted *bytes*, and it blocks this
-change rather than that one.
+The wider lesson for this change: the fall-through is real and observable (the order is
+ICU-collated, not byte-ordered), but "observable" and "a drift risk" are different claims,
+and the second one did not survive being measured.
 
 ### The enabling half and the desired half are separate
 

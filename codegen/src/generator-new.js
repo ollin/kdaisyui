@@ -341,11 +341,9 @@ function collectImports(classified, element, config) {
     }
   }
   
-  return [...imports].sort((a, b) => {
-    if (a.startsWith('kdaisyui') && !b.startsWith('kdaisyui')) return -1
-    if (!a.startsWith('kdaisyui') && b.startsWith('kdaisyui')) return 1
-    return a.localeCompare(b)
-  })
+  // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
+  // ahead of kotlin/kotlinx, so no special-casing is needed to group it first.
+  return [...imports].sort((a, b) => a.localeCompare(b))
 }
 
 export function generateKotlinFile(classified, elementRules, config) {

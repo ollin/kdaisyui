@@ -213,11 +213,7 @@ export function generateComponent(config, cssDir) {
 
   const sortedImports = [...allImports]
     .filter(i => i)
-    .sort((a, b) => {
-      if (a.startsWith('kdaisyui') && !b.startsWith('kdaisyui')) return -1
-      if (!a.startsWith('kdaisyui') && b.startsWith('kdaisyui')) return 1
-      return a.localeCompare(b)
-    })
+    .sort((a, b) => a.localeCompare(b))
 
   const header = [
     `// GENERATED — DO NOT EDIT`,

@@ -53,9 +53,16 @@ Measured: all 1911 import lines across the generated output fall under exactly t
 begin with the literal `kdaisyui` the predicate tests, so the branches cannot fire, and
 removing them cannot change the output.
 
-- [ ] 3.1 `. r` Delete the two unreachable branches in `codegen/src/generator-new.js:344-348`
+- [x] 3.1 `. r` Delete the two unreachable branches in `codegen/src/generator-new.js:344-348`
       and `codegen/src/generator.js:216-219`, leaving the `localeCompare` they fall through
-      to. Confirm by regenerating that the output is unchanged
+      to. **Confirmed unchanged**: regenerated with and without the branches, aggregate hash
+      over all 450 files identical (`0b7ddefd…`), `:lib:test` 566 green
+
+Considered and rejected: replacing `localeCompare` with a locale-independent comparison, to
+remove the ICU dependency rather than verify it. Tasks 1.2-1.3 measured the locale variance
+at zero, so the swap would flip the import order in all 63 components — a real diff bought
+against a risk that was already measured away. If task 1.4 finds cross-machine drift this
+comes back on the table; until then it is a speculative fix.
 
 ## 4. Move the sources into the repository
 

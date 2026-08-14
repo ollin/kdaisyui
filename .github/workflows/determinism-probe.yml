@@ -34,10 +34,20 @@ jobs:
       - name: Regenerate
         run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons --rerun-tasks --no-daemon
 
-      - name: Aggregate hash over the generated tree
+      - name: Compare against the local baseline
         run: |
+          EXPECTED=0b7ddefdfba7bedf0b77e8b34fc6fb9035c49d769d80b0aeaac485a731a72bb3
           cd lib/build/generated
-          echo "file count: $(find . -type f | wc -l)"
-          find . -type f | sed 's|^\./||' | LC_ALL=C sort \
+          COUNT=$(find . -type f | wc -l)
+          ACTUAL=$(find . -type f | sed 's|^\./||' | LC_ALL=C sort \
             | while read -r f; do echo "$f:$(sha256sum "$f" | cut -d' ' -f1)"; done \
-            | sha256sum
+            | sha256sum | cut -d' ' -f1)
+          echo "files    $COUNT (expected 450)"
+          echo "expected $EXPECTED"
+          echo "actual   $ACTUAL"
+          if [ "$EXPECTED" = "$ACTUAL" ]; then
+            echo "IDENTICAL — regeneration is machine-independent"
+          else
+            echo "DIFFERENT — the drift check would be unreliable; assumption 1 is refuted"
+            exit 1
+          fi

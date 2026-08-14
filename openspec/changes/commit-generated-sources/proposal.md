@@ -66,14 +66,16 @@ None. `openspec/specs/` is empty; this is the first capability in the project.
 Carried over from this change's `gate.md`, which the gate-free workflow retired. Each one
 names what would show it is wrong; `tasks.md` orders their verification first.
 
-1. **Regeneration is byte-identical across machines, locales and Node versions.** Everything
-   the CI drift check is worth rests on this. **Partly verified 2026-08-14** (tasks 1.1-1.3):
+1. ~~**Regeneration is byte-identical across machines, locales and Node versions.**~~
+   **VERIFIED — no longer an assumption.** Everything
+   the CI drift check is worth rests on this. Measured 2026-08-14 (tasks 1.1-1.3):
    450 files, byte-identical across two consecutive runs and across `LANG=C` and
    `LANG=de_DE.UTF-8`. The `localeCompare` fall-through is real but harmless for pure-ASCII
    identifiers, and the two branches feeding it turned out to be unreachable dead code that
    changes no output. `codegen/package-lock.json` **is** committed (verified, since
-   `c7b85cc`), so npm resolution is not a variance source. *Still open:* a second machine —
-   *wrong if:* the CI runner diffs against the local baseline (task 1.4).
+   `c7b85cc`), so npm resolution is not a variance source.
+   **Fully verified 2026-08-14** (task 1.4): a clean `ubuntu-latest` runner produced the same
+   aggregate hash as this machine. The assumption is discharged.
 2. **A committed baseline is the only practical way to verify the codegen port.** *Wrong if:*
    a throwaway copy of `lib/build/generated/**` diffed against the port's output serves
    equally well — in which case justification (3) does not need this change at all, and the

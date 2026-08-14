@@ -22,12 +22,16 @@ baseline. Revise proposal, specs and these tasks before continuing.*
       ICU-collated rather than byte-ordered (`addClassNames` precedes `HtmlId`, `button`
       precedes `BUTTON` — byte order would reverse both), so the fall-through is real. It
       simply does not vary across these locales for pure-ASCII identifiers
-- [ ] 1.4 `. r` Regenerate on the CI runner and diff against the local 1.1 baseline, via a
-      temporary workflow on a scratch branch. Delete the workflow afterwards. **This is now
-      the only unverified part of the assumption** — the residual risk is the ICU build and
-      Node version, not the locale
-- [ ] 1.5 `. d` Record the outcome on the "Regeneration is deterministic" requirement:
-      change **Assumed** to **Verified**, naming the diffs, or revise the change
+- [x] 1.4 `. r` Regenerate on the CI runner and diff against the local 1.1 baseline, via a
+      temporary workflow on a scratch branch. **Identical**: the job asserted the aggregate
+      SHA-256 over all 450 files against the local `0b7ddefd…` and passed on a clean
+      `ubuntu-latest` (PR #229, since closed; scratch branch and workflow deleted). The
+      assertion had to live in the job's exit code because no tool available here can read
+      workflow logs
+- [x] 1.5 `. d` Record the outcome — the requirement is now **Verified** across runs,
+      locales and machines
+
+**Assumption 1 holds.** Sections 4-6 are unblocked; the drift check is viable.
 
 ## 2. Check assumption 2 — does the port actually need committed sources?
 

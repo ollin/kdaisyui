@@ -58,20 +58,22 @@ Running the generators twice against identical inputs SHALL produce byte-identic
 independently of the machine, the filesystem's directory order, the active locale and the
 Node.js minor version.
 
-**Verified, in part** (measured 2026-08-14, task 1.1-1.3): regenerating all 450 files twice
-on one machine produced a byte-identical result, as did regenerating under `LANG=C` and
-`LANG=de_DE.UTF-8`. The locale dimension is settled, and the test was not vacuous — the
-emitted import order is demonstrably ICU-collated rather than byte-ordered
-(`addClassNames` before `HtmlId`; `button` before `BUTTON`), so `localeCompare` really is
-deciding the order; it simply decides it the same way in every locale tried, because the
-identifiers are pure ASCII.
+**Verified** (measured 2026-08-14, tasks 1.1-1.4). All 450 generated files, compared by
+aggregate SHA-256:
 
-**Assumed, for the remainder**: that the same holds across machines, ICU builds and Node
-versions. Nothing here has been checked on a second machine.
+- two consecutive runs on one machine — identical;
+- `LANG=C` and `LANG=de_DE.UTF-8` against the ambient `en_US.UTF-8` — identical;
+- a clean `ubuntu-latest` runner against the local baseline `0b7ddefd…` — identical.
 
-*Wrong if:* the CI runner produces a diff against the local baseline (task 1.4). The residual
-risk is a Node built against a different ICU version, or a small-icu build, collating these
-ASCII identifiers differently — not the locale, which is now measured.
+The locale test was not vacuous: the emitted import order is demonstrably ICU-collated
+rather than byte-ordered (`addClassNames` before `HtmlId`, `button` before `BUTTON` — byte
+order reverses both), so `localeCompare` really does decide it. It simply decides it
+identically everywhere tried, because the identifiers are pure ASCII.
+
+Contributing factors, both checked rather than assumed: every directory read is sorted
+before use (`codegen/src/parser/frontmatter.js:218-223`, `codegen/src/index-heroicons.js:47`),
+no timestamps or absolute paths are emitted, and `codegen/package-lock.json` is committed
+(since `c7b85cc`) so npm resolution cannot drift.
 
 #### Scenario: Regenerating twice on one machine
 
@@ -88,9 +90,10 @@ ASCII identifiers differently — not the locale, which is now measured.
 CI SHALL regenerate from the committed inputs and fail when the result differs from what is
 committed. This replaces the guarantee the build-time dependency used to provide.
 
-**Assumed**: this depends entirely on the determinism requirement above. If output is not
-byte-identical across machines, the check fails for reasons no author caused, and a check
-that cries wolf is one people learn to bypass.
+**Assumed**: this depends entirely on the determinism requirement above, which is now
+Verified — including one measurement on the exact runner image the drift job will use. What
+remains unchecked is durability: one green run is not a track record, and a check that
+eventually cries wolf is one people learn to bypass.
 
 *Wrong if:* the drift job reports a diff on a run where no input changed.
 

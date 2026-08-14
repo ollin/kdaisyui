@@ -7,9 +7,12 @@
 <!-- requirement text -->
 
 <!-- Provenance — required. Exactly one of:
-     **Given**: <citation to the decision made outside this project>
-     **Earned**: <the probe whose learning.md established this>
-     An assumption is not allowed here — it belongs in a probe-driven hypothesis.md. -->
+     **Verified**: <how we checked — document quoted with a line, measurement taken,
+                    or the probe whose learning.md established this>
+     **Assumed**: <what we believe> — *Wrong if:* <the observation that would refute it>
+     Every requirement is one or the other. An Assumed requirement is a debt that
+     tasks.md pays early; one with no falsifier is a guess wearing a contract's
+     authority. -->
 
 #### Scenario: <!-- scenario name -->
 - **WHEN** <!-- condition -->

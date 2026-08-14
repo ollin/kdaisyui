@@ -30,18 +30,24 @@ This is the precondition for the rest of the renovation, so it goes first.
   is bumped.
 - Regeneration is made **deterministic**: byte-identical output for identical inputs. This
   requires fixing the import ordering, whose `startsWith('kdaisyui')` branch never matches
-  (`io.github.ollin.kdaisyui…`) and silently degrades to byte order.
+  (`io.github.ollin.kdaisyui…`) so every import falls through to `localeCompare`
+  (`generator-new.js:344-348`, repeated at `generator.js:216-219`). That is not byte order —
+  it is *locale-collated* order, which depends on the machine's default locale, so the
+  misfire is a candidate source of the very cross-machine drift the CI check relies on
+  not existing.
 - CI gains a **drift check**: regenerate, then fail if the working tree is dirty. This is what
   keeps the committed sources honest and replaces the guarantee the build dependency used to
   give.
-- Stale `.gitignore` rules for `lib/src/main/kotlin/io/github/ollin/kdaisyui/components/`,
-  `…/test/…/components/` and `…/icons/*` are removed — codegen stopped writing there, so they
-  currently protect nothing while implying generated code lives in `src/`.
+- ~~Stale `.gitignore` rules for the `components/` and `icons/` source paths are removed.~~
+  **Already done.** Verified 2026-08-14: `.gitignore` contains no such rules; it ignores
+  `build` and nothing else relevant. That cleanup landed with `adopt-openspec`.
 - `AGENTS.md` is corrected: the "never edit generated code" rule must name the new committed
   path, and the version-source list must stop citing `.tool-versions`.
-- **Folded in from the working tree** (pre-existing uncommitted work): removal of
-  `.tool-versions`, the `.gitignore` additions for `**/.settings/`, `**/bin/` and the AI
-  scratch directories, and the `README.md` AI-context table edit.
+- **Folded in from the working tree** (pre-existing uncommitted work): the `.tool-versions`
+  edit and the `README.md` AI-context table edit. The `.gitignore` additions for
+  `**/.settings/`, `**/bin/` and the AI scratch directories are **already committed**
+  (verified 2026-08-14). Note that `.tool-versions` is not emptied by removing `nodejs` and
+  `just` — it still pins the JDK that runs Gradle, and nine places in the docs cite it.
 
 No public API changes. No **BREAKING** changes for consumers.
 
@@ -56,6 +62,27 @@ No public API changes. No **BREAKING** changes for consumers.
 ### Modified Capabilities
 
 None. `openspec/specs/` is empty; this is the first capability in the project.
+
+## Assumptions
+
+Carried over from this change's `gate.md`, which the gate-free workflow retired. Each one
+names what would show it is wrong; `tasks.md` orders their verification first.
+
+1. **Regeneration is byte-identical across machines, locales and Node versions.** Everything
+   the CI drift check is worth rests on this. *Wrong if:* regenerating under two different
+   `LANG` values, or on the CI runner versus locally, produces a non-empty diff. Cheap to
+   check and therefore first. Known risk: the `localeCompare` fall-through above.
+   `codegen/package-lock.json` **is** committed (verified, since `c7b85cc`), so npm
+   resolution is not a variance source.
+2. **A committed baseline is the only practical way to verify the codegen port.** *Wrong if:*
+   a throwaway copy of `lib/build/generated/**` diffed against the port's output serves
+   equally well — in which case justification (3) does not need this change at all, and the
+   change gets smaller.
+3. **A committed diff makes a DaisyUI bump reviewable.** This is a claim about human
+   attention, not about tooling, and it is the weakest of the three. *Wrong if:* the first
+   bump after this change is approved without anyone commenting on a signature change. There
+   is no cheap way to check it in advance; it is taken on faith deliberately, and named here
+   so it is not mistaken for a verified requirement.
 
 ## Impact
 

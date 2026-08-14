@@ -80,9 +80,11 @@ comes back on the table; until then it is a speculative fix.
 
 Enabler. Same bytes, different path; provable by diffing against the section 1 baseline.
 
-- [ ] 4.1 `. r` Point the generator tasks and `sourceSets` at a committed generated source
-      root beside `src/`, leaving the build dependencies untouched
-- [ ] 4.2 `. r` Regenerate and confirm the output is byte-identical to the 1.1 baseline
+- [x] 4.1 `. r` Point the generator tasks and `sourceSets` at a committed generated source
+      root beside `src/` (`lib/generated/{main,test}/kotlin`), build dependencies untouched
+- [x] 4.2 `. r` Regenerate and confirm byte-identity: 450/450 files hash-equal to the old
+      tree (itself equal to baseline `0b7ddefd…`); `:lib:test` 566 green compiled from the
+      new root with `build/generated` deleted, so the classes cannot have come from it
 - [ ] 4.3 `. f` Commit the generated sources
 - [ ] 4.4 `. d` Add `.gitattributes` marking the generated root `linguist-generated`
 

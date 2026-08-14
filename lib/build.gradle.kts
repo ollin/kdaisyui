@@ -121,9 +121,12 @@ val checkoutHeroiconsTag = tasks.register<CheckoutHeroiconsTag>("checkoutHeroico
 }
 
 // --- Generated sources from DaisyUI codegen ---
+// Committed, not build output: a sibling of src/ so generated and hand-written
+// Kotlin never share a tree. Regeneration rewrites these directories; the diff
+// then shows in git status. Never edit them by hand.
 
-val generatedMainDir = layout.buildDirectory.dir("generated/sources/kotlin/main")
-val generatedTestDir = layout.buildDirectory.dir("generated/sources/kotlin/test")
+val generatedMainDir = layout.projectDirectory.dir("generated/main/kotlin")
+val generatedTestDir = layout.projectDirectory.dir("generated/test/kotlin")
 
 sourceSets {
     main {
@@ -151,9 +154,9 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     description = "Regenerate Kotlin components from DaisyUI source (git submodule)"
     dependsOn(checkoutDaisyuiTag)
     workingDir = rootProject.file("codegen")
-    val outputDir = generatedMainDir.map { it.dir("io/github/ollin/kdaisyui/components") }
-    doFirst { outputDir.get().asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/index-new.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "npm install --silent && node src/index-new.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
@@ -166,9 +169,9 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     description = "Regenerate Kotlin component tests from DaisyUI source (git submodule)"
     dependsOn(checkoutDaisyuiTag)
     workingDir = rootProject.file("codegen")
-    val outputDir = generatedTestDir.map { it.dir("io/github/ollin/kdaisyui/components") }
-    doFirst { outputDir.get().asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/components")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.asFile.absolutePath}\"")
     dependsOn(generateComponents)
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
@@ -182,9 +185,9 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     description = "Regenerate Kotlin icon functions from Heroicons SVG source (git submodule)"
     dependsOn(checkoutHeroiconsTag)
     workingDir = rootProject.file("codegen")
-    val outputDir = generatedMainDir.map { it.dir("io/github/ollin/kdaisyui/icons") }
-    doFirst { outputDir.get().asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/index-heroicons.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/icons")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "npm install --silent && node src/index-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))

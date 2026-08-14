@@ -158,8 +158,11 @@ artifacts:
       skipped. If a question would change the specs, the chosen approach, or
       the task breakdown, resolve it now - ask the user instead of guessing.
 
-      If an open question turns out to have no obtainable answer, that is a signal
-      to return to gate.md and consider demoting this change to a probe.
+      If an open question turns out to have no obtainable answer, it was never
+      deferrable - it is an assumption. Mark it as one on the requirement it
+      affects, with what would show it wrong, and put its verification early in
+      tasks.md. If the unanswerable question is the change's premise rather than a
+      detail of it, convert the change to probe-driven.
 
       Focus on architecture and approach, not line-by-line implementation.
       The proposal covers why and what; design covers how. Reference the
@@ -237,6 +240,16 @@ apply:
     probe: this plan claimed to know what the system should do, so a failure means
     the implementation is wrong - or the claim was.
 
-    If implementation reveals that the information this plan assumed to exist does
-    not in fact exist, stop and return to gate.md. That is a demotion to a probe,
-    not a failure of the plan.
+    WORKING UNDER UNCERTAINTY. This plan may rest on requirements marked Assumed,
+    and the early tasks are the ones that check them. When a check refutes one,
+    REVISE THE CHANGE - proposal, specs, tasks, whichever the finding touches -
+    before continuing. Do not work around a refuted assumption while leaving the
+    documents asserting it; that is how a plan becomes fiction that later readers
+    take at face value.
+
+    Revision is the expected outcome of ordering uncertainty first, not a failure.
+    Record what was believed and what replaced it, so the next reader knows the
+    plan changed and why.
+
+    If what falls over is the change's premise rather than a detail of it, convert
+    the change to probe-driven and find out by doing instead.

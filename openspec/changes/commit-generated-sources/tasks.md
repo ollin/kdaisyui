@@ -39,10 +39,18 @@ baseline. Revise proposal, specs and these tasks before continuing.*
 drops out, and the change must stand on justifications (1) and (2) alone — which is a
 smaller case and may not carry ~450 committed files.*
 
-- [ ] 2.1 `. d` Write down how `codegen-to-kotlin` would verify parity against an
-      uncommitted baseline copy, and what specifically fails that a committed one solves
-- [ ] 2.2 `. d` Record the answer in proposal.md — either strike justification (3) or state
-      what makes the committed form necessary
+- [x] 2.1 `. d` Write down how `codegen-to-kotlin` would verify parity against an
+      uncommitted baseline copy, and what specifically fails that a committed one solves.
+      **Answer**: snapshot `lib/build/generated/**` (a copy, or hashes as in tasks 1.1-1.4),
+      run the Kotlin generator, compare — nothing in that procedure needs git. Nothing fails
+      that a committed copy solves; it only makes the baseline ambient instead of ad hoc
+- [x] 2.2 `. d` Record the answer in proposal.md — justification (3) struck and demoted to
+      a side effect; the change stands on (1) publishable, browsable API and (2) reviewable
+      bumps. Decided by Oliver, 2026-08-14
+
+**Assumption 2 resolved by refutation — and the change survives it.** The honest accounting
+was the point: (3) was a one-time need that never required committing; (1) and (2) are the
+permanent benefits that do.
 
 ## 3. Remove the dead comparator branches
 

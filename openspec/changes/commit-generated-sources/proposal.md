@@ -12,12 +12,16 @@ follow from that:
    signature and produces a diff of zero lines. There is no way to see what a version bump
    did to the API, which is exactly why the bump is marked "never automerged" in
    `gradle.properties` — the safeguard exists because the evidence does not.
-3. **The planned codegen work has no safety net.** Porting the ~2.800 LoC Node generator to
-   Kotlin, and redesigning the emitted API, both change generated output. Without a committed
-   baseline neither can be verified; with one, the port is provable by an empty diff and the
-   redesign becomes a readable, line-by-line record of every signature that changed.
+3. ~~**The planned codegen work has no safety net.**~~ **Demoted to a side effect**
+   (decided by Oliver, 2026-08-14 — see Assumptions 2). The port of the ~2.800 LoC Node
+   generator is provable by an empty diff against a **throwaway** snapshot of
+   `lib/build/generated/**`; tasks 1.1-1.4 already verified exactly this way, against
+   in-memory hashes. Committed sources make that baseline ambient and give the API redesign
+   a reviewable line-by-line record — welcome, but not what justifies the change.
 
-This is the precondition for the rest of the renovation, so it goes first.
+The change stands on (1) and (2): the library is meant to be published and lived with —
+API browsable in the repository, bumps reviewable as diffs. Those are permanent benefits
+only committed sources provide; (3) was a one-time need that never required them.
 
 ## What Changes
 
@@ -76,10 +80,12 @@ names what would show it is wrong; `tasks.md` orders their verification first.
    `c7b85cc`), so npm resolution is not a variance source.
    **Fully verified 2026-08-14** (task 1.4): a clean `ubuntu-latest` runner produced the same
    aggregate hash as this machine. The assumption is discharged.
-2. **A committed baseline is the only practical way to verify the codegen port.** *Wrong if:*
-   a throwaway copy of `lib/build/generated/**` diffed against the port's output serves
-   equally well — in which case justification (3) does not need this change at all, and the
-   change gets smaller.
+2. ~~**A committed baseline is the only practical way to verify the codegen port.**~~
+   **REFUTED — and that is fine** (decided by Oliver, 2026-08-14, tasks 2.1-2.2). A throwaway
+   snapshot serves the port equally well; tasks 1.1-1.4 demonstrated the exact procedure
+   (snapshot, regenerate, compare hashes) without committing anything. Justification (3) is
+   therefore demoted to a side effect, and the change stands on (1) and (2) alone — which it
+   does, because the library is meant to be published and lived with, not only ported.
 3. **A committed diff makes a DaisyUI bump reviewable.** This is a claim about human
    attention, not about tooling, and it is the weakest of the three. *Wrong if:* the first
    bump after this change is approved without anyone commenting on a signature change. There
@@ -108,5 +114,5 @@ names what would show it is wrong; `tasks.md` orders their verification first.
 - Any change to the emitted API — change `daisyui-taxonomy-api`.
 
 The generated output committed by this change is therefore the *current* output, warts
-included (11 booleans on `daisyButton`, byte-ordered imports). That is the point: it is a
+included (11 booleans on `daisyButton`, plain-collated imports). That is the point: it is a
 baseline, not an improvement.

@@ -75,10 +75,9 @@ this project repeats most often is that the two must not be confused.
 
 ## Risks / Trade-offs
 
-- **Determinism does not hold across machines** → the whole drift check is worthless and
-  requirement 4 has to go. This is why it is task 1. If it fails, the change shrinks to
-  "commit a baseline, keep the build coupled", or is abandoned in favour of the throwaway
-  baseline (assumption 2).
+- ~~**Determinism does not hold across machines**~~ → discharged 2026-08-14: tasks 1.1-1.4
+  measured byte-identical output across runs, locales and a clean `ubuntu-latest` runner.
+  The risk this line guarded against did not materialise.
 - **The `linguist-generated` attribute only affects GitHub's rendering** → local `git diff`,
   `git log -p` and IDE search still show ~450 files. Mitigation: none available; this is a
   cost, and it is the cost assumption 3 is supposed to justify.

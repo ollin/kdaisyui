@@ -1,0 +1,62 @@
+// GENERATED — DO NOT EDIT
+// Source: heroicons/src/{16,20,24}/equals.svg
+// Regenerate: cd codegen && npm run generate:heroicons
+
+package io.github.ollin.kdaisyui.icons
+
+import kotlinx.html.FlowContent
+import kotlinx.html.SPAN
+import kotlinx.html.span
+import kotlinx.html.unsafe
+
+/**
+ * Equals icon from Heroicons.
+ * @param variant Icon style — [HeroIconVariant.Outline] (default) or [HeroIconVariant.Solid]
+ * @param size Icon size — [HeroIconSize.Sm] (16px), [HeroIconSize.Md] (20px), or [HeroIconSize.Lg] (24px, default)
+ * @param extraClasses Additional CSS classes appended to the icon
+ */
+fun FlowContent.heroIconEquals(
+    variant: HeroIconVariant = HeroIconVariant.Outline,
+    size: HeroIconSize = HeroIconSize.Lg,
+    extraClasses: String? = null,
+) {
+    val classes = buildList {
+        add(size.className)
+        add(variant.className)
+        if (extraClasses != null) add(extraClasses)
+    }.joinToString(" ")
+
+    val svgContent = when (variant) {
+        HeroIconVariant.Outline -> heroIconEqualsOutline24
+        HeroIconVariant.Solid -> when (size) {
+            HeroIconSize.Sm -> heroIconEqualsSolid16
+            HeroIconSize.Md -> heroIconEqualsSolid20
+            HeroIconSize.Lg -> heroIconEqualsSolid24
+        }
+    }
+    val viewBox = when (variant) {
+        HeroIconVariant.Outline -> "0 0 24 24"
+        HeroIconVariant.Solid -> when (size) {
+            HeroIconSize.Sm -> "0 0 16 16"
+            HeroIconSize.Md -> "0 0 20 20"
+            HeroIconSize.Lg -> "0 0 24 24"
+        }
+    }
+
+    span {
+        unsafe {
+            raw("""<svg xmlns="http://www.w3.org/2000/svg" viewBox="$viewBox" class="$classes" width="${size.dimension}" height="${size.dimension}">$svgContent</svg>""")
+        }
+    }
+}
+internal const val heroIconEqualsOutline24 = """<path fill="none" d="M4.49854 8.24805H19.4982M4.49854 15.749H19.4982" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />"""
+
+internal const val heroIconEqualsSolid16 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M2 4.75C2 4.33579 2.33579 4 2.75 4H13.25C13.6642 4 14 4.33579 14 4.75C14 5.16421 13.6642 5.5 13.25 5.5H2.75C2.33579 5.5 2 5.16421 2 4.75Z" fill="black" />"""+
+        """<path fill-rule="evenodd" clip-rule="evenodd" d="M2 11.25C2 10.8358 2.33579 10.5 2.75 10.5H13.25C13.6642 10.5 14 10.8358 14 11.25C14 11.6642 13.6642 12 13.25 12H2.75C2.33579 12 2 11.6642 2 11.25Z" fill="black" />"""
+
+internal const val heroIconEqualsSolid20 = """<path d="M3.75 6C3.33579 6 3 6.33579 3 6.75C3 7.16421 3.33579 7.5 3.75 7.5H16.25C16.6642 7.5 17 7.16421 17 6.75C17 6.33579 16.6642 6 16.25 6H3.75Z" fill="black" />"""+
+        """<path d="M3.75 13.5C3.33579 13.5 3 13.8358 3 14.25C3 14.6642 3.33579 15 3.75 15H16.25C16.6642 15 17 14.6642 17 14.25C17 13.8358 16.6642 13.5 16.25 13.5H3.75Z" fill="black" />"""
+
+internal const val heroIconEqualsSolid24 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M3.74805 8.24809C3.74805 7.83385 4.08384 7.49805 4.49807 7.49805H19.4978C19.912 7.49805 20.2478 7.83385 20.2478 8.24809C20.2478 8.66232 19.912 8.99813 19.4978 8.99813H4.49807C4.08384 8.99813 3.74805 8.66232 3.74805 8.24809Z" fill="black" />"""+
+        """<path fill-rule="evenodd" clip-rule="evenodd" d="M3.74805 15.7491C3.74805 15.3348 4.08384 14.999 4.49807 14.999H19.4978C19.912 14.999 20.2478 15.3348 20.2478 15.7491C20.2478 16.1633 19.912 16.4991 19.4978 16.4991H4.49807C4.08384 16.4991 3.74805 16.1633 3.74805 15.7491Z" fill="black" />"""
+

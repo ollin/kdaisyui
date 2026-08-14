@@ -85,7 +85,7 @@ Enabler. Same bytes, different path; provable by diffing against the section 1 b
 - [x] 4.2 `. r` Regenerate and confirm byte-identity: 450/450 files hash-equal to the old
       tree (itself equal to baseline `0b7ddefd…`); `:lib:test` 566 green compiled from the
       new root with `build/generated` deleted, so the classes cannot have come from it
-- [ ] 4.3 `. f` Commit the generated sources
+- [x] 4.3 `. f` Commit the generated sources — 450 files, the exact bytes verified in 4.2
 - [ ] 4.4 `. d` Add `.gitattributes` marking the generated root `linguist-generated`
 
 ## 5. Decouple the build

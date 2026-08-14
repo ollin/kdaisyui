@@ -52,29 +52,21 @@ comment and in `kdaisyui-codegen`.
 Non-trivial changes are planned as OpenSpec changes under `openspec/changes/<name>/`.
 Slash commands: `/opsx-propose`, `/opsx-apply`, `/opsx-archive`.
 
-**Every change enters through `gate.md`** — the first artifact of both schemas. It asks one
-question, and refuses a yes/no answer:
+**Plans are allowed to be wrong; they are not allowed to hide where.** A change does not
+get classified up front. It gets written with its assumptions marked, and the tasks that
+check those assumptions run **first** — so being wrong costs a rewritten plan instead of
+rewritten code.
 
-> **Name the source and the cost.** Where exactly does the information live, and what does
-> it take to fetch it?
-
-Can you name both? Then the answer already exists — **complicated** — go get it and use
-`spec-driven`. Can you not name a source? Then you have no research ahead of you, only a
-guess — **complex** — use `probe-driven`. "Probably findable" and "we could analyse it" are
-not sources.
-
-**The default is complex.** Complicated has to be earned by naming a source; undecided
-counts as complex. The two errors cost differently: treating complex work as complicated
-produces confident plans that are wrong and expensive to unwind, while treating complicated
-work as complex costs about twenty minutes before someone reads the manual.
-
-**The agent does not decide the gate alone.** It lays out both sides with evidence and
-stops; Oliver decides; the reasoning is recorded, not just the verdict.
-
-| | Schema | Artifacts after the gate |
+| Schema | Artifacts | Use it when |
 |---|---|---|
-| complicated | `spec-driven` | proposal → specs → design → tasks |
-| complex | `probe-driven` | hypothesis → probe → observations → learning |
+| `spec-driven` | proposal → specs → design → tasks | you can describe what should happen |
+| `probe-driven` | hypothesis → probe → observations → learning | you have to find out by doing |
+
+The two are not a taxonomy to sort work into once. `probe-driven` is also **how a
+spec-driven change verifies an assumption it cannot check by reading** — split that
+assumption out as its own probe, or convert the whole change when the assumption *was* the
+premise. Going the other way, a probe that reveals a stable pattern gets written up as a
+spec. Switching mid-change is normal, not a failure.
 
 `probe-driven` starts from coherence rather than justification, requires the amplify **and**
 dampen signals to be written before the probe runs, and treats a probe that fails as a
@@ -87,17 +79,20 @@ instruction — `openspec/config.yaml` only holds what is true either way). Unde
 outcome; the only real failure is **no** signal, which is a defect in the probe's design.
 How much must still work scales with blast radius, declared in `probe.md` before running.
 
-In `spec-driven`, every requirement must name its provenance: **Given** (decided outside
-this project, with a citation) or **Earned** (a probe established it). **Assumed is not
-allowed** — a guess written as SHALL gets cited, defended and generates work.
+In `spec-driven`, **every requirement is an assumption until something checked it**, and it
+says which it is: **Verified**, naming the check — the document quoted with a line, the
+measurement taken, the probe that established it — or **Assumed**, naming **what would show
+it is wrong**. An assumption nobody can falsify is a guess wearing the authority of a
+contract; an uncited citation is an assumption about a citation.
 
-The gate is a checkpoint, not a lock. A plan that stalls because its assumed information
-does not exist is **demoted** to a probe; a probe that reveals a stable pattern is
-**promoted** to a spec. Both are appended to `gate.md` as dated entries. Neither is a
-failure — being unsure at the start is the normal case.
+Marking one Assumed is not a licence to leave it there. It is a debt, and `tasks.md` pays it
+by ordering **uncertainty before dependency**: the task that checks the shakiest assumption
+comes first. When the check refutes it, **revise the change** — proposal, specs, tasks,
+whatever the finding touches — rather than working around it while the documents go on
+asserting it. That revision is the process working.
 
 `openspec new change` always scaffolds `spec-driven`; set `schema: probe-driven` in the
-change's `.openspec.yaml` when the gate says so.
+change's `.openspec.yaml` when you are finding out rather than describing.
 
 **`openspec/config.yaml` carries the planning rules** — the project context, per-artifact
 rules, and the guidance served when implementation or archival starts (what "green" means

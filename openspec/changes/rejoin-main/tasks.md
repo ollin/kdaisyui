@@ -78,20 +78,47 @@ otherwise have shipped unseen:
    `<details>` was not the dominant form either, so this is a pre-existing weakness that
    changed which wrong answer it gives.
 
-- [ ] 3.4 Decide with Oliver what happens to the dropdown defect. It cannot be fixed in
-      `lib/generated` — the drift job requires that tree to equal generator output — so the
-      fix belongs in `codegen/src` element detection, which is outside this change. But this
-      branch is heading for Maven Central, and `<ul>` wrapping a `<div tabindex>` trigger is
-      not markup to publish
+- [x] 3.4 Dropdown defect fixed (`ca2129a`), with a correction to my own report: the parser
+      reads `daisyui/skills/daisyui/components/`, not `+page.md`, and there `<ul>` is the
+      first of two documented variants rather than an outlier. The real fault is that the
+      first variant needs `popover`/`id`/`style` attributes the generator cannot emit, so it
+      produces a dropdown that cannot open. Recorded per component in `componentElements`.
+
+## 3b. The silent coverage loss (found while fixing 3.4, not planned)
+
+Regenerating surfaced a warning on stderr: `test-generator.js` was still reading components
+from the pre-move `lib/build/generated/...`, and on a missing directory it **warned and
+returned**. The source-root move in `commit-generated-sources` therefore deleted 66 coverage
+test files and 525 assertions without turning anything red — the suite stayed green while
+testing less, through every run reporting 566, 606 and 963.
+
+- [x] 3b.1 `^ b` Restore them (`d51d417`) — `:lib:test` 963 → 1488
+- [x] 3b.2 Measure what was actually lost, rather than assume. Reproduced the pre-fix state
+      and ran the gate: **line 92.088%, branch 90.909%**, both against a 100% minimum. So the
+      loss was material, and `koverVerify` would have caught it — this branch simply had no
+      gate until the merge
+- [x] 3b.3 `^ b` Remove the cause (`d921d87`): `lib/build.gradle.kts` passes
+      `--components-dir`, so the path lives in one place, and the skip becomes a throw.
+      Proven by moving the directory aside — the build now fails at the Gradle layer, before
+      the generator runs, because `inputs.dir` makes the dependency declarative
 
 ## 4. Get the gate green
 
 *Assumption 4, the one Oliver accepted the risk on.*
 
-- [ ] 4.1 `^ F` Run `./gradlew :lib:test koverVerify` and record the shortfall, if any
-- [ ] 4.2 `^ F` Close the gap, or bring back a documented exclusion — do not lower the
-      threshold to make it pass
-- [ ] 4.3 Full suite: `:lib:test`, `:ktor-integration:test`, `:e2e-tests:test`, `koverVerify`
+- [x] 4.1 `^ F` Run `koverVerify` and record the shortfall. **None** — it passes.
+- [x] 4.2 `^ F` Nothing to close. The only gap was 3b, and it was a defect rather than
+      genuinely uncovered code; no threshold was lowered and no exclusion added. The gate's
+      one exclusion (`*$DefaultImpls`) predates this change and carries its justification in
+      `build.gradle.kts:29-52`
+- [x] 4.3 Full suite with everything re-executed: **1522 tests green**, `koverVerify` green
+      (`:lib:test`, `:ktor-integration:test`, `:e2e-tests:test`, `--rerun-tasks`)
+
+**Assumption 4 holds** — the risk Oliver accepted did not materialise. Worth noting *why* it
+did not: the shortfall it anticipated was real (92.088% / 90.909%), but caused by 3b rather
+than by the committed sources being untestable. Had 3b not been found first, this section
+would have read as "the coverage gate cannot cope with 457 generated files" — the wrong
+conclusion, and an expensive one.
 
 ## 5. Correct the documents that are now wrong
 

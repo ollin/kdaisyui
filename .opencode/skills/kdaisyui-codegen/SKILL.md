@@ -18,14 +18,19 @@ From `lib/build.gradle.kts`:
 
 | Gradle task | Entry point | Output |
 |---|---|---|
-| `generateComponents` | `codegen/src/index-new.js` | `lib/build/generated/sources/kotlin/main/io/github/ollin/kdaisyui/components/` |
-| `generateHeroicons` | `codegen/src/index-heroicons.js` | `…/kotlin/main/io/github/ollin/kdaisyui/icons/` |
-| `generateComponentTests` | `codegen/src/test-generator.js` | `lib/build/generated/sources/kotlin/test/…` |
+| `generateComponents` | `codegen/src/index-new.js` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/components/` |
+| `generateHeroicons` | `codegen/src/index-heroicons.js` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/icons/` |
+| `generateComponentTests` | `codegen/src/test-generator.js` | `lib/generated/test/kotlin/io/github/ollin/kdaisyui/components/` |
+
+That output is **committed**, and **compilation does not depend on these tasks**. A clone
+builds and tests with no Node, no npm and no git submodules; only regeneration needs them:
 
 ```
-compileKotlin      dependsOn generateComponents, generateHeroicons
-compileTestKotlin  dependsOn generateComponentTests
+just generate      # all three tasks, then shows the resulting diff
 ```
+
+What keeps the committed output honest is CI's `generated-sources-drift` job: it regenerates
+and fails if `lib/generated` changed. So the loop is regenerate → review the diff → commit it.
 
 So **any build regenerates**. `just generate` is a *separate* npm path
 (`cd codegen && npm install && npm run generate`) and is not required for a normal build.
@@ -92,7 +97,9 @@ Consumers never hardcode class strings — they use the enums, or `extraClasses`
 
 ## Never edit generated files
 
-`lib/build/generated/**` is build output and is overwritten on every compile. Change the
+`lib/generated/**` is committed and readable — deliberately, so the API and every DaisyUI
+bump can be reviewed. It is still not yours to edit: `just generate` overwrites it wholesale,
+and CI's `generated-sources-drift` job fails any commit that hand-edited it. Change the
 pipeline instead.
 
 ## Where to change what
@@ -147,7 +154,9 @@ so a `:lib:generateComponents` run after the deletion proves nothing depended on
 
 ## Verifying a codegen change
 
-1. `mcp_Gradle_gradle` → `:lib:compileKotlin` (regenerates and compiles), or run configuration
-   `kdaisyUI [:lib:generateComponents]`
+1. `mcp_Gradle_gradle` → `:lib:generateComponents` (compiling no longer regenerates — the
+   build reads the committed sources), or run configuration `kdaisyUI [:lib:generateComponents]`
 2. `:lib:test`
-3. Inspect the produced file under `lib/build/generated/…` — read only, never edit
+3. Inspect the produced file under `lib/generated/…` — read only, never edit
+4. Review `git diff -- lib/generated` and commit it. An unreviewed regeneration diff is the
+   thing this layout exists to prevent, and CI fails if you leave it uncommitted

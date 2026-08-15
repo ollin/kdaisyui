@@ -9,8 +9,14 @@ Exact versions live in `gradle.properties`, `.tool-versions` and
 ## The one rule
 
 **Components, icons and most tests are GENERATED.** Never edit anything under
-`lib/build/generated/**` — it is build output, overwritten on every compile. Change the codegen
-pipeline instead → skill **`kdaisyui-codegen`**.
+`lib/generated/**`. It *is* committed and it *is* readable — that is the point, it is how the
+API and a DaisyUI bump become reviewable — but it is overwritten wholesale by `just generate`,
+and CI's `generated-sources-drift` job fails any commit whose generated output no longer
+matches its inputs. A hand edit therefore does not survive and does not merge. Change the
+codegen pipeline instead → skill **`kdaisyui-codegen`**.
+
+The build does **not** run the generators: a clone compiles and tests with no Node, no npm and
+no git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
 
 Hand-written Kotlin exists only here:
 
@@ -105,7 +111,7 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 ## Anti-patterns
 
-- Editing `lib/build/generated/**`
+- Editing `lib/generated/**`
 - Hardcoding CSS class strings instead of using the generated enums
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle.properties`
 - Assuming release automation exists — it does not, see `kdaisyui-release`

@@ -10,9 +10,12 @@ context: |
 
   Most of this library is GENERATED. 63 components, 324 Heroicon functions and
   63 component test files are produced by the codegen from the daisyui and
-  heroicons git submodules into lib/build/generated/**. Never propose editing
-  generated output — change the codegen instead. Hand-written Kotlin is roughly
-  200 lines: lib/.../core/ (ClassNames.kt, TagId.kt), the two icon enums, and
+  heroicons git submodules into lib/generated/**, which is COMMITTED. Never
+  propose editing generated output — change the codegen instead. The build does
+  not run the generators; regeneration is explicit (just generate) and CI's
+  generated-sources-drift job rejects committed output that no longer matches
+  its inputs. Hand-written Kotlin is roughly 200 lines: lib/.../core/
+  (ClassNames.kt, TagId.kt), the two icon enums, and
   ktor-integration/.../Resolvable.kt.
 
   The package is io.github.ollin.kdaisyui — never com.github.ollin.
@@ -70,8 +73,9 @@ operations:
         apply instruction - a full green suite for spec-driven, a usable signal for
         probe-driven. Do not apply one schema's bar to the other."
       - "If Chromium is missing, run ./gradlew :e2e-tests:playwrightInstall first."
-      - "Never edit lib/build/generated/** to make something pass. Change the codegen
-        under codegen/ and regenerate with ./gradlew :lib:generateComponents."
+      - "Never edit lib/generated/** to make something pass - it is committed, but CI's
+        generated-sources-drift job fails any hand edit. Change the codegen under
+        codegen/ and regenerate with just generate."
       - "Commit after every completed task, never as one batch at the end. Each task is
         one Risk-Aware (Arlo) commit; never inflate a risk code to make a log look
         tidy."

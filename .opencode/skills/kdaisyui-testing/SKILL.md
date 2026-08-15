@@ -12,11 +12,12 @@ Three layers, three different frameworks. Identify which one you are in before w
 
 ## 1. Generated component tests — `:lib:test`
 
-Produced by `codegen/src/test-generator.js` into
-`lib/build/generated/sources/kotlin/test/…`, wired via `compileTestKotlin dependsOn
-generateComponentTests`. These are the bulk of the suite (`:lib:test` runs ~566 tests).
+Produced by `codegen/src/test-generator.js` into `lib/generated/test/kotlin/…`, which is
+**committed**. Compiling does not regenerate them, so `:lib:test` needs no Node and no
+submodules. These are the bulk of the suite (`:lib:test` runs ~566 tests).
 
-**Never hand-edit them** — they are build output. Fix `test-generator.js` instead; see the
+**Never hand-edit them** — `just generate` overwrites them wholesale and CI's
+`generated-sources-drift` job fails any hand edit. Fix `test-generator.js` instead; see the
 `kdaisyui-codegen` skill.
 
 ## 2. Hand-written unit tests — `:lib:test`, `:ktor-integration:test`

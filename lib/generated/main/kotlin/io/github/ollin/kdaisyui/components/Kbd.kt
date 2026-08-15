@@ -1,6 +1,7 @@
 // GENERATED — DO NOT EDIT
 // Source: daisyui/packages/docs/src/routes/(routes)/components/kbd/+page.md
 // Regenerate: cd codegen && npm run generate
+// TEMPORARY: hand-edit to prove the drift check catches exactly this.
 
 package io.github.ollin.kdaisyui.components
 

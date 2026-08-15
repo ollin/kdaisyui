@@ -94,11 +94,20 @@ Enabler. Same bytes, different path; provable by diffing against the section 1 b
 Desired change. Only after section 4, so a broken build cannot be mistaken for a broken
 generator.
 
-- [ ] 5.1 `^ F` Remove the `compileKotlin` / `compileTestKotlin` dependencies on the
-      generator tasks (`lib/build.gradle.kts:194-201`)
-- [ ] 5.2 `^ F` Verify a build with uninitialised submodules and no Node on `PATH` — this is
-      the scenario the requirement names, so it needs an actual run, not an argument
-- [ ] 5.3 `. d` Add a `just` recipe that regenerates and shows the resulting diff
+- [x] 5.1 `^ F` Remove the `compileKotlin` / `compileTestKotlin` dependencies on the
+      generator tasks — and `sourcesJar`'s two, which were the same coupling
+- [x] 5.2 `^ F` Verify a build with no Node on `PATH` — `:lib:test` (566 green) and
+      `:lib:sourcesJar` (391 sources) both succeed with `~/.asdf/shims`, the only PATH entry
+      providing node/npm, removed. The submodule half is verified structurally for now: the
+      task graph contains no generate or checkout task at all, so nothing reads `daisyui/`.
+      The clean-clone proof arrives in 6.3 when `submodules: recursive` leaves the test jobs
+- [x] 5.3 `. d` Add a `just` recipe that regenerates and shows the resulting diff.
+      Regenerating after the move left `lib/generated` untouched — the drift check in
+      miniature
+
+Found on the way: `just generate` ran `npm run generate`, which passes no `--output-dir`, and
+all three generators defaulted to `lib/src/**` — inside the hand-written tree. Fixed in its
+own commit (`! b`), since it is a defect and not part of decoupling.
 
 ## 6. Reject drift
 

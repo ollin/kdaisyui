@@ -12,8 +12,14 @@ default:
 build:
     ./gradlew build :lib:publishToMavenLocal
 
+# Regenerate the committed Kotlin sources in lib/generated and show what changed.
+# The build never does this by itself — committed output plus CI's drift check
+# is what keeps lib/generated honest. Needs Node and the git submodules.
 generate:
-    cd codegen && npm install && npm run generate
+    ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons
+    @echo
+    @git status --short lib/generated || true
+    @git --no-pager diff --stat -- lib/generated || true
 
 # Regenerate Heroicons Kotlin source from Heroicons SVG submodule
 generate-heroicons:

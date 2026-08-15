@@ -13,11 +13,32 @@ static analysis of the two trees.
 *Refuted if the conflict set is unmanageable. Then: reconstruct this branch's four
 substantive commits on top of `origin/main` instead of merging, and rewrite sections 2-5.*
 
-- [ ] 1.1 `. r` On a throwaway branch off `ollins-stuff-at-home`, merge `origin/main` and
-      record the conflict list without resolving anything
-- [ ] 1.2 `. d` Record the outcome: merge or reconstruct. Name the files that conflict and
-      which side should win for each, so the real merge is a decision list rather than
-      improvisation
+- [x] 1.1 `. r` On a throwaway branch off `ollins-stuff-at-home`, merge `origin/main` and
+      record the conflict list without resolving anything. **23 conflicts**, no resolution
+      attempted, merge aborted and the branch deleted
+- [x] 1.2 `. d` **Outcome: merge, not reconstruct.** Assumption 1 holds. Only five conflicts
+      need thought; the rest are documentation or vendored files with an obvious winner.
+
+      | Conflict | Winner | Why |
+      |---|---|---|
+      | `lib/build.gradle.kts` | **both** | main's coverage/publishing wiring, this branch's committed source roots and decoupling. The only genuinely hand-written resolution — task 2.2 |
+      | `.github/workflows/ci.yml` | **both** | main's `koverVerify` and `checkout@v7`, this branch's drift job and submodule-free test jobs — task 2.3 |
+      | `gradle.properties` | **main** | the file is now just `version=0.1.0`; everything else moved to `libs.versions.toml`. This branch's DaisyUI ceiling comment goes with it |
+      | `codegen/src/generator-new.js` | **both** | main reworked 44 lines; this branch deleted the two unreachable comparator branches. Re-apply the deletion if main still carries them |
+      | `openspec/config.yaml` | **both** | main's context plus this branch's uncertainty-first rules and the gate-free wording |
+      | `codegen/package.json` + lock | **this branch** | removing `js-yaml` supersedes main's bump of it. Still unused there |
+      | `.opencode/commands/opsx-*.md` (4), `.opencode/skills/openspec-*` (4) | **main** | vendored upstream copies, added on both sides |
+      | `AGENTS.md`, `README.md`, `justfile`, `.tool-versions`, `.gitignore`, `example-app/build.gradle.kts` | **merge by hand** | both sides edited; section 5 corrects the content afterwards either way |
+      | `.github/copilot-instructions.md`, `CODESEEKER.md` | **decide** | deleted on this branch, modified on main. Delete/modify, so git cannot guess |
+
+      Two things this exposed that the proposal did not anticipate:
+
+      - This branch **deleted** `.github/copilot-instructions.md` and `CODESEEKER.md` at some
+        point. Main still maintains both. Whether that deletion was deliberate is unknown and
+        needs Oliver.
+      - The vendored `openspec-*` skills and `opsx-*` commands exist on both sides with
+        different content. Taking main's wholesale may drop local edits — check before
+        resolving.
 
 ## 2. Do the merge
 

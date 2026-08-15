@@ -3,7 +3,7 @@
 # The two numbers differ on purpose; they are not in conflict.
 java temurin-25.0.3+9.0.LTS
 
-# Needed only by the codegen (codegen/src/*.js). Goes away once the generator is Kotlin.
-nodejs 26.5.1
+# Node is deliberately NOT pinned here. Building and testing kdaisyui needs no
+# Node at all — the generated sources are committed. Only `just generate` runs
+# the codegen, and whoever does that brings their own Node.
 
-just 1.51.0

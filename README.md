@@ -92,10 +92,15 @@ val html = createHTML().div {
 ```bash
 git clone https://github.com/ollin/kdaisyui
 cd kdaisyui
-asdf install   # reads .tool-versions — installs JDK, Node, just
+asdf install   # reads .tool-versions — installs the JDK
 just test      # run unit tests
 just dev       # start dev server → http://localhost:8080
 ```
+
+Building and testing needs **only a JDK**. The components and icons are generated, but the
+generated sources are committed, so there is no Node, no npm and no git submodule in the way
+of a clone. Only `just generate` — regenerating after a DaisyUI or Heroicons bump — needs
+Node and the submodules.
 
 ### Option B — Any JDK 21+
 
@@ -107,7 +112,7 @@ Exact versions are the single source of truth in these files:
 
 | What | Where |
 |---|---|
-| JDK, Gradle, Node | [`.tool-versions`](.tool-versions) |
+| JDK that runs Gradle | [`.tool-versions`](.tool-versions) |
 | Kotlin, kotlinx-html | [`gradle.properties`](gradle.properties) |
 | Gradle wrapper | [`gradle/wrapper/gradle-wrapper.properties`](gradle/wrapper/gradle-wrapper.properties) |
 | Ktor, webjars | [`example-app/build.gradle.kts`](example-app/build.gradle.kts) |
@@ -125,7 +130,9 @@ This project uses [`just`](https://just.systems/) as a task runner. Run `just` t
 | `just build` | Build all Gradle modules |
 | `just clean` | Remove all build artifacts |
 
-`just` is included in [`.tool-versions`](.tool-versions) and installed automatically with `asdf install`. The raw Gradle commands still work if you prefer them directly.
+`just generate` regenerates the committed sources in `lib/generated` and shows the resulting
+diff; it is the only recipe that needs Node and the git submodules. The raw Gradle commands
+still work if you prefer them directly.
 
 ## AI support
 

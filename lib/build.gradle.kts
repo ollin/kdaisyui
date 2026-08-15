@@ -1,52 +1,24 @@
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
+    alias(libs.plugins.kover)
 }
 
-version = project.findProperty("version")?.toString() ?: "0.0.1-SNAPSHOT"
 group = "io.github.ollin.kdaisyui"
 
 base.archivesName.set("kdaisyui")
 
 // --- DaisyUI submodule tag checkout ---
 
-val daisyuiVersion = project.property("daisyui.version").toString()
-val heroiconsVersion = project.property("heroicons.version").toString()
+val daisyuiVersion = libs.versions.daisyui.get()
+val heroiconsVersion = libs.versions.heroicons.get()
 
-// --- Git hash for manifest (lazy, configuration-cache safe) ---
-
-val gitHash: Provider<String> = providers.of(GitHashValueSource::class) {
-    parameters.rootDir.set(rootProject.layout.projectDirectory)
-}
-
-abstract class GitHashValueSource : ValueSource<String, GitHashValueSource.Parameters> {
-    interface Parameters : ValueSourceParameters {
-        val rootDir: DirectoryProperty
-    }
-
-    override fun obtain(): String {
-        val dir = parameters.rootDir.get().asFile
-        val process = ProcessBuilder("git", "rev-parse", "HEAD")
-            .directory(dir)
-            .start()
-        return process.inputStream.bufferedReader().readLine()?.trim() ?: "unknown"
-    }
-}
-
-// --- JAR manifest attributes ---
+// --- JAR manifest: shared attributes come from the convention plugin; only the
+// DaisyUI version is module-specific to lib. ---
 
 tasks.withType<Jar> {
     manifest {
-        attributes(
-            "Implementation-Title" to "io.github.ollin.kdaisyui:kdaisyui",
-            "Implementation-Version" to project.version,
-            "Implementation-Vendor" to "ollin",
-            "Implementation-URL" to "https://github.com/ollin/kdaisyui",
-            "SCM-Revision" to gitHash,
-            "DaisyUI-Version" to daisyuiVersion,
-            "Kotlin-Version" to project.property("versions.kotlin").toString(),
-            "Created-By" to "Gradle ${gradle.gradleVersion}",
-        )
+        attributes("DaisyUI-Version" to daisyuiVersion)
     }
 }
 
@@ -138,13 +110,13 @@ sourceSets {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-html-jvm:${project.property("versions.kotlinx-html")}")
+    api(libs.kotlinx.html.jvm)
 }
 
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
-            useKotlinTest(project.property("versions.kotlin").toString())
+            useKotlinTest(libs.versions.kotlin.get())
         }
     }
 }
@@ -180,6 +152,20 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     outputs.dir(outputDir)
 }
 
+val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
+    group = "codegen"
+    description = "Regenerate exhaustive Kotlin icon render tests from Heroicons SVG source (git submodule)"
+    dependsOn(checkoutHeroiconsTag)
+    workingDir = rootProject.file("codegen")
+    val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/icons")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "npm install --silent && node src/test-generator-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("heroicons/src"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    outputs.dir(outputDir)
+}
+
 val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     group = "codegen"
     description = "Regenerate Kotlin icon functions from Heroicons SVG source (git submodule)"
@@ -197,7 +183,7 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
 // Compilation deliberately does NOT depend on the generators. The generated
 // sources are committed, so a clone builds and tests with no Node, no npm and
 // no git submodules. Regeneration is explicit — `just generate` — and CI's
-// drift check is what keeps the committed output honest.
+// generated-sources-drift job is what keeps the committed output honest.
 
 // Sources JAR for Maven Central
 val sourcesJar by tasks.registering(Jar::class) {
@@ -217,32 +203,32 @@ publishing {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             artifactId = "kdaisyui"
-            
+
             // Attach sources and javadoc JARs
             artifact(sourcesJar.get())
             artifact(javadocJar.get())
-            
+
             // POM metadata required for Maven Central
             pom {
                 name.set("kdaisyui")
                 description.set("Type-safe DaisyUI component DSL for Kotlin server-rendered HTML")
                 url.set("https://github.com/ollin/kdaisyui")
-                
+
                 licenses {
                     license {
                         name.set("MIT License")
                         url.set("https://opensource.org/licenses/MIT")
                     }
                 }
-                
+
                 developers {
                     developer {
                         id.set("ollin")
-                        name.set("ollin")
+                        name.set("Oliver Nautsch")
                         email.set("ollin@users.noreply.github.com")
                     }
                 }
-                
+
                 scm {
                     connection.set("scm:git:git://github.com/ollin/kdaisyui.git")
                     developerConnection.set("scm:git:ssh://github.com/ollin/kdaisyui.git")
@@ -253,12 +239,8 @@ publishing {
     }
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ollin/kdaisyui")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
+            name = "staging"
+            url = rootProject.layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
         }
     }
 }

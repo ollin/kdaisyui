@@ -18,21 +18,9 @@ dependencies {
     implementation(project(":lib"))
     implementation(project(":ktor-integration"))
 
-    val ktorVersion = project.property("versions.ktor").toString()
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
-    implementation("io.ktor:ktor-server-webjars:$ktorVersion")
-    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
-    implementation("io.ktor:ktor-server-resources:$ktorVersion")
+    implementation(libs.bundles.ktor.server.app)
 
-    // Webjars — served at /webjars/{name}/{file}
-    // The daisyui webjar version is derived from daisyui.version in gradle.properties so the
-    // CSS served here always matches the submodule tag the components were generated from.
-    // Do not hardcode it: a literal here drifts away from the codegen input silently.
-    implementation("org.webjars.npm:daisyui:${project.property("daisyui.version")}")
-    implementation("org.webjars.npm:tailwindcss__browser:4.2.1")
-    implementation("org.webjars.npm:htmx.org:2.0.10")
+    // Webjar assets (daisyui, tailwind, htmx) come transitively from :ktor-integration.
 
-    implementation("ch.qos.logback:logback-classic:1.5.32")
+    implementation(libs.logback.classic)
 }

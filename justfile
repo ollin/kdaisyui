@@ -16,14 +16,10 @@ build:
 # The build never does this by itself — committed output plus CI's drift check
 # is what keeps lib/generated honest. Needs Node and the git submodules.
 generate:
-    ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons
+    ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests
     @echo
     @git status --short lib/generated || true
     @git --no-pager diff --stat -- lib/generated || true
-
-# Regenerate Heroicons Kotlin source from Heroicons SVG submodule
-generate-heroicons:
-    ./gradlew :lib:generateHeroicons
 
 # Sync DaisyUI submodule to the tag matching daisyui.version in gradle.properties
 sync-daisyui:

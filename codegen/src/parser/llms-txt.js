@@ -8,15 +8,32 @@
 import fs from 'fs'
 import path from 'path'
 
-const LLMS_TXT_PATH = path.resolve(import.meta.dirname, '../../../daisyui/packages/docs/static/llms.txt')
+const DAISYUI_ROOT = path.resolve(import.meta.dirname, '../../../daisyui')
+const STATIC_LLMS_TXT = path.join(DAISYUI_ROOT, 'packages/docs/static/llms.txt')
+const COMPONENT_SKILLS_DIR = path.join(DAISYUI_ROOT, 'skills/daisyui/components')
+
+function readElementRuleSource() {
+  if (fs.existsSync(STATIC_LLMS_TXT)) {
+    return fs.readFileSync(STATIC_LLMS_TXT, 'utf8')
+  }
+  if (fs.existsSync(COMPONENT_SKILLS_DIR)) {
+    return fs.readdirSync(COMPONENT_SKILLS_DIR)
+      .filter((name) => name.endsWith('.md'))
+      .sort()
+      .map((name) => fs.readFileSync(path.join(COMPONENT_SKILLS_DIR, name), 'utf8'))
+      .join('\n')
+  }
+  throw new Error(
+    `DaisyUI layout changed: found neither ${STATIC_LLMS_TXT} nor ${COMPONENT_SKILLS_DIR}. ` +
+    `Check the pinned daisyui version and the codegen path.`
+  )
+}
 
 /**
- * Parse llms.txt and extract HTML element rules for each component
  * @returns {Map<string, ElementRule>}
  */
 export function parseLlmsTxt() {
-  const content = fs.readFileSync(LLMS_TXT_PATH, 'utf8')
-  return parseLlmsTxtContent(content)
+  return parseLlmsTxtContent(readElementRuleSource())
 }
 
 function parseLlmsTxtContent(content) {

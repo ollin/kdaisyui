@@ -12,11 +12,14 @@
 // build.gradle.kts
 repositories {
     mavenCentral()
-    maven("https://maven.pkg.github.com/ollin/kdaisyui")
 }
 
 dependencies {
-    implementation("io.github.ollin.kdaisyui:kdaisyui:5.5.19-1")
+    // Import the BOM once (replace VERSION with the latest release), then declare
+    // the artifacts without versions — the BOM keeps them aligned.
+    implementation(platform("io.github.ollin.kdaisyui:kdaisyui-bom:VERSION"))
+    implementation("io.github.ollin.kdaisyui:kdaisyui")
+    implementation("io.github.ollin.kdaisyui:kdaisyui-ktor-integration") // optional
 }
 ```
 
@@ -554,8 +557,8 @@ fun FlowContent.daisyRange(
 ## Requirements
 
 - JDK 21+ (see `.tool-versions`)
-- Kotlin 2.3.10, kotlinx-html 0.12.0
-- DaisyUI 5.5.19
+- Kotlin 2.4.0, kotlinx-html 0.12.0
+- DaisyUI 5.5.20 (a Tailwind v4 plugin; Tailwind 4.1.14)
 
 ## Links
 

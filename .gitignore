@@ -17,6 +17,13 @@ node_modules/
 # Ignore CodeSeeker index
 .codeseeker/
 
+# Ignore local scratch directory
+tmp/
+
+# NOTE: generated sources are COMMITTED under lib/generated/ and must not be
+# ignored. The rules that used to hide them inside lib/src/ are gone with the
+# paths they guarded.
+
 **/.classpath
 **/.project
 **/.settings/

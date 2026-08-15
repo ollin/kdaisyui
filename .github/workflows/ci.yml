@@ -18,7 +18,7 @@ jobs:
     name: generated-sources-drift
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -30,7 +30,7 @@ jobs:
           cache: gradle
 
       - name: Regenerate
-        run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons --no-daemon
+        run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests --no-daemon
 
       - name: Fail if the committed sources no longer match their inputs
         run: |
@@ -53,7 +53,7 @@ jobs:
       # No submodules: the generated sources are committed and the build does not
       # run the generators. If this job ever needs them again, that is a defect -
       # the drift job is what owns regeneration.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -62,8 +62,10 @@ jobs:
           java-version: 21
           cache: gradle
 
-      - name: Run unit tests
-        run: ./gradlew :lib:test --no-daemon
+      - name: Run unit tests and enforce coverage gate
+        # koverVerify is the aggregated 100% gate — keep it here so CI fails on a
+        # coverage shortfall; reverting this to a bare :lib:test silently disables it.
+        run: ./gradlew :lib:test koverVerify koverXmlReport --no-daemon
 
       - name: Upload test report
         if: failure()
@@ -72,12 +74,20 @@ jobs:
           name: unit-test-report
           path: lib/build/reports/tests/test/
 
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: build/reports/kover/
+          retention-days: 7
+
   e2e-tests:
     name: e2e-tests
     runs-on: ubuntu-latest
     steps:
       # No submodules — see unit-tests.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up JDK
         uses: actions/setup-java@v5

@@ -1,1 +1,6 @@
 build/
+
+# Empty husk dirs the Playwright Java driver touches in the working dir;
+# real artifacts (traces, screenshots, reports) live under build/.
+playwright-report/
+test-results/

@@ -11,30 +11,28 @@ kotlin {
 }
 
 dependencies {
-    val ktorVersion = project.property("versions.ktor").toString()
     testImplementation(project(":lib"))
     testImplementation(project(":example-app"))
-    testImplementation("io.ktor:ktor-server-core:$ktorVersion")
-    testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation(libs.ktor.server.core)
+    testImplementation(libs.ktor.server.netty)
+    testImplementation(libs.ktor.server.test.host)
 
-    testImplementation("com.microsoft.playwright:playwright:1.60.0")
+    testImplementation(libs.playwright)
 
     // Kotest (existing tests)
-    testImplementation("io.kotest:kotest-runner-junit5:6.1.11")
-    testImplementation("io.kotest:kotest-assertions-core:6.1.11")
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Cucumber BDD
-    val cucumberVersion = "7.34.3"
-    testImplementation("io.cucumber:cucumber-java:$cucumberVersion")
-    testImplementation("io.cucumber:cucumber-junit-platform-engine:$cucumberVersion")
-    testImplementation("io.cucumber:cucumber-picocontainer:$cucumberVersion")
+    testImplementation(libs.cucumber.java)
+    testImplementation(libs.cucumber.junit.platform.engine)
+    testImplementation(libs.cucumber.picocontainer)
 
-    testImplementation("org.junit.platform:junit-platform-suite:6.1.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:6.1.0")
+    testImplementation(libs.junit.platform.suite)
+    testRuntimeOnly(libs.junit.platform.suite.engine)
 
-    testImplementation("ch.qos.logback:logback-classic:1.5.32")
+    testImplementation(libs.logback.classic)
 }
 
 tasks.test {
@@ -58,6 +56,15 @@ tasks.test {
                 }
         })
     chromiumPath.orNull?.let { environment("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH", it) }
+
+    doLast {
+        listOf("playwright-report", "test-results").forEach { name ->
+            val dir = projectDir.resolve(name)
+            if (dir.isDirectory && dir.walkBottomUp().all { it.isDirectory }) {
+                dir.deleteRecursively()
+            }
+        }
+    }
 }
 
 

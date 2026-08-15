@@ -1,9 +1,10 @@
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
+    alias(libs.plugins.kover)
+    kotlin("plugin.serialization")
 }
 
-version = project.findProperty("version")?.toString() ?: "0.0.1-SNAPSHOT"
 group = "io.github.ollin.kdaisyui"
 
 base.archivesName.set("kdaisyui-ktor-integration")
@@ -21,20 +22,23 @@ kotlin {
 dependencies {
     api(project(":lib"))
 
-    val ktorVersion = project.property("versions.ktor").toString()
-    api("io.ktor:ktor-server-resources:$ktorVersion")
+    api(libs.ktor.server.resources)
+
+    // DaisyUI CSS + Tailwind + htmx assets, served via Ktor's Webjars plugin.
+    // Exposed transitively so Ktor consumers get the matching asset versions.
+    api(libs.ktor.server.webjars)
+    api(libs.bundles.webjars)
 }
 
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
-            useKotlinTest(project.property("versions.kotlin").toString())
+            useKotlinTest(libs.versions.kotlin.get())
 
             dependencies {
-                val ktorVersion = project.property("versions.ktor").toString()
-                implementation("io.ktor:ktor-server-test-host:$ktorVersion")
-                implementation("io.ktor:ktor-server-core:$ktorVersion")
-                implementation("io.ktor:ktor-server-resources:$ktorVersion")
+                implementation(libs.ktor.server.test.host)
+                implementation(libs.ktor.server.core)
+                implementation(libs.ktor.server.resources)
             }
         }
     }
@@ -74,7 +78,7 @@ publishing {
                 developers {
                     developer {
                         id.set("ollin")
-                        name.set("ollin")
+                        name.set("Oliver Nautsch")
                         email.set("ollin@users.noreply.github.com")
                     }
                 }
@@ -89,12 +93,8 @@ publishing {
     }
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ollin/kdaisyui")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
+            name = "staging"
+            url = rootProject.layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
         }
     }
 }

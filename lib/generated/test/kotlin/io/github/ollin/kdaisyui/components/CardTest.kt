@@ -171,4 +171,15 @@ class CardTest {
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive card (vertical on small screen, horizontal on large screen)")
     }
+
+    @Test
+    fun selectable_cards() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard() {
+            }
+        }
+        val expectedClasses = "card"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Selectable cards")
+    }
 }

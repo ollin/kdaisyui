@@ -96,6 +96,17 @@ class FabTest {
     }
 
     @Test
+    fun fab_flower_without_a_main_action_button() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFab(flower = true) {
+            }
+        }
+        val expectedClasses = "fab fab-flower"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB Flower without a main action button")
+    }
+
+    @Test
     fun fab_and_flower_speed_dial_with_svg_icons() {
         val html = createHTML(prettyPrint = false).div {
             daisyFab(flower = true) {

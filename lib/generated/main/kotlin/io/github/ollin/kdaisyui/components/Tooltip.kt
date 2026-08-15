@@ -12,8 +12,6 @@ import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `tooltip-`) */
 enum class TooltipVariant(internal val className: String) {
-    /** CSS: `tooltip-neutral` — neutral color */
-    Neutral("tooltip-neutral"),
     /** CSS: `tooltip-primary` — primary color */
     Primary("tooltip-primary"),
     /** CSS: `tooltip-secondary` — secondary color */
@@ -36,9 +34,12 @@ enum class TooltipVariant(internal val className: String) {
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
  * @param bottom — Put tooltip on bottom
+ * @param center — Align tooltip on center
+ * @param end — Align tooltip on end
  * @param left — Put tooltip on left
  * @param open — Force open tooltip
  * @param right — Put tooltip on right
+ * @param start — Align tooltip on start
  * @param top — Put tooltip on top
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -48,9 +49,12 @@ fun FlowContent.daisyTooltip(
     id: HtmlId? = null,
     variant: TooltipVariant? = null,
     bottom: Boolean = false,
+    center: Boolean = false,
+    end: Boolean = false,
     left: Boolean = false,
     open: Boolean = false,
     right: Boolean = false,
+    start: Boolean = false,
     top: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -61,9 +65,12 @@ fun FlowContent.daisyTooltip(
         addClassNames("tooltip")
         if (variant != null) addClassNames(variant.className)
         if (bottom) addClassNames("tooltip-bottom")
+        if (center) addClassNames("tooltip-center")
+        if (end) addClassNames("tooltip-end")
         if (left) addClassNames("tooltip-left")
         if (open) addClassNames("tooltip-open")
         if (right) addClassNames("tooltip-right")
+        if (start) addClassNames("tooltip-start")
         if (top) addClassNames("tooltip-top")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

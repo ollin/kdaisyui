@@ -6,14 +6,14 @@ package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
-import kotlinx.html.details
-import kotlinx.html.DETAILS
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.ul
+import kotlinx.html.UL
 
 /**
- * Dropdown can open a menu or any other element when the button is clicked. Renders `<details class="dropdown ...">`.
+ * Dropdown can open a menu or any other element when the button is clicked. Renders `<ul class="dropdown ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param close — Force close
  * @param hover — Opens on hover too
@@ -42,10 +42,10 @@ fun FlowContent.daisyDropdown(
     right: Boolean = false,
     center: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DETAILS.() -> Unit)? = null,
-    content: (DETAILS.() -> Unit),
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
 ) {
-    details {
+    ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown")
         if (close) addClassNames("dropdown-close")

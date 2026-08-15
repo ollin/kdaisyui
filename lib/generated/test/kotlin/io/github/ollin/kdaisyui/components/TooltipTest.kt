@@ -43,10 +43,10 @@ class TooltipTest {
     @Test
     fun top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, top = true) {
+            daisyTooltip(open = true, top = true, start = true, end = true) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-top"
+        val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-start tooltip-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Top")
     }
@@ -54,10 +54,10 @@ class TooltipTest {
     @Test
     fun bottom() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, bottom = true) {
+            daisyTooltip(open = true, bottom = true, start = true, end = true) {
             }
         }
-        val expectedClasses = "tooltip tooltip-bottom tooltip-open"
+        val expectedClasses = "tooltip tooltip-bottom tooltip-end tooltip-open tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Bottom")
     }
@@ -65,10 +65,10 @@ class TooltipTest {
     @Test
     fun left() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, left = true) {
+            daisyTooltip(open = true, left = true, start = true, end = true) {
             }
         }
-        val expectedClasses = "tooltip tooltip-left tooltip-open"
+        val expectedClasses = "tooltip tooltip-end tooltip-left tooltip-open tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Left")
     }
@@ -76,23 +76,12 @@ class TooltipTest {
     @Test
     fun right() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, right = true) {
+            daisyTooltip(open = true, right = true, start = true, end = true) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-right"
+        val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-right tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Right")
-    }
-
-    @Test
-    fun neutral_color() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true) {
-            }
-        }
-        val expectedClasses = "tooltip tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
     }
 
     @Test
@@ -181,5 +170,16 @@ class TooltipTest {
         val expectedClasses = "tooltip"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive tooltip. only show for large screen")
+    }
+
+    @Test
+    fun responsive_tooltip_position() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(start = true) {
+            }
+        }
+        val expectedClasses = "tooltip tooltip-start"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive tooltip position")
     }
 }

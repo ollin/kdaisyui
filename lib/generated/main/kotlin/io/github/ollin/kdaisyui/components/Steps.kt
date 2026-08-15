@@ -38,7 +38,7 @@ enum class StepsVariant(internal val className: String) {
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
  * @param horizontal — Makes steps horizontal
- * @param vertical — Makes steps vertical (default)
+ * @param vertical — Vertical layout
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content

@@ -5,148 +5,148 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class RangeTest {
+class AuraTest {
 
     @Test
-    fun range() {
+    fun aura() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura() {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Range")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura")
     }
 
     @Test
-    fun with_steps_and_measure() {
+    fun aura_around_a_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura() {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With steps and measure")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura around a button")
     }
 
     @Test
-    fun neutral_color() {
+    fun aura_dual() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura(dual = true) {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura aura-dual"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura dual")
     }
 
     @Test
-    fun primary_color() {
+    fun aura_rainbow() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura(rainbow = true) {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura aura-rainbow"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura rainbow")
     }
 
     @Test
-    fun secondary_color() {
+    fun aura_holo() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura(holo = true) {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura aura-holo"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura holo")
     }
 
     @Test
-    fun accent_color() {
+    fun aura_glow() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura(glow = true) {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura aura-glow"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura glow")
     }
 
     @Test
-    fun success_color() {
+    fun aura_gold() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura(gold = true) {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura aura-gold"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura gold")
     }
 
     @Test
-    fun warning_color() {
+    fun aura_silver() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura(silver = true) {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura aura-silver"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura silver")
     }
 
     @Test
-    fun info_color() {
+    fun aura_with_custom_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura() {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura with custom color")
     }
 
     @Test
-    fun error_color() {
+    fun aura_with_custom_color_and_custom_background_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura() {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura with custom color and custom background color")
     }
 
     @Test
-    fun sizes() {
+    fun aura_rainbow_around_a_pricing_card() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura(rainbow = true) {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura aura-rainbow"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura rainbow around a pricing card")
     }
 
     @Test
-    fun range_with_custom_color_and_no_fill() {
+    fun aura_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange() {
+            daisyAura() {
             }
         }
-        val expectedClasses = "range"
+        val expectedClasses = "aura"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Range with custom color and no fill")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
     }
 
     @Test
-    fun vertical() {
+    fun aura_with_custom_animation_duration() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRange(vertical = true) {
+            daisyAura(rainbow = true) {
             }
         }
-        val expectedClasses = "range range-vertical"
+        val expectedClasses = "aura aura-rainbow"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura with custom animation duration")
     }
 }

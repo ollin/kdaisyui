@@ -51,6 +51,7 @@ enum class RangeSize(internal val className: String) {
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
  * @param size — Size variant
+ * @param vertical — Vertical slider
  * @param min
  * @param max
  * @param value
@@ -63,6 +64,7 @@ fun FlowContent.daisyRange(
     id: HtmlId? = null,
     variant: RangeVariant? = null,
     size: RangeSize? = null,
+    vertical: Boolean = false,
     min: String? = null,
     max: String? = null,
     value: String? = null,
@@ -77,6 +79,7 @@ fun FlowContent.daisyRange(
         addClassNames("range")
         if (variant != null) addClassNames(variant.className)
         if (size != null) addClassNames(size.className)
+        if (vertical) addClassNames("range-vertical")
         if (min != null) this.min = min
         if (max != null) this.max = max
         if (value != null) this.value = value

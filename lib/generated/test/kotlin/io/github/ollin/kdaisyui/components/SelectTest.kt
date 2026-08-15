@@ -160,4 +160,15 @@ class SelectTest {
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Using OS native style for the options dropdown")
     }
+
+    @Test
+    fun select_with_custom_dropdown_height() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelect() {
+            }
+        }
+        val expectedClasses = "select"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Select with custom dropdown height")
+    }
 }

@@ -30,6 +30,17 @@ class MenuTest {
     }
 
     @Test
+    fun paged_menu_with_nested_submenus() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenu(paged = true, vertical = true) {
+            }
+        }
+        val expectedClasses = "menu menu-paged menu-vertical"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Paged menu with nested submenus")
+    }
+
+    @Test
     fun menu_with_icon_only() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenu() {

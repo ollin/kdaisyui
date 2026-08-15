@@ -103,3 +103,19 @@ fun FlowContent.daisyDrawerOverlay(
         content()
     }
 }
+
+/** Renders `<div class="drawer-button ...">`. */
+fun FlowContent.daisyDrawerButton(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        if (id != null) attributes["id"] = id.id
+        addClassNames("drawer-button")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}

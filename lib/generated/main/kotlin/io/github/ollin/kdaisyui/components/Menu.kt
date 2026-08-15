@@ -38,6 +38,7 @@ enum class MenuSize(internal val className: String) {
  * @param dropdownShow — Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
  * @param focus — For the element inside <li> to look focused
  * @param horizontal — Horizontal menu
+ * @param paged — Shows one level at a time and turns the open summary into a back button
  * @param vertical — Vertical menu (default)
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -51,6 +52,7 @@ fun FlowContent.daisyMenu(
     dropdownShow: Boolean = false,
     focus: Boolean = false,
     horizontal: Boolean = false,
+    paged: Boolean = false,
     vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
@@ -65,6 +67,7 @@ fun FlowContent.daisyMenu(
         if (dropdownShow) addClassNames("menu-dropdown-show")
         if (focus) addClassNames("menu-focus")
         if (horizontal) addClassNames("menu-horizontal")
+        if (paged) addClassNames("menu-paged")
         if (vertical) addClassNames("menu-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

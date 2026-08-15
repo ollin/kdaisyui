@@ -128,7 +128,10 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     workingDir = rootProject.file("codegen")
     val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/index-new.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    // No `npm install`: the codegen declares no dependencies, so it installed nothing and
+    // only cost a network round-trip. Regeneration now works offline. Add it back here and
+    // in the other two generator tasks if a dependency is ever introduced.
+    commandLine("sh", "-c", "node src/index-new.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
@@ -164,7 +167,7 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     workingDir = rootProject.file("codegen")
     val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/icons")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/test-generator-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/test-generator-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))
@@ -178,7 +181,7 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     workingDir = rootProject.file("codegen")
     val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/icons")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/index-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/index-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))

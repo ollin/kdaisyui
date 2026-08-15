@@ -1,79 +1,84 @@
 ---
 name: kdaisyui-release
 description: >-
-  Releasing, versioning or publishing kdaisyui - what the release setup actually is (and what
-  it is not), the version scheme, and what CI does and does not do. Read this before claiming
-  anything about release automation in this repo.
+  Releasing, versioning or publishing kdaisyui - the JReleaser pipeline to Maven Central, what
+  triggers it, the version scheme, and the guards that stop a partial upload. Read this before
+  claiming anything about release automation in this repo.
 ---
 
 # kdaisyui — Release & Publishing
 
-## There is no release automation
+## Releases are automated, and a git tag is the trigger
 
-Older documentation in this repo described a release-please pipeline. **None of it exists.**
-Verified 2026-07-28:
+Pushing a tag matching `v*` runs `.github/workflows/release.yml`, which derives the version
+from the tag name (`v0.1.2` → `0.1.2`) and runs `jreleaserFullRelease`. Nothing else releases;
+there is no manual publish step and no release-please.
 
-| Previously documented | Actual |
+> An earlier version of this skill stated "there is no release automation". That was true of
+> one long-lived branch and never of the project — the pipeline had been on `main` for months.
+> If you find yourself about to write that sentence again, check `origin/main` first.
+
+## What gets published
+
+Three artifacts under `io.github.ollin.kdaisyui`, all listed in `build.gradle.kts` as
+`publishedArtifacts`:
+
+| Artifact | Module |
 |---|---|
-| `release-please-config.json` | absent |
-| `.release-please-manifest.json` | absent |
-| `.github/workflows/release-please.yml` | absent |
-| `.github/workflows/publish.yml` | absent |
+| `kdaisyui` | `:lib` |
+| `kdaisyui-ktor-integration` | `:ktor-integration` |
+| `kdaisyui-bom` | `:bom` — a `java-platform` BOM that pins the other two |
 
-`.github/workflows/` contains exactly three files: `ci.yml`, `pr-conventional-commits.yml`,
-`renovate.yml`. **No workflow publishes anything.**
+Consumers import the BOM once and then declare the artifacts without versions; that is what
+`README.md` shows.
 
-Consequence: do not "fix" version handling on the assumption that release-please owns
-`gradle.properties`. Nothing owns it. A version bump is a manual edit.
+## The pipeline, in order
+
+1. `stageAll` publishes every subproject into `build/staging-deploy/`.
+2. `verifyStagingComplete` fails the release if any of the three artifacts is missing a `.pom`
+   for **this** version.
+3. JReleaser signs (GPG, armored), deploys to Maven Central via
+   `https://central.sonatype.com/api/v1/publisher`, and creates the GitHub release with a
+   changelog generated from Conventional Commits.
+
+Steps 1 and 2 exist because of a real incident: **in 0.1.1 only the BOM reached Central.**
+Gradle was free to interleave `jreleaserDeploy` with the slow `:lib` publish, and
+`applyMavenCentralRules` validates POM shape, not module count, so a valid-but-partial bundle
+uploaded cleanly. Maven Central publishes a version exactly once, so this is unrecoverable
+without burning a version number. Do not remove those task dependencies.
 
 ## Versioning
 
-`gradle.properties`:
+`gradle.properties` holds one line, `version=0.1.0`, and JReleaser tags the git history with
+it. Everything else — dependencies, plugins, tooling, submodule tags — lives in
+`gradle/libs.versions.toml`.
 
-```
-daisyui.version=5.5.20      # single source of truth — see kdaisyui-codegen for the ceiling
-heroicons.version=2.2.0
-version=5.5.20-SNAPSHOT     # <daisyui.version>-<local revision>
-```
+The scheme is plain SemVer and is **not** tied to the DaisyUI version. A DaisyUI bump that adds
+components is a `minor`; the wrapped DaisyUI version is recorded in the JAR manifest as
+`DaisyUI-Version`, not in the project version.
 
-Scheme is Debian-style `<daisyui-version>-<local-revision>`, e.g. `5.5.20-1`. The project
-version tracks the DaisyUI base version it wraps, so bumping `daisyui.version` means bumping
-`version` in the same commit.
+The release workflow passes `-Pversion` from the tag, so the value in `gradle.properties` is
+what local builds and `publishToMavenLocal` use.
 
-`lib/build.gradle.kts` uses `-Pversion` when supplied, else falls back to `0.0.1-SNAPSHOT` —
-note that fallback is *not* the `gradle.properties` value's shape, so always pass `-Pversion`
-explicitly when publishing.
+## Local publishing
 
-## Publishing — manual only
+`just build` runs `:lib:publishToMavenLocal`, which is how `example-app` and downstream
+experiments consume the library. The `staging` repository in each module's `publishing` block
+is a local directory, not a remote — the only remote upload path is JReleaser.
 
-`lib/build.gradle.kts` carries a complete, Maven-Central-shaped `publishing` block:
+## Secrets the release needs
 
-- `groupId` `io.github.ollin.kdaisyui`, `artifactId` `kdaisyui`
-- `sourcesJar` + `javadocJar` + full POM (licence, developer, SCM)
-- repository `GitHubPackages` → `https://maven.pkg.github.com/ollin/kdaisyui`
-- credentials from `GITHUB_ACTOR` / `GITHUB_TOKEN`
-- JAR manifest embeds `SCM-Revision`, `DaisyUI-Version` and `Kotlin-Version`
+`JRELEASER_GPG_PASSPHRASE`, `JRELEASER_GPG_PUBLIC_KEY`, `JRELEASER_GPG_SECRET_KEY`,
+`JRELEASER_MAVENCENTRAL_USERNAME`, `JRELEASER_MAVENCENTRAL_PASSWORD`, plus the workflow's
+`GITHUB_TOKEN`. A missing secret fails the release rather than publishing unsigned.
 
-So publishing is a deliberate `:lib:publish` with those environment variables set. Nothing
-triggers it automatically.
+## What CI enforces before any of this
 
-`just build` additionally runs `:lib:publishToMavenLocal`, which is how the example app and
-downstream experiments consume the library locally.
+`ci.yml` runs three jobs on pushes and PRs to `main`: `generated-sources-drift`, `unit-tests`
+(including the aggregated 100% `koverVerify` gate) and `e2e-tests`.
+`pr-conventional-commits.yml` validates PR titles — and that matters more than usual here,
+because JReleaser builds the release changelog from those commit messages.
 
-**README says "not yet published" — that is the accurate claim.** Do not change it to imply a
-released artifact exists on GitHub Packages until one actually does.
-
-## What CI does enforce
-
-`pr-conventional-commits.yml` validates PR titles against the Conventional Commits spec. It is
-real, it is enforced, and it is the only release-adjacent automation present. Keep PR titles
-conforming.
-
-`ci.yml` runs unit and E2E tests on pushes and PRs to `main`. It does not build or upload
-artifacts.
-
-## If you set up release automation
-
-That is a feature change, not a documentation fix. It would make `version=` release-please
-owned, at which point the manual-bump rule above becomes wrong and this skill must be updated
-in the same change.
+**Known gap:** `ci.yml`'s `pull_request` trigger does not currently fire on this repository.
+Only the `pull_request_target`-based title check runs on a PR. CI gates pushes to `main` but
+not pull requests into it. Diagnose that before relying on PR checks.

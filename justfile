@@ -21,7 +21,7 @@ generate:
     @git status --short lib/generated || true
     @git --no-pager diff --stat -- lib/generated || true
 
-# Sync DaisyUI submodule to the tag matching daisyui.version in gradle.properties
+# Sync DaisyUI submodule to the tag matching the daisyui version in gradle/libs.versions.toml
 sync-daisyui:
     ./gradlew :lib:checkoutDaisyuiTag
 

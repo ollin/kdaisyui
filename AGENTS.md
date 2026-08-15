@@ -3,8 +3,10 @@
 Type-safe DaisyUI component DSL for Kotlin server-rendered HTML (kotlinx.html). Wraps Tailwind
 / DaisyUI class strings into compile-time-checked extension functions.
 
-Exact versions live in `gradle.properties`, `.tool-versions` and
-`gradle/wrapper/gradle-wrapper.properties` — never restate them here.
+Exact versions live in `gradle/libs.versions.toml` (dependencies, plugins, tooling and the
+submodule tags), `.tool-versions` (the JDK that runs Gradle) and
+`gradle/wrapper/gradle-wrapper.properties` — never restate them here. `gradle.properties`
+holds one line, the project version.
 
 ## The one rule
 
@@ -37,13 +39,15 @@ Package is `io.github.ollin.kdaisyui` — never `com.github.ollin`.
 | `ktor-integration` | Ktor Resources integration (`Resolvable`, context parameters) |
 | `example-app` | Ktor + htmx demo dashboard, port 8080 |
 | `e2e-tests` | Kotest + Playwright + Cucumber |
+| `bom` | `java-platform` BOM aligning `kdaisyui` and `kdaisyui-ktor-integration` |
 | `buildSrc` | Gradle convention plugins |
 
-There is no root `build.gradle.kts`; configuration lives in the subprojects and `buildSrc`.
+The root `build.gradle.kts` carries the release (JReleaser → Maven Central) and the aggregated
+coverage gate; per-module configuration lives in the subprojects and `buildSrc`.
 
-`daisyui.version` in `gradle.properties` is the single source of truth for the submodule tag,
-the codegen input and the webjar CSS. It has a hard upper bound — the reason is in that file's
-comment and in `kdaisyui-codegen`.
+`daisyui` in `gradle/libs.versions.toml` is the single source of truth for the submodule tag,
+the codegen input and the webjar CSS. It must stay at a version that also has a published
+webjar, so generated components never reference CSS the webjar lacks.
 
 ## Skills
 
@@ -113,7 +117,8 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 - Editing `lib/generated/**`
 - Hardcoding CSS class strings instead of using the generated enums
-- Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle.properties`
-- Assuming release automation exists — it does not, see `kdaisyui-release`
+- Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
+- Assuming there is no release automation — there is, see `kdaisyui-release`
+- Letting `koverVerify` slip: the gate is 100% line **and** branch, aggregated
 - Package `com.github.ollin`
 - Shipping a UI change without E2E

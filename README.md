@@ -120,7 +120,7 @@ Exact versions are the single source of truth in these files:
 | What | Where |
 |---|---|
 | JDK that runs Gradle | [`.tool-versions`](.tool-versions) |
-| Kotlin, kotlinx-html | [`gradle.properties`](gradle.properties) |
+| Kotlin, kotlinx-html, DaisyUI, Heroicons | [`gradle/libs.versions.toml`](gradle/libs.versions.toml) |
 | Gradle wrapper | [`gradle/wrapper/gradle-wrapper.properties`](gradle/wrapper/gradle-wrapper.properties) |
 | Ktor, webjars | [`example-app/build.gradle.kts`](example-app/build.gradle.kts) |
 

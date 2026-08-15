@@ -36,44 +36,41 @@ So **no build regenerates** — `just generate` is the only way, and it drives t
 Gradle tasks rather than a separate npm path.
 
 Submodules are pinned and checked out automatically: `checkoutDaisyuiTag` and
-`checkoutHeroiconsTag` read `daisyui.version` / `heroicons.version` from `gradle.properties`
-and check out the matching `v<version>` tag.
+`checkoutHeroiconsTag` read `daisyui` / `heroicons` from `gradle/libs.versions.toml` and check
+out the matching `v<version>` tag.
 
-## DaisyUI version ceiling — read before bumping `daisyui.version`
+## Where the element and class data come from
 
-`daisyui.version` in `gradle.properties` is capped at **5.5.20**, and the cap is a codegen
-constraint, not caution:
+`codegen/src/parser/llms-txt.js` reads two sources, in this order:
 
-| Ceiling | Value |
-|---|---|
-| newest git tag | v5.7.4 |
-| newest published webjar | 5.7.0 |
-| **newest usable codegen input** | **5.5.22** |
+1. `daisyui/packages/docs/static/llms.txt` — **gone since DaisyUI 5.5.23**, which deleted it
+   in favour of a generated SvelteKit route.
+2. `daisyui/skills/daisyui/components/*.md` — the fallback, and what is actually used today.
 
-DaisyUI deleted the static `packages/docs/static/llms.txt` in commit `f00802cc` (2026-05-21)
-and replaced it with a generated SvelteKit route,
-`packages/docs/src/routes/llms.txt/+server.js`. The first release without the file is
-**5.5.23**. `codegen/src/parser/llms-txt.js` resolves that static path at module level and
-dies with `ENOENT` the moment it is missing:
+There used to be a hard 5.5.20 ceiling because only (1) existed and its absence killed the
+build with `ENOENT`. **That ceiling is gone**; the fallback removed it and the project runs
+5.7.16.
 
+The remaining constraint is unrelated to the parser: DaisyUI must stay at a version with a
+**published Maven webjar** (`org.webjars.npm:daisyui`), because `:example-app` serves the CSS
+from it. Only a subset of releases gets one, so the newest git tag is usually ahead of the
+newest usable version.
+
+**The element choice is a heuristic, and it can be wrong.** `findComponentInSyntax` takes the
+first element in a component's `#### Syntax` block that carries a matching class. When DaisyUI
+documents several variants, the first one wins — even if it only works with attributes the
+generator cannot emit. That happened to `dropdown` at 5.7.16: the popover-API variant
+(`<ul class="dropdown" popover id=… style="position-anchor:…">`) is listed first, and picking
+it produced a dropdown that renders but cannot open.
+
+The remedy is per-component and explicit, not a smarter heuristic:
+
+```json
+"componentElements": { "dropdown": "details" }
 ```
-Error: ENOENT: no such file or directory,
-  open '…/daisyui/packages/docs/static/llms.txt'
-  at parseLlmsTxt (codegen/src/parser/llms-txt.js:18)
-```
 
-`renovate.json` therefore pins `org.webjars.npm:daisyui` to `<=5.5.22`. **Lift that cap only
-together with a reworked parser**, otherwise the build goes red on the next Renovate PR.
-
-To actually go upstream, the parser needs a new source. Options, in order of how well they
-preserve build determinism:
-
-1. Aggregate the same docs sources that DaisyUI's `+server.js` reads (69 lines, present in the
-   submodule) — stays offline and reproducible
-2. Parse `skills/daisyui/SKILL.md`, which upstream still ships
-3. Fetch `llms.txt` over HTTP at build time — **rejected by default**: it makes the build
-   network-dependent and non-reproducible, which is exactly what the single-source-of-truth
-   setup exists to prevent
+Watch for this on every DaisyUI bump — the committed diff under `lib/generated/` is where it
+becomes visible, which is the main reason that tree is committed at all.
 
 ## Component shape
 

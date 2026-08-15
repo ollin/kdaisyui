@@ -8,8 +8,8 @@ context: |
   wrapping Tailwind/DaisyUI class strings into compile-time-checked kotlinx.html
   extension functions.
 
-  Most of this library is GENERATED. 63 components, 324 Heroicon functions and
-  63 component test files are produced by the codegen from the daisyui and
+  Most of this library is GENERATED. 66 components, 324 Heroicon functions and
+  their test files are produced by the codegen from the daisyui and
   heroicons git submodules into lib/generated/**, which is COMMITTED. Never
   propose editing generated output — change the codegen instead. The build does
   not run the generators; regeneration is explicit (just generate) and CI's
@@ -20,18 +20,20 @@ context: |
 
   The package is io.github.ollin.kdaisyui — never com.github.ollin.
 
-  gradle.properties is the single source of truth for every version:
-  daisyui.version drives the submodule tag, the codegen input AND the webjar CSS
-  at once. It carries a documented upper bound. Never hardcode a version
+  gradle/libs.versions.toml is the single source of truth for every version:
+  the daisyui entry drives the submodule tag, the codegen input AND the webjar
+  CSS at once, so it must stay at a version that has a published webjar.
+  gradle.properties holds only the project version. Never hardcode a version
   elsewhere.
 
-  Four modules: lib (the library), ktor-integration (Resolvable, context
-  parameters), example-app (Ktor + htmx dashboard on port 8080) and e2e-tests
-  (Kotest + Playwright + Cucumber). There is no root build.gradle.kts;
-  configuration lives in the subprojects and in buildSrc.
+  Five modules: lib (the library), ktor-integration (Resolvable, context
+  parameters), example-app (Ktor + htmx dashboard on port 8080), e2e-tests
+  (Kotest + Playwright + Cucumber) and bom (a java-platform BOM). The root
+  build.gradle.kts carries the release and the coverage gate.
 
-  There is NO release automation. Do not assume a release plugin owns the
-  version, and do not plan work that depends on one existing.
+  Releases ARE automated: pushing a v* tag runs JReleaser, which publishes
+  kdaisyui, kdaisyui-ktor-integration and kdaisyui-bom to Maven Central. CI
+  enforces an aggregated 100% line AND branch koverVerify gate.
 
   Deeper conventions: AGENTS.md and the .opencode/skills/kdaisyui-* skills
   (kdaisyui-codegen, kdaisyui-testing, kdaisyui-release).

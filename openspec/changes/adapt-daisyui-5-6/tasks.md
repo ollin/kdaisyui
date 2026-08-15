@@ -56,8 +56,18 @@
 
 ## 7. E2E smoke coverage for the new components
 
-- [ ] 7.1 Add example-app routes/fragments rendering `daisyAura`, `daisyOtp`, and `daisyMegamenu` (feature; demo wiring in `example-app`)
-- [ ] 7.2 Add Playwright E2E assertions verifying each new component's expected class is present in the served HTML; run `just e2e` and confirm result files exist and the suite is green (feature-test; e2e proof)
+- [x] 7.1 `. F` `WhatsNewFragment.kt` renders all three on the dashboard, wired as
+      `/fragments/whats-new` and htmx-loaded like the existing fragments
+- [x] 7.2 `^ F` `WhatsNewFragmentTest.kt` — three Playwright tests asserting the emitted
+      classes in the served HTML (`aura-lg`/`aura-rainbow`, `otp-primary`/`otp-joined` with
+      six digit boxes, `megamenu-wide` with its `megamenu-active` popover and nested menu).
+      E2E suite 34 → 37, full suite **1525 green**, `koverVerify` green.
+
+      The megamenu test failed first, and on my own bug rather than the component's: I
+      asserted `AriaRole.LINK`, but the menu anchors carry no `href` and therefore have no
+      link role. Switched to a text assertion, matching how the rest of the suite handles the
+      same pattern. Worth keeping in mind — a role-based assertion silently tests something
+      other than what it appears to.
 
 ## 8. Docs + version
 

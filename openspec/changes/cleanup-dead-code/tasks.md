@@ -151,8 +151,16 @@ Consequences, worst first:
    proposals, and its own `openspec/config.yaml` — none of which this session saw.
 5. `commit-generated-sources` edited `ci.yml`; `main` changed the same file by 18 lines.
 
-- [ ] 7.1 Decide with Oliver how this branch rejoins `main` before any further work lands on
-      it. Everything from this session is committed and none of it is pushed
+- [x] 7.1 Decided and done: planned and executed as its own change, `rejoin-main`, archived
+      2026-08-15. Every consequence above was resolved there — including two this list got
+      wrong. The v1 `.js` deletion here was **not** wasted: main still carried the 22 YAML
+      configs and the unused `js-yaml`, so only the three `.js` files were duplicate work.
+      And main's `js-yaml` bump lost to this branch's removal, since nothing imports it there
+      either.
+
+      Finding a 168-commit divergence *inside* a cleanup change was the most valuable thing
+      this change produced, and it was pure luck — task 4.2 fast-forwarded local `main` for
+      tidiness, not to compare anything.
 
 ## 6. Decide on the now-empty `npm install`
 

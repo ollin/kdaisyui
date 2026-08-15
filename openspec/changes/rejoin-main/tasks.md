@@ -42,14 +42,17 @@ substantive commits on top of `origin/main` instead of merging, and rewrite sect
 
 ## 2. Do the merge
 
-- [ ] 2.1 `. r` Merge `origin/main`, resolving toward main for build, release and coverage
-      infrastructure, and toward this branch for the committed generated sources and the
-      drift job
-- [ ] 2.2 `^ r` Re-apply the `generated-sources` decoupling on main's `lib/build.gradle.kts`:
-      compilation must not depend on the generator tasks, and the source roots must point at
-      `lib/generated`
-- [ ] 2.3 `^ r` Merge the two `ci.yml` versions: main's coverage gate and `checkout@v7`, this
-      branch's `generated-sources-drift` job, and no submodules on the test jobs
+- [x] 2.1 `. r` Merge `origin/main`, resolving per the 1.2 decision list
+- [x] 2.2 `^ r` Re-apply the `generated-sources` decoupling on main's `lib/build.gradle.kts`
+- [x] 2.3 `^ r` Merge the two `ci.yml` versions
+
+All three landed in the merge commit `40da5ee`, which lists every resolution. **606 tests
+green** immediately after — assumption 1 fully discharged, and assumption 2 survives:
+`generated-sources` still holds, the decoupling re-applied cleanly onto main's build script.
+
+One correction to the 1.2 map: it said the vendored `.opencode/opsx-*` files should go to
+main. Backwards — this branch carries `generatedBy: 1.7.0` against main's `1.4.1`, so ours
+are the newer copies. Caught by reading them instead of applying the map.
 
 ## 3. Regenerate at DaisyUI 5.7.16
 

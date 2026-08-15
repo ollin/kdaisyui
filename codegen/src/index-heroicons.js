@@ -4,7 +4,9 @@ import { parseIconFiles } from './parser/svg-heroicons.js'
 import { generateKotlinFile } from './generator-heroicons.js'
 
 const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
-const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/src/main/kotlin/io/github/ollin/kdaisyui/icons')
+// Committed generated root — a sibling of lib/src/, never inside it.
+// Gradle passes --output-dir explicitly; this default is for a bare `node` run.
+const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generated/main/kotlin/io/github/ollin/kdaisyui/icons')
 
 function parseOutputDir() {
   for (const arg of process.argv) {

@@ -5,7 +5,9 @@ import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.js'
 import { classifyFromFrontmatter } from './classifier.js'
 import { generateKotlinFile } from './generator-new.js'
 
-const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/src/main/kotlin/io/github/ollin/kdaisyui/components')
+// Committed generated root — a sibling of lib/src/, never inside it.
+// Gradle passes --output-dir explicitly; this default is for a bare `node` run.
+const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generated/main/kotlin/io/github/ollin/kdaisyui/components')
 
 function parseOutputDir() {
   for (const arg of process.argv) {

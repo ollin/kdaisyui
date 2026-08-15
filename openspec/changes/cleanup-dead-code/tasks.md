@@ -107,13 +107,38 @@ What each carries, as far as the subject lines and today's tree show:
 | `chore/remove-version-consistency-ci` | remove version-consistency CI job | **No.** No such job exists in `ci.yml` today |
 | `fix/renovate-action-version` | pin `renovatebot/github-action` to v46.1.6 | **Superseded.** `renovate.yml:22` already pins v46.1.14 |
 
-- [ ] 4.1 `. d` With Oliver: delete all three, given that each one's content is obsolete or
-      already superseded on `main`. Not done unilaterally — branch deletion discards commits,
-      and "the subject line looks obsolete" is weaker evidence than the tool check that just
-      refuted the original premise
-- [ ] 4.2 `. d` Fast-forward local `main` to `origin/main` (168 behind), or delete it if the
-      workflow never uses it. Safe either way — it is at `4bdb074`, an ancestor of
-      `origin/main`
+- [x] 4.1 `. d` Deleted all three, decided by Oliver 2026-08-15.
+- [x] 4.2 `. d` Fast-forwarded local `main` from `4bdb074` to `origin/main` (`0034960`),
+      168 commits.
+
+      **That fast-forward exposed something that outranks this whole change** — see the
+      note below.
+
+## 7. STOP — this branch is far behind `origin/main`
+
+Not a cleanup item. Found while doing 4.2, recorded here because it invalidates assumptions
+several pieces of work in this session were built on.
+
+`ollins-stuff-at-home` is missing 168 commits of `origin/main`. Marker files present on
+`origin/main` and absent here: root `build.gradle.kts`, `bom/`,
+`.github/workflows/release.yml`, `codegen/src/test-generator-heroicons.js`.
+
+Consequences, worst first:
+
+1. **`origin/main` already deleted `codegen/src/{index,generator,classify}.js`.** Commit
+   `cec80ae` in this session re-did work that main had done. The YAML configs and the
+   `js-yaml` removal may or may not still be needed there — unchecked.
+2. **`js-yaml` was bumped to v5.3.0 on main** (`0034960`, PR #230) while this branch removed
+   it as unused. Direct collision.
+3. **Release automation exists on `main`** (`release.yml`, a root `build.gradle.kts`, a `bom/`
+   module). This branch's `AGENTS.md` and the `kdaisyui-release` skill both state there is
+   none. That statement is true of this branch and false of the project.
+4. `main` also carries a coverage-enforcement spec, mutation-testing and DaisyUI 5.6 change
+   proposals, and its own `openspec/config.yaml` — none of which this session saw.
+5. `commit-generated-sources` edited `ci.yml`; `main` changed the same file by 18 lines.
+
+- [ ] 7.1 Decide with Oliver how this branch rejoins `main` before any further work lands on
+      it. Everything from this session is committed and none of it is pushed
 
 ## 6. Decide on the now-empty `npm install`
 

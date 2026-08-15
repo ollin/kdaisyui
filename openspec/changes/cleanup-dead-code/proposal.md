@@ -35,10 +35,11 @@ It is not harmless clutter. It actively misleads:
 
 - **Delete the v1 pipeline**: `codegen/src/index.js`, `codegen/src/generator.js`,
   `codegen/src/classify.js` and all 22 `codegen/src/config/*.yml`.
-- **`.idea/misc.xml` stops being tracked.** `.gitignore:15` ignores `.idea/`, yet this one
-  file is committed (`e24148b`), so it surfaces as a modification in every session and has
-  been noise throughout this work. Either it is ignored like the rest of `.idea/`, or the
-  ignore rule is wrong — the current state is the one thing it cannot stay.
+- **The three tracked `.idea` files stop being tracked** — `misc.xml`, `gradle.xml` and
+  `vcs.xml`, all added in `e24148b`. `.gitignore:15` ignores `.idea/`, which does not apply
+  to files already tracked, so the rule has been aspirational. `misc.xml` in particular
+  cannot be tracked quietly: it carries `project-jdk-name`, a local SDK-table name, so it
+  churns per machine. Decided 2026-08-15; the reasoning per file is in `tasks.md` section 3.
 - **Prune merged local branches**: `chore/minimize-codegen-yaml-configs`,
   `chore/remove-version-consistency-ci`, `fix/renovate-action-version` — all at 0 ahead /
   0 behind. Local `main` is 164 behind `origin/main`.

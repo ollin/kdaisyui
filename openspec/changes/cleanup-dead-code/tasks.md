@@ -29,12 +29,31 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
 - [ ] 2.4 `. d` Drop `js-yaml` from `codegen/package.json` if the deletion made it unused,
       and refresh `package-lock.json` — check first, `parser/frontmatter.js` may still need it
 
-## 3. Stop tracking `.idea/misc.xml`
+## 3. Stop tracking the three `.idea` files
 
-- [ ] 3.1 `. d` Decide with Oliver which way it goes: untrack the file to match
-      `.gitignore:15`, or keep it deliberately and narrow the ignore rule. Do not guess — a
-      tracked IDE file can be intentional
-- [ ] 3.2 `. d` Apply the decision
+- [x] 3.1 `. d` Decide with Oliver which way it goes. **Decided 2026-08-15: untrack all
+      three** — `.idea/misc.xml`, `.idea/gradle.xml`, `.idea/vcs.xml` (all added in
+      `e24148b`) — and leave them on disk. This makes `.gitignore:15` true instead of
+      aspirational; IntelliJ regenerates all three on the first Gradle import.
+
+      Why each one goes, rather than just the noisy one:
+
+      - `misc.xml` carries `project-jdk-name`, the JDK's display name in the *local* SDK
+        table, so it cannot be tracked without churning per machine. The rest is a
+        Kubernetes-plugin component that only exists where that plugin is installed, plus
+        `languageLevel=JDK_21`, which `jvmToolchain(21)` in `buildSrc` already owns.
+      - `gradle.xml` holds `gradleJvm` and a module list IntelliJ rebuilds from
+        `settings.gradle.kts` on import, including the `buildSrc` composite build.
+      - `vcs.xml` maps `daisyui/` and `heroicons/` as git roots — actively misleading since
+        `commit-generated-sources`, because an ordinary clone no longer has them.
+
+      Rejected: narrowing `.gitignore` to `.idea/*` plus `!` exceptions. It trades one
+      inconsistency for more rules and does not fix the churn, which is inherent to
+      `project-jdk-name`.
+
+- [ ] 3.2 `. d` Apply it: `git rm --cached .idea/misc.xml .idea/gradle.xml .idea/vcs.xml`,
+      keeping the files on disk. Needs a shell — the Git MCP server exposes no `rm`, and
+      deleting-then-committing would take the running IDE's configuration with it
 
 ## 4. Prune branches
 

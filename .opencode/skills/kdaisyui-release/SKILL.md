@@ -49,9 +49,14 @@ without burning a version number. Do not remove those task dependencies.
 
 ## Versioning
 
-`gradle.properties` holds one line, `version=0.1.0`, and JReleaser tags the git history with
-it. Everything else — dependencies, plugins, tooling, submodule tags — lives in
-`gradle/libs.versions.toml`.
+`gradle.properties` holds one line, the project version. Everything else — dependencies,
+plugins, tooling, submodule tags — lives in `gradle/libs.versions.toml`.
+
+**The tag governs, not the file.** `release.yml` triggers on a `v*` tag and passes
+`-Pversion` derived from the tag name, which overrides `gradle.properties`. That file is the
+version for local builds and `publishToMavenLocal`, plus a declaration of intent for the next
+release — which is why v0.1.1 and v0.1.2 both shipped while it still read `0.1.0`. Do not
+trust it to tell you what is on Maven Central; check the releases.
 
 The scheme is plain SemVer and is **not** tied to the DaisyUI version. A DaisyUI bump that adds
 components is a `minor`; the wrapped DaisyUI version is recorded in the JAR manifest as

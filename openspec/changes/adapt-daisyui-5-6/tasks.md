@@ -71,10 +71,25 @@
 
 ## 8. Docs + version
 
-- [ ] 8.1 Update `llms.txt` (still says "DaisyUI 5.5.20" at line 561) and `docs/reference.md`
-      (still says "63 components" at line 7) to include `aura`, `otp`, `megamenu` and the real
-      pinned version (documentation)
+- [x] 8.1 `. d` Three new reference pages (`aura.md`, `otp.md`, `megamenu.md`), all three
+      added to the `docs/reference/index.md` table and the `llms.txt` component table, counts
+      63 → 66 in both.
+
+      The version lines were **not** updated to the new numbers — they were replaced by
+      pointers to `gradle/libs.versions.toml`. `llms.txt` claimed "DaisyUI 5.5.20" through two
+      minor releases, and `docs/reference/index.md` plus both tutorials still sent readers to
+      `gradle.properties → versions.kotlin`, a key that no longer exists. Restating a version
+      in prose is what produced every one of those; AGENTS.md already forbids it.
 - [x] 8.2 `AGENTS.md` no longer states a component count or a pinned version — it points at
       `gradle/libs.versions.toml` instead, which cannot go stale
-- [ ] 8.3 Bump the project SemVer `minor` in `gradle.properties` — note it is `version=0.1.0`
-      now, and JReleaser derives the release version from the git tag (feature)
+- [x] 8.3 `. F` Bumped `0.1.0` → `0.2.0`: three new components make the next release a minor.
+
+      Checking what that value actually does turned up a false comment, which I had also
+      carried into the `kdaisyui-release` skill without verifying it. Both claimed *"JReleaser
+      tags the git history with this value at release time"*. It is the other way round —
+      `release.yml` triggers **on** a `v*` tag and passes `-Pversion` from the tag name, which
+      overrides the file. The evidence was sitting in the releases list: **v0.1.1 and v0.1.2
+      both shipped while `gradle.properties` read `0.1.0`.**
+
+      So the bump is a declaration of intent for the next tag, not the thing that sets the
+      version. Both files now say so.

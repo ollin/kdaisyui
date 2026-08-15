@@ -85,7 +85,7 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
 
 - [x] 3.2 `. d` Applied by Oliver in the shell; committed as `b46cec3`.
 
-- [ ] 3.3 `. d` **My list of three was incomplete.** `.idea/kotlinc.xml` (tracked since
+- [x] 3.3 `. d` **My list of three was incomplete.** `.idea/kotlinc.xml` (tracked since
       `36248e7`) and `.idea/.gitignore` (tracked since the initial commit `0c9029a`) are also
       tracked, and `kotlinc.xml` surfaced as a working-tree modification right after the other
       three were untracked — the same IDE churn, one file later.
@@ -95,8 +95,7 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
       `kotlinc.xml` is not — it records the IDE's Kotlin compiler settings and moves with the
       IDE version.
 
-      Same decision as 3.1 and the same mechanism:
-      `git rm --cached .idea/kotlinc.xml`. Needs a shell.
+      Done — `a27f08a`. The working tree is finally free of IDE churn.
 
       The lesson for 3.1: I derived "three files" from one commit's stat instead of asking git
       what is tracked. A commit shows what that commit touched, not what the index holds.

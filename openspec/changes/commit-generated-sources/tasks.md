@@ -116,16 +116,33 @@ Desired change. Build this **only if** task 1.5 recorded Verified.
 - [x] 6.1 `^ F` Add the CI job: regenerate, then fail if the working tree is dirty. Uses
       `git status --porcelain` rather than `git diff --exit-code`, so a newly added
       component counts as drift instead of slipping through as "no diff"
-- [ ] 6.2 `^ F` Prove it fails — hand-edit one generated file on a scratch branch and watch
-      the job go red. A gate nobody has seen fail is not known to be a gate
+- [x] 6.2 `^ F` Prove it fails — hand-edit one generated file on a scratch branch and watch
+      the job go red. **Confirmed**: one added comment line in `Kbd.kt`, no generator input
+      touched → `generated-sources-drift` **failed**, while `unit-tests` and `e2e-tests`
+      **passed** on the same commit. That second half is the clean-clone proof: both ran on
+      a checkout with no submodules at all (PR #231, closed; branch deleted)
+
+Note for whoever adds a workflow next: `ci.yml`'s `pull_request` trigger does **not** fire on
+this repository — PRs #229 and #231 both showed only the `pull_request_target`-based title
+check. The proof run had to be forced with a temporary `push` trigger. Worth diagnosing
+separately; it means CI currently gates pushes to `main` but not pull requests into it.
 - [x] 6.3 `. r` Drop `submodules: recursive` from `unit-tests` and `e2e-tests`; only the
       drift job still checks them out. This is also the clean-clone proof task 5.2 could
       not do locally — CI now builds and tests from a checkout with no submodules at all
 
 ## 7. Documentation
 
-- [ ] 7.1 `. d` Update `AGENTS.md`: the "never edit generated code" rule names the new
-      committed path
-- [ ] 7.2 `. d` Fold in the remaining working-tree edits — `.tool-versions` and the
-      `README.md` AI-context table — and correct the nine documentation references to
-      `.tool-versions` that no longer match its contents
+- [x] 7.1 `. d` Update `AGENTS.md`: the "never edit generated code" rule names the new
+      committed path — and rests on the drift job rather than on futility, since a hand edit
+      now survives locally. Same correction applied to `openspec/config.yaml` and the
+      `kdaisyui-codegen` / `kdaisyui-testing` skills, which described the old build output
+- [x] 7.2 `. d` Fold in the remaining working-tree edits — `.tool-versions`, `README.md`,
+      `docs/how-to.md` and the `justfile` header, all of which claimed `asdf install` brings
+      Node and `just`. It now pins the JDK and nothing else
+
+## 8. Verification
+
+- [x] 8.1 Full suite, everything re-executed: **611 tests green**
+      (`:lib:test`, `:ktor-integration:test`, `:e2e-tests:test` with `--rerun-tasks`,
+      25/25 tasks executed)
+- [x] 8.2 CI on a clean runner: `unit-tests` and `e2e-tests` green **without submodules**

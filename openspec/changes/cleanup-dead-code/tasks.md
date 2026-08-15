@@ -39,11 +39,13 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
 
 ## 2. Delete the v1 pipeline
 
-- [ ] 2.1 `. r` Delete `codegen/src/index.js`, `codegen/src/generator.js` and
+- [x] 2.1 `. r` Delete `codegen/src/index.js`, `codegen/src/generator.js` and
       `codegen/src/classify.js`
-- [ ] 2.2 `. r` Delete the 22 files in `codegen/src/config/`
-- [ ] 2.3 `. r` Prove nothing moved: regenerate all three outputs and confirm `git status`
-      reports `lib/generated` unchanged, then `./gradlew :lib:test`
+- [x] 2.2 `. r` Delete the 22 files in `codegen/src/config/`
+- [x] 2.3 `. r` **Proven.** The deletion invalidated `codegen/src`, a declared input of all
+      three generate tasks, so they genuinely re-ran (`5 executed`). Aggregate hash over all
+      450 files identical before and after (`2019abca…`), `git status` reports nothing under
+      `lib/generated`, and `:lib:test` is 566 green
 - [ ] 2.4 `. d` Drop `js-yaml` from `codegen/package.json` if the deletion made it unused,
       and refresh `package-lock.json` — check first, `parser/frontmatter.js` may still need it
 

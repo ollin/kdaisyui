@@ -1,7 +1,0 @@
-component: Select
-htmlElement: SELECT
-extras:
-  - name: disabled
-    type: "Boolean"
-    default: "false"
-    apply: "if (disabled) this.disabled = true"

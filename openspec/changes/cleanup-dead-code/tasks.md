@@ -88,11 +88,32 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
 
 ## 4. Prune branches
 
-- [ ] 4.1 `. d` Delete the three merged local branches
-      (`chore/minimize-codegen-yaml-configs`, `chore/remove-version-consistency-ci`,
-      `fix/renovate-action-version`) after confirming each is contained in `origin/main`
-- [ ] 4.2 `. d` Fast-forward local `main` to `origin/main`, or delete it if the workflow
-      never uses it
+**Revised 2026-08-15 — the premise was wrong.** The proposal called these "merged local
+branches, all at 0 ahead / 0 behind". That reading was of each branch against *its own
+upstream*, not against `main`. Checked properly with `--merged origin/main`: **none of the
+three is contained in `origin/main`.** Deleting them would discard commits.
+
+They are not stale-by-a-little, they are ancient. `chore/minimize-codegen-yaml-configs` is
+249 files away from `origin/main`, and the diff runs the wrong way — adopting it would delete
+`classifier.js`, `generator-new.js`, `ktor-integration/`, the Kotlin e2e suite and `openspec/`
+and restore `codegen/src/index.js` with `lib/src/main/kotlin/kdaisyui/components/`. It
+predates the v2 codegen entirely. The other two sit on the same old base.
+
+What each carries, as far as the subject lines and today's tree show:
+
+| Branch | Subject | Still relevant? |
+|---|---|---|
+| `chore/minimize-codegen-yaml-configs` | derive `htmlTag` from `htmlElement`, drop redundant YAML fields | **No.** It edits the v1 `config/*.yml` deleted in task 2.2 |
+| `chore/remove-version-consistency-ci` | remove version-consistency CI job | **No.** No such job exists in `ci.yml` today |
+| `fix/renovate-action-version` | pin `renovatebot/github-action` to v46.1.6 | **Superseded.** `renovate.yml:22` already pins v46.1.14 |
+
+- [ ] 4.1 `. d` With Oliver: delete all three, given that each one's content is obsolete or
+      already superseded on `main`. Not done unilaterally — branch deletion discards commits,
+      and "the subject line looks obsolete" is weaker evidence than the tool check that just
+      refuted the original premise
+- [ ] 4.2 `. d` Fast-forward local `main` to `origin/main` (168 behind), or delete it if the
+      workflow never uses it. Safe either way — it is at `4bdb074`, an ancestor of
+      `origin/main`
 
 ## 6. Decide on the now-empty `npm install`
 

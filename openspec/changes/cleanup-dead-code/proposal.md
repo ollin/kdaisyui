@@ -40,9 +40,12 @@ It is not harmless clutter. It actively misleads:
   to files already tracked, so the rule has been aspirational. `misc.xml` in particular
   cannot be tracked quietly: it carries `project-jdk-name`, a local SDK-table name, so it
   churns per machine. Decided 2026-08-15; the reasoning per file is in `tasks.md` section 3.
-- **Prune merged local branches**: `chore/minimize-codegen-yaml-configs`,
-  `chore/remove-version-consistency-ci`, `fix/renovate-action-version` — all at 0 ahead /
-  0 behind. Local `main` is 164 behind `origin/main`.
+- ~~**Prune merged local branches**~~ — **the premise was wrong**, corrected 2026-08-15.
+  "0 ahead / 0 behind" was each branch against its own upstream, not against `main`. None of
+  the three is contained in `origin/main`; one is 249 files away and predates the v2 codegen.
+  Their *content* does look obsolete or already superseded, but deleting them discards
+  commits, so it needs a decision rather than a sweep. See `tasks.md` section 4.
+  Local `main` is 168 behind `origin/main`.
 - **Decide on `just generate-heroicons`**: now a strict subset of `just generate`. Keep it as
   a convenience or drop it; either is fine, leaving it undecided is not.
 

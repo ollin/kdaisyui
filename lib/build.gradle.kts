@@ -194,19 +194,13 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     outputs.dir(outputDir)
 }
 
-tasks.named("compileKotlin") {
-    dependsOn(generateComponents)
-    dependsOn(generateHeroicons)
-}
-
-tasks.named("compileTestKotlin") {
-    dependsOn(generateComponentTests)
-}
+// Compilation deliberately does NOT depend on the generators. The generated
+// sources are committed, so a clone builds and tests with no Node, no npm and
+// no git submodules. Regeneration is explicit — `just generate` — and CI's
+// drift check is what keeps the committed output honest.
 
 // Sources JAR for Maven Central
 val sourcesJar by tasks.registering(Jar::class) {
-    dependsOn(tasks.named("generateComponents"))
-    dependsOn(tasks.named("generateHeroicons"))
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }

@@ -122,19 +122,43 @@ conclusion, and an expensive one.
 
 ## 5. Correct the documents that are now wrong
 
-- [ ] 5.1 `. d` `AGENTS.md` and the `kdaisyui-release` skill: release automation exists —
-      JReleaser, `bom/`, `release.yml`, version from the git tag
-- [ ] 5.2 `. d` `AGENTS.md`, `gradle.properties`, `renovate.json` and the `kdaisyui-codegen`
-      skill: the DaisyUI 5.5.20 ceiling is gone
-- [ ] 5.3 `. d` Everywhere that names `gradle.properties` as the version source: it is
-      `gradle/libs.versions.toml` now, and `gradle.properties` holds only the project version
+- [x] 5.1 `. d` `AGENTS.md` and the `kdaisyui-release` skill. The skill was rewritten rather
+      than patched — nearly every claim in it was false, including "there is no release
+      automation" as its opening heading. It now documents the tag trigger, the three
+      artifacts, and the `stageAll` / `verifyStagingComplete` guards that exist because 0.1.1
+      shipped with only the BOM reaching Central
+- [x] 5.2 `. d` The ceiling. `gradle.properties` lost it with the merge; the `kdaisyui-codegen`
+      skill's ceiling section is replaced by how the parser actually resolves its input today,
+      including that the element choice is a heuristic and how to override it
+- [x] 5.3 `. d` `AGENTS.md`, `openspec/config.yaml`, `README.md`, `justfile` — the version
+      source is `gradle/libs.versions.toml`; `gradle.properties` holds only the project version
+
+- [x] 5.4 `. d` **`renovate.json`, not in the plan.** It carried a `<=5.5.22` cap on
+      `org.webjars.npm:daisyui` and a `customManager` matching `daisyui.version=` in
+      `gradle.properties`. Both were added on **this** branch — `origin/main` never had them —
+      and both are now actively wrong: the cap blocks every DaisyUI update for a reason that
+      no longer exists, and the customManager targets a key that no longer exists. Removed;
+      the "never automerge a DaisyUI bump" rule stays
 
 ## 6. Verify the openspec state
 
-- [ ] 6.1 `. d` Reconcile the two `openspec/config.yaml` files and the two `specs/` trees —
-      main brings `coverage-enforcement`, this branch brings `generated-sources`
-- [ ] 6.2 `. d` Decide what happens to main's open changes `adapt-daisyui-5-6` and
-      `add-mutation-testing`, which this session never saw
-- [ ] 6.3 `. d` Decide whether `generated-sources` needs a spec delta — if the merge changes
-      what it promises (heroicon tests are a fourth generated category), it does, and this
-      change's `.openspec.yaml` must not carry `skip_specs`
+- [x] 6.1 `. d` Reconciled. Both `specs/` trees coexist without overlap —
+      `coverage-enforcement` from main, `generated-sources` from here. `openspec/config.yaml`
+      kept this branch's content (main's was the untouched default template) and its facts
+      were corrected: five modules, a root build script, `libs.versions.toml` as version
+      source, and release automation that exists
+- [x] 6.3 `. d` **Yes, a delta was needed.** The capability grew a fourth generated category
+      (icon render tests), and the drift requirement now has to cover every generator. Written
+      as two MODIFIED requirements; `skip_specs` deliberately not set. The validator caught
+      that the MODIFIED block would have dropped an existing scenario — a MODIFIED requirement
+      replaces the whole block, so surviving scenarios must be copied in
+
+- [ ] 6.2 `. d` Decide with Oliver what happens to main's two open changes:
+
+      - **`adapt-daisyui-5-6`** proposes bumping 5.5.20 → 5.6.3 and adding `aura`, `megamenu`,
+        `otp`. All of that is **already true**: the project is at 5.7.16 and those three
+        components are generated and committed. Its tasks are still unchecked, so it reads as
+        pending work that is in fact done and overtaken. Archive it, or check its tasks off
+        against reality first?
+      - **`add-mutation-testing`** is untouched by anything here and stays open on its own
+        merits.

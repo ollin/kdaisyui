@@ -46,8 +46,15 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
       three generate tasks, so they genuinely re-ran (`5 executed`). Aggregate hash over all
       450 files identical before and after (`2019abca…`), `git status` reports nothing under
       `lib/generated`, and `:lib:test` is 566 green
-- [ ] 2.4 `. d` Drop `js-yaml` from `codegen/package.json` if the deletion made it unused,
-      and refresh `package-lock.json` — check first, `parser/frontmatter.js` may still need it
+- [x] 2.4 `. r` Drop `js-yaml` from `codegen/package.json` — checked first, and
+      `parser/frontmatter.js` does **not** need it: it has its own `parseYamlFrontmatter`.
+      `index.js` was the only importer. `package-lock.json` was refreshed by the
+      `npm install` the generate task already runs, dropping `js-yaml` and its transitive
+      `argparse`. Regenerated output still hashes to `2019abca…`
+
+      **The codegen now has zero npm dependencies.** That makes the `npm install --silent &&`
+      prefix in two of the `Exec` commands a network round-trip that can no longer install
+      anything — see section 6.
 
 ## 3. Stop tracking the three `.idea` files
 
@@ -81,6 +88,15 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
       `fix/renovate-action-version`) after confirming each is contained in `origin/main`
 - [ ] 4.2 `. d` Fast-forward local `main` to `origin/main`, or delete it if the workflow
       never uses it
+
+## 6. Decide on the now-empty `npm install`
+
+Surfaced by 2.4, not planned. With zero dependencies, `npm install --silent &&` in
+`lib/build.gradle.kts:159,190` costs a network round-trip and installs nothing.
+
+- [ ] 6.1 `. d` With Oliver: drop the prefix, or keep it so that adding a dependency later
+      needs no build change. Dropping it also makes regeneration work offline; keeping it
+      means one less thing to remember. Not obvious either way, hence not decided here
 
 ## 5. Resolve `just generate-heroicons`
 

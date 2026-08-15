@@ -18,6 +18,7 @@ fun Route.dashboardRoutes() {
     get<Fragments.Stats> { call.respondHtmlFragment { statsFragment() } }
     get<Fragments.CardsRow1> { call.respondHtmlFragment { cardsRow1Fragment() } }
     get<Fragments.CardsRow2> { call.respondHtmlFragment { cardsRow2Fragment() } }
+    get<Fragments.WhatsNew> { call.respondHtmlFragment { whatsNewFragment() } }
     get<Fragments.Forms> { call.respondHtmlFragment { repoFragment() } }
     get<Fragments.FormSections> { call.respondHtmlFragment { formSectionsFragment() } }
     get<Fragments.Team> { call.respondHtmlFragment { teamFragment() } }

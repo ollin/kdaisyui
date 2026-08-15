@@ -16,6 +16,9 @@ class Fragments {
     @Resource("/cards-row2")
     class CardsRow2(val parent: Fragments = Fragments())
 
+    @Resource("/whats-new")
+    class WhatsNew(val parent: Fragments = Fragments())
+
     @Resource("/forms")
     class Forms(val parent: Fragments = Fragments())
 

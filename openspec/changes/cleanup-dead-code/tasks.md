@@ -13,11 +13,29 @@ cannot change a single byte of it, so an empty diff is the proof.
 *Refuted if any caller exists. Then: that caller decides what happens — either it is itself
 dead and goes too, or `index.js` is live and this change is wrong about its central claim.*
 
-- [ ] 1.1 `. r` Search the whole repository — `.github/`, `justfile`, `docs/`, `README.md`,
+- [x] 1.1 `. r` Search the whole repository — `.github/`, `justfile`, `docs/`, `README.md`,
       `llms.txt`, `buildSrc/`, every `*.gradle.kts` — for `index.js`, `generator.js`,
       `classify.js`, `src/config`, `npm run generate` and `codegen/src/config`. Record what
       is found, including in documentation, not only in executable code
-- [ ] 1.2 `. d` Record the outcome here: confirmed unreachable, or the change is revised
+- [x] 1.2 `. d` **Confirmed unreachable.** Outside the cluster itself, not one live caller:
+
+      | Where | Result |
+      |---|---|
+      | `lib/build.gradle.kts:159,174,190` | invokes `index-new.js`, `test-generator.js`, `index-heroicons.js` only |
+      | `codegen/package.json:6-7` | `generate` → `index-new.js`, `generate:heroicons` → `index-heroicons.js` |
+      | `.github/workflows/*` | no codegen entry point named at all |
+      | `justfile` | `generate` goes through Gradle since `2e93f84` |
+      | `docs/`, `README.md`, `llms.txt`, `renovate.json` | reference only live files |
+      | `codegen/src/**` imports | `index.js` → `generator.js` → `classify.js`, a closed cycle nothing enters |
+
+      The only live mention is `.opencode/skills/kdaisyui-codegen/SKILL.md:145-153`, a "Dead
+      files — do not edit, do not revive" section that reached this conclusion earlier and
+      says to delete itself along with them. It also names the check used in 2.3: `codegen/src`
+      is a declared input of all three generate tasks (`lib/build.gradle.kts:160,176,191`), so
+      the deletion invalidates them and forces a real regeneration.
+
+      Hits elsewhere were the `daisyui/` and `heroicons/` submodules' own `index.js` files —
+      unrelated — and the openspec archive, which is history and stays as written.
 
 ## 2. Delete the v1 pipeline
 
@@ -51,9 +69,8 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
       inconsistency for more rules and does not fix the churn, which is inherent to
       `project-jdk-name`.
 
-- [ ] 3.2 `. d` Apply it: `git rm --cached .idea/misc.xml .idea/gradle.xml .idea/vcs.xml`,
-      keeping the files on disk. Needs a shell — the Git MCP server exposes no `rm`, and
-      deleting-then-committing would take the running IDE's configuration with it
+- [x] 3.2 `. d` Applied by Oliver in the shell; committed as `b46cec3`. The files remain on
+      disk and the working tree is finally clean of IDE churn
 
 ## 4. Prune branches
 

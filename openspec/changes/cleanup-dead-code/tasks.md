@@ -159,12 +159,17 @@ Consequences, worst first:
 Surfaced by 2.4, not planned. With zero dependencies, `npm install --silent &&` in
 `lib/build.gradle.kts:159,190` costs a network round-trip and installs nothing.
 
-- [ ] 6.1 `. d` With Oliver: drop the prefix, or keep it so that adding a dependency later
-      needs no build change. Dropping it also makes regeneration work offline; keeping it
-      means one less thing to remember. Not obvious either way, hence not decided here
+- [x] 6.1 `. r` Dropped, decided by Oliver: "if something comes back, we rebuild it." All
+      three generator tasks now invoke `node` directly. Regeneration works offline, and the
+      generated output is byte-identical afterwards.
 
 ## 5. Resolve `just generate-heroicons`
 
-- [ ] 5.1 `. d` Keep it as a documented convenience or delete it as a subset of
-      `just generate` — with Oliver, since it is a taste question about the task runner's
-      surface, not a correctness one
+- [x] 5.1 `. d` Deleted, decided by Oliver. **It was already gone**, and not cleanly: I
+      removed it inside the `rejoin-main` merge conflict resolution (`40da5ee`) while
+      rewriting the neighbouring `generate` recipe, without flagging it as a deletion. The
+      outcome matches the decision, but a merge commit is the wrong place to decide something
+      — it hides the choice among 23 conflicts.
+
+      Also fixed here: the `sync-heroicons` comment still pointed at `gradle.properties`,
+      missed by `rejoin-main` section 5.

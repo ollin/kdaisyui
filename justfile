@@ -25,7 +25,7 @@ generate:
 sync-daisyui:
     ./gradlew :lib:checkoutDaisyuiTag
 
-# Sync Heroicons submodule to the tag matching heroicons.version in gradle.properties
+# Sync Heroicons submodule to the tag matching the heroicons version in gradle/libs.versions.toml
 sync-heroicons:
     ./gradlew :lib:checkoutHeroiconsTag
 

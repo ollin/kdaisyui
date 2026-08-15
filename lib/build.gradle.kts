@@ -142,9 +142,14 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     dependsOn(checkoutDaisyuiTag)
     workingDir = rootProject.file("codegen")
     val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/components")
+    // The coverage tests are produced by reading the generated components back, so
+    // this task needs both paths. Passing the input path keeps this file the single
+    // source of it — a second copy inside the generator once went stale unnoticed.
+    val componentsDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.asFile.absolutePath}\" --components-dir=\"${componentsDir.asFile.absolutePath}\"")
     dependsOn(generateComponents)
+    inputs.dir(componentsDir)
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))

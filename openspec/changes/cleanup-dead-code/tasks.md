@@ -83,8 +83,23 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
       inconsistency for more rules and does not fix the churn, which is inherent to
       `project-jdk-name`.
 
-- [x] 3.2 `. d` Applied by Oliver in the shell; committed as `b46cec3`. The files remain on
-      disk and the working tree is finally clean of IDE churn
+- [x] 3.2 `. d` Applied by Oliver in the shell; committed as `b46cec3`.
+
+- [ ] 3.3 `. d` **My list of three was incomplete.** `.idea/kotlinc.xml` (tracked since
+      `36248e7`) and `.idea/.gitignore` (tracked since the initial commit `0c9029a`) are also
+      tracked, and `kotlinc.xml` surfaced as a working-tree modification right after the other
+      three were untracked — the same IDE churn, one file later.
+
+      `.idea/.gitignore` is a deliberate exception worth keeping: JetBrains generates it to
+      exclude its own volatile files, and it is the one thing in `.idea/` that does not churn.
+      `kotlinc.xml` is not — it records the IDE's Kotlin compiler settings and moves with the
+      IDE version.
+
+      Same decision as 3.1 and the same mechanism:
+      `git rm --cached .idea/kotlinc.xml`. Needs a shell.
+
+      The lesson for 3.1: I derived "three files" from one commit's stat instead of asking git
+      what is tracked. A commit shows what that commit touched, not what the index holds.
 
 ## 4. Prune branches
 

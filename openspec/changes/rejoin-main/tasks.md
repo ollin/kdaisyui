@@ -153,12 +153,23 @@ conclusion, and an expensive one.
       that the MODIFIED block would have dropped an existing scenario — a MODIFIED requirement
       replaces the whole block, so surviving scenarios must be copied in
 
-- [ ] 6.2 `. d` Decide with Oliver what happens to main's two open changes:
+- [x] 6.2 `. d` **Not archived — I withdrew my own recommendation.** I had suggested archiving
+      `adapt-daisyui-5-6` as overtaken. Checking its five requirements against the tree instead
+      of its summary showed that is wrong: **requirement 5 is unmet.** Neither `example-app`
+      nor the E2E suite mentions `aura`, `otp` or `megamenu`, and `docs/reference.md:7` still
+      says 63 components while `llms.txt:561` still says DaisyUI 5.5.20.
 
-      - **`adapt-daisyui-5-6`** proposes bumping 5.5.20 → 5.6.3 and adding `aura`, `megamenu`,
-        `otp`. All of that is **already true**: the project is at 5.7.16 and those three
-        components are generated and committed. Its tasks are still unchecked, so it reads as
-        pending work that is in fact done and overtaken. Archive it, or check its tasks off
-        against reality first?
-      - **`add-mutation-testing`** is untouched by anything here and stays open on its own
-        merits.
+      Archiving would have published a requirement pinning `5.6.3` and asserted E2E coverage
+      that does not exist. The change was lying in both directions — claiming nothing was done
+      when sections 1-6 were, and implying sections 7-8 were covered when they are not.
+
+      Made truthful instead: sections 1-6 ticked with evidence, 7 (E2E) and 8.1/8.3 (docs,
+      version) left open as the real remaining work, and the spec's `SHALL be 5.6.3` corrected
+      — naming a version in a requirement is what made it expire.
+
+      Two findings recorded there for whoever picks it up: the bump was **not purely additive**
+      (`TooltipVariant.Neutral` was removed), and every piece of `codegen-config.json` work the
+      plan predicted for the three new components turned out unnecessary, while the component
+      that *did* need config — `dropdown` — nobody had flagged.
+
+      **`add-mutation-testing`** is untouched by anything here and stays open on its own merits.

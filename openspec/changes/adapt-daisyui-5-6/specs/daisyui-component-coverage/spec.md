@@ -1,7 +1,9 @@
 ## ADDED Requirements
 
 ### Requirement: DaisyUI version pinned to a webjar-backed release
-The pinned DaisyUI version SHALL be a version that has a published Maven webjar under `org.webjars.npm:daisyui`, and the build's DaisyUI submodule, the generated components, and the served webjar SHALL all derive from that same single version. For this change the pinned version SHALL be `5.6.3`.
+The pinned DaisyUI version SHALL be a version that has a published Maven webjar under `org.webjars.npm:daisyui`, and the build's DaisyUI submodule, the generated components, and the served webjar SHALL all derive from that same single version.
+
+**Corrected 2026-08-15:** this requirement originally fixed the version at `5.6.3`. Reality moved past it twice and the project is pinned at `5.7.16`. Naming a version in a requirement made the requirement expire; the webjar-backed constraint is the durable part and the only one kept.
 
 #### Scenario: Pinned version has a published webjar
 - **WHEN** the `daisyui` version is set in `gradle/libs.versions.toml`
@@ -10,7 +12,7 @@ The pinned DaisyUI version SHALL be a version that has a published Maven webjar 
 
 #### Scenario: Submodule, generated code, and webjar agree
 - **WHEN** components are regenerated for the pinned DaisyUI version
-- **THEN** the `daisyui` git submodule is checked out at the tag matching the pinned version (`v5.6.3`)
+- **THEN** the `daisyui` git submodule is checked out at the tag matching the pinned version
 - **AND** every generated CSS class is present in the served webjar of that same version
 
 ### Requirement: New DaisyUI 5.6 components are wrapped
@@ -37,6 +39,8 @@ The library SHALL expose a generated, type-safe `FlowContent.daisyXxx()` DSL fun
 
 ### Requirement: New modifiers on existing components are exposed
 Regeneration against the pinned DaisyUI release SHALL surface the new modifiers added to existing components — at minimum `range-vertical`, `tooltip-start` / `tooltip-center` / `tooltip-end`, and the `modal` popover attribute — as new enum entries or parameters on the corresponding existing wrappers, with backward-compatible defaults.
+
+**Not purely additive, contrary to the proposal:** the same regeneration *removed* `TooltipVariant.Neutral`, because DaisyUI dropped `tooltip-neutral`. A DaisyUI bump can take API away, and a requirement that only anticipates additions will not notice.
 
 #### Scenario: New modifier becomes available
 - **WHEN** a DaisyUI 5.6 modifier is declared in an existing component's frontmatter

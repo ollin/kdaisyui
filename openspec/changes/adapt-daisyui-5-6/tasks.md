@@ -1,35 +1,58 @@
+> **Reality check, 2026-08-15 (from `rejoin-main` task 6.2).** Most of this change happened
+> without being ticked here, and it happened at **5.7.16**, not 5.6.3 — the version this plan
+> treated as a hard ceiling was overtaken twice. Sections 1-6 are done and verified below.
+> Sections 7 and 8 are **genuinely outstanding**: neither `example-app` nor the E2E suite
+> mentions `aura`, `otp` or `megamenu`, and the docs still say 63 components / DaisyUI 5.5.20.
+>
+> So this change is neither finished nor untouched. It is not archivable as it stands —
+> archiving would publish a requirement pinning 5.6.3 and claim E2E coverage that does not
+> exist.
+
 ## 1. Version bump + submodule sync (build stays green)
 
-- [ ] 1.1 Bump `daisyui = "5.5.20"` → `"5.6.3"` in `gradle/libs.versions.toml` and update the catalog comment to note 5.6.3 is the highest webjar-backed version (refactoring; catalog only)
-- [ ] 1.2 Bump `webjar-tailwindcss-browser = "4.3.0"` → `"4.3.1"` in `gradle/libs.versions.toml` (DaisyUI 5.6.3 build target) (refactoring; catalog only)
-- [ ] 1.3 Run `just sync-daisyui` to check out the `daisyui` submodule at `v5.6.3` and commit the updated submodule pointer (refactoring; submodule pointer)
-- [ ] 1.4 Run `just generate` and `./gradlew :lib:test` to confirm the existing 63 components still regenerate and build green at 5.6.3 before adding anything new (refactoring; verification, no new behavior)
+- [x] 1.1 **Superseded**: `daisyui = "5.7.16"` in `gradle/libs.versions.toml`, past the 5.6.3
+      this task assumed was the ceiling
+- [x] 1.2 **Superseded**: `webjar-tailwindcss-browser = "4.3.3"`
+- [x] 1.3 Submodule is at the matching tag; pointer committed in `2297257`
+- [x] 1.4 Regenerated and green — 1488 tests, `koverVerify` at 100/100
 
 ## 2. Pick up new modifiers on existing components
 
-- [ ] 2.1 Regenerate and inspect the diff to existing component wrappers; confirm the new modifiers (`range-vertical`, `tooltip-start/center/end`, `modal` popover) appear as new enum entries / params with backward-compatible defaults (documentation; record the surfaced modifiers in the change notes)
-- [ ] 2.2 Run `./gradlew check`; for every NEW modifier branch on an existing component that drops coverage below 100%, extend the codegen test generator so the generated tests cover it; iterate until `:lib`+`:ktor-integration` aggregated coverage is 100/100 (feature-test; gated on `./gradlew check` green)
+- [x] 2.1 Confirmed in the committed diff: `range-vertical` and `tooltip-start/center/end`
+      appear as new params with `false` defaults. **One deviation this task did not predict:**
+      `TooltipVariant.Neutral` was *removed* — DaisyUI dropped `tooltip-neutral`, so the change
+      is not purely additive as the proposal claims
+- [x] 2.2 Aggregated coverage is 100/100 with the new modifiers present; no generator change
+      was needed for them
 
 ## 3. Wrap `aura` (trivial — div wrapper)
 
-- [ ] 3.1 Regenerate; verify the generated `daisyAura()` wrapper renders `<div class="aura ...">` with all `aura-*` style+size classes and nested content, asserting against the DaisyUI HTML example (feature; verify generated output, add config in `codegen-config.json` ONLY if needed)
-- [ ] 3.2 Run `./gradlew check`; ensure the generated tests cover every `aura` variant/size/extraClasses/attrs/content branch to 100% line+branch; extend `test-generator.js` if any branch is uncovered (feature-test; gated on `./gradlew check` green at 100/100)
+- [x] 3.1 `Aura.kt` generated and committed; no `codegen-config.json` entry was needed
+- [x] 3.2 Covered by the generated `AuraTest.kt` + `AuraCoverageTest.kt`; gate green
 
 ## 4. Wrap `otp` (medium — label element + slot spans)
 
-- [ ] 4.1 Add the `otp` config to `codegen-config.json` (element override to `LABEL`; slot-span / custom-part handling as the generated output requires), regenerate, and verify `daisyOtp()` renders `<label class="otp ...">` with the `otp-*` modifier/size/color classes (feature; element-override + config)
-- [ ] 4.2 Run `./gradlew check`; ensure generated tests cover every `otp` modifier/size/color/extraClasses/attrs branch to 100% line+branch, extending `test-generator.js` for the `LABEL`/slot structure if needed (feature-test; gated on `./gradlew check` green at 100/100)
+- [x] 4.1 `Otp.kt` generated and committed. The predicted `LABEL` element override was not
+      needed — the heuristic resolved it without config
+- [x] 4.2 Covered by `OtpTest.kt` + `OtpCoverageTest.kt`; gate green
 
 ## 5. Wrap `megamenu` (complex — popover-based multi-part nav)
 
-- [ ] 5.1 Add the `megamenu` config to `codegen-config.json` (custom parts for the popover trigger/menu sub-elements + the container `popover` attribute), regenerate, and verify `daisyMegamenu()` renders `<div class="megamenu ..." popover>` with `megamenu-*` modifier/direction/size classes and its sub-parts (feature; custom parts + popover attribute)
-- [ ] 5.2 If the test generator cannot express the `popover`/custom-part structure, extend `codegen/src/generator-new.js` / `test-generator.js` to support it (refactoring; codegen capability — keep existing components' output unchanged)
-- [ ] 5.3 Run `./gradlew check`; ensure generated tests cover every `megamenu` branch to 100% line+branch. ONLY if a branch is genuinely beyond the generator AND a hole remains, add ONE documented hand-written test file for `megamenu` with a written justification (last-resort exception per design D4) (feature-test; gated on `./gradlew check` green at 100/100)
+- [x] 5.1 `Megamenu.kt` generated and committed; no config entry was needed
+- [x] 5.2 No generator extension was required
+- [x] 5.3 Covered by `MegamenuTest.kt` + `MegamenuCoverageTest.kt`; gate green, and **no**
+      hand-written test file was needed — the last-resort exception in design D4 stays unused
+
+      Worth carrying forward: sections 3-5 each predicted config or generator work, and none
+      of it was necessary. The three components came out of regeneration unaided. What *did*
+      need a `codegen-config.json` entry was a component nobody flagged — `dropdown`, whose
+      element heuristic picked an unusable variant at 5.7.16.
 
 ## 6. Full coverage verification
 
-- [ ] 6.1 Run the full `./gradlew check`; confirm the aggregated Kover report reads exactly 100% LINE and 100% BRANCH with the 3 new components + new modifiers present, and capture the evidence (documentation; evidence captured)
-- [ ] 6.2 Confirm no new user-facing component class was added to a Kover `excludes` filter (the only allowed exclusion remains the synthetic `*$DefaultImpls`) (refactoring; audit, no code if clean)
+- [x] 6.1 `koverVerify` passes at 100% line and 100% branch with all three components present,
+      1488 unit tests / 1522 including e2e
+- [x] 6.2 Audited: `*$DefaultImpls` remains the only exclusion in `build.gradle.kts:48-52`
 
 ## 7. E2E smoke coverage for the new components
 
@@ -38,6 +61,10 @@
 
 ## 8. Docs + version
 
-- [ ] 8.1 Update `llms.txt` and `docs/reference.md` to include `aura`, `otp`, `megamenu` (66 components) (documentation)
-- [ ] 8.2 Update the component count (63 → 66) and the pinned DaisyUI version references in `AGENTS.md` (documentation)
-- [ ] 8.3 Bump the project SemVer `minor` in `gradle.properties` (new components = minor) (feature; user-visible version bump)
+- [ ] 8.1 Update `llms.txt` (still says "DaisyUI 5.5.20" at line 561) and `docs/reference.md`
+      (still says "63 components" at line 7) to include `aura`, `otp`, `megamenu` and the real
+      pinned version (documentation)
+- [x] 8.2 `AGENTS.md` no longer states a component count or a pinned version — it points at
+      `gradle/libs.versions.toml` instead, which cannot go stale
+- [ ] 8.3 Bump the project SemVer `minor` in `gradle.properties` — note it is `version=0.1.0`
+      now, and JReleaser derives the release version from the git tag (feature)

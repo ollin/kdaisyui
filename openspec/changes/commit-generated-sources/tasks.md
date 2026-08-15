@@ -113,10 +113,14 @@ own commit (`! b`), since it is a defect and not part of decoupling.
 
 Desired change. Build this **only if** task 1.5 recorded Verified.
 
-- [ ] 6.1 `^ F` Add the CI job: regenerate, then fail if the working tree is dirty
+- [x] 6.1 `^ F` Add the CI job: regenerate, then fail if the working tree is dirty. Uses
+      `git status --porcelain` rather than `git diff --exit-code`, so a newly added
+      component counts as drift instead of slipping through as "no diff"
 - [ ] 6.2 `^ F` Prove it fails — hand-edit one generated file on a scratch branch and watch
       the job go red. A gate nobody has seen fail is not known to be a gate
-- [ ] 6.3 `. r` Drop `submodules: recursive` from the jobs that no longer need it
+- [x] 6.3 `. r` Drop `submodules: recursive` from `unit-tests` and `e2e-tests`; only the
+      drift job still checks them out. This is also the clean-clone proof task 5.2 could
+      not do locally — CI now builds and tests from a checkout with no submodules at all
 
 ## 7. Documentation
 

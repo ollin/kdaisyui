@@ -10,13 +10,50 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  unit-tests:
-    name: unit-tests
+  # Keeps the committed lib/generated honest. Before this job existed the build
+  # itself regenerated on every compile, so drift was impossible; now that the
+  # build reads committed sources instead, this is what replaces that guarantee.
+  # It is the only job that needs Node and the git submodules.
+  generated-sources-drift:
+    name: generated-sources-drift
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           submodules: recursive
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Regenerate
+        run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons --no-daemon
+
+      - name: Fail if the committed sources no longer match their inputs
+        run: |
+          # --porcelain also reports untracked files, so a newly added component
+          # counts as drift rather than slipping through as "no diff".
+          if [ -n "$(git status --porcelain -- lib/generated)" ]; then
+            echo "::error::lib/generated does not match what the generators produce."
+            echo "Run 'just generate' and commit the result."
+            echo
+            git --no-pager diff --stat -- lib/generated
+            git status --porcelain -- lib/generated
+            exit 1
+          fi
+          echo "lib/generated matches its inputs."
+
+  unit-tests:
+    name: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      # No submodules: the generated sources are committed and the build does not
+      # run the generators. If this job ever needs them again, that is a defect -
+      # the drift job is what owns regeneration.
+      - uses: actions/checkout@v6
 
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -39,9 +76,8 @@ jobs:
     name: e2e-tests
     runs-on: ubuntu-latest
     steps:
+      # No submodules — see unit-tests.
       - uses: actions/checkout@v6
-        with:
-          submodules: recursive
 
       - name: Set up JDK
         uses: actions/setup-java@v5

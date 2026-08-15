@@ -316,9 +316,12 @@ function generateForComponent(componentName, config) {
 // Exhaustive branch-coverage tests: parse each generated component source and
 // drive every branch of every function with assertions on the rendered HTML.
 
+// Committed generated root — a sibling of lib/src/, never inside it, and never
+// under build/. If this path is wrong the coverage tests are silently skipped
+// rather than failing, so it must track lib/build.gradle.kts's generatedMainDir.
 const GENERATED_MAIN_DIR = path.resolve(
   import.meta.dirname,
-  '../../lib/build/generated/sources/kotlin/main/io/github/ollin/kdaisyui/components',
+  '../../lib/generated/main/kotlin/io/github/ollin/kdaisyui/components',
 )
 
 // Enum types from kotlinx.html (not declared in the source): arms can't be

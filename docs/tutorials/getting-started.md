@@ -23,7 +23,7 @@ includeBuild("../kdaisyui")   // point to where you cloned kdaisyui
 
 ```kotlin
 plugins {
-    // current Kotlin version: see gradle.properties → versions.kotlin
+    // current Kotlin version: see gradle/libs.versions.toml → kotlin
     kotlin("jvm") version "«versions.kotlin»"
 }
 
@@ -33,13 +33,13 @@ repositories {
 
 dependencies {
     implementation(project(":lib"))
-    // current kotlinx-html version: see gradle.properties → versions.kotlinx-html
+    // current kotlinx-html version: see gradle/libs.versions.toml → kotlinx-html
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:«versions.kotlinx-html»")
 }
 ```
 
 > Replace `«versions.kotlin»` and `«versions.kotlinx-html»` with the values from
-> [`gradle.properties`](../../gradle.properties) in the kdaisyui repository.
+> [`gradle/libs.versions.toml`](../../gradle/libs.versions.toml) in the kdaisyui repository.
 
 Run `./gradlew build` to verify everything resolves.
 

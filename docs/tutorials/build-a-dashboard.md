@@ -28,7 +28,7 @@ Create a new Gradle module (or a standalone project) with these dependencies.
 
 ```kotlin
 plugins {
-    // current Kotlin version: see gradle.properties → versions.kotlin
+    // current Kotlin version: see gradle/libs.versions.toml → kotlin
     kotlin("jvm") version "«versions.kotlin»"
     application
 }
@@ -45,17 +45,17 @@ dependencies {
     // kdaisyui (via composite build or local project)
     implementation(project(":lib"))
 
-    // Ktor server — current version: see example-app/build.gradle.kts → ktorVersion
+    // Ktor server — current version: see gradle/libs.versions.toml → ktor
     implementation("io.ktor:ktor-server-core:«ktorVersion»")
     implementation("io.ktor:ktor-server-netty:«ktorVersion»")
     implementation("io.ktor:ktor-server-html-builder:«ktorVersion»")
 
-    implementation("ch.qos.logback:logback-classic:1.5.18")
+    implementation("ch.qos.logback:logback-classic:«logback»")
 }
 ```
 
-> Replace `«versions.kotlin»` with the value from [`gradle.properties`](../../gradle.properties)
-> and `«ktorVersion»` with the value from [`example-app/build.gradle.kts`](../../example-app/build.gradle.kts).
+> Replace `«versions.kotlin»`, `«ktorVersion»` and `«logback»` with the values from
+> [`gradle/libs.versions.toml`](../../gradle/libs.versions.toml).
 
 ## 2. Create the entry point
 

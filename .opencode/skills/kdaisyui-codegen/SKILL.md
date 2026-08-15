@@ -32,8 +32,8 @@ just generate      # all three tasks, then shows the resulting diff
 What keeps the committed output honest is CI's `generated-sources-drift` job: it regenerates
 and fails if `lib/generated` changed. So the loop is regenerate → review the diff → commit it.
 
-So **any build regenerates**. `just generate` is a *separate* npm path
-(`cd codegen && npm install && npm run generate`) and is not required for a normal build.
+So **no build regenerates** — `just generate` is the only way, and it drives the same three
+Gradle tasks rather than a separate npm path.
 
 Submodules are pinned and checked out automatically: `checkoutDaisyuiTag` and
 `checkoutHeroiconsTag` read `daisyui.version` / `heroicons.version` from `gradle.properties`
@@ -141,16 +141,6 @@ daisyui/packages/docs/src/routes/(routes)/components/<name>/+page.md   (YAML fro
 ```
 
 Heroicons runs a separate path: `parser/svg-heroicons.js` → `generator-heroicons.js`.
-
-## Dead files — do not edit, do not revive
-
-`codegen/src/index.js`, `generator.js` and `classify.js` are superseded by the `*-new.js` pair.
-Nothing references them: `lib/build.gradle.kts` invokes only `index-new.js`,
-`index-heroicons.js` and `test-generator.js`, and `test-generator.js` imports `./classifier.js`
-— not `classify.js`. They are pending deletion; editing them has no effect.
-
-Delete them and this section together. `codegen/src` is a declared input of the generate tasks,
-so a `:lib:generateComponents` run after the deletion proves nothing depended on them.
 
 ## Verifying a codegen change
 

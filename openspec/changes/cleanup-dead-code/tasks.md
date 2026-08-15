@@ -56,6 +56,11 @@ dead and goes too, or `index.js` is live and this change is wrong about its cent
       prefix in two of the `Exec` commands a network round-trip that can no longer install
       anything — see section 6.
 
+- [x] 2.5 `. d` Delete the `kdaisyui-codegen` skill's "Dead files — do not edit, do not
+      revive" section, which asked to be removed together with the files. Also corrected two
+      stale lines it sat next to: "any build regenerates" (now the opposite) and `just
+      generate` described as a separate npm path (it drives the Gradle tasks since `2e93f84`)
+
 ## 3. Stop tracking the three `.idea` files
 
 - [x] 3.1 `. d` Decide with Oliver which way it goes. **Decided 2026-08-15: untrack all

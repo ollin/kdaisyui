@@ -61,7 +61,11 @@ function main() {
     }
     
     const classified = classifyFromFrontmatter(frontmatter, componentName)
-    const element = getElementForComponent(elementRules, componentName)
+    // The element heuristic takes the first variant in DaisyUI's Syntax block. When that
+    // variant only works with attributes this generator cannot emit, the result compiles
+    // but does not function — see componentElements in codegen-config.json.
+    const element = config.componentElements?.[componentName]
+      ?? getElementForComponent(elementRules, componentName)
     
     const kotlin = generateKotlinFile(classified, { primaryElement: element }, config)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)

@@ -192,6 +192,9 @@
   "additionalBooleans": {
     "join": ["vertical"]
   },
+  "componentElements": {
+    "dropdown": "details"
+  },
   "subComponentElements": {
     "card-title": "H2",
     "card-actions": "DIV"

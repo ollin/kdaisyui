@@ -58,12 +58,31 @@ are the newer copies. Caught by reading them instead of applying the map.
 
 *Assumption 3. The submodule jumps seven minor versions and the parser was reworked.*
 
-- [ ] 3.1 `. r` Regenerate with main's codegen and review the diff against the committed
-      `lib/generated` — this is the first real exercise of the reviewable-bump claim that
-      `commit-generated-sources` was built for
-- [ ] 3.2 `. f` Add the heroicon tests main's `test-generator-heroicons.js` produces, which
-      this branch's committed tree does not have
-- [ ] 3.3 `. r` Commit the regenerated tree and confirm the drift job would pass
+- [x] 3.1 `. r` Regenerate with main's codegen and review the diff. **450 → 457 files**:
+      three new components (`Aura`, `Megamenu`, `Otp`) with tests, 16 changed, none removed
+- [x] 3.2 `. f` Heroicon tests added — `HeroIconsGeneratedTest.kt`, render coverage for all
+      324 icons
+- [x] 3.3 `. r` Committed as `2297257`; 963 tests green and `example-app` compiles
+
+**Assumption 3 holds** — 5.7.16 regenerates cleanly across a seven-minor jump.
+
+**And the reviewable diff paid for itself on first use.** Three things it caught that would
+otherwise have shipped unseen:
+
+1. `TooltipVariant.Neutral` is **gone** — DaisyUI dropped `tooltip-neutral`. Source-breaking.
+2. `daisyDropdown` renders `<ul>` instead of `<details>`, changing its `attrs`/`content`
+   receiver from `DETAILS` to `UL`. Source-breaking.
+3. **That `<ul>` is a codegen defect.** DaisyUI 5.7.16's dropdown page shows
+   `<div class="dropdown">` about 25 times, `<details>` twice, and `<ul class="dropdown menu">`
+   exactly once (`+page.md:111`) — the element heuristic picked the singleton. The old
+   `<details>` was not the dominant form either, so this is a pre-existing weakness that
+   changed which wrong answer it gives.
+
+- [ ] 3.4 Decide with Oliver what happens to the dropdown defect. It cannot be fixed in
+      `lib/generated` — the drift job requires that tree to equal generator output — so the
+      fix belongs in `codegen/src` element detection, which is outside this change. But this
+      branch is heading for Maven Central, and `<ul>` wrapping a `<div tabindex>` trigger is
+      not markup to publish
 
 ## 4. Get the gate green
 

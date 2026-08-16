@@ -35,7 +35,10 @@ needed — see **Constraint** below, which matters more than it looks.
 default. This is the house convention (Arlo on commits, Conventional on the merge commit)
 meeting a generator that reads every commit.
 
-None of this is fixable after the fact: the release reports `"immutable": true`.
+~~None of this is fixable after the fact: the release reports `"immutable": true`.~~
+**Wrong, corrected 2026-08-16:** the release *body* is editable — `immutable` locks the tag and
+assets only. The v0.2.0 text was rewritten by hand. That repairs the symptom on one page; this
+change removes the cause for every page after it.
 
 ## What Changes
 
@@ -112,8 +115,14 @@ a release adds no evidence. The improved notes go to the next release that carri
 content.
 
 **Out of scope**
-- Repairing the v0.2.0 release notes from here. The API reports `immutable: true` and no tool
-  available in this setup can edit a release body. Whether GitHub's immutable releases lock the
-  body or only the tag and assets was not established — Oliver is trying the UI's *Edit
-  release* directly, which would fix the visible problem without any new version.
+- Repairing the v0.2.0 release notes from here. No tool available in this setup can edit a
+  release body.
+
+  **Resolved 2026-08-16:** the body *is* editable. `immutable: true` locks the tag and the
+  assets, not the release text — confirmed by Oliver doing it in the UI. So my earlier "not
+  fixable after the fact" was wrong, and one of the three defects was repairable all along by
+  hand. Only the underlying cause needed this change.
+
+  Worth carrying: a hand-edited body is overwritten if JReleaser ever re-releases the same tag,
+  because `release.github.overwrite` is `true` in `build.gradle.kts`.
 - Changing the Arlo-on-commits convention.

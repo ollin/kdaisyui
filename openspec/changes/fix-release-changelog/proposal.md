@@ -26,6 +26,10 @@ paragraph after it became part of the note.
 now, and the merge with `main` brought two months of Renovate history with it — once as the PR
 merge commit `(#228)` and once as the underlying commit. Three real features are buried.
 
+The duplication is a symptom, not the disease: none of these entries belong in release notes at
+all. Hiding the category removes both halves at once, which is why no merge-commit filtering is
+needed — see **Constraint** below, which matters more than it looks.
+
 **3. 117 raw Arlo commits, uncategorized.** The `conventional-commits` preset cannot classify
 `. d Plan detect-api-changes`, so they land in the uncategorized bucket, which is shown by
 default. This is the house convention (Arlo on commits, Conventional on the merge commit)
@@ -64,12 +68,22 @@ fold into it rather than growing a capability of its own.
    `getCategories()` and `getContributors()`. *Wrong if:* hiding a category also drops entries
    the preset assigned to it that we wanted to keep — checked by diffing the generated
    changelog before and after.
-3. **`skipMergeCommits` is not available to us**, even though it would deduplicate the Renovate
-   entries in one line. The house convention puts the Conventional Commit on the *merge*
-   commit, so skipping merge commits would delete the only properly-formed entry in the
-   changelog. *Wrong if:* the deduplication turns out to matter more than that entry, in which
-   case the convention itself is what needs revisiting — a bigger conversation than this
-   change.
+## Constraint: merge commits must stay in the changelog
+
+Not an assumption — a decision, and the one thing this change must not break.
+
+**`skipMergeCommits` stays off.** The house convention puts the Conventional Commit on the
+*merge* commit, so in v0.2.0 the merge commit `30b991d` was the **only** properly-formed entry
+in the entire changelog. Enabling this option would delete precisely the line worth keeping.
+
+Verified: `Changelog.isSkipMergeCommits()` returns `null != skipMergeCommits && skipMergeCommits`
+(`jreleaser-model-impl/.../release/Changelog.java:334`), so unset means false and today's
+behaviour is already correct. This change must keep it that way — and say so in the build
+file, because the option is an obvious-looking cure for the duplicated dependency entries, and
+reaching for it would silently gut the changelog.
+
+The duplicates need no such cure: hiding the dependency category removes the merge-commit
+entry *and* the underlying commit together, which is task 2.2.
 
 ## Impact
 

@@ -27,6 +27,13 @@ categories explicitly instead of using the preset.*
 - [ ] 2.3 `. r` Diff against the 1.1 reference and confirm nothing was lost that should have
       stayed. Hiding a category is a blunt instrument — this is the check that it did not take
       a real entry with it
+- [ ] 2.4 `. d` **Confirm the merge-commit entry survived**, by name: `30b991d` must still be
+      in the output. It is the only Conventional Commit in the range, so it is the whole point
+      of the changelog
+- [ ] 2.5 `. d` Pin `skipMergeCommits = false` explicitly in `build.gradle.kts` with a comment
+      saying why. It is already the default, so this adds no behaviour — it exists to stop a
+      future reader reaching for the obvious-looking cure for duplicated dependency entries and
+      deleting the one entry that matters. The duplicates are gone by 2.2 anyway
 
 ## 3. Stop mangling the breaking-change note
 

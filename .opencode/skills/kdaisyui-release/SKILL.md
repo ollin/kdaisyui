@@ -84,6 +84,18 @@ is a local directory, not a remote — the only remote upload path is JReleaser.
 `pr-conventional-commits.yml` validates PR titles — and that matters more than usual here,
 because JReleaser builds the release changelog from those commit messages.
 
-**Known gap:** `ci.yml`'s `pull_request` trigger does not currently fire on this repository.
-Only the `pull_request_target`-based title check runs on a PR. CI gates pushes to `main` but
-not pull requests into it. Diagnose that before relying on PR checks.
+## A conflicted PR gets no CI at all — and looks clean doing it
+
+`pull_request` workflows run against the PR's **merge commit**. When the head branch conflicts
+with the base, GitHub cannot compute that commit and **silently skips those workflows**. The
+checks are not red; they are absent.
+
+`pull_request_target` workflows are unaffected, because they run from the base branch. So a
+conflicted PR shows exactly one green check — `Validate PR title` — and no sign that
+`unit-tests`, `e2e-tests` and `generated-sources-drift` never ran.
+
+Verified 2026-08-15: PRs #229 and #231 had `mergeable_state: "dirty"` and ran only the title
+check, while #230 from Renovate ran the full suite on the same workflow file.
+
+**Before trusting a PR's checks, confirm it is mergeable.** "No red checks" and "the checks
+passed" are different statements, and this is the case where they come apart.

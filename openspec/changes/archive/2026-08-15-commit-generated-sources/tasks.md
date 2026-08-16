@@ -122,10 +122,20 @@ Desired change. Build this **only if** task 1.5 recorded Verified.
       **passed** on the same commit. That second half is the clean-clone proof: both ran on
       a checkout with no submodules at all (PR #231, closed; branch deleted)
 
-Note for whoever adds a workflow next: `ci.yml`'s `pull_request` trigger does **not** fire on
-this repository — PRs #229 and #231 both showed only the `pull_request_target`-based title
-check. The proof run had to be forced with a temporary `push` trigger. Worth diagnosing
-separately; it means CI currently gates pushes to `main` but not pull requests into it.
+~~Note for whoever adds a workflow next: `ci.yml`'s `pull_request` trigger does **not** fire on
+this repository.~~ **Wrong, corrected 2026-08-15.** The trigger is fine; PR #230 from Renovate
+ran the full suite on the same workflow file.
+
+The real cause: PRs #229 and #231 had `mergeable_state: "dirty"`, because their scratch
+branches sat on `ollins-stuff-at-home` while it still conflicted with `main` in 23 files.
+`pull_request` workflows run against the PR's **merge commit**, which cannot be computed for a
+conflicted PR, so they are skipped — not failed, skipped. `pull_request_target` runs from the
+base branch and is unaffected, which is why the title check still appeared.
+
+I generalised from two PRs that shared an unexamined property, and that property was the
+cause. One look at somebody else's PR would have settled it. The durable lesson is recorded in
+the `kdaisyui-release` skill: a conflicted PR shows one green check and no indication that the
+real ones never ran.
 - [x] 6.3 `. r` Drop `submodules: recursive` from `unit-tests` and `e2e-tests`; only the
       drift job still checks them out. This is also the clean-clone proof task 5.2 could
       not do locally — CI now builds and tests from a checkout with no submodules at all

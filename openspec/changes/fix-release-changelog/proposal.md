@@ -95,6 +95,25 @@ entry *and* the underlying commit together, which is task 2.2.
 the whole change can be checked locally against the real `v0.1.2..v0.2.0` range before the next
 tag exists.
 
+## This change does not get its own release
+
+Considered and rejected 2026-08-16: cutting a 0.2.1 to "publish corrected release notes".
+
+- It would not repair v0.2.0. That page stays as it is; a new release is a new page.
+- **Its own notes would be nearly empty, so the fix could not be demonstrated by it.**
+  JReleaser computes `v0.2.0..v0.2.1`, which would hold only this change's own configuration
+  commits — and `hide { uncategorized }` would hide most of them. Every piece of evidence lives
+  in `v0.1.2..v0.2.0`: the 120 dependency lines, the 117 uncategorized commits, the mangled
+  breaking-change note.
+- It would republish byte-identical artifacts to Maven Central, permanently, for a docs fix.
+
+`jreleaserChangelog` verifies the fix against the range that actually contains the problem, so
+a release adds no evidence. The improved notes go to the next release that carries real
+content.
+
 **Out of scope**
-- Repairing the v0.2.0 release notes. The release is immutable.
+- Repairing the v0.2.0 release notes from here. The API reports `immutable: true` and no tool
+  available in this setup can edit a release body. Whether GitHub's immutable releases lock the
+  body or only the tag and assets was not established — Oliver is trying the UI's *Edit
+  release* directly, which would fix the visible problem without any new version.
 - Changing the Arlo-on-commits convention.

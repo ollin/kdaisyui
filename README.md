@@ -49,6 +49,60 @@ This project follows the [Diátaxis](https://diataxis.fr/) documentation framewo
 
 > Published to [Maven Central](https://central.sonatype.com/artifact/io.github.ollin.kdaisyui/kdaisyui). Use the latest version shown on the badge above (or build from source with `just build`).
 
+## What's new in 0.2.0
+
+Tracks DaisyUI 5.7.16, up from 5.5.20. **66 components**, up from 63.
+
+**New components**
+
+| Component | Function | What it does |
+|---|---|---|
+| [Aura](docs/reference/aura.md) | `daisyAura` | Border light effect wrapping a component — `dual`, `glow`, `gold`, `holo`, `rainbow`, `silver` |
+| [Otp](docs/reference/otp.md) | `daisyOtp` | One-time password / verification code input, 8 colours, `joined` |
+| [Megamenu](docs/reference/megamenu.md) | `daisyMegamenu`, `daisyMegamenuActive` | Horizontal menu with popover navigation blocks — `full`, `vertical`, `wide` |
+
+**New on existing components**
+
+- `daisyDrawerButton` — a new drawer part
+- `daisyMenu(paged = true)` — shows one level at a time, turning the open summary into a back button
+- `daisyRange(vertical = true)`
+- `daisyTooltip(start = …, center = …, end = …)` — alignment alongside the existing `top`/`bottom`/`left`/`right`
+
+### How to migrate from 0.1.x
+
+**1. `TooltipVariant.Neutral` was removed.** DaisyUI dropped the `tooltip-neutral` class, so
+the enum entry went with it. This is a compile error, not a silent change:
+
+```kotlin
+// before
+daisyTooltip("Copy to clipboard", variant = TooltipVariant.Neutral) { … }
+
+// after — pick another variant, or omit it for the default styling
+daisyTooltip("Copy to clipboard", variant = TooltipVariant.Primary) { … }
+daisyTooltip("Copy to clipboard") { … }
+```
+
+**2. Switch positional arguments to named ones.** This one *is* silent, and it is the reason
+to act even if you never used `Neutral`.
+
+Generated parameters are sorted alphabetically, so a DaisyUI release that adds a modifier
+inserts it into the *middle* of an existing signature. In 0.2.0, `center` and `end` landed
+between `bottom` and `left` on `daisyTooltip`:
+
+```kotlin
+// 0.1.x — third boolean was `left`
+daisyTooltip("Hint", null, false, true) { … }   // meant left = true
+
+// 0.2.0 — the same call now means center = true
+```
+
+Every modifier is `Boolean = false`, so the compiler cannot notice. Named arguments are
+immune, and they are the only call style this project can keep stable across DaisyUI releases:
+
+```kotlin
+daisyTooltip("Hint", left = true) { … }
+```
+
 ## Quick start
 
 ### 1. Add the dependency
@@ -99,10 +153,15 @@ val html = createHTML().div {
 ```bash
 git clone https://github.com/ollin/kdaisyui
 cd kdaisyui
-asdf install   # reads .tool-versions — installs JDK, Node, just
+asdf install   # reads .tool-versions — installs the JDK
 just test      # run unit tests
 just dev       # start dev server → http://localhost:8080
 ```
+
+Building and testing needs **only a JDK**. The components and icons are generated, but the
+generated sources are committed, so there is no Node, no npm and no git submodule in the way
+of a clone. Only `just generate` — regenerating after a DaisyUI or Heroicons bump — needs
+Node and the submodules.
 
 ### Option B — Any JDK 21+
 
@@ -114,8 +173,8 @@ Exact versions are the single source of truth in these files:
 
 | What | Where |
 |---|---|
-| JDK, Gradle, Node | [`.tool-versions`](.tool-versions) |
-| Kotlin, kotlinx-html | [`gradle.properties`](gradle.properties) |
+| JDK that runs Gradle | [`.tool-versions`](.tool-versions) |
+| Kotlin, kotlinx-html, DaisyUI, Heroicons | [`gradle/libs.versions.toml`](gradle/libs.versions.toml) |
 | Gradle wrapper | [`gradle/wrapper/gradle-wrapper.properties`](gradle/wrapper/gradle-wrapper.properties) |
 | Ktor, webjars | [`example-app/build.gradle.kts`](example-app/build.gradle.kts) |
 
@@ -132,7 +191,9 @@ This project uses [`just`](https://just.systems/) as a task runner. Run `just` t
 | `just build` | Build all Gradle modules |
 | `just clean` | Remove all build artifacts |
 
-`just` is included in [`.tool-versions`](.tool-versions) and installed automatically with `asdf install`. The raw Gradle commands still work if you prefer them directly.
+`just generate` regenerates the committed sources in `lib/generated` and shows the resulting
+diff; it is the only recipe that needs Node and the git submodules. The raw Gradle commands
+still work if you prefer them directly.
 
 ## AI support
 
@@ -140,11 +201,9 @@ This project ships AI-ready context files so AI tools can work with kdaisyui eff
 
 | Audience | File | Purpose |
 |---|---|---|
-| Contributors (all AI tools) | [`AGENTS.md`](AGENTS.md) | Single source of truth: conventions, codegen, anti-patterns |
-| Claude Code | [`CLAUDE.md`](CLAUDE.md) | Points to AGENTS.md + Claude-specific tips |
-| GitHub Copilot Agent | [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Links to AGENTS.md + quick reference |
-| CodeSeeker | [`CODESEEKER.md`](CODESEEKER.md) | Project metadata for code analysis |
-| Library users (any AI) | [`llms.txt`](llms.txt) | API reference — all 63 components, usage examples |
+| Contributors (all AI tools) | [`AGENTS.md`](AGENTS.md) | Single source of truth: conventions, codegen, tooling, anti-patterns |
+| Claude Code | [`CLAUDE.md`](CLAUDE.md) | Thin pointer to AGENTS.md |
+| Library users (any AI) | [`llms.txt`](llms.txt) | API reference for consuming the library |
 
 If you're using kdaisyui as a dependency and want AI assistance, point your AI tool to [`llms.txt`](llms.txt).
 

@@ -51,30 +51,35 @@
       "description": "Pin GitHub Actions to digest for security",
       "matchManagers": ["github-actions"],
       "pinDigests": false
+    },
+    {
+      "description": "A DaisyUI bump moves the submodule tag and regenerates every component, so it always needs a human on the generated diff — never automerge. No version cap: the 5.5.22 ceiling came from codegen/src/parser/llms-txt.js requiring a static llms.txt that DaisyUI deleted in 5.5.23, and the parser now falls back to daisyui/skills/daisyui/components/. Renovate resolves this through the webjar coordinate in gradle/libs.versions.toml, so it only ever offers a version whose CSS artifact actually exists.",
+      "matchDepNames": ["org.webjars.npm:daisyui"],
+      "automerge": false
     }
   ],
 
   "gradle": {
     "enabled": true,
     "managerFilePatterns": [
-      "/(^|/)build\.gradle\.kts$/",
-      "/(^|/)settings\.gradle\.kts$/",
-      "/(^|/)gradle\.properties$/",
-      "/(^|/)buildSrc/.+\.gradle\.kts$/"
+      "/(^|/)build\\.gradle\\.kts$/",
+      "/(^|/)settings\\.gradle\\.kts$/",
+      "/(^|/)gradle\\.properties$/",
+      "/(^|/)buildSrc/.+\\.gradle\\.kts$/"
     ]
   },
 
   "npm": {
     "enabled": true,
     "managerFilePatterns": [
-      "/(^|/)e2e-tests/package\.json$/"
+      "/(^|/)e2e-tests/package\\.json$/"
     ]
   },
 
   "github-actions": {
     "enabled": true,
     "managerFilePatterns": [
-      "/^\.github/workflows/[^/]+\.ya?ml$/"
+      "/^\\.github/workflows/[^/]+\\.ya?ml$/"
     ]
   }
 }

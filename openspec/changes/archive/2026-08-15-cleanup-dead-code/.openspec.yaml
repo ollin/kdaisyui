@@ -1,0 +1,5 @@
+schema: spec-driven
+created: 2026-08-15
+# Pure removal of unreachable code and stale references. Nothing observable
+# changes, so there is no spec-level behaviour delta to record.
+skip_specs: true

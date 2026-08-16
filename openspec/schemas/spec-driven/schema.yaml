@@ -1,0 +1,255 @@
+name: spec-driven
+version: 1
+description: Plan it, then build it - proposal → specs → design → tasks
+# Project-local copy of the package schema. It differs from
+# @fission-ai/openspec/schemas/spec-driven/schema.yaml in three places — the
+# provenance rule in `specs`, the uncertainty-first ordering in `tasks`, and the
+# `apply` instruction. Diff against upstream after an `openspec update` and carry
+# over any other changes.
+
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: Initial proposal document outlining the change
+    template: proposal.md
+    instruction: |
+      Create the proposal document that establishes WHY this change is needed.
+
+      Sections:
+      - **Why**: 1-2 sentences on the problem or opportunity. What problem does this solve? Why now?
+      - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or removals. Mark breaking changes with **BREAKING**.
+      - **Capabilities**: Identify which specs will be created or modified:
+        - **New Capabilities**: List capabilities being introduced. Each becomes a new `specs/<name>/spec.md`. Use kebab-case names (e.g., `user-auth`, `data-export`).
+        - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Check `openspec/specs/` for existing spec names. Leave empty if no requirement changes.
+      - **Impact**: Affected code, APIs, dependencies, or systems.
+
+      IMPORTANT: The Capabilities section is critical. It creates the contract between
+      proposal and specs phases. Research existing specs before filling this in.
+      Each capability listed here will need a corresponding spec file.
+
+      Every change must either declare at least one capability (new or
+      modified) or explicitly opt out of specs: `openspec validate` rejects a
+      change with zero deltas unless the change's `.openspec.yaml` sets
+      `skip_specs: true`. Use `skip_specs: true` only when no spec-level
+      behavior changes (pure refactor, tooling, docs) - specs describe
+      behavior, so if behavior does not change, no spec should change either.
+      Do not invent a requirement just to satisfy validation.
+
+      Keep it concise (1-2 pages). Focus on the "why" not the "how" -
+      implementation details belong in design.md.
+
+      This is the foundation - specs, design, and tasks all build on this.
+    requires: []
+
+  - id: specs
+    generates: "specs/**/*.md"
+    description: Detailed specifications for the change
+    template: spec.md
+    instruction: |
+      Create specification files that define WHAT the system should do.
+
+      A spec is a behavior contract, not an implementation plan.
+
+      PROVENANCE - every requirement is an assumption until something checked it.
+      Mark each one:
+
+      - **Verified**: we checked it, and the mark says how - the document quoted
+        with a line reference, the measurement taken, the probe whose learning.md
+        established it. "It is in the upstream docs" is only Verified once someone
+        has actually opened them; an uncited citation is an assumption about a
+        citation.
+      - **Assumed**: not checked yet. This is ALLOWED, and pretending otherwise is
+        what used to push guesses into SHALL form unmarked. It carries one
+        obligation: say WHAT WOULD SHOW US IT IS WRONG. An assumption nobody can
+        falsify is a guess wearing the authority of a contract.
+
+      An Assumed requirement is a debt, and the interest is paid in tasks.md: the
+      task that verifies it goes EARLY, before work is built on top of it. When
+      verification refutes it, revise the change - that is the process working, not
+      a failure of the plan.
+
+      If you cannot say which of the two a requirement is, you have not thought
+      about it yet. openspec/specs/ stays trustworthy while every requirement in it
+      says how much weight it can bear.
+
+      Good spec content:
+      - Observable behavior users or downstream systems rely on
+      - Inputs, outputs, and error conditions
+      - External constraints (security, privacy, reliability, compatibility)
+      - Scenarios that can be tested or explicitly validated
+
+      Avoid in specs:
+      - Internal class/function names
+      - Library or framework choices
+      - Step-by-step implementation details
+      - Detailed execution plans (those belong in design.md or tasks.md)
+
+      Quick test: if the implementation can change without changing externally
+      visible behavior, it likely does not belong in the spec.
+
+      Create one spec file per capability listed in the proposal's Capabilities section.
+      - New capabilities: use the exact kebab-case name from the proposal (specs/<capability>/spec.md).
+      - Modified capabilities: use the existing spec folder name from openspec/specs/<capability>/ when creating the delta spec at specs/<capability>/spec.md.
+
+      There must be at least one spec file unless the change's `.openspec.yaml`
+      sets `skip_specs: true` (no spec-level behavior change) - `openspec validate`
+      rejects a zero-delta change without that marker. If the proposal lists no
+      capabilities and `skip_specs` is not set, revisit the proposal first.
+
+      Delta operations (use ## headers):
+      - **ADDED Requirements**: New capabilities
+      - **MODIFIED Requirements**: Changed behavior - MUST include full updated content
+      - **REMOVED Requirements**: Deprecated features - MUST include **Reason** and **Migration**
+      - **RENAMED Requirements**: Name changes only - use FROM:/TO: format
+
+      Format requirements:
+      - Each requirement: `### Requirement: <name>` followed by description
+      - Use SHALL/MUST for normative requirements (avoid should/may)
+      - Each scenario: `#### Scenario: <name>` with WHEN/THEN format
+      - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
+      - Every requirement MUST have at least one scenario.
+
+      New capabilities only: start the delta spec with a `## Purpose` section -
+      one or two sentences (50+ characters, or `openspec validate --strict`
+      reports it as too brief) describing what the capability is for. Archive
+      copies it into the main spec it creates; without it the new main spec is
+      left with a `TBD ... Update Purpose after archive` placeholder to fill in
+      by hand. Do NOT add `## Purpose` to a delta for an existing capability -
+      that spec already has one and the delta's is ignored. To change an
+      existing capability's Purpose - including a leftover `TBD` placeholder -
+      edit `openspec/specs/<capability>/spec.md` directly.
+
+      MODIFIED requirements workflow:
+      1. Locate the existing requirement in openspec/specs/<capability>/spec.md
+      2. Copy the ENTIRE requirement block (from `### Requirement:` through all scenarios)
+      3. Paste under `## MODIFIED Requirements` and edit to reflect new behavior
+      4. Ensure header text matches exactly (whitespace-insensitive)
+
+      Common pitfall: Using MODIFIED with partial content loses detail at archive time.
+      If adding new concerns without changing existing behavior, use ADDED instead.
+
+      Specs should be testable - each scenario is a potential test case.
+    requires:
+      - proposal
+
+  - id: design
+    generates: design.md
+    description: Technical design document with implementation details
+    template: design.md
+    instruction: |
+      Create the design document that explains HOW to implement the change.
+
+      When to include design.md (create only if any apply):
+      - Cross-cutting change (multiple services/modules) or new architectural pattern
+      - New external dependency or significant data model changes
+      - Security, performance, or migration complexity
+      - Ambiguity that benefits from technical decisions before coding
+
+      Sections:
+      - **Context**: Only the current state and constraints needed to explain the approach. Reference the proposal for motivation instead of restating it (e.g., "See proposal.md - Why").
+      - **Goals / Non-Goals**: What this design achieves and explicitly excludes. Don't restate the proposal's scope - add only design-level boundaries.
+      - **Decisions**: Key technical choices with rationale (why X over Y?). Include alternatives considered for each decision.
+      - **Risks / Trade-offs**: Known limitations, things that could go wrong. Format: [Risk] → Mitigation
+      - **Migration Plan**: Steps to deploy, rollback strategy (if applicable)
+      - **Open Questions**: Unknowns that can safely be answered later without
+        changing the specs, the approach, or the task breakdown. Omit if none.
+
+      Open questions are for genuinely deferrable unknowns, not decisions you
+      skipped. If a question would change the specs, the chosen approach, or
+      the task breakdown, resolve it now - ask the user instead of guessing.
+
+      If an open question turns out to have no obtainable answer, it was never
+      deferrable - it is an assumption. Mark it as one on the requirement it
+      affects, with what would show it wrong, and put its verification early in
+      tasks.md. If the unanswerable question is the change's premise rather than a
+      detail of it, convert the change to probe-driven.
+
+      Focus on architecture and approach, not line-by-line implementation.
+      The proposal covers why and what; design covers how. Reference the
+      proposal for motivation and, once written, the specs for requirements -
+      if a section would only restate them, point to them instead.
+
+      Good design docs explain the "why" behind technical decisions.
+    requires:
+      - proposal
+
+  - id: tasks
+    generates: tasks.md
+    description: Implementation checklist with trackable tasks
+    template: tasks.md
+    instruction: |
+      Create the task list that breaks down the implementation work.
+
+      ORDER BY UNCERTAINTY FIRST, DEPENDENCY SECOND. Every requirement marked
+      Assumed gets a task that verifies it, and those tasks come first - before
+      anything is built on top of them. A wrong assumption found in task 1.2 costs
+      a rewritten plan; the same assumption found in task 7.4 costs the code as
+      well. Dependency still wins where it must: a task that is impossible before
+      another follows it, however uncertain it is.
+
+      This is the whole reason the plan is allowed to rest on assumptions at all.
+      Order the shakiest first and the plan is cheap to be wrong about; order them
+      last and it is not a plan, it is a bet.
+
+      Before writing tasks, check design.md for Open Questions. If any of them
+      would change what gets built, resolve them with the user first - do not
+      bake an unstated assumption into the task list.
+
+      **IMPORTANT: Follow the template below exactly.** The apply phase parses
+      checkbox format to track progress. Tasks not using `- [ ]` won't be tracked.
+
+      Guidelines:
+      - Group related tasks under ## numbered headings
+      - Each task MUST be a checkbox: `- [ ] X.Y Task description`
+      - Tasks should be small enough to complete in one session
+      - Order tasks by uncertainty, then by dependency (see above)
+
+      Example:
+      ```
+      ## 1. Setup
+
+      - [ ] 1.1 Create new module structure
+      - [ ] 1.2 Add dependencies to package.json
+      ```
+
+      Reference specs for what needs to be built, design for how to build it.
+      Each task should be verifiable - you know when it's done.
+    requires:
+      - specs
+      - design
+
+apply:
+  requires: [tasks]
+  tracks: tasks.md
+  instruction: |
+    Read context files, work through pending tasks, mark complete as you go.
+    Pause if you hit blockers or need clarification.
+
+    DONE MEANS THE FULL SUITE. This schema is for work whose answer was knowable in
+    advance, so the bar is the ordinary one and there is no situational discount:
+
+    - a repo-wide compile of production AND test sources;
+    - `./gradlew :lib:test` AND `./gradlew :e2e-tests:test`. A scoped run is not
+      green - it hides cross-module ripple;
+    - the e2e layer is never optional. It boots an in-process Ktor server and drives
+      a real Chromium through Playwright, so it is the only layer that catches boot
+      and rendering defects. Confirm the reports under `e2e-tests/build/reports/`
+      exist rather than trusting an exit code.
+
+    A red test here is a defect to fix, not a finding. That is the difference from a
+    probe: this plan claimed to know what the system should do, so a failure means
+    the implementation is wrong - or the claim was.
+
+    WORKING UNDER UNCERTAINTY. This plan may rest on requirements marked Assumed,
+    and the early tasks are the ones that check them. When a check refutes one,
+    REVISE THE CHANGE - proposal, specs, tasks, whichever the finding touches -
+    before continuing. Do not work around a refuted assumption while leaving the
+    documents asserting it; that is how a plan becomes fiction that later readers
+    take at face value.
+
+    Revision is the expected outcome of ordering uncertainty first, not a failure.
+    Record what was believed and what replaced it, so the next reader knows the
+    plan changed and why.
+
+    If what falls over is the change's premise rather than a detail of it, convert
+    the change to probe-driven and find out by doing instead.

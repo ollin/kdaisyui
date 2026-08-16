@@ -1,6 +1,6 @@
 # kdaisyui — task runner
 # Run `just` or `just --list` to see all available recipes.
-# Requires: just (see .tool-versions), JDK, Node.js
+# Requires: just and a JDK. Node and the git submodules are needed by `generate` only.
 
 # List all recipes
 default:
@@ -12,19 +12,20 @@ default:
 build:
     ./gradlew build :lib:publishToMavenLocal
 
-# Regenerate Kotlin components + their tests from the DaisyUI submodule
+# Regenerate the committed Kotlin sources in lib/generated and show what changed.
+# The build never does this by itself — committed output plus CI's drift check
+# is what keeps lib/generated honest. Needs Node and the git submodules.
 generate:
-    ./gradlew :lib:generateComponents :lib:generateComponentTests
+    ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests
+    @echo
+    @git status --short lib/generated || true
+    @git --no-pager diff --stat -- lib/generated || true
 
-# Regenerate Heroicons Kotlin source from Heroicons SVG submodule
-generate-heroicons:
-    ./gradlew :lib:generateHeroicons
-
-# Sync DaisyUI submodule to the tag matching daisyui.version in gradle.properties
+# Sync DaisyUI submodule to the tag matching the daisyui version in gradle/libs.versions.toml
 sync-daisyui:
     ./gradlew :lib:checkoutDaisyuiTag
 
-# Sync Heroicons submodule to the tag matching heroicons.version in gradle.properties
+# Sync Heroicons submodule to the tag matching the heroicons version in gradle/libs.versions.toml
 sync-heroicons:
     ./gradlew :lib:checkoutHeroiconsTag
 

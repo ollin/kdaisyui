@@ -1,12 +1,36 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "intellij-server": {
-      "type": "remote",
-      "url": "http://localhost:64342/sse",
-      "headers": {
-        "IJ_MCP_SERVER_PROJECT_PATH": "/home/ollin/dev/src/devops.katta.nautsch.ch/ollin/gitea-runner-ai-review"
-      }
-    }
+    "gradle": { "enabled": true },
+    "jetbrains": { "enabled": true },
+    "github": { "enabled": true },
+    "git": { "enabled": true },
+    "playwright": { "enabled": true },
+    "codescene": { "enabled": true },
+    "daisyui-blueprint": { "enabled": true },
+    "memory": { "enabled": true },
+
+    "gitlab-katta": { "enabled": false },
+    "gitlab-nimbus": { "enabled": false },
+    "chrome-devtools": { "enabled": false },
+    "archi": { "enabled": false },
+    "structurizr-mcp": { "enabled": false },
+    "dacli": { "enabled": false },
+    "obsidian": { "enabled": false },
+    "tasknotes": { "enabled": false },
+    "nelson": { "enabled": false },
+    "pdf-mcp": { "enabled": false },
+    "pdf-reader": { "enabled": false },
+    "booksearch": { "enabled": false },
+    "unifi": { "enabled": false }
+  },
+
+  "tools": {
+    "bash": false,
+    "interactive_bash": false,
+    "write": false,
+    "edit": false,
+    "patch": false,
+    "jetbrains_execute_terminal_command": false
   }
 }

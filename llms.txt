@@ -87,11 +87,12 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 - Variant enums: `XxxVariant`, Size enums: `XxxSize`
 - Both have `internal val className: String`
 
-## Available components (63)
+## Available components (66)
 
 | Component | Function | Description | Variants | Sizes |
 |---|---|---|---|---|
 | Alert | `daisyAlert` | Status messages and notifications | Info, Success, Warning, Error | — |
+| Aura | `daisyAura` | Border light effect wrapping a component | dual, glow, gold, holo, rainbow, silver | Xs–Xl |
 | Avatar | `daisyAvatar` | User and entity representations | — | — |
 | Badge | `daisyBadge` | Labels, counts, and status tags | 8 colors | Xs–Xl |
 | Breadcrumbs | `daisyBreadcrumbs`, `daisyBreadcrumbsItems`, `daisyBreadcrumbsItem` | Navigation trail | — | — |
@@ -125,6 +126,7 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 | List | `daisyList` | Styled list | — | — |
 | Loading | `daisyLoading` | Loading spinners | — | Xs–Xl |
 | Mask | `daisyMask` | CSS mask shapes | — | — |
+| Megamenu | `daisyMegamenu`, `daisyMegamenuActive` | Horizontal menu with popover navigation blocks | full, vertical, wide | Xs–Xl |
 | Menu | `daisyMenu`, `daisyMenuTitle`, `daisyMenuDropdown`, `daisyMenuDropdownToggle` | Navigation lists with submenus | — | Xs–Xl |
 | MockupBrowser | `daisyMockupBrowser` | Browser frame mockup | — | — |
 | MockupCode | `daisyMockupCode` | Code block mockup | — | — |
@@ -132,6 +134,7 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 | MockupWindow | `daisyMockupWindow` | Window frame mockup | — | — |
 | Modal | `daisyModal`, `daisyModalBox`, `daisyModalAction`, `daisyModalBackdrop` | Modal dialogs | — | — |
 | Navbar | `daisyNavbar` | Top navigation bar | — | — |
+| Otp | `daisyOtp` | One-time password / verification code input | 8 colors | Xs–Xl |
 | Progress | `daisyProgress` | Progress bars | — | — |
 | RadialProgress | `daisyRadialProgress` | Circular progress indicator | — | — |
 | Radio | `daisyRadio` | Single-choice option groups | 8 colors | Xs–Xl |
@@ -556,9 +559,10 @@ fun FlowContent.daisyRange(
 
 ## Requirements
 
-- JDK 21+ (see `.tool-versions`)
-- Kotlin 2.4.0, kotlinx-html 0.12.0
-- DaisyUI 5.5.20 (a Tailwind v4 plugin; Tailwind 4.1.14)
+- JDK 21+
+- Kotlin, kotlinx-html, DaisyUI (a Tailwind v4 plugin) and Tailwind: exact versions are in
+  `gradle/libs.versions.toml`. They are deliberately not restated here — this file said
+  "DaisyUI 5.5.20" for two minor releases after that stopped being true.
 
 ## Links
 

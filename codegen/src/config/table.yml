@@ -1,4 +1,0 @@
-component: Table
-htmlElement: TABLE
-additionalBooleans:
-  - pin-rows

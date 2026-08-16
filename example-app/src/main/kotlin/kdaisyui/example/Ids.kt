@@ -23,6 +23,11 @@ class Dashboard : AnnotatedIdBase("dashboard") {
 
     class CardsRow2(parent: Dashboard = Dashboard()) : AnnotatedIdBase("cards-row2", parent)
 
+    class WhatsNew(parent: Dashboard = Dashboard()) : AnnotatedIdBase("whats-new", parent) {
+        class Otp(parent: WhatsNew = WhatsNew()) : AnnotatedIdBase("otp", parent)
+        class Megamenu(parent: WhatsNew = WhatsNew()) : AnnotatedIdBase("megamenu", parent)
+    }
+
     class Repo(parent: Dashboard = Dashboard()) : AnnotatedIdBase("repo", parent) {
         class Form(parent: Repo = Repo()) : AnnotatedIdBase("form", parent) {
             class Name(parent: Form = Form()) : AnnotatedIdBase("name", parent)

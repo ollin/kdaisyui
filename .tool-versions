@@ -1,3 +1,11 @@
+# JDK that RUNS Gradle. The JDK that COMPILES the code is pinned separately and
+# independently by jvmToolchain(21) in buildSrc — Gradle provisions that itself.
+# The two numbers differ on purpose; they are not in conflict.
 java temurin-25.0.4+7.0.LTS
+
+# Node is NOT needed to build or test — the generated sources are committed.
+# It is pinned anyway because `just generate` needs it, and a fixed Node keeps
+# regeneration reproducible, which is what the generated-sources-drift job relies on.
 nodejs 26.7.0
+
 just 1.58.0

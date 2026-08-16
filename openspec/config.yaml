@@ -1,20 +1,94 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Project context — shown to whoever writes an artifact.
+# Only facts that are true OF THIS REPOSITORY and cannot be learned elsewhere.
+# Conventions for writing code live in AGENTS.md; do not duplicate them here.
+context: |
+  kdaisyui is a type-safe DaisyUI component DSL for Kotlin server-rendered HTML,
+  wrapping Tailwind/DaisyUI class strings into compile-time-checked kotlinx.html
+  extension functions.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Most of this library is GENERATED. 66 components, 324 Heroicon functions and
+  their test files are produced by the codegen from the daisyui and
+  heroicons git submodules into lib/generated/**, which is COMMITTED. Never
+  propose editing generated output — change the codegen instead. The build does
+  not run the generators; regeneration is explicit (just generate) and CI's
+  generated-sources-drift job rejects committed output that no longer matches
+  its inputs. Hand-written Kotlin is roughly 200 lines: lib/.../core/
+  (ClassNames.kt, TagId.kt), the two icon enums, and
+  ktor-integration/.../Resolvable.kt.
+
+  The package is io.github.ollin.kdaisyui — never com.github.ollin.
+
+  gradle/libs.versions.toml is the single source of truth for every version:
+  the daisyui entry drives the submodule tag, the codegen input AND the webjar
+  CSS at once, so it must stay at a version that has a published webjar.
+  gradle.properties holds only the project version. Never hardcode a version
+  elsewhere.
+
+  Five modules: lib (the library), ktor-integration (Resolvable, context
+  parameters), example-app (Ktor + htmx dashboard on port 8080), e2e-tests
+  (Kotest + Playwright + Cucumber) and bom (a java-platform BOM). The root
+  build.gradle.kts carries the release and the coverage gate.
+
+  Releases ARE automated: pushing a v* tag runs JReleaser, which publishes
+  kdaisyui, kdaisyui-ktor-integration and kdaisyui-bom to Maven Central. CI
+  enforces an aggregated 100% line AND branch koverVerify gate.
+
+  Deeper conventions: AGENTS.md and the .opencode/skills/kdaisyui-* skills
+  (kdaisyui-codegen, kdaisyui-testing, kdaisyui-release).
+
+# Per-artifact rules.
+rules:
+  proposal:
+    - State the subtractive option next to the additive one. Ask what can be REMOVED
+      or SIMPLIFIED, not only what can be added; people systematically overlook
+      subtractive changes.
+    - Name explicitly what is deliberately out of scope and which change owns it
+      instead. A renovation sequence only works if each change refuses the others'
+      work.
+  design:
+    - Record the alternatives considered for each decision and why they lost. A
+      decision without its rejected alternative cannot be revisited later.
+    - Separate ENABLERS (behaviour-preserving, provable by diff) from DESIRED
+      CHANGES. Do not present a second desired change as preparation.
+  tasks:
+    - Put the tasks that verify the change's Assumed requirements FIRST. Being
+      wrong is expected; being wrong after six tasks were built on top is what
+      costs. Dependency order applies only where a task is genuinely impossible
+      earlier.
+    - Size every task so it becomes exactly ONE Risk-Aware (Arlo) commit - one
+      behaviour, or zero for a refactoring, with its test included.
+    - A behaviour change larger than 8 lines of code including tests is too big.
+      Split it into the enabling refactoring tasks plus the small behaviour task,
+      in that order.
+    - Give each task its intended Arlo prefix, and for anything bug-related make
+      the first step the failing reproducing test.
+
+# Per-operation guidance, served when implementation or archival starts.
+# Advisory: it reduces the chance a step is forgotten, it does not enforce anything.
+# CI remains the enforcement point.
+operations:
+  apply:
+    guidance:
+      - "What counts as DONE depends on the schema and is defined in that schema's
+        apply instruction - a full green suite for spec-driven, a usable signal for
+        probe-driven. Do not apply one schema's bar to the other."
+      - "If Chromium is missing, run ./gradlew :e2e-tests:playwrightInstall first."
+      - "Never edit lib/generated/** to make something pass - it is committed, but CI's
+        generated-sources-drift job fails any hand edit. Change the codegen under
+        codegen/ and regenerate with just generate."
+      - "Commit after every completed task, never as one batch at the end. Each task is
+        one Risk-Aware (Arlo) commit; never inflate a risk code to make a log look
+        tidy."
+  archive:
+    guidance:
+      - "Archive on the implementation branch and commit the archival there. The
+        archived state must travel in the SAME pull request as the code it documents,
+        never in a follow-up afterwards."
+      - "The pull request title is a Conventional Commit, enforced by
+        .github/workflows/pr-conventional-commits.yml. The Arlo commits underneath it
+        stay untouched - never squash, because squashing replaces every risk
+        attestation with a single line."
+      - "A change that declared skip_specs: true archives without spec updates. That is
+        expected, not an error to work around."

@@ -1,0 +1,59 @@
+// GENERATED — DO NOT EDIT
+// Source: heroicons/src/{16,20,24}/arrow-turn-up-right.svg
+// Regenerate: cd codegen && npm run generate:heroicons
+
+package io.github.ollin.kdaisyui.icons
+
+import kotlinx.html.FlowContent
+import kotlinx.html.SPAN
+import kotlinx.html.span
+import kotlinx.html.unsafe
+
+/**
+ * Arrow Turn Up Right icon from Heroicons.
+ * @param variant Icon style — [HeroIconVariant.Outline] (default) or [HeroIconVariant.Solid]
+ * @param size Icon size — [HeroIconSize.Sm] (16px), [HeroIconSize.Md] (20px), or [HeroIconSize.Lg] (24px, default)
+ * @param extraClasses Additional CSS classes appended to the icon
+ */
+fun FlowContent.heroIconArrowTurnUpRight(
+    variant: HeroIconVariant = HeroIconVariant.Outline,
+    size: HeroIconSize = HeroIconSize.Lg,
+    extraClasses: String? = null,
+) {
+    val classes = buildList {
+        add(size.className)
+        add(variant.className)
+        if (extraClasses != null) add(extraClasses)
+    }.joinToString(" ")
+
+    val svgContent = when (variant) {
+        HeroIconVariant.Outline -> heroIconArrowTurnUpRightOutline24
+        HeroIconVariant.Solid -> when (size) {
+            HeroIconSize.Sm -> heroIconArrowTurnUpRightSolid16
+            HeroIconSize.Md -> heroIconArrowTurnUpRightSolid20
+            HeroIconSize.Lg -> heroIconArrowTurnUpRightSolid24
+        }
+    }
+    val viewBox = when (variant) {
+        HeroIconVariant.Outline -> "0 0 24 24"
+        HeroIconVariant.Solid -> when (size) {
+            HeroIconSize.Sm -> "0 0 16 16"
+            HeroIconSize.Md -> "0 0 20 20"
+            HeroIconSize.Lg -> "0 0 24 24"
+        }
+    }
+
+    span {
+        unsafe {
+            raw("""<svg xmlns="http://www.w3.org/2000/svg" viewBox="$viewBox" class="$classes" width="${size.dimension}" height="${size.dimension}">$svgContent</svg>""")
+        }
+    }
+}
+internal const val heroIconArrowTurnUpRightOutline24 = """<path fill="none" d="M16.4899 11.9994L20.2397 8.24902M20.2397 8.24902L16.4899 4.49866M20.2397 8.24902L3.74023 8.24902L3.74023 19.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />"""
+
+internal const val heroIconArrowTurnUpRightSolid16 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M2.75 14C3.16421 14 3.5 13.6642 3.5 13.25V6.75H11.4393L10.4697 7.71967C10.1768 8.01256 10.1768 8.48744 10.4697 8.78033C10.7626 9.07322 11.2374 9.07322 11.5303 8.78033L13.7803 6.53033C14.0732 6.23744 14.0732 5.76256 13.7803 5.46967L11.5303 3.21967C11.2374 2.92678 10.7626 2.92678 10.4697 3.21967C10.1768 3.51256 10.1768 3.98744 10.4697 4.28033L11.4393 5.25H2.75C2.33579 5.25 2 5.58579 2 6V13.25C2 13.6642 2.33579 14 2.75 14Z" fill="black" />"""
+
+internal const val heroIconArrowTurnUpRightSolid20 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 17C4.16421 17 4.5 16.6642 4.5 16.25V8.75H15.4393L13.4697 10.7197C13.1768 11.0126 13.1768 11.4874 13.4697 11.7803C13.7626 12.0732 14.2374 12.0732 14.5303 11.7803L17.7803 8.53033C18.0732 8.23744 18.0732 7.76256 17.7803 7.46967L14.5303 4.21967C14.2374 3.92678 13.7626 3.92678 13.4697 4.21967C13.1768 4.51256 13.1768 4.98744 13.4697 5.28033L15.4393 7.25H3.75C3.33579 7.25 3 7.58579 3 8V16.25C3 16.6642 3.33579 17 3.75 17Z" fill="black" />"""
+
+internal const val heroIconArrowTurnUpRightSolid24 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M3.73927 20.25C4.15349 20.25 4.48928 19.9142 4.48928 19.5L4.48928 8.99902L18.4282 8.99902L15.9585 11.469C15.6656 11.7619 15.6657 12.2368 15.9586 12.5297C16.2515 12.8226 16.7264 12.8226 17.0193 12.5297L20.7691 8.77932C21.062 8.48642 21.062 8.01156 20.7691 7.71866L17.0193 3.9683C16.7264 3.67538 16.2515 3.67535 15.9586 3.96825C15.6657 4.26114 15.6656 4.73603 15.9585 5.02896L18.4282 7.49895L3.73927 7.49895C3.32505 7.49895 2.98926 7.83476 2.98926 8.24899L2.98926 19.5C2.98926 19.9142 3.32505 20.25 3.73927 20.25Z" fill="black" />"""
+

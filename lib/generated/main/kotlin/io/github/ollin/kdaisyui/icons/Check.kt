@@ -1,0 +1,59 @@
+// GENERATED — DO NOT EDIT
+// Source: heroicons/src/{16,20,24}/check.svg
+// Regenerate: cd codegen && npm run generate:heroicons
+
+package io.github.ollin.kdaisyui.icons
+
+import kotlinx.html.FlowContent
+import kotlinx.html.SPAN
+import kotlinx.html.span
+import kotlinx.html.unsafe
+
+/**
+ * Check icon from Heroicons.
+ * @param variant Icon style — [HeroIconVariant.Outline] (default) or [HeroIconVariant.Solid]
+ * @param size Icon size — [HeroIconSize.Sm] (16px), [HeroIconSize.Md] (20px), or [HeroIconSize.Lg] (24px, default)
+ * @param extraClasses Additional CSS classes appended to the icon
+ */
+fun FlowContent.heroIconCheck(
+    variant: HeroIconVariant = HeroIconVariant.Outline,
+    size: HeroIconSize = HeroIconSize.Lg,
+    extraClasses: String? = null,
+) {
+    val classes = buildList {
+        add(size.className)
+        add(variant.className)
+        if (extraClasses != null) add(extraClasses)
+    }.joinToString(" ")
+
+    val svgContent = when (variant) {
+        HeroIconVariant.Outline -> heroIconCheckOutline24
+        HeroIconVariant.Solid -> when (size) {
+            HeroIconSize.Sm -> heroIconCheckSolid16
+            HeroIconSize.Md -> heroIconCheckSolid20
+            HeroIconSize.Lg -> heroIconCheckSolid24
+        }
+    }
+    val viewBox = when (variant) {
+        HeroIconVariant.Outline -> "0 0 24 24"
+        HeroIconVariant.Solid -> when (size) {
+            HeroIconSize.Sm -> "0 0 16 16"
+            HeroIconSize.Md -> "0 0 20 20"
+            HeroIconSize.Lg -> "0 0 24 24"
+        }
+    }
+
+    span {
+        unsafe {
+            raw("""<svg xmlns="http://www.w3.org/2000/svg" viewBox="$viewBox" class="$classes" width="${size.dimension}" height="${size.dimension}">$svgContent</svg>""")
+        }
+    }
+}
+internal const val heroIconCheckOutline24 = """<path fill="none" d="M4.5 12.75L10.5 18.75L19.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />"""
+
+internal const val heroIconCheckSolid16 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M12.416 3.37592C12.7607 3.60568 12.8538 4.07134 12.624 4.41598L7.62404 11.916C7.4994 12.1029 7.2975 12.2242 7.0739 12.2463C6.8503 12.2684 6.62855 12.1892 6.46967 12.0303L3.46967 9.03029C3.17678 8.73739 3.17678 8.26252 3.46967 7.96963C3.76256 7.67673 4.23744 7.67673 4.53033 7.96963L6.88343 10.3227L11.376 3.58393C11.6057 3.23929 12.0714 3.14616 12.416 3.37592Z" fill="#09090B" />"""
+
+internal const val heroIconCheckSolid20 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M16.7045 4.15347C17.034 4.4045 17.0976 4.87509 16.8466 5.20457L8.84657 15.7046C8.71541 15.8767 8.51627 15.9838 8.30033 15.9983C8.08439 16.0129 7.87271 15.9334 7.71967 15.7804L3.21967 11.2804C2.92678 10.9875 2.92678 10.5126 3.21967 10.2197C3.51256 9.92682 3.98744 9.92682 4.28033 10.2197L8.17351 14.1129L15.6534 4.29551C15.9045 3.96603 16.3751 3.90243 16.7045 4.15347Z" fill="currentColor" />"""
+
+internal const val heroIconCheckSolid24 = """<path fill-rule="evenodd" clip-rule="evenodd" d="M19.916 4.62592C20.2607 4.85568 20.3538 5.32134 20.124 5.66598L11.124 19.166C10.9994 19.3529 10.7975 19.4742 10.5739 19.4963C10.3503 19.5184 10.1286 19.4392 9.96967 19.2803L3.96967 13.2803C3.67678 12.9874 3.67678 12.5125 3.96967 12.2196C4.26256 11.9267 4.73744 11.9267 5.03033 12.2196L10.3834 17.5727L18.876 4.83393C19.1057 4.48929 19.5714 4.39616 19.916 4.62592Z" fill="currentColor" />"""
+

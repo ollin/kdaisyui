@@ -14,6 +14,7 @@ import io.github.ollin.kdaisyui.components.*
 | Component | Description | Tag |
 |---|---|---|
 | [Alert](alert.md) | Status messages and notifications | `<div>` |
+| [Aura](aura.md) | Border light effect wrapping a component | `<div>` |
 | [Avatar](avatar.md) | User and entity representations | `<div>` |
 | [Badge](badge.md) | Labels, counts, and status tags | `<span>` |
 | [Breadcrumbs](breadcrumbs.md) | Navigation trail showing current location | `<div>` |
@@ -47,6 +48,7 @@ import io.github.ollin.kdaisyui.components.*
 | [List](list.md) | Styled list layout | `<ul>` |
 | [Loading](loading.md) | Loading spinners and indicators | `<span>` |
 | [Mask](mask.md) | CSS masks for cropping images to shapes | `<img>` |
+| [Megamenu](megamenu.md) | Horizontal menu with popover navigation blocks | `<div>` |
 | [Menu](menu.md) | Navigation lists with submenus | `<ul>` |
 | [MockupBrowser](mockupBrowser.md) | Browser window mockup frame | `<div>` |
 | [MockupCode](mockupCode.md) | Code block mockup frame | `<div>` |
@@ -54,6 +56,7 @@ import io.github.ollin.kdaisyui.components.*
 | [MockupWindow](mockupWindow.md) | Desktop window mockup frame | `<div>` |
 | [Modal](modal.md) | Modal dialogs | `<dialog>` |
 | [Navbar](navbar.md) | Navigation bar layout | `<div>` |
+| [Otp](otp.md) | One-time password / verification code input | `<div>` |
 | [Progress](progress.md) | Progress bar indicator | `<progress>` |
 | [RadialProgress](radialProgress.md) | Circular progress indicator | `<div>` |
 | [Radio](radio.md) | Single-choice option groups | `<input>` |
@@ -111,5 +114,5 @@ div {
 ## Requirements
 
 - JDK: see [`.tool-versions`](../.tool-versions) → `java` (toolchain configured in [`buildSrc/.../kdaisyui.kotlin-library-conventions.gradle.kts`](../buildSrc/src/main/kotlin/kdaisyui.kotlin-library-conventions.gradle.kts))
-- Kotlin: see [`gradle.properties`](../gradle.properties) → `versions.kotlin`
-- kotlinx-html: see [`gradle.properties`](../gradle.properties) → `versions.kotlinx-html`
+- Kotlin: see [`gradle/libs.versions.toml`](../gradle/libs.versions.toml) → `kotlin`
+- kotlinx-html: see [`gradle/libs.versions.toml`](../gradle/libs.versions.toml) → `kotlinx-html`

@@ -4,18 +4,21 @@ import { getAllComponentDirs, readComponentFrontmatter, toPascalCase } from './p
 import { toCamelCase } from './classifier.js'
 
 const DOCS_DIR = path.resolve(import.meta.dirname, '../../daisyui/packages/docs/src/routes/(routes)/components')
-const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/src/test/kotlin/io/github/ollin/kdaisyui/components')
+// Committed generated root — a sibling of lib/src/, never inside it.
+// Gradle passes --output-dir explicitly; this default is for a bare `node` run.
+const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generated/test/kotlin/io/github/ollin/kdaisyui/components')
 
-function parseOutputDir() {
+function parseArg(flag, fallback) {
+  const prefix = `--${flag}=`
   for (const arg of process.argv) {
-    if (arg.startsWith('--output-dir=')) {
-      return arg.slice('--output-dir='.length)
+    if (arg.startsWith(prefix)) {
+      return arg.slice(prefix.length)
     }
   }
-  return DEFAULT_OUTPUT_DIR
+  return fallback
 }
 
-const OUTPUT_DIR = parseOutputDir()
+const OUTPUT_DIR = parseArg('output-dir', DEFAULT_OUTPUT_DIR)
 const CONFIG_PATH = path.resolve(import.meta.dirname, '../codegen-config.json')
 
 function loadConfig() {
@@ -314,9 +317,15 @@ function generateForComponent(componentName, config) {
 // Exhaustive branch-coverage tests: parse each generated component source and
 // drive every branch of every function with assertions on the rendered HTML.
 
-const GENERATED_MAIN_DIR = path.resolve(
-  import.meta.dirname,
-  '../../lib/build/generated/sources/kotlin/main/io/github/ollin/kdaisyui/components',
+// Where the generated component sources are READ BACK from, to drive every branch
+// of every function. Gradle passes --components-dir so lib/build.gradle.kts stays
+// the single source of that path; the default only serves a bare `node` run.
+//
+// This used to be a second hardcoded copy of the path, and when the real one moved
+// it silently produced no coverage tests at all — see generateAllCoverage below.
+const GENERATED_MAIN_DIR = parseArg(
+  'components-dir',
+  path.resolve(import.meta.dirname, '../../lib/generated/main/kotlin/io/github/ollin/kdaisyui/components'),
 )
 
 // Enum types from kotlinx.html (not declared in the source): arms can't be
@@ -590,11 +599,21 @@ ${body}}
 }
 
 function generateAllCoverage() {
+  // FAIL, never skip. This used to warn and return, so a wrong path produced zero
+  // coverage tests while the build stayed green and the other generators kept the
+  // test count looking plausible. That cost 8% line and 9% branch coverage without
+  // turning anything red. A missing input is a broken build, not a warning.
   if (!fs.existsSync(GENERATED_MAIN_DIR)) {
-    console.error(`  ⚠ generated component sources not found at ${GENERATED_MAIN_DIR}; skipping coverage tests`)
-    return
+    throw new Error(
+      `Generated component sources not found at ${GENERATED_MAIN_DIR}. ` +
+      `Coverage tests are read back from them, so this cannot be skipped. ` +
+      `Pass --components-dir=<path>, or check generatedMainDir in lib/build.gradle.kts.`
+    )
   }
   const files = fs.readdirSync(GENERATED_MAIN_DIR).filter((f) => f.endsWith('.kt')).sort()
+  if (files.length === 0) {
+    throw new Error(`No .kt files in ${GENERATED_MAIN_DIR}; generateComponents must run first.`)
+  }
   let generated = 0
   for (const file of files) {
     const result = generateCoverageForFile(file)

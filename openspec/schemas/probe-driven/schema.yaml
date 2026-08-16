@@ -1,0 +1,172 @@
+name: probe-driven
+version: 1
+description: Find out by doing - hypothesis → probe → observations → learning. Knowledge is the output, not the input.
+
+artifacts:
+  - id: hypothesis
+    generates: hypothesis.md
+    description: What we believe, why it is plausible, and what we do not know
+    template: hypothesis.md
+    requires: []
+    instruction: |
+      State what you BELIEVE and why it is worth trying. This is not a proposal
+      and not a business case.
+
+      The bar is COHERENCE, not justification: a plausible reason to think this
+      might work, given what we know. If you can already prove it will work,
+      probing is waste - plan it with the spec-driven schema instead.
+
+      This schema is also how a spec-driven change VERIFIES an assumption it
+      cannot check by reading: split the assumption out as its own probe, or
+      convert the whole change here when the assumption was the premise.
+
+      Sections:
+      - **Belief**: what you think is true, in one or two sentences. Written as a
+        belief that could turn out wrong, never as a requirement. No SHALL, no MUST.
+      - **Why it is plausible**: the reasoning, the analogy, the observation, or the
+        hunch. An intuition with no articulable reason is still admissible - say so
+        plainly rather than inventing a rationale for it after the fact.
+      - **What we do not know**: the honest list. This is the most valuable section
+        and the one most often skipped. If it is empty, you are not in complex
+        territory or you are not being honest.
+      - **What would change our mind**: name it now, while you are still neutral.
+
+      Do NOT write requirements, acceptance criteria or a design here. You do not
+      know enough yet - that is the premise of this whole workflow.
+
+      Keep it short. Half a page is normal. A long hypothesis usually means
+      analysis is being smuggled in where evidence is needed.
+
+  - id: probe
+    generates: probe.md
+    description: The smallest safe-to-fail experiment, with its amplify and dampen signals
+    template: probe.md
+    instruction: |
+      Design the smallest experiment that produces real evidence about the
+      hypothesis.
+
+      SAFE-TO-FAIL, NOT FAIL-SAFE. Do not try to make the probe succeed. Make it
+      cheap to be wrong. The test: if you abandoned this tomorrow, what would it
+      cost? If the answer is uncomfortable, the probe is too big - shrink it until
+      throwing it away is boring.
+
+      Sections:
+      - **The experiment**: what you will actually do, as `- [ ]` checkboxes. The
+        apply phase tracks these, so they must be concrete actions, not intentions.
+      - **Timebox**: how long before you stop and look, regardless of progress.
+      - **Amplify signal**: what you would observe that means "do more of this".
+        Be specific enough that you could not talk yourself into it afterwards.
+      - **Dampen signal**: what you would observe that means "stop". This is the
+        one people leave out, and leaving it out is how a probe quietly becomes a
+        commitment.
+      - **How we throw it away**: the concrete discard path - a branch to delete,
+        a directory to remove. Name it, so abandoning stays a real option.
+      - **What must still work**: the blast radius, declared now rather than judged
+        later. Either "nothing outside the discard path" (a probe confined to a
+        throwaway branch or directory - broken code inside it is fine), or the named
+        parts that must still build and pass because this probe touches shared
+        config, dependencies or existing source.
+
+      Write amplify, dampen and the blast radius BEFORE running anything. Afterwards you will find
+      the result obvious in hindsight and will not be able to reconstruct what you
+      genuinely expected.
+
+      Several probes may run in parallel on the same hypothesis. Do not pick a
+      favourite early - premature convergence is the failure mode this workflow
+      exists to prevent.
+    requires:
+      - hypothesis
+
+  - id: observations
+    generates: observations.md
+    description: What actually happened, written during and after the probe
+    template: observations.md
+    instruction: |
+      Record what ACTUALLY happened. Written during and after the probe, never
+      before - if this file exists before the probe has run, something has gone
+      wrong.
+
+      Sections:
+      - **What we expected**: copy it from the probe BEFORE writing anything else.
+        This is the guard against retrospective coherence: once you know the
+        outcome it looks inevitable, and you will unconsciously edit your memory
+        of what you predicted.
+      - **What happened**: the plain account, including the boring parts.
+      - **Surprises**: things you were not looking for. In complex work these are
+        usually worth more than the answer to the original question, because they
+        are the part no amount of up-front analysis could have produced.
+      - **What it cost**: actual time and effort, against the timebox.
+
+      Report failures with the same care as successes. A probe that dampens is a
+      successful probe - it bought information at low cost, which is the entire
+      point. Never dress up a dampen signal as a partial success.
+    requires:
+      - probe
+
+  - id: learning
+    generates: learning.md
+    description: Amplify, dampen or pivot - and what is now stable enough to specify
+    template: learning.md
+    instruction: |
+      Decide what to do next, and capture what was learned.
+
+      Sections:
+      - **Signal read**: amplify, dampen, or pivot. State which, and point at the
+        specific observation that drove it - not at a general impression.
+      - **What we learned**: the durable part. What is now true that we did not
+        know before, including learning about how we work, not only about the code.
+      - **What is now specifiable**: complex work does not stay complex. When a
+        probe reveals a stable, repeatable pattern, that pattern has moved into
+        knowable territory and belongs in a spec. Name it here; the follow-up
+        spec-driven change or the direct edit to `openspec/specs/` records it.
+        If nothing has stabilised yet, say so - that is a legitimate outcome and
+        usually means another probe.
+      - **What is still unknown**: carried forward into the next hypothesis.
+
+      Do not retrofit a rationale onto a result. If the probe worked for reasons
+      you did not anticipate, that is the finding - write it that way.
+    requires:
+      - observations
+
+apply:
+  requires: [probe]
+  tracks: probe.md
+  instruction: |
+    Run the probe. Work through its checkboxes and stop at the timebox even if
+    unfinished - an unfinished probe at the timebox is itself an observation.
+
+    Write observations.md WHILE you work, not from memory afterwards. Start it by
+    copying the expectation out of probe.md before anything else, so the
+    prediction is on record before the outcome is known.
+
+    Do not repair the probe to make it succeed. If it is going badly, that is the
+    dampen signal doing its job.
+
+    When the probe is done or the timebox expires, write learning.md.
+
+    WHAT "DONE" MEANS HERE IS NOT WHAT IT MEANS FOR A SPEC-DRIVEN CHANGE.
+
+    A probe is done when it has produced a SIGNAL. A signal that refutes the
+    hypothesis is a good outcome, not a failure - it bought the information
+    cheaply, which is the entire point of probing. Never repair a probe to turn a
+    dampen signal into an amplify signal; that destroys the only thing the probe
+    was for.
+
+    The one real failure is NO SIGNAL: the probe could not run at all, so nothing
+    was learned. That is a defect in the probe's design, not evidence about the
+    hypothesis - do not report it as "the idea did not work". Say so plainly in
+    observations.md and cut the probe smaller.
+
+    WHAT MUST STILL WORK scales with blast radius, not with the probe's ambition:
+
+    - Probe confined to a throwaway branch or directory: nothing needs to be green
+      except the discard path named in probe.md. Broken code inside the probe is
+      acceptable - it is being thrown away, and demanding a clean build of it is
+      how a cheap probe turns into an expensive commitment.
+    - Probe touching shared build config, dependencies, or existing source: the
+      untouched parts must still build and their tests must still pass. You changed
+      something others rely on, so you owe evidence that you did not break it.
+
+    Declare which of the two applies in probe.md BEFORE running, next to the
+    amplify and dampen signals. Deciding it afterwards is how "situational" becomes
+    rationalisation.

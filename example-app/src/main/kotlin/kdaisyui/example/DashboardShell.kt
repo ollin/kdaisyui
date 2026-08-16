@@ -40,6 +40,7 @@ fun HTML.dashboardShell(application: Application) {
                 htmxPlaceholder(application.href(Fragments.Stats()), "load", "col-span-12")
                 htmxPlaceholder(application.href(Fragments.CardsRow1()), "load delay:100ms", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
                 htmxPlaceholder(application.href(Fragments.CardsRow2()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+                htmxPlaceholder(application.href(Fragments.WhatsNew()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
                 htmxPlaceholder(application.href(Fragments.Forms()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
                 htmxPlaceholder(application.href(Fragments.FormSections()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
                 htmxPlaceholder(application.href(Fragments.Team()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")

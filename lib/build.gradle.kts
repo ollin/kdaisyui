@@ -93,9 +93,12 @@ val checkoutHeroiconsTag = tasks.register<CheckoutHeroiconsTag>("checkoutHeroico
 }
 
 // --- Generated sources from DaisyUI codegen ---
+// Committed, not build output: a sibling of src/ so generated and hand-written
+// Kotlin never share a tree. Regeneration rewrites these directories; the diff
+// then shows in git status. Never edit them by hand.
 
-val generatedMainDir = layout.buildDirectory.dir("generated/sources/kotlin/main")
-val generatedTestDir = layout.buildDirectory.dir("generated/sources/kotlin/test")
+val generatedMainDir = layout.projectDirectory.dir("generated/main/kotlin")
+val generatedTestDir = layout.projectDirectory.dir("generated/test/kotlin")
 
 sourceSets {
     main {
@@ -123,9 +126,12 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     description = "Regenerate Kotlin components from DaisyUI source (git submodule)"
     dependsOn(checkoutDaisyuiTag)
     workingDir = rootProject.file("codegen")
-    val outputDir = generatedMainDir.map { it.dir("io/github/ollin/kdaisyui/components") }
-    doFirst { outputDir.get().asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/index-new.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
+    doFirst { outputDir.asFile.mkdirs() }
+    // No `npm install`: the codegen declares no dependencies, so it installed nothing and
+    // only cost a network round-trip. Regeneration now works offline. Add it back here and
+    // in the other two generator tasks if a dependency is ever introduced.
+    commandLine("sh", "-c", "node src/index-new.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
@@ -138,10 +144,15 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     description = "Regenerate Kotlin component tests from DaisyUI source (git submodule)"
     dependsOn(checkoutDaisyuiTag)
     workingDir = rootProject.file("codegen")
-    val outputDir = generatedTestDir.map { it.dir("io/github/ollin/kdaisyui/components") }
-    doFirst { outputDir.get().asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/components")
+    // The coverage tests are produced by reading the generated components back, so
+    // this task needs both paths. Passing the input path keeps this file the single
+    // source of it — a second copy inside the generator once went stale unnoticed.
+    val componentsDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.asFile.absolutePath}\" --components-dir=\"${componentsDir.asFile.absolutePath}\"")
     dependsOn(generateComponents)
+    inputs.dir(componentsDir)
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
@@ -154,9 +165,9 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     description = "Regenerate exhaustive Kotlin icon render tests from Heroicons SVG source (git submodule)"
     dependsOn(checkoutHeroiconsTag)
     workingDir = rootProject.file("codegen")
-    val outputDir = generatedTestDir.map { it.dir("io/github/ollin/kdaisyui/icons") }
-    doFirst { outputDir.get().asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/test-generator-heroicons.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/icons")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "node src/test-generator-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))
@@ -168,29 +179,22 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     description = "Regenerate Kotlin icon functions from Heroicons SVG source (git submodule)"
     dependsOn(checkoutHeroiconsTag)
     workingDir = rootProject.file("codegen")
-    val outputDir = generatedMainDir.map { it.dir("io/github/ollin/kdaisyui/icons") }
-    doFirst { outputDir.get().asFile.mkdirs() }
-    commandLine("sh", "-c", "npm install --silent && node src/index-heroicons.js --output-dir=\"${outputDir.get().asFile.absolutePath}\"")
+    val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/icons")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "node src/index-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))
     outputs.dir(outputDir)
 }
 
-tasks.named("compileKotlin") {
-    dependsOn(generateComponents)
-    dependsOn(generateHeroicons)
-}
-
-tasks.named("compileTestKotlin") {
-    dependsOn(generateComponentTests)
-    dependsOn(generateHeroiconTests)
-}
+// Compilation deliberately does NOT depend on the generators. The generated
+// sources are committed, so a clone builds and tests with no Node, no npm and
+// no git submodules. Regeneration is explicit — `just generate` — and CI's
+// generated-sources-drift job is what keeps the committed output honest.
 
 // Sources JAR for Maven Central
 val sourcesJar by tasks.registering(Jar::class) {
-    dependsOn(tasks.named("generateComponents"))
-    dependsOn(tasks.named("generateHeroicons"))
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
@@ -207,24 +211,24 @@ publishing {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             artifactId = "kdaisyui"
-            
+
             // Attach sources and javadoc JARs
             artifact(sourcesJar.get())
             artifact(javadocJar.get())
-            
+
             // POM metadata required for Maven Central
             pom {
                 name.set("kdaisyui")
                 description.set("Type-safe DaisyUI component DSL for Kotlin server-rendered HTML")
                 url.set("https://github.com/ollin/kdaisyui")
-                
+
                 licenses {
                     license {
                         name.set("MIT License")
                         url.set("https://opensource.org/licenses/MIT")
                     }
                 }
-                
+
                 developers {
                     developer {
                         id.set("ollin")
@@ -232,7 +236,7 @@ publishing {
                         email.set("ollin@users.noreply.github.com")
                     }
                 }
-                
+
                 scm {
                     connection.set("scm:git:git://github.com/ollin/kdaisyui.git")
                     developerConnection.set("scm:git:ssh://github.com/ollin/kdaisyui.git")

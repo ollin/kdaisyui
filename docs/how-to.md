@@ -23,7 +23,7 @@ After the container starts, port 8080 is forwarded automatically. Run the exampl
 
 ### With asdf (local)
 
-The repository ships a `.tool-versions` file that pins the exact versions of JDK, Gradle, and Node used in development:
+The repository ships a `.tool-versions` file pinning the JDK that runs Gradle. That is all building and testing needs — the generated sources are committed, so no Node and no git submodules are involved:
 
 ```bash
 git clone https://github.com/ollin/kdaisyui

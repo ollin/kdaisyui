@@ -49,6 +49,60 @@ This project follows the [Diátaxis](https://diataxis.fr/) documentation framewo
 
 > Published to [Maven Central](https://central.sonatype.com/artifact/io.github.ollin.kdaisyui/kdaisyui). Use the latest version shown on the badge above (or build from source with `just build`).
 
+## What's new in 0.2.0
+
+Tracks DaisyUI 5.7.16, up from 5.5.20. **66 components**, up from 63.
+
+**New components**
+
+| Component | Function | What it does |
+|---|---|---|
+| [Aura](docs/reference/aura.md) | `daisyAura` | Border light effect wrapping a component — `dual`, `glow`, `gold`, `holo`, `rainbow`, `silver` |
+| [Otp](docs/reference/otp.md) | `daisyOtp` | One-time password / verification code input, 8 colours, `joined` |
+| [Megamenu](docs/reference/megamenu.md) | `daisyMegamenu`, `daisyMegamenuActive` | Horizontal menu with popover navigation blocks — `full`, `vertical`, `wide` |
+
+**New on existing components**
+
+- `daisyDrawerButton` — a new drawer part
+- `daisyMenu(paged = true)` — shows one level at a time, turning the open summary into a back button
+- `daisyRange(vertical = true)`
+- `daisyTooltip(start = …, center = …, end = …)` — alignment alongside the existing `top`/`bottom`/`left`/`right`
+
+### How to migrate from 0.1.x
+
+**1. `TooltipVariant.Neutral` was removed.** DaisyUI dropped the `tooltip-neutral` class, so
+the enum entry went with it. This is a compile error, not a silent change:
+
+```kotlin
+// before
+daisyTooltip("Copy to clipboard", variant = TooltipVariant.Neutral) { … }
+
+// after — pick another variant, or omit it for the default styling
+daisyTooltip("Copy to clipboard", variant = TooltipVariant.Primary) { … }
+daisyTooltip("Copy to clipboard") { … }
+```
+
+**2. Switch positional arguments to named ones.** This one *is* silent, and it is the reason
+to act even if you never used `Neutral`.
+
+Generated parameters are sorted alphabetically, so a DaisyUI release that adds a modifier
+inserts it into the *middle* of an existing signature. In 0.2.0, `center` and `end` landed
+between `bottom` and `left` on `daisyTooltip`:
+
+```kotlin
+// 0.1.x — third boolean was `left`
+daisyTooltip("Hint", null, false, true) { … }   // meant left = true
+
+// 0.2.0 — the same call now means center = true
+```
+
+Every modifier is `Boolean = false`, so the compiler cannot notice. Named arguments are
+immune, and they are the only call style this project can keep stable across DaisyUI releases:
+
+```kotlin
+daisyTooltip("Hint", left = true) { … }
+```
+
 ## Quick start
 
 ### 1. Add the dependency

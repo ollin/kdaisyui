@@ -6,6 +6,6 @@ java temurin-25.0.4+101.0.LTS
 # Node is NOT needed to build or test — the generated sources are committed.
 # It is pinned anyway because `just generate` needs it, and a fixed Node keeps
 # regeneration reproducible, which is what the generated-sources-drift job relies on.
-nodejs 26.7.0
+nodejs 26.8.1
 
 just 1.58.0

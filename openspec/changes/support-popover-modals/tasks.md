@@ -90,7 +90,7 @@ the whole claim being tested.
 
 ## 6. Leave the trail
 
-- [ ] 6.1 Record in `.opencode/skills/kdaisyui-codegen/SKILL.md` that `customParts` can carry
+- [x] 6.1 Record in `.opencode/skills/kdaisyui-codegen/SKILL.md` that `customParts` can carry
   static attributes, and that an alternative construction method is configured there rather than
   through `componentElements` (which replaces the single root element instead of adding one).
   → `. d`

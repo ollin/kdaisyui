@@ -81,7 +81,7 @@ together, and is relabelled there when reached.
 
 ## 4. Land it
 
-- [ ] 4.1 `. d` Verify the finished `changelog` block end to end on the real branch, and record
+- [x] 4.1 `. d` Verify the finished `changelog` block end to end on the real branch, and record
       the before/after
 
 **Rewritten 2026-09-04, as flagged at 2.1.** This said "commit the `changelog` block". There is

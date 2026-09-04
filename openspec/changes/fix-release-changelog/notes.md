@@ -227,6 +227,48 @@ non-footer prose is not merely safe — it is dropped. Anyone writing explanatio
 expecting it on the release page will not find it there; only the subject line and the footer
 survive.
 
+## 4.1 — The finished block, end to end
+
+Final `changelog` block, `build.gradle.kts:99`:
+
+```kotlin
+changelog {
+    formatted.set(ALWAYS)
+    preset.set("conventional-commits")
+    contributors { enabled.set(false) }
+    skipMergeCommits.set(false)     // pinned; already the default
+    hide {
+        uncategorized.set(true)
+        category("tasks")
+    }
+}
+```
+
+Regenerated on the real branch against `v0.1.2..v0.2.0`:
+
+| | Before | After |
+|---|---|---|
+| total lines | 264 | **15** |
+| 🚀 Features | 3 | 3 |
+| 🧰 Tasks | 108 | 0 |
+| 📝 Documentation | 2 | 2 |
+| uncategorized | 137 | 0 |
+
+Verification gate, `./gradlew check --rerun-tasks`:
+
+- **1525 tests passed**, 0 failed, 0 skipped
+- **37 of them in `:e2e-tests:test`** — checked by task path, not inferred from the total,
+  because a suite without the e2e layer is not the full suite. Includes the app-boot path and
+  `Webjar Assets - DaisyUI CSS is served from webjars`
+- `koverVerify` green: 100% line and branch, aggregated
+- 65 tasks executed under `--rerun-tasks`, so nothing was UP-TO-DATE
+
+### What this change did not fix
+
+The `30b991d` entry still spans six lines. That is v0.2.0's history and cannot be rewritten;
+section 3 stops it recurring rather than repairing it. Any future release whose MR body puts the
+footer last will render as one line — verified at 3.3.
+
 ### A note on how 2.3 can be checked
 
 There is no shell in this environment, so a byte-level `diff` between the reference and a later

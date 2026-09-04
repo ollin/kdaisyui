@@ -109,6 +109,18 @@ sourceSets {
     }
 }
 
+// --- Public API baseline ---
+// The API is generated from DaisyUI, so nobody decides to remove an enum entry —
+// a dependency bump carries it in, and releases are automated from a v* tag. This
+// makes the surface a committed artefact: `lib/api/lib.api`, rewritten only by
+// `updateKotlinAbi`. checkKotlinAbi joins `check` on its own and fails when the
+// two diverge. Kotlin's own DSL, so no extra plugin; experimental, so opted in.
+@OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+kotlin {
+    abiValidation {
+    }
+}
+
 dependencies {
     api(libs.kotlinx.html.jvm)
 }

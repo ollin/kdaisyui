@@ -25,16 +25,26 @@ categories explicitly instead of using the preset.*
       baseline.
       **Label corrected from `. r`:** running a task and recording what it produced changes no
       code and preserves no behaviour. It is evidence, so it is `d`, not `r`
-- [ ] 1.2 `. r` Find the keys behind "🚀 Features", "🧰 Tasks" and "📝 Documentation" — from
+- [x] 1.2 `. d` Find the keys behind "🚀 Features", "🧰 Tasks" and "📝 Documentation" — from
       `jreleaserConfig`, the trace log, or JReleaser's published preset
-- [ ] 1.3 `. d` Record the keys and where they came from
+- [x] 1.3 `. d` Record the keys and where they came from
+
+**1.2 and 1.3 collapsed into one act.** Finding the keys and recording them was a single
+`jreleaserConfig` run written up in `notes.md`; splitting the commit would have produced an empty
+one. 1.2 is also relabelled `. r` → `. d` for the reason given at 1.1.
 
 ## 2. Hide the noise
 
 - [x] 2.1 `! F` Set `hide { uncategorized = true }` and re-run. Expect: the 137 raw Arlo
       commits disappear, everything else unchanged
-- [ ] 2.2 `! F` Add the dependency category to `hide { categories }` and re-run. Expect: 108
-      lines disappear, the three real features remain
+- [ ] 2.2 `! F` Hide the `tasks` category and re-run. Expect: 108 lines disappear, the three
+      real features remain
+
+**Rewritten 2026-09-04, premise refuted by 1.2.** This said "add the dependency category". There
+is no dependency category. `chore(deps):` is labelled `chore` — the scope is not in the labeler
+regex — so it lands in `tasks`, whose only label is `chore` and whose entire content in this
+range is the 108 dependency lines. Hiding `tasks` is the available move; the cost, and the
+precise alternative that was rejected, are recorded in `notes.md`.
 
 **Labels corrected 2026-09-04, and the count with them.** Both were `. r`. Neither is a
 refactoring: each changes what a reader sees on the release page, which is the behaviour this

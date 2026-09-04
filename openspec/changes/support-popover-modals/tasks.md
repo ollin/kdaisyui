@@ -33,7 +33,7 @@ it changed nothing; and the field's real behaviour is pinned by the generated Ko
 lands with the output in 3.2, which asserts the attribute in rendered HTML rather than
 asserting a string inside the generator.
 
-- [ ] 2.1 Extend `generateCustomPartFunction` so a `customParts` entry may declare static
+- [x] 2.1 Extend `generateCustomPartFunction` so a `customParts` entry may declare static
   attributes, emitted into the function body after `id` and ahead of `extraClasses` — so
   `attrs()` still runs last and can override them. No config uses the field yet, so
   `just generate` must produce a zero diff.

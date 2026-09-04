@@ -77,3 +77,28 @@ Ran the drift job's own command locally — all four generators
 :lib:generateHeroiconTests`) with `--rerun-tasks` — then `git status --porcelain`, which is
 what `ci.yml:39` checks. Working tree clean: the committed `lib/generated` matches what the
 generators produce from the current config.
+
+## 7.1 — `adapt-daisyui-5-6` archived this requirement as satisfied when it was not
+
+That change closed 20/20 carrying a requirement that regeneration surfaces "the `modal` popover
+attribute". Nothing implemented it. The archived change is left untouched — rewriting an archive
+hides the lesson instead of recording it — so the correction lives here.
+
+**How it survived every gate.** The popover method adds no CSS class, and that single fact
+defeats the whole safety net at once:
+
+- generated component tests assert **class strings**, so there was nothing to fail;
+- `generated-sources-drift` compares regenerated output against committed output, and the two
+  agreed — the generator was consistently wrong, which a drift check cannot see;
+- coverage stayed at 100%, because the code that would have been uncovered was never generated;
+- and the task that recorded it as done was satisfied by reading the regenerated diff, in which
+  the absence of a thing does not appear.
+
+**What to take from it.** A requirement of the form "the new modifier is exposed" can be checked
+by reading a diff. One of the form "the component is reachable" cannot — it needs something that
+*uses* it. That is why this change ends in an example-app route and an E2E scenario rather than
+in a generated test: a consumer is the only gate that would have caught the original defect.
+
+And the mirror deserves the same suspicion as the code. A change reading 20/20 with none of that
+work done was trusted precisely because it looked complete. Ticking a box is a claim, worth
+exactly as much as the check behind it.

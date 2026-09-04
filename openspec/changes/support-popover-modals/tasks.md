@@ -49,7 +49,7 @@ asserting a string inside the generator.
   `codegen/codegen-config.json`. Config only; nothing regenerates until 3.2.
   → `. r`
 
-- [ ] 3.2 Run `just generate`, review the diff under `lib/generated/`, and commit the
+- [x] 3.2 Run `just generate`, review the diff under `lib/generated/`, and commit the
   regenerated output. Confirm `daisyModal` itself is untouched. The new public wrapper and the
   generated test that pins it land together here.
   → `. F` — regeneration is tool-produced and drift-checked, so it stays `.` however many lines

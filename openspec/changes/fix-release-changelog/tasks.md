@@ -67,6 +67,21 @@ together, and is relabelled there when reached.
       future reader reaching for the obvious-looking cure for duplicated dependency entries and
       deleting the one entry that matters. The duplicates are gone by 2.2 anyway
 
+## 2b. Narrow the hide to dependencies only
+
+*Added 2026-09-04 after review. 2.2 hid the whole `tasks` category because no dependency category
+existed, and recorded the cost: a future non-dependency `chore:` disappears with the bumps. That
+cost is not worth carrying — the precise version was already described in `notes.md` as the fix
+"if it ever matters", and doing it now is cheaper than discovering later that a chore went
+missing from a release page.*
+
+- [ ] 2b.1 `! F` Add a labeler matching `chore(deps)` and a category holding it, then hide that
+      category instead of `tasks`. Expect the output unchanged at 15 lines — the same 108 bumps
+      hidden, by a key that names them
+- [ ] 2b.2 `. d` Prove the precision was actually gained: a scratch non-dependency `chore:`
+      commit must now appear under 🧰 Tasks. Without this the change is only assumed to be
+      narrower
+
 ## 3. Stop mangling the breaking-change note
 
 *The defect that actually hurt a reader, and the one no configuration can fix.*

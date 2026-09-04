@@ -69,3 +69,11 @@ parameter — the static attribute is unconditional, so it introduces no branch 
 `staticAttributes` entry can therefore never open a coverage hole in the generated Kotlin.
 The branch it *does* add is in the generator, which Kover does not measure and no JS test
 covers; what stands behind that one is the zero diff in tasks 2.1 and 2.2.
+
+## 4.2 — no drift (2026-09-04)
+
+Ran the drift job's own command locally — all four generators
+(`:lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons
+:lib:generateHeroiconTests`) with `--rerun-tasks` — then `git status --porcelain`, which is
+what `ci.yml:39` checks. Working tree clean: the committed `lib/generated` matches what the
+generators produce from the current config.

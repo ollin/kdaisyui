@@ -37,6 +37,19 @@ The library SHALL expose a generated, type-safe `FlowContent.daisyXxx()` DSL fun
 - **THEN** it emits the `megamenu` container carrying the `megamenu` class plus the selected `megamenu-*` classes
 - **AND** its popover-based sub-parts are expressible from the wrapper
 
+> **NOT SATISFIED — recorded 2026-09-04.** The last clause is untrue and has been since it was
+> written. `daisyMegamenu` emits no `popover` attribute and there is no wrapper for the
+> `<div id="…" popover>` panels DaisyUI documents, so the megamenu as generated cannot open.
+>
+> Found while archiving `support-popover-modals`, which fixed the identical defect on `modal`.
+> Same cause, same blind spot: the popover method introduces no new CSS class, so the generated
+> tests, `generated-sources-drift` and the coverage gate are all satisfied by markup that does not
+> work — and the example app renders a megamenu whose E2E assertion passes on classes alone.
+>
+> Left standing rather than deleted, because a requirement that names a real gap is worth more
+> than a tidy spec. `support-popover-megamenu` is the change that makes it true; this note goes
+> when that lands.
+
 #### Scenario: New components are generated, not hand-written
 - **WHEN** the codegen pipeline runs for the pinned DaisyUI release
 - **THEN** the `aura`, `otp`, and `megamenu` wrappers are produced into the generated sources directory

@@ -102,6 +102,9 @@ jreleaser {
                 contributors {
                     enabled.set(false)
                 }
+                hide {
+                    uncategorized.set(true)
+                }
             }
         }
     }

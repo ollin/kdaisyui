@@ -7,7 +7,7 @@ A *modifier* is a CSS class toggled on a component's existing element. An altern
 
 **Corrected 2026-09-04:** this requirement previously also named "the `modal` popover attribute" among the modifiers to be surfaced. That was unbuildable: DaisyUI's popover modal is `<div class="modal" popover>`, a different root element from the `<dialog>` the wrapper emits, so no parameter on that wrapper could ever satisfy it. The clause was archived as satisfied while nothing implemented it, because no test and no drift check can detect a construction method that introduces no new class name.
 
-**Verified:** `lib/generated/main/kotlin/io/github/ollin/kdaisyui/components/Modal.kt:40` emits `dialog { }` and contains no `popover` reference; `daisyui/packages/docs/src/routes/(routes)/components/modal/+page.md:310` shows the popover method as `<div class="modal" id="…" popover>`.
+**Verified:** before this change `lib/generated/…/components/Modal.kt` held one wrapper only, `daisyModal`, emitting `dialog { }` with no `popover` reference anywhere in the file; `daisyui/packages/docs/src/routes/(routes)/components/modal/+page.md:310` shows the popover method as `<div class="modal" id="…" popover>`. The file now also holds `daisyModalPopover`, which is what satisfies the requirement added below — `daisyModal` itself is unchanged.
 
 #### Scenario: New modifier becomes available
 - **WHEN** a DaisyUI modifier class is declared in an existing component's frontmatter
@@ -56,7 +56,7 @@ The specification SHALL record that DaisyUI's checkbox modal (method 3) and anch
 ### Requirement: The popover modal is covered like any other component
 The popover-modal wrapper SHALL be exercised by generated tests covering every branch it introduces, SHALL keep aggregated line and branch coverage at 100%, and SHALL be rendered by the example application and asserted by an end-to-end test.
 
-**Assumed:** the generated-test path produces branch-complete tests for a `customParts` entry as it does for a class-derived part. *Wrong if:* regenerating with the popover entry configured yields a test file that leaves any branch of the new function uncovered, and `koverVerify` drops below 100%.
+**Verified:** regenerating with the popover entry configured produced branch-complete tests without any change to the test generator's coverage path, and `koverVerify --rerun-tasks` held at 100% line and branch over 1491 tests. The reason is structural rather than lucky: a static attribute is emitted unconditionally, so it introduces no branch into the generated Kotlin at all.
 
 #### Scenario: Coverage gate holds
 - **WHEN** the suite runs after the popover wrapper is generated

@@ -21,6 +21,14 @@ generate:
     @git status --short lib/generated || true
     @git --no-pager diff --stat -- lib/generated || true
 
+# Re-dump the committed public API baseline in lib/api and show what changed.
+# Only run this when an API change is intended: the diff is the change, and a
+# breaking one needs a "How to migrate" entry in README.md before its release.
+update-api:
+    ./gradlew :lib:updateKotlinAbi
+    @echo
+    @git --no-pager diff -- lib/api || true
+
 # Sync DaisyUI submodule to the tag matching the daisyui version in gradle/libs.versions.toml
 sync-daisyui:
     ./gradlew :lib:checkoutDaisyuiTag

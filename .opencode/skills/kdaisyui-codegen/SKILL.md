@@ -48,8 +48,8 @@ out the matching `v<version>` tag.
 2. `daisyui/skills/daisyui/components/*.md` — the fallback, and what is actually used today.
 
 There used to be a hard 5.5.20 ceiling because only (1) existed and its absence killed the
-build with `ENOENT`. **That ceiling is gone**; the fallback removed it and the project runs
-5.7.16.
+build with `ENOENT`. **That ceiling is gone** — the fallback removed it. The version actually
+pinned is in `gradle/libs.versions.toml`; do not restate it here.
 
 The remaining constraint is unrelated to the parser: DaisyUI must stay at a version with a
 **published Maven webjar** (`org.webjars.npm:daisyui`), because `:example-app` serves the CSS
@@ -71,6 +71,35 @@ The remedy is per-component and explicit, not a smarter heuristic:
 
 Watch for this on every DaisyUI bump — the committed diff under `lib/generated/` is where it
 becomes visible, which is the main reason that tree is committed at all.
+
+## Bumping the DaisyUI version — read the CHANGELOG first
+
+Whenever `daisyui` (or `heroicons`) moves in `gradle/libs.versions.toml`, read
+`daisyui/CHANGELOG.md` **back to the version currently pinned**, not just the release notes of
+the single version Renovate offers. Renovate shows one entry; a bump usually spans dozens, and
+the `Features` headings are the only ones that matter — `Bug Fixes` are CSS-internal and reach
+us through the webjar without touching the API.
+
+**Do not read it to find new classes.** The generator derives every class from the submodule at
+the pinned tag, so regeneration plus `generated-sources-drift` catches all of them mechanically.
+Verified at 5.7.17: `menu-paged` (new in 5.7.0), `btn-active` (5.6.1), `range-vertical` and
+`tooltip-start|center|end` (5.6.0) were all present without anyone reading a changelog.
+
+Read it for what the generator **structurally cannot see**:
+
+| Changelog says | Why codegen misses it |
+|---|---|
+| a new way to *construct* a component (different tag or attributes) | one element per component, chosen by `findComponentInSyntax` |
+| a class became responsive-prefixable | booleans emit a fixed class; `md:` needs `extraClasses` |
+| a component gained a new container element | same one-element limit |
+| a doc page appeared or vanished | may need a `skip` or `componentElements` entry |
+
+Worked example: 5.6.0 added HTML-popover modals (`<div class="modal" popover>` driven by
+`popovertarget`), which the docs list as method 2 of 4 and **not** legacy. `daisyModal` emits
+`<dialog>` only, so that method is unreachable — no test fails and no drift appears, because
+nothing about it is a class name. Only the changelog surfaces it.
+
+Record what you find as an issue or an OpenSpec change; do not fold it into the dependency PR.
 
 ## Component shape
 

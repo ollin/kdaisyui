@@ -14,7 +14,7 @@ if 1.2 refutes the assumption, revise this change rather than working around it.
   Revert the config entry afterwards; this task produces evidence, not code.
   → `. d`
 
-- [ ] 1.2 Decide how the `popover` attribute gets emitted, and write the decision into
+- [x] 1.2 Decide how the `popover` attribute gets emitted, and write the decision into
   `design.md`: extend `customParts` with a static-attributes field, or reject that and choose
   another mechanism. The requirement forbids pushing it onto callers via `attrs`, so "callers
   pass it themselves" is not an available answer. **If no mechanism is workable within the

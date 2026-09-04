@@ -39,7 +39,7 @@ asserting a string inside the generator.
   `just generate` must produce a zero diff.
   → `. r`
 
-- [ ] 2.2 Mirror the same field in `codegen/src/test-generator.js` so a generated test asserts
+- [x] 2.2 Mirror the same field in `codegen/src/test-generator.js` so a generated test asserts
   the rendered attribute, not only the class. Zero diff for the same reason.
   → `. r`
 

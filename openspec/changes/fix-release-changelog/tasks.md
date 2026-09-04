@@ -71,7 +71,7 @@ together, and is relabelled there when reached.
 
 *The defect that actually hurt a reader, and the one no configuration can fix.*
 
-- [ ] 3.1 `. d` Record the rule in the `risk-aware-commits` skill: in a merge-request title's
+- [x] 3.1 `. d` Record the rule in the `risk-aware-commits` skill: in a merge-request title's
       commit body, `BREAKING CHANGE:` is the **last** paragraph. Everything after it is
       absorbed into the note — per the Conventional Commits spec, the footer runs to the end
 - [ ] 3.2 `. d` Note the same in the `kdaisyui-release` skill, next to the existing warning

@@ -20,7 +20,7 @@ This also keeps the section's own promise that nothing is wired in until it has 
 - [x] 1.2 `. d` ~~If it does not, apply `org.jetbrains.kotlinx:binary-compatibility-validator`
       0.18.1 and run its dump task~~ — **not needed**, 1.1 answered yes. Recorded rather than
       deleted: the fallback was the reason assumption 1 was safe to hold
-- [ ] 1.3 `. d` Record which mechanism is in play and why
+- [x] 1.3 `. d` Record which mechanism is in play and why
 
 ## 2. Does it catch the silent case?
 
@@ -28,15 +28,18 @@ This also keeps the section's own promise that nothing is wired in until it has 
 dump change — then the tool detects removals only, the requirements say exactly that, and the
 parameter-shift hazard stays a documentation problem.*
 
-- [ ] 2.1 `. r` Take a dump of the current API as the reference
-- [ ] 2.2 `. r` Insert a `Boolean = false` parameter into the middle of one generated
+Each of 2.1-2.4 is a working-tree measurement that leaves no committed change, so none of them
+is a `. r`; the section's single artefact is 2.5's write-up. Relabelled `. d` to match.
+
+- [x] 2.1 `. d` Take a dump of the current API as the reference
+- [x] 2.2 `. d` Insert a `Boolean = false` parameter into the middle of one generated
       function's signature — by hand, in a throwaway working-tree edit, since the generator
       would have to be changed to do it properly — and re-dump
-- [ ] 2.3 `. r` Diff the two dumps. Record whether the insertion is visible, and what it looks
+- [x] 2.3 `. d` Diff the two dumps. Record whether the insertion is visible, and what it looks
       like. Revert the edit
-- [ ] 2.4 `. r` Repeat for a removal: delete an enum entry, re-dump, diff, revert. This is the
+- [x] 2.4 `. d` Repeat for a removal: delete an enum entry, re-dump, diff, revert. This is the
       case that is expected to work, so it is the control
-- [ ] 2.5 `. d` Record both outcomes
+- [x] 2.5 `. d` Record both outcomes
 
 ## 3. Write the specs
 

@@ -10,12 +10,21 @@ import kdaisyui.e2e.SharedInfrastructure
 import java.nio.file.Files
 import java.nio.file.Path
 
+private const val NO_JAVASCRIPT_TAG = "@nojs"
+
 class CucumberHooks(private val world: PlaywrightWorld) {
 
+    /**
+     * Tag a scenario `@nojs` to run it in a context with JavaScript disabled. That is the only
+     * way to prove a component needs none — with scripting on, "no handler was wired" is an
+     * argument about the source rather than an observation of the browser.
+     */
     @Before
-    fun setUp() {
+    fun setUp(scenario: Scenario) {
         world.context = SharedInfrastructure.browser.newContext(
-            Browser.NewContextOptions().setBaseURL(SharedInfrastructure.BASE_URL)
+            Browser.NewContextOptions()
+                .setBaseURL(SharedInfrastructure.BASE_URL)
+                .setJavaScriptEnabled(NO_JAVASCRIPT_TAG !in scenario.sourceTagNames)
         )
         world.context.setDefaultTimeout(10_000.0)
         world.context.tracing().start(

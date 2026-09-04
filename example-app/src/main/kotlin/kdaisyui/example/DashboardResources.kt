@@ -5,6 +5,9 @@ import io.ktor.resources.Resource
 @Resource("/")
 class DashboardPage
 
+@Resource("/popover-modal")
+class PopoverModalDemo
+
 @Resource("/fragments")
 class Fragments {
     @Resource("/stats")

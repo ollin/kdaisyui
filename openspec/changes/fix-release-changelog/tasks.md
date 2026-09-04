@@ -37,7 +37,7 @@ one. 1.2 is also relabelled `. r` → `. d` for the reason given at 1.1.
 
 - [x] 2.1 `! F` Set `hide { uncategorized = true }` and re-run. Expect: the 137 raw Arlo
       commits disappear, everything else unchanged
-- [ ] 2.2 `! F` Hide the `tasks` category and re-run. Expect: 108 lines disappear, the three
+- [x] 2.2 `! F` Hide the `tasks` category and re-run. Expect: 108 lines disappear, the three
       real features remain
 
 **Rewritten 2026-09-04, premise refuted by 1.2.** This said "add the dependency category". There
@@ -56,10 +56,10 @@ proposal; 1.1 measured 137 and 108.
 **Consequence for 4.1:** it can no longer be "commit the `changelog` block", because 2.1 and 2.2
 each commit their own line of it. It becomes the final verification that the whole block behaves
 together, and is relabelled there when reached.
-- [ ] 2.3 `. r` Diff against the 1.1 reference and confirm nothing was lost that should have
+- [x] 2.3 `. d` Diff against the 1.1 reference and confirm nothing was lost that should have
       stayed. Hiding a category is a blunt instrument — this is the check that it did not take
       a real entry with it
-- [ ] 2.4 `. d` **Confirm the merge-commit entry survived**, by name: `30b991d` must still be
+- [x] 2.4 `. d` **Confirm the merge-commit entry survived**, by name: `30b991d` must still be
       in the output. It is the only Conventional Commit in the range, so it is the whole point
       of the changelog
 - [ ] 2.5 `. d` Pin `skipMergeCommits = false` explicitly in `build.gradle.kts` with a comment

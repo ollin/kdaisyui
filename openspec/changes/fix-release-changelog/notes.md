@@ -148,6 +148,43 @@ commits it introduced.
 and left the previous output in place — which reads exactly like "the setting had no effect".
 Pass `--rerun`. Every later measurement in this change needs it.
 
+## 2.2 — `hide { category("tasks") }`
+
+| Block | Reference | After 2.1 | After 2.2 |
+|---|---|---|---|
+| 🚀 Features | 3 | 3 | **3** |
+| 🧰 Tasks | 108 | 108 | **0** |
+| 📝 Documentation | 2 | 2 | **2** |
+| uncategorized | 137 | 0 | 0 |
+| **total lines** | **264** | 125 | **15** |
+
+## 2.3 — Nothing that should have stayed was lost
+
+Checked against the acceptance list recorded at 1.1. All five entries present, by hash:
+
+- `30b991d` 🚨 commit generated sources, adopt DaisyUI 5.7.16, and gate regeneration drift
+- `d30a1b0` **coverage**: enforce a hard 100% line+branch coverage gate (#158)
+- `66b62ef` **breadcrumbs**: add `Items` and `Item` subcomponents with structure wrappers
+- `28a6d73` **openspec**: add adapt-daisyui-5-6 change proposal (#159)
+- `9b52a6d` **openspec**: add coverage and mutation testing change proposals (#101)
+
+The 249 removed lines are 137 uncategorized Arlo commits and 108 dependency bumps. Both buckets
+were removed whole; nothing was removed partially, and no category lost some members while
+keeping others.
+
+## 2.4 — The merge-commit entry survived
+
+`30b991d` is present, at line 4 of the 15. Confirmed by name, as the task requires.
+
+It matters because it is the only Conventional Commit in `v0.1.2..v0.2.0`. Every other entry
+that survives is a merge commit from a PR; every entry that was hidden was either uncategorized
+or a dependency bump. A filter that removed it would have left a changelog that technically
+rendered and said nothing.
+
+This is also the case against `skipMergeCommits = true`, which task 2.5 pins: that option would
+delete `30b991d` and leave 🚀 Features holding two entries that describe less than the one it
+removed.
+
 ### A note on how 2.3 can be checked
 
 There is no shell in this environment, so a byte-level `diff` between the reference and a later

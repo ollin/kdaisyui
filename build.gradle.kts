@@ -102,6 +102,33 @@ jreleaser {
                 contributors {
                     enabled.set(false)
                 }
+                // Already the default. Pinned because it looks like the cure for the
+                // duplicated dependency entries and is the opposite: merge commits are the
+                // ONLY Conventional Commits this project produces — the Arlo commits beneath
+                // them are uncategorized by design. Setting this true would empty the
+                // changelog of everything worth reading. The duplicates are gone via
+                // hide.category("tasks") below.
+                skipMergeCommits.set(false)
+                // The preset labels `chore(deps):` as plain `chore`, because its labeler
+                // ignores the scope — so dependency bumps land in `tasks` with every other
+                // chore. These two blocks give them a key of their own, so hiding them does
+                // not also hide a chore worth reading about. Ordered before `tasks` (40) so
+                // a commit carrying both labels is claimed by this category.
+                labeler {
+                    label.set("deps")
+                    title.set("regex:^(?:chore\\(deps.*\\)!?):\\s.*")
+                    order.set(15)
+                }
+                category {
+                    key.set("deps")
+                    title.set("📦 Dependencies")
+                    labels.set(setOf("deps"))
+                    order.set(38)
+                }
+                hide {
+                    uncategorized.set(true)
+                    category("deps")
+                }
             }
         }
     }

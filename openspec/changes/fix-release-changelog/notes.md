@@ -83,6 +83,51 @@ Conventional Commits spec the footer runs to the end of the body, so this is not
 defect and no configuration fixes it — it is a commit-authoring rule, which is why section 3
 records it in the two skills instead of trying to configure it away.
 
+## 1.2 / 1.3 — The category keys of the `conventional-commits` preset
+
+Measured, not read: `./gradlew jreleaserConfig --rerun` dumps the fully resolved model, preset
+included. Assumption 1 is discharged — the generator does reveal the keys, so the categories do
+not have to be owned explicitly.
+
+**`jreleaserConfig` needs more credentials than `jreleaserChangelog`.** It validates the whole
+model, so blank `signing.pgp.secretKey` and `deploy.maven.mavenCentral.sonatype.username` /
+`.password` abort it. Placeholders for all of them are enough; nothing is contacted.
+
+| key | title | labels | order |
+|---|---|---|---|
+| `merge` | 🔀 Merge | merge | 0 |
+| `features` | 🚀 Features | feat | 10 |
+| `fixes` | 🐛 Fixes | fix | 20 |
+| `changes` | 🔄️ Changes | revert, style, perf, refactor | 30 |
+| `test` | 🧪 Tests | test | 35 |
+| `tasks` | 🧰 Tasks | chore | 40 |
+| `build` | 🛠 Build | test, build, ci | 50 |
+| `docs` | 📝 Documentation | docs | 60 |
+
+Labelers map a commit-message prefix to a label: `regex:^(?:chore(?:\(.*\))?!?):\s.*` → `chore`,
+and so on for build, ci, docs, feat, fix, perf, refactor, revert, style, test. Two more map
+`Merge pull` and `Merge branch` to `merge`.
+
+### There is no dependency category
+
+This refutes task 2.2 as written. A `chore(deps): Update …` commit is labelled `chore` — the
+scope is not part of the labeler regex — and lands in `tasks`. The 108 dependency lines are the
+entire content of 🧰 Tasks, and there is no narrower key to hide.
+
+Two ways forward:
+
+1. **Hide `tasks`.** One line. Also hides any future `chore:` commit that is not a dependency
+   bump.
+2. **Add a labeler matching `chore(deps)` plus a category for it, and hide that.** Precise, but
+   introduces two config blocks and a custom category to maintain.
+
+Taking (1). In this repository the project's own commits use Arlo notation and are uncategorized;
+Conventional Commits appear only on merge commits, which are Renovate bumps plus the occasional
+feature or docs MR. So `tasks` is empty of anything but dependencies today, and a chore worth
+reading about is unlikely to be a chore at all. The residual risk is recorded here rather than
+designed around: if a non-dependency `chore:` MR ever matters to a reader, this hides it, and the
+fix is option (2).
+
 ## 2.1 — `hide { uncategorized = true }`
 
 Measured against the reference above:

@@ -101,7 +101,7 @@ the whole claim being tested.
 
 ## 7. Close the loop on the finding that started this
 
-- [ ] 7.1 The archived `adapt-daisyui-5-6` recorded this requirement as satisfied when it was
+- [x] 7.1 The archived `adapt-daisyui-5-6` recorded this requirement as satisfied when it was
   not. Add a line to that effect in this change's notes so the archive is not silently trusted
   next time — do not edit the archived change itself.
   → `. d`

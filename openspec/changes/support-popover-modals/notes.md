@@ -55,3 +55,17 @@ shape of the wrapper right and stops one attribute short.
    That is the same blind spot the proposal names as the reason this defect survived
    `adapt-daisyui-5-6`: a construction method that adds no CSS class is invisible to both the
    generated tests and `generated-sources-drift`. Task 2.2 has to close it deliberately.
+
+## 4.1 — gates green with no test-generator fix needed (2026-09-04)
+
+- `:lib:test --rerun-tasks` — 1478 passed, 0 failed, 0 skipped.
+- `koverVerify --rerun-tasks` — 1491 passed (adds `:ktor-integration`), gate held at 100%
+  line **and** branch.
+
+No branch of `daisyModalPopover` was left uncovered, so the escape hatch in this task ("fix the
+*test generator*, never the generated file") went unused. That is not luck: the generated
+coverage test already exercises every parameter of a custom part, and the new function adds no
+parameter — the static attribute is unconditional, so it introduces no branch at all. A
+`staticAttributes` entry can therefore never open a coverage hole in the generated Kotlin.
+The branch it *does* add is in the generator, which Kover does not measure and no JS test
+covers; what stands behind that one is the zero diff in tasks 2.1 and 2.2.

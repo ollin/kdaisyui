@@ -1,0 +1,5 @@
+schema: spec-driven
+# Changelog generator configuration and a commit-message rule. Neither is a
+# capability of the library, and nothing a consumer can observe changes.
+skip_specs: true
+created: 2026-08-16

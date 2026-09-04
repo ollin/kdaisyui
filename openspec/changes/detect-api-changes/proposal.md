@@ -34,6 +34,11 @@ Specs are deliberately **not** written yet. What the requirements can promise de
 section 1 finds the available tooling actually detects; writing them first would be inventing
 a contract and then shopping for a tool that satisfies it.
 
+**So `openspec validate` fails on this change until task 3.1 writes them, and that is
+expected.** Do not silence it with `skip_specs: true` — this change *does* have a spec-level
+delta, it just is not knowable yet. Setting the flag would put a false statement in the
+metadata to quiet a warning that is doing its job.
+
 ## Assumptions
 
 1. **A suitable tool is available in this build.** Verified to exist:

@@ -56,7 +56,7 @@ is a `. r`; the section's single artefact is 2.5's write-up. Relabelled `. d` to
       A gate nobody has seen fail is not known to be a gate. Note that the PR must be
       **mergeable** for `pull_request` workflows to run at all; see the `kdaisyui-release`
       skill
-- [ ] 4.4 `. d` Add a `just` recipe to re-dump the baseline, alongside `just generate`
+- [x] 4.4 `. d` Add a `just` recipe to re-dump the baseline, alongside `just generate`
 
 ## 5. Make the migration note a rule
 

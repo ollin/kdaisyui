@@ -5,7 +5,7 @@ if 1.2 refutes the assumption, revise this change rather than working around it.
 
 ## 1. Establish whether the generator can express the popover method
 
-- [ ] 1.1 Add a throwaway `customParts` entry for `modal`
+- [x] 1.1 Add a throwaway `customParts` entry for `modal`
   (`{ "name": "Popover", "element": "DIV", "cssClass": "modal" }`) to
   `codegen/codegen-config.json`, run `just generate`, and record in the change notes what
   `Modal.kt` actually gained. Expected: a `daisyModalPopover` emitting `<div class="modal">`,

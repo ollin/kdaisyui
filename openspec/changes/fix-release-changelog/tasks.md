@@ -74,7 +74,7 @@ together, and is relabelled there when reached.
 - [x] 3.1 `. d` Record the rule in the `risk-aware-commits` skill: in a merge-request title's
       commit body, `BREAKING CHANGE:` is the **last** paragraph. Everything after it is
       absorbed into the note — per the Conventional Commits spec, the footer runs to the end
-- [ ] 3.2 `. d` Note the same in the `kdaisyui-release` skill, next to the existing warning
+- [x] 3.2 `. d` Note the same in the `kdaisyui-release` skill, next to the existing warning
       about conflicted PRs getting no CI, with the v0.2.0 render as the worked example
 - [ ] 3.3 `. r` Verify by generating a changelog from a scratch commit whose body ends with the
       footer, and confirm the note renders as one clean line

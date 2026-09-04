@@ -57,7 +57,7 @@ asserting a string inside the generator.
 
 ## 4. Hold the gates
 
-- [ ] 4.1 Run `:lib:test` and root `koverVerify` with `--rerun-tasks`. If any branch of the new
+- [x] 4.1 Run `:lib:test` and root `koverVerify` with `--rerun-tasks`. If any branch of the new
   function is uncovered, fix the *test generator*, never the generated file.
   → `^ f` (or `. d` if already green and only evidence is recorded)
 

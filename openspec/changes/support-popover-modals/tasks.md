@@ -75,7 +75,7 @@ The demo is a **standalone page**, not a dashboard fragment: the dashboard loads
 htmx, so a fragment could never be reached with JavaScript disabled, and disabled JavaScript is
 the whole claim being tested.
 
-- [ ] 5.1 Add the popover-modal demo page — a rendering function and its `HtmlId`, opened by a
+- [x] 5.1 Add the popover-modal demo page — a rendering function and its `HtmlId`, opened by a
   `popovertarget` button. Not routed yet, so nothing reaches it and nothing changes.
   → `. r`
 

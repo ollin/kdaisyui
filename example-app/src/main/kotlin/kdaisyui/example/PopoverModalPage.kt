@@ -25,18 +25,23 @@ fun HTML.popoverModalPage() {
     }
     body("bg-base-200 min-h-screen p-10") {
         val modalId = Dashboard.PopoverModal()
-        daisyButton(text = "Open modal", variant = ButtonVariant.Primary) {
-            attributes["popovertarget"] = modalId.id
-        }
+        daisyButton(
+            text = "Open modal",
+            variant = ButtonVariant.Primary,
+            attrs = { attributes["popovertarget"] = modalId.id },
+        )
         daisyModalPopover(id = modalId) {
             daisyModalBox {
                 h3("text-lg font-bold") { +"Opened without JavaScript" }
                 p("py-4") { +"The browser's popover API opened this. No script ran." }
                 daisyModalAction {
-                    daisyButton(text = "Close") {
-                        attributes["popovertarget"] = modalId.id
-                        attributes["popovertargetaction"] = "hide"
-                    }
+                    daisyButton(
+                        text = "Close",
+                        attrs = {
+                            attributes["popovertarget"] = modalId.id
+                            attributes["popovertargetaction"] = "hide"
+                        },
+                    )
                 }
             }
         }

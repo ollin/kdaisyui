@@ -185,6 +185,21 @@ This is also the case against `skipMergeCommits = true`, which task 2.5 pins: th
 delete `30b991d` and leave 🚀 Features holding two entries that describe less than the one it
 removed.
 
+## 2.5 — `skipMergeCommits = false`, pinned
+
+Output byte-identical at 15 lines before and after, confirming the task's own claim that this is
+already the default and adds no behaviour.
+
+What makes it worth a line of config is that the wrong value is *reachable by good reasoning*.
+The duplicated dependency entries were the loudest defect in v0.2.0, and `skipMergeCommits`
+names exactly that symptom. It is also the one setting that would empty this changelog
+completely: all five surviving entries are merge commits, because merge commits are the only
+Conventional Commits the project produces — everything else is Arlo notation, which the preset
+cannot categorise.
+
+So the option that looks like the fix removes 5 of 5 entries, while the actual fix,
+`hide.category("tasks")`, removed 108 of 108 duplicates and kept all 5.
+
 ### A note on how 2.3 can be checked
 
 There is no shell in this environment, so a byte-level `diff` between the reference and a later

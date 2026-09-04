@@ -62,7 +62,7 @@ together, and is relabelled there when reached.
 - [x] 2.4 `. d` **Confirm the merge-commit entry survived**, by name: `30b991d` must still be
       in the output. It is the only Conventional Commit in the range, so it is the whole point
       of the changelog
-- [ ] 2.5 `. d` Pin `skipMergeCommits = false` explicitly in `build.gradle.kts` with a comment
+- [x] 2.5 `. d` Pin `skipMergeCommits = false` explicitly in `build.gradle.kts` with a comment
       saying why. It is already the default, so this adds no behaviour — it exists to stop a
       future reader reaching for the obvious-looking cure for duplicated dependency entries and
       deleting the one entry that matters. The duplicates are gone by 2.2 anyway

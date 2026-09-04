@@ -99,3 +99,31 @@ check, while #230 from Renovate ran the full suite on the same workflow file.
 
 **Before trusting a PR's checks, confirm it is mergeable.** "No red checks" and "the checks
 passed" are different statements, and this is the case where they come apart.
+
+## The PR body becomes the release notes — put `BREAKING CHANGE:` last
+
+The merge commit's message is what JReleaser renders on the release page, so the PR body is
+release-notes copy, not review chatter.
+
+One rule decides whether it reads well: **`BREAKING CHANGE:` must be the last paragraph.** Per
+the Conventional Commits spec the footer runs to the end of the body, so everything after it —
+blank lines, further paragraphs, unrelated notes — is absorbed into the migration note. Nothing
+terminates it, and no changelog configuration repairs it afterwards.
+
+Worked example, v0.2.0. The body put a branch summary after the footer:
+
+```
+BREAKING CHANGE: TooltipVariant.Neutral is removed; DaisyUI dropped
+tooltip-neutral. See "How to migrate" in README.md, …
+
+Four OpenSpec changes: commit-generated-sources, cleanup-dead-code,
+rejoin-main, adapt-daisyui-5-6.
+```
+
+which rendered as a single italic blob spanning six lines of the release page, announcing that
+four OpenSpec changes were a breaking change. The fix is to swap the two paragraphs; there was
+never a setting for it.
+
+The rule is stated once, globally, in the `risk-aware-commits` skill
+(`references/mr-conventional-commits.md`) — this is the local reminder, because in this
+repository the consequence is a published artifact page rather than a commit message.

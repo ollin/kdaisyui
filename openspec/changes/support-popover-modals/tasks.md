@@ -95,7 +95,7 @@ the whole claim being tested.
   through `componentElements` (which replaces the single root element instead of adding one).
   → `. d`
 
-- [ ] 6.2 Check whether `llms.txt` enumerates modal methods for library consumers; update it if
+- [x] 6.2 Check whether `llms.txt` enumerates modal methods for library consumers; update it if
   so. Skip with a note if it does not.
   → `. d`
 

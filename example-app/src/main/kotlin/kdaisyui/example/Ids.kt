@@ -17,6 +17,8 @@ class Dashboard : AnnotatedIdBase("dashboard") {
 
     class Stats(parent: Dashboard = Dashboard()) : AnnotatedIdBase("stats", parent)
 
+    class PopoverModal(parent: Dashboard = Dashboard()) : AnnotatedIdBase("popover-modal", parent)
+
     class Pipelines(parent: Dashboard = Dashboard()) : AnnotatedIdBase("pipelines", parent)
 
     class Issues(parent: Dashboard = Dashboard()) : AnnotatedIdBase("issues", parent)

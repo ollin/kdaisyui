@@ -272,10 +272,14 @@ function generateCustomPartFunction(classified, part) {
   const htmlTag = htmlTagFor(element)
   const cssClass = part.cssClass
   const receiver = part.receiver || 'FlowContent'
+  const staticAttributes = Object.entries(part.staticAttributes || {})
 
+  const attrDoc = staticAttributes
+    .map(([name, value]) => (value === '' ? ` ${name}` : ` ${name}="${value}"`))
+    .join('')
   const kdocLine = cssClass
-    ? `Renders \`<${htmlTag} class="${cssClass} ...">\`.`
-    : `Structural wrapper. Renders \`<${htmlTag}>\`.`
+    ? `Renders \`<${htmlTag} class="${cssClass} ..."${attrDoc}>\`.`
+    : `Structural wrapper. Renders \`<${htmlTag}${attrDoc}>\`.`
   const kdoc = `/** ${kdocLine} */\n`
 
   const params = []
@@ -286,6 +290,9 @@ function generateCustomPartFunction(classified, part) {
 
   const body = []
   body.push(`        if (id != null) attributes["id"] = id.id`)
+  for (const [name, value] of staticAttributes) {
+    body.push(`        attributes[${JSON.stringify(name)}] = ${JSON.stringify(value)}`)
+  }
   if (cssClass) {
     body.push(`        addClassNames("${cssClass}")`)
   }

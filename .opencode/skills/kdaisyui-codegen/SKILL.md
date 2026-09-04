@@ -96,8 +96,10 @@ Read it for what the generator **structurally cannot see**:
 
 Worked example: 5.6.0 added HTML-popover modals (`<div class="modal" popover>` driven by
 `popovertarget`), which the docs list as method 2 of 4 and **not** legacy. `daisyModal` emits
-`<dialog>` only, so that method is unreachable — no test fails and no drift appears, because
-nothing about it is a class name. Only the changelog surfaces it.
+`<dialog>` only, so that method was unreachable — and no test failed and no drift appeared,
+because nothing about it is a class name. Only the changelog surfaced it. It went unnoticed long
+enough to be archived as delivered; `daisyModalPopover` and `staticAttributes` (below) are the
+fix. **`megamenu` still has it**, so the example is live, not historical.
 
 Record what you find as an issue or an OpenSpec change; do not fold it into the dependency PR.
 
@@ -137,6 +139,7 @@ pipeline instead.
 | Component must not accept children | → `noContent` |
 | Wrong HTML role or input type | → `roles`, `inputTypes` |
 | Component should not be generated at all | → `skip` (currently `accordion`, `pagination`) |
+| Component needs a second wrapper / an alternative construction method | → `customParts` |
 | CSS class lands in the wrong category | `codegen/src/classifier.js` |
 | Kotlin output shape is wrong | `codegen/src/generator-new.js` |
 | Generated tests are wrong | `codegen/src/test-generator.js` |
@@ -155,6 +158,45 @@ pipeline instead.
 
 Add an `imports` array when the type is not in the default import set (e.g.
 `kotlinx.html.ButtonType`).
+
+## An alternative construction method is a `customParts` entry — not `componentElements`
+
+Some DaisyUI components document more than one way to build them. `modal` is the clearest case:
+method 1 is `<dialog class="modal">`, method 2 is `<div class="modal" popover>` opened by a
+`popovertarget` button. These are not modifiers of one wrapper — they are different elements —
+so no parameter on the `<dialog>` wrapper can produce the second one.
+
+**`componentElements` cannot express this.** It *replaces* a component's single root element, so
+using it for modal would trade one method for the other. It is the right tool only when the
+heuristic picked the wrong element outright, as with `dropdown`.
+
+`customParts` adds a second generated function alongside the main one, and an entry may carry
+`staticAttributes` for attributes that define the method rather than vary per call:
+
+```json
+"modal": [
+  {
+    "name": "Popover",
+    "element": "DIV",
+    "cssClass": "modal",
+    "staticAttributes": { "popover": "" }
+  }
+]
+```
+
+That produces `daisyModalPopover` emitting `<div class="modal" popover>`. An empty value renders
+as `popover=""`, which HTML treats as the attribute's default state. The attributes are emitted
+before `extraClasses` and before `attrs()`, so a caller can still override one.
+
+`codegen/src/test-generator.js` mirrors the field: each static attribute becomes an assertion in
+the generated test. Keep the two in step — a construction method that adds **no CSS class** is
+otherwise invisible to the whole safety net, because both the generated tests and
+`generated-sources-drift` key on class names. That blind spot is how the popover modal was
+recorded as delivered while `daisyModal` still emitted only `<dialog>`.
+
+**`megamenu` has the same unfixed defect today:** DaisyUI documents it as
+`<div class="megamenu …" popover>` opened by a `popovertarget` button, and `daisyMegamenu`
+emits no `popover`.
 
 ## Pipeline
 

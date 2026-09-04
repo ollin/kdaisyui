@@ -115,3 +115,20 @@ fun FlowContent.daisyModalToggle(
         content()
     }
 }
+
+/** Renders `<div class="modal ..." popover>`. */
+fun FlowContent.daisyModalPopover(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        if (id != null) attributes["id"] = id.id
+        attributes["popover"] = ""
+        addClassNames("modal")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}

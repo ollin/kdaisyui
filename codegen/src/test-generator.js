@@ -157,6 +157,17 @@ function mapClassesToParams(classes, classToParam) {
   return params
 }
 
+function customPartAssertions(part, tag) {
+  const assertions = [`        assertTrue(html.contains("<${tag}"))`]
+  if (part.cssClass) {
+    assertions.push(`        assertTrue(html.contains("class=\\"${part.cssClass}"))`)
+  }
+  for (const [name, value] of Object.entries(part.staticAttributes || {})) {
+    assertions.push(`        assertTrue(html.contains("${name}=\\"${value}\\""))`)
+  }
+  return assertions.join('\n')
+}
+
 function generateCustomPartTests(className, customParts) {
   if (!customParts || customParts.length === 0) return ''
 
@@ -169,31 +180,17 @@ function generateCustomPartTests(className, customParts) {
     // Determine wrapping context based on receiver type
     const wrapperTag = receiver === 'FlowContent' ? 'div' : receiver.toLowerCase()
     const wrapperFn = htmlTagFnFor(wrapperTag)
-    
-    if (part.cssClass) {
-      kotlin += `
+
+    kotlin += `
     @Test
     fun ${funcName}() {
         val html = createHTML(prettyPrint = false).${wrapperFn} {
             daisy${className}${part.name} {
             }
         }
-        assertTrue(html.contains("<${tag}"))
-        assertTrue(html.contains("class=\\"${part.cssClass}"))
+${customPartAssertions(part, tag)}
     }
 `
-    } else {
-      kotlin += `
-    @Test
-    fun ${funcName}() {
-        val html = createHTML(prettyPrint = false).${wrapperFn} {
-            daisy${className}${part.name} {
-            }
-        }
-        assertTrue(html.contains("<${tag}"))
-    }
-`
-    }
   }
   return kotlin
 }

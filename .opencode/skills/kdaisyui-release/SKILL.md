@@ -100,6 +100,30 @@ check, while #230 from Renovate ran the full suite on the same workflow file.
 **Before trusting a PR's checks, confirm it is mergeable.** "No red checks" and "the checks
 passed" are different statements, and this is the case where they come apart.
 
+## A breaking API change needs a migration note before the tag
+
+`lib`'s public API is committed at `lib/api/lib.api` and gated by the `api-baseline` CI job. A
+change to it therefore cannot arrive silently — but a *failing gate* only says the surface moved,
+and a consumer needs to be told what to do about it.
+
+So: **a breaking API change requires a "How to migrate" entry in `README.md` before the release
+that ships it.** The 0.2.0 entry is the shape to copy; it was written after the fact, from
+recollection, which is the habit this rule replaces.
+
+"Ready to tag" therefore means, in addition to everything else on this page:
+
+- `:lib:checkKotlinAbi` is green, or the baseline was re-dumped **deliberately** with
+  `just update-api` and the diff was read;
+- every removal or signature change in that diff is either non-breaking or has its `README.md`
+  migration entry;
+- the PR body's `BREAKING CHANGE:` footer points at that entry — see the next section for why
+  its position matters.
+
+Why the API check and the migration note are one rule rather than two: the check is what makes
+the breaking change *knowable* before release, and the note is the only part a consumer ever
+sees. Either alone leaves the 0.2.0 failure mode intact — that break was found by a human
+reading a diff, and documented afterwards.
+
 ## The PR body becomes the release notes — put `BREAKING CHANGE:` last
 
 The merge commit's message is what JReleaser renders on the release page, so the PR body is

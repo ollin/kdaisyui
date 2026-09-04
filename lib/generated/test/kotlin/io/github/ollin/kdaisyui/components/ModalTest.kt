@@ -4,6 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ModalTest {
 
@@ -115,5 +116,16 @@ class ModalTest {
         val expectedClasses = "modal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Modal using anchor link")
+    }
+
+    @Test
+    fun custom_part_popover_renders_div() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModalPopover {
+            }
+        }
+        assertTrue(html.contains("<div"))
+        assertTrue(html.contains("class=\"modal"))
+        assertTrue(html.contains("popover=\"\""))
     }
 }

@@ -132,7 +132,7 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 | MockupCode | `daisyMockupCode` | Code block mockup | — | — |
 | MockupPhone | `daisyMockupPhone` | Phone frame mockup | — | — |
 | MockupWindow | `daisyMockupWindow` | Window frame mockup | — | — |
-| Modal | `daisyModal`, `daisyModalBox`, `daisyModalAction`, `daisyModalBackdrop` | Modal dialogs | — | — |
+| Modal | `daisyModal`, `daisyModalPopover`, `daisyModalBox`, `daisyModalAction`, `daisyModalBackdrop` | Modal dialogs | — | — |
 | Navbar | `daisyNavbar` | Top navigation bar | — | — |
 | Otp | `daisyOtp` | One-time password / verification code input | 8 colors | Xs–Xl |
 | Progress | `daisyProgress` | Progress bars | — | — |
@@ -448,6 +448,12 @@ fun FlowContent.daisyModal(
     attrs: (DIALOG.() -> Unit)? = null,
     content: (DIALOG.() -> Unit),
 )
+fun FlowContent.daisyModalPopover(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+)
 fun FlowContent.daisyModalBox(extraClasses, attrs, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalAction(extraClasses, attrs, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalBackdrop(extraClasses, attrs, content: (DIV.() -> Unit))
@@ -455,6 +461,13 @@ fun FlowContent.daisyModalBackdrop(extraClasses, attrs, content: (DIV.() -> Unit
 daisyModal(open = true) {
     daisyModalBox { h3("text-lg font-bold") { +"Edit Profile" } }
     daisyModalBackdrop { }
+}
+
+// The popover method: <div class="modal" popover>, opened and closed by the
+// browser with no JavaScript. Pair it with a button carrying popovertarget.
+daisyButton(text = "Open", attrs = { attributes["popovertarget"] = modalId.id })
+daisyModalPopover(id = modalId) {
+    daisyModalBox { h3("text-lg font-bold") { +"Edit Profile" } }
 }
 ```
 

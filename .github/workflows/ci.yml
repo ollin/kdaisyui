@@ -46,6 +46,30 @@ jobs:
           fi
           echo "lib/generated matches its inputs."
 
+  # The sibling of generated-sources-drift: both compare a committed artefact
+  # against what the build produces. Kept separate from unit-tests so an API
+  # change and a failing test are distinguishable in the checks list - and so
+  # this gate cannot be lost inside another job's task list. It needs no
+  # submodules; the ABI comes from the committed sources.
+  api-baseline:
+    name: api-baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Fail if the public API no longer matches its baseline
+        # Run `./gradlew :lib:updateKotlinAbi` and commit lib/api/lib.api when the
+        # change is intended. A breaking change also needs a "How to migrate"
+        # entry in README.md before the release that ships it.
+        run: ./gradlew :lib:checkKotlinAbi --no-daemon
+
   unit-tests:
     name: unit-tests
     runs-on: ubuntu-latest

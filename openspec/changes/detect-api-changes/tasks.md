@@ -9,10 +9,17 @@ the requirements can promise depends on what the tool actually detects.
 *Assumption 1. Refuted if neither option works here — then the answer is japicmp/Revapi against
 the published artifact, and sections 3-5 are rewritten.*
 
-- [ ] 1.1 `. r` Try Kotlin's built-in `kotlin { abiValidation { } }` on `:lib`. It needs no new
+**Correction.** 1.1 was labelled `. r`, as though the DSL could be committed on its own. It
+cannot: enabling `abiValidation` puts `checkKotlinAbi` into `:lib:check`'s task graph, so a
+commit that enables it without a reference dump leaves `check` red — an `@`, not a `. r`. The
+DSL and the baseline therefore land together in **4.1**, and sections 1-2 produce evidence only.
+This also keeps the section's own promise that nothing is wired in until it has answered.
+
+- [x] 1.1 `. d` Try Kotlin's built-in `kotlin { abiValidation { } }` on `:lib`. It needs no new
       dependency, so it wins if it exists in 2.4.10
-- [ ] 1.2 `. r` If it does not, apply `org.jetbrains.kotlinx:binary-compatibility-validator`
-      0.18.1 and run its dump task
+- [x] 1.2 `. d` ~~If it does not, apply `org.jetbrains.kotlinx:binary-compatibility-validator`
+      0.18.1 and run its dump task~~ — **not needed**, 1.1 answered yes. Recorded rather than
+      deleted: the fallback was the reason assumption 1 was safe to hold
 - [ ] 1.3 `. d` Record which mechanism is in play and why
 
 ## 2. Does it catch the silent case?

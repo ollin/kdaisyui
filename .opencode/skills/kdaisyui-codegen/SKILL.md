@@ -96,8 +96,10 @@ Read it for what the generator **structurally cannot see**:
 
 Worked example: 5.6.0 added HTML-popover modals (`<div class="modal" popover>` driven by
 `popovertarget`), which the docs list as method 2 of 4 and **not** legacy. `daisyModal` emits
-`<dialog>` only, so that method is unreachable — no test fails and no drift appears, because
-nothing about it is a class name. Only the changelog surfaces it.
+`<dialog>` only, so that method was unreachable — and no test failed and no drift appeared,
+because nothing about it is a class name. Only the changelog surfaced it. It went unnoticed long
+enough to be archived as delivered; `daisyModalPopover` and `staticAttributes` (below) are the
+fix. **`megamenu` still has it**, so the example is live, not historical.
 
 Record what you find as an issue or an OpenSpec change; do not fold it into the dependency PR.
 

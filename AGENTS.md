@@ -120,5 +120,7 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
 - Assuming there is no release automation — there is, see `kdaisyui-release`
 - Letting `koverVerify` slip: the gate is 100% line **and** branch, aggregated
+- Re-dumping `lib/api/lib.api` to make the `api-baseline` job green without reading the diff —
+  and shipping a breaking change in it with no **How to migrate** entry in `README.md`
 - Package `com.github.ollin`
 - Shipping a UI change without E2E

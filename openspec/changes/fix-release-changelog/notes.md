@@ -185,6 +185,51 @@ This is also the case against `skipMergeCommits = true`, which task 2.5 pins: th
 delete `30b991d` and leave 🚀 Features holding two entries that describe less than the one it
 removed.
 
+## 2b — Hiding dependencies by their own key
+
+Added after review: the residual risk from 2.2 was paid rather than carried.
+
+```kotlin
+labeler {
+    label.set("deps")
+    title.set("regex:^(?:chore\\(deps.*\\)!?):\\s.*")
+    order.set(15)
+}
+category {
+    key.set("deps")
+    title.set("📦 Dependencies")
+    labels.set(setOf("deps"))
+    order.set(38)
+}
+hide {
+    uncategorized.set(true)
+    category("deps")     // was: category("tasks")
+}
+```
+
+Both orders sit ahead of `tasks` (40). A `chore(deps):` commit matches *both* labelers and
+carries both labels; `deps` claims it because its category is ordered first. That was the part
+worth verifying rather than reasoning about, and it holds.
+
+**Output unchanged at 15 lines** against `v0.1.2..v0.2.0` — the same 108 bumps hidden.
+
+### 2b.2 — The precision is real, not nominal
+
+Hiding a differently-named key proves nothing if both keys still catch the same commits. Two
+scratch commits on a throwaway branch, `-Pversion=0.2.1`:
+
+```
+## 🧰 Tasks
+- 04f0948 tidy the scratch fixtures directory        <- chore:        VISIBLE
+                                                     <- chore(deps):  hidden
+## 📝 Documentation
+- b942d93 add version-bump changelog rule …
+```
+
+`chore(deps): Update dependency org.example:scratch to v9.9.9` — Renovate's exact shape — stayed
+hidden. `chore: tidy the scratch fixtures directory` appeared. **Under the previous
+`hide.category("tasks")` both would have been hidden**, which is the whole difference.
+
 ## 2.5 — `skipMergeCommits = false`, pinned
 
 Output byte-identical at 15 lines before and after, confirming the task's own claim that this is

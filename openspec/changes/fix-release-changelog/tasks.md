@@ -75,10 +75,10 @@ cost is not worth carrying — the precise version was already described in `not
 "if it ever matters", and doing it now is cheaper than discovering later that a chore went
 missing from a release page.*
 
-- [ ] 2b.1 `! F` Add a labeler matching `chore(deps)` and a category holding it, then hide that
+- [x] 2b.1 `! F` Add a labeler matching `chore(deps)` and a category holding it, then hide that
       category instead of `tasks`. Expect the output unchanged at 15 lines — the same 108 bumps
       hidden, by a key that names them
-- [ ] 2b.2 `. d` Prove the precision was actually gained: a scratch non-dependency `chore:`
+- [x] 2b.2 `. d` Prove the precision was actually gained: a scratch non-dependency `chore:`
       commit must now appear under 🧰 Tasks. Without this the change is only assumed to be
       narrower
 

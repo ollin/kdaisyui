@@ -52,7 +52,7 @@ is a `. r`; the section's single artefact is 2.5's write-up. Relabelled `. d` to
       in section 1; separately it would leave `check` red
 - [x] 4.2 `! F` Add the check to `ci.yml`. It belongs with the drift job conceptually: both
       compare a committed artefact against what the build regenerates
-- [ ] 4.3 `^ F` Prove it fails — change the API on a scratch branch and watch the job go red.
+- [x] 4.3 `^ F` Prove it fails — change the API on a scratch branch and watch the job go red.
       A gate nobody has seen fail is not known to be a gate. Note that the PR must be
       **mergeable** for `pull_request` workflows to run at all; see the `kdaisyui-release`
       skill

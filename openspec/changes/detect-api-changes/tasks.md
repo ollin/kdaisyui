@@ -43,7 +43,7 @@ is a `. r`; the section's single artefact is 2.5's write-up. Relabelled `. d` to
 
 ## 3. Write the specs
 
-- [ ] 3.1 `. d` Write `specs/api-change-detection/spec.md` against what sections 1-2 measured —
+- [x] 3.1 `. d` Write `specs/api-change-detection/spec.md` against what sections 1-2 measured —
       Verified where measured, Assumed with a falsifier where not
 
 ## 4. Wire it in

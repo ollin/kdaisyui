@@ -78,3 +78,36 @@ knowing anything about descriptors.
 
 The 0.2.0 break would have turned the dump red and required a human to re-dump deliberately.
 That is the whole gap this change set out to close, and it closes with no new dependency.
+
+## 4.3 — the gate bites locally; the CI half is still owed
+
+Deleted `TooltipVariant.Error` again, this time against the **committed** baseline, and ran the
+command the `api-baseline` job runs:
+
+```
+> Task :lib:checkKotlinAbi FAILED
+ABI check failed for project lib
+
+<<<ABI has changed>>>
+--- lib/api/lib.api
++++ lib/build/kotlin/abi/lib.api
+@@ -939,7 +939,6 @@
+ public final class io/github/ollin/kdaisyui/components/TooltipVariant : java/lang/Enum {
+ 	public static final field Accent …;
+-	public static final field Error …;
+ 	public static final field Info …;
+
+You can run ':lib:updateKotlinAbi' task to create or overwrite reference ABI declarations
+```
+
+Non-zero exit, the diff in the failure output, and a message naming the remedy. So **the command
+the job runs is proven to fail on the 0.2.0 break's exact shape.**
+
+**What is not yet proven, and is the point of this task:** that the *job* fails — that
+`api-baseline` triggers on a pull request and reports red. That needs a branch pushed and a PR
+opened, and the change set is not adopted yet. Deliberately left open rather than ticked on the
+strength of the local run, because "a gate nobody has seen fail is not known to be a gate" is
+about the CI wiring, not about the Gradle task. It also explains the `! F` on the job's commit.
+
+Watch for the trap recorded in the `kdaisyui-release` skill: a PR whose `mergeable_state` is
+`dirty` runs **no** workflows at all, so an absent check reads like a passing one.

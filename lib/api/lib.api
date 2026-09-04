@@ -939,7 +939,6 @@ public final class io/github/ollin/kdaisyui/components/TooltipKt {
 
 public final class io/github/ollin/kdaisyui/components/TooltipVariant : java/lang/Enum {
 	public static final field Accent Lio/github/ollin/kdaisyui/components/TooltipVariant;
-	public static final field Error Lio/github/ollin/kdaisyui/components/TooltipVariant;
 	public static final field Info Lio/github/ollin/kdaisyui/components/TooltipVariant;
 	public static final field Primary Lio/github/ollin/kdaisyui/components/TooltipVariant;
 	public static final field Secondary Lio/github/ollin/kdaisyui/components/TooltipVariant;

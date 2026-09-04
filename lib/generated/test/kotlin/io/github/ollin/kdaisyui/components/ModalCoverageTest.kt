@@ -154,4 +154,32 @@ class ModalCoverageTest {
         assertTrue(html.contains("data-attrs=\"yes\""), "ModalToggle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ModalToggle content")
     }
+
+    @Test
+    fun modalPopover_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModalPopover(
+                content = { },
+            )
+        }
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals("modal", actualClasses, "ModalPopover defaults")
+    }
+
+    @Test
+    fun modalPopover_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModalPopover(
+                id = htmlId("x-cov-id"),
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+                content = { attributes["data-content"] = "yes" },
+            )
+        }
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals("modal zz-extra", actualClasses, "ModalPopover all flags")
+        assertTrue(html.contains("id=\"x-cov-id\""), "ModalPopover id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "ModalPopover attrs")
+        assertTrue(html.contains("data-content=\"yes\""), "ModalPopover content")
+    }
 }

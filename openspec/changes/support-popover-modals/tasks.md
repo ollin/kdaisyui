@@ -24,24 +24,36 @@ if 1.2 refutes the assumption, revise this change rather than working around it.
 
 ## 2. Teach the generator to emit static attributes on a custom part
 
+**Correction (task 1.2 follow-on).** Both tasks below originally called for "a codegen-level
+assertion". There is no JS test infrastructure in `codegen/` — no runner, no test files, no
+devDependencies — so that assertion had nowhere to live. Introducing one is a separate change.
+What replaces it is stronger, not weaker: no component declares `staticAttributes` until task
+3.1, so each of these tasks must leave `just generate` producing a **zero diff**, which proves
+it changed nothing; and the field's real behaviour is pinned by the generated Kotlin test that
+lands with the output in 3.2, which asserts the attribute in rendered HTML rather than
+asserting a string inside the generator.
+
 - [ ] 2.1 Extend `generateCustomPartFunction` so a `customParts` entry may declare static
-  attributes, emitted into the function body ahead of `extraClasses`. Cover the new branch with
-  a codegen-level assertion.
-  → `^ f`
+  attributes, emitted into the function body after `id` and ahead of `extraClasses` — so
+  `attrs()` still runs last and can override them. No config uses the field yet, so
+  `just generate` must produce a zero diff.
+  → `. r`
 
 - [ ] 2.2 Mirror the same field in `codegen/src/test-generator.js` so a generated test asserts
-  the rendered attribute, not only the class.
-  → `^ f`
+  the rendered attribute, not only the class. Zero diff for the same reason.
+  → `. r`
 
 ## 3. Configure the popover modal
 
 - [ ] 3.1 Add the real `modal` `customParts` entry, carrying `popover`, to
-  `codegen/codegen-config.json`.
-  → `^ f`
+  `codegen/codegen-config.json`. Config only; nothing regenerates until 3.2.
+  → `. r`
 
 - [ ] 3.2 Run `just generate`, review the diff under `lib/generated/`, and commit the
-  regenerated output. Confirm `daisyModal` itself is untouched.
-  → `^ r`
+  regenerated output. Confirm `daisyModal` itself is untouched. The new public wrapper and the
+  generated test that pins it land together here.
+  → `. F` — regeneration is tool-produced and drift-checked, so it stays `.` however many lines
+  it spans; precedent `2297257 . F Regenerate lib/generated at DaisyUI 5.7.16`
 
 ## 4. Hold the gates
 

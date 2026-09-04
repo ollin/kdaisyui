@@ -4,16 +4,27 @@ Ordered by uncertainty. Everything here is verifiable locally with `jreleaserCha
 calculates the changelog without releasing anything — so the whole change can be proven against
 the real `v0.1.2..v0.2.0` range before another tag exists.
 
+**Corrected 2026-09-04, measured at 1.1:** "verifiable locally" needs one caveat. JReleaser
+aborts validation with `release.github.token must not be blank` before it computes anything, so
+the task needs `JRELEASER_GITHUB_TOKEN` set. Any non-blank value works — generation reads git
+history and makes no API call — so pass a placeholder rather than a real token.
+
+The range also needs no special handling: with the project version at `0.2.0` and the `v0.2.0`
+tag present, JReleaser ends the range at the tag, not at HEAD. Verified — the output contains no
+commit later than `v0.2.0`, despite HEAD being `b942d93`.
+
 ## 1. Find the category keys
 
 *Assumption 1. The preset lives in a jar resource, not in the sources, so the keys have to be
 measured rather than read. Refuted if the generator does not reveal them — then own the
 categories explicitly instead of using the preset.*
 
-- [ ] 1.1 `. r` Run `jreleaserChangelog` on the current configuration and capture the output as
+- [ ] 1.1 `. d` Run `jreleaserChangelog` on the current configuration and capture the output as
       the reference. It should reproduce what v0.2.0 published — if it does not, the local
       range differs from what CI saw and everything after this is measured against the wrong
-      baseline
+      baseline.
+      **Label corrected from `. r`:** running a task and recording what it produced changes no
+      code and preserves no behaviour. It is evidence, so it is `d`, not `r`
 - [ ] 1.2 `. r` Find the keys behind "🚀 Features", "🧰 Tasks" and "📝 Documentation" — from
       `jreleaserConfig`, the trace log, or JReleaser's published preset
 - [ ] 1.3 `. d` Record the keys and where they came from

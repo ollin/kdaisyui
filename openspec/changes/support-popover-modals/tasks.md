@@ -67,13 +67,26 @@ asserting a string inside the generator.
 
 ## 5. Prove it works in a browser
 
-- [ ] 5.1 Render a popover modal on a demo route in `example-app`, opened by a `popovertarget`
-  button. This is the first real consumer and will expose whether the wrapper is usable.
-  → `^ F`
+**Correction.** Splitting "add the route" from "test the route" would make 5.1 an `^ F` with no
+test, which the gate forbids. The route wiring therefore travels in 5.2, in the same commit as
+the scenario that proves it; 5.1 is reduced to the unreachable page it needs.
 
-- [ ] 5.2 Add a Cucumber scenario and step asserting the served HTML carries the `modal` class
-  and the `popover` attribute, and that the modal opens without JavaScript.
-  → `^ F`
+The demo is a **standalone page**, not a dashboard fragment: the dashboard loads fragments over
+htmx, so a fragment could never be reached with JavaScript disabled, and disabled JavaScript is
+the whole claim being tested.
+
+- [ ] 5.1 Add the popover-modal demo page — a rendering function and its `HtmlId`, opened by a
+  `popovertarget` button. Not routed yet, so nothing reaches it and nothing changes.
+  → `. r`
+
+- [ ] 5.2 Route the page and add the Cucumber feature that proves it. Lands as three commits:
+  - `^ r` let a scenario request a JavaScript-disabled browser context via an `@nojs` tag;
+    every existing scenario keeps the context it has today
+  - `. r` add the step definitions, with no feature referencing them yet
+  - `^ F` route `/popover-modal` and add the feature: the served HTML carries the `modal` class
+    and the `popover` attribute, and the modal reaches `:popover-open` on click **with
+    JavaScript disabled**
+  → `^ F` for the task as a whole
 
 ## 6. Leave the trail
 

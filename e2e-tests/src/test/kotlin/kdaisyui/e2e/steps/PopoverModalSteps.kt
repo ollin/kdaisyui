@@ -24,6 +24,17 @@ class PopoverModalSteps(private val world: PlaywrightWorld) {
         world.page.getByText(text).first().click()
     }
 
+    /**
+     * Escape rather than the modal's own close button. Both are browser-native, but clicking
+     * inside the open modal needs Playwright to see a stable box, and in a `@nojs` scenario the
+     * modal is only half-styled — Tailwind never compiled the `@apply` rules that lay it out.
+     * Escape closes an auto popover without touching layout at all.
+     */
+    @When("the user presses Escape")
+    fun pressEscape() {
+        world.page.keyboard().press("Escape")
+    }
+
     @Then("the popover {string} is open")
     fun popoverIsOpen(elementId: String) {
         check(isPopoverOpen(elementId)) { "Expected #$elementId to be open" }

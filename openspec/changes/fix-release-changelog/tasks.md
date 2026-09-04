@@ -31,10 +31,21 @@ categories explicitly instead of using the preset.*
 
 ## 2. Hide the noise
 
-- [ ] 2.1 `. r` Set `hide { uncategorized = true }` and re-run. Expect: the 117 raw Arlo
+- [ ] 2.1 `! F` Set `hide { uncategorized = true }` and re-run. Expect: the 137 raw Arlo
       commits disappear, everything else unchanged
-- [ ] 2.2 `. r` Add the dependency category to `hide { categories }` and re-run. Expect: ~120
+- [ ] 2.2 `! F` Add the dependency category to `hide { categories }` and re-run. Expect: 108
       lines disappear, the three real features remain
+
+**Labels corrected 2026-09-04, and the count with them.** Both were `. r`. Neither is a
+refactoring: each changes what a reader sees on the release page, which is the behaviour this
+whole change exists to alter. Neither can reach `^` either, because nothing in CI asserts
+changelog content — verification is running `jreleaserChangelog` and reading the output against
+the reference in `notes.md`. That is the definition of `!`. The counts were estimates in the
+proposal; 1.1 measured 137 and 108.
+
+**Consequence for 4.1:** it can no longer be "commit the `changelog` block", because 2.1 and 2.2
+each commit their own line of it. It becomes the final verification that the whole block behaves
+together, and is relabelled there when reached.
 - [ ] 2.3 `. r` Diff against the 1.1 reference and confirm nothing was lost that should have
       stayed. Hiding a category is a blunt instrument — this is the check that it did not take
       a real entry with it

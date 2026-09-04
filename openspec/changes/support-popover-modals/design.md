@@ -27,9 +27,9 @@ and `:52`. The attribute carries no value.
 
 `popover` is an enumerated attribute whose empty string maps to the `auto` state, so
 `attributes["popover"] = ""` rendering as `popover=""` is equivalent to the bare `popover` in
-the DaisyUI source. **Assumed:** that kotlinx.html 0.12.0 renders an empty attribute value as
-`popover=""` rather than dropping it. *Wrong if:* the generated test in task 2.2 does not find
-the attribute in the rendered HTML — which is precisely what that test exists to check.
+the DaisyUI source. **Verified** in task 3.2: kotlinx.html 0.12.0 keeps the empty value rather
+than dropping the attribute, and `ModalTest.custom_part_popover_renders_div` passes asserting
+`popover=""` in the rendered HTML.
 
 ## Alternatives rejected
 

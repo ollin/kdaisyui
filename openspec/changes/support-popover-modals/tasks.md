@@ -45,7 +45,7 @@ asserting a string inside the generator.
 
 ## 3. Configure the popover modal
 
-- [ ] 3.1 Add the real `modal` `customParts` entry, carrying `popover`, to
+- [x] 3.1 Add the real `modal` `customParts` entry, carrying `popover`, to
   `codegen/codegen-config.json`. Config only; nothing regenerates until 3.2.
   → `. r`
 

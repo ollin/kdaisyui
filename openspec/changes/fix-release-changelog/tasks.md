@@ -90,5 +90,5 @@ before/after evidence, which is what the commit-per-task cadence requires. What 
 genuinely missing is a check that the three settings behave *together* on the real range, rather
 than each having been verified as it was added. That is what this task now does, and it is
 evidence, so `. d`.
-- [ ] 4.2 `. d` Consider whether this belongs with `detect-api-changes` section 5, which also
+- [x] 4.2 `. d` Consider whether this belongs with `detect-api-changes` section 5, which also
       adds a release-hygiene rule. Two rules about what a release must say want one home

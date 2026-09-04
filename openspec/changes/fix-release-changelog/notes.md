@@ -263,6 +263,32 @@ Verification gate, `./gradlew check --rerun-tasks`:
 - `koverVerify` green: 100% line and branch, aggregated
 - 65 tasks executed under `--rerun-tasks`, so nothing was UP-TO-DATE
 
+## 4.2 — Does this belong with `detect-api-changes` section 5?
+
+**No. They compose; they do not overlap.** Recommendation, open to override.
+
+| | This change, section 3 | `detect-api-changes`, section 5 |
+|---|---|---|
+| Question answered | *where* does the breaking-change note go | *whether* a migration note must exist |
+| Trigger | any MR body carrying a `BREAKING CHANGE:` footer | a detected breaking API change |
+| Failure it prevents | a note that renders as a six-line blob | a release that ships a break with no migration path |
+| Enforced by | a rule two skills state | a check plus a `README.md` entry |
+
+One says "if the API broke, you owe the reader a migration note"; the other says "if you write
+that note as a footer, put it last or it eats the rest of the body". The second is useless
+without something to write, and the first produces a note that renders badly without the second.
+Merging them would fuse a formatting constraint with a completeness obligation, and the merged
+rule would be harder to state than either.
+
+There is also no scheduling reason to merge: this change is finished, `detect-api-changes` is
+0/15. Folding a done change into an unstarted one would delay the only part already paid for.
+
+**What to carry across instead:** `detect-api-changes` 5.2 already plans to note in the
+`kdaisyui-release` skill that the API check and migration note are part of "ready to tag". That
+section now sits directly below the footer rule this change added to the same skill. Writing 5.2
+adjacent to it, with a sentence pointing at it, gives a reader both halves in one place without
+either change having to own the other's rule.
+
 ### What this change did not fix
 
 The `30b991d` entry still spans six lines. That is v0.2.0's history and cannot be rewritten;

@@ -203,6 +203,14 @@
     "breadcrumbs": [
       { "name": "Items", "element": "UL", "cssClass": null },
       { "name": "Item", "element": "LI", "cssClass": null, "receiver": "UL" }
+    ],
+    "modal": [
+      {
+        "name": "Popover",
+        "element": "DIV",
+        "cssClass": "modal",
+        "staticAttributes": { "popover": "" }
+      }
     ]
   }
 }

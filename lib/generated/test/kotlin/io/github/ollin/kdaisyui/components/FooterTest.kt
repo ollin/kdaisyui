@@ -43,10 +43,10 @@ class FooterTest {
     @Test
     fun footer_with_logo_and_social_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter() {
+            daisyFooter(horizontal = true) {
             }
         }
-        val expectedClasses = "footer"
+        val expectedClasses = "footer footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with logo and social icons")
     }
@@ -54,10 +54,10 @@ class FooterTest {
     @Test
     fun footer_with_copyright_text() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(center = true) {
+            daisyFooter(horizontal = true, center = true) {
             }
         }
-        val expectedClasses = "footer footer-center"
+        val expectedClasses = "footer footer-center footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with copyright text")
     }

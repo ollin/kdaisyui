@@ -44,7 +44,7 @@ enum class FileInputSize(internal val className: String) {
 
 
 /**
- * File Input is a an input field for uploading files. Renders `<input class="file-input ...">`.
+ * File Input is an input field for uploading files. Renders `<input class="file-input ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
  * @param size — Size variant

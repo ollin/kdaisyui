@@ -175,10 +175,10 @@ class TooltipTest {
     @Test
     fun responsive_tooltip_position() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(start = true) {
+            daisyTooltip(start = true, right = true, center = true) {
             }
         }
-        val expectedClasses = "tooltip tooltip-start"
+        val expectedClasses = "tooltip tooltip-center tooltip-right tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive tooltip position")
     }

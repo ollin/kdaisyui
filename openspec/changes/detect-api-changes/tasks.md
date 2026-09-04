@@ -60,8 +60,14 @@ is a `. r`; the section's single artefact is 2.5's write-up. Relabelled `. d` to
 
 ## 5. Make the migration note a rule
 
-- [ ] 5.1 `. d` Record in `AGENTS.md`: a detected breaking API change requires a **How to
-      migrate** entry in `README.md` before the release that ships it. `README.md` already has
-      the 0.2.0 one to serve as the shape
-- [ ] 5.2 `. d` Note in the `kdaisyui-release` skill that the API check and the migration note
+**Correction.** 5.1 named `AGENTS.md` as the home for the rule and 5.2 the release skill, which
+would have split one rule across two files. It lives in the release skill, next to the
+`BREAKING CHANGE:` footer rule — that is the page open when "ready to tag" is being judged, and
+`AGENTS.md` already delegates release matters to it. `AGENTS.md` carries a one-line anti-pattern
+pointing there. Both landed in one commit.
+
+- [x] 5.1 `. d` Record the rule: a detected breaking API change requires a **How to migrate**
+      entry in `README.md` before the release that ships it. `README.md` already has the 0.2.0
+      one to serve as the shape
+- [x] 5.2 `. d` Note in the `kdaisyui-release` skill that the API check and the migration note
       are part of what "ready to tag" means

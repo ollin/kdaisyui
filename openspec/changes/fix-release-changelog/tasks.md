@@ -19,7 +19,7 @@ commit later than `v0.2.0`, despite HEAD being `b942d93`.
 measured rather than read. Refuted if the generator does not reveal them — then own the
 categories explicitly instead of using the preset.*
 
-- [ ] 1.1 `. d` Run `jreleaserChangelog` on the current configuration and capture the output as
+- [x] 1.1 `. d` Run `jreleaserChangelog` on the current configuration and capture the output as
       the reference. It should reproduce what v0.2.0 published — if it does not, the local
       range differs from what CI saw and everything after this is measured against the wrong
       baseline.

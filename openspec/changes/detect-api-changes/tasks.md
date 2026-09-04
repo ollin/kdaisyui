@@ -48,7 +48,8 @@ is a `. r`; the section's single artefact is 2.5's write-up. Relabelled `. d` to
 
 ## 4. Wire it in
 
-- [ ] 4.1 `. r` Commit the API baseline
+- [x] 4.1 `^ F` Commit the API baseline — **with** the DSL that produces it, per the correction
+      in section 1; separately it would leave `check` red
 - [ ] 4.2 `^ F` Add the check to `ci.yml`. It belongs with the drift job conceptually: both
       compare a committed artefact against what the build regenerates
 - [ ] 4.3 `^ F` Prove it fails — change the API on a scratch branch and watch the job go red.

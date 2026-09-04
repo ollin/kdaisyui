@@ -1,7 +1,17 @@
 # api-change-detection Specification
 
 ## Purpose
-TBD - created by archiving change detect-api-changes. Update Purpose after archive.
+To make a change to `kdaisyui`'s published API impossible to ship without somebody having seen it.
+
+The library's public surface is **generated** from DaisyUI and released automatically from a `v*`
+tag, so the two moments where a human would normally notice a removal — writing it, and pressing
+publish — do not exist here. v0.2.0 shipped a breaking change (`TooltipVariant.Neutral` removed,
+because DaisyUI dropped `tooltip-neutral`) that nobody chose and no check caught; it was found by
+a person reading a diff, and documented afterwards.
+
+This capability replaces that reader with a committed baseline and a gate. It does not prevent
+breaking changes — it makes them deliberate, and requires that a consumer be told how to migrate
+before the release goes out.
 
 ## Requirements
 

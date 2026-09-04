@@ -79,7 +79,7 @@ the whole claim being tested.
   `popovertarget` button. Not routed yet, so nothing reaches it and nothing changes.
   → `. r`
 
-- [ ] 5.2 Route the page and add the Cucumber feature that proves it. Lands as three commits:
+- [x] 5.2 Route the page and add the Cucumber feature that proves it. Lands as three commits:
   - `^ r` let a scenario request a JavaScript-disabled browser context via an `@nojs` tag;
     every existing scenario keeps the context it has today
   - `. r` add the step definitions, with no feature referencing them yet

@@ -103,11 +103,32 @@ You can run ':lib:updateKotlinAbi' task to create or overwrite reference ABI dec
 Non-zero exit, the diff in the failure output, and a message naming the remedy. So **the command
 the job runs is proven to fail on the 0.2.0 break's exact shape.**
 
-**What is not yet proven, and is the point of this task:** that the *job* fails — that
-`api-baseline` triggers on a pull request and reports red. That needs a branch pushed and a PR
-opened, and the change set is not adopted yet. Deliberately left open rather than ticked on the
-strength of the local run, because "a gate nobody has seen fail is not known to be a gate" is
-about the CI wiring, not about the Gradle task. It also explains the `! F` on the job's commit.
+### The CI half — observed red on PR #288
 
-Watch for the trap recorded in the `kdaisyui-release` skill: a PR whose `mergeable_state` is
-`dirty` runs **no** workflows at all, so an absent check reads like a passing one.
+Throwaway branch `scratch/prove-api-baseline`, one commit removing
+`TooltipVariant.Error` from the **committed baseline** so it no longer matches the compiled ABI.
+Only that file was touched, deliberately: the divergence is the same one a regeneration dropping
+an enum entry produces, but nothing else can go red, so the new job either fails on its own
+account or not at all.
+
+Draft PR #288 → `main`, run
+[33897979020](https://github.com/ollin/kdaisyui/actions/runs/33897979020):
+
+| Check | Conclusion |
+|---|---|
+| **`api-baseline`** | **failure** |
+| `generated-sources-drift` | success |
+| `unit-tests` | success |
+| `Validate PR title` | success |
+
+**The gate has now been seen to fail, and it failed alone.** PR closed and branch deleted; the
+commit that broke the baseline never existed on any branch that matters.
+
+Two things confirmed in passing, both worth keeping:
+
+- `mergeable_state` was `blocked`, not `dirty` — `blocked` is `main`'s ruleset waiting on required
+  checks and does **not** stop workflows. The trap in the `kdaisyui-release` skill is specifically
+  `dirty`, where **no** workflow runs at all and an absent check reads like a passing one. The two
+  states look similar in the API and mean opposite things for CI.
+- `pull_request_read(method="get_check_runs")` reports these; the legacy commit-status API does
+  not see Actions at all.

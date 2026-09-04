@@ -104,6 +104,10 @@ jreleaser {
                 }
                 hide {
                     uncategorized.set(true)
+                    // `tasks` is the preset's category for the `chore` label, and
+                    // `chore(deps):` is where every Renovate bump lands — the scope is not
+                    // part of the labeler regex, so there is no narrower key to name here.
+                    category("tasks")
                 }
             }
         }

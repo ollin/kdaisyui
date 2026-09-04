@@ -200,6 +200,33 @@ cannot categorise.
 So the option that looks like the fix removes 5 of 5 entries, while the actual fix,
 `hide.category("tasks")`, removed 108 of 108 duplicates and kept all 5.
 
+## 3.3 — The footer rule, verified against the renderer
+
+`v0.1.2..v0.2.0` is closed history, so the check ran on a throwaway branch with two empty
+commits and `-Pversion=0.2.1`, which moves the computed range to `v0.2.0..HEAD`. Nothing on the
+real branch was touched; the branch was deleted afterwards.
+
+Both orderings in a single render:
+
+```
+- 589975a 🚨 scratch commit with prose after the footer - *the old API is removed; callers must use the new one.
+
+This ordinary paragraph explains the change and should not be part of the
+migration note, but nothing terminates the footer.*
+- 1996a79 🚨 scratch commit with the footer written last - *the old API is removed; callers must use the new one.*
+```
+
+Footer last renders as **one clean line**. Prose after the footer renders as **four**, and the
+closing `*` sits after the absorbed paragraph — the italic migration note extends over prose
+that was never part of it. This is the v0.2.0 defect reproduced on demand, and the rule
+confirmed by contrast rather than by assertion.
+
+**Prose written *before* the footer does not appear at all.** `1996a79`'s body opened with an
+ordinary explanatory paragraph, and the entry shows only the footer text. So the body's
+non-footer prose is not merely safe — it is dropped. Anyone writing explanation into a PR body
+expecting it on the release page will not find it there; only the subject line and the footer
+survive.
+
 ### A note on how 2.3 can be checked
 
 There is no shell in this environment, so a byte-level `diff` between the reference and a later

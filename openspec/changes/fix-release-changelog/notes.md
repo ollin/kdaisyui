@@ -83,6 +83,26 @@ Conventional Commits spec the footer runs to the end of the body, so this is not
 defect and no configuration fixes it — it is a commit-authoring rule, which is why section 3
 records it in the two skills instead of trying to configure it away.
 
+## 2.1 — `hide { uncategorized = true }`
+
+Measured against the reference above:
+
+| Block | Before | After |
+|---|---|---|
+| 🚀 Features | 3 | 3 — `30b991d`, `d30a1b0`, `66b62ef` |
+| 🧰 Tasks | 108 | 108 |
+| 📝 Documentation | 2 | 2 |
+| uncategorized | 137 | 0 |
+| **total lines** | **264** | **125** |
+
+Nothing that should have stayed was taken with it. The `---` at line 127 is gone along with the
+commits it introduced.
+
+**`jreleaserChangelog` is UP-TO-DATE after a config change.** Gradle does not see
+`build.gradle.kts` as an input to it, so the first re-run reported success, regenerated nothing,
+and left the previous output in place — which reads exactly like "the setting had no effect".
+Pass `--rerun`. Every later measurement in this change needs it.
+
 ### A note on how 2.3 can be checked
 
 There is no shell in this environment, so a byte-level `diff` between the reference and a later

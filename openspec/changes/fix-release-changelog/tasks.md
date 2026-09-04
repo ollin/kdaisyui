@@ -31,7 +31,7 @@ categories explicitly instead of using the preset.*
 
 ## 2. Hide the noise
 
-- [ ] 2.1 `! F` Set `hide { uncategorized = true }` and re-run. Expect: the 137 raw Arlo
+- [x] 2.1 `! F` Set `hide { uncategorized = true }` and re-run. Expect: the 137 raw Arlo
       commits disappear, everything else unchanged
 - [ ] 2.2 `! F` Add the dependency category to `hide { categories }` and re-run. Expect: 108
       lines disappear, the three real features remain

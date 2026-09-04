@@ -61,7 +61,7 @@ asserting a string inside the generator.
   function is uncovered, fix the *test generator*, never the generated file.
   → `^ f` (or `. d` if already green and only evidence is recorded)
 
-- [ ] 4.2 Confirm `generated-sources-drift` passes on the branch, so the committed tree matches
+- [x] 4.2 Confirm `generated-sources-drift` passes on the branch, so the committed tree matches
   its inputs.
   → `. d`
 

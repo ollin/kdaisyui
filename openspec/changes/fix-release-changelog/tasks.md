@@ -81,7 +81,14 @@ together, and is relabelled there when reached.
 
 ## 4. Land it
 
-- [ ] 4.1 `^ F` Commit the `changelog` block with the before/after outputs quoted in the
-      message
+- [ ] 4.1 `. d` Verify the finished `changelog` block end to end on the real branch, and record
+      the before/after
+
+**Rewritten 2026-09-04, as flagged at 2.1.** This said "commit the `changelog` block". There is
+nothing left to commit: 2.1, 2.2 and 2.5 each landed their own line of it with their own
+before/after evidence, which is what the commit-per-task cadence requires. What is still
+genuinely missing is a check that the three settings behave *together* on the real range, rather
+than each having been verified as it was added. That is what this task now does, and it is
+evidence, so `. d`.
 - [ ] 4.2 `. d` Consider whether this belongs with `detect-api-changes` section 5, which also
       adds a release-hygiene rule. Two rules about what a release must say want one home

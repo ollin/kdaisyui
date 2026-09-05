@@ -106,6 +106,60 @@ Rejected alternatives:
 own class usage, so it is *not* a general-purpose DaisyUI build and must never be offered to
 consumers as one. What consumers need is the instructions, which is section 5.
 
+## 2.1 — scanning works on disk, and is unavailable to consumers
+
+Two findings that point in opposite directions.
+
+### Scanning `.kt` works, with no configuration
+
+Pointing `@source` at `lib/generated/main/kotlin` finds everything. No extension setting was
+needed — Tailwind 4 scans a `@source` directory by content:
+
+| Class | Occurrences in output |
+|---|---|
+| `.btn` | 74 |
+| `.btn-primary`, `.btn-lg`, `.alert-success`, `.badge-outline` | 1 each |
+| `.card` | 15 |
+| `.megamenu` | 52 |
+| `.tooltip-info` | 4 |
+
+**Assumption 3 refuted:** a safelist is *not* required, because every class the library can emit
+appears as a string literal in a generated enum constructor, and the scanner reads them. That is a
+much better answer than the safelist the proposal assumed.
+
+*(An earlier run of this same probe reported most of these absent. The grep required `{` or `,`
+immediately after the class name and Tailwind emits neither. Fifth instrument defect of the
+session; the numbers above come from counting occurrences instead of matching punctuation.)*
+
+### But a consumer has no sources to scan
+
+```
+kdaisyui-0.2.0.jar   kt entries: 0    class entries: 1088
+```
+
+The published jar carries compiled classes only. A consumer's Tailwind, pointed at their own
+sources, finds nothing: they write `daisyButton(variant = ButtonVariant.Primary)`, and the string
+`btn-primary` lives in **our** source, not theirs. So the mechanism that works in this repository
+is exactly the one unavailable to the people the documentation is for.
+
+A `kdaisyui-<version>-sources.jar` *is* published, so the classes are obtainable — but a jar is
+not a directory and Tailwind cannot read into one.
+
+### The cost that comes with it
+
+Scanning the library's full generated surface produces **399,879 bytes** — every class the library
+can emit, because every one of them is a literal in the sources. Against:
+
+| Approach | Output |
+|---|---|
+| Prebuilt webjar (today) | 1,123,000 B |
+| Scan the library's whole generated surface | 399,879 B |
+| Scan only the classes an app actually uses | 32,373 B |
+
+So the consumer choice is not "correct or broken" but "correct-and-400 KB" versus
+"small-and-you-maintain-a-list". Both are defensible; what is not defensible is leaving it
+undocumented, which is the current state.
+
 ## Method note
 
 The `lg:` scenarios passing is what exposed the mistake. Had this change started by building the

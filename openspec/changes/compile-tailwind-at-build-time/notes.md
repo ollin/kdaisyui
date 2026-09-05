@@ -55,6 +55,57 @@ The boundary is also not a contract. It is whatever DaisyUI chose to pre-generat
 we happen to pin, and a future DaisyUI could shrink that set without it being breaking for anyone
 except consumers of a prebuilt stylesheet.
 
+## 1.2 — compiling works, and needs no standalone binary
+
+Probe run entirely in `/tmp/tw-probe`, nothing committed: `npm install tailwindcss@4
+@tailwindcss/cli@4 daisyui@5.7.17`, an entry CSS of `@import "tailwindcss"; @plugin "daisyui";
+@source "./classes.txt"`, and a class list naming the cases that fail today.
+
+| Class | In compiled output |
+|---|---|
+| `lg:btn-lg` | PRESENT |
+| `max-lg:btn-lg` | **PRESENT** |
+| `max-sm:megamenu-vertical` | **PRESENT** |
+| `dark:alert-info` | **PRESENT** |
+| `focus:input-primary` | **PRESENT** |
+| `.megamenu-vertical`, `.btn` | PRESENT |
+
+Every prefix the prebuilt webjar lacks compiles fine. The DaisyUI plugin resolves from a plain npm
+install with no special setup.
+
+**Two things this changes about the plan.**
+
+1. **The 112 MB standalone binary is unnecessary.** It was the assumed route because it avoids
+   Node. But Node is already required for `just generate`, so it buys nothing here and costs a
+   per-platform download — six release assets, 80-112 MB each, needing OS and libc detection.
+2. **The output is 32 KB, against 1.1 MB for the prebuilt webjar** — a 97% reduction, because a
+   compile emits only what the sources use. That was not a goal and is the larger practical win.
+
+## 1.3 — decision: compile in `just generate`, commit the result
+
+Not in the Gradle build. The repository already has exactly this pattern and it is the reason a
+clone needs no Node: **generated output is committed and a CI drift job keeps it honest.**
+Components, component tests and Heroicons all work this way.
+
+A compiled stylesheet is the same kind of artefact. So:
+
+- `just generate` gains a step that compiles `example-app`'s CSS;
+- the result is committed, like `lib/generated/`;
+- `generated-sources-drift` regenerates and fails if it changed;
+- `example-app` serves the committed file, and `./gradlew build` needs no Node.
+
+Rejected alternatives:
+
+- **Compile in the Gradle build.** Puts Node on the critical path for a plain `./gradlew build`,
+  which is the constraint the project deliberately removed when it started committing generated
+  sources. It would be undoing a decision this project already made and documented.
+- **Standalone binary.** Solves a Node problem that only exists if the previous option is chosen.
+- **Keep the webjar.** The status quo, and the thing being fixed.
+
+**One consequence to hold on to:** the committed stylesheet is compiled against the example app's
+own class usage, so it is *not* a general-purpose DaisyUI build and must never be offered to
+consumers as one. What consumers need is the instructions, which is section 5.
+
 ## Method note
 
 The `lg:` scenarios passing is what exposed the mistake. Had this change started by building the

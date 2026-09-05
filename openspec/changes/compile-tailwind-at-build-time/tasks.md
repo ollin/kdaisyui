@@ -5,13 +5,19 @@ answers the question that matters to consumers. Nothing is wired in until both h
 
 ## 1. Find out whether Tailwind can compile here without Node in the build
 
-- [ ] 1.1 Write the failing assertion first: an E2E scenario that puts a `variant:daisy-class` on
-  an element in `example-app` — `lg:btn-lg` is the one the docs promise — and asserts the variant
-  actually applies at that breakpoint. **It must fail on today's setup.** A gate nobody has seen
-  fail is not a gate, and this one is the whole point of the change.
-  → `@ f` for the red step alone is not allowed to land; write it, watch it fail, then leave it
-  failing only until 3.x. Land it as `^ F` together with the fix in 3.2 if it cannot be kept green
-  before then.
+- [x] 1.1 Write the assertion that a `variant:daisy-class` applies, using `lg:btn-lg` — the one
+  the docs promise — and see what it says about today's setup.
+  → `. r`
+
+  **Outcome: the premise was refuted, and the proposal is revised.** `lg:btn-lg` *works* today.
+  The webjar ships `sm:` `md:` `lg:` `xl:` `hover:` pre-generated and nothing else; `max-*`,
+  `dark:` and `focus:` are absent. So the gate this change needs is a **`max-*` scenario**, not
+  an `lg:` one — and the `lg:` scenarios become characterization tests that must stay green.
+
+- [ ] 1.1b Add the failing gate: the same matched-pair assertion with a `max-*` variant, which
+  no shipped prefix covers. **It must fail on today's setup**, and it is what 3.2 makes pass.
+  Do not land it red — write it, watch it fail, revert it, and bring it back with the fix.
+  → evidence now, `^ F` with 3.2
 
 - [ ] 1.2 Try the Tailwind standalone executable: obtain it, point it at a CSS entry file that
   `@import`s tailwindcss and `@plugin`s daisyui, and compile once by hand. Record whether it

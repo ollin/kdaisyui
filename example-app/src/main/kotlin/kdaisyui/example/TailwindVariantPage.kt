@@ -47,6 +47,11 @@ fun HTML.tailwindVariantPage() {
                 extraClasses = "lg:btn-lg",
                 attrs = { attributes["id"] = "variant-subject" },
             )
+            daisyButton(
+                text = "Max variant",
+                extraClasses = "max-lg:btn-lg",
+                attrs = { attributes["id"] = "variant-subject-max" },
+            )
         }
     }
 }

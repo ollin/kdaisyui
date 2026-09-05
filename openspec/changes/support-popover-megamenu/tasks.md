@@ -36,7 +36,7 @@ as an E2E scenario that saves screenshots to disk. Two reasons, both better than
   not settled until he has, because a rendering fault is what he sees and an assertion does not.
   → `. d`
 
-- [ ] 1.2 Decide from 1.1 whether `popover` on the root is a static attribute or a parameter, and
+- [x] 1.2 Decide from 1.1 whether `popover` on the root is a static attribute or a parameter, and
   write it into `design.md`. **If a `<div class="megamenu" popover>` cannot be made visible on
   desktop from generated markup alone, stop and revise the proposal.**
   → `. d`

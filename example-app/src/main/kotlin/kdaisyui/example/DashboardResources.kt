@@ -8,6 +8,9 @@ class DashboardPage
 @Resource("/popover-modal")
 class PopoverModalDemo
 
+@Resource("/megamenu-reference")
+class MegamenuReference
+
 @Resource("/fragments")
 class Fragments {
     @Resource("/stats")

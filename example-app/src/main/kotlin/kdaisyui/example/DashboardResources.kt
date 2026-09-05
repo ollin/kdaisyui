@@ -11,6 +11,9 @@ class PopoverModalDemo
 @Resource("/megamenu-reference")
 class MegamenuReference
 
+@Resource("/tailwind-variant")
+class TailwindVariantCheck
+
 @Resource("/fragments")
 class Fragments {
     @Resource("/stats")

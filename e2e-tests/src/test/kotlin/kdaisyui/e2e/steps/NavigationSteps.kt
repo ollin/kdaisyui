@@ -18,6 +18,11 @@ class NavigationSteps(private val world: PlaywrightWorld) {
         world.page.navigate("/")
     }
 
+    @Given("the user opens {string}")
+    fun openPath(path: String) {
+        world.page.navigate(path)
+    }
+
     @Then("the text {string} is visible")
     fun textIsVisible(text: String) {
         assertThat(world.page.getByText(text).first()).isVisible()
@@ -36,6 +41,16 @@ class NavigationSteps(private val world: PlaywrightWorld) {
     @Then("the button {string} is visible")
     fun buttonIsVisible(name: String) {
         assertThat(world.page.getByRole(AriaRole.BUTTON, GetByRoleOptions().setName(name))).isVisible()
+    }
+
+    /**
+     * Prefer this over clicking by text. `getByText` is a case-insensitive substring match, so
+     * `getByText("Menu").first()` happily returns the heading "Megamenu reference" and clicks
+     * that instead — which looks exactly like the popover failing to open.
+     */
+    @When("the user clicks the button {string}")
+    fun clickButton(name: String) {
+        world.page.getByRole(AriaRole.BUTTON, GetByRoleOptions().setName(name).setExact(true)).click()
     }
 
     @Then("the sidebar contains the following navigation items:")

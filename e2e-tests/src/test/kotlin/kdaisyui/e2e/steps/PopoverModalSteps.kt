@@ -1,5 +1,6 @@
 package kdaisyui.e2e.steps
 
+import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
@@ -43,6 +44,17 @@ class PopoverModalSteps(private val world: PlaywrightWorld) {
     @Then("the popover {string} is closed")
     fun popoverIsClosed(elementId: String) {
         check(!isPopoverOpen(elementId)) { "Expected #$elementId to be closed" }
+    }
+
+    /**
+     * Settles the open animation before a screenshot. `:popover-open` flips synchronously on
+     * click, but DaisyUI transitions opacity and scale over 200ms, so a screenshot taken straight
+     * after the click catches the popover mid-fade or not at all. This assertion auto-waits, so it
+     * both proves visibility and gives the transition time to finish.
+     */
+    @Then("the popover {string} is visible")
+    fun popoverIsVisible(elementId: String) {
+        assertThat(world.page.locator("#$elementId")).isVisible()
     }
 
     private fun isPopoverOpen(elementId: String): Boolean =

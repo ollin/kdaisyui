@@ -18,20 +18,20 @@ as an E2E scenario that saves screenshots to disk. Two reasons, both better than
   same screenshots then prove the generated output matches the reference — which is exactly the
   check that was missing when megamenu was first declared done.
 
-- [ ] 1.1a Add the megamenu reference page — DaisyUI's documented markup, hand-written, so the
+- [x] 1.1a Add the megamenu reference page — DaisyUI's documented markup, hand-written, so the
   question stays about the markup and not about the DSL. Not routed yet.
   → `. r`
 
-- [ ] 1.1b Add two step definitions, both reusable and neither megamenu-specific: set the
+- [x] 1.1b Add two step definitions, both reusable and neither megamenu-specific: set the
   viewport, and save a named full-page screenshot to `build/reports/screenshots/`. The existing
   hook only attaches screenshots to the Cucumber report, where they cannot be browsed.
   → `. r`
 
-- [ ] 1.1c Route the page and add the scenario that screenshots it at a **desktop** and a
+- [x] 1.1c Route the page and add the scenario that screenshots it at a **desktop** and a
   **small** viewport, with and without the megamenu opened.
   → `^ F`
 
-- [ ] 1.1d Look at the screenshots. Record what is visible at each viewport, and whether the
+- [x] 1.1d Look at the screenshots. Record what is visible at each viewport, and whether the
   root's `popover` has to be present in both. **Oliver reviews the images too** — the finding is
   not settled until he has, because a rendering fault is what he sees and an assertion does not.
   → `. d`

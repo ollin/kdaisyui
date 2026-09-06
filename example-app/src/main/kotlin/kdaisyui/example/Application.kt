@@ -3,6 +3,7 @@ package kdaisyui.example
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.http.content.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import io.ktor.server.webjars.*
@@ -17,6 +18,8 @@ fun Application.configureRouting() {
     install(Webjars)
     install(Resources)
     routing {
+        // The stylesheet the build compiles, produced by :example-app:compileTailwind.
+        staticResources("/static", "static")
         dashboardRoutes()
     }
 }

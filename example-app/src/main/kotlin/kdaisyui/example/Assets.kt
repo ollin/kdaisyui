@@ -2,17 +2,19 @@ package kdaisyui.example
 
 import kotlinx.html.HEAD
 import kotlinx.html.link
-import kotlinx.html.script
 
 /**
  * The stylesheet every page in this application loads.
  *
- * One place on purpose: four pages carried the same three lines, and how this application
- * gets its CSS is precisely the thing `compile-tailwind-at-build-time` is changing. A
- * change of delivery should be a change in one function, not a search across page files.
+ * Compiled by `:example-app:compileTailwind` from this application's Kotlin sources and the
+ * library's generated ones, then shipped as a classpath resource.
+ *
+ * It replaced the prebuilt `daisyui.css` webjar plus Tailwind's browser build. That pairing
+ * worked for the five variant prefixes DaisyUI happens to pre-generate — `sm:` `md:` `lg:`
+ * `xl:` `hover:` — and silently produced nothing for every other one, so `max-sm:card-side`
+ * or `dark:alert-info` were classes that sat in the HTML and did nothing. Compiling produces
+ * whatever the sources actually use, and the result is ~23 KB instead of 1.1 MB.
  */
 fun HEAD.daisyuiStylesheet() {
-    link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
-    link { rel = "stylesheet"; href = "/webjars/daisyui/themes.css" }
-    script { src = "/webjars/tailwindcss__browser/dist/index.global.js" }
+    link { rel = "stylesheet"; href = "/static/app.css" }
 }

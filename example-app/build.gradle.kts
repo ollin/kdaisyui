@@ -99,6 +99,12 @@ val compileTailwind = tasks.register<Exec>("compileTailwind") {
  * Windows must not get it: there is no `id` command, and Docker Desktop already writes
  * as the calling user, so the flag would be both unavailable and pointless.
  */
+// The compiled stylesheet ships as a classpath resource, so the running application
+// serves it the same way in the IDE, from `just dev` and from a distribution.
+tasks.named<ProcessResources>("processResources") {
+    from(compileTailwind) { into("static") }
+}
+
 fun callingUserArgs(): List<String> {
     if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true)) return emptyList()
     val path = projectDir.toPath()

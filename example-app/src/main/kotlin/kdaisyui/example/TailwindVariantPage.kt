@@ -25,9 +25,7 @@ fun HTML.tailwindVariantPage() {
         meta { charset = "utf-8" }
         title { +"Tailwind variant check" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
-        link { rel = "stylesheet"; href = "/webjars/daisyui/themes.css" }
-        script { src = "/webjars/tailwindcss__browser/dist/index.global.js" }
+        daisyuiStylesheet()
     }
     body("bg-base-200 min-h-screen p-10") {
         h1("text-xl font-bold mb-6") { +"Tailwind variant check" }

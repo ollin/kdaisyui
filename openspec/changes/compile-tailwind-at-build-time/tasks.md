@@ -89,19 +89,19 @@ pipeline instead of from the plan.
 Reshaped by 2.3: this is no longer a safelist for our own build — scanning covers that — but the
 artefact that makes a consumer's build possible at all.
 
-- [ ] 4.1 Emit the complete class list from the codegen pipeline, which already knows every class
+- [x] 4.1 Emit the complete class list from the codegen pipeline, which already knows every class
   it can generate, into `lib/generated/` so `just generate` produces it and the drift job keeps it
   honest.
-  → `^ f`
+  → `^ f` — 555 classes.
 
-- [ ] 4.2 Package it as a resource in the `kdaisyui` jar. Assert it is present in the built jar —
+- [x] 4.2 Package it as a resource in the `kdaisyui` jar. Assert it is present in the built jar —
   a file that silently stops being packaged is the failure this change is about.
-  → `^ F`
+  → `^ F` — 7 KB entry, six tests.
 
-- [ ] 4.3 Verify the documented consumer recipe end to end: extract the list from the jar with the
+- [x] 4.3 Verify the documented consumer recipe end to end: extract the list from the jar with the
   Gradle snippet from 2.3, compile against it, and confirm a class the app never mentions in its
   own sources — one that only exists inside a generated enum — reaches the stylesheet.
-  → `^ f`
+  → `^ f` — `btn-primary` occurs 0 times in the consumer's source and is present in their CSS.
 
 ## 5. Tell consumers the truth
 

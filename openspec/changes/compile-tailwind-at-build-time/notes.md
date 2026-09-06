@@ -270,6 +270,37 @@ the `e2e-tests` job fails on the pull request — which is the honest place to f
 `ci.yml` triggers on pull requests and pushes to `main`, so a topic-branch push proves nothing.
 **Check this on the PR before adoption**, and add the ~15 s image build to the job's expected time.
 
+## 4.3 — the consumer recipe, verified from the jar alone
+
+Run as a consumer would: take the published jar, extract nothing else, compile.
+
+1. `unzip -j kdaisyui-0.2.1.jar kdaisyui-classes.txt` → 560 lines. What the documented Gradle
+   `Copy` task does.
+2. A source file calling `daisyButton(variant = ButtonVariant.Primary, size = ButtonSize.Lg)` and
+   `daisyCard(extraClasses = "max-sm:card-side")`. **`btn-primary` occurs 0 times in it.**
+3. Compile with `@source` on the extracted list plus their own sources.
+
+| Class | In their stylesheet |
+|---|---|
+| `.btn-primary` | PRESENT — reachable only through the class list |
+| `.btn-lg` | PRESENT — same |
+| `.max-sm\:card-side` | PRESENT — from their own source, and a prefix the webjar never ships |
+| `.card` | PRESENT |
+
+**552 KB**, more than the 400 KB estimated in 2.1: the class list is complete where a scan of the
+generated Kotlin was not. The honest comparison for the documentation:
+
+| Setup | Size | Correct? |
+|---|---|---|
+| Prebuilt webjar — today's documented path | 1123 KB | **no**, five variant prefixes only |
+| Compile with the class list | 552 KB | yes |
+| Compile with only what an application uses | ~32 KB | yes, but needs tooling that does not exist |
+
+The documented path halves the payload *and* fixes correctness. The remaining 17× is the
+follow-up tooling change, not homework for a reader.
+
+## Method note
+
 The `lg:` scenarios passing is what exposed the mistake. Had this change started by building the
 Gradle task, the five working prefixes would have kept everything looking correct and the wrong
 justification would have shipped in `README.md`. Writing the assertion first cost about twenty

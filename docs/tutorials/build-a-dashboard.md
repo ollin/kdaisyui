@@ -110,7 +110,8 @@ fun HTML.shellPage() {
         title { +"Dashboard" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
 
-        // DaisyUI + Tailwind CSS via Webjars
+        // DaisyUI's prebuilt stylesheet via Webjars. Good enough for this tutorial;
+        // see the note below before using it in something real.
         link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
         link { rel = "stylesheet"; href = "/webjars/daisyui/themes.css" }
         script { src = "/webjars/tailwindcss__browser/dist/index.global.js" }
@@ -120,6 +121,7 @@ fun HTML.shellPage() {
     }
     body("drawer bg-base-200 lg:drawer-open min-h-screen") {
         input { id = "my-drawer"; type = InputType.checkBox; classes = setOf("drawer-toggle") }
+
 
         main("drawer-content") {
             div("grid grid-cols-12 gap-y-12 p-4 lg:gap-x-12 lg:p-10") {
@@ -135,6 +137,16 @@ fun HTML.shellPage() {
     }
 }
 ```
+
+> **About that stylesheet.** DaisyUI's prebuilt CSS needs no toolchain, which is why this tutorial
+> uses it — but it ships only five Tailwind variant prefixes: `sm:` `md:` `lg:` `xl:` `hover:`.
+> Anything else (`max-sm:card-side`, `dark:alert-info`) lands in the HTML and does nothing, with no
+> error to tell you. It is also 1.1 MB, against ~550 KB for a compiled stylesheet.
+>
+> For an application rather than a tutorial, compile Tailwind yourself and point it at the class
+> list kdaisyui ships — otherwise your Tailwind cannot see class names like `btn-primary`, which
+> are assembled at runtime from enum values. See
+> [Give those classes some CSS](../../README.md#3-give-those-classes-some-css).
 
 ## 4. Build the sidebar
 

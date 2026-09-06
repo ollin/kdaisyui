@@ -81,7 +81,46 @@ install with no special setup.
 2. **The output is 32 KB, against 1.1 MB for the prebuilt webjar** — a 97% reduction, because a
    compile emits only what the sources use. That was not a goal and is the larger practical win.
 
-## 1.3 — decision: compile in `just generate`, commit the result
+## 1.3 — REVISED (Oliver): compile in the Gradle build, in a Docker container
+
+Supersedes the decision recorded below, which was to compile in `just generate` and commit the
+result. Oliver chose compilation in the build; Docker is what makes that possible without putting
+Node on the host.
+
+**Measured**, `node:26-slim`, `max-sm:megamenu-vertical` and `.megamenu-vertical` and
+`dark:alert-info` all present in the output:
+
+| | |
+|---|---|
+| Warm run, image and npm cache present | **0.99 s** |
+| Cold run, image pull | ~15 s, once per machine |
+| Output | 23 KB |
+| Host requirement | Docker. **No Node, no npm.** |
+
+**The one real obstacle, and its fix.** A default `docker run` writes output as `root`, which
+would leave root-owned files in `build/` and break `./gradlew clean` for the user who ran it. The
+container must run as the calling user:
+
+```
+-u "$(id -u):$(id -g)" -e HOME=/tmp -e NPM_CONFIG_CACHE=/tmp/.npm
+```
+
+Worth stating because the failure is delayed and confusing: the first root run succeeds, and the
+*next* run fails with npm exit 243 because it cannot overwrite the root-owned `node_modules` the
+first one left. Found by running the probe twice, which is the only reason it was found at all.
+
+**What this changes about the project's promises.** `AGENTS.md` says a clone "compiles and tests
+with no Node, no npm and no git submodules". That stays literally true — and becomes misleading
+unless it also says Docker is now required, because `:e2e-tests` depends on `:example-app:classes`
+and therefore `./gradlew check` will pull the CSS compilation in. `:lib` and `:ktor-integration`
+remain free of it. This is a deliberate trade, not a side effect, and it belongs in the
+documentation rather than in a commit body.
+
+**Open, and to settle in section 3:** pinning the image by digest rather than by tag, declaring
+Gradle task inputs and outputs so the compile is incremental and cacheable, and adding Docker to
+the four CI jobs that build `example-app`.
+
+## ~~1.3 — decision: compile in `just generate`, commit the result~~ (superseded)
 
 Not in the Gradle build. The repository already has exactly this pattern and it is the reason a
 clone needs no Node: **generated output is committed and a CI drift job keeps it honest.**
@@ -159,6 +198,55 @@ can emit, because every one of them is a literal in the sources. Against:
 So the consumer choice is not "correct or broken" but "correct-and-400 KB" versus
 "small-and-you-maintain-a-list". Both are defensible; what is not defensible is leaving it
 undocumented, which is the current state.
+
+## 2.3 — decision: ship the class list in the jar, and never ask anyone to hand-maintain one
+
+**The documented path is a generated class list, packaged as a resource inside the existing
+`kdaisyui` jar.** A consumer extracts it with a short Gradle task and points `@source` at it:
+
+```kotlin
+val kdaisyuiClasses by configurations.creating
+dependencies { kdaisyuiClasses("io.github.ollin.kdaisyui:kdaisyui:<version>") }
+
+tasks.register<Copy>("extractKdaisyuiClasses") {
+    from(zipTree(kdaisyuiClasses.singleFile)) { include("kdaisyui-classes.txt") }
+    into(layout.buildDirectory.dir("kdaisyui"))
+}
+```
+
+```css
+@import "tailwindcss";
+@plugin "daisyui";
+@source "./build/kdaisyui/kdaisyui-classes.txt";
+@source "./src/main/kotlin";
+```
+
+Properties that decided it:
+
+- **No new published artifact.** The list rides in the jar that consumers already depend on, so
+  the release pipeline and its `verifyStagingComplete` guard are untouched. That guard exists
+  because v0.1.1 shipped a partial bundle; adding a fourth artifact is exactly the kind of change
+  it was written to catch, and there is no reason to provoke it.
+- **Generated, committed, drift-checked** — the same treatment as every other generated artefact
+  here, so it cannot silently fall behind the components.
+- **Small.** A class list is text; the 400 KB is the *compiled CSS*, not the input.
+- **Always correct.** It contains every class the library can emit, so no consumer can be caught
+  out by a component they used but did not think to list.
+
+**Rejected: a hand-maintained safelist as the documented optimisation.** It was the obvious way to
+get from 400 KB to 32 KB, and it is the wrong instruction to publish. A list a human keeps in step
+with their component usage is a rule that is followed until the day it is not, and its failure mode
+is the same silent one this whole change exists to remove — a class quietly missing from the
+stylesheet, with nothing failing.
+
+**The narrowing is a tooling problem, and a separate change.** Getting from "every class the
+library can emit" to "the classes this application actually uses" means knowing which generated
+functions and which enum entries a codebase references. That is real machinery — KSP, or bytecode
+analysis of the consumer's compiled output — and it is worth doing precisely because it cannot be
+asked of a person. Recorded here as a follow-up rather than smuggled into this change.
+
+**Consequence for section 5:** the docs offer one path, not two. 400 KB, correct, no list to keep.
+The optimisation is named as future tooling, not as homework.
 
 ## Method note
 

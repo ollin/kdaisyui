@@ -1,0 +1,18 @@
+/*
+ * Tailwind entry for :example-app, compiled by the `compileTailwind` Gradle task.
+ *
+ * The `@source` paths are mount points the task creates, not repository paths — see
+ * example-app/build.gradle.kts. Keeping them flat and named avoids a chain of `../..`
+ * that would break the moment a directory moves.
+ *
+ * Both sources are needed, and the second is the interesting one: a class like
+ * `btn-primary` never appears in this application's code. It is assembled at runtime
+ * from ButtonVariant.Primary, so its only textual form is the string literal in the
+ * library's generated enum. A consumer of the published jar has no equivalent, which
+ * is what the css-delivery capability is about.
+ */
+@import "tailwindcss";
+@plugin "daisyui";
+
+@source "../app-kotlin";
+@source "../lib-kotlin";

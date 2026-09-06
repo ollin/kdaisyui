@@ -7,14 +7,36 @@ a static attribute).
 
 ## 1. Find out what markup a working megamenu actually needs
 
-- [ ] 1.1 Hand-write DaisyUI's documented megamenu markup — root `<div class="megamenu" popover>`
-  with a `popovertarget` button, a `megamenu-active` span and two inner `<div popover>` panels —
-  on a throwaway route in `example-app`, and open it in a browser at a **desktop** viewport and a
-  **small** one. Record what is visible in each, and whether the root's `popover` has to be
-  present in both. This is the assumption `megamenu.css` is too intricate to settle by reading.
+**Correction (Oliver).** 1.1 originally built a throwaway route and deleted it. Keep it instead,
+as an E2E scenario that saves screenshots to disk. Two reasons, both better than the original:
+
+- **A human can see what an assertion cannot.** The question is "does this look right at each
+  viewport", and a rendering fault is something Oliver spots in a picture faster than any
+  assertion finds it. Throwing the page away throws away the only artefact that can be looked at.
+- **The probe becomes the acceptance test for 5.1.** The page starts as DaisyUI's documented
+  markup, hand-written. Task 5.1 rebuilds it from generated wrappers. The same scenario and the
+  same screenshots then prove the generated output matches the reference — which is exactly the
+  check that was missing when megamenu was first declared done.
+
+- [x] 1.1a Add the megamenu reference page — DaisyUI's documented markup, hand-written, so the
+  question stays about the markup and not about the DSL. Not routed yet.
+  → `. r`
+
+- [x] 1.1b Add two step definitions, both reusable and neither megamenu-specific: set the
+  viewport, and save a named full-page screenshot to `build/reports/screenshots/`. The existing
+  hook only attaches screenshots to the Cucumber report, where they cannot be browsed.
+  → `. r`
+
+- [x] 1.1c Route the page and add the scenario that screenshots it at a **desktop** and a
+  **small** viewport, with and without the megamenu opened.
+  → `^ F`
+
+- [x] 1.1d Look at the screenshots. Record what is visible at each viewport, and whether the
+  root's `popover` has to be present in both. **Oliver reviews the images too** — the finding is
+  not settled until he has, because a rendering fault is what he sees and an assertion does not.
   → `. d`
 
-- [ ] 1.2 Decide from 1.1 whether `popover` on the root is a static attribute or a parameter, and
+- [x] 1.2 Decide from 1.1 whether `popover` on the root is a static attribute or a parameter, and
   write it into `design.md`. **If a `<div class="megamenu" popover>` cannot be made visible on
   desktop from generated markup alone, stop and revise the proposal.**
   → `. d`

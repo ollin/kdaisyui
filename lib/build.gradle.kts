@@ -100,9 +100,15 @@ val checkoutHeroiconsTag = tasks.register<CheckoutHeroiconsTag>("checkoutHeroico
 val generatedMainDir = layout.projectDirectory.dir("generated/main/kotlin")
 val generatedTestDir = layout.projectDirectory.dir("generated/test/kotlin")
 
+// Generated resources, shipped in the jar. Currently the Tailwind class list, which is
+// the only way a consumer's CSS build can learn the class names this library emits —
+// they are assembled from enum values at runtime and the jar carries no Kotlin sources.
+val generatedResourcesDir = layout.projectDirectory.dir("generated/main/resources")
+
 sourceSets {
     main {
         kotlin.srcDir(generatedMainDir)
+        resources.srcDir(generatedResourcesDir)
     }
     test {
         kotlin.srcDir(generatedTestDir)
@@ -139,16 +145,22 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     dependsOn(checkoutDaisyuiTag)
     workingDir = rootProject.file("codegen")
     val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
+    val classList = generatedResourcesDir.file("kdaisyui-classes.txt")
     doFirst { outputDir.asFile.mkdirs() }
     // No `npm install`: the codegen declares no dependencies, so it installed nothing and
     // only cost a network round-trip. Regeneration now works offline. Add it back here and
     // in the other two generator tasks if a dependency is ever introduced.
-    commandLine("sh", "-c", "node src/index-new.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    commandLine(
+        "sh", "-c",
+        "node src/index-new.js --output-dir=\"${outputDir.asFile.absolutePath}\"" +
+            " --class-list=\"${classList.asFile.absolutePath}\""
+    )
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
     outputs.dir(outputDir)
+    outputs.file(classList)
 }
 
 val generateComponentTests = tasks.register<Exec>("generateComponentTests") {

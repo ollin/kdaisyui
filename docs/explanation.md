@@ -140,6 +140,16 @@ The escape hatches ensure the DSL never limits you:
 
 If DaisyUI adds a new modifier tomorrow, you can use it immediately via `extraClasses` without waiting for a kdaisyui update.
 
+> **Whether `"lg:btn-lg"` actually applies depends on how your application compiles CSS**, and it
+> is not obvious which way it will go. If you load DaisyUI's prebuilt stylesheet, exactly five
+> variant prefixes work — `sm:` `md:` `lg:` `xl:` `hover:` — because those are the ones DaisyUI
+> pre-generates. `lg:btn-lg` is among them; `max-sm:card-side` and `dark:alert-info` are not, and a
+> class that does not compile fails silently. Compile Tailwind yourself and all of them work. See
+> [Give those classes some CSS](../README.md#3-give-those-classes-some-css).
+>
+> The same caveat applies to every class you pass here: `extraClasses` puts a string in the HTML,
+> and only your CSS build decides whether it means anything.
+
 ## How it fits together: Ktor + kdaisyui + htmx
 
 The three technologies form a clean server-rendering stack:

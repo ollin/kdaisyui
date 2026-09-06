@@ -60,6 +60,29 @@ there rather than restating them here.
 - `test dependsOn :example-app:classes` — the Ktor server runs **in process**, no external
   server to start
 
+## What none of these layers can see: CSS
+
+Every generated component test asserts a **class string** in rendered HTML. So does most of the
+E2E suite. None of it evaluates a stylesheet, which means **a component can pass its entire test
+suite and render completely unstyled** — the class is in the markup and no rule matches it.
+
+This is not hypothetical. It has now happened twice:
+
+- `daisyModal` emitted no `popover` attribute for two releases while every test passed, because
+  the missing thing added no CSS class;
+- `max-sm:megamenu-vertical` sat on the megamenu doing nothing, because the prebuilt DaisyUI
+  stylesheet ships only five Tailwind variant prefixes and no test looked at computed styles.
+
+Two step definitions exist for the cases where it matters — `the elements {string} and {string}
+have the same {string}` and `… differ in {string}` in `ComputedStyleSteps.kt`. They compare two
+elements rather than assert a value, so nothing hard-codes a pixel size that a DaisyUI restyle
+would invalidate. Reach for them when a change is about *appearance* rather than markup.
+
+`e2e-tests/build/reports/screenshots/` holds named full-page screenshots, written by
+`a screenshot is saved as {string}`. Animations are disabled for them, so what you see is the
+settled state. They exist to be looked at: a rendering fault is something a person catches in a
+picture and no assertion here would.
+
 ## Running tests
 
 Terminal is disabled in this repo — drive Gradle through the Gradle MCP, or use an IDE run
@@ -89,12 +112,25 @@ checkout will not have them. Fall back to the Gradle tasks above.
 `generate-heroicons` · `sync-daisyui` · `sync-heroicons` · `clean` (also removes
 `e2e-tests/build`)
 
-`just generate` is a *separate* npm path. A normal Gradle build already regenerates, because
-`compileKotlin dependsOn generateComponents, generateHeroicons`.
+**A normal Gradle build does NOT regenerate.** An earlier version of this page said it did, citing
+a `compileKotlin dependsOn generateComponents` that does not exist — `lib/build.gradle.kts` says
+the opposite in as many words. The generated sources are committed, and `just generate` is the only
+thing that rewrites them.
 
 ## CI
 
-`.github/workflows/ci.yml`, two jobs: `unit-tests` (`:lib:test`) and `e2e-tests`
-(`playwrightInstall` then `:e2e-tests:test`). Both JDK 21 temurin with
-`submodules: recursive` — the DaisyUI and Heroicons submodules must be present or codegen
-fails before any test runs.
+`.github/workflows/ci.yml`, **four** jobs. An earlier version of this page said two.
+
+| Job | Runs | Needs |
+|---|---|---|
+| `generated-sources-drift` | the four `:lib:generate*` tasks, then `git status --porcelain` | `submodules: recursive`, Node |
+| `api-baseline` | `:lib:checkKotlinAbi` | — |
+| `unit-tests` | `:lib:test koverVerify koverXmlReport` | — |
+| `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | **Docker** |
+
+All JDK 21 temurin. **Only the drift job needs submodules** — the others build from committed
+sources, which is the point of committing them.
+
+`e2e-tests` needs Docker because `:e2e-tests:test` depends on `:example-app:classes`, which
+compiles the app's stylesheet in a container (`:example-app:compileTailwind`). That adds a one-off
+image build, ~15 s with no layer cache between runs.

@@ -18,10 +18,13 @@ class WebjarsAssetsTest : PlaywrightSpec() {
             response.headers()["content-type"]!! shouldContain "javascript"
         }
 
-        test("Tailwind browser JS is served from webjars") {
-            val response = page.request().get("$BASE_URL/webjars/tailwindcss__browser/dist/index.global.js")
+        // Replaced the Tailwind-browser-JS test. Nothing loads that script since the build
+        // started compiling CSS, so asserting it was still downloadable tested a dependency
+        // the application no longer has.
+        test("the compiled stylesheet is served") {
+            val response = page.request().get("$BASE_URL/static/app.css")
             response.status() shouldBe 200
-            response.headers()["content-type"]!! shouldContain "javascript"
+            response.headers()["content-type"]!! shouldContain "text/css"
         }
     }
 }

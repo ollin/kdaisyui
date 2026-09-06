@@ -17,8 +17,15 @@ and CI's `generated-sources-drift` job fails any commit whose generated output n
 matches its inputs. A hand edit therefore does not survive and does not merge. Change the
 codegen pipeline instead → skill **`kdaisyui-codegen`**.
 
-The build does **not** run the generators: a clone compiles and tests with no Node, no npm and
-no git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
+The build does **not** run the generators: a clone compiles and tests with no Node, no npm and no
+git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
+
+**One host requirement was added deliberately: `:example-app` compiles its stylesheet in a Docker
+container**, so `./gradlew check` needs Docker — `:e2e-tests` depends on `:example-app:classes`.
+`:lib`, `:ktor-integration` and `:bom` stay free of it, and Docker was chosen precisely so the
+no-Node promise above survives. Why at all: DaisyUI's prebuilt stylesheet ships only five Tailwind
+variant prefixes, so `max-sm:card-side` and `dark:alert-info` silently did nothing. See the
+`css-delivery` capability.
 
 Hand-written Kotlin exists only here:
 

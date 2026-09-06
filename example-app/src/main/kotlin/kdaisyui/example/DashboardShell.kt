@@ -13,9 +13,7 @@ fun HTML.dashboardShell(application: Application) {
         meta { charset = "utf-8" }
         title { +"DevTrack Overview" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
-        link { rel = "stylesheet"; href = "/webjars/daisyui/themes.css" }
-        script { src = "/webjars/tailwindcss__browser/dist/index.global.js" }
+        daisyuiStylesheet()
         script { src = "/webjars/htmx.org/dist/htmx.min.js" }
         style {
             unsafe {

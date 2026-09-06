@@ -17,6 +17,10 @@ fun Route.dashboardRoutes() {
 
     get<PopoverModalDemo> { call.respondHtml(HttpStatusCode.OK) { popoverModalPage() } }
 
+    get<MegamenuReference> { call.respondHtml(HttpStatusCode.OK) { megamenuReferencePage() } }
+
+    get<TailwindVariantCheck> { call.respondHtml(HttpStatusCode.OK) { tailwindVariantPage() } }
+
     get<Fragments.Stats> { call.respondHtmlFragment { statsFragment() } }
     get<Fragments.CardsRow1> { call.respondHtmlFragment { cardsRow1Fragment() } }
     get<Fragments.CardsRow2> { call.respondHtmlFragment { cardsRow2Fragment() } }

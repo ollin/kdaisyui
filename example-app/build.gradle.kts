@@ -1,3 +1,7 @@
+// Explicit: inside the Kotlin DSL, `java` resolves to the JavaPluginExtension accessor,
+// so a fully qualified `java.nio.file.Files` does not compile.
+import java.nio.file.Files
+
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     kotlin("plugin.serialization")
@@ -68,24 +72,40 @@ val compileTailwind = tasks.register<Exec>("compileTailwind") {
     outputs.file(outDir.map { it.file("app.css") })
 
     // Mount points rather than repository paths, so app.css can name them flatly and
-    // survives a directory move. Runs as the calling user: a default `docker run`
-    // writes root-owned files into build/, which then breaks `./gradlew clean`.
+    // survives a directory move.
     commandLine(
-        "docker", "run", "--rm",
-        "-u", "${"id -u".runCommand()}:${"id -g".runCommand()}",
-        "-v", "${cssDir.asFile.absolutePath}:/deps/project/css:ro",
-        "-v", "${appKotlin.asFile.absolutePath}:/deps/project/app-kotlin:ro",
-        "-v", "${libKotlin.asFile.absolutePath}:/deps/project/lib-kotlin:ro",
-        "-v", "${outDir.get().asFile.absolutePath}:/deps/project/out",
-        tailwindImageTag,
-        "--input", "css/app.css",
-        "--output", "out/app.css",
+        listOf("docker", "run", "--rm") +
+            callingUserArgs() +
+            listOf(
+                "-v", "${cssDir.asFile.absolutePath}:/deps/project/css:ro",
+                "-v", "${appKotlin.asFile.absolutePath}:/deps/project/app-kotlin:ro",
+                "-v", "${libKotlin.asFile.absolutePath}:/deps/project/lib-kotlin:ro",
+                "-v", "${outDir.get().asFile.absolutePath}:/deps/project/out",
+                tailwindImageTag,
+                "--input", "css/app.css",
+                "--output", "out/app.css",
+            )
     )
     doFirst { outDir.get().asFile.mkdirs() }
 }
 
-fun String.runCommand(): String =
-    ProcessBuilder(split(" ")).start().inputStream.bufferedReader().readText().trim()
+/**
+ * `--user` on Unix only, and read from the filesystem rather than by running `id`.
+ *
+ * Unix needs it: a default `docker run` writes output as root, which leaves root-owned
+ * files in `build/` and breaks a later `./gradlew clean`. The failure is delayed and
+ * confusing — the first run succeeds and the *next* one cannot overwrite what it left.
+ *
+ * Windows must not get it: there is no `id` command, and Docker Desktop already writes
+ * as the calling user, so the flag would be both unavailable and pointless.
+ */
+fun callingUserArgs(): List<String> {
+    if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true)) return emptyList()
+    val path = projectDir.toPath()
+    val uid = Files.getAttribute(path, "unix:uid")
+    val gid = Files.getAttribute(path, "unix:gid")
+    return listOf("-u", "$uid:$gid")
+}
 
 dependencies {
     implementation(project(":lib"))

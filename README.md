@@ -137,6 +137,73 @@ val html = createHTML().div {
 // → <div><button class="btn btn-primary btn-lg">Click me</button></div>
 ```
 
+### 3. Give those classes some CSS
+
+**kdaisyui emits class names. It does not produce CSS.** The snippet above renders
+`class="btn btn-primary btn-lg"` and nothing more — turning that into a styled button is your
+application's job, and there is one detail you cannot guess.
+
+#### The detail: your Tailwind cannot see these class names
+
+Tailwind scans your source files for class names. `btn-primary` is assembled at runtime from
+`ButtonVariant.Primary`, so it appears in **none** of your files — and the published jar contains
+compiled classes, not Kotlin sources. A scan of your project finds nothing, Tailwind emits no rule,
+and your button renders unstyled with no error anywhere.
+
+So the library ships the list. Extract it and point Tailwind at it:
+
+```kotlin
+// build.gradle.kts
+val kdaisyuiClasses by configurations.creating
+dependencies { kdaisyuiClasses("io.github.ollin.kdaisyui:kdaisyui:VERSION") }
+
+tasks.register<Copy>("extractKdaisyuiClasses") {
+    from(zipTree(kdaisyuiClasses.singleFile)) { include("kdaisyui-classes.txt") }
+    into(layout.buildDirectory.dir("kdaisyui"))
+}
+```
+
+```css
+/* app.css */
+@import "tailwindcss";
+@plugin "daisyui";
+
+@source "./build/kdaisyui/kdaisyui-classes.txt";  /* what kdaisyui can emit */
+@source "./src/main/kotlin";                       /* what you write yourself */
+```
+
+Compile it with the Tailwind CLI, the standalone binary, or a container — whatever suits your
+build. `:example-app` compiles in a container so the repository needs no Node; see
+[`example-app/build.gradle.kts`](example-app/build.gradle.kts).
+
+Expect roughly **550 KB**. The list covers every class the library can emit, not the subset you
+use, because nothing yet knows which components your code calls. Narrowing that is a known
+follow-up; **do not hand-maintain a shorter list** — it works until the day someone adds a
+component and forgets, and the failure is silent.
+
+#### The quick path, and what it costs
+
+For a prototype you can skip the build step and load DaisyUI's prebuilt stylesheet, which
+`:ktor-integration` already puts on your classpath as a webjar:
+
+```kotlin
+link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
+```
+
+This works and needs no toolchain. **What it cannot do is Tailwind variants of DaisyUI classes,
+beyond the five prefixes DaisyUI pre-generates.** Measured against 5.7.17:
+
+| Variant | Works with the prebuilt stylesheet |
+|---|---|
+| `sm:` `md:` `lg:` `xl:` `hover:` | yes |
+| `max-sm:` `max-lg:` `dark:` `focus:` … | **no — the class does nothing, silently** |
+
+So `lg:btn-lg` behaves and `max-sm:card-side` does not, with nothing to tell you apart. If you use
+responsive or state variants on DaisyUI classes, compile.
+
+> `extraClasses` takes any class you like, but the same rule applies: it must be visible to *your*
+> Tailwind setup. The library cannot account for classes it never sees.
+
 ## Modules
 
 | Module | Description |

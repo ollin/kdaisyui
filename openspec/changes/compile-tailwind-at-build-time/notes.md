@@ -248,7 +248,27 @@ asked of a person. Recorded here as a follow-up rather than smuggled into this c
 **Consequence for section 5:** the docs offer one path, not two. 400 KB, correct, no list to keep.
 The optimisation is named as future tooling, not as homework.
 
-## Method note
+## 3.5 — one CI job needs Docker, not four
+
+Measured with `koverVerify --dry-run`: the task graph contains no `:example-app` task at all, so
+the `unit-tests` job (`:lib:test koverVerify koverXmlReport`) is unaffected. Same for
+`generated-sources-drift` (`:lib:generate*`) and `api-baseline` (`:lib:checkKotlinAbi`).
+
+| Job | Builds `:example-app` | Needs Docker |
+|---|---|---|
+| `unit-tests` | no | no |
+| `generated-sources-drift` | no | no |
+| `api-baseline` | no | no |
+| **`e2e-tests`** | yes, via `:example-app:classes` | **yes** |
+
+Blast radius is one job, not the four assumed when the plan was written. `compileTailwind` is
+reached through `processResources`, which `classes` depends on.
+
+**Assumed:** that `ubuntu-latest` provides a working Docker daemon to a plain `docker build` /
+`docker run` from Gradle. It is documented to, but this repository has never used it. *Wrong if:*
+the `e2e-tests` job fails on the pull request — which is the honest place to find out, because
+`ci.yml` triggers on pull requests and pushes to `main`, so a topic-branch push proves nothing.
+**Check this on the PR before adoption**, and add the ~15 s image build to the job's expected time.
 
 The `lg:` scenarios passing is what exposed the mistake. Had this change started by building the
 Gradle task, the five working prefixes would have kept everything looking correct and the wrong

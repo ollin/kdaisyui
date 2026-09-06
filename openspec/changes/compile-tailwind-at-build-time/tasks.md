@@ -56,23 +56,33 @@ This is the half consumers need and the half we cannot answer by reading our own
 
 ## 3. Make the example app compile its own CSS
 
-- [ ] 3.1 Add the compilation step to `example-app/build.gradle.kts`, producing a stylesheet into
+- [x] 3.1 Add the compilation step to `example-app/build.gradle.kts`, producing a stylesheet into
   the app's resources. Nothing serves it yet.
   → `. r`
 
-- [ ] 3.2 Switch the page heads from the webjar stylesheet plus browser Tailwind to the compiled
+- [x] 3.2 Switch the page heads from the webjar stylesheet plus browser Tailwind to the compiled
   output, and make 1.1's assertion pass.
   → `^ F`
 
-- [ ] 3.3 Confirm the existing E2E suite still passes — particularly `firstNavHasBackground` and
+- [x] 3.3 Confirm the existing E2E suite still passes — particularly `firstNavHasBackground` and
   the `@nojs` popover-modal scenario, which asserted against the old delivery. The `@nojs`
   scenario should now be *more* honest, because a build-time stylesheet needs no JavaScript.
-  → `^ f`
+  → `^ f` — covered by 3.2's run: 46 green, both named scenarios among them.
 
-- [ ] 3.4 Decide what happens to the `webjars_assets` scenarios that assert the Tailwind browser
+- [x] 3.4 Decide what happens to the `webjars_assets` scenarios that assert the Tailwind browser
   JS is served. If the app no longer uses it, an assertion that it is still downloadable is
   testing a dependency nobody has. Remove or repurpose, and say which in the commit.
   → `. r`
+
+**Added task — CI was missing from this plan.** The build now requires Docker, and every CI job
+that compiles `:example-app` inherits that. Leaving it out would mean discovering it from a red
+pipeline instead of from the plan.
+
+- [ ] 3.5 Establish which CI jobs now need Docker and confirm they have it. `ubuntu-latest`
+  ships a Docker daemon, so this may need no workflow change at all — but "may" is not a state
+  to merge in. Measure the added time too: the image build is ~15 s with no layer cache between
+  runs, on every job that pays it.
+  → `. d`, or `^ f` if a workflow change turns out to be needed
 
 ## 4. Ship the class list consumers need
 

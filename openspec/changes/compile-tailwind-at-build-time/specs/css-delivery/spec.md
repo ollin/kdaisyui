@@ -8,60 +8,84 @@ This is not a disclaimer. It is the fact that makes every other requirement here
 component can be generated correctly, pass every generated test, and render completely unstyled,
 because nothing in the library or its test suite ever evaluates CSS.
 
-**Verified:** the generated component tests assert rendered class strings
-(`lib/generated/test/.../*Test.kt`), and no test in any module asserts a computed style except
-`NavigationSteps.firstNavHasBackground`, which is a single E2E check on one element.
+**Verified:** the generated component tests assert rendered class strings, and until this change
+no test in any module evaluated a computed style except
+`NavigationSteps.firstNavHasBackground`, a single check on one element.
 
 #### Scenario: A consumer learns what they must supply
 - **WHEN** a developer reads the getting-started documentation
 - **THEN** it states that the library emits class names only
 - **AND** it names what the application must provide to turn them into styles
 
-### Requirement: A supported CSS setup makes Tailwind variants of DaisyUI classes work
-The documentation SHALL describe at least one CSS setup in which a Tailwind variant of a DaisyUI
-class — `lg:btn-lg`, `max-sm:megamenu-vertical` — actually applies, and the example application
+### Requirement: The supported CSS setup makes every Tailwind variant work
+The documentation SHALL describe a CSS setup in which any Tailwind variant of a DaisyUI class —
+`lg:btn-lg`, `max-sm:card-side`, `dark:alert-info` — actually applies, and the example application
 SHALL use that setup.
 
-**Verified:** the setup currently taught cannot do this. Measured on the running example app:
-`max-sm:megamenu-vertical` is absent from both the prebuilt `daisyui.css` webjar and the
-Tailwind browser build's output, because Tailwind can only generate a variant of a class it owns
-and DaisyUI's classes arrive in a stylesheet it never sees. Evidence in
-`support-popover-megamenu/notes.md`.
+**Verified by measurement.** The prebuilt `daisyui.css` webjar ships exactly five variant prefixes
+pre-generated — `sm:` `md:` `lg:` `xl:` (1198 rules each) and `hover:` (60) — and nothing else.
+Tailwind's browser build contributes no DaisyUI variants at all, because it can only generate
+variants of utilities it owns. So `lg:btn-lg` works and `max-sm:card-side` silently does nothing.
+Compiling with the DaisyUI plugin produces both; the example app's stylesheet is 23 KB against the
+webjar's 1123 KB, because a compile emits only what is reachable.
 
-**Assumed:** that a build-time compilation is achievable here without adding Node to the Gradle
-build. *Wrong if:* the Tailwind standalone executable cannot resolve the DaisyUI plugin — in which
-case the honest outcome is to keep the browser build and document its limit rather than promise
-otherwise. Checked by task 1.2 before anything is wired in.
+**The failure this prevents is a wrong general rule, not a broken build.** A developer tries
+`lg:btn-lg`, sees it work, concludes that variants are supported, and later loses `dark:alert-info`
+with no error anywhere. The boundary between the two is not a contract — it is whatever DaisyUI
+chose to pre-generate in the pinned release.
 
-#### Scenario: A responsive DaisyUI class applies
+#### Scenario: A variant of a DaisyUI class applies
 - **WHEN** an element carries a Tailwind variant of a DaisyUI class
-- **AND** the viewport matches that variant's condition
+- **AND** the viewport or state matches that variant's condition
 - **THEN** the corresponding CSS rule applies to the element
 
-#### Scenario: The failure is visible when it happens
-- **WHEN** a variant of a DaisyUI class fails to compile
+#### Scenario: A variant that fails to compile is caught automatically
+- **WHEN** a variant of a DaisyUI class does not reach the stylesheet
 - **THEN** an automated check fails
 - **AND** the failure is not left to be noticed by someone looking at a rendered page
 
-### Requirement: The scanner limitation is documented
-The documentation SHALL state that Tailwind's content scanner cannot see class names that exist
-only inside compiled Kotlin, and SHALL name the remedy.
+### Requirement: The library ships the class list a consumer's CSS build needs
+The published `kdaisyui` artifact SHALL contain a generated, complete list of every DaisyUI class
+the library can emit, as a resource a consumer can extract and hand to their own CSS build. The
+documentation SHALL show how.
 
-A consumer has no way to discover this from the API. They write `daisyButton(size = ButtonSize.Lg)`,
-Tailwind scans their sources, finds no `btn-lg`, and omits the rule — and the button renders
-unstyled with no error anywhere. The class name is assembled at runtime from an enum's value and
-never appears as a literal in any file a scanner reads.
+**A consumer cannot obtain these class names any other way.** `btn-primary` is assembled at
+runtime from `ButtonVariant.Primary`, so it appears in no file a content scanner reads, and the
+published jar carries compiled classes and no Kotlin sources.
 
-**Assumed:** that scanning the generated Kotlin sources is insufficient and a safelist is needed.
-*Wrong if:* the scan picks up enough — the class values do appear as string literals in the
-generated enum constructors, so this may work and would make the consumer story much simpler.
-Measured by task 2.1 before anything is documented.
+**Verified end to end** from the published jar alone: extracting `kdaisyui-classes.txt`, compiling
+against it plus a consumer source file in which `btn-primary` occurs zero times, produces a
+stylesheet containing `.btn-primary`, `.btn-lg` and `.max-sm\:card-side`. 555 classes, 7 KB in the
+jar, 552 KB of resulting CSS.
 
-#### Scenario: A consumer's build produces the classes their code can emit
+**Assumed:** that the list stays in step with the components. *Wrong if:* a regeneration changes
+the components without changing the list — which `generated-sources-drift` is what stands behind,
+since both are generated into `lib/generated/` by the same task.
+
+#### Scenario: A class only reachable through an enum reaches the stylesheet
 - **WHEN** an application uses a generated component whose class name is assembled at runtime
-- **THEN** the documented setup still produces that class in the compiled stylesheet
+- **AND** its CSS build follows the documented setup
+- **THEN** that class is present in the compiled stylesheet
 
-#### Scenario: The limit of the remedy is stated
+#### Scenario: The resource cannot silently stop being packaged
+- **WHEN** the class list is missing from the built artifact
+- **THEN** a test fails
+
+### Requirement: The size and its remedy are stated honestly
+The documentation SHALL state that the documented setup produces a stylesheet covering every class
+the library can emit, and SHALL NOT instruct a reader to hand-maintain a narrower list.
+
+A hand-kept safelist is followed until the day it is not, and its failure mode is the silent one
+this capability exists to remove. Narrowing the output to what an application actually uses
+requires knowing which generated functions and enum entries a codebase references — tooling, not
+diligence.
+
+#### Scenario: A reader can predict the cost
+- **WHEN** a developer follows the documented setup
+- **THEN** the documentation has told them the approximate size of the result
+- **AND** why it covers more than their application uses
+
+#### Scenario: The escape hatch's limit is stated
 - **WHEN** a consumer passes an arbitrary class through `extraClasses`
 - **THEN** the documentation says that class must be visible to their own Tailwind setup
 - **AND** does not imply the library can account for it

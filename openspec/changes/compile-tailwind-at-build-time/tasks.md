@@ -107,22 +107,23 @@ artefact that makes a consumer's build possible at all.
 
 The point of the change. A consumer cannot discover any of this from the library's API.
 
-- [ ] 5.1 Write the `css-delivery` spec against what sections 1-2 measured — Verified where
+- [x] 5.1 Write the `css-delivery` spec against what sections 1-2 measured — Verified where
   measured, Assumed with a falsifier where not.
   → `. d`
 
-- [ ] 5.2 Add a CSS setup section to `README.md`: what the library provides (class names), what it
-  does not (CSS), the two supported paths, and the scanner limitation with the safelist remedy.
-  → `. D`
+- [x] 5.2 Add a CSS setup section to `README.md`: what the library provides (class names), what it
+  does not (CSS), the two supported paths, and the scanner limitation with the class-list remedy.
+  → `. D` — landed as quick-start step 3, which was where the gap was.
 
-- [ ] 5.3 Correct `docs/explanation.md:137`. It promises `lg:btn-lg` works; say under which setup
+- [x] 5.3 Correct `docs/explanation.md:137`. It promises `lg:btn-lg` works; say under which setup
   that is true.
-  → `. D`
+  → `. D` — the promise was true; what was missing is that `max-sm:` is not.
 
-- [ ] 5.4 Correct `docs/tutorials/build-a-dashboard.md:113-116`. Either teach the build-time setup
+- [x] 5.4 Correct `docs/tutorials/build-a-dashboard.md:113-116`. Either teach the build-time setup
   or mark the browser setup as prototype-only, naming what it cannot do.
-  → `. D`
+  → `. D` — kept as the tutorial path, with its cost stated.
 
-- [ ] 5.5 Note in the `kdaisyui-testing` skill that a component can pass every generated test and
+- [x] 5.5 Note in the `kdaisyui-testing` skill that a component can pass every generated test and
   still render unstyled, because the tests assert class **names** and never CSS.
-  → `. d`
+  → `. d` — and corrected two false claims found in the same file: that a normal Gradle build
+  regenerates, and that CI has two jobs. `AGENTS.md` gained the Docker requirement.

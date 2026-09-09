@@ -79,10 +79,10 @@ is a local directory, not a remote — the only remote upload path is JReleaser.
 
 ## What CI enforces before any of this
 
-`ci.yml` runs **five** jobs on pushes and PRs to `main`: `generated-sources-drift`,
+`ci.yml` runs **six** jobs on pushes and PRs to `main`: `generated-sources-drift`,
 `codegen-tests`, `api-baseline`, `unit-tests` (including the aggregated 100% `koverVerify`
-gate) and `e2e-tests`. See `kdaisyui-testing` for what each one needs; this page had the count
-wrong twice, so read `ci.yml` if it matters.
+gate), `mutation-tests` (100% test strength) and `e2e-tests`. See `kdaisyui-testing` for what
+each one needs; this page had the count wrong twice, so read `ci.yml` if it matters.
 `pr-conventional-commits.yml` validates PR titles — and that matters more than usual here,
 because JReleaser builds the release changelog from those commit messages.
 

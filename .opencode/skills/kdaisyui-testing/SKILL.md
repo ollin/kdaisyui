@@ -119,8 +119,8 @@ thing that rewrites them.
 
 ## CI
 
-`.github/workflows/ci.yml`, **five** jobs. Earlier versions of this page said two, then four —
-so check the file rather than trusting this count.
+`.github/workflows/ci.yml`, **six** jobs. Earlier versions of this page said two, then four,
+then five — so check the file rather than trusting this count.
 
 | Job | Runs | Needs |
 |---|---|---|
@@ -128,7 +128,13 @@ so check the file rather than trusting this count.
 | `codegen-tests` | `npm test` in `codegen/` (`node --test test/`) | Node only |
 | `api-baseline` | `:lib:checkKotlinAbi` | JDK |
 | `unit-tests` | `:lib:test koverVerify koverXmlReport` | JDK |
+| `mutation-tests` | `:lib:pitest`, gated at 100% **test strength** | JDK |
 | `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | JDK, **Docker** |
+
+`unit-tests` and `mutation-tests` are a deliberate pair and neither implies the other: Kover
+says the line ran, PIT says an assertion would have noticed if it ran differently. See
+`AGENTS.md` for the short version and `lib/build.gradle.kts` for why the threshold is test
+strength rather than mutation score.
 
 **Only the drift job needs submodules** — the others build from committed sources, which is the
 point of committing them. **`codegen-tests` is the only job with no JDK at all**: it imports the

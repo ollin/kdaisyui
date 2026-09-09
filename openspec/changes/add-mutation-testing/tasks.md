@@ -97,8 +97,13 @@ already applies to `$DefaultImpls`.
 
 ## 6. Sharpen the gate (LAST — build now fails below threshold)
 
-- [ ] 6.1 Add `testStrengthThreshold.set(100)` to the `PitestPluginExtension` — NOT `mutationThreshold`, which cannot reach 100 on this scope (feature; the gate goes hard, run `./gradlew :lib:pitest` — must pass)
-- [ ] 6.2 Confirm the gate bites: revert one assertion so a mutant survives, run pitest, expect non-zero exit, then restore (feature-test; proves the threshold fails the build)
+- [x] 6.1 Add `testStrengthThreshold.set(100)` to the `PitestPluginExtension` — NOT `mutationThreshold`, which cannot reach 100 on this scope (feature; the gate goes hard, run `./gradlew :lib:pitest` — must pass) — passes at 218 mutants, 214 killed, 0 survived.
+- [x] 6.2 Confirm the gate bites: revert one assertion so a mutant survives, run pitest, expect non-zero exit, then restore (feature-test; proves the threshold fails the build) — **verified.** `VoidElementNestingTest`'s assertion was weakened to `assertEquals(html, html)`; PIT reported test strength 99% and PIT's own `throwErrorIfScoreBelowTestStrengthThreshold` raised `Test strength score of 99 is below threshold of 100`, exit 1, BUILD FAILED. Assertion restored, back to 100%.
+
+  **The part worth keeping:** the weakened test still PASSED. `:lib:test` was green, Kover was
+  green, and the only thing that objected was the mutation gate. A test that asserts nothing
+  is invisible to every other check this project has — which is the entire argument for this
+  change, demonstrated rather than asserted.
 
 ## 7. CI + docs
 

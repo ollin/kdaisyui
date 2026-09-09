@@ -16,6 +16,7 @@ class ToggleCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("toggle", actualClasses, "Toggle defaults")
+        assertTrue(html.contains("type=\""), "Toggle sets type")
     }
 
     @Test
@@ -33,6 +34,9 @@ class ToggleCoverageTest {
         assertEquals("toggle zz-extra", actualClasses, "Toggle all flags")
         assertTrue(html.contains("id=\"x-cov-id\""), "Toggle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Toggle attrs")
+        assertTrue(html.contains("type=\""), "Toggle sets type")
+        assertTrue(html.contains("checked=\""), "Toggle sets checked")
+        assertTrue(html.contains("disabled=\""), "Toggle sets disabled")
     }
 
     @Test

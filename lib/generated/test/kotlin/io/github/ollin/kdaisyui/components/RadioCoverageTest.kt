@@ -16,6 +16,7 @@ class RadioCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("radio", actualClasses, "Radio defaults")
+        assertTrue(html.contains("type=\""), "Radio sets type")
     }
 
     @Test
@@ -35,6 +36,10 @@ class RadioCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Radio id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Radio attrs")
         assertTrue(html.contains("name=\"x\""), "Radio name")
+        assertTrue(html.contains("type=\""), "Radio sets type")
+        assertTrue(html.contains("name=\""), "Radio sets name")
+        assertTrue(html.contains("checked=\""), "Radio sets checked")
+        assertTrue(html.contains("disabled=\""), "Radio sets disabled")
     }
 
     @Test

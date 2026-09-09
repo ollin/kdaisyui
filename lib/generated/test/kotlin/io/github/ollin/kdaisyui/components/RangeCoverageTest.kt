@@ -16,6 +16,7 @@ class RangeCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("range", actualClasses, "Range defaults")
+        assertTrue(html.contains("type=\""), "Range sets type")
     }
 
     @Test
@@ -41,6 +42,12 @@ class RangeCoverageTest {
         assertTrue(html.contains("max=\"x\""), "Range max")
         assertTrue(html.contains("value=\"x\""), "Range value")
         assertTrue(html.contains("step=\"x\""), "Range step")
+        assertTrue(html.contains("type=\""), "Range sets type")
+        assertTrue(html.contains("min=\""), "Range sets min")
+        assertTrue(html.contains("max=\""), "Range sets max")
+        assertTrue(html.contains("value=\""), "Range sets value")
+        assertTrue(html.contains("step=\""), "Range sets step")
+        assertTrue(html.contains("disabled=\""), "Range sets disabled")
     }
 
     @Test

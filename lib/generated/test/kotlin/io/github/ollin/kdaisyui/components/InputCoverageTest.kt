@@ -16,6 +16,7 @@ class InputCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("input", actualClasses, "Input defaults")
+        assertTrue(html.contains("type=\""), "Input sets type")
     }
 
     @Test
@@ -37,6 +38,10 @@ class InputCoverageTest {
         assertTrue(html.contains("data-attrs=\"yes\""), "Input attrs")
         assertTrue(html.contains("placeholder=\"x\""), "Input placeholder")
         assertTrue(html.contains("value=\"x\""), "Input value")
+        assertTrue(html.contains("type=\""), "Input sets type")
+        assertTrue(html.contains("placeholder=\""), "Input sets placeholder")
+        assertTrue(html.contains("value=\""), "Input sets value")
+        assertTrue(html.contains("disabled=\""), "Input sets disabled")
     }
 
     @Test

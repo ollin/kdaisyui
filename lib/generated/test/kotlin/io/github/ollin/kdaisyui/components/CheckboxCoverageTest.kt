@@ -16,6 +16,7 @@ class CheckboxCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("checkbox", actualClasses, "Checkbox defaults")
+        assertTrue(html.contains("type=\""), "Checkbox sets type")
     }
 
     @Test
@@ -33,6 +34,9 @@ class CheckboxCoverageTest {
         assertEquals("checkbox zz-extra", actualClasses, "Checkbox all flags")
         assertTrue(html.contains("id=\"x-cov-id\""), "Checkbox id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Checkbox attrs")
+        assertTrue(html.contains("type=\""), "Checkbox sets type")
+        assertTrue(html.contains("checked=\""), "Checkbox sets checked")
+        assertTrue(html.contains("disabled=\""), "Checkbox sets disabled")
     }
 
     @Test

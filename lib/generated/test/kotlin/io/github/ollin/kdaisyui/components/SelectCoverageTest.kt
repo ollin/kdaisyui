@@ -38,6 +38,7 @@ class SelectCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Select id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Select attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Select content")
+        assertTrue(html.contains("disabled=\""), "Select sets disabled")
         assertTrue(html.endsWith("</select></div>"), "Select closes <select>")
     }
 

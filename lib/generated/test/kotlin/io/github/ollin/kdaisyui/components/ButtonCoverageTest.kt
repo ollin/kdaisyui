@@ -47,6 +47,8 @@ class ButtonCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Button id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Button attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Button content")
+        assertTrue(html.contains("disabled=\""), "Button sets disabled")
+        assertTrue(html.contains("type=\""), "Button sets type")
         assertTrue(html.endsWith("</button></div>"), "Button closes <button>")
     }
 

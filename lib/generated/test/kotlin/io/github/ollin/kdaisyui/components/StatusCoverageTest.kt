@@ -18,6 +18,7 @@ class StatusCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("status", actualClasses, "Status defaults")
+        assertTrue(html.contains("role=\""), "Status sets role")
         assertTrue(html.endsWith("</span></div>"), "Status closes <span>")
     }
 
@@ -36,6 +37,7 @@ class StatusCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Status id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Status attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Status content")
+        assertTrue(html.contains("role=\""), "Status sets role")
         assertTrue(html.endsWith("</span></div>"), "Status closes <span>")
     }
 

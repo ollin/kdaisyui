@@ -185,6 +185,18 @@ pitest {
     // Kotlin emits null-check calls into `kotlin.jvm.internal` on every parameter.
     // Mutating them yields mutants no test can meaningfully kill.
     avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+    // The same exclusion the Kover config carries, for the same reason and with the same
+    // justification: `$DefaultImpls` holds only binary-compatibility bridge stubs for
+    // interface defaults, reachable solely from consumers compiled against the legacy ABI.
+    // No source-level test can call them — a `super<HtmlId>.target` super-call, which IS
+    // tested, routes to the interface default directly.
+    //
+    // Safe as a CLASS exclusion because that class holds nothing else. The sibling bridges
+    // that Kotlin emits into `AnnotatedIdBase` and `StringHtmlId` cannot be excluded the
+    // same way: those classes also hold real, killed mutants, and `excludedMethods` matches
+    // on name alone — "getTarget" would take out `HtmlId::getTarget`, the one place the
+    // real logic lives, which IS killed.
+    excludedClasses.set(setOf("*${'$'}DefaultImpls"))
     // XML alongside the HTML report: the surviving-mutant list is read mechanically in
     // the next step, and parsing HTML for it would be its own small disaster.
     outputFormats.set(setOf("HTML", "XML"))

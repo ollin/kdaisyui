@@ -103,32 +103,42 @@ function toClassName(componentName) {
   return toPascalCase(componentName)
 }
 
-function buildClassMappings(frontmatter, componentName) {
-  const allowedClasses = new Set()
+// The five frontmatter sections whose entries become component parameters. `component` is
+// not among them: it names the element itself, not a modifier of it.
+const MODIFIER_CATEGORIES = ['placement', 'modifier', 'direction', 'behavior', 'style']
+
+/**
+ * Every class named under the modifier categories, in document order.
+ *
+ * A category that is not an array is skipped rather than trusted — the frontmatter is
+ * hand-written YAML in a submodule we do not control, and a scalar where a list belongs
+ * should not take the build down.
+ */
+function modifierClasses(classnames) {
+  return MODIFIER_CATEGORIES
+    .flatMap((category) => {
+      const items = classnames?.[category]
+      return Array.isArray(items) ? items : []
+    })
+    .filter((item) => item.class)
+    .map((item) => item.class)
+}
+
+function buildClassMappings(frontmatter) {
+  const componentClass = frontmatter.classnames?.component?.[0]?.class
+  const allowedClasses = new Set(componentClass ? [componentClass] : [])
   const classToParam = {}
   const paramToGeneratedClass = {}
-  
-  const componentClass = frontmatter.classnames?.component?.[0]?.class
-  if (componentClass) {
-    allowedClasses.add(componentClass)
+
+  for (const cssClass of modifierClasses(frontmatter.classnames)) {
+    allowedClasses.add(cssClass)
+    // `replace` with a STRING replaces the first occurrence only, so `btn-btn-x` yields
+    // `btnX` rather than `x`. Pinned by test; do not reach for a regex here.
+    const paramName = toCamelCase(cssClass.replace(`${componentClass}-`, ''))
+    classToParam[cssClass] = paramName
+    paramToGeneratedClass[paramName] = cssClass
   }
-  
-  const categories = ['placement', 'modifier', 'direction', 'behavior', 'style']
-  for (const cat of categories) {
-    const items = frontmatter.classnames?.[cat]
-    if (items && Array.isArray(items)) {
-      for (const item of items) {
-        if (item.class) {
-          allowedClasses.add(item.class)
-          const suffix = item.class.replace(`${componentClass}-`, '')
-          const paramName = toCamelCase(suffix)
-          classToParam[item.class] = paramName
-          paramToGeneratedClass[paramName] = item.class
-        }
-      }
-    }
-  }
-  
+
   return { allowedClasses, classToParam, paramToGeneratedClass, componentClass }
 }
 
@@ -281,7 +291,7 @@ function generateClassTest(className, { testName, args, expectedClasses, caseNam
 
 function generateKotlinTest(componentName, testCases, frontmatter, config) {
   const className = toClassName(componentName)
-  const { allowedClasses, classToParam, componentClass } = buildClassMappings(frontmatter, componentName)
+  const { allowedClasses, classToParam, componentClass } = buildClassMappings(frontmatter)
   const customParts = configSection(config, 'customParts', componentName, [])
   const attributeTest = generateComponentAttributeTest(className, configSection(config, 'componentAttributes', componentName, {}))
   

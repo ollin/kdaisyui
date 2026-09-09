@@ -101,7 +101,6 @@ describe('buildClassMappings', () => {
   test('takes the component class from the first component entry', () => {
     const { componentClass } = buildClassMappings(
       frontmatter({ component: [{ class: 'btn' }, { class: 'ignored' }] }),
-      'button',
     )
 
     assert.equal(componentClass, 'btn')
@@ -117,7 +116,6 @@ describe('buildClassMappings', () => {
         behavior: [{ class: 'btn-active' }],
         style: [{ class: 'btn-ghost' }],
       }),
-      'button',
     )
 
     assert.deepEqual(
@@ -129,7 +127,6 @@ describe('buildClassMappings', () => {
   test('maps each class to a camelCase param with the component prefix stripped', () => {
     const { classToParam } = buildClassMappings(
       frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-no-animation' }] }),
-      'button',
     )
 
     assert.deepEqual(classToParam, { 'btn-no-animation': 'noAnimation' })
@@ -138,7 +135,6 @@ describe('buildClassMappings', () => {
   test('builds the reverse map from param back to class', () => {
     const { paramToGeneratedClass } = buildClassMappings(
       frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-outline' }] }),
-      'button',
     )
 
     assert.deepEqual(paramToGeneratedClass, { outline: 'btn-outline' })
@@ -147,7 +143,6 @@ describe('buildClassMappings', () => {
   test('leaves a class alone when it does not carry the component prefix', () => {
     const { classToParam } = buildClassMappings(
       frontmatter({ component: [{ class: 'btn' }], style: [{ class: 'glass' }] }),
-      'button',
     )
 
     assert.deepEqual(classToParam, { glass: 'glass' })
@@ -158,14 +153,13 @@ describe('buildClassMappings', () => {
     // switch to a regex would silently change this.
     const { classToParam } = buildClassMappings(
       frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-btn-x' }] }),
-      'button',
     )
 
     assert.deepEqual(classToParam, { 'btn-btn-x': 'btnX' })
   })
 
   test('tolerates a document with no classnames at all', () => {
-    const result = buildClassMappings({}, 'button')
+    const result = buildClassMappings({})
 
     assert.equal(result.componentClass, undefined)
     assert.deepEqual([...result.allowedClasses], [])
@@ -179,17 +173,9 @@ describe('buildClassMappings', () => {
         modifier: 'not-an-array',
         style: [{ notAClass: 'x' }, { class: 'btn-ghost' }],
       }),
-      'button',
     )
 
     assert.deepEqual([...allowedClasses].sort(), ['btn', 'btn-ghost'])
   })
 
-  test('IGNORES its componentName argument entirely', () => {
-    // The parameter is dead: the prefix comes from the frontmatter's component class, not
-    // from the name. Pinned so 2.3 can remove it knowing nothing depended on it.
-    const args = frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-wide' }] })
-
-    assert.deepEqual(buildClassMappings(args, 'button'), buildClassMappings(args, 'nonsense'))
-  })
 })

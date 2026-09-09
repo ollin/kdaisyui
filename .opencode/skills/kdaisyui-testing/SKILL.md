@@ -119,17 +119,31 @@ thing that rewrites them.
 
 ## CI
 
-`.github/workflows/ci.yml`, **four** jobs. An earlier version of this page said two.
+`.github/workflows/ci.yml`, **five** jobs. Earlier versions of this page said two, then four —
+so check the file rather than trusting this count.
 
 | Job | Runs | Needs |
 |---|---|---|
-| `generated-sources-drift` | the four `:lib:generate*` tasks, then `git status --porcelain` | `submodules: recursive`, Node |
-| `api-baseline` | `:lib:checkKotlinAbi` | — |
-| `unit-tests` | `:lib:test koverVerify koverXmlReport` | — |
-| `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | **Docker** |
+| `generated-sources-drift` | the four `:lib:generate*` tasks, then `git status --porcelain` | `submodules: recursive`, Node, JDK |
+| `codegen-tests` | `npm test` in `codegen/` (`node --test test/`) | Node only |
+| `api-baseline` | `:lib:checkKotlinAbi` | JDK |
+| `unit-tests` | `:lib:test koverVerify koverXmlReport` | JDK |
+| `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | JDK, **Docker** |
 
-All JDK 21 temurin. **Only the drift job needs submodules** — the others build from committed
-sources, which is the point of committing them.
+**Only the drift job needs submodules** — the others build from committed sources, which is the
+point of committing them. **`codegen-tests` is the only job with no JDK at all**: it imports the
+generator modules and asserts on pure functions, so it needs neither a compiler nor the DaisyUI
+checkout. If it ever grows one, the tests have drifted into integration work that
+`generated-sources-drift` already covers end to end.
+
+Its Node version comes from `node-version-file: .tool-versions`, not a literal — the test
+runner's default file patterns have changed between majors, and a mismatch there fails quietly.
+
+### The codegen tests are NOT part of `check`
+
+`./gradlew :lib:testCodegen` runs them locally and is in the `codegen` group, not
+`verification`. Wiring them into `check` would break the promise in `AGENTS.md` that a clone
+builds and tests with no Node, no npm and no submodules. Both Node-needing jobs stay outside it.
 
 `e2e-tests` needs Docker because `:e2e-tests:test` depends on `:example-app:classes`, which
 compiles the app's stylesheet in a container (`:example-app:compileTailwind`). That adds a one-off

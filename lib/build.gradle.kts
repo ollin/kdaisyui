@@ -200,6 +200,22 @@ pitest {
     // XML alongside the HTML report: the surviving-mutant list is read mechanically in
     // the next step, and parsing HTML for it would be its own small disaster.
     outputFormats.set(setOf("HTML", "XML"))
+    // TEST STRENGTH, not mutation score, and 100 is the real number rather than a
+    // concession. Test strength is killed / (killed + survived): it ignores mutants no test
+    // covers, which here is exactly four Kotlin-emitted interface-default bridges in
+    // `AnnotatedIdBase` and `StringHtmlId` that NO source-level test can call.
+    //
+    // `mutationThreshold` cannot reach 100 on this scope because of those four, and PIT
+    // offers no surgical way to drop them: `excludedMethods` matches by name with no class
+    // qualifier, so excluding `getTarget` would also delete the mutant on
+    // `HtmlId::getTarget` — the one place the real logic lives, and one that IS killed.
+    // Removing the bridges outright means `-Xjvm-default=no-compatibility`, an ABI change
+    // to a published artifact, already rejected in the Kover config for the same reason.
+    //
+    // Read this together with the Kover gate in the root build. The pair says something
+    // precise and non-overlapping: everything reachable is EXECUTED (Kover, 100% line and
+    // branch), and everything executed is ASSERTED (here, 100% test strength).
+    testStrengthThreshold.set(100)
 }
 
 val generateComponents = tasks.register<Exec>("generateComponents") {

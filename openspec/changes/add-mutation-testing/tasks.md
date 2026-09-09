@@ -26,8 +26,22 @@
 
 ## 3. Kill surviving mutants in core logic
 
-- [ ] 3.1 Strengthen `ClassNames` tests to kill all its surviving mutants AND assert exact output (feature-test; small, re-run pitest on that class)
-- [ ] 3.2 Strengthen `TagId`/HtmlId tests to kill all its surviving mutants AND assert (feature-test; small)
+**3.1 corrected 2026-09-09.** The task assumed a weak test. It was redundant code. `ClassNames`
+had exactly one survivor — a changed conditional boundary on `.filter { it.isNotEmpty() }`
+in the nullable overload — and no test could ever have killed it, because the vararg overload
+it delegates to trims and drops empties on every element it receives. The mutant was
+equivalent: it changed which values reached the callee, not what the callee produced.
+
+So the fix is subtraction, not a test. Removing the redundant `.map {}.filter {}` deletes
+the branch instead of asserting around it, and the surviving mutant goes with it. The
+alternative — an `excludedMethods` entry under 5.1 — would have kept unreachable code and
+added configuration to hide it.
+
+Worth generalising: a surviving mutant is not always a missing assertion. It can be code
+that cannot matter, and then the honest response is to delete it.
+
+- [x] 3.1 Remove the redundant trim/filter from the nullable `addClassNames` overload, which was the sole `ClassNames` survivor and an equivalent mutant (refactoring; NOT the feature-test the task originally described) — 223 → 220 mutants, 18 → 17 survivors, 1494 tests still green
+- [ ] 3.2 Strengthen `TagId`/HtmlId tests to kill all its surviving mutants AND assert (feature-test; small) — one survivor (`AnnotatedIdBase::hashCode`, replaced int return with 0) plus 2 of the 8 uncovered mutants that ARE reachable (`AnnotatedIdBase::getParent`, `NamedAnnotatedIdBase::getName` — public accessors no test reads). The other 6 uncovered are compiler-emitted bridges and belong to 5.1 as exclusions, not here.
 
 ## 4. Kill surviving mutants in scoped components
 

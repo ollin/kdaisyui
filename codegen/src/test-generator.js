@@ -480,6 +480,65 @@ function parseBaseClass(body) {
   return m ? m[1] : null
 }
 
+/**
+ * The kotlinx.html BUILDER the function opens with. Every generated component body
+ * starts with exactly one `<builder> {` line.
+ *
+ * A builder name is not an HTML tag name — see `htmlTagForFn`.
+ */
+function parseEmittedBuilder(body) {
+  const m = body.match(/^\s*([a-z][\w]*)\s*\{\s*$/m)
+  return m ? m[1] : null
+}
+
+/**
+ * The HTML tag a kotlinx.html builder emits — the inverse of `htmlTagFnFor`.
+ *
+ * The two differ: the builder for `<fieldset>` is `fieldSet` and for `<textarea>`
+ * is `textArea`, so naively reusing the builder name produces `</fieldSet>`, which
+ * matches nothing. Lowercasing fixes those, but not `htmlObject` (tag: `object`).
+ *
+ * Rather than maintain a second exception table that can drift from the first, the
+ * inversion is CHECKED: lowercase, then round-trip through `htmlTagFnFor`. A builder
+ * that does not round-trip returns null and its caller emits no assertion — refusing
+ * to assert beats asserting something false, which is the failure this whole task
+ * exists to remove.
+ */
+function htmlTagForFn(builder) {
+  const tag = builder.toLowerCase()
+  return htmlTagFnFor(tag) === builder ? tag : null
+}
+
+/**
+ * HTML void elements. They have no closing tag, so the "element is closed"
+ * assertion below does not apply to them and would assert something false.
+ */
+const VOID_TAGS = new Set([
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+  'link', 'meta', 'param', 'source', 'track', 'wbr',
+])
+
+/**
+ * Assert the emitted element is actually CLOSED.
+ *
+ * Every other assertion in these tests reads the class attribute, and a class
+ * attribute is unaffected by whether the element was ever closed: dropping the
+ * closing tag turns `<div><dialog class="modal"></dialog></div>` into
+ * `<div><dialog class="modal"></div>`, from which `substringAfter("class=\"")`
+ * extracts exactly the same string. Mutation testing found 11 such mutants
+ * surviving across Modal, Dropdown, Tooltip and Range.
+ *
+ * `endsWith` rather than `contains`: the component is the wrapper's only child
+ * and the test content adds no child elements, so its closing tag sits directly
+ * before the wrapper's. `contains("</div>")` would be satisfied by the wrapper
+ * alone and would kill nothing for any div-based component.
+ */
+function closesTagAssert(ctx) {
+  const tag = ctx.tagFn ? htmlTagForFn(ctx.tagFn) : null
+  if (!tag || VOID_TAGS.has(tag)) return null
+  return `assertTrue(html.endsWith("</${tag}></${ctx.wrapperTag}>"), "${ctx.daisyName} closes <${tag}>")`
+}
+
 /** CSS class(es) a boolean modifier adds via `if (param) addClassNames("...")`. */
 function boolClassesFor(body, param) {
   const line = body.match(new RegExp(`^\\s*if \\(${param}\\)(.*)$`, 'm'))
@@ -518,6 +577,11 @@ function coverageContext(fn, enums) {
     body: fn.body,
     base: parseBaseClass(fn.body) || '',
     wrapperFn: fn.receiver === 'FlowContent' ? 'div' : htmlTagFnFor(fn.receiver.toLowerCase()),
+    // The wrapper's CLOSING tag, which is the raw receiver name — not `wrapperFn`,
+    // because `htmlTagFnFor` renames a few builders away from their tag (`object`
+    // becomes `htmlObject`) and `</htmlObject>` is not a thing.
+    wrapperTag: fn.receiver === 'FlowContent' ? 'div' : fn.receiver.toLowerCase(),
+    tagFn: parseEmittedBuilder(fn.body),
     fnBase: lowerFirst(fn.name),
     daisyName: fn.name,
     required: params.find((p) => p.kind === 'contentRequired'),

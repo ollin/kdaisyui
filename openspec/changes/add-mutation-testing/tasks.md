@@ -107,8 +107,8 @@ already applies to `$DefaultImpls`.
 
 ## 7. CI + docs
 
-- [ ] 7.1 Add a dedicated `mutation-tests` job to `.github/workflows/ci.yml` running `./gradlew :lib:pitest` (parallel to unit-tests/e2e-tests, NOT bound to local check) (refactoring; CI wiring)
-- [ ] 7.2 Document the mutation-testing gate, its scope, and how to run + read the PIT report locally in `AGENTS.md` (documentation)
+- [x] 7.1 Add a dedicated `mutation-tests` job to `.github/workflows/ci.yml` running `./gradlew :lib:pitest` (parallel to unit-tests/e2e-tests, NOT bound to local check) (refactoring; CI wiring) — no submodules, uploads the report on success as well as failure. The threshold stays in `lib/build.gradle.kts` next to its justification rather than being passed on the command line.
+- [x] 7.2 Document the mutation-testing gate, its scope, and how to run + read the PIT report locally in `AGENTS.md` (documentation) — plus two anti-patterns (weakening an assertion; swapping to `mutationThreshold`) and the note that a surviving mutant is sometimes code to delete rather than a missing assertion. The CI job count in `kdaisyui-testing` and `kdaisyui-release` was corrected too — five to six.
 
 ## 8. Gradle 10 readiness (added after section 1; no spec delta)
 

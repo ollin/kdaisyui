@@ -41,5 +41,5 @@ changes behaviour and belongs in its own commit with its own reasoning.
 
 ## 3. Keep it that way
 
-- [ ] 3.1 Add a `codegen-tests` CI job running the suite — parallel to `generated-sources-drift`, and NOT bound to `./gradlew check`, which must stay runnable with no Node (documentation/CI wiring)
+- [x] 3.1 Add a `codegen-tests` CI job running the suite — parallel to `generated-sources-drift`, and NOT bound to `./gradlew check`, which must stay runnable with no Node (documentation/CI wiring) — needs **neither submodules nor a JDK**, the only job with no JDK; Node version read from `.tool-versions` rather than duplicated. The Gradle task now shells out to `npm test` so the invocation has one definition shared with CI. Two skills that listed the CI jobs were stale (one already wrong before this) and were corrected.
 - [ ] 3.2 Re-measure with CodeScene and record the before/after score in this change (documentation; evidence captured)

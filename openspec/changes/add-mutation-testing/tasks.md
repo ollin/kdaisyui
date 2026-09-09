@@ -1,6 +1,6 @@
 ## 1. Wire PIT + smoke-test the kotlin-test bridge (report-only, build green)
 
-- [ ] 1.1 Add `pitest` + `pitest-junit5` to `[versions]` and the `pitest` plugin to `[plugins]` in `gradle/libs.versions.toml` (refactoring; catalog only)
+- [x] 1.1 Add `pitest` + `pitest-junit5` to `[versions]` and the `pitest` plugin to `[plugins]` in `gradle/libs.versions.toml` (refactoring; catalog only) — the version key is `pitest-plugin`, not `pitest`, so the leaf does not collide with `pitest-junit5`
 - [ ] 1.2 Apply `alias(libs.plugins.pitest)` to `lib/build.gradle.kts` with a minimal `PitestPluginExtension` scoped to `io.github.ollin.kdaisyui.core.ClassNames` ONLY, `junit5PluginVersion` set, `avoidCallsTo` kotlin.jvm.internal, NO `mutationThreshold` (refactoring; wiring)
 - [ ] 1.3 SMOKE TEST: run `./gradlew :lib:pitest` and confirm PIT generates mutants AND runs the kotlin-test suite (not "0 tests"); if the JUnit5 bridge fails, fix `junit5PluginVersion` before proceeding (documentation; capture evidence — this de-risks the whole change)
 

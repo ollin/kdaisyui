@@ -249,13 +249,13 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
 // generated-sources-drift job is what keeps the committed output honest.
 
 // Sources JAR for Maven Central
-val sourcesJar by tasks.registering(Jar::class) {
+val sourcesJar = tasks.register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
 
 // Javadoc JAR for Maven Central (empty for Kotlin, but required)
-val javadocJar by tasks.registering(Jar::class) {
+val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
     dependsOn(tasks.javadoc)
     from(tasks.javadoc.map { it.outputs.files })

@@ -2,6 +2,7 @@ plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
     alias(libs.plugins.kover)
+    alias(libs.plugins.pitest)
 }
 
 group = "io.github.ollin.kdaisyui"
@@ -137,6 +138,29 @@ testing {
             useKotlinTest(libs.versions.kotlin.get())
         }
     }
+}
+
+// --- Mutation testing (PIT) ---
+// Coverage says a line ran; mutation testing says an assertion would have noticed if it
+// ran differently. Deliberately NOT bound to `check`: it forks a JVM per mutant and is far
+// too slow for the inner loop — it runs as `:lib:pitest`, and in CI as its own job.
+//
+// The scope starts at one class on purpose. Mutating all 63 generated components would
+// take hours and measure the generator rather than the code anyone wrote; it is widened
+// deliberately in a later step. No `mutationThreshold` yet — the gate is sharpened only
+// once the score is known to be 100%, so this stage cannot fail the build.
+pitest {
+    targetClasses.set(setOf("io.github.ollin.kdaisyui.core.ClassNames"))
+    // PIT drives the suite through the JUnit Platform, which is what `useKotlinTest`
+    // produces here; without this bridge it finds zero tests and reports every mutant
+    // as surviving — an all-green-looking report that means nothing.
+    junit5PluginVersion.set(libs.versions.pitest.junit5.get())
+    // Kotlin emits null-check calls into `kotlin.jvm.internal` on every parameter.
+    // Mutating them yields mutants no test can meaningfully kill.
+    avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+    // XML alongside the HTML report: the surviving-mutant list is read mechanically in
+    // the next step, and parsing HTML for it would be its own small disaster.
+    outputFormats.set(setOf("HTML", "XML"))
 }
 
 val generateComponents = tasks.register<Exec>("generateComponents") {

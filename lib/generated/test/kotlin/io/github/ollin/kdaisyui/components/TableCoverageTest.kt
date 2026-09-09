@@ -18,6 +18,7 @@ class TableCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("table", actualClasses, "Table defaults")
+        assertTrue(html.endsWith("</table></div>"), "Table closes <table>")
     }
 
     @Test
@@ -38,6 +39,7 @@ class TableCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Table id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Table attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Table content")
+        assertTrue(html.endsWith("</table></div>"), "Table closes <table>")
     }
 
     @Test

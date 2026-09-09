@@ -16,6 +16,7 @@ class LinkCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("link", actualClasses, "Link defaults")
+        assertTrue(html.endsWith("</a></div>"), "Link closes <a>")
     }
 
     @Test
@@ -34,6 +35,7 @@ class LinkCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Link id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Link attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Link content")
+        assertTrue(html.endsWith("</a></div>"), "Link closes <a>")
     }
 
     @Test

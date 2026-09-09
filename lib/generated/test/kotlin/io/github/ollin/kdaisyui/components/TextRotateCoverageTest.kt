@@ -18,6 +18,7 @@ class TextRotateCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("text-rotate", actualClasses, "TextRotate defaults")
+        assertTrue(html.endsWith("</span></div>"), "TextRotate closes <span>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class TextRotateCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "TextRotate id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TextRotate attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TextRotate content")
+        assertTrue(html.endsWith("</span></div>"), "TextRotate closes <span>")
     }
 }

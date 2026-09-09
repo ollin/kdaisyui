@@ -18,6 +18,7 @@ class MockupPhoneCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("mockup-phone", actualClasses, "MockupPhone defaults")
+        assertTrue(html.endsWith("</div></div>"), "MockupPhone closes <div>")
     }
 
     @Test
@@ -35,6 +36,7 @@ class MockupPhoneCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupPhone id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupPhone attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupPhone content")
+        assertTrue(html.endsWith("</div></div>"), "MockupPhone closes <div>")
     }
 
     @Test
@@ -46,6 +48,7 @@ class MockupPhoneCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("mockup-phone-camera", actualClasses, "MockupPhoneCamera defaults")
+        assertTrue(html.endsWith("</div></div>"), "MockupPhoneCamera closes <div>")
     }
 
     @Test
@@ -63,6 +66,7 @@ class MockupPhoneCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupPhoneCamera id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupPhoneCamera attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupPhoneCamera content")
+        assertTrue(html.endsWith("</div></div>"), "MockupPhoneCamera closes <div>")
     }
 
     @Test
@@ -74,6 +78,7 @@ class MockupPhoneCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("mockup-phone-display", actualClasses, "MockupPhoneDisplay defaults")
+        assertTrue(html.endsWith("</div></div>"), "MockupPhoneDisplay closes <div>")
     }
 
     @Test
@@ -91,5 +96,6 @@ class MockupPhoneCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupPhoneDisplay id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupPhoneDisplay attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupPhoneDisplay content")
+        assertTrue(html.endsWith("</div></div>"), "MockupPhoneDisplay closes <div>")
     }
 }

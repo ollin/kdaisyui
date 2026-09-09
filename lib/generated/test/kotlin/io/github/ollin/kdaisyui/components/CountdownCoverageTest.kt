@@ -18,6 +18,7 @@ class CountdownCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("countdown", actualClasses, "Countdown defaults")
+        assertTrue(html.endsWith("</span></div>"), "Countdown closes <span>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class CountdownCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Countdown id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Countdown attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Countdown content")
+        assertTrue(html.endsWith("</span></div>"), "Countdown closes <span>")
     }
 }

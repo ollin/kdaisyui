@@ -18,6 +18,7 @@ class JoinCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("join", actualClasses, "Join defaults")
+        assertTrue(html.endsWith("</div></div>"), "Join closes <div>")
     }
 
     @Test
@@ -37,5 +38,6 @@ class JoinCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Join id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Join attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Join content")
+        assertTrue(html.endsWith("</div></div>"), "Join closes <div>")
     }
 }

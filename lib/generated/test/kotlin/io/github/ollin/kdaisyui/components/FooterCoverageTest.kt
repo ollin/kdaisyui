@@ -18,6 +18,7 @@ class FooterCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("footer", actualClasses, "Footer defaults")
+        assertTrue(html.endsWith("</footer></div>"), "Footer closes <footer>")
     }
 
     @Test
@@ -38,6 +39,7 @@ class FooterCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Footer id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Footer attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Footer content")
+        assertTrue(html.endsWith("</footer></div>"), "Footer closes <footer>")
     }
 
     @Test
@@ -47,6 +49,7 @@ class FooterCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("footer-title", actualClasses, "FooterTitle defaults")
+        assertTrue(html.endsWith("</h2></div>"), "FooterTitle closes <h2>")
     }
 
     @Test
@@ -64,6 +67,7 @@ class FooterCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "FooterTitle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FooterTitle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FooterTitle content")
+        assertTrue(html.endsWith("</h2></div>"), "FooterTitle closes <h2>")
     }
 
     @Test

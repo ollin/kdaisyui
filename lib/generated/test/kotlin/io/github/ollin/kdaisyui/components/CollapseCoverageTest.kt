@@ -18,6 +18,7 @@ class CollapseCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("collapse", actualClasses, "Collapse defaults")
+        assertTrue(html.endsWith("</div></div>"), "Collapse closes <div>")
     }
 
     @Test
@@ -39,6 +40,7 @@ class CollapseCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Collapse id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Collapse attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Collapse content")
+        assertTrue(html.endsWith("</div></div>"), "Collapse closes <div>")
     }
 
     @Test
@@ -48,6 +50,7 @@ class CollapseCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("collapse-title", actualClasses, "CollapseTitle defaults")
+        assertTrue(html.endsWith("</h2></div>"), "CollapseTitle closes <h2>")
     }
 
     @Test
@@ -65,6 +68,7 @@ class CollapseCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "CollapseTitle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CollapseTitle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CollapseTitle content")
+        assertTrue(html.endsWith("</h2></div>"), "CollapseTitle closes <h2>")
     }
 
     @Test
@@ -88,6 +92,7 @@ class CollapseCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("collapse-content", actualClasses, "CollapseContent defaults")
+        assertTrue(html.endsWith("</div></div>"), "CollapseContent closes <div>")
     }
 
     @Test
@@ -105,5 +110,6 @@ class CollapseCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "CollapseContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CollapseContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CollapseContent content")
+        assertTrue(html.endsWith("</div></div>"), "CollapseContent closes <div>")
     }
 }

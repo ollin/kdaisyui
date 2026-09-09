@@ -18,6 +18,7 @@ class CalendarCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("cally", actualClasses, "Calendar defaults")
+        assertTrue(html.endsWith("</div></div>"), "Calendar closes <div>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class CalendarCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Calendar id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Calendar attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Calendar content")
+        assertTrue(html.endsWith("</div></div>"), "Calendar closes <div>")
     }
 }

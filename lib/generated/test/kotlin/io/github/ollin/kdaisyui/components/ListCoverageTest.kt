@@ -18,6 +18,7 @@ class ListCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("list", actualClasses, "List defaults")
+        assertTrue(html.endsWith("</ul></div>"), "List closes <ul>")
     }
 
     @Test
@@ -37,5 +38,6 @@ class ListCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "List id")
         assertTrue(html.contains("data-attrs=\"yes\""), "List attrs")
         assertTrue(html.contains("data-content=\"yes\""), "List content")
+        assertTrue(html.endsWith("</ul></div>"), "List closes <ul>")
     }
 }

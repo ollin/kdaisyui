@@ -18,6 +18,7 @@ class FieldsetCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("fieldset", actualClasses, "Fieldset defaults")
+        assertTrue(html.endsWith("</fieldset></div>"), "Fieldset closes <fieldset>")
     }
 
     @Test
@@ -35,6 +36,7 @@ class FieldsetCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Fieldset id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Fieldset attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Fieldset content")
+        assertTrue(html.endsWith("</fieldset></div>"), "Fieldset closes <fieldset>")
     }
 
     @Test
@@ -46,6 +48,7 @@ class FieldsetCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("fieldset-legend", actualClasses, "FieldsetLegend defaults")
+        assertTrue(html.endsWith("</div></div>"), "FieldsetLegend closes <div>")
     }
 
     @Test
@@ -63,5 +66,6 @@ class FieldsetCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "FieldsetLegend id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FieldsetLegend attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FieldsetLegend content")
+        assertTrue(html.endsWith("</div></div>"), "FieldsetLegend closes <div>")
     }
 }

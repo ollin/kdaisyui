@@ -18,6 +18,7 @@ class TextareaCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("textarea", actualClasses, "Textarea defaults")
+        assertTrue(html.endsWith("</textarea></div>"), "Textarea closes <textarea>")
     }
 
     @Test
@@ -36,6 +37,7 @@ class TextareaCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Textarea id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Textarea attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Textarea content")
+        assertTrue(html.endsWith("</textarea></div>"), "Textarea closes <textarea>")
     }
 
     @Test

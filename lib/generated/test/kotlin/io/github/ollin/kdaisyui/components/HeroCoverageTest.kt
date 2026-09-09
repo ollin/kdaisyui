@@ -18,6 +18,7 @@ class HeroCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("hero", actualClasses, "Hero defaults")
+        assertTrue(html.endsWith("</div></div>"), "Hero closes <div>")
     }
 
     @Test
@@ -35,6 +36,7 @@ class HeroCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Hero id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Hero attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Hero content")
+        assertTrue(html.endsWith("</div></div>"), "Hero closes <div>")
     }
 
     @Test
@@ -46,6 +48,7 @@ class HeroCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("hero-content", actualClasses, "HeroContent defaults")
+        assertTrue(html.endsWith("</div></div>"), "HeroContent closes <div>")
     }
 
     @Test
@@ -63,6 +66,7 @@ class HeroCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "HeroContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "HeroContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "HeroContent content")
+        assertTrue(html.endsWith("</div></div>"), "HeroContent closes <div>")
     }
 
     @Test
@@ -74,6 +78,7 @@ class HeroCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("hero-overlay", actualClasses, "HeroOverlay defaults")
+        assertTrue(html.endsWith("</label></div>"), "HeroOverlay closes <label>")
     }
 
     @Test
@@ -91,5 +96,6 @@ class HeroCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "HeroOverlay id")
         assertTrue(html.contains("data-attrs=\"yes\""), "HeroOverlay attrs")
         assertTrue(html.contains("data-content=\"yes\""), "HeroOverlay content")
+        assertTrue(html.endsWith("</label></div>"), "HeroOverlay closes <label>")
     }
 }

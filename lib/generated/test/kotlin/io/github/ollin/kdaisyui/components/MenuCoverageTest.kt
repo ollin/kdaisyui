@@ -18,6 +18,7 @@ class MenuCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("menu", actualClasses, "Menu defaults")
+        assertTrue(html.endsWith("</ul></div>"), "Menu closes <ul>")
     }
 
     @Test
@@ -42,6 +43,7 @@ class MenuCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Menu id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Menu attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Menu content")
+        assertTrue(html.endsWith("</ul></div>"), "Menu closes <ul>")
     }
 
     @Test
@@ -111,6 +113,7 @@ class MenuCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("menu-title", actualClasses, "MenuTitle defaults")
+        assertTrue(html.endsWith("</h2></div>"), "MenuTitle closes <h2>")
     }
 
     @Test
@@ -128,6 +131,7 @@ class MenuCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MenuTitle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MenuTitle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MenuTitle content")
+        assertTrue(html.endsWith("</h2></div>"), "MenuTitle closes <h2>")
     }
 
     @Test
@@ -151,6 +155,7 @@ class MenuCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("menu-dropdown", actualClasses, "MenuDropdown defaults")
+        assertTrue(html.endsWith("</div></div>"), "MenuDropdown closes <div>")
     }
 
     @Test
@@ -168,6 +173,7 @@ class MenuCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MenuDropdown id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MenuDropdown attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MenuDropdown content")
+        assertTrue(html.endsWith("</div></div>"), "MenuDropdown closes <div>")
     }
 
     @Test
@@ -179,6 +185,7 @@ class MenuCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("menu-dropdown-toggle", actualClasses, "MenuDropdownToggle defaults")
+        assertTrue(html.endsWith("</div></div>"), "MenuDropdownToggle closes <div>")
     }
 
     @Test
@@ -196,5 +203,6 @@ class MenuCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MenuDropdownToggle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MenuDropdownToggle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MenuDropdownToggle content")
+        assertTrue(html.endsWith("</div></div>"), "MenuDropdownToggle closes <div>")
     }
 }

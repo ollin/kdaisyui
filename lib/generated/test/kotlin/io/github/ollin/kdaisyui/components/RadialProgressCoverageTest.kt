@@ -18,6 +18,7 @@ class RadialProgressCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("radial-progress", actualClasses, "RadialProgress defaults")
+        assertTrue(html.endsWith("</div></div>"), "RadialProgress closes <div>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class RadialProgressCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "RadialProgress id")
         assertTrue(html.contains("data-attrs=\"yes\""), "RadialProgress attrs")
         assertTrue(html.contains("data-content=\"yes\""), "RadialProgress content")
+        assertTrue(html.endsWith("</div></div>"), "RadialProgress closes <div>")
     }
 }

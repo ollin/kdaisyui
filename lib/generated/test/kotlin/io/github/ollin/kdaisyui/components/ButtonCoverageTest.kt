@@ -17,6 +17,7 @@ class ButtonCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("btn", actualClasses, "Button defaults")
+        assertTrue(html.endsWith("</button></div>"), "Button closes <button>")
     }
 
     @Test
@@ -46,6 +47,7 @@ class ButtonCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Button id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Button attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Button content")
+        assertTrue(html.endsWith("</button></div>"), "Button closes <button>")
     }
 
     @Test

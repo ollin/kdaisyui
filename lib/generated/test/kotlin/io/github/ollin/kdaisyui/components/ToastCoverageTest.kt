@@ -18,6 +18,7 @@ class ToastCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("toast", actualClasses, "Toast defaults")
+        assertTrue(html.endsWith("</div></div>"), "Toast closes <div>")
     }
 
     @Test
@@ -41,5 +42,6 @@ class ToastCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Toast id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Toast attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Toast content")
+        assertTrue(html.endsWith("</div></div>"), "Toast closes <div>")
     }
 }

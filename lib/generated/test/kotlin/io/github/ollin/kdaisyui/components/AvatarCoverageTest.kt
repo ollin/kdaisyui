@@ -18,6 +18,7 @@ class AvatarCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("avatar", actualClasses, "Avatar defaults")
+        assertTrue(html.endsWith("</div></div>"), "Avatar closes <div>")
     }
 
     @Test
@@ -38,5 +39,6 @@ class AvatarCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Avatar id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Avatar attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Avatar content")
+        assertTrue(html.endsWith("</div></div>"), "Avatar closes <div>")
     }
 }

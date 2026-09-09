@@ -18,6 +18,7 @@ class HoverGalleryCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("hover-gallery", actualClasses, "HoverGallery defaults")
+        assertTrue(html.endsWith("</figure></div>"), "HoverGallery closes <figure>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class HoverGalleryCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "HoverGallery id")
         assertTrue(html.contains("data-attrs=\"yes\""), "HoverGallery attrs")
         assertTrue(html.contains("data-content=\"yes\""), "HoverGallery content")
+        assertTrue(html.endsWith("</figure></div>"), "HoverGallery closes <figure>")
     }
 }

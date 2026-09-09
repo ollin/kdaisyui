@@ -18,6 +18,7 @@ class ChatCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("chat", actualClasses, "Chat defaults")
+        assertTrue(html.endsWith("</div></div>"), "Chat closes <div>")
     }
 
     @Test
@@ -37,6 +38,7 @@ class ChatCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Chat id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Chat attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Chat content")
+        assertTrue(html.endsWith("</div></div>"), "Chat closes <div>")
     }
 
     @Test
@@ -144,6 +146,7 @@ class ChatCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("chat-image", actualClasses, "ChatImage defaults")
+        assertTrue(html.endsWith("</div></div>"), "ChatImage closes <div>")
     }
 
     @Test
@@ -161,6 +164,7 @@ class ChatCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatImage id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatImage attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatImage content")
+        assertTrue(html.endsWith("</div></div>"), "ChatImage closes <div>")
     }
 
     @Test
@@ -172,6 +176,7 @@ class ChatCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("chat-header", actualClasses, "ChatHeader defaults")
+        assertTrue(html.endsWith("</div></div>"), "ChatHeader closes <div>")
     }
 
     @Test
@@ -189,6 +194,7 @@ class ChatCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatHeader id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatHeader attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatHeader content")
+        assertTrue(html.endsWith("</div></div>"), "ChatHeader closes <div>")
     }
 
     @Test
@@ -200,6 +206,7 @@ class ChatCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("chat-footer", actualClasses, "ChatFooter defaults")
+        assertTrue(html.endsWith("</div></div>"), "ChatFooter closes <div>")
     }
 
     @Test
@@ -217,6 +224,7 @@ class ChatCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatFooter id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatFooter attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatFooter content")
+        assertTrue(html.endsWith("</div></div>"), "ChatFooter closes <div>")
     }
 
     @Test
@@ -228,6 +236,7 @@ class ChatCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("chat-bubble", actualClasses, "ChatBubble defaults")
+        assertTrue(html.endsWith("</div></div>"), "ChatBubble closes <div>")
     }
 
     @Test
@@ -245,5 +254,6 @@ class ChatCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatBubble id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatBubble attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatBubble content")
+        assertTrue(html.endsWith("</div></div>"), "ChatBubble closes <div>")
     }
 }

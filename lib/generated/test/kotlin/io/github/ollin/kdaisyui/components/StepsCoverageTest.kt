@@ -18,6 +18,7 @@ class StepsCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("steps", actualClasses, "Steps defaults")
+        assertTrue(html.endsWith("</ul></div>"), "Steps closes <ul>")
     }
 
     @Test
@@ -37,6 +38,7 @@ class StepsCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Steps id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Steps attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Steps content")
+        assertTrue(html.endsWith("</ul></div>"), "Steps closes <ul>")
     }
 
     @Test
@@ -144,6 +146,7 @@ class StepsCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("step", actualClasses, "StepsStep defaults")
+        assertTrue(html.endsWith("</div></div>"), "StepsStep closes <div>")
     }
 
     @Test
@@ -161,6 +164,7 @@ class StepsCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "StepsStep id")
         assertTrue(html.contains("data-attrs=\"yes\""), "StepsStep attrs")
         assertTrue(html.contains("data-content=\"yes\""), "StepsStep content")
+        assertTrue(html.endsWith("</div></div>"), "StepsStep closes <div>")
     }
 
     @Test
@@ -172,6 +176,7 @@ class StepsCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("step-icon", actualClasses, "StepsStepIcon defaults")
+        assertTrue(html.endsWith("</div></div>"), "StepsStepIcon closes <div>")
     }
 
     @Test
@@ -189,5 +194,6 @@ class StepsCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "StepsStepIcon id")
         assertTrue(html.contains("data-attrs=\"yes\""), "StepsStepIcon attrs")
         assertTrue(html.contains("data-content=\"yes\""), "StepsStepIcon content")
+        assertTrue(html.endsWith("</div></div>"), "StepsStepIcon closes <div>")
     }
 }

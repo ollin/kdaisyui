@@ -42,6 +42,7 @@ class ValidatorCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("validator-hint", actualClasses, "ValidatorHint defaults")
+        assertTrue(html.endsWith("</div></div>"), "ValidatorHint closes <div>")
     }
 
     @Test
@@ -59,5 +60,6 @@ class ValidatorCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "ValidatorHint id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ValidatorHint attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ValidatorHint content")
+        assertTrue(html.endsWith("</div></div>"), "ValidatorHint closes <div>")
     }
 }

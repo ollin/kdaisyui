@@ -16,6 +16,7 @@ class LabelCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("label", actualClasses, "Label defaults")
+        assertTrue(html.endsWith("</span></div>"), "Label closes <span>")
     }
 
     @Test
@@ -33,6 +34,7 @@ class LabelCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Label id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Label attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Label content")
+        assertTrue(html.endsWith("</span></div>"), "Label closes <span>")
     }
 
     @Test

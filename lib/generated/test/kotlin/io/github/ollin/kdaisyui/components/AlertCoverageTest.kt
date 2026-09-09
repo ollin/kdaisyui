@@ -18,6 +18,7 @@ class AlertCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("alert", actualClasses, "Alert defaults")
+        assertTrue(html.endsWith("</div></div>"), "Alert closes <div>")
     }
 
     @Test
@@ -40,6 +41,7 @@ class AlertCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Alert id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Alert attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Alert content")
+        assertTrue(html.endsWith("</div></div>"), "Alert closes <div>")
     }
 
     @Test

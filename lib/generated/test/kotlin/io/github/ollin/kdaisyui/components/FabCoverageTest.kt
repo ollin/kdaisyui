@@ -18,6 +18,7 @@ class FabCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("fab", actualClasses, "Fab defaults")
+        assertTrue(html.endsWith("</div></div>"), "Fab closes <div>")
     }
 
     @Test
@@ -36,6 +37,7 @@ class FabCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Fab id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Fab attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Fab content")
+        assertTrue(html.endsWith("</div></div>"), "Fab closes <div>")
     }
 
     @Test
@@ -47,6 +49,7 @@ class FabCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("fab-close", actualClasses, "FabClose defaults")
+        assertTrue(html.endsWith("</div></div>"), "FabClose closes <div>")
     }
 
     @Test
@@ -64,6 +67,7 @@ class FabCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "FabClose id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FabClose attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FabClose content")
+        assertTrue(html.endsWith("</div></div>"), "FabClose closes <div>")
     }
 
     @Test
@@ -75,6 +79,7 @@ class FabCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("fab-main-action", actualClasses, "FabMainAction defaults")
+        assertTrue(html.endsWith("</div></div>"), "FabMainAction closes <div>")
     }
 
     @Test
@@ -92,5 +97,6 @@ class FabCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "FabMainAction id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FabMainAction attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FabMainAction content")
+        assertTrue(html.endsWith("</div></div>"), "FabMainAction closes <div>")
     }
 }

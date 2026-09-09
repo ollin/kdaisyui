@@ -18,6 +18,7 @@ class TabCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("tabs", actualClasses, "Tab defaults")
+        assertTrue(html.endsWith("</button></div>"), "Tab closes <button>")
     }
 
     @Test
@@ -42,6 +43,7 @@ class TabCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Tab id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Tab attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Tab content")
+        assertTrue(html.endsWith("</button></div>"), "Tab closes <button>")
     }
 
     @Test
@@ -113,6 +115,7 @@ class TabCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("tab", actualClasses, "TabTab defaults")
+        assertTrue(html.endsWith("</div></div>"), "TabTab closes <div>")
     }
 
     @Test
@@ -130,6 +133,7 @@ class TabCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "TabTab id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TabTab attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TabTab content")
+        assertTrue(html.endsWith("</div></div>"), "TabTab closes <div>")
     }
 
     @Test
@@ -141,6 +145,7 @@ class TabCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("tab-content", actualClasses, "TabTabContent defaults")
+        assertTrue(html.endsWith("</div></div>"), "TabTabContent closes <div>")
     }
 
     @Test
@@ -158,5 +163,6 @@ class TabCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "TabTabContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TabTabContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TabTabContent content")
+        assertTrue(html.endsWith("</div></div>"), "TabTabContent closes <div>")
     }
 }

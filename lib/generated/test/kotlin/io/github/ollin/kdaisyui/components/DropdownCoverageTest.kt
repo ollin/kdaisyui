@@ -18,6 +18,7 @@ class DropdownCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("dropdown", actualClasses, "Dropdown defaults")
+        assertTrue(html.endsWith("</details></div>"), "Dropdown closes <details>")
     }
 
     @Test
@@ -45,6 +46,7 @@ class DropdownCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Dropdown id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Dropdown attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Dropdown content")
+        assertTrue(html.endsWith("</details></div>"), "Dropdown closes <details>")
     }
 
     @Test
@@ -56,6 +58,7 @@ class DropdownCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("dropdown-content", actualClasses, "DropdownContent defaults")
+        assertTrue(html.endsWith("</div></div>"), "DropdownContent closes <div>")
     }
 
     @Test
@@ -73,5 +76,6 @@ class DropdownCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "DropdownContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DropdownContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DropdownContent content")
+        assertTrue(html.endsWith("</div></div>"), "DropdownContent closes <div>")
     }
 }

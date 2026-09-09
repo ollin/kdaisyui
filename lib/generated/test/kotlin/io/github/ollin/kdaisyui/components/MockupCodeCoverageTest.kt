@@ -18,6 +18,7 @@ class MockupCodeCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("mockup-code", actualClasses, "MockupCode defaults")
+        assertTrue(html.endsWith("</div></div>"), "MockupCode closes <div>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class MockupCodeCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupCode id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupCode attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupCode content")
+        assertTrue(html.endsWith("</div></div>"), "MockupCode closes <div>")
     }
 }

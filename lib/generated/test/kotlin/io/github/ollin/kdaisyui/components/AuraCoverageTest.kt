@@ -18,6 +18,7 @@ class AuraCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("aura", actualClasses, "Aura defaults")
+        assertTrue(html.endsWith("</div></div>"), "Aura closes <div>")
     }
 
     @Test
@@ -41,6 +42,7 @@ class AuraCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Aura id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Aura attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Aura content")
+        assertTrue(html.endsWith("</div></div>"), "Aura closes <div>")
     }
 
     @Test

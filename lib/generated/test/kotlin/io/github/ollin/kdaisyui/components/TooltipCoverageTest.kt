@@ -18,6 +18,7 @@ class TooltipCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("tooltip", actualClasses, "Tooltip defaults")
+        assertTrue(html.endsWith("</div></div>"), "Tooltip closes <div>")
     }
 
     @Test
@@ -43,6 +44,7 @@ class TooltipCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Tooltip id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Tooltip attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Tooltip content")
+        assertTrue(html.endsWith("</div></div>"), "Tooltip closes <div>")
     }
 
     @Test
@@ -138,6 +140,7 @@ class TooltipCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("tooltip-content", actualClasses, "TooltipContent defaults")
+        assertTrue(html.endsWith("</div></div>"), "TooltipContent closes <div>")
     }
 
     @Test
@@ -155,5 +158,6 @@ class TooltipCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "TooltipContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TooltipContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TooltipContent content")
+        assertTrue(html.endsWith("</div></div>"), "TooltipContent closes <div>")
     }
 }

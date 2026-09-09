@@ -599,6 +599,8 @@ function defaultsTest(ctx) {
   const asserts = ctx.base
     ? [ACTUAL_CLASSES, `assertEquals("${ctx.base}", actualClasses, "${ctx.daisyName} defaults")`]
     : [`assertTrue(!html.contains("class=\\""), "${ctx.daisyName} defaults emits no class")`]
+  const closes = closesTagAssert(ctx)
+  if (closes) asserts.push(closes)
   return wrapTest(ctx, `${ctx.fnBase}_defaults`, args, asserts)
 }
 
@@ -626,6 +628,8 @@ function allFlagsAsserts(ctx, boolCss) {
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)
   }
+  const closes = closesTagAssert(ctx)
+  if (closes) asserts.push(closes)
   return asserts
 }
 

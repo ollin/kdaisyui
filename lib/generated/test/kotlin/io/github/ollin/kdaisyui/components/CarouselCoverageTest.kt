@@ -18,6 +18,7 @@ class CarouselCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("carousel", actualClasses, "Carousel defaults")
+        assertTrue(html.endsWith("</div></div>"), "Carousel closes <div>")
     }
 
     @Test
@@ -40,6 +41,7 @@ class CarouselCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Carousel id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Carousel attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Carousel content")
+        assertTrue(html.endsWith("</div></div>"), "Carousel closes <div>")
     }
 
     @Test
@@ -51,6 +53,7 @@ class CarouselCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("carousel-item", actualClasses, "CarouselItem defaults")
+        assertTrue(html.endsWith("</div></div>"), "CarouselItem closes <div>")
     }
 
     @Test
@@ -68,5 +71,6 @@ class CarouselCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "CarouselItem id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CarouselItem attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CarouselItem content")
+        assertTrue(html.endsWith("</div></div>"), "CarouselItem closes <div>")
     }
 }

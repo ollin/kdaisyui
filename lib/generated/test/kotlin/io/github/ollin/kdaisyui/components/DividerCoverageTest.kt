@@ -18,6 +18,7 @@ class DividerCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("divider", actualClasses, "Divider defaults")
+        assertTrue(html.endsWith("</div></div>"), "Divider closes <div>")
     }
 
     @Test
@@ -39,6 +40,7 @@ class DividerCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Divider id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Divider attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Divider content")
+        assertTrue(html.endsWith("</div></div>"), "Divider closes <div>")
     }
 
     @Test

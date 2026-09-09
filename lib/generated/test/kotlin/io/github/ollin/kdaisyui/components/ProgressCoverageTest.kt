@@ -18,6 +18,7 @@ class ProgressCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("progress", actualClasses, "Progress defaults")
+        assertTrue(html.endsWith("</progress></div>"), "Progress closes <progress>")
     }
 
     @Test
@@ -35,6 +36,7 @@ class ProgressCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Progress id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Progress attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Progress content")
+        assertTrue(html.endsWith("</progress></div>"), "Progress closes <progress>")
     }
 
     @Test

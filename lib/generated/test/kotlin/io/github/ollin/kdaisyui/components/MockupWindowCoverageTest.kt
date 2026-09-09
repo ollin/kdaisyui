@@ -18,6 +18,7 @@ class MockupWindowCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("mockup-window", actualClasses, "MockupWindow defaults")
+        assertTrue(html.endsWith("</div></div>"), "MockupWindow closes <div>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class MockupWindowCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupWindow id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupWindow attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupWindow content")
+        assertTrue(html.endsWith("</div></div>"), "MockupWindow closes <div>")
     }
 }

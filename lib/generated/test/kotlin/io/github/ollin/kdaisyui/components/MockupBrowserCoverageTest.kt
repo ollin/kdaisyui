@@ -18,6 +18,7 @@ class MockupBrowserCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("mockup-browser", actualClasses, "MockupBrowser defaults")
+        assertTrue(html.endsWith("</div></div>"), "MockupBrowser closes <div>")
     }
 
     @Test
@@ -35,6 +36,7 @@ class MockupBrowserCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupBrowser id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupBrowser attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupBrowser content")
+        assertTrue(html.endsWith("</div></div>"), "MockupBrowser closes <div>")
     }
 
     @Test
@@ -46,6 +48,7 @@ class MockupBrowserCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("mockup-browser-toolbar", actualClasses, "MockupBrowserToolbar defaults")
+        assertTrue(html.endsWith("</div></div>"), "MockupBrowserToolbar closes <div>")
     }
 
     @Test
@@ -63,5 +66,6 @@ class MockupBrowserCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupBrowserToolbar id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupBrowserToolbar attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupBrowserToolbar content")
+        assertTrue(html.endsWith("</div></div>"), "MockupBrowserToolbar closes <div>")
     }
 }

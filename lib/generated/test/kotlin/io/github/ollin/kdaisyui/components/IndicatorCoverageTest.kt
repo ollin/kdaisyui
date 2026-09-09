@@ -18,6 +18,7 @@ class IndicatorCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("indicator", actualClasses, "Indicator defaults")
+        assertTrue(html.endsWith("</div></div>"), "Indicator closes <div>")
     }
 
     @Test
@@ -41,6 +42,7 @@ class IndicatorCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Indicator id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Indicator attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Indicator content")
+        assertTrue(html.endsWith("</div></div>"), "Indicator closes <div>")
     }
 
     @Test
@@ -52,6 +54,7 @@ class IndicatorCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("indicator-item", actualClasses, "IndicatorItem defaults")
+        assertTrue(html.endsWith("</div></div>"), "IndicatorItem closes <div>")
     }
 
     @Test
@@ -69,5 +72,6 @@ class IndicatorCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "IndicatorItem id")
         assertTrue(html.contains("data-attrs=\"yes\""), "IndicatorItem attrs")
         assertTrue(html.contains("data-content=\"yes\""), "IndicatorItem content")
+        assertTrue(html.endsWith("</div></div>"), "IndicatorItem closes <div>")
     }
 }

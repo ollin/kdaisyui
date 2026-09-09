@@ -18,6 +18,7 @@ class FilterCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("filter", actualClasses, "Filter defaults")
+        assertTrue(html.endsWith("</form></div>"), "Filter closes <form>")
     }
 
     @Test
@@ -35,6 +36,7 @@ class FilterCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Filter id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Filter attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Filter content")
+        assertTrue(html.endsWith("</form></div>"), "Filter closes <form>")
     }
 
     @Test
@@ -46,6 +48,7 @@ class FilterCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("filter-reset", actualClasses, "FilterReset defaults")
+        assertTrue(html.endsWith("</div></div>"), "FilterReset closes <div>")
     }
 
     @Test
@@ -63,5 +66,6 @@ class FilterCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "FilterReset id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FilterReset attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FilterReset content")
+        assertTrue(html.endsWith("</div></div>"), "FilterReset closes <div>")
     }
 }

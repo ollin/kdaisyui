@@ -18,6 +18,7 @@ class SelectCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("select", actualClasses, "Select defaults")
+        assertTrue(html.endsWith("</select></div>"), "Select closes <select>")
     }
 
     @Test
@@ -37,6 +38,7 @@ class SelectCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Select id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Select attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Select content")
+        assertTrue(html.endsWith("</select></div>"), "Select closes <select>")
     }
 
     @Test

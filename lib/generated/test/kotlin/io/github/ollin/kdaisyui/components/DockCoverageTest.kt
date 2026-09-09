@@ -18,6 +18,7 @@ class DockCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("dock", actualClasses, "Dock defaults")
+        assertTrue(html.endsWith("</div></div>"), "Dock closes <div>")
     }
 
     @Test
@@ -36,6 +37,7 @@ class DockCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Dock id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Dock attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Dock content")
+        assertTrue(html.endsWith("</div></div>"), "Dock closes <div>")
     }
 
     @Test
@@ -107,6 +109,7 @@ class DockCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("dock-label", actualClasses, "DockLabel defaults")
+        assertTrue(html.endsWith("</div></div>"), "DockLabel closes <div>")
     }
 
     @Test
@@ -124,5 +127,6 @@ class DockCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "DockLabel id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DockLabel attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DockLabel content")
+        assertTrue(html.endsWith("</div></div>"), "DockLabel closes <div>")
     }
 }

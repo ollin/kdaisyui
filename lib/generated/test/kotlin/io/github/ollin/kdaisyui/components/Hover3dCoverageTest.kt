@@ -18,6 +18,7 @@ class Hover3dCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("hover-3d", actualClasses, "Hover3d defaults")
+        assertTrue(html.endsWith("</div></div>"), "Hover3d closes <div>")
     }
 
     @Test
@@ -35,5 +36,6 @@ class Hover3dCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Hover3d id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Hover3d attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Hover3d content")
+        assertTrue(html.endsWith("</div></div>"), "Hover3d closes <div>")
     }
 }

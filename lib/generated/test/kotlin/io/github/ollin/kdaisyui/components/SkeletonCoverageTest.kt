@@ -18,6 +18,7 @@ class SkeletonCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("skeleton", actualClasses, "Skeleton defaults")
+        assertTrue(html.endsWith("</div></div>"), "Skeleton closes <div>")
     }
 
     @Test
@@ -36,5 +37,6 @@ class SkeletonCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Skeleton id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Skeleton attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Skeleton content")
+        assertTrue(html.endsWith("</div></div>"), "Skeleton closes <div>")
     }
 }

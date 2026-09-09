@@ -18,6 +18,7 @@ class OtpCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("otp", actualClasses, "Otp defaults")
+        assertTrue(html.endsWith("</div></div>"), "Otp closes <div>")
     }
 
     @Test
@@ -36,6 +37,7 @@ class OtpCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Otp id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Otp attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Otp content")
+        assertTrue(html.endsWith("</div></div>"), "Otp closes <div>")
     }
 
     @Test

@@ -19,6 +19,7 @@ class BreadcrumbsCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("breadcrumbs", actualClasses, "Breadcrumbs defaults")
+        assertTrue(html.endsWith("</div></div>"), "Breadcrumbs closes <div>")
     }
 
     @Test
@@ -36,6 +37,7 @@ class BreadcrumbsCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Breadcrumbs id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Breadcrumbs attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Breadcrumbs content")
+        assertTrue(html.endsWith("</div></div>"), "Breadcrumbs closes <div>")
     }
 
     @Test
@@ -46,6 +48,7 @@ class BreadcrumbsCoverageTest {
             )
         }
         assertTrue(!html.contains("class=\""), "BreadcrumbsItems defaults emits no class")
+        assertTrue(html.endsWith("</ul></div>"), "BreadcrumbsItems closes <ul>")
     }
 
     @Test
@@ -63,6 +66,7 @@ class BreadcrumbsCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "BreadcrumbsItems id")
         assertTrue(html.contains("data-attrs=\"yes\""), "BreadcrumbsItems attrs")
         assertTrue(html.contains("data-content=\"yes\""), "BreadcrumbsItems content")
+        assertTrue(html.endsWith("</ul></div>"), "BreadcrumbsItems closes <ul>")
     }
 
     @Test
@@ -73,6 +77,7 @@ class BreadcrumbsCoverageTest {
             )
         }
         assertTrue(!html.contains("class=\""), "BreadcrumbsItem defaults emits no class")
+        assertTrue(html.endsWith("</li></ul>"), "BreadcrumbsItem closes <li>")
     }
 
     @Test
@@ -90,5 +95,6 @@ class BreadcrumbsCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "BreadcrumbsItem id")
         assertTrue(html.contains("data-attrs=\"yes\""), "BreadcrumbsItem attrs")
         assertTrue(html.contains("data-content=\"yes\""), "BreadcrumbsItem content")
+        assertTrue(html.endsWith("</li></ul>"), "BreadcrumbsItem closes <li>")
     }
 }

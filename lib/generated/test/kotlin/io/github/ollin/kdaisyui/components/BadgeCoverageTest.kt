@@ -16,6 +16,7 @@ class BadgeCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("badge", actualClasses, "Badge defaults")
+        assertTrue(html.endsWith("</span></div>"), "Badge closes <span>")
     }
 
     @Test
@@ -37,6 +38,7 @@ class BadgeCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Badge id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Badge attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Badge content")
+        assertTrue(html.endsWith("</span></div>"), "Badge closes <span>")
     }
 
     @Test

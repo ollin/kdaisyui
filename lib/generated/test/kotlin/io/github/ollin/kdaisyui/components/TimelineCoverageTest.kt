@@ -18,6 +18,7 @@ class TimelineCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("timeline", actualClasses, "Timeline defaults")
+        assertTrue(html.endsWith("</ul></div>"), "Timeline closes <ul>")
     }
 
     @Test
@@ -40,6 +41,7 @@ class TimelineCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Timeline id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Timeline attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Timeline content")
+        assertTrue(html.endsWith("</ul></div>"), "Timeline closes <ul>")
     }
 
     @Test
@@ -51,6 +53,7 @@ class TimelineCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("timeline-start", actualClasses, "TimelineStart defaults")
+        assertTrue(html.endsWith("</div></div>"), "TimelineStart closes <div>")
     }
 
     @Test
@@ -68,6 +71,7 @@ class TimelineCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "TimelineStart id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TimelineStart attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TimelineStart content")
+        assertTrue(html.endsWith("</div></div>"), "TimelineStart closes <div>")
     }
 
     @Test
@@ -79,6 +83,7 @@ class TimelineCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("timeline-middle", actualClasses, "TimelineMiddle defaults")
+        assertTrue(html.endsWith("</div></div>"), "TimelineMiddle closes <div>")
     }
 
     @Test
@@ -96,6 +101,7 @@ class TimelineCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "TimelineMiddle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TimelineMiddle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TimelineMiddle content")
+        assertTrue(html.endsWith("</div></div>"), "TimelineMiddle closes <div>")
     }
 
     @Test
@@ -107,6 +113,7 @@ class TimelineCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("timeline-end", actualClasses, "TimelineEnd defaults")
+        assertTrue(html.endsWith("</div></div>"), "TimelineEnd closes <div>")
     }
 
     @Test
@@ -124,5 +131,6 @@ class TimelineCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "TimelineEnd id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TimelineEnd attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TimelineEnd content")
+        assertTrue(html.endsWith("</div></div>"), "TimelineEnd closes <div>")
     }
 }

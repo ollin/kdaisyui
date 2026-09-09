@@ -18,6 +18,7 @@ class LoadingCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("loading", actualClasses, "Loading defaults")
+        assertTrue(html.endsWith("</span></div>"), "Loading closes <span>")
     }
 
     @Test
@@ -41,6 +42,7 @@ class LoadingCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Loading id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Loading attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Loading content")
+        assertTrue(html.endsWith("</span></div>"), "Loading closes <span>")
     }
 
     @Test

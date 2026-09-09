@@ -16,6 +16,7 @@ class KbdCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("kbd", actualClasses, "Kbd defaults")
+        assertTrue(html.endsWith("</kbd></div>"), "Kbd closes <kbd>")
     }
 
     @Test
@@ -33,6 +34,7 @@ class KbdCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Kbd id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Kbd attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Kbd content")
+        assertTrue(html.endsWith("</kbd></div>"), "Kbd closes <kbd>")
     }
 
     @Test

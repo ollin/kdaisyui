@@ -18,6 +18,7 @@ class StackCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("stack", actualClasses, "Stack defaults")
+        assertTrue(html.endsWith("</div></div>"), "Stack closes <div>")
     }
 
     @Test
@@ -39,5 +40,6 @@ class StackCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Stack id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Stack attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Stack content")
+        assertTrue(html.endsWith("</div></div>"), "Stack closes <div>")
     }
 }

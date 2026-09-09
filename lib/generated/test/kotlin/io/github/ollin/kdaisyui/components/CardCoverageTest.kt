@@ -18,6 +18,7 @@ class CardCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("card", actualClasses, "Card defaults")
+        assertTrue(html.endsWith("</div></div>"), "Card closes <div>")
     }
 
     @Test
@@ -39,6 +40,7 @@ class CardCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Card id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Card attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Card content")
+        assertTrue(html.endsWith("</div></div>"), "Card closes <div>")
     }
 
     @Test
@@ -108,6 +110,7 @@ class CardCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("card-title", actualClasses, "CardTitle defaults")
+        assertTrue(html.endsWith("</h2></div>"), "CardTitle closes <h2>")
     }
 
     @Test
@@ -125,6 +128,7 @@ class CardCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "CardTitle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CardTitle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CardTitle content")
+        assertTrue(html.endsWith("</h2></div>"), "CardTitle closes <h2>")
     }
 
     @Test
@@ -148,6 +152,7 @@ class CardCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("card-body", actualClasses, "CardBody defaults")
+        assertTrue(html.endsWith("</div></div>"), "CardBody closes <div>")
     }
 
     @Test
@@ -165,6 +170,7 @@ class CardCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "CardBody id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CardBody attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CardBody content")
+        assertTrue(html.endsWith("</div></div>"), "CardBody closes <div>")
     }
 
     @Test
@@ -176,6 +182,7 @@ class CardCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("card-actions", actualClasses, "CardActions defaults")
+        assertTrue(html.endsWith("</div></div>"), "CardActions closes <div>")
     }
 
     @Test
@@ -193,5 +200,6 @@ class CardCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "CardActions id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CardActions attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CardActions content")
+        assertTrue(html.endsWith("</div></div>"), "CardActions closes <div>")
     }
 }

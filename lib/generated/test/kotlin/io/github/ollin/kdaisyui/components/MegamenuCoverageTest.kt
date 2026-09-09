@@ -18,6 +18,7 @@ class MegamenuCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("megamenu", actualClasses, "Megamenu defaults")
+        assertTrue(html.endsWith("</div></div>"), "Megamenu closes <div>")
     }
 
     @Test
@@ -38,6 +39,7 @@ class MegamenuCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "Megamenu id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Megamenu attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Megamenu content")
+        assertTrue(html.endsWith("</div></div>"), "Megamenu closes <div>")
     }
 
     @Test
@@ -109,6 +111,7 @@ class MegamenuCoverageTest {
         }
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals("megamenu-active", actualClasses, "MegamenuActive defaults")
+        assertTrue(html.endsWith("</span></div>"), "MegamenuActive closes <span>")
     }
 
     @Test
@@ -126,6 +129,7 @@ class MegamenuCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MegamenuActive id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MegamenuActive attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MegamenuActive content")
+        assertTrue(html.endsWith("</span></div>"), "MegamenuActive closes <span>")
     }
 
     @Test
@@ -136,6 +140,7 @@ class MegamenuCoverageTest {
             )
         }
         assertTrue(!html.contains("class=\""), "MegamenuPanel defaults emits no class")
+        assertTrue(html.endsWith("</div></div>"), "MegamenuPanel closes <div>")
     }
 
     @Test
@@ -153,5 +158,6 @@ class MegamenuCoverageTest {
         assertTrue(html.contains("id=\"x-cov-id\""), "MegamenuPanel id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MegamenuPanel attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MegamenuPanel content")
+        assertTrue(html.endsWith("</div></div>"), "MegamenuPanel closes <div>")
     }
 }

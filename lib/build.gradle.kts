@@ -150,10 +150,17 @@ testing {
 // deliberately in a later step. No `mutationThreshold` yet — the gate is sharpened only
 // once the score is known to be 100%, so this stage cannot fail the build.
 pitest {
-    targetClasses.set(setOf("io.github.ollin.kdaisyui.core.ClassNames"))
+    // `ClassNamesKt`, not `ClassNames`: the file holds top-level functions, and Kotlin
+    // compiles those into a `<File>Kt` class. A filter naming a class that does not exist
+    // is not an error to PIT — it reports "0 mutation test units" and stops.
+    targetClasses.set(setOf("io.github.ollin.kdaisyui.core.ClassNamesKt"))
     // PIT drives the suite through the JUnit Platform, which is what `useKotlinTest`
     // produces here; without this bridge it finds zero tests and reports every mutant
     // as surviving — an all-green-looking report that means nothing.
+    // Without this, PIT defaults the test filter to `targetClasses` and looks for a test
+    // class literally called `ClassNamesKt`, finds none, and reports every mutant as
+    // uncovered rather than as an error.
+    targetTests.set(setOf("io.github.ollin.kdaisyui.core.*"))
     junit5PluginVersion.set(libs.versions.pitest.junit5.get())
     // Kotlin emits null-check calls into `kotlin.jvm.internal` on every parameter.
     // Mutating them yields mutants no test can meaningfully kill.

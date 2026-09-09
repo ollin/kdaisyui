@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { pathToFileURL } from 'node:url'
 import { getAllComponentDirs, readComponentFrontmatter, toPascalCase } from './parser/frontmatter.js'
 import { toCamelCase } from './classifier.js'
 
@@ -841,4 +842,24 @@ function main() {
   }
 }
 
-main()
+// Run only when invoked directly — `node src/test-generator.js all …`, which is how Gradle
+// calls it. Without this guard, importing the module to test one function would regenerate
+// all 66 components as a side effect, so no unit test could exist. That is why this file
+// has none today.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+}
+
+// Exported for tests only. This module has no other consumer: Gradle runs it as a script,
+// and nothing in codegen/ imports it.
+export {
+  // Targets of the refactorings in section 2.
+  parseTestCases,
+  buildClassMappings,
+  // Added by add-mutation-testing and still untested — the gap that motivated this change.
+  parseEmittedBuilder,
+  htmlTagForFn,
+  parseAttrProps,
+  attrAssert,
+  closesTagAssert,
+}

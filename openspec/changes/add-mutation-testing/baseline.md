@@ -1,5 +1,28 @@
 # Baseline mutation report
 
+> **After section 3** (2026-09-09): **220 mutants, 198 killed (90%), 16 survived, 6 uncovered**,
+> test strength 93%.
+>
+> | | Baseline | After section 3 |
+> |---|---|---|
+> | Mutants | 223 | 220 |
+> | Killed | 197 | 198 |
+> | Survived | 18 | **16** |
+> | No coverage | 8 | **6** |
+>
+> The core-logic scope now has **zero** survivors. Three of the five causes below are closed:
+> D (`ClassNames` conditional boundary) turned out to be an equivalent mutant and was removed
+> with the redundant code that produced it; E (`AnnotatedIdBase::hashCode`) got the assertion
+> it lacked; and 2 of the 8 uncovered — `getParent`, `getName` — were reachable after all and
+> are now tested.
+>
+> Everything remaining is either a component (groups A, B, C → section 4) or one of the 6
+> compiler-emitted bridges (→ 5.1, as exclusions). The mutant counts changed, so the line
+> numbers below are the baseline's, not the current file's.
+
+---
+
+
 Task 2.3. Report-only run, no `mutationThreshold` set — the build cannot fail on these
 numbers yet. Reproduce with `./gradlew :lib:pitest`; the machine-readable source is
 `lib/build/reports/pitest/mutations.xml`.

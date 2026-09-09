@@ -41,7 +41,7 @@ Worth generalising: a surviving mutant is not always a missing assertion. It can
 that cannot matter, and then the honest response is to delete it.
 
 - [x] 3.1 Remove the redundant trim/filter from the nullable `addClassNames` overload, which was the sole `ClassNames` survivor and an equivalent mutant (refactoring; NOT the feature-test the task originally described) — 223 → 220 mutants, 18 → 17 survivors, 1494 tests still green
-- [ ] 3.2 Strengthen `TagId`/HtmlId tests to kill all its surviving mutants AND assert (feature-test; small) — one survivor (`AnnotatedIdBase::hashCode`, replaced int return with 0) plus 2 of the 8 uncovered mutants that ARE reachable (`AnnotatedIdBase::getParent`, `NamedAnnotatedIdBase::getName` — public accessors no test reads). The other 6 uncovered are compiler-emitted bridges and belong to 5.1 as exclusions, not here.
+- [x] 3.2 Strengthen `TagId`/HtmlId tests to kill all its surviving mutants AND assert (feature-test; small) — one survivor (`AnnotatedIdBase::hashCode`, replaced int return with 0) plus 2 of the 8 uncovered mutants that ARE reachable (`AnnotatedIdBase::getParent`, `NamedAnnotatedIdBase::getName` — public accessors no test reads). The other 6 uncovered are compiler-emitted bridges and belong to 5.1 as exclusions, not here. Landed as `. r`, not `^ f`: all three tests were green on the first run, so they pin existing behaviour rather than changing any.
 
 ## 4. Kill surviving mutants in scoped components
 

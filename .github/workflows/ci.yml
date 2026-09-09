@@ -133,6 +133,43 @@ jobs:
           path: build/reports/kover/
           retention-days: 7
 
+  # Asks the question coverage cannot: were the executed lines actually ASSERTED. The pair
+  # is deliberate — unit-tests enforces Kover at 100% line and branch, this enforces PIT at
+  # 100% test strength, and neither implies the other.
+  #
+  # Its own job rather than a step in unit-tests, for the same reason api-baseline is
+  # separate: a failing assertion and a surviving mutant are different problems and should
+  # be distinguishable in the checks list. It also forks a JVM per mutant, so it has no
+  # business in the inner loop or in `./gradlew check`.
+  #
+  # No submodules — it builds from the committed generated sources like everything except
+  # the drift job.
+  mutation-tests:
+    name: mutation-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Run mutation tests and enforce the test-strength gate
+        # testStrengthThreshold = 100 lives in lib/build.gradle.kts, next to the reasoning
+        # for why it is test strength and not mutation score. Do not move the number here.
+        run: ./gradlew :lib:pitest --no-daemon
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mutation-report
+          path: lib/build/reports/pitest/
+          retention-days: 7
+
   e2e-tests:
     name: e2e-tests
     runs-on: ubuntu-latest

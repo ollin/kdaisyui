@@ -50,3 +50,27 @@
 
 - [ ] 7.1 Add a dedicated `mutation-tests` job to `.github/workflows/ci.yml` running `./gradlew :lib:pitest` (parallel to unit-tests/e2e-tests, NOT bound to local check) (refactoring; CI wiring)
 - [ ] 7.2 Document the mutation-testing gate, its scope, and how to run + read the PIT report locally in `AGENTS.md` (documentation)
+
+## 8. Gradle 10 readiness (added after section 1; no spec delta)
+
+Not planned up front. Running `:lib:pitest` surfaced the build's existing deprecation
+warnings, and the message they end with — "making it incompatible with Gradle 10" — is
+not something to leave standing while adding a Gradle plugin and a CI job (7.1) to the
+same build. Numbered 8 rather than inserted before 2 so the mirrored issues #135–#152
+keep pointing at the tasks they were written for.
+
+These four carry no requirement of their own: nothing a consumer can observe changes, so
+there is no delta in `specs/`. They are recorded here rather than left in the git log
+because `tasks.md` is what the archive keeps.
+
+Gate for all four: `gradle check --warning-mode all --rerun-tasks` → 0 problems, 1555
+tests passing, e2e included.
+
+- [x] 8.1 Replace the `val x by getting(Type::class)` test-suite delegates with `getByName<Type>("x")` in `buildSrc`, `:lib` and `:ktor-integration` (refactoring) — Gradle 9.6 deprecated every Kotlin DSL property delegate for removal in 10
+- [x] 8.2 Replace the `val x by tasks.registering(Type::class)` jar delegates with `tasks.register<Type>("x")` in `:lib` and `:ktor-integration` (refactoring)
+- [x] 8.3 Apply the foojay resolver in `buildSrc/settings.gradle.kts` (refactoring) — buildSrc is a separate build, so the root settings' resolver never reached it; declared without a version because buildSrc inherits the root's plugin classpath
+- [x] 8.4 Drop `-Xcontext-parameters` from `:ktor-integration` and `:example-app` (refactoring) — redundant at Kotlin language version 2.4, which is what the compiler now reports
+
+No issues mirrored for 8.1–8.4: all four were implemented before being written down, and
+a mirror that exists only to be closed in the same merge request is noise rather than
+tracking.

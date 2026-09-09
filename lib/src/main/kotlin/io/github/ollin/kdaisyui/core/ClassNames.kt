@@ -29,10 +29,8 @@ fun Tag.addClassNames(vararg classNames: String) {
 fun Tag.addClassNames(classNames: String?) {
     if (classNames == null) return
 
-    val tokens = classNames
-        .split(' ', '\n', '\t', '\r')
-        .map { it.trim() }
-        .filter { it.isNotEmpty() }
-
-    addClassNames(*tokens.toTypedArray())
+    // Split only. Trimming and dropping empties is the vararg overload's job — it does
+    // both to every element it receives (see `trimmed` above), so doing it here as well
+    // changes no output and only adds a branch no test can distinguish.
+    addClassNames(*classNames.split(' ', '\n', '\t', '\r').toTypedArray())
 }

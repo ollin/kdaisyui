@@ -78,6 +78,23 @@ genuinely document- and matrix-shaped, which is approval testing's home ground. 
 *detects* every such regression, so the marginal value is **localisation**, not detection.
 Revisit only if the refactorings in section 2 prove hard to verify function-by-function.
 
+## This change cannot merge without `add-mutation-testing`
+
+Decided 2026-09-09, after checking rather than assuming.
+
+Task 1.1 exports `parseEmittedBuilder`, `htmlTagForFn`, `parseAttrProps`, `attrAssert` and
+`closesTagAssert` — every one of them created by `add-mutation-testing` tasks 4.1 and 4.2. So
+this change's first commit does not apply without that change's commits, and cherry-picking it
+onto `main` fails.
+
+That rules out the split it would otherwise invite: `test-and-clean-codegen` is complete while
+`add-mutation-testing` is not. Merging the finished one first would also break the house rule
+that a change's archived OpenSpec state travels in the **same** merge request as its code —
+`add-mutation-testing`'s code would land in one MR and its archive in another.
+
+**Both changes therefore archive on the same branch and merge in one request.** The coupling is
+an artefact of doing them back to back on one branch, not something either change needs.
+
 ## Relationship to the TypeScript migration
 
 Decided separately: `codegen/` moves to TypeScript as its own change, after `add-mutation-testing`

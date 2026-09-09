@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { pathToFileURL } from 'node:url'
 import { parseIconFiles } from './parser/svg-heroicons.js'
 
 const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
@@ -157,4 +158,11 @@ ${methods}}
   console.log(`Output: ${outFile}`)
 }
 
-main()
+// Run only when invoked directly. Without this, importing the module to test anything in it
+// regenerates 324 icon tests as a side effect — and `node --test`'s default patterns include
+// `**/test-*.js`, so a bare invocation treats this very file as a test and executes it.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+}
+
+export { DEFAULT_OUTPUT_DIR }

@@ -22,7 +22,7 @@
 
 - [x] 2.1 Expand `targetClasses` to the full core-logic scope (`io.github.ollin.kdaisyui.core.*`) (refactoring; config) — the wildcard is required, not stylistic: file-level functions compile to `<File>Kt` classes, so a name taken from a `.kt` filename matches nothing (see 1.3). `targetTests` had to widen to `io.github.ollin.kdaisyui.*` in the same step, or every test outside `core` counts as non-existent when deciding whether a mutant was killed.
 - [x] 2.2 From the compiled output, identify the 3–5 most branch-rich components (most variant/size/boolean-modifier combinations) and add their `...Kt` classes to `targetClasses`; verify the class names against actual compiled output (refactoring; config + verification) — chose `ButtonKt` (18 conditionals), `ModalKt` (23 across 7 functions), `DropdownKt` (12), `TooltipKt` (11), `RangeKt` (10); all five verified present in `lib/build/classes/kotlin/main/...`
-- [ ] 2.3 Run `./gradlew :lib:pitest` report-only; record the baseline mutation score and list every surviving mutant (class/line/mutator) into the change notes (documentation; no code)
+- [x] 2.3 Run `./gradlew :lib:pitest` report-only; record the baseline mutation score and list every surviving mutant (class/line/mutator) into the change notes (documentation; no code) — written to `baseline.md`: 223 mutants, 197 killed (88%), 18 survived, 8 uncovered, 12s wall clock. Read it before starting section 3: the survivors group into five causes, not eighteen problems, and section 4 turns out to be the larger half rather than section 3.
 
 ## 3. Kill surviving mutants in core logic
 

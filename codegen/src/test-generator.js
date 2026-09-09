@@ -533,6 +533,60 @@ const VOID_TAGS = new Set([
  * before the wrapper's. `contains("</div>")` would be satisfied by the wrapper
  * alone and would kill nothing for any div-based component.
  */
+/**
+ * The HTML attributes a component body sets, split by whether a guard protects them.
+ *
+ * Three shapes occur in generated bodies, and all three are attribute assignments to
+ * the kotlinx.html tag receiver:
+ *
+ *     type = InputType.range                                    // unconditional
+ *     if (disabled) this.disabled = true                        // boolean param
+ *     if (disabled) { this.disabled = true; addClassNames(…) }   // boolean param, block
+ *     if (type != null) this.type = type                        // nullable param
+ *
+ * `attributes["id"] = …` is deliberately NOT matched: `attributes` is followed by `[`
+ * rather than `=`, and the id is already asserted separately.
+ *
+ * Only all-lowercase property names are reported. A kotlinx.html property whose name
+ * is camelCase generally renames on the way out — `htmlFor` emits `for=` — and there
+ * is no table here to invert. Skipping them asserts nothing rather than something
+ * false, the same trade `htmlTagForFn` makes.
+ */
+const ATTR_ASSIGN = /(?:this\.)?\b([a-z][a-z0-9]*)\s*=\s*[^=]/g
+
+function parseAttrProps(body) {
+  const unconditional = new Set()
+  const guarded = new Set()
+  for (const line of body.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('addClassNames')) continue
+    const isGuarded = trimmed.startsWith('if (')
+    // On a guarded line, only look at what follows the condition.
+    const scanned = isGuarded ? trimmed.slice(trimmed.indexOf(')') + 1) : trimmed
+    for (const m of scanned.matchAll(ATTR_ASSIGN)) {
+      ;(isGuarded ? guarded : unconditional).add(m[1])
+    }
+  }
+  return { unconditional, guarded }
+}
+
+/**
+ * Assert an attribute is PRESENT, by name, without asserting its value.
+ *
+ * The value is deliberately not checked. Doing so would mean predicting how
+ * kotlinx.html renders each enum, and the entry name is not the rendered value —
+ * `InputType.checkBox` emits `checkbox`. Replicating that mapping here would be a
+ * second source of truth that can disagree with the library.
+ *
+ * Presence is exactly strong enough for what mutation testing found: every one of
+ * these mutants REMOVES the setter call, and a removed call leaves no attribute at
+ * all. A negated guard has the same effect on the all-flags case, which sets every
+ * parameter.
+ */
+function attrAssert(ctx, name) {
+  return `assertTrue(html.contains("${name}=\\""), "${ctx.daisyName} sets ${name}")`
+}
+
 function closesTagAssert(ctx) {
   const tag = ctx.tagFn ? htmlTagForFn(ctx.tagFn) : null
   if (!tag || VOID_TAGS.has(tag)) return null

@@ -46,6 +46,33 @@ jobs:
           fi
           echo "lib/generated matches its inputs."
 
+  # The codegen's own unit tests. Deliberately not part of `./gradlew check`: AGENTS.md
+  # promises a clone builds and tests with no Node, so anything needing Node lives in its
+  # own job. This and generated-sources-drift are the only two.
+  #
+  # Neither submodules nor a JDK, unlike its sibling. These tests import the generator
+  # modules and assert on pure functions — nothing reads the DaisyUI or Heroicons
+  # checkouts, nothing compiles Kotlin. If this job ever needs either, that is the signal
+  # that the tests have drifted into integration territory which generated-sources-drift
+  # already covers end to end.
+  codegen-tests:
+    name: codegen-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          # Read from .tool-versions so the pinned version has exactly one home. A second
+          # copy here would drift, and a Node mismatch is not loud: the test runner's
+          # default file patterns have changed between majors.
+          node-version-file: .tool-versions
+
+      - name: Run codegen unit tests
+        working-directory: codegen
+        run: npm test
+
   # The sibling of generated-sources-drift: both compare a committed artefact
   # against what the build produces. Kept separate from unit-tests so an API
   # change and a failing test are distinguishable in the checks list - and so

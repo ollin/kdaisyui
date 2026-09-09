@@ -258,12 +258,15 @@ tasks.register<Exec>("testCodegen") {
     group = "codegen"
     description = "Run the codegen unit tests (needs Node; not part of `check`)"
     workingDir = rootProject.file("codegen")
-    // `test/`, not a bare `node --test`. The runner's default patterns include
-    // `**/test-*.js`, which matches `src/test-generator.js` and
-    // `src/test-generator-heroicons.js` — so a bare invocation EXECUTES both generators as
-    // if they were test files. The heroicons one has no entry-point guard and wrote a
-    // generated file into the hand-written `lib/src/test/` tree.
-    commandLine("sh", "-c", "node --test test/")
+    // Delegates to the npm script rather than repeating `node --test test/`, so the
+    // invocation is defined once. CI runs the same `npm test`, and a change to one cannot
+    // leave the other behind.
+    //
+    // The `test/` argument in that script is load-bearing: the runner's default patterns
+    // include `**/test-*.js`, which matches `src/test-generator.js` and
+    // `src/test-generator-heroicons.js`, so a bare `node --test` EXECUTES both generators
+    // as if they were test files.
+    commandLine("sh", "-c", "npm test")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("codegen/test"))
     inputs.file(rootProject.file("codegen/package.json"))

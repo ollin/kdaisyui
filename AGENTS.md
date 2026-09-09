@@ -63,6 +63,7 @@ webjar, so generated components never reference CSS the webjar lacks.
 | Codegen, component shape, config knobs, adding a component, version ceiling | `kdaisyui-codegen` |
 | Any test work, run configurations, `just` recipes, E2E wiring, Cucumber | `kdaisyui-testing` |
 | Versioning, publishing, what CI does | `kdaisyui-release` |
+| The Gradle build itself — buildSrc, settings, toolchains, compiler flags, adding a plugin, any build warning | `kdaisyui-build` |
 
 ## Planning changes — OpenSpec
 

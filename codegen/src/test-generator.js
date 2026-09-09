@@ -29,61 +29,63 @@ function loadConfig() {
   return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
 }
 
+// A doc page is scanned line by line, and until now the position in that scan lived in four
+// mutable locals threaded through one loop. Collecting them into one object is what lets each
+// line kind below be read on its own — the loop no longer has to be simulated in your head to
+// know what any branch does.
+//
+// `language` is deliberately NOT reset when a fence closes. That is load-bearing: the final
+// flush consults it, and a heading inside an open fence leaves it standing. Both behaviours
+// are pinned by tests in codegen/test/.
+const TEST_CASE_HEADING = /^### ~(.+)$/
+
+function newScan() {
+  return { cases: [], current: null, insideBlock: false, blockLines: [], language: null }
+}
+
+function flushCurrentCase(scan) {
+  scan.current.html = scan.blockLines.join('\n')
+  scan.cases.push(scan.current)
+}
+
+function startCase(scan, name) {
+  if (scan.current && scan.blockLines.length > 0) flushCurrentCase(scan)
+  scan.current = { name: name.trim(), html: null }
+  scan.blockLines = []
+}
+
+function openBlock(scan, fenceLine) {
+  scan.insideBlock = true
+  scan.language = fenceLine.slice(3).trim()
+  scan.blockLines = []
+}
+
+function closeBlock(scan) {
+  scan.insideBlock = false
+  if (scan.language === 'html' && scan.current) {
+    flushCurrentCase(scan)
+    scan.current = null
+  }
+  scan.blockLines = []
+}
+
+function scanLine(scan, line) {
+  const heading = line.match(TEST_CASE_HEADING)
+  if (heading) return startCase(scan, heading[1])
+  if (line.startsWith('```')) return scan.insideBlock ? closeBlock(scan) : openBlock(scan, line)
+  if (scan.insideBlock) scan.blockLines.push(line)
+}
+
+/** A document may end mid-block; that trailing case is still emitted, if it is html. */
+function endsInsideUnclosedHtmlBlock(scan) {
+  return scan.current !== null && scan.blockLines.length > 0 && scan.language === 'html'
+}
+
 function parseTestCases(content) {
-  const testCases = []
-  const lines = content.split('\n')
-  
-  let currentTest = null
-  let inCodeBlock = false
-  let codeBlock = []
-  let codeBlockLang = null
-  
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    
-    const testMatch = line.match(/^### ~(.+)$/)
-    if (testMatch) {
-      if (currentTest && codeBlock.length > 0) {
-        currentTest.html = codeBlock.join('\n')
-        testCases.push(currentTest)
-      }
-      
-      currentTest = {
-        name: testMatch[1].trim(),
-        html: null
-      }
-      codeBlock = []
-      continue
-    }
-    
-    if (line.startsWith('```')) {
-      if (!inCodeBlock) {
-        inCodeBlock = true
-        codeBlockLang = line.slice(3).trim()
-        codeBlock = []
-      } else {
-        inCodeBlock = false
-        if (codeBlockLang === 'html' && currentTest) {
-          currentTest.html = codeBlock.join('\n')
-          testCases.push(currentTest)
-          currentTest = null
-        }
-        codeBlock = []
-      }
-      continue
-    }
-    
-    if (inCodeBlock) {
-      codeBlock.push(line)
-    }
-  }
-  
-  if (currentTest && codeBlock.length > 0 && codeBlockLang === 'html') {
-    currentTest.html = codeBlock.join('\n')
-    testCases.push(currentTest)
-  }
-  
-  return testCases
+  const scan = newScan()
+  for (const line of content.split('\n')) scanLine(scan, line)
+  if (endsInsideUnclosedHtmlBlock(scan)) flushCurrentCase(scan)
+  return scan.cases
 }
 
 function extractDaisyClasses(html) {

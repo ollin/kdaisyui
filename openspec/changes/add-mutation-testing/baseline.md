@@ -1,5 +1,25 @@
 # Baseline mutation report
 
+> **After section 4** (2026-09-09): **220 mutants, 213 killed (97%), 1 survived, 6 uncovered**,
+> test strength 99%.
+>
+> | | Baseline | After s3 | After s4 |
+> |---|---|---|---|
+> | Killed | 197 | 198 | **213** |
+> | Survived | 18 | 16 | **1** |
+> | No coverage | 8 | 6 | 6 |
+>
+> Two generator changes did it, one per cause, reaching all 63 components rather than the
+> 5 in scope. Group A (11 × `onTagEnd`) fell to a closing-tag assertion; groups B and C
+> (5 × attribute) to an attribute-presence assertion.
+>
+> **The single remaining survivor** is `RangeKt.daisyRange` `onTagEnd`, on a `<input>`.
+> A void element has no closing tag for kotlinx.html to omit, so this is very likely an
+> equivalent mutant — but that has to be argued, not assumed, and 5.1 is where it is argued.
+>
+> The 6 uncovered are unchanged and unchangeable by tests: compiler-emitted interface-default
+> bridges, also for 5.1.
+
 > **After section 3** (2026-09-09): **220 mutants, 198 killed (90%), 16 survived, 6 uncovered**,
 > test strength 93%.
 >

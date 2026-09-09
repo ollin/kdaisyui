@@ -72,23 +72,20 @@ describe('parseTestCases', () => {
     assert.deepEqual(cases, [{ name: 'Truncated', html: '<i>x</i>' }])
   })
 
-  test('a heading inside an unclosed block desynchronises the fence state', () => {
+  test('a heading inside a fenced block is content, not a new case', () => {
     const cases = parseTestCases(
       doc('### ~First', '```html', '<i>1</i>', '### ~Second', '```html', '<i>2</i>', '```'),
     )
 
-    // The heading branch runs BEFORE the in-code-block branch, so `### ~Second` starts a
-    // new case even though the first fence is still open — and `inCodeBlock` is never
-    // reset. The next ```html is therefore read as the CLOSING fence of the first block,
-    // which flushes "Second" with an empty body, and `<i>2</i>` then falls outside any
-    // block and is lost.
+    // Markdown semantics: everything between fences is literal, headings included. So the
+    // second ```html is the CLOSING fence of the first block, and the document contains
+    // exactly one test case whose body happens to include a line that looks like a heading.
     //
-    // Recorded, not endorsed: this is a latent defect, and pinning it means a refactoring
-    // has to change it deliberately rather than by accident.
-    assert.deepEqual(cases, [
-      { name: 'First', html: '<i>1</i>' },
-      { name: 'Second', html: '' },
-    ])
+    // The input is malformed either way — someone forgot a closing fence. What changed is
+    // which wrong answer you get: this one is visibly wrong, where the previous behaviour
+    // emitted a SECOND case with an empty body, which downstream turns into a generated
+    // test asserting nothing at all.
+    assert.deepEqual(cases, [{ name: 'First', html: '<i>1</i>\n### ~Second' }])
   })
 })
 

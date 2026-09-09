@@ -69,11 +69,20 @@ function closeBlock(scan) {
   scan.blockLines = []
 }
 
+// Order matters and is the fix for a real defect. A fence is decided first, then whether we
+// are inside one; only text OUTSIDE a block can be a heading. Markdown says a fenced block's
+// contents are literal, headings included.
+//
+// Previously the heading branch ran first, so `### ~x` inside an open block started a case
+// AND left `insideBlock` set — the next opening fence was then read as a closing one, the
+// new case was flushed with an empty body, and its real content fell outside any block and
+// vanished. An empty case survives all the way into a generated Kotlin test that asserts
+// nothing.
 function scanLine(scan, line) {
-  const heading = line.match(TEST_CASE_HEADING)
-  if (heading) return startCase(scan, heading[1])
   if (line.startsWith('```')) return scan.insideBlock ? closeBlock(scan) : openBlock(scan, line)
-  if (scan.insideBlock) scan.blockLines.push(line)
+  if (scan.insideBlock) return scan.blockLines.push(line)
+  const heading = line.match(TEST_CASE_HEADING)
+  if (heading) startCase(scan, heading[1])
 }
 
 /** A document may end mid-block; that trailing case is still emitted, if it is html. */

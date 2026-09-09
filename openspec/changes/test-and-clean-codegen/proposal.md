@@ -48,6 +48,36 @@ touched this file twice, so this is that debt being paid rather than new appetit
   without changing output. Falsified if a refactoring cannot be expressed without altering
   emitted text — in which case the honest answer is to stop and record why, not to force it.
 
+## Rejected alternative: Approvals.NodeJS
+
+Considered and analysed 2026-09-09 (Apache-2.0, 125 stars, actively maintained; Mocha and
+Jest integrations, plus a runner-agnostic `approvals.verify(dirName, testName, data)`).
+
+**Rejected, because this repository already has the approval test that matters.**
+`lib/generated/**` committed alongside CI's `generated-sources-drift` job *is* the
+golden-master pattern: expected output under version control, build fails on any diff. Its
+oracle is stronger than anything a library would give us here — the entire pipeline output,
+66 components × 2 files plus 324 icons, byte for byte. Adding Approvals.NodeJS would be a
+second, weaker copy of a check that already passes.
+
+Four further costs, in descending order:
+
+1. It would be codegen's **first npm dependency**. `package.json` declares none today, and
+   that is load-bearing for the promise that a clone needs no Node.
+2. Its documented paths add a second test runner (Mocha or Jest) where `node:test` ships
+   inside the pinned Node 26 runtime at zero cost.
+3. The functions being tested are the wrong shape for it. `parseTestCases` returns
+   `[{name, html}]`; an expectation that small belongs in the test where a reviewer sees it,
+   not in a separate approved file.
+4. Default reporters launch GUI diff tools, so CI needs `gitdiff`/`donothing`, plus
+   `*.received.*` ignored and `eol=lf` pinned in `.gitattributes`.
+
+**Where it would be the right tool**, if this comes up again: pinning per-component generated
+Kotlin snippets as documents — `generateKotlinTest("button", …)` across a 66-case matrix — is
+genuinely document- and matrix-shaped, which is approval testing's home ground. Drift already
+*detects* every such regression, so the marginal value is **localisation**, not detection.
+Revisit only if the refactorings in section 2 prove hard to verify function-by-function.
+
 ## Relationship to the TypeScript migration
 
 Decided separately: `codegen/` moves to TypeScript as its own change, after `add-mutation-testing`

@@ -247,6 +247,30 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     outputs.dir(outputDir)
 }
 
+// Deliberately NOT wired into `check`, and deliberately in the `codegen` group rather than
+// `verification`: `AGENTS.md` promises a clone builds and tests with no Node, no npm and no
+// submodules. Only regeneration may need them, and this task is part of that world. CI runs
+// it as its own job, next to `generated-sources-drift`.
+//
+// `node --test` needs no dependency — the runner ships with the Node pinned in
+// `.tool-versions`, which keeps `codegen/package.json` free of dependencies.
+tasks.register<Exec>("testCodegen") {
+    group = "codegen"
+    description = "Run the codegen unit tests (needs Node; not part of `check`)"
+    workingDir = rootProject.file("codegen")
+    // `test/`, not a bare `node --test`. The runner's default patterns include
+    // `**/test-*.js`, which matches `src/test-generator.js` and
+    // `src/test-generator-heroicons.js` — so a bare invocation EXECUTES both generators as
+    // if they were test files. The heroicons one has no entry-point guard and wrote a
+    // generated file into the hand-written `lib/src/test/` tree.
+    commandLine("sh", "-c", "node --test test/")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("codegen/test"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    // No declared output, so Gradle must never call this up-to-date and skip it.
+    outputs.upToDateWhen { false }
+}
+
 val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     group = "codegen"
     description = "Regenerate exhaustive Kotlin icon render tests from Heroicons SVG source (git submodule)"

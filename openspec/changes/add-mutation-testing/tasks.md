@@ -2,7 +2,21 @@
 
 - [x] 1.1 Add `pitest` + `pitest-junit5` to `[versions]` and the `pitest` plugin to `[plugins]` in `gradle/libs.versions.toml` (refactoring; catalog only) — the version key is `pitest-plugin`, not `pitest`, so the leaf does not collide with `pitest-junit5`
 - [x] 1.2 Apply `alias(libs.plugins.pitest)` to `lib/build.gradle.kts` with a minimal `PitestPluginExtension` scoped to `io.github.ollin.kdaisyui.core.ClassNamesKt` ONLY, `junit5PluginVersion` set, `avoidCallsTo` kotlin.jvm.internal, NO `mutationThreshold` (refactoring; wiring) — also sets `outputFormats` to HTML+XML, since task 2.3 has to read the surviving-mutant list mechanically
-- [ ] 1.3 SMOKE TEST: run `./gradlew :lib:pitest` and confirm PIT generates mutants AND runs the kotlin-test suite (not "0 tests"); if the JUnit5 bridge fails, fix `junit5PluginVersion` before proceeding (documentation; capture evidence — this de-risks the whole change)
+- [x] 1.3 SMOKE TEST: run `./gradlew :lib:pitest` and confirm PIT generates mutants AND runs the kotlin-test suite (not "0 tests"); if the JUnit5 bridge fails, fix `junit5PluginVersion` before proceeding (documentation; capture evidence — this de-risks the whole change)
+
+  **PASSED.** PIT 1.19.0 plugin, `pitest-junit5-plugin` 1.2.3, JDK 21, Kotlin 2.4.20.
+  Evidence from the run on `ClassNamesKt`:
+  - `Created 1 mutation test units in pre scan` / `Generated 17 mutations`
+  - tests execute on the JUnit Platform: `[engine:junit-jupiter]/[class:io.github.ollin.kdaisyui.core.ClassNamesTest]`
+  - `Ran 20 tests (1.18 tests per mutation)` — the "0 tests" failure mode did NOT occur
+  - `Line Coverage (for mutated classes only): 34/34 (100%)`
+  - `Killed 16 (94%)`, 1 survivor (`ConditionalsBoundaryMutator`), 0 without coverage
+
+  Two plan corrections came out of this and are recorded on 1.2 and 2.1: the target is
+  `ClassNamesKt`, and `targetTests` must be set explicitly. Both failure modes report as
+  a clean run rather than an error, so neither would have been caught by a green build.
+
+  The bridge assumption the whole change rested on is now **Verified**, not Assumed.
 
 ## 2. Expand scope + baseline measurement
 

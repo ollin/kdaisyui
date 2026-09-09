@@ -35,8 +35,8 @@ changes behaviour and belongs in its own commit with its own reasoning.
 ## 2. Clear the smells, tests before each refactoring
 
 - [x] 2.1 Refactor `parseTestCases` — cc 13, nesting depth 4, 3 bumps, plus the complex conditional at line 80. The four mutable locals threading through one loop are the smell; the code-block scan wants to be its own thing (refactoring) — **all four smells cleared**, function gone from the findings. File score 8.26 → 8.70. Verified by the 10 characterization tests and byte-identical regeneration.
-- [ ] 2.2 Characterization tests for `buildClassMappings` (refactoring; test-only, green from the start)
-- [ ] 2.3 Refactor `buildClassMappings` — cc 11, nesting depth 4 (refactoring)
+- [x] 2.2 Characterization tests for `buildClassMappings` (refactoring; test-only, green from the start) — 9 tests, all green first run. Suite now 19.
+- [ ] 2.3 Refactor `buildClassMappings` — cc 11, nesting depth 4 (refactoring) — **also delete the dead `componentName` parameter**: 2.2 measured that it is never read, and its two call sites pass a value that cannot matter. Removing it is part of the same restructuring, not a separate behaviour change.
 - [ ] 2.4 Refactor `main` — cc 10, 2 bumps. Argument dispatch and the reporting loop are separable (refactoring)
 
 ## 3. Keep it that way

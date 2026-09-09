@@ -11,6 +11,12 @@ logback = "1.6.3"
 jreleaser = "1.26.0"
 kover = "0.9.9"
 
+# Mutation testing. `pitest-plugin` is the Gradle plugin; the PIT core version is left at
+# the plugin's own default so the two cannot drift apart. `pitest-junit5` is the bridge
+# that lets PIT drive a JUnit Platform suite — which is what `useKotlinTest` produces here.
+pitest-plugin = "1.19.0"
+pitest-junit5 = "1.2.3"
+
 # Codegen submodule tags (drive `git checkout` of the daisyui/heroicons submodules).
 # daisyui must stay at a version that also has a published webjar (see webjar-daisyui
 # library below), so generated components never reference CSS absent from the webjar.
@@ -78,3 +84,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-plugin" }

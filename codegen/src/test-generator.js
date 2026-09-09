@@ -799,59 +799,67 @@ function generateAllCoverage() {
   console.log(`Generated coverage tests for ${generated} component files`)
 }
 
-function main() {
-  const args = process.argv.slice(2)
-  const mode = args[0]
-  const config = loadConfig()
-  
-  if (mode === 'all') {
-    console.log('Generating tests for all components...\n')
-    
-    const componentDirs = getAllComponentDirs()
-    let generated = 0
-    let skipped = 0
-    
-    for (const componentName of componentDirs) {
-      if (config.skip?.includes(componentName)) {
-        console.log(`  ⊘ ${componentName}: Skipped (alias)`)
-        skipped++
-        continue
-      }
-      
-      const result = generateForComponent(componentName, config)
-      
-      if (result.success) {
-        console.log(`  ✓ ${componentName}: ${result.testCount} tests`)
-        generated++
-      } else {
-        console.log(`  ⊘ ${componentName}: ${result.error}`)
-        skipped++
-      }
-    }
-    
-    console.log(`\nGenerated tests for ${generated} components, skipped ${skipped}`)
-    generateAllCoverage()
-  } else if (mode) {
-    if (config.skip?.includes(mode)) {
-      console.error(`Error: ${mode} is skipped (alias)`)
-      process.exit(1)
-    }
-    
-    const result = generateForComponent(mode, config)
-    
-    if (result.success) {
-      console.log(`Generated ${result.testCount} tests for ${mode}`)
-    } else {
-      console.error(`Error: ${result.error}`)
-      process.exit(1)
-    }
-  } else {
-    console.log('Usage: node test-generator.js <component-name|all>')
-    console.log('Examples:')
-    console.log('  node test-generator.js dropdown')
-    console.log('  node test-generator.js all')
+/**
+ * Generate one component and print its progress line.
+ * @returns whether it produced tests — the caller only needs the tally.
+ */
+function generateAndReport(componentName, config) {
+  if (config.skip?.includes(componentName)) {
+    console.log(`  ⊘ ${componentName}: Skipped (alias)`)
+    return false
+  }
+  const result = generateForComponent(componentName, config)
+  console.log(
+    result.success
+      ? `  ✓ ${componentName}: ${result.testCount} tests`
+      : `  ⊘ ${componentName}: ${result.error}`,
+  )
+  return result.success
+}
+
+function generateAllComponents(config) {
+  console.log('Generating tests for all components...\n')
+
+  let generated = 0
+  let skipped = 0
+  for (const componentName of getAllComponentDirs()) {
+    if (generateAndReport(componentName, config)) generated++
+    else skipped++
+  }
+
+  console.log(`\nGenerated tests for ${generated} components, skipped ${skipped}`)
+  generateAllCoverage()
+}
+
+/** Single-component mode. Unlike the bulk mode, a failure here is fatal: it was asked for. */
+function generateSingleComponent(componentName, config) {
+  if (config.skip?.includes(componentName)) {
+    console.error(`Error: ${componentName} is skipped (alias)`)
     process.exit(1)
   }
+  const result = generateForComponent(componentName, config)
+  if (!result.success) {
+    console.error(`Error: ${result.error}`)
+    process.exit(1)
+  }
+  console.log(`Generated ${result.testCount} tests for ${componentName}`)
+}
+
+function printUsageAndExit() {
+  console.log('Usage: node test-generator.js <component-name|all>')
+  console.log('Examples:')
+  console.log('  node test-generator.js dropdown')
+  console.log('  node test-generator.js all')
+  process.exit(1)
+}
+
+function main() {
+  const [mode] = process.argv.slice(2)
+  const config = loadConfig()
+
+  if (mode === 'all') return generateAllComponents(config)
+  if (mode) return generateSingleComponent(mode, config)
+  printUsageAndExit()
 }
 
 // Run only when invoked directly — `node src/test-generator.js all …`, which is how Gradle

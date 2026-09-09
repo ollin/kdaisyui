@@ -22,6 +22,16 @@ is reachable and the plan gets rewritten rather than worked around.
   It also carries the other half of 1.1's proof: a test that imports the module and finishes
   in milliseconds is what shows `main()` did not run.
 
+- [x] 1.2 — done. Ten characterization tests, green on the first run; suite completes in 54 ms, which is 1.1's missing proof. Task is `:lib:testCodegen`, `codegen` group, not on `check`. No dependency added.
+
+## 1a. Defects found by writing the tests
+
+Neither was known before 1.2. Both are recorded here rather than fixed inline, because each
+changes behaviour and belongs in its own commit with its own reasoning.
+
+- [ ] 1a.1 `codegen/src/test-generator-heroicons.js` has no entry-point guard and its `DEFAULT_OUTPUT_DIR` points at `lib/src/test/…`, the HAND-WRITTEN tree, not `lib/generated/test/…` (bugfix) — a bare `node --test` executed it as a test file and it wrote `HeroIconsGeneratedTest.kt` into the hand-written tree. Masked until now because Gradle always passes `--output-dir`. Same defect class as the one already commented in `test-generator.js`: "a second copy inside the generator once went stale unnoticed". **Write the reproducing test first.**
+- [ ] 1a.2 `parseTestCases` loses a test case when a `### ~heading` appears inside an unclosed fence: the heading branch runs before the in-code-block branch, `inCodeBlock` is never reset, the next ```` ```html ```` is read as a closing fence, and the case is flushed with an empty body while its real content falls outside any block (bugfix) — pinned by the characterization test added in 1.2, so the fix is a deliberate edit to that test plus the code. **Do this AFTER 2.1**: refactoring first makes the fix small, and the current test proves the refactoring changed nothing.
+
 ## 2. Clear the smells, tests before each refactoring
 
 - [ ] 2.1 Refactor `parseTestCases` — cc 13, nesting depth 4, 3 bumps, plus the complex conditional at line 80. The four mutable locals threading through one loop are the smell; the code-block scan wants to be its own thing (refactoring)

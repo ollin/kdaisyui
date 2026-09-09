@@ -10,8 +10,17 @@ is reachable and the plan gets rewritten rather than worked around.
 
 ## 1. Make the generator testable
 
-- [ ] 1.1 Guard `main()` behind an entry-point check and export the functions under test (refactoring) — the module currently runs on import, so no test can load it. Verify by regenerating: empty diff.
+- [x] 1.1 Guard `main()` behind an entry-point check and export the functions under test (refactoring) — the module currently runs on import, so no test can load it. Verify by regenerating: empty diff. **Assumption held**: regeneration emits all 66 components and leaves `lib/generated/` byte-identical. Seven functions exported — the two refactoring targets plus the five `add-mutation-testing` helpers that have no tests at all.
 - [ ] 1.2 Add a `test` script running `node --test` and the first characterization tests for `parseTestCases` (refactoring; test-only, and green from the first run — they pin existing behaviour, they do not change any)
+
+  **Scope correction found in 1.1:** 1.2 must also add a Gradle task that runs the suite, not
+  just an npm script. Every other codegen entry point is driven through Gradle
+  (`lib/build.gradle.kts` uses `Exec` with `node …`), and an npm-only script would be
+  unrunnable from the build and therefore unrunnable in CI without duplicating the invocation.
+  The task must NOT be wired into `check` — see 3.1 and the no-Node promise.
+
+  It also carries the other half of 1.1's proof: a test that imports the module and finishes
+  in milliseconds is what shows `main()` did not run.
 
 ## 2. Clear the smells, tests before each refactoring
 

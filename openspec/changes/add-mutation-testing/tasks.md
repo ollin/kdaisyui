@@ -31,10 +31,31 @@
 
 ## 4. Kill surviving mutants in scoped components
 
-- [ ] 4.1 Strengthen tests for scoped component #1 until all its mutants are killed AND assert rendered class strings (feature-test; small)
-- [ ] 4.2 Strengthen tests for scoped component #2 until all its mutants are killed (feature-test; small)
-- [ ] 4.3 Strengthen tests for scoped component #3 until all its mutants are killed (feature-test; small)
-- [ ] 4.4 Strengthen tests for any remaining scoped components until all their mutants are killed (feature-test; small, one component per commit)
+**Rewritten 2026-09-09, before any of it was implemented.** The original 4.1-4.4 read
+"strengthen tests for scoped component #1 / #2 / #3 / the rest, one component per commit".
+That cannot be done: every component test lives under `lib/generated/**`, which
+`AGENTS.md` forbids editing and which CI's `generated-sources-drift` job fails on. Five
+hand-edits would have been overwritten by the next `just generate` and rejected before
+that by CI.
+
+The edit point is `codegen/src/test-generator.js`. Three consequences, all of which change
+the shape of the work rather than its goal:
+
+- **One change per cause, not per component.** `baseline.md` groups the 16 component
+  survivors into two habits, and a generator fix addresses each once.
+- **The fix reaches all 63 components**, not the 5 in `targetClasses`. Widening the
+  mutation scope later therefore gets cheaper, not more expensive.
+- **This section needs Node**, which nothing else in this change does — `just generate` is
+  the only step in the repository that requires it.
+
+Each task below lands the generator change and its regenerated output in ONE commit: the
+drift job compares the two, so a commit holding only one of them is red by construction.
+The authored diff stays small; the regenerated diff will not be, and that is expected.
+
+- [ ] 4.1 Teach the test generator to assert the **exact rendered markup** rather than a substring of it, and regenerate (feature-test; kills group A — 11 survivors across `ModalKt`, `DropdownKt`, `TooltipKt`, `RangeKt`, all `removed call to TagConsumer::onTagEnd`. A substring assertion is satisfied by an element left hanging open, which is exactly what deleting `onTagEnd` produces.)
+- [ ] 4.2 Teach the test generator to assert the **attributes** a component sets, not only its classes, and regenerate (feature-test; kills groups B and C — 5 survivors: `BUTTON::setDisabled`, `BUTTON::setType`, `INPUT::setType`, `INPUT::setDisabled`, and the negated `disabled` conditional in `daisyRange` that guards one of them)
+- [ ] 4.3 Re-run `./gradlew :lib:pitest` and confirm all 16 component survivors are dead; confirm `just generate` is idempotent so the drift job stays green (documentation; evidence into `baseline.md`)
+- [ ] 4.4 Kill any component survivor the two generator changes did not reach — per cause if it is one, per component only if it genuinely is (feature-test; may be empty, which is the intended outcome)
 
 ## 5. Resolve residual / equivalent mutants
 

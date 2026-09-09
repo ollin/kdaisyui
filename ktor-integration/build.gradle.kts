@@ -13,12 +13,6 @@ repositories {
     mavenCentral()
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xcontext-parameters")
-    }
-}
-
 dependencies {
     api(project(":lib"))
 

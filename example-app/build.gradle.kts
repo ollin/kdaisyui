@@ -12,12 +12,6 @@ application {
     mainClass.set("kdaisyui.example.ApplicationKt")
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xcontext-parameters")
-    }
-}
-
 // --- Tailwind CSS, compiled at build time in a container ---
 //
 // The prebuilt daisyui webjar ships only five variant prefixes (sm, md, lg, xl, hover),

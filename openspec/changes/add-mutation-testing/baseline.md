@@ -14,8 +14,7 @@
 > (5 × attribute) to an attribute-presence assertion.
 >
 > **The single remaining survivor** is `RangeKt.daisyRange` `onTagEnd`, on a `<input>`.
-> A void element has no closing tag for kotlinx.html to omit, so this is very likely an
-> equivalent mutant — but that has to be argued, not assumed, and 5.1 is where it is argued.
+> Evidence for 5.1 is below rather than left as an assumption.
 >
 > The 6 uncovered are unchanged and unchangeable by tests: compiler-emitted interface-default
 > bridges, also for 5.1.
@@ -159,6 +158,42 @@ Both are public API and no test reads either. Line coverage cannot see this: the
 line *is* the constructor parameter's declaration line, which the constructor covers. This
 is the clearest single example of why the change exists — coverage measures the line,
 mutation testing measures the method.
+
+## The last survivor: evidence for 5.1
+
+`RangeKt.daisyRange`, `removed call to kotlinx/html/TagConsumer::onTagEnd`. Read out of
+`HTMLStreamBuilder.onTagEnd` in kotlinx-html-jvm rather than inferred:
+
+```kotlin
+override fun onTagEnd(tag: Tag) {
+    level--
+    if (ln) { indent() }
+    if (!tag.emptyTag) { out.append("</"); out.append(tag.tagName); out.append(">") }
+    if (prettyPrint && !tag.inlineTag) { appendln() }
+}
+```
+
+`<input>` has `emptyTag == true`, so the only statement that appends anything is skipped.
+Everything else is `prettyPrint`-guarded — `indent()` and `appendln()` both return
+immediately when it is false — and the generated tests all use `prettyPrint = false`. The
+remaining effect, `level--`, is read only by `indent()`. **Under the conditions these tests
+run, the call produces no output at all.**
+
+Residual uncertainty, stated rather than hidden: `createHTML()` wraps the builder in
+`.delayed()`, and that wrapper was not read. The 30 tests that execute this mutant observe
+no difference, which is consistent with equivalence but does not prove it for the wrapper.
+
+Three ways 5.1 can resolve it, in preference order:
+
+1. **Argue equivalence and exclude.** Blocked as stated: PIT's `excludedMethods` takes a
+   whole method, and excluding `daisyRange` would drop ~20 killed mutants from the score
+   along with this one. Needs a narrower mechanism than the task assumes.
+2. **Kill it with a `prettyPrint = true` test.** It would work — `appendln()` becomes
+   observable — but it is a test written to kill a mutant rather than to pin behaviour
+   anyone wants, which is the classic way a mutation score stops meaning anything.
+3. **Read the `.delayed()` wrapper** and settle (1) properly.
+
+Not decided here. 4.4 is about component tests, and no component test can reach this.
 
 ## What this implies for sections 3-5
 

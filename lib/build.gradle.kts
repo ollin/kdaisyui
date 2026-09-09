@@ -154,7 +154,25 @@ pitest {
     // `<File>Kt` class and `by lazy` into synthetic ones, so a hand-maintained list would
     // silently shrink whenever the compiler's output shape changed — and PIT reports a
     // filter that matches nothing as a clean run, never as an error.
-    targetClasses.set(setOf("io.github.ollin.kdaisyui.core.*"))
+    targetClasses.set(
+        setOf(
+            "io.github.ollin.kdaisyui.core.*",
+            // Five of the 63 components, named individually rather than by wildcard:
+            // `components.*` would mutate the whole generated surface for hours and would
+            // mostly measure the generator, which emits one shape repeatedly. These five
+            // carry the most conditionals, so they are where "the line ran" and "the right
+            // class was emitted" are most likely to come apart.
+            //
+            // Verified against lib/build/classes — the `...Kt` suffix is the compiled name
+            // for a file of top-level functions, and the sibling `ButtonVariant` /
+            // `ButtonSize` enums are separate classes deliberately left out of scope.
+            "io.github.ollin.kdaisyui.components.ButtonKt", // 18 conditionals, 2 enums, 10 flags
+            "io.github.ollin.kdaisyui.components.ModalKt", // 23 across 7 functions
+            "io.github.ollin.kdaisyui.components.DropdownKt", // 12, 10 positional flags
+            "io.github.ollin.kdaisyui.components.TooltipKt", // 11, 8 positional flags
+            "io.github.ollin.kdaisyui.components.RangeKt", // 10, and 4 nullable value params
+        )
+    )
     // PIT drives the suite through the JUnit Platform, which is what `useKotlinTest`
     // produces here; without this bridge it finds zero tests and reports every mutant
     // as surviving — an all-green-looking report that means nothing.

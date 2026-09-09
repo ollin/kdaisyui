@@ -73,12 +73,31 @@ The authored diff stays small; the regenerated diff will not be, and that is exp
 
 ## 5. Resolve residual / equivalent mutants
 
-- [ ] 5.1 Re-run `./gradlew :lib:pitest`; for each remaining surviving mutant, either add an assertion that kills it OR, if provably an equivalent mutant, exclude it via `excludedMethods`/`excludedClasses` with a written justification (feature-test/refactoring; iterate until score is 100%)
-- [ ] 5.2 Confirm the report shows 100% mutation score on the full scope before sharpening the gate (documentation; evidence captured)
+**Sections 5 and 6 corrected 2026-09-09, before implementing, after measuring that the
+original gate is unreachable.** Decision by Oliver: gate on **test strength**, not mutation
+score.
+
+A 100% mutation score cannot be reached, and not because of weak tests. Four mutants are
+Kotlin-emitted interface-default bridges in `AnnotatedIdBase` and `StringHtmlId` that no
+source-level test can call, and PIT offers no surgical way to drop them: `excludedMethods`
+matches by name alone, so excluding `getTarget` would also delete the mutant on
+`HtmlId::getTarget` — the one place the real logic lives, and one that IS killed. Excluding
+those classes would discard their genuine killed mutants. Removing the bridges themselves
+means `-Xjvm-default=no-compatibility`, an ABI change to a published artifact, already
+rejected in the Kover config for the same reason.
+
+**Test strength** is killed ÷ (killed + survived); it ignores mutants no test covers. Paired
+with the existing Kover gate the two say exactly the intended thing and nothing more:
+*everything reachable is executed* (Kover, 100% line and branch) and *everything executed is
+asserted* (PIT, 100% test strength). The 4 bridges are excluded by the same reasoning Kover
+already applies to `$DefaultImpls`.
+
+- [x] 5.1 Re-run `./gradlew :lib:pitest`; for each remaining surviving mutant, either add an assertion that kills it OR, if provably an equivalent mutant, exclude it via `excludedMethods`/`excludedClasses` with a written justification (feature-test/refactoring; iterate until score is 100%) — one survivor remained and it got an assertion rather than an exclusion. `VoidElementNestingTest` renders `daisyRange` with `prettyPrint = true` and asserts a sibling's indentation. `HTMLStreamBuilder.onTagEnd` decrements `level` BEFORE checking `emptyTag`, so a void `<input>` that skips it indents everything after it one level too deep — a real contract ("a component leaves the nesting level as it found it"), not a formatting assertion.
+- [x] 5.2 Confirm the report shows 100% mutation score on the full scope before sharpening the gate (documentation; evidence captured) — **test strength 100%**, not mutation score: 218 mutants, 214 killed, 0 survived, 4 uncovered. Mutation score reads 98% and cannot go higher, per the note above.
 
 ## 6. Sharpen the gate (LAST — build now fails below threshold)
 
-- [ ] 6.1 Add `mutationThreshold.set(100)` to the `PitestPluginExtension` (feature; the gate goes hard, run `./gradlew :lib:pitest` — must pass at 100%)
+- [ ] 6.1 Add `testStrengthThreshold.set(100)` to the `PitestPluginExtension` — NOT `mutationThreshold`, which cannot reach 100 on this scope (feature; the gate goes hard, run `./gradlew :lib:pitest` — must pass)
 - [ ] 6.2 Confirm the gate bites: revert one assertion so a mutant survives, run pitest, expect non-zero exit, then restore (feature-test; proves the threshold fails the build)
 
 ## 7. CI + docs

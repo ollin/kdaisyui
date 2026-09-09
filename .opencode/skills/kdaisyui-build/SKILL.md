@@ -25,6 +25,29 @@ The Gradle MCP server reports the same thing as a `Problems:` count with stable 
 Use `--rerun-tasks` when the count matters. An up-to-date task emits no warnings, so a cached
 build can report zero while the underlying problem is still there.
 
+### IntelliJ's sync warning is not ours — do not chase it
+
+Syncing the project in IntelliJ ends with "Deprecated Gradle features were used in this
+build, making it incompatible with Gradle 10." The repository is clean; the warning is four
+`Project.getProperties` deprecations raised by **IntelliJ's own injected init scripts**.
+
+Confirmed 2026-09-09, and worth stating so the next reader stops here rather than searching:
+
+- `prepareKotlinBuildScriptModel --warning-mode all` run from the command line, i.e. the same
+  task without the IDE's init scripts, reports `Problems: 0`.
+- `getProperties` / `project.properties` appear nowhere in any `.gradle.kts` or in `buildSrc`.
+- Gradle attached **no source location** to any of the four diagnostics, which is what an
+  init script looks like in `build/reports/problems/problems-report.html`.
+
+It never reaches CI, which does not run the IDE sync path. To re-verify after an IDEA or
+Gradle upgrade, put `systemProp.org.gradle.deprecation.trace=true` in `gradle.properties`,
+re-sync, and read the stack traces — then take the line out again, since that file
+deliberately holds only the project version.
+
+The general lesson is the reason this subsection exists: `check` and `help` do not exercise
+every configuration path. A claim of "no warnings anywhere" needs the path it was measured on
+named, or it is broader than the measurement.
+
 ## Where build logic lives
 
 | File | What it decides |

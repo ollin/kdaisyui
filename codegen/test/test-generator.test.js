@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { parseTestCases } from '../src/test-generator.js'
+import { parseTestCases, buildClassMappings } from '../src/test-generator.js'
 
 // Characterization tests: they pin what `parseTestCases` does TODAY, so section 2 can
 // restructure it and know immediately whether anything moved. They were green on the
@@ -89,5 +89,107 @@ describe('parseTestCases', () => {
       { name: 'First', html: '<i>1</i>' },
       { name: 'Second', html: '' },
     ])
+  })
+})
+
+// Characterization tests for the target of task 2.3 (cc 11, nesting depth 4). Same rules as
+// above: they record what the function does, not what it ought to do.
+
+const frontmatter = (classnames) => ({ classnames })
+
+describe('buildClassMappings', () => {
+  test('takes the component class from the first component entry', () => {
+    const { componentClass } = buildClassMappings(
+      frontmatter({ component: [{ class: 'btn' }, { class: 'ignored' }] }),
+      'button',
+    )
+
+    assert.equal(componentClass, 'btn')
+  })
+
+  test('allows the component class and every category class', () => {
+    const { allowedClasses } = buildClassMappings(
+      frontmatter({
+        component: [{ class: 'btn' }],
+        placement: [{ class: 'btn-top' }],
+        modifier: [{ class: 'btn-outline' }],
+        direction: [{ class: 'btn-end' }],
+        behavior: [{ class: 'btn-active' }],
+        style: [{ class: 'btn-ghost' }],
+      }),
+      'button',
+    )
+
+    assert.deepEqual(
+      [...allowedClasses].sort(),
+      ['btn', 'btn-active', 'btn-end', 'btn-ghost', 'btn-outline', 'btn-top'],
+    )
+  })
+
+  test('maps each class to a camelCase param with the component prefix stripped', () => {
+    const { classToParam } = buildClassMappings(
+      frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-no-animation' }] }),
+      'button',
+    )
+
+    assert.deepEqual(classToParam, { 'btn-no-animation': 'noAnimation' })
+  })
+
+  test('builds the reverse map from param back to class', () => {
+    const { paramToGeneratedClass } = buildClassMappings(
+      frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-outline' }] }),
+      'button',
+    )
+
+    assert.deepEqual(paramToGeneratedClass, { outline: 'btn-outline' })
+  })
+
+  test('leaves a class alone when it does not carry the component prefix', () => {
+    const { classToParam } = buildClassMappings(
+      frontmatter({ component: [{ class: 'btn' }], style: [{ class: 'glass' }] }),
+      'button',
+    )
+
+    assert.deepEqual(classToParam, { glass: 'glass' })
+  })
+
+  test('strips only the FIRST occurrence of the prefix', () => {
+    // `String.replace` with a string argument replaces once. Pinned because a later
+    // switch to a regex would silently change this.
+    const { classToParam } = buildClassMappings(
+      frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-btn-x' }] }),
+      'button',
+    )
+
+    assert.deepEqual(classToParam, { 'btn-btn-x': 'btnX' })
+  })
+
+  test('tolerates a document with no classnames at all', () => {
+    const result = buildClassMappings({}, 'button')
+
+    assert.equal(result.componentClass, undefined)
+    assert.deepEqual([...result.allowedClasses], [])
+    assert.deepEqual(result.classToParam, {})
+  })
+
+  test('skips a category that is not an array, and an item with no class', () => {
+    const { allowedClasses } = buildClassMappings(
+      frontmatter({
+        component: [{ class: 'btn' }],
+        modifier: 'not-an-array',
+        style: [{ notAClass: 'x' }, { class: 'btn-ghost' }],
+      }),
+      'button',
+    )
+
+    assert.deepEqual([...allowedClasses].sort(), ['btn', 'btn-ghost'])
+  })
+
+  test('IGNORES its componentName argument entirely', () => {
+    // The parameter is dead: the prefix comes from the frontmatter's component class, not
+    // from the name. Pinned so 2.3 can remove it knowing nothing depended on it.
+    const args = frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-wide' }] })
+
+    assert.deepEqual(buildClassMappings(args, 'button'), buildClassMappings(args, 'nonsense'))
   })
 })

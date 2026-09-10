@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class ProgressCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun progress_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress", actualClasses, "Progress defaults")
-        assertTrue(html.endsWith("</progress></div>"), "Progress closes <progress>")
+        assertRendered(html, "progress", "Progress defaults", closes = "</progress></div>")
     }
 
     @Test
@@ -31,12 +38,10 @@ class ProgressCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress zz-extra", actualClasses, "Progress all flags")
+        assertRendered(html, "progress zz-extra", "Progress all flags", closes = "</progress></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Progress id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Progress attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Progress content")
-        assertTrue(html.endsWith("</progress></div>"), "Progress closes <progress>")
     }
 
     @Test
@@ -47,8 +52,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-neutral", actualClasses, "Progress variant Neutral")
+        assertRendered(html, "progress progress-neutral", "Progress variant Neutral")
     }
 
     @Test
@@ -59,8 +63,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-primary", actualClasses, "Progress variant Primary")
+        assertRendered(html, "progress progress-primary", "Progress variant Primary")
     }
 
     @Test
@@ -71,8 +74,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-secondary", actualClasses, "Progress variant Secondary")
+        assertRendered(html, "progress progress-secondary", "Progress variant Secondary")
     }
 
     @Test
@@ -83,8 +85,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-accent", actualClasses, "Progress variant Accent")
+        assertRendered(html, "progress progress-accent", "Progress variant Accent")
     }
 
     @Test
@@ -95,8 +96,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-info", actualClasses, "Progress variant Info")
+        assertRendered(html, "progress progress-info", "Progress variant Info")
     }
 
     @Test
@@ -107,8 +107,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-success", actualClasses, "Progress variant Success")
+        assertRendered(html, "progress progress-success", "Progress variant Success")
     }
 
     @Test
@@ -119,8 +118,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-warning", actualClasses, "Progress variant Warning")
+        assertRendered(html, "progress progress-warning", "Progress variant Warning")
     }
 
     @Test
@@ -131,7 +129,6 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("progress progress-error", actualClasses, "Progress variant Error")
+        assertRendered(html, "progress progress-error", "Progress variant Error")
     }
 }

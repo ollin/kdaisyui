@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class HeroCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun hero_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class HeroCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hero", actualClasses, "Hero defaults")
-        assertTrue(html.endsWith("</div></div>"), "Hero closes <div>")
+        assertRendered(html, "hero", "Hero defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,12 +38,10 @@ class HeroCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hero zz-extra", actualClasses, "Hero all flags")
+        assertRendered(html, "hero zz-extra", "Hero all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Hero id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Hero attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Hero content")
-        assertTrue(html.endsWith("</div></div>"), "Hero closes <div>")
     }
 
     @Test
@@ -46,9 +51,7 @@ class HeroCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hero-content", actualClasses, "HeroContent defaults")
-        assertTrue(html.endsWith("</div></div>"), "HeroContent closes <div>")
+        assertRendered(html, "hero-content", "HeroContent defaults", closes = "</div></div>")
     }
 
     @Test
@@ -61,12 +64,10 @@ class HeroCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hero-content zz-extra", actualClasses, "HeroContent all flags")
+        assertRendered(html, "hero-content zz-extra", "HeroContent all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "HeroContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "HeroContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "HeroContent content")
-        assertTrue(html.endsWith("</div></div>"), "HeroContent closes <div>")
     }
 
     @Test
@@ -76,9 +77,7 @@ class HeroCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hero-overlay", actualClasses, "HeroOverlay defaults")
-        assertTrue(html.endsWith("</label></div>"), "HeroOverlay closes <label>")
+        assertRendered(html, "hero-overlay", "HeroOverlay defaults", closes = "</label></div>")
     }
 
     @Test
@@ -91,11 +90,9 @@ class HeroCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hero-overlay zz-extra", actualClasses, "HeroOverlay all flags")
+        assertRendered(html, "hero-overlay zz-extra", "HeroOverlay all flags", closes = "</label></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "HeroOverlay id")
         assertTrue(html.contains("data-attrs=\"yes\""), "HeroOverlay attrs")
         assertTrue(html.contains("data-content=\"yes\""), "HeroOverlay content")
-        assertTrue(html.endsWith("</label></div>"), "HeroOverlay closes <label>")
     }
 }

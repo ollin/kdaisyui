@@ -9,14 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class KbdCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun kbd_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyKbd()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd", actualClasses, "Kbd defaults")
-        assertTrue(html.endsWith("</kbd></div>"), "Kbd closes <kbd>")
+        assertRendered(html, "kbd", "Kbd defaults", closes = "</kbd></div>")
     }
 
     @Test
@@ -29,12 +36,10 @@ class KbdCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd zz-extra", actualClasses, "Kbd all flags")
+        assertRendered(html, "kbd zz-extra", "Kbd all flags", closes = "</kbd></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Kbd id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Kbd attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Kbd content")
-        assertTrue(html.endsWith("</kbd></div>"), "Kbd closes <kbd>")
     }
 
     @Test
@@ -44,8 +49,7 @@ class KbdCoverageTest {
                 size = KbdSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd kbd-xs", actualClasses, "Kbd size Xs")
+        assertRendered(html, "kbd kbd-xs", "Kbd size Xs")
     }
 
     @Test
@@ -55,8 +59,7 @@ class KbdCoverageTest {
                 size = KbdSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd kbd-sm", actualClasses, "Kbd size Sm")
+        assertRendered(html, "kbd kbd-sm", "Kbd size Sm")
     }
 
     @Test
@@ -66,8 +69,7 @@ class KbdCoverageTest {
                 size = KbdSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd kbd-md", actualClasses, "Kbd size Md")
+        assertRendered(html, "kbd kbd-md", "Kbd size Md")
     }
 
     @Test
@@ -77,8 +79,7 @@ class KbdCoverageTest {
                 size = KbdSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd kbd-lg", actualClasses, "Kbd size Lg")
+        assertRendered(html, "kbd kbd-lg", "Kbd size Lg")
     }
 
     @Test
@@ -88,8 +89,7 @@ class KbdCoverageTest {
                 size = KbdSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd kbd-xl", actualClasses, "Kbd size Xl")
+        assertRendered(html, "kbd kbd-xl", "Kbd size Xl")
     }
 
     @Test
@@ -99,8 +99,7 @@ class KbdCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("kbd", actualClasses, "Kbd text")
+        assertRendered(html, "kbd", "Kbd text")
         assertTrue(html.contains("txtmark"), "Kbd text content")
     }
 }

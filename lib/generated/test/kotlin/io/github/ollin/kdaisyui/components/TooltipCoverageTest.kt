@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class TooltipCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun tooltip_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip", actualClasses, "Tooltip defaults")
-        assertTrue(html.endsWith("</div></div>"), "Tooltip closes <div>")
+        assertRendered(html, "tooltip", "Tooltip defaults", closes = "</div></div>")
     }
 
     @Test
@@ -39,12 +46,10 @@ class TooltipCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-bottom tooltip-center tooltip-end tooltip-left tooltip-open tooltip-right tooltip-start tooltip-top zz-extra", actualClasses, "Tooltip all flags")
+        assertRendered(html, "tooltip tooltip-bottom tooltip-center tooltip-end tooltip-left tooltip-open tooltip-right tooltip-start tooltip-top zz-extra", "Tooltip all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Tooltip id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Tooltip attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Tooltip content")
-        assertTrue(html.endsWith("</div></div>"), "Tooltip closes <div>")
     }
 
     @Test
@@ -55,8 +60,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-primary", actualClasses, "Tooltip variant Primary")
+        assertRendered(html, "tooltip tooltip-primary", "Tooltip variant Primary")
     }
 
     @Test
@@ -67,8 +71,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-secondary", actualClasses, "Tooltip variant Secondary")
+        assertRendered(html, "tooltip tooltip-secondary", "Tooltip variant Secondary")
     }
 
     @Test
@@ -79,8 +82,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-accent", actualClasses, "Tooltip variant Accent")
+        assertRendered(html, "tooltip tooltip-accent", "Tooltip variant Accent")
     }
 
     @Test
@@ -91,8 +93,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-info", actualClasses, "Tooltip variant Info")
+        assertRendered(html, "tooltip tooltip-info", "Tooltip variant Info")
     }
 
     @Test
@@ -103,8 +104,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-success", actualClasses, "Tooltip variant Success")
+        assertRendered(html, "tooltip tooltip-success", "Tooltip variant Success")
     }
 
     @Test
@@ -115,8 +115,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-warning", actualClasses, "Tooltip variant Warning")
+        assertRendered(html, "tooltip tooltip-warning", "Tooltip variant Warning")
     }
 
     @Test
@@ -127,8 +126,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip tooltip-error", actualClasses, "Tooltip variant Error")
+        assertRendered(html, "tooltip tooltip-error", "Tooltip variant Error")
     }
 
     @Test
@@ -138,9 +136,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip-content", actualClasses, "TooltipContent defaults")
-        assertTrue(html.endsWith("</div></div>"), "TooltipContent closes <div>")
+        assertRendered(html, "tooltip-content", "TooltipContent defaults", closes = "</div></div>")
     }
 
     @Test
@@ -153,11 +149,9 @@ class TooltipCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tooltip-content zz-extra", actualClasses, "TooltipContent all flags")
+        assertRendered(html, "tooltip-content zz-extra", "TooltipContent all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "TooltipContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "TooltipContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "TooltipContent content")
-        assertTrue(html.endsWith("</div></div>"), "TooltipContent closes <div>")
     }
 }

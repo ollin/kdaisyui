@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class AuraCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun aura_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("aura", actualClasses, "Aura defaults")
-        assertTrue(html.endsWith("</div></div>"), "Aura closes <div>")
+        assertRendered(html, "aura", "Aura defaults", closes = "</div></div>")
     }
 
     @Test
@@ -37,12 +44,10 @@ class AuraCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("aura aura-dual aura-glow aura-gold aura-holo aura-rainbow aura-silver zz-extra", actualClasses, "Aura all flags")
+        assertRendered(html, "aura aura-dual aura-glow aura-gold aura-holo aura-rainbow aura-silver zz-extra", "Aura all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Aura id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Aura attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Aura content")
-        assertTrue(html.endsWith("</div></div>"), "Aura closes <div>")
     }
 
     @Test
@@ -53,8 +58,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("aura aura-xs", actualClasses, "Aura size Xs")
+        assertRendered(html, "aura aura-xs", "Aura size Xs")
     }
 
     @Test
@@ -65,8 +69,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("aura aura-sm", actualClasses, "Aura size Sm")
+        assertRendered(html, "aura aura-sm", "Aura size Sm")
     }
 
     @Test
@@ -77,8 +80,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("aura aura-md", actualClasses, "Aura size Md")
+        assertRendered(html, "aura aura-md", "Aura size Md")
     }
 
     @Test
@@ -89,8 +91,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("aura aura-lg", actualClasses, "Aura size Lg")
+        assertRendered(html, "aura aura-lg", "Aura size Lg")
     }
 
     @Test
@@ -101,7 +102,6 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("aura aura-xl", actualClasses, "Aura size Xl")
+        assertRendered(html, "aura aura-xl", "Aura size Xl")
     }
 }

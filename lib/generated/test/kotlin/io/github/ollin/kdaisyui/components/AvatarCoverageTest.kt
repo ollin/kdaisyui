@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class AvatarCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun avatar_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class AvatarCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("avatar", actualClasses, "Avatar defaults")
-        assertTrue(html.endsWith("</div></div>"), "Avatar closes <div>")
+        assertRendered(html, "avatar", "Avatar defaults", closes = "</div></div>")
     }
 
     @Test
@@ -34,11 +41,9 @@ class AvatarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("avatar avatar-offline avatar-online avatar-placeholder zz-extra", actualClasses, "Avatar all flags")
+        assertRendered(html, "avatar avatar-offline avatar-online avatar-placeholder zz-extra", "Avatar all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Avatar id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Avatar attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Avatar content")
-        assertTrue(html.endsWith("</div></div>"), "Avatar closes <div>")
     }
 }

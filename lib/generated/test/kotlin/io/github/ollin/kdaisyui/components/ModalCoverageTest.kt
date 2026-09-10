@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class ModalCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun modal_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal", actualClasses, "Modal defaults")
-        assertTrue(html.endsWith("</dialog></div>"), "Modal closes <dialog>")
+        assertRendered(html, "modal", "Modal defaults", closes = "</dialog></div>")
     }
 
     @Test
@@ -37,12 +44,10 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal modal-bottom modal-end modal-middle modal-open modal-start modal-top zz-extra", actualClasses, "Modal all flags")
+        assertRendered(html, "modal modal-bottom modal-end modal-middle modal-open modal-start modal-top zz-extra", "Modal all flags", closes = "</dialog></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Modal id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Modal attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Modal content")
-        assertTrue(html.endsWith("</dialog></div>"), "Modal closes <dialog>")
     }
 
     @Test
@@ -52,9 +57,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-box", actualClasses, "ModalBox defaults")
-        assertTrue(html.endsWith("</div></div>"), "ModalBox closes <div>")
+        assertRendered(html, "modal-box", "ModalBox defaults", closes = "</div></div>")
     }
 
     @Test
@@ -67,12 +70,10 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-box zz-extra", actualClasses, "ModalBox all flags")
+        assertRendered(html, "modal-box zz-extra", "ModalBox all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ModalBox id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ModalBox attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ModalBox content")
-        assertTrue(html.endsWith("</div></div>"), "ModalBox closes <div>")
     }
 
     @Test
@@ -82,9 +83,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-action", actualClasses, "ModalAction defaults")
-        assertTrue(html.endsWith("</div></div>"), "ModalAction closes <div>")
+        assertRendered(html, "modal-action", "ModalAction defaults", closes = "</div></div>")
     }
 
     @Test
@@ -97,12 +96,10 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-action zz-extra", actualClasses, "ModalAction all flags")
+        assertRendered(html, "modal-action zz-extra", "ModalAction all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ModalAction id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ModalAction attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ModalAction content")
-        assertTrue(html.endsWith("</div></div>"), "ModalAction closes <div>")
     }
 
     @Test
@@ -112,9 +109,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-backdrop", actualClasses, "ModalBackdrop defaults")
-        assertTrue(html.endsWith("</div></div>"), "ModalBackdrop closes <div>")
+        assertRendered(html, "modal-backdrop", "ModalBackdrop defaults", closes = "</div></div>")
     }
 
     @Test
@@ -127,12 +122,10 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-backdrop zz-extra", actualClasses, "ModalBackdrop all flags")
+        assertRendered(html, "modal-backdrop zz-extra", "ModalBackdrop all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ModalBackdrop id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ModalBackdrop attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ModalBackdrop content")
-        assertTrue(html.endsWith("</div></div>"), "ModalBackdrop closes <div>")
     }
 
     @Test
@@ -142,9 +135,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-toggle", actualClasses, "ModalToggle defaults")
-        assertTrue(html.endsWith("</div></div>"), "ModalToggle closes <div>")
+        assertRendered(html, "modal-toggle", "ModalToggle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -157,12 +148,10 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-toggle zz-extra", actualClasses, "ModalToggle all flags")
+        assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ModalToggle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ModalToggle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ModalToggle content")
-        assertTrue(html.endsWith("</div></div>"), "ModalToggle closes <div>")
     }
 
     @Test
@@ -172,9 +161,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal", actualClasses, "ModalPopover defaults")
-        assertTrue(html.endsWith("</div></div>"), "ModalPopover closes <div>")
+        assertRendered(html, "modal", "ModalPopover defaults", closes = "</div></div>")
     }
 
     @Test
@@ -187,11 +174,9 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal zz-extra", actualClasses, "ModalPopover all flags")
+        assertRendered(html, "modal zz-extra", "ModalPopover all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ModalPopover id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ModalPopover attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ModalPopover content")
-        assertTrue(html.endsWith("</div></div>"), "ModalPopover closes <div>")
     }
 }

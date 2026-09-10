@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class FileInputCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun fileInput_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +25,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input", actualClasses, "FileInput defaults")
+        assertRendered(html, "file-input", "FileInput defaults")
     }
 
     @Test
@@ -31,8 +39,7 @@ class FileInputCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-ghost zz-extra", actualClasses, "FileInput all flags")
+        assertRendered(html, "file-input file-input-ghost zz-extra", "FileInput all flags")
         assertTrue(html.contains("id=\"x-cov-id\""), "FileInput id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FileInput attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FileInput content")
@@ -46,8 +53,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-neutral", actualClasses, "FileInput variant Neutral")
+        assertRendered(html, "file-input file-input-neutral", "FileInput variant Neutral")
     }
 
     @Test
@@ -58,8 +64,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-primary", actualClasses, "FileInput variant Primary")
+        assertRendered(html, "file-input file-input-primary", "FileInput variant Primary")
     }
 
     @Test
@@ -70,8 +75,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-secondary", actualClasses, "FileInput variant Secondary")
+        assertRendered(html, "file-input file-input-secondary", "FileInput variant Secondary")
     }
 
     @Test
@@ -82,8 +86,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-accent", actualClasses, "FileInput variant Accent")
+        assertRendered(html, "file-input file-input-accent", "FileInput variant Accent")
     }
 
     @Test
@@ -94,8 +97,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-info", actualClasses, "FileInput variant Info")
+        assertRendered(html, "file-input file-input-info", "FileInput variant Info")
     }
 
     @Test
@@ -106,8 +108,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-success", actualClasses, "FileInput variant Success")
+        assertRendered(html, "file-input file-input-success", "FileInput variant Success")
     }
 
     @Test
@@ -118,8 +119,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-warning", actualClasses, "FileInput variant Warning")
+        assertRendered(html, "file-input file-input-warning", "FileInput variant Warning")
     }
 
     @Test
@@ -130,8 +130,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-error", actualClasses, "FileInput variant Error")
+        assertRendered(html, "file-input file-input-error", "FileInput variant Error")
     }
 
     @Test
@@ -142,8 +141,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-xs", actualClasses, "FileInput size Xs")
+        assertRendered(html, "file-input file-input-xs", "FileInput size Xs")
     }
 
     @Test
@@ -154,8 +152,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-sm", actualClasses, "FileInput size Sm")
+        assertRendered(html, "file-input file-input-sm", "FileInput size Sm")
     }
 
     @Test
@@ -166,8 +163,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-md", actualClasses, "FileInput size Md")
+        assertRendered(html, "file-input file-input-md", "FileInput size Md")
     }
 
     @Test
@@ -178,8 +174,7 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-lg", actualClasses, "FileInput size Lg")
+        assertRendered(html, "file-input file-input-lg", "FileInput size Lg")
     }
 
     @Test
@@ -190,7 +185,6 @@ class FileInputCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("file-input file-input-xl", actualClasses, "FileInput size Xl")
+        assertRendered(html, "file-input file-input-xl", "FileInput size Xl")
     }
 }

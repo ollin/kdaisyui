@@ -9,14 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class BadgeCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun badge_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge", actualClasses, "Badge defaults")
-        assertTrue(html.endsWith("</span></div>"), "Badge closes <span>")
+        assertRendered(html, "badge", "Badge defaults", closes = "</span></div>")
     }
 
     @Test
@@ -33,12 +40,10 @@ class BadgeCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-dash badge-ghost badge-outline badge-soft zz-extra", actualClasses, "Badge all flags")
+        assertRendered(html, "badge badge-dash badge-ghost badge-outline badge-soft zz-extra", "Badge all flags", closes = "</span></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Badge id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Badge attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Badge content")
-        assertTrue(html.endsWith("</span></div>"), "Badge closes <span>")
     }
 
     @Test
@@ -48,8 +53,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-neutral", actualClasses, "Badge variant Neutral")
+        assertRendered(html, "badge badge-neutral", "Badge variant Neutral")
     }
 
     @Test
@@ -59,8 +63,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-primary", actualClasses, "Badge variant Primary")
+        assertRendered(html, "badge badge-primary", "Badge variant Primary")
     }
 
     @Test
@@ -70,8 +73,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-secondary", actualClasses, "Badge variant Secondary")
+        assertRendered(html, "badge badge-secondary", "Badge variant Secondary")
     }
 
     @Test
@@ -81,8 +83,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-accent", actualClasses, "Badge variant Accent")
+        assertRendered(html, "badge badge-accent", "Badge variant Accent")
     }
 
     @Test
@@ -92,8 +93,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-info", actualClasses, "Badge variant Info")
+        assertRendered(html, "badge badge-info", "Badge variant Info")
     }
 
     @Test
@@ -103,8 +103,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-success", actualClasses, "Badge variant Success")
+        assertRendered(html, "badge badge-success", "Badge variant Success")
     }
 
     @Test
@@ -114,8 +113,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-warning", actualClasses, "Badge variant Warning")
+        assertRendered(html, "badge badge-warning", "Badge variant Warning")
     }
 
     @Test
@@ -125,8 +123,7 @@ class BadgeCoverageTest {
                 variant = BadgeVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-error", actualClasses, "Badge variant Error")
+        assertRendered(html, "badge badge-error", "Badge variant Error")
     }
 
     @Test
@@ -136,8 +133,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-xs", actualClasses, "Badge size Xs")
+        assertRendered(html, "badge badge-xs", "Badge size Xs")
     }
 
     @Test
@@ -147,8 +143,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-sm", actualClasses, "Badge size Sm")
+        assertRendered(html, "badge badge-sm", "Badge size Sm")
     }
 
     @Test
@@ -158,8 +153,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-md", actualClasses, "Badge size Md")
+        assertRendered(html, "badge badge-md", "Badge size Md")
     }
 
     @Test
@@ -169,8 +163,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-lg", actualClasses, "Badge size Lg")
+        assertRendered(html, "badge badge-lg", "Badge size Lg")
     }
 
     @Test
@@ -180,8 +173,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge badge-xl", actualClasses, "Badge size Xl")
+        assertRendered(html, "badge badge-xl", "Badge size Xl")
     }
 
     @Test
@@ -191,8 +183,7 @@ class BadgeCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("badge", actualClasses, "Badge text")
+        assertRendered(html, "badge", "Badge text")
         assertTrue(html.contains("txtmark"), "Badge text content")
     }
 }

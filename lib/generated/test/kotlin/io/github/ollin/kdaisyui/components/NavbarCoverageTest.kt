@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class NavbarCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun navbar_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar", actualClasses, "Navbar defaults")
-        assertTrue(html.endsWith("</div></div>"), "Navbar closes <div>")
+        assertRendered(html, "navbar", "Navbar defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,12 +38,10 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar zz-extra", actualClasses, "Navbar all flags")
+        assertRendered(html, "navbar zz-extra", "Navbar all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Navbar id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Navbar attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Navbar content")
-        assertTrue(html.endsWith("</div></div>"), "Navbar closes <div>")
     }
 
     @Test
@@ -46,9 +51,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar-start", actualClasses, "NavbarStart defaults")
-        assertTrue(html.endsWith("</div></div>"), "NavbarStart closes <div>")
+        assertRendered(html, "navbar-start", "NavbarStart defaults", closes = "</div></div>")
     }
 
     @Test
@@ -61,12 +64,10 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar-start zz-extra", actualClasses, "NavbarStart all flags")
+        assertRendered(html, "navbar-start zz-extra", "NavbarStart all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "NavbarStart id")
         assertTrue(html.contains("data-attrs=\"yes\""), "NavbarStart attrs")
         assertTrue(html.contains("data-content=\"yes\""), "NavbarStart content")
-        assertTrue(html.endsWith("</div></div>"), "NavbarStart closes <div>")
     }
 
     @Test
@@ -76,9 +77,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar-center", actualClasses, "NavbarCenter defaults")
-        assertTrue(html.endsWith("</div></div>"), "NavbarCenter closes <div>")
+        assertRendered(html, "navbar-center", "NavbarCenter defaults", closes = "</div></div>")
     }
 
     @Test
@@ -91,12 +90,10 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar-center zz-extra", actualClasses, "NavbarCenter all flags")
+        assertRendered(html, "navbar-center zz-extra", "NavbarCenter all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "NavbarCenter id")
         assertTrue(html.contains("data-attrs=\"yes\""), "NavbarCenter attrs")
         assertTrue(html.contains("data-content=\"yes\""), "NavbarCenter content")
-        assertTrue(html.endsWith("</div></div>"), "NavbarCenter closes <div>")
     }
 
     @Test
@@ -106,9 +103,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar-end", actualClasses, "NavbarEnd defaults")
-        assertTrue(html.endsWith("</div></div>"), "NavbarEnd closes <div>")
+        assertRendered(html, "navbar-end", "NavbarEnd defaults", closes = "</div></div>")
     }
 
     @Test
@@ -121,11 +116,9 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("navbar-end zz-extra", actualClasses, "NavbarEnd all flags")
+        assertRendered(html, "navbar-end zz-extra", "NavbarEnd all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "NavbarEnd id")
         assertTrue(html.contains("data-attrs=\"yes\""), "NavbarEnd attrs")
         assertTrue(html.contains("data-content=\"yes\""), "NavbarEnd content")
-        assertTrue(html.endsWith("</div></div>"), "NavbarEnd closes <div>")
     }
 }

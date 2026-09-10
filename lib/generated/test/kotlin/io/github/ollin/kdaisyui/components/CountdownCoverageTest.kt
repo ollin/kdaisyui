@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class CountdownCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun countdown_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class CountdownCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("countdown", actualClasses, "Countdown defaults")
-        assertTrue(html.endsWith("</span></div>"), "Countdown closes <span>")
+        assertRendered(html, "countdown", "Countdown defaults", closes = "</span></div>")
     }
 
     @Test
@@ -31,11 +38,9 @@ class CountdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("countdown zz-extra", actualClasses, "Countdown all flags")
+        assertRendered(html, "countdown zz-extra", "Countdown all flags", closes = "</span></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Countdown id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Countdown attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Countdown content")
-        assertTrue(html.endsWith("</span></div>"), "Countdown closes <span>")
     }
 }

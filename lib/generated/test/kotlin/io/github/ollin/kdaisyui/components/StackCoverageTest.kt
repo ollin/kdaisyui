@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class StackCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun stack_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class StackCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stack", actualClasses, "Stack defaults")
-        assertTrue(html.endsWith("</div></div>"), "Stack closes <div>")
+        assertRendered(html, "stack", "Stack defaults", closes = "</div></div>")
     }
 
     @Test
@@ -35,11 +42,9 @@ class StackCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stack stack-bottom stack-end stack-start stack-top zz-extra", actualClasses, "Stack all flags")
+        assertRendered(html, "stack stack-bottom stack-end stack-start stack-top zz-extra", "Stack all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Stack id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Stack attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Stack content")
-        assertTrue(html.endsWith("</div></div>"), "Stack closes <div>")
     }
 }

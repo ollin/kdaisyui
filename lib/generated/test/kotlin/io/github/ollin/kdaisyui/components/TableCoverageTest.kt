@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class TableCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun table_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("table", actualClasses, "Table defaults")
-        assertTrue(html.endsWith("</table></div>"), "Table closes <table>")
+        assertRendered(html, "table", "Table defaults", closes = "</table></div>")
     }
 
     @Test
@@ -34,12 +41,10 @@ class TableCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("table table-pin-cols table-pin-rows table-zebra zz-extra", actualClasses, "Table all flags")
+        assertRendered(html, "table table-pin-cols table-pin-rows table-zebra zz-extra", "Table all flags", closes = "</table></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Table id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Table attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Table content")
-        assertTrue(html.endsWith("</table></div>"), "Table closes <table>")
     }
 
     @Test
@@ -50,8 +55,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("table table-xs", actualClasses, "Table size Xs")
+        assertRendered(html, "table table-xs", "Table size Xs")
     }
 
     @Test
@@ -62,8 +66,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("table table-sm", actualClasses, "Table size Sm")
+        assertRendered(html, "table table-sm", "Table size Sm")
     }
 
     @Test
@@ -74,8 +77,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("table table-md", actualClasses, "Table size Md")
+        assertRendered(html, "table table-md", "Table size Md")
     }
 
     @Test
@@ -86,8 +88,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("table table-lg", actualClasses, "Table size Lg")
+        assertRendered(html, "table table-lg", "Table size Lg")
     }
 
     @Test
@@ -98,7 +99,6 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("table table-xl", actualClasses, "Table size Xl")
+        assertRendered(html, "table table-xl", "Table size Xl")
     }
 }

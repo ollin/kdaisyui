@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class ListCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun list_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class ListCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("list", actualClasses, "List defaults")
-        assertTrue(html.endsWith("</ul></div>"), "List closes <ul>")
+        assertRendered(html, "list", "List defaults", closes = "</ul></div>")
     }
 
     @Test
@@ -33,11 +40,9 @@ class ListCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("list list-col-grow list-col-wrap zz-extra", actualClasses, "List all flags")
+        assertRendered(html, "list list-col-grow list-col-wrap zz-extra", "List all flags", closes = "</ul></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "List id")
         assertTrue(html.contains("data-attrs=\"yes\""), "List attrs")
         assertTrue(html.contains("data-content=\"yes\""), "List content")
-        assertTrue(html.endsWith("</ul></div>"), "List closes <ul>")
     }
 }

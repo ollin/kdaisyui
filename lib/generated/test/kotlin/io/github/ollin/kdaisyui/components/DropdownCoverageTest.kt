@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class DropdownCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun dropdown_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dropdown", actualClasses, "Dropdown defaults")
-        assertTrue(html.endsWith("</details></div>"), "Dropdown closes <details>")
+        assertRendered(html, "dropdown", "Dropdown defaults", closes = "</details></div>")
     }
 
     @Test
@@ -41,12 +48,10 @@ class DropdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dropdown dropdown-bottom dropdown-center dropdown-close dropdown-end dropdown-hover dropdown-left dropdown-open dropdown-right dropdown-start dropdown-top zz-extra", actualClasses, "Dropdown all flags")
+        assertRendered(html, "dropdown dropdown-bottom dropdown-center dropdown-close dropdown-end dropdown-hover dropdown-left dropdown-open dropdown-right dropdown-start dropdown-top zz-extra", "Dropdown all flags", closes = "</details></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Dropdown id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Dropdown attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Dropdown content")
-        assertTrue(html.endsWith("</details></div>"), "Dropdown closes <details>")
     }
 
     @Test
@@ -56,9 +61,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dropdown-content", actualClasses, "DropdownContent defaults")
-        assertTrue(html.endsWith("</div></div>"), "DropdownContent closes <div>")
+        assertRendered(html, "dropdown-content", "DropdownContent defaults", closes = "</div></div>")
     }
 
     @Test
@@ -71,11 +74,9 @@ class DropdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dropdown-content zz-extra", actualClasses, "DropdownContent all flags")
+        assertRendered(html, "dropdown-content zz-extra", "DropdownContent all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DropdownContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DropdownContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DropdownContent content")
-        assertTrue(html.endsWith("</div></div>"), "DropdownContent closes <div>")
     }
 }

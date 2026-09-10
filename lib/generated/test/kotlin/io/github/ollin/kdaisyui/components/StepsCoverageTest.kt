@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class StepsCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun steps_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps", actualClasses, "Steps defaults")
-        assertTrue(html.endsWith("</ul></div>"), "Steps closes <ul>")
+        assertRendered(html, "steps", "Steps defaults", closes = "</ul></div>")
     }
 
     @Test
@@ -33,12 +40,10 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-horizontal steps-vertical zz-extra", actualClasses, "Steps all flags")
+        assertRendered(html, "steps steps-horizontal steps-vertical zz-extra", "Steps all flags", closes = "</ul></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Steps id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Steps attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Steps content")
-        assertTrue(html.endsWith("</ul></div>"), "Steps closes <ul>")
     }
 
     @Test
@@ -49,8 +54,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-neutral", actualClasses, "Steps variant StepNeutral")
+        assertRendered(html, "steps steps-step-neutral", "Steps variant StepNeutral")
     }
 
     @Test
@@ -61,8 +65,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-primary", actualClasses, "Steps variant StepPrimary")
+        assertRendered(html, "steps steps-step-primary", "Steps variant StepPrimary")
     }
 
     @Test
@@ -73,8 +76,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-secondary", actualClasses, "Steps variant StepSecondary")
+        assertRendered(html, "steps steps-step-secondary", "Steps variant StepSecondary")
     }
 
     @Test
@@ -85,8 +87,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-accent", actualClasses, "Steps variant StepAccent")
+        assertRendered(html, "steps steps-step-accent", "Steps variant StepAccent")
     }
 
     @Test
@@ -97,8 +98,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-info", actualClasses, "Steps variant StepInfo")
+        assertRendered(html, "steps steps-step-info", "Steps variant StepInfo")
     }
 
     @Test
@@ -109,8 +109,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-success", actualClasses, "Steps variant StepSuccess")
+        assertRendered(html, "steps steps-step-success", "Steps variant StepSuccess")
     }
 
     @Test
@@ -121,8 +120,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-warning", actualClasses, "Steps variant StepWarning")
+        assertRendered(html, "steps steps-step-warning", "Steps variant StepWarning")
     }
 
     @Test
@@ -133,8 +131,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("steps steps-step-error", actualClasses, "Steps variant StepError")
+        assertRendered(html, "steps steps-step-error", "Steps variant StepError")
     }
 
     @Test
@@ -144,9 +141,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("step", actualClasses, "StepsStep defaults")
-        assertTrue(html.endsWith("</div></div>"), "StepsStep closes <div>")
+        assertRendered(html, "step", "StepsStep defaults", closes = "</div></div>")
     }
 
     @Test
@@ -159,12 +154,10 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("step zz-extra", actualClasses, "StepsStep all flags")
+        assertRendered(html, "step zz-extra", "StepsStep all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "StepsStep id")
         assertTrue(html.contains("data-attrs=\"yes\""), "StepsStep attrs")
         assertTrue(html.contains("data-content=\"yes\""), "StepsStep content")
-        assertTrue(html.endsWith("</div></div>"), "StepsStep closes <div>")
     }
 
     @Test
@@ -174,9 +167,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("step-icon", actualClasses, "StepsStepIcon defaults")
-        assertTrue(html.endsWith("</div></div>"), "StepsStepIcon closes <div>")
+        assertRendered(html, "step-icon", "StepsStepIcon defaults", closes = "</div></div>")
     }
 
     @Test
@@ -189,11 +180,9 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("step-icon zz-extra", actualClasses, "StepsStepIcon all flags")
+        assertRendered(html, "step-icon zz-extra", "StepsStepIcon all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "StepsStepIcon id")
         assertTrue(html.contains("data-attrs=\"yes\""), "StepsStepIcon attrs")
         assertTrue(html.contains("data-content=\"yes\""), "StepsStepIcon content")
-        assertTrue(html.endsWith("</div></div>"), "StepsStepIcon closes <div>")
     }
 }

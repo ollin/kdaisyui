@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class FooterCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun footer_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class FooterCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("footer", actualClasses, "Footer defaults")
-        assertTrue(html.endsWith("</footer></div>"), "Footer closes <footer>")
+        assertRendered(html, "footer", "Footer defaults", closes = "</footer></div>")
     }
 
     @Test
@@ -34,12 +41,10 @@ class FooterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("footer footer-center footer-horizontal footer-vertical zz-extra", actualClasses, "Footer all flags")
+        assertRendered(html, "footer footer-center footer-horizontal footer-vertical zz-extra", "Footer all flags", closes = "</footer></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Footer id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Footer attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Footer content")
-        assertTrue(html.endsWith("</footer></div>"), "Footer closes <footer>")
     }
 
     @Test
@@ -47,9 +52,7 @@ class FooterCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFooterTitle()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("footer-title", actualClasses, "FooterTitle defaults")
-        assertTrue(html.endsWith("</h2></div>"), "FooterTitle closes <h2>")
+        assertRendered(html, "footer-title", "FooterTitle defaults", closes = "</h2></div>")
     }
 
     @Test
@@ -62,12 +65,10 @@ class FooterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("footer-title zz-extra", actualClasses, "FooterTitle all flags")
+        assertRendered(html, "footer-title zz-extra", "FooterTitle all flags", closes = "</h2></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "FooterTitle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FooterTitle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FooterTitle content")
-        assertTrue(html.endsWith("</h2></div>"), "FooterTitle closes <h2>")
     }
 
     @Test
@@ -77,8 +78,7 @@ class FooterCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("footer-title", actualClasses, "FooterTitle text")
+        assertRendered(html, "footer-title", "FooterTitle text")
         assertTrue(html.contains("txtmark"), "FooterTitle text content")
     }
 }

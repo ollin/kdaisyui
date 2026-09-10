@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class SkeletonCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun skeleton_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class SkeletonCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("skeleton", actualClasses, "Skeleton defaults")
-        assertTrue(html.endsWith("</div></div>"), "Skeleton closes <div>")
+        assertRendered(html, "skeleton", "Skeleton defaults", closes = "</div></div>")
     }
 
     @Test
@@ -32,11 +39,9 @@ class SkeletonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("skeleton skeleton-text zz-extra", actualClasses, "Skeleton all flags")
+        assertRendered(html, "skeleton skeleton-text zz-extra", "Skeleton all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Skeleton id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Skeleton attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Skeleton content")
-        assertTrue(html.endsWith("</div></div>"), "Skeleton closes <div>")
     }
 }

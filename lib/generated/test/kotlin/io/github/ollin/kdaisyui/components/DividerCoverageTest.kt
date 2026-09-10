@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class DividerCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun divider_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider", actualClasses, "Divider defaults")
-        assertTrue(html.endsWith("</div></div>"), "Divider closes <div>")
+        assertRendered(html, "divider", "Divider defaults", closes = "</div></div>")
     }
 
     @Test
@@ -35,12 +42,10 @@ class DividerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-end divider-horizontal divider-start divider-vertical zz-extra", actualClasses, "Divider all flags")
+        assertRendered(html, "divider divider-end divider-horizontal divider-start divider-vertical zz-extra", "Divider all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Divider id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Divider attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Divider content")
-        assertTrue(html.endsWith("</div></div>"), "Divider closes <div>")
     }
 
     @Test
@@ -51,8 +56,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-neutral", actualClasses, "Divider variant Neutral")
+        assertRendered(html, "divider divider-neutral", "Divider variant Neutral")
     }
 
     @Test
@@ -63,8 +67,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-primary", actualClasses, "Divider variant Primary")
+        assertRendered(html, "divider divider-primary", "Divider variant Primary")
     }
 
     @Test
@@ -75,8 +78,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-secondary", actualClasses, "Divider variant Secondary")
+        assertRendered(html, "divider divider-secondary", "Divider variant Secondary")
     }
 
     @Test
@@ -87,8 +89,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-accent", actualClasses, "Divider variant Accent")
+        assertRendered(html, "divider divider-accent", "Divider variant Accent")
     }
 
     @Test
@@ -99,8 +100,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-success", actualClasses, "Divider variant Success")
+        assertRendered(html, "divider divider-success", "Divider variant Success")
     }
 
     @Test
@@ -111,8 +111,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-warning", actualClasses, "Divider variant Warning")
+        assertRendered(html, "divider divider-warning", "Divider variant Warning")
     }
 
     @Test
@@ -123,8 +122,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-info", actualClasses, "Divider variant Info")
+        assertRendered(html, "divider divider-info", "Divider variant Info")
     }
 
     @Test
@@ -135,7 +133,6 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("divider divider-error", actualClasses, "Divider variant Error")
+        assertRendered(html, "divider divider-error", "Divider variant Error")
     }
 }

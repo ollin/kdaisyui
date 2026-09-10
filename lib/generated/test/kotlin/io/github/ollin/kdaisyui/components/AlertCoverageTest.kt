@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class AlertCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun alert_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,10 +25,8 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("alert", actualClasses, "Alert defaults")
+        assertRendered(html, "alert", "Alert defaults", closes = "</div></div>")
         assertTrue(html.contains("role=\""), "Alert sets role")
-        assertTrue(html.endsWith("</div></div>"), "Alert closes <div>")
     }
 
     @Test
@@ -37,13 +44,11 @@ class AlertCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("alert alert-dash alert-horizontal alert-outline alert-soft alert-vertical zz-extra", actualClasses, "Alert all flags")
+        assertRendered(html, "alert alert-dash alert-horizontal alert-outline alert-soft alert-vertical zz-extra", "Alert all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Alert id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Alert attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Alert content")
         assertTrue(html.contains("role=\""), "Alert sets role")
-        assertTrue(html.endsWith("</div></div>"), "Alert closes <div>")
     }
 
     @Test
@@ -54,8 +59,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("alert alert-info", actualClasses, "Alert variant Info")
+        assertRendered(html, "alert alert-info", "Alert variant Info")
     }
 
     @Test
@@ -66,8 +70,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("alert alert-success", actualClasses, "Alert variant Success")
+        assertRendered(html, "alert alert-success", "Alert variant Success")
     }
 
     @Test
@@ -78,8 +81,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("alert alert-warning", actualClasses, "Alert variant Warning")
+        assertRendered(html, "alert alert-warning", "Alert variant Warning")
     }
 
     @Test
@@ -90,7 +92,6 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("alert alert-error", actualClasses, "Alert variant Error")
+        assertRendered(html, "alert alert-error", "Alert variant Error")
     }
 }

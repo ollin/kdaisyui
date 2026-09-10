@@ -9,14 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class LabelCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun label_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyLabel()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("label", actualClasses, "Label defaults")
-        assertTrue(html.endsWith("</span></div>"), "Label closes <span>")
+        assertRendered(html, "label", "Label defaults", closes = "</span></div>")
     }
 
     @Test
@@ -29,12 +36,10 @@ class LabelCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("label zz-extra", actualClasses, "Label all flags")
+        assertRendered(html, "label zz-extra", "Label all flags", closes = "</span></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Label id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Label attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Label content")
-        assertTrue(html.endsWith("</span></div>"), "Label closes <span>")
     }
 
     @Test
@@ -44,8 +49,7 @@ class LabelCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("label", actualClasses, "Label text")
+        assertRendered(html, "label", "Label text")
         assertTrue(html.contains("txtmark"), "Label text content")
     }
 }

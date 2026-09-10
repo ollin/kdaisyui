@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class StatusCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun status_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,10 +25,8 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status", actualClasses, "Status defaults")
+        assertRendered(html, "status", "Status defaults", closes = "</span></div>")
         assertTrue(html.contains("role=\""), "Status sets role")
-        assertTrue(html.endsWith("</span></div>"), "Status closes <span>")
     }
 
     @Test
@@ -32,13 +39,11 @@ class StatusCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status zz-extra", actualClasses, "Status all flags")
+        assertRendered(html, "status zz-extra", "Status all flags", closes = "</span></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Status id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Status attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Status content")
         assertTrue(html.contains("role=\""), "Status sets role")
-        assertTrue(html.endsWith("</span></div>"), "Status closes <span>")
     }
 
     @Test
@@ -49,8 +54,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-neutral", actualClasses, "Status variant Neutral")
+        assertRendered(html, "status status-neutral", "Status variant Neutral")
     }
 
     @Test
@@ -61,8 +65,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-primary", actualClasses, "Status variant Primary")
+        assertRendered(html, "status status-primary", "Status variant Primary")
     }
 
     @Test
@@ -73,8 +76,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-secondary", actualClasses, "Status variant Secondary")
+        assertRendered(html, "status status-secondary", "Status variant Secondary")
     }
 
     @Test
@@ -85,8 +87,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-accent", actualClasses, "Status variant Accent")
+        assertRendered(html, "status status-accent", "Status variant Accent")
     }
 
     @Test
@@ -97,8 +98,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-info", actualClasses, "Status variant Info")
+        assertRendered(html, "status status-info", "Status variant Info")
     }
 
     @Test
@@ -109,8 +109,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-success", actualClasses, "Status variant Success")
+        assertRendered(html, "status status-success", "Status variant Success")
     }
 
     @Test
@@ -121,8 +120,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-warning", actualClasses, "Status variant Warning")
+        assertRendered(html, "status status-warning", "Status variant Warning")
     }
 
     @Test
@@ -133,8 +131,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-error", actualClasses, "Status variant Error")
+        assertRendered(html, "status status-error", "Status variant Error")
     }
 
     @Test
@@ -145,8 +142,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-xs", actualClasses, "Status size Xs")
+        assertRendered(html, "status status-xs", "Status size Xs")
     }
 
     @Test
@@ -157,8 +153,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-sm", actualClasses, "Status size Sm")
+        assertRendered(html, "status status-sm", "Status size Sm")
     }
 
     @Test
@@ -169,8 +164,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-md", actualClasses, "Status size Md")
+        assertRendered(html, "status status-md", "Status size Md")
     }
 
     @Test
@@ -181,8 +175,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-lg", actualClasses, "Status size Lg")
+        assertRendered(html, "status status-lg", "Status size Lg")
     }
 
     @Test
@@ -193,7 +186,6 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("status status-xl", actualClasses, "Status size Xl")
+        assertRendered(html, "status status-xl", "Status size Xl")
     }
 }

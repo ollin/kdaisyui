@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class LoadingCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun loading_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("loading", actualClasses, "Loading defaults")
-        assertTrue(html.endsWith("</span></div>"), "Loading closes <span>")
+        assertRendered(html, "loading", "Loading defaults", closes = "</span></div>")
     }
 
     @Test
@@ -37,12 +44,10 @@ class LoadingCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("loading loading-ball loading-bars loading-dots loading-infinity loading-ring loading-spinner zz-extra", actualClasses, "Loading all flags")
+        assertRendered(html, "loading loading-ball loading-bars loading-dots loading-infinity loading-ring loading-spinner zz-extra", "Loading all flags", closes = "</span></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Loading id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Loading attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Loading content")
-        assertTrue(html.endsWith("</span></div>"), "Loading closes <span>")
     }
 
     @Test
@@ -53,8 +58,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("loading loading-xs", actualClasses, "Loading size Xs")
+        assertRendered(html, "loading loading-xs", "Loading size Xs")
     }
 
     @Test
@@ -65,8 +69,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("loading loading-sm", actualClasses, "Loading size Sm")
+        assertRendered(html, "loading loading-sm", "Loading size Sm")
     }
 
     @Test
@@ -77,8 +80,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("loading loading-md", actualClasses, "Loading size Md")
+        assertRendered(html, "loading loading-md", "Loading size Md")
     }
 
     @Test
@@ -89,8 +91,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("loading loading-lg", actualClasses, "Loading size Lg")
+        assertRendered(html, "loading loading-lg", "Loading size Lg")
     }
 
     @Test
@@ -101,7 +102,6 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("loading loading-xl", actualClasses, "Loading size Xl")
+        assertRendered(html, "loading loading-xl", "Loading size Xl")
     }
 }

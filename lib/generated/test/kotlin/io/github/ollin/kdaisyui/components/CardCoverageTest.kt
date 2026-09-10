@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class CardCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun card_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card", actualClasses, "Card defaults")
-        assertTrue(html.endsWith("</div></div>"), "Card closes <div>")
+        assertRendered(html, "card", "Card defaults", closes = "</div></div>")
     }
 
     @Test
@@ -35,12 +42,10 @@ class CardCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card card-border card-dash card-image-full card-side zz-extra", actualClasses, "Card all flags")
+        assertRendered(html, "card card-border card-dash card-image-full card-side zz-extra", "Card all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Card id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Card attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Card content")
-        assertTrue(html.endsWith("</div></div>"), "Card closes <div>")
     }
 
     @Test
@@ -51,8 +56,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card card-xs", actualClasses, "Card size Xs")
+        assertRendered(html, "card card-xs", "Card size Xs")
     }
 
     @Test
@@ -63,8 +67,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card card-sm", actualClasses, "Card size Sm")
+        assertRendered(html, "card card-sm", "Card size Sm")
     }
 
     @Test
@@ -75,8 +78,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card card-md", actualClasses, "Card size Md")
+        assertRendered(html, "card card-md", "Card size Md")
     }
 
     @Test
@@ -87,8 +89,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card card-lg", actualClasses, "Card size Lg")
+        assertRendered(html, "card card-lg", "Card size Lg")
     }
 
     @Test
@@ -99,8 +100,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card card-xl", actualClasses, "Card size Xl")
+        assertRendered(html, "card card-xl", "Card size Xl")
     }
 
     @Test
@@ -108,9 +108,7 @@ class CardCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCardTitle()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card-title", actualClasses, "CardTitle defaults")
-        assertTrue(html.endsWith("</h2></div>"), "CardTitle closes <h2>")
+        assertRendered(html, "card-title", "CardTitle defaults", closes = "</h2></div>")
     }
 
     @Test
@@ -123,12 +121,10 @@ class CardCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card-title zz-extra", actualClasses, "CardTitle all flags")
+        assertRendered(html, "card-title zz-extra", "CardTitle all flags", closes = "</h2></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "CardTitle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CardTitle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CardTitle content")
-        assertTrue(html.endsWith("</h2></div>"), "CardTitle closes <h2>")
     }
 
     @Test
@@ -138,8 +134,7 @@ class CardCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card-title", actualClasses, "CardTitle text")
+        assertRendered(html, "card-title", "CardTitle text")
         assertTrue(html.contains("txtmark"), "CardTitle text content")
     }
 
@@ -150,9 +145,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card-body", actualClasses, "CardBody defaults")
-        assertTrue(html.endsWith("</div></div>"), "CardBody closes <div>")
+        assertRendered(html, "card-body", "CardBody defaults", closes = "</div></div>")
     }
 
     @Test
@@ -165,12 +158,10 @@ class CardCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card-body zz-extra", actualClasses, "CardBody all flags")
+        assertRendered(html, "card-body zz-extra", "CardBody all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "CardBody id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CardBody attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CardBody content")
-        assertTrue(html.endsWith("</div></div>"), "CardBody closes <div>")
     }
 
     @Test
@@ -180,9 +171,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card-actions", actualClasses, "CardActions defaults")
-        assertTrue(html.endsWith("</div></div>"), "CardActions closes <div>")
+        assertRendered(html, "card-actions", "CardActions defaults", closes = "</div></div>")
     }
 
     @Test
@@ -195,11 +184,9 @@ class CardCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("card-actions zz-extra", actualClasses, "CardActions all flags")
+        assertRendered(html, "card-actions zz-extra", "CardActions all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "CardActions id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CardActions attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CardActions content")
-        assertTrue(html.endsWith("</div></div>"), "CardActions closes <div>")
     }
 }

@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class RatingCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun rating_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("rating", actualClasses, "Rating defaults")
-        assertTrue(html.endsWith("</div></div>"), "Rating closes <div>")
+        assertRendered(html, "rating", "Rating defaults", closes = "</div></div>")
     }
 
     @Test
@@ -33,12 +40,10 @@ class RatingCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("rating rating-half rating-hidden zz-extra", actualClasses, "Rating all flags")
+        assertRendered(html, "rating rating-half rating-hidden zz-extra", "Rating all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Rating id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Rating attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Rating content")
-        assertTrue(html.endsWith("</div></div>"), "Rating closes <div>")
     }
 
     @Test
@@ -49,8 +54,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("rating rating-xs", actualClasses, "Rating size Xs")
+        assertRendered(html, "rating rating-xs", "Rating size Xs")
     }
 
     @Test
@@ -61,8 +65,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("rating rating-sm", actualClasses, "Rating size Sm")
+        assertRendered(html, "rating rating-sm", "Rating size Sm")
     }
 
     @Test
@@ -73,8 +76,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("rating rating-md", actualClasses, "Rating size Md")
+        assertRendered(html, "rating rating-md", "Rating size Md")
     }
 
     @Test
@@ -85,8 +87,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("rating rating-lg", actualClasses, "Rating size Lg")
+        assertRendered(html, "rating rating-lg", "Rating size Lg")
     }
 
     @Test
@@ -97,7 +98,6 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("rating rating-xl", actualClasses, "Rating size Xl")
+        assertRendered(html, "rating rating-xl", "Rating size Xl")
     }
 }

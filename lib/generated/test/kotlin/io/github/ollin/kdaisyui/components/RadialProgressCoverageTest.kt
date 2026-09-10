@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class RadialProgressCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun radialProgress_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class RadialProgressCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radial-progress", actualClasses, "RadialProgress defaults")
-        assertTrue(html.endsWith("</div></div>"), "RadialProgress closes <div>")
+        assertRendered(html, "radial-progress", "RadialProgress defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,11 +38,9 @@ class RadialProgressCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radial-progress zz-extra", actualClasses, "RadialProgress all flags")
+        assertRendered(html, "radial-progress zz-extra", "RadialProgress all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "RadialProgress id")
         assertTrue(html.contains("data-attrs=\"yes\""), "RadialProgress attrs")
         assertTrue(html.contains("data-content=\"yes\""), "RadialProgress content")
-        assertTrue(html.endsWith("</div></div>"), "RadialProgress closes <div>")
     }
 }

@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class FilterCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun filter_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class FilterCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("filter", actualClasses, "Filter defaults")
-        assertTrue(html.endsWith("</form></div>"), "Filter closes <form>")
+        assertRendered(html, "filter", "Filter defaults", closes = "</form></div>")
     }
 
     @Test
@@ -31,12 +38,10 @@ class FilterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("filter zz-extra", actualClasses, "Filter all flags")
+        assertRendered(html, "filter zz-extra", "Filter all flags", closes = "</form></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Filter id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Filter attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Filter content")
-        assertTrue(html.endsWith("</form></div>"), "Filter closes <form>")
     }
 
     @Test
@@ -46,9 +51,7 @@ class FilterCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("filter-reset", actualClasses, "FilterReset defaults")
-        assertTrue(html.endsWith("</div></div>"), "FilterReset closes <div>")
+        assertRendered(html, "filter-reset", "FilterReset defaults", closes = "</div></div>")
     }
 
     @Test
@@ -61,11 +64,9 @@ class FilterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("filter-reset zz-extra", actualClasses, "FilterReset all flags")
+        assertRendered(html, "filter-reset zz-extra", "FilterReset all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "FilterReset id")
         assertTrue(html.contains("data-attrs=\"yes\""), "FilterReset attrs")
         assertTrue(html.contains("data-content=\"yes\""), "FilterReset content")
-        assertTrue(html.endsWith("</div></div>"), "FilterReset closes <div>")
     }
 }

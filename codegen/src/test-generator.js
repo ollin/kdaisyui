@@ -610,9 +610,9 @@ function attrAssert(ctx, name) {
 }
 
 function closesTagAssert(ctx) {
-  const tag = ctx.tagFn ? htmlTagForFn(ctx.tagFn) : null
-  if (!tag || VOID_TAGS.has(tag)) return null
-  return `assertTrue(html.endsWith("</${tag}></${ctx.wrapperTag}>"), "${ctx.daisyName} closes <${tag}>")`
+  const closes = closesSuffix(ctx)
+  if (!closes) return null
+  return `assertTrue(html.endsWith("${closes}"), "${ctx.daisyName} closes")`
 }
 
 /** CSS class(es) a boolean modifier adds via `if (param) addClassNames("...")`. */
@@ -630,8 +630,39 @@ function sortedClasses(arr) {
   return [...new Set(arr.filter(Boolean))].sort().join(' ')
 }
 
-const ACTUAL_CLASSES =
-  'val actualClasses = html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" ")'
+/**
+ * Emitted once per generated coverage class, and called by every case in it.
+ *
+ * Before this existed, each case repeated a long class-extraction line plus its assertions,
+ * which made every `*_defaults` method structurally identical to its siblings — real
+ * duplication, flagged as such, in files a human reads exactly when a test fails.
+ *
+ * `closes` is empty for a void element such as `<input>`, which has no closing tag. It is
+ * also omitted by the enum and text cases, which never asserted closure and must not start
+ * doing so here: this is a refactoring, and a refactoring does not change an assertion.
+ */
+const COVERAGE_HELPER = `
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+`
+
+/** The exact tail a correctly closed component leaves, or null when there is none to assert. */
+function closesSuffix(ctx) {
+  const tag = ctx.tagFn ? htmlTagForFn(ctx.tagFn) : null
+  if (!tag || VOID_TAGS.has(tag)) return null
+  return `</${tag}></${ctx.wrapperTag}>`
+}
+
+function renderedAssert(ctx, classes, label, withCloses) {
+  const closes = withCloses ? closesSuffix(ctx) : null
+  return `assertRendered(html, "${classes}", "${label}"${closes ? `, closes = "${closes}"` : ''})`
+}
 
 function renderTest(funcName, wrapperFn, callArgs, asserts) {
   const argStr = callArgs.length ? `\n${callArgs.map((a) => `                ${a},`).join('\n')}\n            ` : ''
@@ -673,11 +704,15 @@ function wrapTest(ctx, tname, args, asserts) {
 function defaultsTest(ctx) {
   const args = ctx.required ? ['content = { }'] : []
   const asserts = ctx.base
-    ? [ACTUAL_CLASSES, `assertEquals("${ctx.base}", actualClasses, "${ctx.daisyName} defaults")`]
+    ? [renderedAssert(ctx, ctx.base, `${ctx.daisyName} defaults`, true)]
     : [`assertTrue(!html.contains("class=\\""), "${ctx.daisyName} defaults emits no class")`]
   for (const a of parseAttrProps(ctx.body).unconditional) asserts.push(attrAssert(ctx, a))
-  const closes = closesTagAssert(ctx)
-  if (closes) asserts.push(closes)
+  // A component with no base class never reaches the helper, so its closure assertion is
+  // still emitted on its own line.
+  if (!ctx.base) {
+    const closes = closesTagAssert(ctx)
+    if (closes) asserts.push(closes)
+  }
   return wrapTest(ctx, `${ctx.fnBase}_defaults`, args, asserts)
 }
 
@@ -695,9 +730,12 @@ function allFlagsArgs(ctx, boolCss) {
 }
 
 function allFlagsAsserts(ctx, boolCss) {
+  // A second helper covering the id/attrs/content trio was tried and reverted. It did not
+  // clear the four files still flagged — what repeats there is the ARGUMENT LIST, not the
+  // assertions — and it introduced an Excess Number of Function Arguments smell of its own
+  // at five parameters against a threshold of four. Net loss, so it went.
   const asserts = [
-    ACTUAL_CLASSES,
-    `assertEquals("${sortedClasses([ctx.base, ...boolCss, 'zz-extra'])}", actualClasses, "${ctx.daisyName} all flags")`,
+    renderedAssert(ctx, sortedClasses([ctx.base, ...boolCss, 'zz-extra']), `${ctx.daisyName} all flags`, true),
     `assertTrue(html.contains("id=\\"x-cov-id\\""), "${ctx.daisyName} id")`,
     `assertTrue(html.contains("data-attrs=\\"yes\\""), "${ctx.daisyName} attrs")`,
   ]
@@ -707,8 +745,6 @@ function allFlagsAsserts(ctx, boolCss) {
   }
   const attrs = parseAttrProps(ctx.body)
   for (const a of [...attrs.unconditional, ...attrs.guarded]) asserts.push(attrAssert(ctx, a))
-  const closes = closesTagAssert(ctx)
-  if (closes) asserts.push(closes)
   return asserts
 }
 
@@ -723,7 +759,7 @@ function enumArmTests(ctx) {
   for (const e of ctx.params.filter((p) => p.kind === 'enumClass')) {
     for (const { entry, css } of e.enumEntries) {
       const args = ctx.required ? [`${e.name} = ${e.baseType}.${entry}`, 'content = { }'] : [`${e.name} = ${e.baseType}.${entry}`]
-      const asserts = [ACTUAL_CLASSES, `assertEquals("${sortedClasses([ctx.base, css])}", actualClasses, "${ctx.daisyName} ${e.name} ${entry}")`]
+      const asserts = [renderedAssert(ctx, sortedClasses([ctx.base, css]), `${ctx.daisyName} ${e.name} ${entry}`, false)]
       tests += wrapTest(ctx, `${ctx.fnBase}_${e.name}_${entry.toLowerCase()}`, args, asserts)
     }
   }
@@ -733,8 +769,7 @@ function enumArmTests(ctx) {
 function textArmTest(ctx) {
   if (!ctx.textParam) return ''
   const asserts = [
-    ACTUAL_CLASSES,
-    `assertEquals("${ctx.base}", actualClasses, "${ctx.daisyName} text")`,
+    renderedAssert(ctx, ctx.base, `${ctx.daisyName} text`, false),
     `assertTrue(html.contains("txtmark"), "${ctx.daisyName} text content")`,
   ]
   return wrapTest(ctx, `${ctx.fnBase}_text`, ['text = "txtmark"'], asserts)
@@ -777,7 +812,7 @@ function generateCoverageForFile(fileName) {
 ${[...imports].sort().join('\n')}
 
 class ${className}CoverageTest {
-${body}}
+${COVERAGE_HELPER}${body}}
 `
   fs.writeFileSync(path.join(OUTPUT_DIR, `${className}CoverageTest.kt`), kotlin)
   return { success: true, funcCount: funcs.length }

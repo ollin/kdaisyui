@@ -10,14 +10,21 @@ import kotlinx.html.stream.createHTML
 
 class ButtonCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun button_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn", actualClasses, "Button defaults")
-        assertTrue(html.endsWith("</button></div>"), "Button closes <button>")
+        assertRendered(html, "btn", "Button defaults", closes = "</button></div>")
     }
 
     @Test
@@ -42,14 +49,12 @@ class ButtonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-active btn-block btn-circle btn-dash btn-disabled btn-ghost btn-link btn-outline btn-soft btn-square btn-wide zz-extra", actualClasses, "Button all flags")
+        assertRendered(html, "btn btn-active btn-block btn-circle btn-dash btn-disabled btn-ghost btn-link btn-outline btn-soft btn-square btn-wide zz-extra", "Button all flags", closes = "</button></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Button id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Button attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Button content")
         assertTrue(html.contains("disabled=\""), "Button sets disabled")
         assertTrue(html.contains("type=\""), "Button sets type")
-        assertTrue(html.endsWith("</button></div>"), "Button closes <button>")
     }
 
     @Test
@@ -59,8 +64,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-neutral", actualClasses, "Button variant Neutral")
+        assertRendered(html, "btn btn-neutral", "Button variant Neutral")
     }
 
     @Test
@@ -70,8 +74,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-primary", actualClasses, "Button variant Primary")
+        assertRendered(html, "btn btn-primary", "Button variant Primary")
     }
 
     @Test
@@ -81,8 +84,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-secondary", actualClasses, "Button variant Secondary")
+        assertRendered(html, "btn btn-secondary", "Button variant Secondary")
     }
 
     @Test
@@ -92,8 +94,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-accent", actualClasses, "Button variant Accent")
+        assertRendered(html, "btn btn-accent", "Button variant Accent")
     }
 
     @Test
@@ -103,8 +104,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-info", actualClasses, "Button variant Info")
+        assertRendered(html, "btn btn-info", "Button variant Info")
     }
 
     @Test
@@ -114,8 +114,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-success", actualClasses, "Button variant Success")
+        assertRendered(html, "btn btn-success", "Button variant Success")
     }
 
     @Test
@@ -125,8 +124,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-warning", actualClasses, "Button variant Warning")
+        assertRendered(html, "btn btn-warning", "Button variant Warning")
     }
 
     @Test
@@ -136,8 +134,7 @@ class ButtonCoverageTest {
                 variant = ButtonVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-error", actualClasses, "Button variant Error")
+        assertRendered(html, "btn btn-error", "Button variant Error")
     }
 
     @Test
@@ -147,8 +144,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-xs", actualClasses, "Button size Xs")
+        assertRendered(html, "btn btn-xs", "Button size Xs")
     }
 
     @Test
@@ -158,8 +154,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-sm", actualClasses, "Button size Sm")
+        assertRendered(html, "btn btn-sm", "Button size Sm")
     }
 
     @Test
@@ -169,8 +164,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-md", actualClasses, "Button size Md")
+        assertRendered(html, "btn btn-md", "Button size Md")
     }
 
     @Test
@@ -180,8 +174,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-lg", actualClasses, "Button size Lg")
+        assertRendered(html, "btn btn-lg", "Button size Lg")
     }
 
     @Test
@@ -191,8 +184,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn btn-xl", actualClasses, "Button size Xl")
+        assertRendered(html, "btn btn-xl", "Button size Xl")
     }
 
     @Test
@@ -202,8 +194,7 @@ class ButtonCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("btn", actualClasses, "Button text")
+        assertRendered(html, "btn", "Button text")
         assertTrue(html.contains("txtmark"), "Button text content")
     }
 }

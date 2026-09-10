@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class CarouselCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun carousel_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("carousel", actualClasses, "Carousel defaults")
-        assertTrue(html.endsWith("</div></div>"), "Carousel closes <div>")
+        assertRendered(html, "carousel", "Carousel defaults", closes = "</div></div>")
     }
 
     @Test
@@ -36,12 +43,10 @@ class CarouselCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("carousel carousel-center carousel-end carousel-horizontal carousel-start carousel-vertical zz-extra", actualClasses, "Carousel all flags")
+        assertRendered(html, "carousel carousel-center carousel-end carousel-horizontal carousel-start carousel-vertical zz-extra", "Carousel all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Carousel id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Carousel attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Carousel content")
-        assertTrue(html.endsWith("</div></div>"), "Carousel closes <div>")
     }
 
     @Test
@@ -51,9 +56,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("carousel-item", actualClasses, "CarouselItem defaults")
-        assertTrue(html.endsWith("</div></div>"), "CarouselItem closes <div>")
+        assertRendered(html, "carousel-item", "CarouselItem defaults", closes = "</div></div>")
     }
 
     @Test
@@ -66,11 +69,9 @@ class CarouselCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("carousel-item zz-extra", actualClasses, "CarouselItem all flags")
+        assertRendered(html, "carousel-item zz-extra", "CarouselItem all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "CarouselItem id")
         assertTrue(html.contains("data-attrs=\"yes\""), "CarouselItem attrs")
         assertTrue(html.contains("data-content=\"yes\""), "CarouselItem content")
-        assertTrue(html.endsWith("</div></div>"), "CarouselItem closes <div>")
     }
 }

@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class ChatCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun chat_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat", actualClasses, "Chat defaults")
-        assertTrue(html.endsWith("</div></div>"), "Chat closes <div>")
+        assertRendered(html, "chat", "Chat defaults", closes = "</div></div>")
     }
 
     @Test
@@ -33,12 +40,10 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-end chat-start zz-extra", actualClasses, "Chat all flags")
+        assertRendered(html, "chat chat-end chat-start zz-extra", "Chat all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Chat id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Chat attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Chat content")
-        assertTrue(html.endsWith("</div></div>"), "Chat closes <div>")
     }
 
     @Test
@@ -49,8 +54,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-neutral", actualClasses, "Chat variant BubbleNeutral")
+        assertRendered(html, "chat chat-bubble-neutral", "Chat variant BubbleNeutral")
     }
 
     @Test
@@ -61,8 +65,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-primary", actualClasses, "Chat variant BubblePrimary")
+        assertRendered(html, "chat chat-bubble-primary", "Chat variant BubblePrimary")
     }
 
     @Test
@@ -73,8 +76,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-secondary", actualClasses, "Chat variant BubbleSecondary")
+        assertRendered(html, "chat chat-bubble-secondary", "Chat variant BubbleSecondary")
     }
 
     @Test
@@ -85,8 +87,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-accent", actualClasses, "Chat variant BubbleAccent")
+        assertRendered(html, "chat chat-bubble-accent", "Chat variant BubbleAccent")
     }
 
     @Test
@@ -97,8 +98,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-info", actualClasses, "Chat variant BubbleInfo")
+        assertRendered(html, "chat chat-bubble-info", "Chat variant BubbleInfo")
     }
 
     @Test
@@ -109,8 +109,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-success", actualClasses, "Chat variant BubbleSuccess")
+        assertRendered(html, "chat chat-bubble-success", "Chat variant BubbleSuccess")
     }
 
     @Test
@@ -121,8 +120,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-warning", actualClasses, "Chat variant BubbleWarning")
+        assertRendered(html, "chat chat-bubble-warning", "Chat variant BubbleWarning")
     }
 
     @Test
@@ -133,8 +131,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat chat-bubble-error", actualClasses, "Chat variant BubbleError")
+        assertRendered(html, "chat chat-bubble-error", "Chat variant BubbleError")
     }
 
     @Test
@@ -144,9 +141,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-image", actualClasses, "ChatImage defaults")
-        assertTrue(html.endsWith("</div></div>"), "ChatImage closes <div>")
+        assertRendered(html, "chat-image", "ChatImage defaults", closes = "</div></div>")
     }
 
     @Test
@@ -159,12 +154,10 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-image zz-extra", actualClasses, "ChatImage all flags")
+        assertRendered(html, "chat-image zz-extra", "ChatImage all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatImage id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatImage attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatImage content")
-        assertTrue(html.endsWith("</div></div>"), "ChatImage closes <div>")
     }
 
     @Test
@@ -174,9 +167,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-header", actualClasses, "ChatHeader defaults")
-        assertTrue(html.endsWith("</div></div>"), "ChatHeader closes <div>")
+        assertRendered(html, "chat-header", "ChatHeader defaults", closes = "</div></div>")
     }
 
     @Test
@@ -189,12 +180,10 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-header zz-extra", actualClasses, "ChatHeader all flags")
+        assertRendered(html, "chat-header zz-extra", "ChatHeader all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatHeader id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatHeader attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatHeader content")
-        assertTrue(html.endsWith("</div></div>"), "ChatHeader closes <div>")
     }
 
     @Test
@@ -204,9 +193,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-footer", actualClasses, "ChatFooter defaults")
-        assertTrue(html.endsWith("</div></div>"), "ChatFooter closes <div>")
+        assertRendered(html, "chat-footer", "ChatFooter defaults", closes = "</div></div>")
     }
 
     @Test
@@ -219,12 +206,10 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-footer zz-extra", actualClasses, "ChatFooter all flags")
+        assertRendered(html, "chat-footer zz-extra", "ChatFooter all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatFooter id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatFooter attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatFooter content")
-        assertTrue(html.endsWith("</div></div>"), "ChatFooter closes <div>")
     }
 
     @Test
@@ -234,9 +219,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-bubble", actualClasses, "ChatBubble defaults")
-        assertTrue(html.endsWith("</div></div>"), "ChatBubble closes <div>")
+        assertRendered(html, "chat-bubble", "ChatBubble defaults", closes = "</div></div>")
     }
 
     @Test
@@ -249,11 +232,9 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("chat-bubble zz-extra", actualClasses, "ChatBubble all flags")
+        assertRendered(html, "chat-bubble zz-extra", "ChatBubble all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "ChatBubble id")
         assertTrue(html.contains("data-attrs=\"yes\""), "ChatBubble attrs")
         assertTrue(html.contains("data-content=\"yes\""), "ChatBubble content")
-        assertTrue(html.endsWith("</div></div>"), "ChatBubble closes <div>")
     }
 }

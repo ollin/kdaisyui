@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class DiffCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun diff_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class DiffCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff", actualClasses, "Diff defaults")
-        assertTrue(html.endsWith("</figure></div>"), "Diff closes <figure>")
+        assertRendered(html, "diff", "Diff defaults", closes = "</figure></div>")
     }
 
     @Test
@@ -31,12 +38,10 @@ class DiffCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff zz-extra", actualClasses, "Diff all flags")
+        assertRendered(html, "diff zz-extra", "Diff all flags", closes = "</figure></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Diff id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Diff attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Diff content")
-        assertTrue(html.endsWith("</figure></div>"), "Diff closes <figure>")
     }
 
     @Test
@@ -46,9 +51,7 @@ class DiffCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff-item-1", actualClasses, "DiffItem1 defaults")
-        assertTrue(html.endsWith("</div></div>"), "DiffItem1 closes <div>")
+        assertRendered(html, "diff-item-1", "DiffItem1 defaults", closes = "</div></div>")
     }
 
     @Test
@@ -61,12 +64,10 @@ class DiffCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff-item-1 zz-extra", actualClasses, "DiffItem1 all flags")
+        assertRendered(html, "diff-item-1 zz-extra", "DiffItem1 all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DiffItem1 id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DiffItem1 attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DiffItem1 content")
-        assertTrue(html.endsWith("</div></div>"), "DiffItem1 closes <div>")
     }
 
     @Test
@@ -76,9 +77,7 @@ class DiffCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff-item-2", actualClasses, "DiffItem2 defaults")
-        assertTrue(html.endsWith("</div></div>"), "DiffItem2 closes <div>")
+        assertRendered(html, "diff-item-2", "DiffItem2 defaults", closes = "</div></div>")
     }
 
     @Test
@@ -91,12 +90,10 @@ class DiffCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff-item-2 zz-extra", actualClasses, "DiffItem2 all flags")
+        assertRendered(html, "diff-item-2 zz-extra", "DiffItem2 all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DiffItem2 id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DiffItem2 attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DiffItem2 content")
-        assertTrue(html.endsWith("</div></div>"), "DiffItem2 closes <div>")
     }
 
     @Test
@@ -106,9 +103,7 @@ class DiffCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff-resizer", actualClasses, "DiffResizer defaults")
-        assertTrue(html.endsWith("</div></div>"), "DiffResizer closes <div>")
+        assertRendered(html, "diff-resizer", "DiffResizer defaults", closes = "</div></div>")
     }
 
     @Test
@@ -121,11 +116,9 @@ class DiffCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("diff-resizer zz-extra", actualClasses, "DiffResizer all flags")
+        assertRendered(html, "diff-resizer zz-extra", "DiffResizer all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DiffResizer id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DiffResizer attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DiffResizer content")
-        assertTrue(html.endsWith("</div></div>"), "DiffResizer closes <div>")
     }
 }

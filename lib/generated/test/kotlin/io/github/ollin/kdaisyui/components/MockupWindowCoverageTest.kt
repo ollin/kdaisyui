@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class MockupWindowCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun mockupWindow_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class MockupWindowCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-window", actualClasses, "MockupWindow defaults")
-        assertTrue(html.endsWith("</div></div>"), "MockupWindow closes <div>")
+        assertRendered(html, "mockup-window", "MockupWindow defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,11 +38,9 @@ class MockupWindowCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-window zz-extra", actualClasses, "MockupWindow all flags")
+        assertRendered(html, "mockup-window zz-extra", "MockupWindow all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "MockupWindow id")
         assertTrue(html.contains("data-attrs=\"yes\""), "MockupWindow attrs")
         assertTrue(html.contains("data-content=\"yes\""), "MockupWindow content")
-        assertTrue(html.endsWith("</div></div>"), "MockupWindow closes <div>")
     }
 }

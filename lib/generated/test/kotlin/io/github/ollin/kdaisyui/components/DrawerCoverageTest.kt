@@ -9,6 +9,15 @@ import kotlinx.html.stream.createHTML
 
 class DrawerCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
     @Test
     fun drawer_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,9 +25,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer", actualClasses, "Drawer defaults")
-        assertTrue(html.endsWith("</div></div>"), "Drawer closes <div>")
+        assertRendered(html, "drawer", "Drawer defaults", closes = "</div></div>")
     }
 
     @Test
@@ -33,12 +40,10 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer drawer-end drawer-open zz-extra", actualClasses, "Drawer all flags")
+        assertRendered(html, "drawer drawer-end drawer-open zz-extra", "Drawer all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "Drawer id")
         assertTrue(html.contains("data-attrs=\"yes\""), "Drawer attrs")
         assertTrue(html.contains("data-content=\"yes\""), "Drawer content")
-        assertTrue(html.endsWith("</div></div>"), "Drawer closes <div>")
     }
 
     @Test
@@ -48,9 +53,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-toggle", actualClasses, "DrawerToggle defaults")
-        assertTrue(html.endsWith("</div></div>"), "DrawerToggle closes <div>")
+        assertRendered(html, "drawer-toggle", "DrawerToggle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -63,12 +66,10 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-toggle zz-extra", actualClasses, "DrawerToggle all flags")
+        assertRendered(html, "drawer-toggle zz-extra", "DrawerToggle all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DrawerToggle id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DrawerToggle attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DrawerToggle content")
-        assertTrue(html.endsWith("</div></div>"), "DrawerToggle closes <div>")
     }
 
     @Test
@@ -78,9 +79,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-content", actualClasses, "DrawerContent defaults")
-        assertTrue(html.endsWith("</div></div>"), "DrawerContent closes <div>")
+        assertRendered(html, "drawer-content", "DrawerContent defaults", closes = "</div></div>")
     }
 
     @Test
@@ -93,12 +92,10 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-content zz-extra", actualClasses, "DrawerContent all flags")
+        assertRendered(html, "drawer-content zz-extra", "DrawerContent all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DrawerContent id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DrawerContent attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DrawerContent content")
-        assertTrue(html.endsWith("</div></div>"), "DrawerContent closes <div>")
     }
 
     @Test
@@ -108,9 +105,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-side", actualClasses, "DrawerSide defaults")
-        assertTrue(html.endsWith("</div></div>"), "DrawerSide closes <div>")
+        assertRendered(html, "drawer-side", "DrawerSide defaults", closes = "</div></div>")
     }
 
     @Test
@@ -123,12 +118,10 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-side zz-extra", actualClasses, "DrawerSide all flags")
+        assertRendered(html, "drawer-side zz-extra", "DrawerSide all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DrawerSide id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DrawerSide attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DrawerSide content")
-        assertTrue(html.endsWith("</div></div>"), "DrawerSide closes <div>")
     }
 
     @Test
@@ -138,9 +131,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-overlay", actualClasses, "DrawerOverlay defaults")
-        assertTrue(html.endsWith("</label></div>"), "DrawerOverlay closes <label>")
+        assertRendered(html, "drawer-overlay", "DrawerOverlay defaults", closes = "</label></div>")
     }
 
     @Test
@@ -153,12 +144,10 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-overlay zz-extra", actualClasses, "DrawerOverlay all flags")
+        assertRendered(html, "drawer-overlay zz-extra", "DrawerOverlay all flags", closes = "</label></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DrawerOverlay id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DrawerOverlay attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DrawerOverlay content")
-        assertTrue(html.endsWith("</label></div>"), "DrawerOverlay closes <label>")
     }
 
     @Test
@@ -168,9 +157,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-button", actualClasses, "DrawerButton defaults")
-        assertTrue(html.endsWith("</div></div>"), "DrawerButton closes <div>")
+        assertRendered(html, "drawer-button", "DrawerButton defaults", closes = "</div></div>")
     }
 
     @Test
@@ -183,11 +170,9 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-button zz-extra", actualClasses, "DrawerButton all flags")
+        assertRendered(html, "drawer-button zz-extra", "DrawerButton all flags", closes = "</div></div>")
         assertTrue(html.contains("id=\"x-cov-id\""), "DrawerButton id")
         assertTrue(html.contains("data-attrs=\"yes\""), "DrawerButton attrs")
         assertTrue(html.contains("data-content=\"yes\""), "DrawerButton content")
-        assertTrue(html.endsWith("</div></div>"), "DrawerButton closes <div>")
     }
 }

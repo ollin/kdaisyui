@@ -110,6 +110,34 @@ already applies to `$DefaultImpls`.
 - [x] 7.1 Add a dedicated `mutation-tests` job to `.github/workflows/ci.yml` running `./gradlew :lib:pitest` (parallel to unit-tests/e2e-tests, NOT bound to local check) (refactoring; CI wiring) — no submodules, uploads the report on success as well as failure. The threshold stays in `lib/build.gradle.kts` next to its justification rather than being passed on the command line.
 - [x] 7.2 Document the mutation-testing gate, its scope, and how to run + read the PIT report locally in `AGENTS.md` (documentation) — plus two anti-patterns (weakening an assertion; swapping to `mutationThreshold`) and the note that a surviving mutant is sometimes code to delete rather than a missing assertion. The CI job count in `kdaisyui-testing` and `kdaisyui-release` was corrected too — five to six.
 
+## 9. Undo the duplication this change introduced (added after 7.2)
+
+**Reopened deliberately.** `analyze_change_set` fails on `lib/generated/**` Code Duplication:
+tasks 4.1 and 4.2 append the same two assertions to every generated `*_defaults` and
+`*_all_flags` test, so ~12 coverage-test files degraded and several more were newly flagged.
+The duplication partly pre-dates this change; 4.1/4.2 made it worse.
+
+The first answer written down — exclude `lib/generated/**` via a new
+`.codescene/code-health-rules.json` — was **rejected on challenge**, and the reasoning it
+rested on did not survive being checked:
+
+- "A shared helper makes a failing generated test hard to read" is false. A labelled helper
+  reports `ModalBox defaults expected:<modal-box> but was:<modal>`, which is exactly as
+  readable as the inline form.
+- Excluding is **addition**: a new config file whose only job is to silence a signal. Fixing
+  the generator is subtraction.
+- Generated-ness makes duplication free to MAINTAIN, not free to READ — and these files are
+  read precisely when a test fails.
+- The safety net now exists. Restructuring generated assertions risks silently weakening
+  them, which is what `:lib:pitest` at 100% test strength catches. Before section 6 this
+  refactoring would have been unsafe; after it, it is not.
+
+- [ ] 9.1 Emit one `assertRendered` helper per generated coverage-test file and collapse the repeated extract-classes + assert block into a single call (refactoring; generator change + regenerated output in ONE commit, drift compares them)
+- [ ] 9.2 Re-measure and confirm: `analyze_change_set` no longer degrades on the coverage tests, 1498 unit tests still green, test strength still 100% (documentation; evidence)
+
+**The gate must still fail if the assertions weaken.** 9.2 is not satisfied by CodeScene going
+quiet — the mutation score is what says the tests still assert what they did before.
+
 ## 8. Gradle 10 readiness (added after section 1; no spec delta)
 
 Not planned up front. Running `:lib:pitest` surfaced the build's existing deprecation

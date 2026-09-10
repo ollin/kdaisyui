@@ -18,6 +18,12 @@ class AlertCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun alert_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -45,9 +51,7 @@ class AlertCoverageTest {
             )
         }
         assertRendered(html, "alert alert-dash alert-horizontal alert-outline alert-soft alert-vertical zz-extra", "Alert all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Alert id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Alert attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Alert content")
+        assertCommonFlags(html, "Alert")
         assertTrue(html.contains("role=\""), "Alert sets role")
     }
 

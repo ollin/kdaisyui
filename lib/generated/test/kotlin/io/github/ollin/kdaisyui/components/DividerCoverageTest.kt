@@ -18,6 +18,12 @@ class DividerCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun divider_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -43,9 +49,7 @@ class DividerCoverageTest {
             )
         }
         assertRendered(html, "divider divider-end divider-horizontal divider-start divider-vertical zz-extra", "Divider all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Divider id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Divider attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Divider content")
+        assertCommonFlags(html, "Divider")
     }
 
     @Test

@@ -18,6 +18,12 @@ class HoverGalleryCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun hoverGallery_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,8 +45,6 @@ class HoverGalleryCoverageTest {
             )
         }
         assertRendered(html, "hover-gallery zz-extra", "HoverGallery all flags", closes = "</figure></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "HoverGallery id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "HoverGallery attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "HoverGallery content")
+        assertCommonFlags(html, "HoverGallery")
     }
 }

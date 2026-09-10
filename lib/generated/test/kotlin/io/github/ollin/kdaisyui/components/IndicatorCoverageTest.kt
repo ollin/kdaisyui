@@ -18,6 +18,12 @@ class IndicatorCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun indicator_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -45,9 +51,7 @@ class IndicatorCoverageTest {
             )
         }
         assertRendered(html, "indicator indicator-bottom indicator-center indicator-end indicator-middle indicator-start indicator-top zz-extra", "Indicator all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Indicator id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Indicator attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Indicator content")
+        assertCommonFlags(html, "Indicator")
     }
 
     @Test
@@ -71,8 +75,6 @@ class IndicatorCoverageTest {
             )
         }
         assertRendered(html, "indicator-item zz-extra", "IndicatorItem all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "IndicatorItem id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "IndicatorItem attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "IndicatorItem content")
+        assertCommonFlags(html, "IndicatorItem")
     }
 }

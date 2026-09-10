@@ -18,6 +18,12 @@ class ValidatorCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun validator_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -36,8 +42,7 @@ class ValidatorCoverageTest {
             )
         }
         assertRendered(html, "validator zz-extra", "Validator all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Validator id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Validator attrs")
+        assertCommonFlags(html, "Validator", content = false)
     }
 
     @Test
@@ -61,8 +66,6 @@ class ValidatorCoverageTest {
             )
         }
         assertRendered(html, "validator-hint zz-extra", "ValidatorHint all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ValidatorHint id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ValidatorHint attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ValidatorHint content")
+        assertCommonFlags(html, "ValidatorHint")
     }
 }

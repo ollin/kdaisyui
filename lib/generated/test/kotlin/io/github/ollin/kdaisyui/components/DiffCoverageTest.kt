@@ -18,6 +18,12 @@ class DiffCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun diff_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,9 +45,7 @@ class DiffCoverageTest {
             )
         }
         assertRendered(html, "diff zz-extra", "Diff all flags", closes = "</figure></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Diff id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Diff attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Diff content")
+        assertCommonFlags(html, "Diff")
     }
 
     @Test
@@ -65,9 +69,7 @@ class DiffCoverageTest {
             )
         }
         assertRendered(html, "diff-item-1 zz-extra", "DiffItem1 all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DiffItem1 id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DiffItem1 attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DiffItem1 content")
+        assertCommonFlags(html, "DiffItem1")
     }
 
     @Test
@@ -91,9 +93,7 @@ class DiffCoverageTest {
             )
         }
         assertRendered(html, "diff-item-2 zz-extra", "DiffItem2 all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DiffItem2 id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DiffItem2 attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DiffItem2 content")
+        assertCommonFlags(html, "DiffItem2")
     }
 
     @Test
@@ -117,8 +117,6 @@ class DiffCoverageTest {
             )
         }
         assertRendered(html, "diff-resizer zz-extra", "DiffResizer all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DiffResizer id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DiffResizer attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DiffResizer content")
+        assertCommonFlags(html, "DiffResizer")
     }
 }

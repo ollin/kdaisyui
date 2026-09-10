@@ -19,6 +19,12 @@ class BreadcrumbsCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun breadcrumbs_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,9 +46,7 @@ class BreadcrumbsCoverageTest {
             )
         }
         assertRendered(html, "breadcrumbs zz-extra", "Breadcrumbs all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Breadcrumbs id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Breadcrumbs attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Breadcrumbs content")
+        assertCommonFlags(html, "Breadcrumbs")
     }
 
     @Test
@@ -67,9 +71,7 @@ class BreadcrumbsCoverageTest {
             )
         }
         assertRendered(html, "zz-extra", "BreadcrumbsItems all flags", closes = "</ul></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "BreadcrumbsItems id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "BreadcrumbsItems attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "BreadcrumbsItems content")
+        assertCommonFlags(html, "BreadcrumbsItems")
     }
 
     @Test
@@ -94,8 +96,6 @@ class BreadcrumbsCoverageTest {
             )
         }
         assertRendered(html, "zz-extra", "BreadcrumbsItem all flags", closes = "</li></ul>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "BreadcrumbsItem id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "BreadcrumbsItem attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "BreadcrumbsItem content")
+        assertCommonFlags(html, "BreadcrumbsItem")
     }
 }

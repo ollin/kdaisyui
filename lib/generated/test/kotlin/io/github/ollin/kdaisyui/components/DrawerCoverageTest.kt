@@ -18,6 +18,12 @@ class DrawerCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun drawer_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -41,9 +47,7 @@ class DrawerCoverageTest {
             )
         }
         assertRendered(html, "drawer drawer-end drawer-open zz-extra", "Drawer all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Drawer id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Drawer attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Drawer content")
+        assertCommonFlags(html, "Drawer")
     }
 
     @Test
@@ -67,9 +71,7 @@ class DrawerCoverageTest {
             )
         }
         assertRendered(html, "drawer-toggle zz-extra", "DrawerToggle all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerToggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerToggle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerToggle content")
+        assertCommonFlags(html, "DrawerToggle")
     }
 
     @Test
@@ -93,9 +95,7 @@ class DrawerCoverageTest {
             )
         }
         assertRendered(html, "drawer-content zz-extra", "DrawerContent all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerContent id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerContent attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerContent content")
+        assertCommonFlags(html, "DrawerContent")
     }
 
     @Test
@@ -119,9 +119,7 @@ class DrawerCoverageTest {
             )
         }
         assertRendered(html, "drawer-side zz-extra", "DrawerSide all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerSide id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerSide attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerSide content")
+        assertCommonFlags(html, "DrawerSide")
     }
 
     @Test
@@ -145,9 +143,7 @@ class DrawerCoverageTest {
             )
         }
         assertRendered(html, "drawer-overlay zz-extra", "DrawerOverlay all flags", closes = "</label></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerOverlay id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerOverlay attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerOverlay content")
+        assertCommonFlags(html, "DrawerOverlay")
     }
 
     @Test
@@ -171,8 +167,6 @@ class DrawerCoverageTest {
             )
         }
         assertRendered(html, "drawer-button zz-extra", "DrawerButton all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerButton id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerButton attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerButton content")
+        assertCommonFlags(html, "DrawerButton")
     }
 }

@@ -18,6 +18,12 @@ class MegamenuCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun megamenu_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -42,9 +48,7 @@ class MegamenuCoverageTest {
             )
         }
         assertRendered(html, "megamenu megamenu-full megamenu-vertical megamenu-wide zz-extra", "Megamenu all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Megamenu id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Megamenu attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Megamenu content")
+        assertCommonFlags(html, "Megamenu")
     }
 
     @Test
@@ -123,9 +127,7 @@ class MegamenuCoverageTest {
             )
         }
         assertRendered(html, "megamenu-active zz-extra", "MegamenuActive all flags", closes = "</span></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MegamenuActive id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MegamenuActive attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MegamenuActive content")
+        assertCommonFlags(html, "MegamenuActive")
     }
 
     @Test
@@ -150,8 +152,6 @@ class MegamenuCoverageTest {
             )
         }
         assertRendered(html, "zz-extra", "MegamenuPanel all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MegamenuPanel id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MegamenuPanel attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MegamenuPanel content")
+        assertCommonFlags(html, "MegamenuPanel")
     }
 }

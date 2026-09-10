@@ -18,6 +18,12 @@ class TabCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun tab_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -46,9 +52,7 @@ class TabCoverageTest {
             )
         }
         assertRendered(html, "tabs tabs-border tabs-bottom tabs-box tabs-lift tabs-tab-active tabs-tab-disabled tabs-top zz-extra", "Tab all flags", closes = "</button></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Tab id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Tab attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Tab content")
+        assertCommonFlags(html, "Tab")
     }
 
     @Test
@@ -127,9 +131,7 @@ class TabCoverageTest {
             )
         }
         assertRendered(html, "tab zz-extra", "TabTab all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TabTab id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TabTab attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TabTab content")
+        assertCommonFlags(html, "TabTab")
     }
 
     @Test
@@ -153,8 +155,6 @@ class TabCoverageTest {
             )
         }
         assertRendered(html, "tab-content zz-extra", "TabTabContent all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TabTabContent id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TabTabContent attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TabTabContent content")
+        assertCommonFlags(html, "TabTabContent")
     }
 }

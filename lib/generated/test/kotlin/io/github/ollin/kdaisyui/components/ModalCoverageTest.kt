@@ -18,6 +18,12 @@ class ModalCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun modal_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -45,9 +51,7 @@ class ModalCoverageTest {
             )
         }
         assertRendered(html, "modal modal-bottom modal-end modal-middle modal-open modal-start modal-top zz-extra", "Modal all flags", closes = "</dialog></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Modal id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Modal attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Modal content")
+        assertCommonFlags(html, "Modal")
     }
 
     @Test
@@ -71,9 +75,7 @@ class ModalCoverageTest {
             )
         }
         assertRendered(html, "modal-box zz-extra", "ModalBox all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalBox id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalBox attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalBox content")
+        assertCommonFlags(html, "ModalBox")
     }
 
     @Test
@@ -97,9 +99,7 @@ class ModalCoverageTest {
             )
         }
         assertRendered(html, "modal-action zz-extra", "ModalAction all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalAction id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalAction attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalAction content")
+        assertCommonFlags(html, "ModalAction")
     }
 
     @Test
@@ -123,9 +123,7 @@ class ModalCoverageTest {
             )
         }
         assertRendered(html, "modal-backdrop zz-extra", "ModalBackdrop all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalBackdrop id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalBackdrop attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalBackdrop content")
+        assertCommonFlags(html, "ModalBackdrop")
     }
 
     @Test
@@ -149,9 +147,7 @@ class ModalCoverageTest {
             )
         }
         assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalToggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalToggle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalToggle content")
+        assertCommonFlags(html, "ModalToggle")
     }
 
     @Test
@@ -175,8 +171,6 @@ class ModalCoverageTest {
             )
         }
         assertRendered(html, "modal zz-extra", "ModalPopover all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalPopover id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalPopover attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalPopover content")
+        assertCommonFlags(html, "ModalPopover")
     }
 }

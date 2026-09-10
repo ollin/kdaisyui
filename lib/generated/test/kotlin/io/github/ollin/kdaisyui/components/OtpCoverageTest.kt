@@ -18,6 +18,12 @@ class OtpCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun otp_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,9 +46,7 @@ class OtpCoverageTest {
             )
         }
         assertRendered(html, "otp otp-joined zz-extra", "Otp all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Otp id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Otp attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Otp content")
+        assertCommonFlags(html, "Otp")
     }
 
     @Test

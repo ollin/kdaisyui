@@ -18,6 +18,12 @@ class TableCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun table_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -42,9 +48,7 @@ class TableCoverageTest {
             )
         }
         assertRendered(html, "table table-pin-cols table-pin-rows table-zebra zz-extra", "Table all flags", closes = "</table></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Table id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Table attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Table content")
+        assertCommonFlags(html, "Table")
     }
 
     @Test

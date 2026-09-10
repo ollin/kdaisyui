@@ -18,6 +18,12 @@ class FabCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun fab_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,9 +46,7 @@ class FabCoverageTest {
             )
         }
         assertRendered(html, "fab fab-flower zz-extra", "Fab all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Fab id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Fab attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Fab content")
+        assertCommonFlags(html, "Fab")
     }
 
     @Test
@@ -66,9 +70,7 @@ class FabCoverageTest {
             )
         }
         assertRendered(html, "fab-close zz-extra", "FabClose all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FabClose id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FabClose attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FabClose content")
+        assertCommonFlags(html, "FabClose")
     }
 
     @Test
@@ -92,8 +94,6 @@ class FabCoverageTest {
             )
         }
         assertRendered(html, "fab-main-action zz-extra", "FabMainAction all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FabMainAction id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FabMainAction attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FabMainAction content")
+        assertCommonFlags(html, "FabMainAction")
     }
 }

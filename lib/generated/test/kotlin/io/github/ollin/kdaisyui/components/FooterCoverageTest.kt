@@ -18,6 +18,12 @@ class FooterCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun footer_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -42,9 +48,7 @@ class FooterCoverageTest {
             )
         }
         assertRendered(html, "footer footer-center footer-horizontal footer-vertical zz-extra", "Footer all flags", closes = "</footer></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Footer id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Footer attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Footer content")
+        assertCommonFlags(html, "Footer")
     }
 
     @Test
@@ -66,9 +70,7 @@ class FooterCoverageTest {
             )
         }
         assertRendered(html, "footer-title zz-extra", "FooterTitle all flags", closes = "</h2></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FooterTitle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FooterTitle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FooterTitle content")
+        assertCommonFlags(html, "FooterTitle")
     }
 
     @Test

@@ -18,6 +18,12 @@ class RangeCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun range_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -43,8 +49,7 @@ class RangeCoverageTest {
             )
         }
         assertRendered(html, "range range-vertical zz-extra", "Range all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Range id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Range attrs")
+        assertCommonFlags(html, "Range", content = false)
         assertTrue(html.contains("min=\"x\""), "Range min")
         assertTrue(html.contains("max=\"x\""), "Range max")
         assertTrue(html.contains("value=\"x\""), "Range value")

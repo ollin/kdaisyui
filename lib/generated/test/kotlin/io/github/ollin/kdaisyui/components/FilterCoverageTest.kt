@@ -18,6 +18,12 @@ class FilterCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun filter_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,9 +45,7 @@ class FilterCoverageTest {
             )
         }
         assertRendered(html, "filter zz-extra", "Filter all flags", closes = "</form></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Filter id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Filter attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Filter content")
+        assertCommonFlags(html, "Filter")
     }
 
     @Test
@@ -65,8 +69,6 @@ class FilterCoverageTest {
             )
         }
         assertRendered(html, "filter-reset zz-extra", "FilterReset all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FilterReset id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FilterReset attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FilterReset content")
+        assertCommonFlags(html, "FilterReset")
     }
 }

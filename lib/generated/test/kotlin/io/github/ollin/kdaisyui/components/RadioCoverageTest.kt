@@ -18,6 +18,12 @@ class RadioCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun radio_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,8 +46,7 @@ class RadioCoverageTest {
             )
         }
         assertRendered(html, "radio zz-extra", "Radio all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Radio id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Radio attrs")
+        assertCommonFlags(html, "Radio", content = false)
         assertTrue(html.contains("name=\"x\""), "Radio name")
         assertTrue(html.contains("type=\""), "Radio sets type")
         assertTrue(html.contains("name=\""), "Radio sets name")

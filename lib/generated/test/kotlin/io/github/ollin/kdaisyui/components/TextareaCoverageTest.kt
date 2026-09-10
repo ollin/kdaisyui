@@ -18,6 +18,12 @@ class TextareaCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun textarea_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,9 +46,7 @@ class TextareaCoverageTest {
             )
         }
         assertRendered(html, "textarea textarea-ghost zz-extra", "Textarea all flags", closes = "</textarea></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Textarea id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Textarea attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Textarea content")
+        assertCommonFlags(html, "Textarea")
     }
 
     @Test

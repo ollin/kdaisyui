@@ -18,6 +18,12 @@ class KbdCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun kbd_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -37,9 +43,7 @@ class KbdCoverageTest {
             )
         }
         assertRendered(html, "kbd zz-extra", "Kbd all flags", closes = "</kbd></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Kbd id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Kbd attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Kbd content")
+        assertCommonFlags(html, "Kbd")
     }
 
     @Test

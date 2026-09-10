@@ -18,6 +18,12 @@ class AvatarCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun avatar_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -42,8 +48,6 @@ class AvatarCoverageTest {
             )
         }
         assertRendered(html, "avatar avatar-offline avatar-online avatar-placeholder zz-extra", "Avatar all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Avatar id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Avatar attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Avatar content")
+        assertCommonFlags(html, "Avatar")
     }
 }

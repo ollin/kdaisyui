@@ -18,6 +18,12 @@ class ChatCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun chat_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -41,9 +47,7 @@ class ChatCoverageTest {
             )
         }
         assertRendered(html, "chat chat-end chat-start zz-extra", "Chat all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Chat id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Chat attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Chat content")
+        assertCommonFlags(html, "Chat")
     }
 
     @Test
@@ -155,9 +159,7 @@ class ChatCoverageTest {
             )
         }
         assertRendered(html, "chat-image zz-extra", "ChatImage all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ChatImage id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ChatImage attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ChatImage content")
+        assertCommonFlags(html, "ChatImage")
     }
 
     @Test
@@ -181,9 +183,7 @@ class ChatCoverageTest {
             )
         }
         assertRendered(html, "chat-header zz-extra", "ChatHeader all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ChatHeader id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ChatHeader attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ChatHeader content")
+        assertCommonFlags(html, "ChatHeader")
     }
 
     @Test
@@ -207,9 +207,7 @@ class ChatCoverageTest {
             )
         }
         assertRendered(html, "chat-footer zz-extra", "ChatFooter all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ChatFooter id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ChatFooter attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ChatFooter content")
+        assertCommonFlags(html, "ChatFooter")
     }
 
     @Test
@@ -233,8 +231,6 @@ class ChatCoverageTest {
             )
         }
         assertRendered(html, "chat-bubble zz-extra", "ChatBubble all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ChatBubble id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ChatBubble attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ChatBubble content")
+        assertCommonFlags(html, "ChatBubble")
     }
 }

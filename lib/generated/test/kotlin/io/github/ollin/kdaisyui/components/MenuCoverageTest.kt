@@ -18,6 +18,12 @@ class MenuCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun menu_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -46,9 +52,7 @@ class MenuCoverageTest {
             )
         }
         assertRendered(html, "menu menu-active menu-disabled menu-dropdown-show menu-focus menu-horizontal menu-paged menu-vertical zz-extra", "Menu all flags", closes = "</ul></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Menu id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Menu attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Menu content")
+        assertCommonFlags(html, "Menu")
     }
 
     @Test
@@ -125,9 +129,7 @@ class MenuCoverageTest {
             )
         }
         assertRendered(html, "menu-title zz-extra", "MenuTitle all flags", closes = "</h2></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MenuTitle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MenuTitle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MenuTitle content")
+        assertCommonFlags(html, "MenuTitle")
     }
 
     @Test
@@ -162,9 +164,7 @@ class MenuCoverageTest {
             )
         }
         assertRendered(html, "menu-dropdown zz-extra", "MenuDropdown all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MenuDropdown id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MenuDropdown attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MenuDropdown content")
+        assertCommonFlags(html, "MenuDropdown")
     }
 
     @Test
@@ -188,8 +188,6 @@ class MenuCoverageTest {
             )
         }
         assertRendered(html, "menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MenuDropdownToggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MenuDropdownToggle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MenuDropdownToggle content")
+        assertCommonFlags(html, "MenuDropdownToggle")
     }
 }

@@ -18,6 +18,12 @@ class StatusCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun status_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,9 +46,7 @@ class StatusCoverageTest {
             )
         }
         assertRendered(html, "status zz-extra", "Status all flags", closes = "</span></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Status id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Status attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Status content")
+        assertCommonFlags(html, "Status")
         assertTrue(html.contains("role=\""), "Status sets role")
     }
 

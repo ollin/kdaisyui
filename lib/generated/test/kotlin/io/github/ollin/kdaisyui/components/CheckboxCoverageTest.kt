@@ -18,6 +18,12 @@ class CheckboxCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun checkbox_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,8 +45,7 @@ class CheckboxCoverageTest {
             )
         }
         assertRendered(html, "checkbox zz-extra", "Checkbox all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Checkbox id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Checkbox attrs")
+        assertCommonFlags(html, "Checkbox", content = false)
         assertTrue(html.contains("type=\""), "Checkbox sets type")
         assertTrue(html.contains("checked=\""), "Checkbox sets checked")
         assertTrue(html.contains("disabled=\""), "Checkbox sets disabled")

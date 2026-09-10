@@ -18,6 +18,12 @@ class LoadingCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun loading_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -45,9 +51,7 @@ class LoadingCoverageTest {
             )
         }
         assertRendered(html, "loading loading-ball loading-bars loading-dots loading-infinity loading-ring loading-spinner zz-extra", "Loading all flags", closes = "</span></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Loading id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Loading attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Loading content")
+        assertCommonFlags(html, "Loading")
     }
 
     @Test

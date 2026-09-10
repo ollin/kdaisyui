@@ -18,6 +18,12 @@ class AuraCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun aura_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -45,9 +51,7 @@ class AuraCoverageTest {
             )
         }
         assertRendered(html, "aura aura-dual aura-glow aura-gold aura-holo aura-rainbow aura-silver zz-extra", "Aura all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Aura id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Aura attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Aura content")
+        assertCommonFlags(html, "Aura")
     }
 
     @Test

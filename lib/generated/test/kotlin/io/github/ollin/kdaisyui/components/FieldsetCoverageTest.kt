@@ -18,6 +18,12 @@ class FieldsetCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun fieldset_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,9 +45,7 @@ class FieldsetCoverageTest {
             )
         }
         assertRendered(html, "fieldset zz-extra", "Fieldset all flags", closes = "</fieldset></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Fieldset id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Fieldset attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Fieldset content")
+        assertCommonFlags(html, "Fieldset")
     }
 
     @Test
@@ -65,8 +69,6 @@ class FieldsetCoverageTest {
             )
         }
         assertRendered(html, "fieldset-legend zz-extra", "FieldsetLegend all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FieldsetLegend id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FieldsetLegend attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FieldsetLegend content")
+        assertCommonFlags(html, "FieldsetLegend")
     }
 }

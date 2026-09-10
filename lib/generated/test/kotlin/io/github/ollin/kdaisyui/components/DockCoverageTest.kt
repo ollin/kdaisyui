@@ -18,6 +18,12 @@ class DockCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun dock_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,9 +46,7 @@ class DockCoverageTest {
             )
         }
         assertRendered(html, "dock dock-active zz-extra", "Dock all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Dock id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Dock attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Dock content")
+        assertCommonFlags(html, "Dock")
     }
 
     @Test
@@ -121,8 +125,6 @@ class DockCoverageTest {
             )
         }
         assertRendered(html, "dock-label zz-extra", "DockLabel all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DockLabel id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DockLabel attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DockLabel content")
+        assertCommonFlags(html, "DockLabel")
     }
 }

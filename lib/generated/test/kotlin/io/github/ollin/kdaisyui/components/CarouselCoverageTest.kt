@@ -18,6 +18,12 @@ class CarouselCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun carousel_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -44,9 +50,7 @@ class CarouselCoverageTest {
             )
         }
         assertRendered(html, "carousel carousel-center carousel-end carousel-horizontal carousel-start carousel-vertical zz-extra", "Carousel all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Carousel id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Carousel attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Carousel content")
+        assertCommonFlags(html, "Carousel")
     }
 
     @Test
@@ -70,8 +74,6 @@ class CarouselCoverageTest {
             )
         }
         assertRendered(html, "carousel-item zz-extra", "CarouselItem all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "CarouselItem id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "CarouselItem attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "CarouselItem content")
+        assertCommonFlags(html, "CarouselItem")
     }
 }

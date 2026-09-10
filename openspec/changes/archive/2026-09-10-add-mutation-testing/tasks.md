@@ -149,9 +149,29 @@ rested on did not survive being checked:
   Removing it means making the call indirect, which costs the readability these files exist
   to provide when a test fails. All four score 9.38 — green.
 
-  A second helper covering the id/attrs/content trio was tried and **reverted**: it cleared
-  none of the four and introduced an `Excess Number of Function Arguments` smell at five
-  parameters against a threshold of four. 9.09 with it, 9.38 without.
+  A second helper covering the id/attrs/content trio was tried three ways, and the sequence
+  is worth keeping because the first conclusion drawn from it was too comfortable:
+
+  1. **Folded into `assertRendered`** — five parameters against Kotlin's threshold of four.
+     Traded the duplication for an `Excess Number of Function Arguments` smell. 9.09.
+  2. **Reverted**, and the residue described as "the argument list, inherent to the
+     exhaustive-test shape". That was an over-generalisation: `fab_all_flags` does carry a
+     component-specific flag, but `fabClose_all_flags` and `fabMainAction_all_flags` are
+     identical apart from the function name and the expected class string.
+  3. **Separate `assertCommonFlags`, three parameters** — kept. Removes two assertion lines
+     from roughly a hundred generated tests and trips no rule.
+
+  **Step 3 did not clear the finding either: still 9.38, still the same three functions.**
+  That is the measurement that settles it. With every shared assertion gone, what CodeScene
+  still sees is the seven-line component call — `daisyFabClose(id = …, extraClasses = …,
+  attrs = …, content = …)` — which differs between the three tests only in the function
+  being called. Collapsing that means passing the component as a lambda, and the lambda's
+  receiver differs per component (`DIV`, `UL`, `BUTTON`, …), so the helper would have to be
+  generic over the wrapper type in generated code that exists to be read when a test fails.
+
+  Not claimed to be impossible — it is a cost, and the cost is legibility in exactly the
+  files that need it most. Recorded so the trade is Oliver's to overturn rather than mine to
+  have quietly decided.
 
   Verified not to have weakened anything: 218 mutants, 214 killed, **test strength still
   exactly 100%**, identical counts. That is the check CodeScene cannot make — a helper that

@@ -18,6 +18,12 @@ class TooltipCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun tooltip_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -47,9 +53,7 @@ class TooltipCoverageTest {
             )
         }
         assertRendered(html, "tooltip tooltip-bottom tooltip-center tooltip-end tooltip-left tooltip-open tooltip-right tooltip-start tooltip-top zz-extra", "Tooltip all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Tooltip id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Tooltip attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Tooltip content")
+        assertCommonFlags(html, "Tooltip")
     }
 
     @Test
@@ -150,8 +154,6 @@ class TooltipCoverageTest {
             )
         }
         assertRendered(html, "tooltip-content zz-extra", "TooltipContent all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TooltipContent id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TooltipContent attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TooltipContent content")
+        assertCommonFlags(html, "TooltipContent")
     }
 }

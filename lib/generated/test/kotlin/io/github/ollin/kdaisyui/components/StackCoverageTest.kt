@@ -18,6 +18,12 @@ class StackCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun stack_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -43,8 +49,6 @@ class StackCoverageTest {
             )
         }
         assertRendered(html, "stack stack-bottom stack-end stack-start stack-top zz-extra", "Stack all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Stack id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Stack attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Stack content")
+        assertCommonFlags(html, "Stack")
     }
 }

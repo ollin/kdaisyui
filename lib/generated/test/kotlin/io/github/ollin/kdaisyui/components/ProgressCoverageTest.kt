@@ -18,6 +18,12 @@ class ProgressCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun progress_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,9 +45,7 @@ class ProgressCoverageTest {
             )
         }
         assertRendered(html, "progress zz-extra", "Progress all flags", closes = "</progress></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Progress id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Progress attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Progress content")
+        assertCommonFlags(html, "Progress")
     }
 
     @Test

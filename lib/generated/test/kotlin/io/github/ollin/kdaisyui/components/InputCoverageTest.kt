@@ -18,6 +18,12 @@ class InputCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun input_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -41,8 +47,7 @@ class InputCoverageTest {
             )
         }
         assertRendered(html, "input input-ghost zz-extra", "Input all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Input id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Input attrs")
+        assertCommonFlags(html, "Input", content = false)
         assertTrue(html.contains("placeholder=\"x\""), "Input placeholder")
         assertTrue(html.contains("value=\"x\""), "Input value")
         assertTrue(html.contains("type=\""), "Input sets type")

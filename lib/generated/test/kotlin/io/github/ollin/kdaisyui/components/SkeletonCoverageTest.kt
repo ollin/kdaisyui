@@ -18,6 +18,12 @@ class SkeletonCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun skeleton_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,8 +46,6 @@ class SkeletonCoverageTest {
             )
         }
         assertRendered(html, "skeleton skeleton-text zz-extra", "Skeleton all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Skeleton id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Skeleton attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Skeleton content")
+        assertCommonFlags(html, "Skeleton")
     }
 }

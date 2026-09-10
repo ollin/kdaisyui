@@ -18,6 +18,12 @@ class ThemeControllerCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun themeController_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,8 +45,6 @@ class ThemeControllerCoverageTest {
             )
         }
         assertRendered(html, "theme-controller zz-extra", "ThemeController all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ThemeController id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ThemeController attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ThemeController content")
+        assertCommonFlags(html, "ThemeController")
     }
 }

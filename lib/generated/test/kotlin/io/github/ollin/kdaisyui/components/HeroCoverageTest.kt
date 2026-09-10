@@ -18,6 +18,12 @@ class HeroCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun hero_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,9 +45,7 @@ class HeroCoverageTest {
             )
         }
         assertRendered(html, "hero zz-extra", "Hero all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Hero id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Hero attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Hero content")
+        assertCommonFlags(html, "Hero")
     }
 
     @Test
@@ -65,9 +69,7 @@ class HeroCoverageTest {
             )
         }
         assertRendered(html, "hero-content zz-extra", "HeroContent all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "HeroContent id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "HeroContent attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "HeroContent content")
+        assertCommonFlags(html, "HeroContent")
     }
 
     @Test
@@ -91,8 +93,6 @@ class HeroCoverageTest {
             )
         }
         assertRendered(html, "hero-overlay zz-extra", "HeroOverlay all flags", closes = "</label></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "HeroOverlay id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "HeroOverlay attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "HeroOverlay content")
+        assertCommonFlags(html, "HeroOverlay")
     }
 }

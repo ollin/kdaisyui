@@ -18,6 +18,12 @@ class StatCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun stat_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -41,9 +47,7 @@ class StatCoverageTest {
             )
         }
         assertRendered(html, "stats stats-horizontal stats-vertical zz-extra", "Stat all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Stat id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Stat attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Stat content")
+        assertCommonFlags(html, "Stat")
     }
 
     @Test
@@ -67,9 +71,7 @@ class StatCoverageTest {
             )
         }
         assertRendered(html, "stat zz-extra", "StatStat all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStat id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStat attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStat content")
+        assertCommonFlags(html, "StatStat")
     }
 
     @Test
@@ -91,9 +93,7 @@ class StatCoverageTest {
             )
         }
         assertRendered(html, "stat-title zz-extra", "StatStatTitle all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatTitle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatTitle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatTitle content")
+        assertCommonFlags(html, "StatStatTitle")
     }
 
     @Test
@@ -126,9 +126,7 @@ class StatCoverageTest {
             )
         }
         assertRendered(html, "stat-value zz-extra", "StatStatValue all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatValue id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatValue attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatValue content")
+        assertCommonFlags(html, "StatStatValue")
     }
 
     @Test
@@ -161,9 +159,7 @@ class StatCoverageTest {
             )
         }
         assertRendered(html, "stat-desc zz-extra", "StatStatDesc all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatDesc id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatDesc attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatDesc content")
+        assertCommonFlags(html, "StatStatDesc")
     }
 
     @Test
@@ -198,9 +194,7 @@ class StatCoverageTest {
             )
         }
         assertRendered(html, "stat-figure zz-extra", "StatStatFigure all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatFigure id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatFigure attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatFigure content")
+        assertCommonFlags(html, "StatStatFigure")
     }
 
     @Test
@@ -224,8 +218,6 @@ class StatCoverageTest {
             )
         }
         assertRendered(html, "stat-actions zz-extra", "StatStatActions all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatActions id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatActions attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatActions content")
+        assertCommonFlags(html, "StatStatActions")
     }
 }

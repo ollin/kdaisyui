@@ -18,6 +18,12 @@ class MockupBrowserCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun mockupBrowser_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,9 +45,7 @@ class MockupBrowserCoverageTest {
             )
         }
         assertRendered(html, "mockup-browser zz-extra", "MockupBrowser all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MockupBrowser id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MockupBrowser attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MockupBrowser content")
+        assertCommonFlags(html, "MockupBrowser")
     }
 
     @Test
@@ -65,8 +69,6 @@ class MockupBrowserCoverageTest {
             )
         }
         assertRendered(html, "mockup-browser-toolbar zz-extra", "MockupBrowserToolbar all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MockupBrowserToolbar id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MockupBrowserToolbar attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MockupBrowserToolbar content")
+        assertCommonFlags(html, "MockupBrowserToolbar")
     }
 }

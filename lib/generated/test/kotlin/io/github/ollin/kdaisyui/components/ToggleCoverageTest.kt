@@ -18,6 +18,12 @@ class ToggleCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun toggle_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,8 +45,7 @@ class ToggleCoverageTest {
             )
         }
         assertRendered(html, "toggle zz-extra", "Toggle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Toggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Toggle attrs")
+        assertCommonFlags(html, "Toggle", content = false)
         assertTrue(html.contains("type=\""), "Toggle sets type")
         assertTrue(html.contains("checked=\""), "Toggle sets checked")
         assertTrue(html.contains("disabled=\""), "Toggle sets disabled")

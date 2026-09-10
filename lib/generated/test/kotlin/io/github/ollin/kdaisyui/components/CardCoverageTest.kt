@@ -18,6 +18,12 @@ class CardCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun card_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -43,9 +49,7 @@ class CardCoverageTest {
             )
         }
         assertRendered(html, "card card-border card-dash card-image-full card-side zz-extra", "Card all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Card id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Card attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Card content")
+        assertCommonFlags(html, "Card")
     }
 
     @Test
@@ -122,9 +126,7 @@ class CardCoverageTest {
             )
         }
         assertRendered(html, "card-title zz-extra", "CardTitle all flags", closes = "</h2></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "CardTitle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "CardTitle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "CardTitle content")
+        assertCommonFlags(html, "CardTitle")
     }
 
     @Test
@@ -159,9 +161,7 @@ class CardCoverageTest {
             )
         }
         assertRendered(html, "card-body zz-extra", "CardBody all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "CardBody id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "CardBody attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "CardBody content")
+        assertCommonFlags(html, "CardBody")
     }
 
     @Test
@@ -185,8 +185,6 @@ class CardCoverageTest {
             )
         }
         assertRendered(html, "card-actions zz-extra", "CardActions all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "CardActions id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "CardActions attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "CardActions content")
+        assertCommonFlags(html, "CardActions")
     }
 }

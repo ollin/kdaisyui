@@ -18,6 +18,12 @@ class TimelineCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun timeline_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -44,9 +50,7 @@ class TimelineCoverageTest {
             )
         }
         assertRendered(html, "timeline timeline-box timeline-compact timeline-horizontal timeline-snap-icon timeline-vertical zz-extra", "Timeline all flags", closes = "</ul></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Timeline id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Timeline attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Timeline content")
+        assertCommonFlags(html, "Timeline")
     }
 
     @Test
@@ -70,9 +74,7 @@ class TimelineCoverageTest {
             )
         }
         assertRendered(html, "timeline-start zz-extra", "TimelineStart all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TimelineStart id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TimelineStart attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TimelineStart content")
+        assertCommonFlags(html, "TimelineStart")
     }
 
     @Test
@@ -96,9 +98,7 @@ class TimelineCoverageTest {
             )
         }
         assertRendered(html, "timeline-middle zz-extra", "TimelineMiddle all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TimelineMiddle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TimelineMiddle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TimelineMiddle content")
+        assertCommonFlags(html, "TimelineMiddle")
     }
 
     @Test
@@ -122,8 +122,6 @@ class TimelineCoverageTest {
             )
         }
         assertRendered(html, "timeline-end zz-extra", "TimelineEnd all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TimelineEnd id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TimelineEnd attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TimelineEnd content")
+        assertCommonFlags(html, "TimelineEnd")
     }
 }

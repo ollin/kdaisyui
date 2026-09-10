@@ -18,6 +18,12 @@ class MaskCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun mask_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -56,8 +62,6 @@ class MaskCoverageTest {
             )
         }
         assertRendered(html, "mask mask-circle mask-decagon mask-diamond mask-half-1 mask-half-2 mask-heart mask-hexagon mask-hexagon-2 mask-pentagon mask-square mask-squircle mask-star mask-star-2 mask-triangle mask-triangle-2 mask-triangle-3 mask-triangle-4 zz-extra", "Mask all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Mask id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Mask attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Mask content")
+        assertCommonFlags(html, "Mask")
     }
 }

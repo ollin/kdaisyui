@@ -19,6 +19,12 @@ class ButtonCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun button_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -50,9 +56,7 @@ class ButtonCoverageTest {
             )
         }
         assertRendered(html, "btn btn-active btn-block btn-circle btn-dash btn-disabled btn-ghost btn-link btn-outline btn-soft btn-square btn-wide zz-extra", "Button all flags", closes = "</button></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Button id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Button attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Button content")
+        assertCommonFlags(html, "Button")
         assertTrue(html.contains("disabled=\""), "Button sets disabled")
         assertTrue(html.contains("type=\""), "Button sets type")
     }

@@ -18,6 +18,12 @@ class JoinCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun join_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -41,8 +47,6 @@ class JoinCoverageTest {
             )
         }
         assertRendered(html, "join join-horizontal join-vertical zz-extra", "Join all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Join id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Join attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Join content")
+        assertCommonFlags(html, "Join")
     }
 }

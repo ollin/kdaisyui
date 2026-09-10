@@ -18,6 +18,12 @@ class RatingCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun rating_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -41,9 +47,7 @@ class RatingCoverageTest {
             )
         }
         assertRendered(html, "rating rating-half rating-hidden zz-extra", "Rating all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Rating id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Rating attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Rating content")
+        assertCommonFlags(html, "Rating")
     }
 
     @Test

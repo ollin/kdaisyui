@@ -18,6 +18,12 @@ class FileInputCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun fileInput_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -40,9 +46,7 @@ class FileInputCoverageTest {
             )
         }
         assertRendered(html, "file-input file-input-ghost zz-extra", "FileInput all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FileInput id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FileInput attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FileInput content")
+        assertCommonFlags(html, "FileInput")
     }
 
     @Test

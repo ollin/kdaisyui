@@ -18,6 +18,12 @@ class DropdownCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun dropdown_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -49,9 +55,7 @@ class DropdownCoverageTest {
             )
         }
         assertRendered(html, "dropdown dropdown-bottom dropdown-center dropdown-close dropdown-end dropdown-hover dropdown-left dropdown-open dropdown-right dropdown-start dropdown-top zz-extra", "Dropdown all flags", closes = "</details></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Dropdown id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Dropdown attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Dropdown content")
+        assertCommonFlags(html, "Dropdown")
     }
 
     @Test
@@ -75,8 +79,6 @@ class DropdownCoverageTest {
             )
         }
         assertRendered(html, "dropdown-content zz-extra", "DropdownContent all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DropdownContent id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DropdownContent attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DropdownContent content")
+        assertCommonFlags(html, "DropdownContent")
     }
 }

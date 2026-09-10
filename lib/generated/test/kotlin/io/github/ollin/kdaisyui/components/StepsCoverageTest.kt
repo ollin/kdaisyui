@@ -18,6 +18,12 @@ class StepsCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun steps_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -41,9 +47,7 @@ class StepsCoverageTest {
             )
         }
         assertRendered(html, "steps steps-horizontal steps-vertical zz-extra", "Steps all flags", closes = "</ul></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Steps id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Steps attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Steps content")
+        assertCommonFlags(html, "Steps")
     }
 
     @Test
@@ -155,9 +159,7 @@ class StepsCoverageTest {
             )
         }
         assertRendered(html, "step zz-extra", "StepsStep all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StepsStep id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StepsStep attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StepsStep content")
+        assertCommonFlags(html, "StepsStep")
     }
 
     @Test
@@ -181,8 +183,6 @@ class StepsCoverageTest {
             )
         }
         assertRendered(html, "step-icon zz-extra", "StepsStepIcon all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StepsStepIcon id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StepsStepIcon attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StepsStepIcon content")
+        assertCommonFlags(html, "StepsStepIcon")
     }
 }

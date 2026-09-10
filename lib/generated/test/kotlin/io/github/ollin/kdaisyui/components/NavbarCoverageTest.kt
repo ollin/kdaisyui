@@ -18,6 +18,12 @@ class NavbarCoverageTest {
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
 
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun navbar_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -39,9 +45,7 @@ class NavbarCoverageTest {
             )
         }
         assertRendered(html, "navbar zz-extra", "Navbar all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Navbar id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Navbar attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Navbar content")
+        assertCommonFlags(html, "Navbar")
     }
 
     @Test
@@ -65,9 +69,7 @@ class NavbarCoverageTest {
             )
         }
         assertRendered(html, "navbar-start zz-extra", "NavbarStart all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "NavbarStart id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "NavbarStart attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "NavbarStart content")
+        assertCommonFlags(html, "NavbarStart")
     }
 
     @Test
@@ -91,9 +93,7 @@ class NavbarCoverageTest {
             )
         }
         assertRendered(html, "navbar-center zz-extra", "NavbarCenter all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "NavbarCenter id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "NavbarCenter attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "NavbarCenter content")
+        assertCommonFlags(html, "NavbarCenter")
     }
 
     @Test
@@ -117,8 +117,6 @@ class NavbarCoverageTest {
             )
         }
         assertRendered(html, "navbar-end zz-extra", "NavbarEnd all flags", closes = "</div></div>")
-        assertTrue(html.contains("id=\"x-cov-id\""), "NavbarEnd id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "NavbarEnd attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "NavbarEnd content")
+        assertCommonFlags(html, "NavbarEnd")
     }
 }

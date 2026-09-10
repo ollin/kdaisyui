@@ -650,6 +650,12 @@ const COVERAGE_HELPER = `
         )
         if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
     }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\\"x-cov-id\\""), "$label id")
+        assertTrue(html.contains("data-attrs=\\"yes\\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\\"yes\\""), "$label content")
+    }
 `
 
 /** The exact tail a correctly closed component leaves, or null when there is none to assert. */
@@ -730,16 +736,17 @@ function allFlagsArgs(ctx, boolCss) {
 }
 
 function allFlagsAsserts(ctx, boolCss) {
-  // A second helper covering the id/attrs/content trio was tried and reverted. It did not
-  // clear the four files still flagged — what repeats there is the ARGUMENT LIST, not the
-  // assertions — and it introduced an Excess Number of Function Arguments smell of its own
-  // at five parameters against a threshold of four. Net loss, so it went.
+  // The id/attrs/content trio is identical in every all-flags case, so it lives in
+  // `assertCommonFlags` rather than being repeated three times per component.
+  //
+  // Kept SEPARATE from `assertRendered` on purpose. Folding both into one helper was tried
+  // and reverted: it needed five parameters against Kotlin's threshold of four and traded
+  // the duplication for an Excess Number of Function Arguments smell. Two helpers of three
+  // and four parameters say the same thing and trip neither rule.
   const asserts = [
     renderedAssert(ctx, sortedClasses([ctx.base, ...boolCss, 'zz-extra']), `${ctx.daisyName} all flags`, true),
-    `assertTrue(html.contains("id=\\"x-cov-id\\""), "${ctx.daisyName} id")`,
-    `assertTrue(html.contains("data-attrs=\\"yes\\""), "${ctx.daisyName} attrs")`,
+    `assertCommonFlags(html, "${ctx.daisyName}"${ctx.hasContent ? '' : ', content = false'})`,
   ]
-  if (ctx.hasContent) asserts.push(`assertTrue(html.contains("data-content=\\"yes\\""), "${ctx.daisyName} content")`)
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)
   }

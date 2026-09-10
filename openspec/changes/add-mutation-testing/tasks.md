@@ -132,8 +132,34 @@ rested on did not survive being checked:
   them, which is what `:lib:pitest` at 100% test strength catches. Before section 6 this
   refactoring would have been unsafe; after it, it is not.
 
-- [ ] 9.1 Emit one `assertRendered` helper per generated coverage-test file and collapse the repeated extract-classes + assert block into a single call (refactoring; generator change + regenerated output in ONE commit, drift compares them)
-- [ ] 9.2 Re-measure and confirm: `analyze_change_set` no longer degrades on the coverage tests, 1498 unit tests still green, test strength still 100% (documentation; evidence)
+- [x] 9.1 Emit one `assertRendered` helper per generated coverage-test file and collapse the repeated extract-classes + assert block into a single call (refactoring; generator change + regenerated output in ONE commit, drift compares them)
+- [x] 9.2 Re-measure and confirm: `analyze_change_set` no longer degrades on the coverage tests, 1498 unit tests still green, test strength still 100% (documentation; evidence)
+
+  **Partly achieved, and the remainder is not worth buying.**
+
+  About twenty coverage-test files went from `degraded` to `improved` or `fixed` — Chat and
+  Steps 5.0 → 2.0; Select, Textarea, Otp, Status, FileInput, Button, Badge, Alert, Table,
+  Rating, Kbd, Divider, Progress and Tooltip out of the findings entirely. Modal, Drawer,
+  Stat, Timeline, Swap, Navbar, Diff and Link no longer degrade.
+
+  **Four still do:** `BreadcrumbsCoverageTest`, `FabCoverageTest`, `HeroCoverageTest`,
+  `MockupPhoneCoverageTest` — each with three `*_all_flags` methods flagged as similar. What
+  repeats there is the *argument list*, not the assertions: the same parameters set to the
+  same values for three parts of one component. That similarity IS the exhaustive-test shape.
+  Removing it means making the call indirect, which costs the readability these files exist
+  to provide when a test fails. All four score 9.38 — green.
+
+  A second helper covering the id/attrs/content trio was tried and **reverted**: it cleared
+  none of the four and introduced an `Excess Number of Function Arguments` smell at five
+  parameters against a threshold of four. 9.09 with it, 9.38 without.
+
+  Verified not to have weakened anything: 218 mutants, 214 killed, **test strength still
+  exactly 100%**, identical counts. That is the check CodeScene cannot make — a helper that
+  quietly dropped an assertion would leave the duplication finding just as fixed.
+
+  `analyze_change_set` therefore still reports `quality_gates: failed` on those four. The
+  honest reading is that the metric is right about the similarity and wrong about it being
+  worth removing.
 
 **The gate must still fail if the assertions weaken.** 9.2 is not satisfied by CodeScene going
 quiet — the mutation score is what says the tests still assert what they did before.

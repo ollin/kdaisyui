@@ -13,7 +13,7 @@ const DEFAULT_OUTPUT_DIR = path.resolve(
   '../../lib/generated/test/kotlin/io/github/ollin/kdaisyui/icons',
 )
 
-function parseOutputDir() {
+function parseOutputDir(): string {
   for (const arg of process.argv) {
     if (arg.startsWith('--output-dir=')) {
       return arg.slice('--output-dir='.length)
@@ -35,6 +35,24 @@ const directories = {
 // HeroIconSize.dimension and is independent of the icon's available variants.
 const SIZE_DIMENSION = { Sm: 16, Md: 20, Lg: 24 }
 
+/** The three sizes `HeroIconSize` declares. Derived so the two cannot drift apart. */
+type IconSize = keyof typeof SIZE_DIMENSION
+
+/**
+ * What `parseIconFiles` returns per icon: the processed SVG path data for each
+ * variant/size the icon actually ships, and `null` for the ones it does not.
+ *
+ * Which fields are null is load-bearing rather than incidental — `solidViewBox` reads
+ * exactly `solid16` and `solid20` to decide the viewBox, so this shape IS the branch
+ * table it consults.
+ */
+interface IconPaths {
+  outline24: string | null
+  solid16: string | null
+  solid20: string | null
+  solid24: string | null
+}
+
 /**
  * Compute the viewBox the function will emit for a Solid render at a given size,
  * mirroring the branch shape produced by generator-heroicons.js:
@@ -42,7 +60,7 @@ const SIZE_DIMENSION = { Sm: 16, Md: 20, Lg: 24 }
  *   - icons with solid20 only:      Sm -> else(24), Md -> 20, Lg -> 24
  *   - icons with neither:           any -> 24
  */
-function solidViewBox(size, struct) {
+function solidViewBox(size: IconSize, struct: IconPaths): string {
   const hasSolid16 = !!struct.solid16
   const hasSolid20 = !!struct.solid20
   if (size === 'Sm') return hasSolid16 ? '0 0 16 16' : '0 0 24 24'
@@ -56,11 +74,16 @@ function solidViewBox(size, struct) {
  * full class list (size + variant + optional extraClasses), and width/height —
  * which uniquely identifies the selected `when` branch for every icon shape.
  */
-function svgOpenFragment(viewBox, classes, dimension) {
+function svgOpenFragment(viewBox: string, classes: string, dimension: number): string {
   return `viewBox="${viewBox}" class="${classes}" width="${dimension}" height="${dimension}">`
 }
 
-function renderAssertion(fnName, callArgs, fragment, label) {
+// Four strings in a fixed order, and the types say so and nothing more. Swapping `fragment`
+// and `label` type-checks perfectly and produces nonsense — the same shape of defect that
+// motivated this change (a kotlinx.html builder name passed where an HTML tag name was
+// meant). Plain annotations do NOT catch it; only branded types would, at a cost this
+// change has not taken on. Recorded rather than papered over.
+function renderAssertion(fnName: string, callArgs: string, fragment: string, label: string): string {
   return `        run {
             val html = createHTML(prettyPrint = false).div { ${fnName}(${callArgs}) }
             assertTrue(
@@ -70,7 +93,7 @@ function renderAssertion(fnName, callArgs, fragment, label) {
         }`
 }
 
-function generateIconTest(pascalName, struct) {
+function generateIconTest(pascalName: string, struct: IconPaths): string {
   const fnName = `heroIcon${pascalName}`
   const outlineFragment = svgOpenFragment(
     '0 0 24 24',

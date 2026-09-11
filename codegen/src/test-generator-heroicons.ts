@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'node:url'
-import { parseIconFiles } from './parser/svg-heroicons.js'
+import { parseIconFiles, type IconPaths } from './parser/svg-heroicons.ts'
 
 const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
 // `lib/generated/test/`, NOT `lib/src/test/`. This file's output is generated, and the
@@ -38,20 +38,9 @@ const SIZE_DIMENSION = { Sm: 16, Md: 20, Lg: 24 }
 /** The three sizes `HeroIconSize` declares. Derived so the two cannot drift apart. */
 type IconSize = keyof typeof SIZE_DIMENSION
 
-/**
- * What `parseIconFiles` returns per icon: the processed SVG path data for each
- * variant/size the icon actually ships, and `null` for the ones it does not.
- *
- * Which fields are null is load-bearing rather than incidental — `solidViewBox` reads
- * exactly `solid16` and `solid20` to decide the viewBox, so this shape IS the branch
- * table it consults.
- */
-interface IconPaths {
-  outline24: string | null
-  solid16: string | null
-  solid20: string | null
-  solid24: string | null
-}
+// `IconPaths` is imported rather than declared here: it describes what the parser PRODUCES,
+// so the parser is where it belongs. It was briefly duplicated in task 1.3, which is how a
+// shape drifts — two declarations, one of them eventually stale.
 
 /**
  * Compute the viewBox the function will emit for a Solid render at a given size,
@@ -160,7 +149,8 @@ function main() {
   const sorted = [...icons.keys()].sort()
 
   const methods = sorted
-    .map((pascalName) => generateIconTest(pascalName, icons.get(pascalName)))
+    // `!` because the key came from `icons.keys()` — present by construction.
+    .map((pascalName) => generateIconTest(pascalName, icons.get(pascalName)!))
     .join('\n')
 
   const kotlin = `// GENERATED — DO NOT EDIT

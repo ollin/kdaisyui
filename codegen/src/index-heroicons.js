@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { parseIconFiles } from './parser/svg-heroicons.js'
+import { parseIconFiles } from './parser/svg-heroicons.ts'
 import { generateKotlinFile } from './generator-heroicons.js'
 
 const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')

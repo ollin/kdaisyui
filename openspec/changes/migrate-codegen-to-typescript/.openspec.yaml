@@ -1,0 +1,7 @@
+schema: spec-driven
+created: 2026-09-11
+
+# No spec-level behaviour delta. The port must leave `lib/generated/**` byte-identical —
+# that is the change's own acceptance criterion — so there is no requirement to state and
+# inventing one would put a false claim into openspec/specs/.
+skip_specs: true

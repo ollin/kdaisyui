@@ -41,11 +41,18 @@ reachable and the plan is rewritten rather than forced.
 Each: rename, update its Gradle task and npm script, annotate the parser boundary, regenerate,
 require an empty diff.
 
-- [ ] 2.1 `codegen/src/test-generator.js` → `.ts`, plus its `tool-logic`-style helpers (refactoring; the largest file, and the one whose defects motivated this)
+- [x] 2.1 `codegen/src/test-generator.js` → `.ts`, plus its `tool-logic`-style helpers (refactoring; the largest file, and the one whose defects motivated this) — `BuilderName` / `TagName` branded, three casts total. Branding forced a real simplification: four inlined copies of `receiver === 'FlowContent' ? 'div' : receiver.toLowerCase()` became one named `wrapperTagOf`, because each would otherwise have needed its own cast. Everything else left to inference, per 1.3.
 - [ ] 2.2 `codegen/src/index-new.js` → `.ts` (refactoring)
 - [ ] 2.3 `codegen/src/index-heroicons.js` → `.ts` (refactoring)
 - [ ] 2.4 `codegen/src/classifier.js`, `generator-new.js`, `generator-heroicons.js` → `.ts` (refactoring; one commit each if any needs real thought, one commit total if they are mechanical)
-- [ ] 2.5 `codegen/src/parser/*.js` → `.ts` — frontmatter, llms-txt, svg-heroicons (refactoring) — **the highest-value annotations in the change**: this is the boundary where hand-written YAML from a submodule becomes typed data, and where every defect found so far actually lived
+- [~] 2.5 `codegen/src/parser/*.js` → `.ts` — frontmatter, llms-txt, svg-heroicons (refactoring) — **the highest-value annotations in the change**: this is the boundary where hand-written YAML from a submodule becomes typed data, and where every defect found so far actually lived
+
+  **`svg-heroicons.ts` done, taken out of order** to test branded types on the smallest file
+  where two string KINDS coexist. `KebabName` / `PascalName`, two casts, and `IconPaths`
+  moved here from `test-generator-heroicons.ts` where 1.3 had duplicated it.
+
+  Remaining: `frontmatter.js` and `llms-txt.js`. Both are larger and parse YAML the submodule
+  owns, so they are where `any` currently does the most damage.
 
 ## 3. Make the new constraints enforceable by something other than memory
 

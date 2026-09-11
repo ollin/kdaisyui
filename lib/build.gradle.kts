@@ -253,7 +253,7 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     // source of it — a second copy inside the generator once went stale unnoticed.
     val componentsDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/test-generator.js all --output-dir=\"${outputDir.asFile.absolutePath}\" --components-dir=\"${componentsDir.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/test-generator.ts all --output-dir=\"${outputDir.asFile.absolutePath}\" --components-dir=\"${componentsDir.asFile.absolutePath}\"")
     dependsOn(generateComponents)
     inputs.dir(componentsDir)
     inputs.dir(rootProject.file("codegen/src"))
@@ -279,7 +279,7 @@ tasks.register<Exec>("testCodegen") {
     // leave the other behind.
     //
     // The `test/` argument in that script is load-bearing: the runner's default patterns
-    // include `**/test-*.js`, which matches `src/test-generator.js` and
+    // include `**/test-*`, which matches `src/test-generator.ts` and
     // `src/test-generator-heroicons.ts`, so a bare `node --test` EXECUTES both generators
     // as if they were test files.
     commandLine("sh", "-c", "npm test")

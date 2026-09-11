@@ -4,6 +4,25 @@ import { pathToFileURL } from 'node:url'
 import { getAllComponentDirs, readComponentFrontmatter, toPascalCase } from './parser/frontmatter.js'
 import { toCamelCase } from './classifier.js'
 
+/**
+ * The two string kinds this generator confuses most easily, and the defect that motivated
+ * the whole TypeScript port.
+ *
+ * A kotlinx.html BUILDER is the Kotlin function you call — `fieldSet`, `textArea`, `div`.
+ * A TAG is what it emits — `fieldset`, `textarea`, `div`. They are equal for most elements
+ * and different for exactly the ones that matter, so a mistake survives every test that
+ * uses a `div` and fails on the two that do not. That is precisely what happened in
+ * `add-mutation-testing` task 4.1: `</fieldSet>` was asserted, and only `FieldsetCoverageTest`
+ * and `TextareaCoverageTest` noticed.
+ *
+ * Branding them turns that into a call-site error. The total cost is THREE casts, each at a
+ * point where a name genuinely comes into existence: `parseEmittedBuilder` (read out of a
+ * generated body), `htmlTagForFn` (lowercased, and immediately validated by round-tripping),
+ * and `wrapperTagOf` (derived from a Kotlin receiver type). Everything downstream is checked.
+ */
+export type BuilderName = string & { readonly __brand: 'BuilderName' }
+export type TagName = string & { readonly __brand: 'TagName' }
+
 const DOCS_DIR = path.resolve(import.meta.dirname, '../../daisyui/packages/docs/src/routes/(routes)/components')
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -226,7 +245,7 @@ function generateCustomPartTests(className, customParts) {
     const receiver = part.receiver || 'FlowContent'
     
     // Determine wrapping context based on receiver type
-    const wrapperTag = receiver === 'FlowContent' ? 'div' : receiver.toLowerCase()
+    const wrapperTag = wrapperTagOf(receiver)
     const wrapperFn = htmlTagFnFor(wrapperTag)
 
     kotlin += `
@@ -243,7 +262,21 @@ ${customPartAssertions(part, tag)}
   return kotlin
 }
 
-function htmlTagFnFor(tag) {
+/**
+ * The tag a kotlinx.html receiver type emits: `DIV` → `div`, `BUTTON` → `button`.
+ *
+ * `FlowContent` is the exception and not an element at all — it is the generic content
+ * position, which the generated tests wrap in a `<div>`.
+ *
+ * This exists so the conversion happens in ONE place. Four call sites used to inline the
+ * same ternary, and after branding they would each have needed their own cast; naming it
+ * costs one cast and deletes four copies of a conditional.
+ */
+function wrapperTagOf(receiver: string): TagName {
+  return (receiver === 'FlowContent' ? 'div' : receiver.toLowerCase()) as TagName
+}
+
+function htmlTagFnFor(tag: TagName): BuilderName {
   const exceptions = { fieldset: 'fieldSet', textarea: 'textArea' }
   return exceptions[tag] ?? tag
 }
@@ -311,7 +344,7 @@ function generateKotlinTest(componentName, testCases, frontmatter, config) {
   for (const part of customParts) {
     const receiver = part.receiver || 'FlowContent'
     if (receiver !== 'FlowContent') {
-      extraImports.add(`import kotlinx.html.${htmlTagFnFor(receiver.toLowerCase())}`)
+      extraImports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(receiver))}`)
     }
   }
   const extraImportLines = [...extraImports].sort().join('\n')
@@ -508,9 +541,10 @@ function parseBaseClass(body) {
  *
  * A builder name is not an HTML tag name — see `htmlTagForFn`.
  */
-function parseEmittedBuilder(body) {
+function parseEmittedBuilder(body: string): BuilderName | null {
   const m = body.match(/^\s*([a-z][\w]*)\s*\{\s*$/m)
-  return m ? m[1] : null
+  // One of the two points a branded name is created: everything downstream is checked.
+  return m ? (m[1] as BuilderName) : null
 }
 
 /**
@@ -526,8 +560,11 @@ function parseEmittedBuilder(body) {
  * to assert beats asserting something false, which is the failure this whole task
  * exists to remove.
  */
-function htmlTagForFn(builder) {
-  const tag = builder.toLowerCase()
+function htmlTagForFn(builder: BuilderName): TagName | null {
+  // The second and last point a branded name is created. The cast is safe precisely
+  // because the next line checks it: a lowercased builder that does not round-trip
+  // through `htmlTagFnFor` is not a tag name, and is rejected rather than returned.
+  const tag = builder.toLowerCase() as TagName
   return htmlTagFnFor(tag) === builder ? tag : null
 }
 
@@ -535,7 +572,10 @@ function htmlTagForFn(builder) {
  * HTML void elements. They have no closing tag, so the "element is closed"
  * assertion below does not apply to them and would assert something false.
  */
-const VOID_TAGS = new Set([
+// Deliberately `Set<string>` rather than `Set<TagName>`: it is only ever queried with a
+// `TagName`, which is assignable to `string`, so branding the literals would buy nothing
+// and cost fourteen casts.
+const VOID_TAGS: Set<string> = new Set([
   'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
   'link', 'meta', 'param', 'source', 'track', 'wbr',
 ])
@@ -689,11 +729,11 @@ function coverageContext(fn, enums) {
     params,
     body: fn.body,
     base: parseBaseClass(fn.body) || '',
-    wrapperFn: fn.receiver === 'FlowContent' ? 'div' : htmlTagFnFor(fn.receiver.toLowerCase()),
+    wrapperFn: htmlTagFnFor(wrapperTagOf(fn.receiver)),
     // The wrapper's CLOSING tag, which is the raw receiver name — not `wrapperFn`,
     // because `htmlTagFnFor` renames a few builders away from their tag (`object`
     // becomes `htmlObject`) and `</htmlObject>` is not a thing.
-    wrapperTag: fn.receiver === 'FlowContent' ? 'div' : fn.receiver.toLowerCase(),
+    wrapperTag: wrapperTagOf(fn.receiver),
     tagFn: parseEmittedBuilder(fn.body),
     fnBase: lowerFirst(fn.name),
     daisyName: fn.name,
@@ -804,7 +844,7 @@ function generateCoverageForFile(fileName) {
     'import kotlin.test.assertTrue',
   ])
   for (const fn of funcs) {
-    if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(fn.receiver.toLowerCase())}`)
+    if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
     for (const raw of splitParams(fn.paramBlock)) {
       const p = classifyParam(raw, enums)
       if (p.kind === 'enumExternal' && EXTERNAL_ENUM_IMPORTS[p.baseType]) imports.add(EXTERNAL_ENUM_IMPORTS[p.baseType])
@@ -897,10 +937,10 @@ function generateSingleComponent(componentName, config) {
 }
 
 function printUsageAndExit() {
-  console.log('Usage: node test-generator.js <component-name|all>')
+  console.log('Usage: node test-generator.ts <component-name|all>')
   console.log('Examples:')
-  console.log('  node test-generator.js dropdown')
-  console.log('  node test-generator.js all')
+  console.log('  node test-generator.ts dropdown')
+  console.log('  node test-generator.ts all')
   process.exit(1)
 }
 
@@ -913,7 +953,7 @@ function main() {
   printUsageAndExit()
 }
 
-// Run only when invoked directly — `node src/test-generator.js all …`, which is how Gradle
+// Run only when invoked directly — `node src/test-generator.ts all …`, which is how Gradle
 // calls it. Without this guard, importing the module to test one function would regenerate
 // all 66 components as a side effect, so no unit test could exist. That is why this file
 // has none today.

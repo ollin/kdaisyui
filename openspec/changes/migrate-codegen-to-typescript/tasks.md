@@ -51,8 +51,21 @@ require an empty diff.
   where two string KINDS coexist. `KebabName` / `PascalName`, two casts, and `IconPaths`
   moved here from `test-generator-heroicons.ts` where 1.3 had duplicated it.
 
-  Remaining: `frontmatter.js` and `llms-txt.js`. Both are larger and parse YAML the submodule
-  owns, so they are where `any` currently does the most damage.
+  **`frontmatter.ts` done.** Its three JSDoc `@typedef` blocks became real interfaces —
+  knowledge that existed and was unenforced. `ClassCategory = keyof Classnames` pays at once:
+  `MODIFIER_CATEGORIES` in `test-generator.ts` is now `ClassCategory[]`, so the typo that
+  silently dropped a whole category can no longer be written.
+
+  **The finding of this change, recorded because it generalises:** annotating the arguments
+  raised CodeScene's **String Heavy Function Arguments at 41.7%, `introduced`, previous value
+  zero** — while nothing about the code had changed. The `.js` version scored zero because
+  nothing could see the arguments were strings. *The smell was always there; writing the types
+  made it measurable.* Its remedy is Object Calisthenics rule 3, and branding
+  `ComponentName` / `PascalComponentName` cleared it (7.02 → 7.24).
+
+  Remaining: `llms-txt.js`.
+
+- [ ] 2.6 Refactor `parseYamlFrontmatter` — cc 32, nesting depth 5, eight bumps — and `parseValue` — cc 10 plus a complex conditional (refactoring) — **pre-existing complexity, surfaced not caused by the port.** A hand-rolled YAML reader in one loop with four mutable locals; the same shape `parseTestCases` had before `test-and-clean-codegen` split it, and the same fix applies. Deliberately NOT done inside a rename commit, where the byte-identical criterion could not distinguish a port from a restructuring. Write characterization tests first: this file currently has none.
 
 ## 3. Make the new constraints enforceable by something other than memory
 

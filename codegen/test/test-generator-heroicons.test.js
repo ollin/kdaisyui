@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { DEFAULT_OUTPUT_DIR } from '../src/test-generator-heroicons.js'
+import { DEFAULT_OUTPUT_DIR } from '../src/test-generator-heroicons.ts'
 
 describe('test-generator-heroicons default output', () => {
   test('writes into the generated tree, never the hand-written one', () => {

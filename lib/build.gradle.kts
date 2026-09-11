@@ -280,7 +280,7 @@ tasks.register<Exec>("testCodegen") {
     //
     // The `test/` argument in that script is load-bearing: the runner's default patterns
     // include `**/test-*.js`, which matches `src/test-generator.js` and
-    // `src/test-generator-heroicons.js`, so a bare `node --test` EXECUTES both generators
+    // `src/test-generator-heroicons.ts`, so a bare `node --test` EXECUTES both generators
     // as if they were test files.
     commandLine("sh", "-c", "npm test")
     inputs.dir(rootProject.file("codegen/src"))
@@ -297,7 +297,7 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     workingDir = rootProject.file("codegen")
     val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/icons")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/test-generator-heroicons.js --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/test-generator-heroicons.ts --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))

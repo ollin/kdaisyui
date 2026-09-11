@@ -19,7 +19,22 @@ reachable and the plan is rewritten rather than forced.
   decided per file by extension rather than by the importer.
 
 - [ ] 1.2 Rename its test to `.ts` and confirm `:lib:testCodegen` still passes (refactoring) — `node --test` must discover and strip a `.ts` test; if it does not, that is a finding worth recording before porting anything else.
-- [ ] 1.3 Add the first real annotations to that file: the parsed-icon shape and the exported `DEFAULT_OUTPUT_DIR` (feature-test; small) — the point at which we learn whether types say anything the code did not already say. **If they do not, stop and reconsider the change** rather than continuing out of consistency.
+- [x] 1.3 Add the first real annotations to that file: the parsed-icon shape and the exported `DEFAULT_OUTPUT_DIR` (feature-test; small) — the point at which we learn whether types say anything the code did not already say. **If they do not, stop and reconsider the change** rather than continuing out of consistency.
+
+  **Verdict: continue, with the argument narrowed.** `IconPaths` and
+  `IconSize = keyof typeof SIZE_DIMENSION` each say something the code did not — the first is
+  the branch table `solidViewBox` consults, the second stops the size union and the dimension
+  map drifting apart. `renderAssertion(…: string ×4)` says nothing, and it is the same defect
+  class the proposal argued from: plain annotations cannot tell a builder name from a tag
+  name, and only branded types would. The proposal has been corrected.
+
+  `DEFAULT_OUTPUT_DIR: string` was deliberately NOT annotated — inference already says
+  `string`, and writing it adds a token without adding a claim.
+
+  **Consequence for section 2:** types pay where there is shape, not where everything is a
+  string. 2.5 (the parser boundary) is the high-value task; 2.1-2.4 are mostly mechanical
+  renames whose annotations will restate themselves. Sequence accordingly, and do not treat a
+  thin annotation set in 2.1-2.4 as a failure — it is the predicted outcome.
 
 ## 2. Port the remaining generators, one per commit
 

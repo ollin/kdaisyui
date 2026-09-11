@@ -14,9 +14,27 @@ errors a type would have named:
 - `closesTagAssert` was handed a kotlinx.html *builder* name where an HTML *tag* name was
   meant. Both are `string`.
 
-That last one is the argument in miniature. `fieldSet` and `fieldset` are the same type and
-different things, and the mistake surfaced as four failing generated tests rather than as a
-compile error.
+That last one was offered as the argument in miniature. **Task 1.3 showed it is the wrong
+example**, and the correction matters more than the original claim.
+
+`fieldSet` and `fieldset` are both `string`. A plain annotation cannot tell them apart, and
+neither can it stop `renderAssertion(fnName, callArgs, fragment, label)` being called with
+`fragment` and `label` swapped — that type-checks perfectly and produces nonsense. Catching
+that class of defect needs **branded types**, which this change has not taken on.
+
+What 1.3 measured instead:
+
+| Annotation | Said something new? |
+|---|---|
+| `IconPaths` — four named, nullable fields | **yes** — it *is* the branch table `solidViewBox` consults, previously only in a comment |
+| `IconSize = keyof typeof SIZE_DIMENSION` | **yes** — the union and the dimension map can no longer drift |
+| `renderAssertion(…: string ×4)` | **no** — pure restatement |
+
+**Types pay where there is SHAPE — objects with named nullable fields, unions of known
+strings — and pay nothing where everything is a string.** That is still an argument for the
+change, but a narrower one than this proposal opened with, and it reorders the work: the
+parser boundary (task 2.5) is where the value is, and the string-formatting helpers will
+mostly restate themselves.
 
 ## What Changes
 

@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class ModalCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun modal_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal", actualClasses, "Modal defaults")
+        assertRendered(html, "modal", "Modal defaults", closes = "</dialog></div>")
     }
 
     @Test
@@ -36,11 +50,8 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal modal-bottom modal-end modal-middle modal-open modal-start modal-top zz-extra", actualClasses, "Modal all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Modal id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Modal attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Modal content")
+        assertRendered(html, "modal modal-bottom modal-end modal-middle modal-open modal-start modal-top zz-extra", "Modal all flags", closes = "</dialog></div>")
+        assertCommonFlags(html, "Modal")
     }
 
     @Test
@@ -50,8 +61,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-box", actualClasses, "ModalBox defaults")
+        assertRendered(html, "modal-box", "ModalBox defaults", closes = "</div></div>")
     }
 
     @Test
@@ -64,11 +74,8 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-box zz-extra", actualClasses, "ModalBox all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalBox id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalBox attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalBox content")
+        assertRendered(html, "modal-box zz-extra", "ModalBox all flags", closes = "</div></div>")
+        assertCommonFlags(html, "ModalBox")
     }
 
     @Test
@@ -78,8 +85,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-action", actualClasses, "ModalAction defaults")
+        assertRendered(html, "modal-action", "ModalAction defaults", closes = "</div></div>")
     }
 
     @Test
@@ -92,11 +98,8 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-action zz-extra", actualClasses, "ModalAction all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalAction id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalAction attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalAction content")
+        assertRendered(html, "modal-action zz-extra", "ModalAction all flags", closes = "</div></div>")
+        assertCommonFlags(html, "ModalAction")
     }
 
     @Test
@@ -106,8 +109,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-backdrop", actualClasses, "ModalBackdrop defaults")
+        assertRendered(html, "modal-backdrop", "ModalBackdrop defaults", closes = "</div></div>")
     }
 
     @Test
@@ -120,11 +122,8 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-backdrop zz-extra", actualClasses, "ModalBackdrop all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalBackdrop id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalBackdrop attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalBackdrop content")
+        assertRendered(html, "modal-backdrop zz-extra", "ModalBackdrop all flags", closes = "</div></div>")
+        assertCommonFlags(html, "ModalBackdrop")
     }
 
     @Test
@@ -134,8 +133,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-toggle", actualClasses, "ModalToggle defaults")
+        assertRendered(html, "modal-toggle", "ModalToggle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -148,11 +146,8 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal-toggle zz-extra", actualClasses, "ModalToggle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalToggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalToggle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalToggle content")
+        assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags", closes = "</div></div>")
+        assertCommonFlags(html, "ModalToggle")
     }
 
     @Test
@@ -162,8 +157,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal", actualClasses, "ModalPopover defaults")
+        assertRendered(html, "modal", "ModalPopover defaults", closes = "</div></div>")
     }
 
     @Test
@@ -176,10 +170,7 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("modal zz-extra", actualClasses, "ModalPopover all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ModalPopover id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ModalPopover attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ModalPopover content")
+        assertRendered(html, "modal zz-extra", "ModalPopover all flags", closes = "</div></div>")
+        assertCommonFlags(html, "ModalPopover")
     }
 }

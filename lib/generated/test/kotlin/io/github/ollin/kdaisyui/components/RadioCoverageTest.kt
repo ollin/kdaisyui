@@ -9,13 +9,28 @@ import kotlinx.html.stream.createHTML
 
 class RadioCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun radio_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio", actualClasses, "Radio defaults")
+        assertRendered(html, "radio", "Radio defaults")
+        assertTrue(html.contains("type=\""), "Radio sets type")
     }
 
     @Test
@@ -30,11 +45,13 @@ class RadioCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio zz-extra", actualClasses, "Radio all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Radio id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Radio attrs")
+        assertRendered(html, "radio zz-extra", "Radio all flags")
+        assertCommonFlags(html, "Radio", content = false)
         assertTrue(html.contains("name=\"x\""), "Radio name")
+        assertTrue(html.contains("type=\""), "Radio sets type")
+        assertTrue(html.contains("name=\""), "Radio sets name")
+        assertTrue(html.contains("checked=\""), "Radio sets checked")
+        assertTrue(html.contains("disabled=\""), "Radio sets disabled")
     }
 
     @Test
@@ -44,8 +61,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-neutral", actualClasses, "Radio variant Neutral")
+        assertRendered(html, "radio radio-neutral", "Radio variant Neutral")
     }
 
     @Test
@@ -55,8 +71,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-primary", actualClasses, "Radio variant Primary")
+        assertRendered(html, "radio radio-primary", "Radio variant Primary")
     }
 
     @Test
@@ -66,8 +81,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-secondary", actualClasses, "Radio variant Secondary")
+        assertRendered(html, "radio radio-secondary", "Radio variant Secondary")
     }
 
     @Test
@@ -77,8 +91,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-accent", actualClasses, "Radio variant Accent")
+        assertRendered(html, "radio radio-accent", "Radio variant Accent")
     }
 
     @Test
@@ -88,8 +101,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-success", actualClasses, "Radio variant Success")
+        assertRendered(html, "radio radio-success", "Radio variant Success")
     }
 
     @Test
@@ -99,8 +111,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-warning", actualClasses, "Radio variant Warning")
+        assertRendered(html, "radio radio-warning", "Radio variant Warning")
     }
 
     @Test
@@ -110,8 +121,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-info", actualClasses, "Radio variant Info")
+        assertRendered(html, "radio radio-info", "Radio variant Info")
     }
 
     @Test
@@ -121,8 +131,7 @@ class RadioCoverageTest {
                 variant = RadioVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-error", actualClasses, "Radio variant Error")
+        assertRendered(html, "radio radio-error", "Radio variant Error")
     }
 
     @Test
@@ -132,8 +141,7 @@ class RadioCoverageTest {
                 size = RadioSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-xs", actualClasses, "Radio size Xs")
+        assertRendered(html, "radio radio-xs", "Radio size Xs")
     }
 
     @Test
@@ -143,8 +151,7 @@ class RadioCoverageTest {
                 size = RadioSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-sm", actualClasses, "Radio size Sm")
+        assertRendered(html, "radio radio-sm", "Radio size Sm")
     }
 
     @Test
@@ -154,8 +161,7 @@ class RadioCoverageTest {
                 size = RadioSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-md", actualClasses, "Radio size Md")
+        assertRendered(html, "radio radio-md", "Radio size Md")
     }
 
     @Test
@@ -165,8 +171,7 @@ class RadioCoverageTest {
                 size = RadioSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-lg", actualClasses, "Radio size Lg")
+        assertRendered(html, "radio radio-lg", "Radio size Lg")
     }
 
     @Test
@@ -176,7 +181,6 @@ class RadioCoverageTest {
                 size = RadioSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("radio radio-xl", actualClasses, "Radio size Xl")
+        assertRendered(html, "radio radio-xl", "Radio size Xl")
     }
 }

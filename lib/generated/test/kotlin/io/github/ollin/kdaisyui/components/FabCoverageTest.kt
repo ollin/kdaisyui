@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class FabCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun fab_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fab", actualClasses, "Fab defaults")
+        assertRendered(html, "fab", "Fab defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,11 +45,8 @@ class FabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fab fab-flower zz-extra", actualClasses, "Fab all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Fab id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Fab attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Fab content")
+        assertRendered(html, "fab fab-flower zz-extra", "Fab all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Fab")
     }
 
     @Test
@@ -45,8 +56,7 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fab-close", actualClasses, "FabClose defaults")
+        assertRendered(html, "fab-close", "FabClose defaults", closes = "</div></div>")
     }
 
     @Test
@@ -59,11 +69,8 @@ class FabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fab-close zz-extra", actualClasses, "FabClose all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FabClose id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FabClose attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FabClose content")
+        assertRendered(html, "fab-close zz-extra", "FabClose all flags", closes = "</div></div>")
+        assertCommonFlags(html, "FabClose")
     }
 
     @Test
@@ -73,8 +80,7 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fab-main-action", actualClasses, "FabMainAction defaults")
+        assertRendered(html, "fab-main-action", "FabMainAction defaults", closes = "</div></div>")
     }
 
     @Test
@@ -87,10 +93,7 @@ class FabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fab-main-action zz-extra", actualClasses, "FabMainAction all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FabMainAction id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FabMainAction attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FabMainAction content")
+        assertRendered(html, "fab-main-action zz-extra", "FabMainAction all flags", closes = "</div></div>")
+        assertCommonFlags(html, "FabMainAction")
     }
 }

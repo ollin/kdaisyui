@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class MenuCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun menu_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu", actualClasses, "Menu defaults")
+        assertRendered(html, "menu", "Menu defaults", closes = "</ul></div>")
     }
 
     @Test
@@ -37,11 +51,8 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu menu-active menu-disabled menu-dropdown-show menu-focus menu-horizontal menu-paged menu-vertical zz-extra", actualClasses, "Menu all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Menu id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Menu attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Menu content")
+        assertRendered(html, "menu menu-active menu-disabled menu-dropdown-show menu-focus menu-horizontal menu-paged menu-vertical zz-extra", "Menu all flags", closes = "</ul></div>")
+        assertCommonFlags(html, "Menu")
     }
 
     @Test
@@ -52,8 +63,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu menu-xs", actualClasses, "Menu size Xs")
+        assertRendered(html, "menu menu-xs", "Menu size Xs")
     }
 
     @Test
@@ -64,8 +74,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu menu-sm", actualClasses, "Menu size Sm")
+        assertRendered(html, "menu menu-sm", "Menu size Sm")
     }
 
     @Test
@@ -76,8 +85,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu menu-md", actualClasses, "Menu size Md")
+        assertRendered(html, "menu menu-md", "Menu size Md")
     }
 
     @Test
@@ -88,8 +96,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu menu-lg", actualClasses, "Menu size Lg")
+        assertRendered(html, "menu menu-lg", "Menu size Lg")
     }
 
     @Test
@@ -100,8 +107,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu menu-xl", actualClasses, "Menu size Xl")
+        assertRendered(html, "menu menu-xl", "Menu size Xl")
     }
 
     @Test
@@ -109,8 +115,7 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuTitle()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu-title", actualClasses, "MenuTitle defaults")
+        assertRendered(html, "menu-title", "MenuTitle defaults", closes = "</h2></div>")
     }
 
     @Test
@@ -123,11 +128,8 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu-title zz-extra", actualClasses, "MenuTitle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MenuTitle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MenuTitle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MenuTitle content")
+        assertRendered(html, "menu-title zz-extra", "MenuTitle all flags", closes = "</h2></div>")
+        assertCommonFlags(html, "MenuTitle")
     }
 
     @Test
@@ -137,8 +139,7 @@ class MenuCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu-title", actualClasses, "MenuTitle text")
+        assertRendered(html, "menu-title", "MenuTitle text")
         assertTrue(html.contains("txtmark"), "MenuTitle text content")
     }
 
@@ -149,8 +150,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu-dropdown", actualClasses, "MenuDropdown defaults")
+        assertRendered(html, "menu-dropdown", "MenuDropdown defaults", closes = "</div></div>")
     }
 
     @Test
@@ -163,11 +163,8 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu-dropdown zz-extra", actualClasses, "MenuDropdown all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MenuDropdown id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MenuDropdown attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MenuDropdown content")
+        assertRendered(html, "menu-dropdown zz-extra", "MenuDropdown all flags", closes = "</div></div>")
+        assertCommonFlags(html, "MenuDropdown")
     }
 
     @Test
@@ -177,8 +174,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu-dropdown-toggle", actualClasses, "MenuDropdownToggle defaults")
+        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -191,10 +187,7 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("menu-dropdown-toggle zz-extra", actualClasses, "MenuDropdownToggle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MenuDropdownToggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MenuDropdownToggle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MenuDropdownToggle content")
+        assertRendered(html, "menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</div></div>")
+        assertCommonFlags(html, "MenuDropdownToggle")
     }
 }

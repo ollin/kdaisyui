@@ -56,6 +56,29 @@ coverage gate; per-module configuration lives in the subprojects and `buildSrc`.
 the codegen input and the webjar CSS. It must stay at a version that also has a published
 webjar, so generated components never reference CSS the webjar lacks.
 
+## Test quality: two gates, and they measure different things
+
+| Gate | Question | Where |
+|---|---|---|
+| `koverVerify` — 100% line **and** branch, aggregated | was the line **executed**? | `./gradlew check`, `unit-tests` job |
+| `:lib:pitest` — 100% **test strength** | was the executed line **asserted**? | `mutation-tests` job, NOT in `check` |
+
+Neither implies the other, which is why both exist. A test asserting `x == x` executes every
+line and branch it used to, so Kover cannot tell it apart from a real one. Verified here: a
+deliberately weakened assertion left `:lib:test` and `koverVerify` green and was caught only by
+the mutation gate.
+
+**Test strength, not mutation score** — it is `killed / (killed + survived)`, ignoring mutants
+no test covers. That set is currently four Kotlin-emitted interface-default bridges that no
+source-level test can call. `lib/build.gradle.kts` carries the full reasoning next to the
+number; read it before "fixing" the threshold to `mutationThreshold`.
+
+Run it with `./gradlew :lib:pitest` (~15s). It is deliberately outside `check` — it forks a JVM
+per mutant. Read `lib/build/reports/pitest/index.html`, or `mutations.xml` for a mechanical
+list. Scope is `core.*` plus five branch-rich components, named in the build file; **a surviving
+mutant is not always a missing assertion** — it can be code that cannot matter, and then the
+answer is to delete the code.
+
 ## Skills
 
 | Task | Skill |
@@ -63,6 +86,7 @@ webjar, so generated components never reference CSS the webjar lacks.
 | Codegen, component shape, config knobs, adding a component, version ceiling | `kdaisyui-codegen` |
 | Any test work, run configurations, `just` recipes, E2E wiring, Cucumber | `kdaisyui-testing` |
 | Versioning, publishing, what CI does | `kdaisyui-release` |
+| The Gradle build itself — buildSrc, settings, toolchains, compiler flags, adding a plugin, any build warning | `kdaisyui-build` |
 
 ## Planning changes — OpenSpec
 
@@ -127,6 +151,9 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
 - Assuming there is no release automation — there is, see `kdaisyui-release`
 - Letting `koverVerify` slip: the gate is 100% line **and** branch, aggregated
+- Weakening an assertion to make a test pass — Kover cannot see it, `:lib:pitest` can
+- Swapping `testStrengthThreshold` for `mutationThreshold`: it cannot reach 100 here, and the
+  build file says why
 - Re-dumping `lib/api/lib.api` to make the `api-baseline` job green without reading the diff —
   and shipping a breaking change in it with no **How to migrate** entry in `README.md`
 - Package `com.github.ollin`

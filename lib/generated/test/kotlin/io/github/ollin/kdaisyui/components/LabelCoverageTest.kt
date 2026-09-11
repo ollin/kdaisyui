@@ -9,13 +9,27 @@ import kotlinx.html.stream.createHTML
 
 class LabelCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun label_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyLabel()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("label", actualClasses, "Label defaults")
+        assertRendered(html, "label", "Label defaults", closes = "</span></div>")
     }
 
     @Test
@@ -28,11 +42,8 @@ class LabelCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("label zz-extra", actualClasses, "Label all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Label attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Label content")
+        assertRendered(html, "label zz-extra", "Label all flags", closes = "</span></div>")
+        assertCommonFlags(html, "Label")
     }
 
     @Test
@@ -42,8 +53,7 @@ class LabelCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("label", actualClasses, "Label text")
+        assertRendered(html, "label", "Label text")
         assertTrue(html.contains("txtmark"), "Label text content")
     }
 }

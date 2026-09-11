@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class Hover3dCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun hover3d_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class Hover3dCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hover-3d", actualClasses, "Hover3d defaults")
+        assertRendered(html, "hover-3d", "Hover3d defaults", closes = "</div></div>")
     }
 
     @Test
@@ -30,10 +44,7 @@ class Hover3dCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("hover-3d zz-extra", actualClasses, "Hover3d all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Hover3d id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Hover3d attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Hover3d content")
+        assertRendered(html, "hover-3d zz-extra", "Hover3d all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Hover3d")
     }
 }

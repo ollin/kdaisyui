@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class ThemeControllerCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun themeController_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class ThemeControllerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("theme-controller", actualClasses, "ThemeController defaults")
+        assertRendered(html, "theme-controller", "ThemeController defaults")
     }
 
     @Test
@@ -30,10 +44,7 @@ class ThemeControllerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("theme-controller zz-extra", actualClasses, "ThemeController all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "ThemeController id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "ThemeController attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "ThemeController content")
+        assertRendered(html, "theme-controller zz-extra", "ThemeController all flags")
+        assertCommonFlags(html, "ThemeController")
     }
 }

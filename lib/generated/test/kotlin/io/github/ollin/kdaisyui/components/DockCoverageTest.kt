@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class DockCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun dock_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock", actualClasses, "Dock defaults")
+        assertRendered(html, "dock", "Dock defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,11 +45,8 @@ class DockCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock dock-active zz-extra", actualClasses, "Dock all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Dock id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Dock attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Dock content")
+        assertRendered(html, "dock dock-active zz-extra", "Dock all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Dock")
     }
 
     @Test
@@ -46,8 +57,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock dock-xs", actualClasses, "Dock size Xs")
+        assertRendered(html, "dock dock-xs", "Dock size Xs")
     }
 
     @Test
@@ -58,8 +68,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock dock-sm", actualClasses, "Dock size Sm")
+        assertRendered(html, "dock dock-sm", "Dock size Sm")
     }
 
     @Test
@@ -70,8 +79,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock dock-md", actualClasses, "Dock size Md")
+        assertRendered(html, "dock dock-md", "Dock size Md")
     }
 
     @Test
@@ -82,8 +90,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock dock-lg", actualClasses, "Dock size Lg")
+        assertRendered(html, "dock dock-lg", "Dock size Lg")
     }
 
     @Test
@@ -94,8 +101,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock dock-xl", actualClasses, "Dock size Xl")
+        assertRendered(html, "dock dock-xl", "Dock size Xl")
     }
 
     @Test
@@ -105,8 +111,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock-label", actualClasses, "DockLabel defaults")
+        assertRendered(html, "dock-label", "DockLabel defaults", closes = "</div></div>")
     }
 
     @Test
@@ -119,10 +124,7 @@ class DockCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("dock-label zz-extra", actualClasses, "DockLabel all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DockLabel id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DockLabel attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DockLabel content")
+        assertRendered(html, "dock-label zz-extra", "DockLabel all flags", closes = "</div></div>")
+        assertCommonFlags(html, "DockLabel")
     }
 }

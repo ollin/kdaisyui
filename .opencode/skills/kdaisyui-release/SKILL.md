@@ -79,8 +79,10 @@ is a local directory, not a remote — the only remote upload path is JReleaser.
 
 ## What CI enforces before any of this
 
-`ci.yml` runs three jobs on pushes and PRs to `main`: `generated-sources-drift`, `unit-tests`
-(including the aggregated 100% `koverVerify` gate) and `e2e-tests`.
+`ci.yml` runs **six** jobs on pushes and PRs to `main`: `generated-sources-drift`,
+`codegen-tests`, `api-baseline`, `unit-tests` (including the aggregated 100% `koverVerify`
+gate), `mutation-tests` (100% test strength) and `e2e-tests`. See `kdaisyui-testing` for what
+each one needs; this page had the count wrong twice, so read `ci.yml` if it matters.
 `pr-conventional-commits.yml` validates PR titles — and that matters more than usual here,
 because JReleaser builds the release changelog from those commit messages.
 
@@ -91,8 +93,8 @@ with the base, GitHub cannot compute that commit and **silently skips those work
 checks are not red; they are absent.
 
 `pull_request_target` workflows are unaffected, because they run from the base branch. So a
-conflicted PR shows exactly one green check — `Validate PR title` — and no sign that
-`unit-tests`, `e2e-tests` and `generated-sources-drift` never ran.
+conflicted PR shows exactly one green check — `Validate PR title` — and no sign that every
+other job never ran.
 
 Verified 2026-08-15: PRs #229 and #231 had `mergeable_state: "dirty"` and ran only the title
 check, while #230 from Renovate ran the full suite on the same workflow file.

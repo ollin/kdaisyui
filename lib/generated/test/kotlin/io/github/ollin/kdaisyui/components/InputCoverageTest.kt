@@ -9,13 +9,28 @@ import kotlinx.html.stream.createHTML
 
 class InputCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun input_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input", actualClasses, "Input defaults")
+        assertRendered(html, "input", "Input defaults")
+        assertTrue(html.contains("type=\""), "Input sets type")
     }
 
     @Test
@@ -31,12 +46,14 @@ class InputCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-ghost zz-extra", actualClasses, "Input all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Input id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Input attrs")
+        assertRendered(html, "input input-ghost zz-extra", "Input all flags")
+        assertCommonFlags(html, "Input", content = false)
         assertTrue(html.contains("placeholder=\"x\""), "Input placeholder")
         assertTrue(html.contains("value=\"x\""), "Input value")
+        assertTrue(html.contains("type=\""), "Input sets type")
+        assertTrue(html.contains("placeholder=\""), "Input sets placeholder")
+        assertTrue(html.contains("value=\""), "Input sets value")
+        assertTrue(html.contains("disabled=\""), "Input sets disabled")
     }
 
     @Test
@@ -46,8 +63,7 @@ class InputCoverageTest {
                 variant = InputVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-neutral", actualClasses, "Input variant Neutral")
+        assertRendered(html, "input input-neutral", "Input variant Neutral")
     }
 
     @Test
@@ -57,8 +73,7 @@ class InputCoverageTest {
                 variant = InputVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-primary", actualClasses, "Input variant Primary")
+        assertRendered(html, "input input-primary", "Input variant Primary")
     }
 
     @Test
@@ -68,8 +83,7 @@ class InputCoverageTest {
                 variant = InputVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-secondary", actualClasses, "Input variant Secondary")
+        assertRendered(html, "input input-secondary", "Input variant Secondary")
     }
 
     @Test
@@ -79,8 +93,7 @@ class InputCoverageTest {
                 variant = InputVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-accent", actualClasses, "Input variant Accent")
+        assertRendered(html, "input input-accent", "Input variant Accent")
     }
 
     @Test
@@ -90,8 +103,7 @@ class InputCoverageTest {
                 variant = InputVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-info", actualClasses, "Input variant Info")
+        assertRendered(html, "input input-info", "Input variant Info")
     }
 
     @Test
@@ -101,8 +113,7 @@ class InputCoverageTest {
                 variant = InputVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-success", actualClasses, "Input variant Success")
+        assertRendered(html, "input input-success", "Input variant Success")
     }
 
     @Test
@@ -112,8 +123,7 @@ class InputCoverageTest {
                 variant = InputVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-warning", actualClasses, "Input variant Warning")
+        assertRendered(html, "input input-warning", "Input variant Warning")
     }
 
     @Test
@@ -123,8 +133,7 @@ class InputCoverageTest {
                 variant = InputVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-error", actualClasses, "Input variant Error")
+        assertRendered(html, "input input-error", "Input variant Error")
     }
 
     @Test
@@ -134,8 +143,7 @@ class InputCoverageTest {
                 size = InputSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-xs", actualClasses, "Input size Xs")
+        assertRendered(html, "input input-xs", "Input size Xs")
     }
 
     @Test
@@ -145,8 +153,7 @@ class InputCoverageTest {
                 size = InputSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-sm", actualClasses, "Input size Sm")
+        assertRendered(html, "input input-sm", "Input size Sm")
     }
 
     @Test
@@ -156,8 +163,7 @@ class InputCoverageTest {
                 size = InputSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-md", actualClasses, "Input size Md")
+        assertRendered(html, "input input-md", "Input size Md")
     }
 
     @Test
@@ -167,8 +173,7 @@ class InputCoverageTest {
                 size = InputSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-lg", actualClasses, "Input size Lg")
+        assertRendered(html, "input input-lg", "Input size Lg")
     }
 
     @Test
@@ -178,7 +183,6 @@ class InputCoverageTest {
                 size = InputSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("input input-xl", actualClasses, "Input size Xl")
+        assertRendered(html, "input input-xl", "Input size Xl")
     }
 }

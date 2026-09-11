@@ -1,11 +1,16 @@
 import fs from 'fs'
 import path from 'path'
+import { pathToFileURL } from 'node:url'
 import { parseIconFiles } from './parser/svg-heroicons.js'
 
 const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
+// `lib/generated/test/`, NOT `lib/src/test/`. This file's output is generated, and the
+// hand-written tree is off-limits to it — `npm run generate:heroicon-tests` passes no
+// --output-dir, so the default is what that command uses, and it is the command this
+// generator's own output header tells you to run.
 const DEFAULT_OUTPUT_DIR = path.resolve(
   import.meta.dirname,
-  '../../lib/src/test/kotlin/io/github/ollin/kdaisyui/icons',
+  '../../lib/generated/test/kotlin/io/github/ollin/kdaisyui/icons',
 )
 
 function parseOutputDir() {
@@ -157,4 +162,11 @@ ${methods}}
   console.log(`Output: ${outFile}`)
 }
 
-main()
+// Run only when invoked directly. Without this, importing the module to test anything in it
+// regenerates 324 icon tests as a side effect — and `node --test`'s default patterns include
+// `**/test-*.js`, so a bare invocation treats this very file as a test and executes it.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+}
+
+export { DEFAULT_OUTPUT_DIR }

@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { pathToFileURL } from 'node:url'
 import { getAllComponentDirs, readComponentFrontmatter, toPascalCase } from './parser/frontmatter.js'
 import { toCamelCase } from './classifier.js'
 
@@ -28,61 +29,72 @@ function loadConfig() {
   return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
 }
 
+// A doc page is scanned line by line, and until now the position in that scan lived in four
+// mutable locals threaded through one loop. Collecting them into one object is what lets each
+// line kind below be read on its own — the loop no longer has to be simulated in your head to
+// know what any branch does.
+//
+// `language` is deliberately NOT reset when a fence closes. That is load-bearing: the final
+// flush consults it, and a heading inside an open fence leaves it standing. Both behaviours
+// are pinned by tests in codegen/test/.
+const TEST_CASE_HEADING = /^### ~(.+)$/
+
+function newScan() {
+  return { cases: [], current: null, insideBlock: false, blockLines: [], language: null }
+}
+
+function flushCurrentCase(scan) {
+  scan.current.html = scan.blockLines.join('\n')
+  scan.cases.push(scan.current)
+}
+
+function startCase(scan, name) {
+  if (scan.current && scan.blockLines.length > 0) flushCurrentCase(scan)
+  scan.current = { name: name.trim(), html: null }
+  scan.blockLines = []
+}
+
+function openBlock(scan, fenceLine) {
+  scan.insideBlock = true
+  scan.language = fenceLine.slice(3).trim()
+  scan.blockLines = []
+}
+
+function closeBlock(scan) {
+  scan.insideBlock = false
+  if (scan.language === 'html' && scan.current) {
+    flushCurrentCase(scan)
+    scan.current = null
+  }
+  scan.blockLines = []
+}
+
+// Order matters and is the fix for a real defect. A fence is decided first, then whether we
+// are inside one; only text OUTSIDE a block can be a heading. Markdown says a fenced block's
+// contents are literal, headings included.
+//
+// Previously the heading branch ran first, so `### ~x` inside an open block started a case
+// AND left `insideBlock` set — the next opening fence was then read as a closing one, the
+// new case was flushed with an empty body, and its real content fell outside any block and
+// vanished. An empty case survives all the way into a generated Kotlin test that asserts
+// nothing.
+function scanLine(scan, line) {
+  if (line.startsWith('```')) return scan.insideBlock ? closeBlock(scan) : openBlock(scan, line)
+  if (scan.insideBlock) return scan.blockLines.push(line)
+  const heading = line.match(TEST_CASE_HEADING)
+  if (heading) startCase(scan, heading[1])
+}
+
+/** A document may end mid-block; that trailing case is still emitted, if it is html. */
+function endsInsideUnclosedHtmlBlock(scan) {
+  return scan.current !== null && scan.blockLines.length > 0 && scan.language === 'html'
+}
+
 function parseTestCases(content) {
-  const testCases = []
-  const lines = content.split('\n')
-  
-  let currentTest = null
-  let inCodeBlock = false
-  let codeBlock = []
-  let codeBlockLang = null
-  
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    
-    const testMatch = line.match(/^### ~(.+)$/)
-    if (testMatch) {
-      if (currentTest && codeBlock.length > 0) {
-        currentTest.html = codeBlock.join('\n')
-        testCases.push(currentTest)
-      }
-      
-      currentTest = {
-        name: testMatch[1].trim(),
-        html: null
-      }
-      codeBlock = []
-      continue
-    }
-    
-    if (line.startsWith('```')) {
-      if (!inCodeBlock) {
-        inCodeBlock = true
-        codeBlockLang = line.slice(3).trim()
-        codeBlock = []
-      } else {
-        inCodeBlock = false
-        if (codeBlockLang === 'html' && currentTest) {
-          currentTest.html = codeBlock.join('\n')
-          testCases.push(currentTest)
-          currentTest = null
-        }
-        codeBlock = []
-      }
-      continue
-    }
-    
-    if (inCodeBlock) {
-      codeBlock.push(line)
-    }
-  }
-  
-  if (currentTest && codeBlock.length > 0 && codeBlockLang === 'html') {
-    currentTest.html = codeBlock.join('\n')
-    testCases.push(currentTest)
-  }
-  
-  return testCases
+  const scan = newScan()
+  for (const line of content.split('\n')) scanLine(scan, line)
+  if (endsInsideUnclosedHtmlBlock(scan)) flushCurrentCase(scan)
+  return scan.cases
 }
 
 function extractDaisyClasses(html) {
@@ -100,32 +112,42 @@ function toClassName(componentName) {
   return toPascalCase(componentName)
 }
 
-function buildClassMappings(frontmatter, componentName) {
-  const allowedClasses = new Set()
+// The five frontmatter sections whose entries become component parameters. `component` is
+// not among them: it names the element itself, not a modifier of it.
+const MODIFIER_CATEGORIES = ['placement', 'modifier', 'direction', 'behavior', 'style']
+
+/**
+ * Every class named under the modifier categories, in document order.
+ *
+ * A category that is not an array is skipped rather than trusted — the frontmatter is
+ * hand-written YAML in a submodule we do not control, and a scalar where a list belongs
+ * should not take the build down.
+ */
+function modifierClasses(classnames) {
+  return MODIFIER_CATEGORIES
+    .flatMap((category) => {
+      const items = classnames?.[category]
+      return Array.isArray(items) ? items : []
+    })
+    .filter((item) => item.class)
+    .map((item) => item.class)
+}
+
+function buildClassMappings(frontmatter) {
+  const componentClass = frontmatter.classnames?.component?.[0]?.class
+  const allowedClasses = new Set(componentClass ? [componentClass] : [])
   const classToParam = {}
   const paramToGeneratedClass = {}
-  
-  const componentClass = frontmatter.classnames?.component?.[0]?.class
-  if (componentClass) {
-    allowedClasses.add(componentClass)
+
+  for (const cssClass of modifierClasses(frontmatter.classnames)) {
+    allowedClasses.add(cssClass)
+    // `replace` with a STRING replaces the first occurrence only, so `btn-btn-x` yields
+    // `btnX` rather than `x`. Pinned by test; do not reach for a regex here.
+    const paramName = toCamelCase(cssClass.replace(`${componentClass}-`, ''))
+    classToParam[cssClass] = paramName
+    paramToGeneratedClass[paramName] = cssClass
   }
-  
-  const categories = ['placement', 'modifier', 'direction', 'behavior', 'style']
-  for (const cat of categories) {
-    const items = frontmatter.classnames?.[cat]
-    if (items && Array.isArray(items)) {
-      for (const item of items) {
-        if (item.class) {
-          allowedClasses.add(item.class)
-          const suffix = item.class.replace(`${componentClass}-`, '')
-          const paramName = toCamelCase(suffix)
-          classToParam[item.class] = paramName
-          paramToGeneratedClass[paramName] = item.class
-        }
-      }
-    }
-  }
-  
+
   return { allowedClasses, classToParam, paramToGeneratedClass, componentClass }
 }
 
@@ -278,7 +300,7 @@ function generateClassTest(className, { testName, args, expectedClasses, caseNam
 
 function generateKotlinTest(componentName, testCases, frontmatter, config) {
   const className = toClassName(componentName)
-  const { allowedClasses, classToParam, componentClass } = buildClassMappings(frontmatter, componentName)
+  const { allowedClasses, classToParam, componentClass } = buildClassMappings(frontmatter)
   const customParts = configSection(config, 'customParts', componentName, [])
   const attributeTest = generateComponentAttributeTest(className, configSection(config, 'componentAttributes', componentName, {}))
   
@@ -480,6 +502,119 @@ function parseBaseClass(body) {
   return m ? m[1] : null
 }
 
+/**
+ * The kotlinx.html BUILDER the function opens with. Every generated component body
+ * starts with exactly one `<builder> {` line.
+ *
+ * A builder name is not an HTML tag name — see `htmlTagForFn`.
+ */
+function parseEmittedBuilder(body) {
+  const m = body.match(/^\s*([a-z][\w]*)\s*\{\s*$/m)
+  return m ? m[1] : null
+}
+
+/**
+ * The HTML tag a kotlinx.html builder emits — the inverse of `htmlTagFnFor`.
+ *
+ * The two differ: the builder for `<fieldset>` is `fieldSet` and for `<textarea>`
+ * is `textArea`, so naively reusing the builder name produces `</fieldSet>`, which
+ * matches nothing. Lowercasing fixes those, but not `htmlObject` (tag: `object`).
+ *
+ * Rather than maintain a second exception table that can drift from the first, the
+ * inversion is CHECKED: lowercase, then round-trip through `htmlTagFnFor`. A builder
+ * that does not round-trip returns null and its caller emits no assertion — refusing
+ * to assert beats asserting something false, which is the failure this whole task
+ * exists to remove.
+ */
+function htmlTagForFn(builder) {
+  const tag = builder.toLowerCase()
+  return htmlTagFnFor(tag) === builder ? tag : null
+}
+
+/**
+ * HTML void elements. They have no closing tag, so the "element is closed"
+ * assertion below does not apply to them and would assert something false.
+ */
+const VOID_TAGS = new Set([
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+  'link', 'meta', 'param', 'source', 'track', 'wbr',
+])
+
+/**
+ * Assert the emitted element is actually CLOSED.
+ *
+ * Every other assertion in these tests reads the class attribute, and a class
+ * attribute is unaffected by whether the element was ever closed: dropping the
+ * closing tag turns `<div><dialog class="modal"></dialog></div>` into
+ * `<div><dialog class="modal"></div>`, from which `substringAfter("class=\"")`
+ * extracts exactly the same string. Mutation testing found 11 such mutants
+ * surviving across Modal, Dropdown, Tooltip and Range.
+ *
+ * `endsWith` rather than `contains`: the component is the wrapper's only child
+ * and the test content adds no child elements, so its closing tag sits directly
+ * before the wrapper's. `contains("</div>")` would be satisfied by the wrapper
+ * alone and would kill nothing for any div-based component.
+ */
+/**
+ * The HTML attributes a component body sets, split by whether a guard protects them.
+ *
+ * Three shapes occur in generated bodies, and all three are attribute assignments to
+ * the kotlinx.html tag receiver:
+ *
+ *     type = InputType.range                                    // unconditional
+ *     if (disabled) this.disabled = true                        // boolean param
+ *     if (disabled) { this.disabled = true; addClassNames(…) }   // boolean param, block
+ *     if (type != null) this.type = type                        // nullable param
+ *
+ * `attributes["id"] = …` is deliberately NOT matched: `attributes` is followed by `[`
+ * rather than `=`, and the id is already asserted separately.
+ *
+ * Only all-lowercase property names are reported. A kotlinx.html property whose name
+ * is camelCase generally renames on the way out — `htmlFor` emits `for=` — and there
+ * is no table here to invert. Skipping them asserts nothing rather than something
+ * false, the same trade `htmlTagForFn` makes.
+ */
+const ATTR_ASSIGN = /(?:this\.)?\b([a-z][a-z0-9]*)\s*=\s*[^=]/g
+
+function parseAttrProps(body) {
+  const unconditional = new Set()
+  const guarded = new Set()
+  for (const line of body.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('addClassNames')) continue
+    const isGuarded = trimmed.startsWith('if (')
+    // On a guarded line, only look at what follows the condition.
+    const scanned = isGuarded ? trimmed.slice(trimmed.indexOf(')') + 1) : trimmed
+    for (const m of scanned.matchAll(ATTR_ASSIGN)) {
+      ;(isGuarded ? guarded : unconditional).add(m[1])
+    }
+  }
+  return { unconditional, guarded }
+}
+
+/**
+ * Assert an attribute is PRESENT, by name, without asserting its value.
+ *
+ * The value is deliberately not checked. Doing so would mean predicting how
+ * kotlinx.html renders each enum, and the entry name is not the rendered value —
+ * `InputType.checkBox` emits `checkbox`. Replicating that mapping here would be a
+ * second source of truth that can disagree with the library.
+ *
+ * Presence is exactly strong enough for what mutation testing found: every one of
+ * these mutants REMOVES the setter call, and a removed call leaves no attribute at
+ * all. A negated guard has the same effect on the all-flags case, which sets every
+ * parameter.
+ */
+function attrAssert(ctx, name) {
+  return `assertTrue(html.contains("${name}=\\""), "${ctx.daisyName} sets ${name}")`
+}
+
+function closesTagAssert(ctx) {
+  const closes = closesSuffix(ctx)
+  if (!closes) return null
+  return `assertTrue(html.endsWith("${closes}"), "${ctx.daisyName} closes")`
+}
+
 /** CSS class(es) a boolean modifier adds via `if (param) addClassNames("...")`. */
 function boolClassesFor(body, param) {
   const line = body.match(new RegExp(`^\\s*if \\(${param}\\)(.*)$`, 'm'))
@@ -495,8 +630,45 @@ function sortedClasses(arr) {
   return [...new Set(arr.filter(Boolean))].sort().join(' ')
 }
 
-const ACTUAL_CLASSES =
-  'val actualClasses = html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" ")'
+/**
+ * Emitted once per generated coverage class, and called by every case in it.
+ *
+ * Before this existed, each case repeated a long class-extraction line plus its assertions,
+ * which made every `*_defaults` method structurally identical to its siblings — real
+ * duplication, flagged as such, in files a human reads exactly when a test fails.
+ *
+ * `closes` is empty for a void element such as `<input>`, which has no closing tag. It is
+ * also omitted by the enum and text cases, which never asserted closure and must not start
+ * doing so here: this is a refactoring, and a refactoring does not change an assertion.
+ */
+const COVERAGE_HELPER = `
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\\"x-cov-id\\""), "$label id")
+        assertTrue(html.contains("data-attrs=\\"yes\\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\\"yes\\""), "$label content")
+    }
+`
+
+/** The exact tail a correctly closed component leaves, or null when there is none to assert. */
+function closesSuffix(ctx) {
+  const tag = ctx.tagFn ? htmlTagForFn(ctx.tagFn) : null
+  if (!tag || VOID_TAGS.has(tag)) return null
+  return `</${tag}></${ctx.wrapperTag}>`
+}
+
+function renderedAssert(ctx, classes, label, withCloses) {
+  const closes = withCloses ? closesSuffix(ctx) : null
+  return `assertRendered(html, "${classes}", "${label}"${closes ? `, closes = "${closes}"` : ''})`
+}
 
 function renderTest(funcName, wrapperFn, callArgs, asserts) {
   const argStr = callArgs.length ? `\n${callArgs.map((a) => `                ${a},`).join('\n')}\n            ` : ''
@@ -518,6 +690,11 @@ function coverageContext(fn, enums) {
     body: fn.body,
     base: parseBaseClass(fn.body) || '',
     wrapperFn: fn.receiver === 'FlowContent' ? 'div' : htmlTagFnFor(fn.receiver.toLowerCase()),
+    // The wrapper's CLOSING tag, which is the raw receiver name — not `wrapperFn`,
+    // because `htmlTagFnFor` renames a few builders away from their tag (`object`
+    // becomes `htmlObject`) and `</htmlObject>` is not a thing.
+    wrapperTag: fn.receiver === 'FlowContent' ? 'div' : fn.receiver.toLowerCase(),
+    tagFn: parseEmittedBuilder(fn.body),
     fnBase: lowerFirst(fn.name),
     daisyName: fn.name,
     required: params.find((p) => p.kind === 'contentRequired'),
@@ -533,8 +710,15 @@ function wrapTest(ctx, tname, args, asserts) {
 function defaultsTest(ctx) {
   const args = ctx.required ? ['content = { }'] : []
   const asserts = ctx.base
-    ? [ACTUAL_CLASSES, `assertEquals("${ctx.base}", actualClasses, "${ctx.daisyName} defaults")`]
+    ? [renderedAssert(ctx, ctx.base, `${ctx.daisyName} defaults`, true)]
     : [`assertTrue(!html.contains("class=\\""), "${ctx.daisyName} defaults emits no class")`]
+  for (const a of parseAttrProps(ctx.body).unconditional) asserts.push(attrAssert(ctx, a))
+  // A component with no base class never reaches the helper, so its closure assertion is
+  // still emitted on its own line.
+  if (!ctx.base) {
+    const closes = closesTagAssert(ctx)
+    if (closes) asserts.push(closes)
+  }
   return wrapTest(ctx, `${ctx.fnBase}_defaults`, args, asserts)
 }
 
@@ -552,16 +736,22 @@ function allFlagsArgs(ctx, boolCss) {
 }
 
 function allFlagsAsserts(ctx, boolCss) {
+  // The id/attrs/content trio is identical in every all-flags case, so it lives in
+  // `assertCommonFlags` rather than being repeated three times per component.
+  //
+  // Kept SEPARATE from `assertRendered` on purpose. Folding both into one helper was tried
+  // and reverted: it needed five parameters against Kotlin's threshold of four and traded
+  // the duplication for an Excess Number of Function Arguments smell. Two helpers of three
+  // and four parameters say the same thing and trip neither rule.
   const asserts = [
-    ACTUAL_CLASSES,
-    `assertEquals("${sortedClasses([ctx.base, ...boolCss, 'zz-extra'])}", actualClasses, "${ctx.daisyName} all flags")`,
-    `assertTrue(html.contains("id=\\"x-cov-id\\""), "${ctx.daisyName} id")`,
-    `assertTrue(html.contains("data-attrs=\\"yes\\""), "${ctx.daisyName} attrs")`,
+    renderedAssert(ctx, sortedClasses([ctx.base, ...boolCss, 'zz-extra']), `${ctx.daisyName} all flags`, true),
+    `assertCommonFlags(html, "${ctx.daisyName}"${ctx.hasContent ? '' : ', content = false'})`,
   ]
-  if (ctx.hasContent) asserts.push(`assertTrue(html.contains("data-content=\\"yes\\""), "${ctx.daisyName} content")`)
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)
   }
+  const attrs = parseAttrProps(ctx.body)
+  for (const a of [...attrs.unconditional, ...attrs.guarded]) asserts.push(attrAssert(ctx, a))
   return asserts
 }
 
@@ -576,7 +766,7 @@ function enumArmTests(ctx) {
   for (const e of ctx.params.filter((p) => p.kind === 'enumClass')) {
     for (const { entry, css } of e.enumEntries) {
       const args = ctx.required ? [`${e.name} = ${e.baseType}.${entry}`, 'content = { }'] : [`${e.name} = ${e.baseType}.${entry}`]
-      const asserts = [ACTUAL_CLASSES, `assertEquals("${sortedClasses([ctx.base, css])}", actualClasses, "${ctx.daisyName} ${e.name} ${entry}")`]
+      const asserts = [renderedAssert(ctx, sortedClasses([ctx.base, css]), `${ctx.daisyName} ${e.name} ${entry}`, false)]
       tests += wrapTest(ctx, `${ctx.fnBase}_${e.name}_${entry.toLowerCase()}`, args, asserts)
     }
   }
@@ -586,8 +776,7 @@ function enumArmTests(ctx) {
 function textArmTest(ctx) {
   if (!ctx.textParam) return ''
   const asserts = [
-    ACTUAL_CLASSES,
-    `assertEquals("${ctx.base}", actualClasses, "${ctx.daisyName} text")`,
+    renderedAssert(ctx, ctx.base, `${ctx.daisyName} text`, false),
     `assertTrue(html.contains("txtmark"), "${ctx.daisyName} text content")`,
   ]
   return wrapTest(ctx, `${ctx.fnBase}_text`, ['text = "txtmark"'], asserts)
@@ -630,7 +819,7 @@ function generateCoverageForFile(fileName) {
 ${[...imports].sort().join('\n')}
 
 class ${className}CoverageTest {
-${body}}
+${COVERAGE_HELPER}${body}}
 `
   fs.writeFileSync(path.join(OUTPUT_DIR, `${className}CoverageTest.kt`), kotlin)
   return { success: true, funcCount: funcs.length }
@@ -661,59 +850,87 @@ function generateAllCoverage() {
   console.log(`Generated coverage tests for ${generated} component files`)
 }
 
-function main() {
-  const args = process.argv.slice(2)
-  const mode = args[0]
-  const config = loadConfig()
-  
-  if (mode === 'all') {
-    console.log('Generating tests for all components...\n')
-    
-    const componentDirs = getAllComponentDirs()
-    let generated = 0
-    let skipped = 0
-    
-    for (const componentName of componentDirs) {
-      if (config.skip?.includes(componentName)) {
-        console.log(`  ⊘ ${componentName}: Skipped (alias)`)
-        skipped++
-        continue
-      }
-      
-      const result = generateForComponent(componentName, config)
-      
-      if (result.success) {
-        console.log(`  ✓ ${componentName}: ${result.testCount} tests`)
-        generated++
-      } else {
-        console.log(`  ⊘ ${componentName}: ${result.error}`)
-        skipped++
-      }
-    }
-    
-    console.log(`\nGenerated tests for ${generated} components, skipped ${skipped}`)
-    generateAllCoverage()
-  } else if (mode) {
-    if (config.skip?.includes(mode)) {
-      console.error(`Error: ${mode} is skipped (alias)`)
-      process.exit(1)
-    }
-    
-    const result = generateForComponent(mode, config)
-    
-    if (result.success) {
-      console.log(`Generated ${result.testCount} tests for ${mode}`)
-    } else {
-      console.error(`Error: ${result.error}`)
-      process.exit(1)
-    }
-  } else {
-    console.log('Usage: node test-generator.js <component-name|all>')
-    console.log('Examples:')
-    console.log('  node test-generator.js dropdown')
-    console.log('  node test-generator.js all')
-    process.exit(1)
+/**
+ * Generate one component and print its progress line.
+ * @returns whether it produced tests — the caller only needs the tally.
+ */
+function generateAndReport(componentName, config) {
+  if (config.skip?.includes(componentName)) {
+    console.log(`  ⊘ ${componentName}: Skipped (alias)`)
+    return false
   }
+  const result = generateForComponent(componentName, config)
+  console.log(
+    result.success
+      ? `  ✓ ${componentName}: ${result.testCount} tests`
+      : `  ⊘ ${componentName}: ${result.error}`,
+  )
+  return result.success
 }
 
-main()
+function generateAllComponents(config) {
+  console.log('Generating tests for all components...\n')
+
+  let generated = 0
+  let skipped = 0
+  for (const componentName of getAllComponentDirs()) {
+    if (generateAndReport(componentName, config)) generated++
+    else skipped++
+  }
+
+  console.log(`\nGenerated tests for ${generated} components, skipped ${skipped}`)
+  generateAllCoverage()
+}
+
+/** Single-component mode. Unlike the bulk mode, a failure here is fatal: it was asked for. */
+function generateSingleComponent(componentName, config) {
+  if (config.skip?.includes(componentName)) {
+    console.error(`Error: ${componentName} is skipped (alias)`)
+    process.exit(1)
+  }
+  const result = generateForComponent(componentName, config)
+  if (!result.success) {
+    console.error(`Error: ${result.error}`)
+    process.exit(1)
+  }
+  console.log(`Generated ${result.testCount} tests for ${componentName}`)
+}
+
+function printUsageAndExit() {
+  console.log('Usage: node test-generator.js <component-name|all>')
+  console.log('Examples:')
+  console.log('  node test-generator.js dropdown')
+  console.log('  node test-generator.js all')
+  process.exit(1)
+}
+
+function main() {
+  const [mode] = process.argv.slice(2)
+  const config = loadConfig()
+
+  if (mode === 'all') return generateAllComponents(config)
+  if (mode) return generateSingleComponent(mode, config)
+  printUsageAndExit()
+}
+
+// Run only when invoked directly — `node src/test-generator.js all …`, which is how Gradle
+// calls it. Without this guard, importing the module to test one function would regenerate
+// all 66 components as a side effect, so no unit test could exist. That is why this file
+// has none today.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+}
+
+// Exported for tests only. This module has no other consumer: Gradle runs it as a script,
+// and nothing in codegen/ imports it.
+export {
+  // Targets of the refactorings in section 2.
+  parseTestCases,
+  buildClassMappings,
+  // Added by add-mutation-testing and still untested — the gap that motivated this change.
+  parseEmittedBuilder,
+  htmlTagForFn,
+  parseAttrProps,
+  attrAssert,
+  closesTagAssert,
+}

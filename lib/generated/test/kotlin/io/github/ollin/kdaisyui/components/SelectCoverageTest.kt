@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class SelectCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun select_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select", actualClasses, "Select defaults")
+        assertRendered(html, "select", "Select defaults", closes = "</select></div>")
     }
 
     @Test
@@ -32,11 +46,9 @@ class SelectCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-ghost zz-extra", actualClasses, "Select all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Select id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Select attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Select content")
+        assertRendered(html, "select select-ghost zz-extra", "Select all flags", closes = "</select></div>")
+        assertCommonFlags(html, "Select")
+        assertTrue(html.contains("disabled=\""), "Select sets disabled")
     }
 
     @Test
@@ -47,8 +59,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-neutral", actualClasses, "Select variant Neutral")
+        assertRendered(html, "select select-neutral", "Select variant Neutral")
     }
 
     @Test
@@ -59,8 +70,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-primary", actualClasses, "Select variant Primary")
+        assertRendered(html, "select select-primary", "Select variant Primary")
     }
 
     @Test
@@ -71,8 +81,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-secondary", actualClasses, "Select variant Secondary")
+        assertRendered(html, "select select-secondary", "Select variant Secondary")
     }
 
     @Test
@@ -83,8 +92,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-accent", actualClasses, "Select variant Accent")
+        assertRendered(html, "select select-accent", "Select variant Accent")
     }
 
     @Test
@@ -95,8 +103,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-info", actualClasses, "Select variant Info")
+        assertRendered(html, "select select-info", "Select variant Info")
     }
 
     @Test
@@ -107,8 +114,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-success", actualClasses, "Select variant Success")
+        assertRendered(html, "select select-success", "Select variant Success")
     }
 
     @Test
@@ -119,8 +125,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-warning", actualClasses, "Select variant Warning")
+        assertRendered(html, "select select-warning", "Select variant Warning")
     }
 
     @Test
@@ -131,8 +136,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-error", actualClasses, "Select variant Error")
+        assertRendered(html, "select select-error", "Select variant Error")
     }
 
     @Test
@@ -143,8 +147,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-xs", actualClasses, "Select size Xs")
+        assertRendered(html, "select select-xs", "Select size Xs")
     }
 
     @Test
@@ -155,8 +158,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-sm", actualClasses, "Select size Sm")
+        assertRendered(html, "select select-sm", "Select size Sm")
     }
 
     @Test
@@ -167,8 +169,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-md", actualClasses, "Select size Md")
+        assertRendered(html, "select select-md", "Select size Md")
     }
 
     @Test
@@ -179,8 +180,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-lg", actualClasses, "Select size Lg")
+        assertRendered(html, "select select-lg", "Select size Lg")
     }
 
     @Test
@@ -191,7 +191,6 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("select select-xl", actualClasses, "Select size Xl")
+        assertRendered(html, "select select-xl", "Select size Xl")
     }
 }

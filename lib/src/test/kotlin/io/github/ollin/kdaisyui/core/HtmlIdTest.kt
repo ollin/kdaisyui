@@ -200,6 +200,30 @@ class HtmlIdTest {
         assertEquals("global #widget", id.targetGlobal)
     }
 
+    // The three members below were reached by no assertion at all. `hashCode` had a
+    // surviving mutant that returned a constant 0; `parent` and `name` were invisible to
+    // line coverage entirely, because a getter's line IS its constructor parameter's
+    // declaration line, which every instantiation covers.
+
+    @Test
+    fun annotatedIdHashCodeMatchesIdHashCode() {
+        // Deliberately not a NamedAnnotatedIdBase: that subclass overrides hashCode and is
+        // already covered, which is what left the base class's own version unasserted.
+        val nav = AppIds.Sidebar.Nav()
+        assertEquals(nav.id.hashCode(), nav.hashCode())
+    }
+
+    @Test
+    fun parentExposesEnclosingIdAndIsNullAtTheRoot() {
+        assertEquals("app", AppIds.Sidebar().parent?.id)
+        assertEquals(null, AppIds().parent)
+    }
+
+    @Test
+    fun namedIdExposesItsNameSuffix() {
+        assertEquals("42", AppIds.Sidebar.Item("42").name)
+    }
+
     class SuperCallingId(override val id: String) : HtmlId {
         fun inheritedTarget(): String = super.target
         fun inheritedTargetGlobal(): String = super.targetGlobal

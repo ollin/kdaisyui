@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class OtpCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun otp_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp", actualClasses, "Otp defaults")
+        assertRendered(html, "otp", "Otp defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,11 +45,8 @@ class OtpCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-joined zz-extra", actualClasses, "Otp all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Otp id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Otp attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Otp content")
+        assertRendered(html, "otp otp-joined zz-extra", "Otp all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Otp")
     }
 
     @Test
@@ -46,8 +57,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-neutral", actualClasses, "Otp variant Neutral")
+        assertRendered(html, "otp otp-neutral", "Otp variant Neutral")
     }
 
     @Test
@@ -58,8 +68,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-primary", actualClasses, "Otp variant Primary")
+        assertRendered(html, "otp otp-primary", "Otp variant Primary")
     }
 
     @Test
@@ -70,8 +79,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-secondary", actualClasses, "Otp variant Secondary")
+        assertRendered(html, "otp otp-secondary", "Otp variant Secondary")
     }
 
     @Test
@@ -82,8 +90,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-accent", actualClasses, "Otp variant Accent")
+        assertRendered(html, "otp otp-accent", "Otp variant Accent")
     }
 
     @Test
@@ -94,8 +101,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-success", actualClasses, "Otp variant Success")
+        assertRendered(html, "otp otp-success", "Otp variant Success")
     }
 
     @Test
@@ -106,8 +112,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-info", actualClasses, "Otp variant Info")
+        assertRendered(html, "otp otp-info", "Otp variant Info")
     }
 
     @Test
@@ -118,8 +123,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-warning", actualClasses, "Otp variant Warning")
+        assertRendered(html, "otp otp-warning", "Otp variant Warning")
     }
 
     @Test
@@ -130,8 +134,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-error", actualClasses, "Otp variant Error")
+        assertRendered(html, "otp otp-error", "Otp variant Error")
     }
 
     @Test
@@ -142,8 +145,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-xs", actualClasses, "Otp size Xs")
+        assertRendered(html, "otp otp-xs", "Otp size Xs")
     }
 
     @Test
@@ -154,8 +156,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-sm", actualClasses, "Otp size Sm")
+        assertRendered(html, "otp otp-sm", "Otp size Sm")
     }
 
     @Test
@@ -166,8 +167,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-md", actualClasses, "Otp size Md")
+        assertRendered(html, "otp otp-md", "Otp size Md")
     }
 
     @Test
@@ -178,8 +178,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-lg", actualClasses, "Otp size Lg")
+        assertRendered(html, "otp otp-lg", "Otp size Lg")
     }
 
     @Test
@@ -190,7 +189,6 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("otp otp-xl", actualClasses, "Otp size Xl")
+        assertRendered(html, "otp otp-xl", "Otp size Xl")
     }
 }

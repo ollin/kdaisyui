@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class TextareaCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun textarea_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea", actualClasses, "Textarea defaults")
+        assertRendered(html, "textarea", "Textarea defaults", closes = "</textarea></div>")
     }
 
     @Test
@@ -31,11 +45,8 @@ class TextareaCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-ghost zz-extra", actualClasses, "Textarea all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Textarea id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Textarea attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Textarea content")
+        assertRendered(html, "textarea textarea-ghost zz-extra", "Textarea all flags", closes = "</textarea></div>")
+        assertCommonFlags(html, "Textarea")
     }
 
     @Test
@@ -46,8 +57,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-neutral", actualClasses, "Textarea variant Neutral")
+        assertRendered(html, "textarea textarea-neutral", "Textarea variant Neutral")
     }
 
     @Test
@@ -58,8 +68,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-primary", actualClasses, "Textarea variant Primary")
+        assertRendered(html, "textarea textarea-primary", "Textarea variant Primary")
     }
 
     @Test
@@ -70,8 +79,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-secondary", actualClasses, "Textarea variant Secondary")
+        assertRendered(html, "textarea textarea-secondary", "Textarea variant Secondary")
     }
 
     @Test
@@ -82,8 +90,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-accent", actualClasses, "Textarea variant Accent")
+        assertRendered(html, "textarea textarea-accent", "Textarea variant Accent")
     }
 
     @Test
@@ -94,8 +101,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-info", actualClasses, "Textarea variant Info")
+        assertRendered(html, "textarea textarea-info", "Textarea variant Info")
     }
 
     @Test
@@ -106,8 +112,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-success", actualClasses, "Textarea variant Success")
+        assertRendered(html, "textarea textarea-success", "Textarea variant Success")
     }
 
     @Test
@@ -118,8 +123,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-warning", actualClasses, "Textarea variant Warning")
+        assertRendered(html, "textarea textarea-warning", "Textarea variant Warning")
     }
 
     @Test
@@ -130,8 +134,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-error", actualClasses, "Textarea variant Error")
+        assertRendered(html, "textarea textarea-error", "Textarea variant Error")
     }
 
     @Test
@@ -142,8 +145,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-xs", actualClasses, "Textarea size Xs")
+        assertRendered(html, "textarea textarea-xs", "Textarea size Xs")
     }
 
     @Test
@@ -154,8 +156,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-sm", actualClasses, "Textarea size Sm")
+        assertRendered(html, "textarea textarea-sm", "Textarea size Sm")
     }
 
     @Test
@@ -166,8 +167,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-md", actualClasses, "Textarea size Md")
+        assertRendered(html, "textarea textarea-md", "Textarea size Md")
     }
 
     @Test
@@ -178,8 +178,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-lg", actualClasses, "Textarea size Lg")
+        assertRendered(html, "textarea textarea-lg", "Textarea size Lg")
     }
 
     @Test
@@ -190,7 +189,6 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("textarea textarea-xl", actualClasses, "Textarea size Xl")
+        assertRendered(html, "textarea textarea-xl", "Textarea size Xl")
     }
 }

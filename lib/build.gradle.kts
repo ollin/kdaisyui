@@ -2,6 +2,7 @@ plugins {
     id("kdaisyui.kotlin-library-conventions")
     `maven-publish`
     alias(libs.plugins.kover)
+    alias(libs.plugins.pitest)
 }
 
 group = "io.github.ollin.kdaisyui"
@@ -133,10 +134,88 @@ dependencies {
 
 testing {
     suites {
-        val test by getting(JvmTestSuite::class) {
+        getByName<JvmTestSuite>("test") {
             useKotlinTest(libs.versions.kotlin.get())
         }
     }
+}
+
+// --- Mutation testing (PIT) ---
+// Coverage says a line ran; mutation testing says an assertion would have noticed if it
+// ran differently. Deliberately NOT bound to `check`: it forks a JVM per mutant and is far
+// too slow for the inner loop — it runs as `:lib:pitest`, and in CI as its own job.
+//
+// The scope starts at one class on purpose. Mutating all 63 generated components would
+// take hours and measure the generator rather than the code anyone wrote; it is widened
+// deliberately in a later step. No `mutationThreshold` yet — the gate is sharpened only
+// once the score is known to be 100%, so this stage cannot fail the build.
+pitest {
+    // A wildcard, not a list of names. Kotlin compiles top-level functions into a
+    // `<File>Kt` class and `by lazy` into synthetic ones, so a hand-maintained list would
+    // silently shrink whenever the compiler's output shape changed — and PIT reports a
+    // filter that matches nothing as a clean run, never as an error.
+    targetClasses.set(
+        setOf(
+            "io.github.ollin.kdaisyui.core.*",
+            // Five of the 63 components, named individually rather than by wildcard:
+            // `components.*` would mutate the whole generated surface for hours and would
+            // mostly measure the generator, which emits one shape repeatedly. These five
+            // carry the most conditionals, so they are where "the line ran" and "the right
+            // class was emitted" are most likely to come apart.
+            //
+            // Verified against lib/build/classes — the `...Kt` suffix is the compiled name
+            // for a file of top-level functions, and the sibling `ButtonVariant` /
+            // `ButtonSize` enums are separate classes deliberately left out of scope.
+            "io.github.ollin.kdaisyui.components.ButtonKt", // 18 conditionals, 2 enums, 10 flags
+            "io.github.ollin.kdaisyui.components.ModalKt", // 23 across 7 functions
+            "io.github.ollin.kdaisyui.components.DropdownKt", // 12, 10 positional flags
+            "io.github.ollin.kdaisyui.components.TooltipKt", // 11, 8 positional flags
+            "io.github.ollin.kdaisyui.components.RangeKt", // 10, and 4 nullable value params
+        )
+    )
+    // PIT drives the suite through the JUnit Platform, which is what `useKotlinTest`
+    // produces here; without this bridge it finds zero tests and reports every mutant
+    // as surviving — an all-green-looking report that means nothing.
+    // The whole suite, deliberately wider than `targetClasses`. PIT otherwise defaults this
+    // to `targetClasses`, and any test outside that package then counts as non-existent:
+    // the core helpers are exercised mostly by the component tests, so a `core.*` filter
+    // here reported 8 mutants as uncovered in code Kover measures at 100%.
+    targetTests.set(setOf("io.github.ollin.kdaisyui.*"))
+    junit5PluginVersion.set(libs.versions.pitest.junit5.get())
+    // Kotlin emits null-check calls into `kotlin.jvm.internal` on every parameter.
+    // Mutating them yields mutants no test can meaningfully kill.
+    avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+    // The same exclusion the Kover config carries, for the same reason and with the same
+    // justification: `$DefaultImpls` holds only binary-compatibility bridge stubs for
+    // interface defaults, reachable solely from consumers compiled against the legacy ABI.
+    // No source-level test can call them — a `super<HtmlId>.target` super-call, which IS
+    // tested, routes to the interface default directly.
+    //
+    // Safe as a CLASS exclusion because that class holds nothing else. The sibling bridges
+    // that Kotlin emits into `AnnotatedIdBase` and `StringHtmlId` cannot be excluded the
+    // same way: those classes also hold real, killed mutants, and `excludedMethods` matches
+    // on name alone — "getTarget" would take out `HtmlId::getTarget`, the one place the
+    // real logic lives, which IS killed.
+    excludedClasses.set(setOf("*${'$'}DefaultImpls"))
+    // XML alongside the HTML report: the surviving-mutant list is read mechanically in
+    // the next step, and parsing HTML for it would be its own small disaster.
+    outputFormats.set(setOf("HTML", "XML"))
+    // TEST STRENGTH, not mutation score, and 100 is the real number rather than a
+    // concession. Test strength is killed / (killed + survived): it ignores mutants no test
+    // covers, which here is exactly four Kotlin-emitted interface-default bridges in
+    // `AnnotatedIdBase` and `StringHtmlId` that NO source-level test can call.
+    //
+    // `mutationThreshold` cannot reach 100 on this scope because of those four, and PIT
+    // offers no surgical way to drop them: `excludedMethods` matches by name with no class
+    // qualifier, so excluding `getTarget` would also delete the mutant on
+    // `HtmlId::getTarget` — the one place the real logic lives, and one that IS killed.
+    // Removing the bridges outright means `-Xjvm-default=no-compatibility`, an ABI change
+    // to a published artifact, already rejected in the Kover config for the same reason.
+    //
+    // Read this together with the Kover gate in the root build. The pair says something
+    // precise and non-overlapping: everything reachable is EXECUTED (Kover, 100% line and
+    // branch), and everything executed is ASSERTED (here, 100% test strength).
+    testStrengthThreshold.set(100)
 }
 
 val generateComponents = tasks.register<Exec>("generateComponents") {
@@ -184,6 +263,33 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     outputs.dir(outputDir)
 }
 
+// Deliberately NOT wired into `check`, and deliberately in the `codegen` group rather than
+// `verification`: `AGENTS.md` promises a clone builds and tests with no Node, no npm and no
+// submodules. Only regeneration may need them, and this task is part of that world. CI runs
+// it as its own job, next to `generated-sources-drift`.
+//
+// `node --test` needs no dependency — the runner ships with the Node pinned in
+// `.tool-versions`, which keeps `codegen/package.json` free of dependencies.
+tasks.register<Exec>("testCodegen") {
+    group = "codegen"
+    description = "Run the codegen unit tests (needs Node; not part of `check`)"
+    workingDir = rootProject.file("codegen")
+    // Delegates to the npm script rather than repeating `node --test test/`, so the
+    // invocation is defined once. CI runs the same `npm test`, and a change to one cannot
+    // leave the other behind.
+    //
+    // The `test/` argument in that script is load-bearing: the runner's default patterns
+    // include `**/test-*.js`, which matches `src/test-generator.js` and
+    // `src/test-generator-heroicons.js`, so a bare `node --test` EXECUTES both generators
+    // as if they were test files.
+    commandLine("sh", "-c", "npm test")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("codegen/test"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    // No declared output, so Gradle must never call this up-to-date and skip it.
+    outputs.upToDateWhen { false }
+}
+
 val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     group = "codegen"
     description = "Regenerate exhaustive Kotlin icon render tests from Heroicons SVG source (git submodule)"
@@ -218,13 +324,13 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
 // generated-sources-drift job is what keeps the committed output honest.
 
 // Sources JAR for Maven Central
-val sourcesJar by tasks.registering(Jar::class) {
+val sourcesJar = tasks.register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
 
 // Javadoc JAR for Maven Central (empty for Kotlin, but required)
-val javadocJar by tasks.registering(Jar::class) {
+val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
     dependsOn(tasks.javadoc)
     from(tasks.javadoc.map { it.outputs.files })

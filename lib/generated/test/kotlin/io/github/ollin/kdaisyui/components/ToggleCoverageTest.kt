@@ -9,13 +9,28 @@ import kotlinx.html.stream.createHTML
 
 class ToggleCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun toggle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle", actualClasses, "Toggle defaults")
+        assertRendered(html, "toggle", "Toggle defaults")
+        assertTrue(html.contains("type=\""), "Toggle sets type")
     }
 
     @Test
@@ -29,10 +44,11 @@ class ToggleCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle zz-extra", actualClasses, "Toggle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Toggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Toggle attrs")
+        assertRendered(html, "toggle zz-extra", "Toggle all flags")
+        assertCommonFlags(html, "Toggle", content = false)
+        assertTrue(html.contains("type=\""), "Toggle sets type")
+        assertTrue(html.contains("checked=\""), "Toggle sets checked")
+        assertTrue(html.contains("disabled=\""), "Toggle sets disabled")
     }
 
     @Test
@@ -42,8 +58,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-primary", actualClasses, "Toggle variant Primary")
+        assertRendered(html, "toggle toggle-primary", "Toggle variant Primary")
     }
 
     @Test
@@ -53,8 +68,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-secondary", actualClasses, "Toggle variant Secondary")
+        assertRendered(html, "toggle toggle-secondary", "Toggle variant Secondary")
     }
 
     @Test
@@ -64,8 +78,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-accent", actualClasses, "Toggle variant Accent")
+        assertRendered(html, "toggle toggle-accent", "Toggle variant Accent")
     }
 
     @Test
@@ -75,8 +88,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-neutral", actualClasses, "Toggle variant Neutral")
+        assertRendered(html, "toggle toggle-neutral", "Toggle variant Neutral")
     }
 
     @Test
@@ -86,8 +98,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-success", actualClasses, "Toggle variant Success")
+        assertRendered(html, "toggle toggle-success", "Toggle variant Success")
     }
 
     @Test
@@ -97,8 +108,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-warning", actualClasses, "Toggle variant Warning")
+        assertRendered(html, "toggle toggle-warning", "Toggle variant Warning")
     }
 
     @Test
@@ -108,8 +118,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-info", actualClasses, "Toggle variant Info")
+        assertRendered(html, "toggle toggle-info", "Toggle variant Info")
     }
 
     @Test
@@ -119,8 +128,7 @@ class ToggleCoverageTest {
                 variant = ToggleVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-error", actualClasses, "Toggle variant Error")
+        assertRendered(html, "toggle toggle-error", "Toggle variant Error")
     }
 
     @Test
@@ -130,8 +138,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-xs", actualClasses, "Toggle size Xs")
+        assertRendered(html, "toggle toggle-xs", "Toggle size Xs")
     }
 
     @Test
@@ -141,8 +148,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-sm", actualClasses, "Toggle size Sm")
+        assertRendered(html, "toggle toggle-sm", "Toggle size Sm")
     }
 
     @Test
@@ -152,8 +158,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-md", actualClasses, "Toggle size Md")
+        assertRendered(html, "toggle toggle-md", "Toggle size Md")
     }
 
     @Test
@@ -163,8 +168,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-lg", actualClasses, "Toggle size Lg")
+        assertRendered(html, "toggle toggle-lg", "Toggle size Lg")
     }
 
     @Test
@@ -174,7 +178,6 @@ class ToggleCoverageTest {
                 size = ToggleSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("toggle toggle-xl", actualClasses, "Toggle size Xl")
+        assertRendered(html, "toggle toggle-xl", "Toggle size Xl")
     }
 }

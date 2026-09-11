@@ -10,6 +10,21 @@ import kotlinx.html.ul
 
 class BreadcrumbsCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun breadcrumbs_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -17,8 +32,7 @@ class BreadcrumbsCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("breadcrumbs", actualClasses, "Breadcrumbs defaults")
+        assertRendered(html, "breadcrumbs", "Breadcrumbs defaults", closes = "</div></div>")
     }
 
     @Test
@@ -31,11 +45,8 @@ class BreadcrumbsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("breadcrumbs zz-extra", actualClasses, "Breadcrumbs all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Breadcrumbs id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Breadcrumbs attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Breadcrumbs content")
+        assertRendered(html, "breadcrumbs zz-extra", "Breadcrumbs all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Breadcrumbs")
     }
 
     @Test
@@ -46,6 +57,7 @@ class BreadcrumbsCoverageTest {
             )
         }
         assertTrue(!html.contains("class=\""), "BreadcrumbsItems defaults emits no class")
+        assertTrue(html.endsWith("</ul></div>"), "BreadcrumbsItems closes")
     }
 
     @Test
@@ -58,11 +70,8 @@ class BreadcrumbsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("zz-extra", actualClasses, "BreadcrumbsItems all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "BreadcrumbsItems id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "BreadcrumbsItems attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "BreadcrumbsItems content")
+        assertRendered(html, "zz-extra", "BreadcrumbsItems all flags", closes = "</ul></div>")
+        assertCommonFlags(html, "BreadcrumbsItems")
     }
 
     @Test
@@ -73,6 +82,7 @@ class BreadcrumbsCoverageTest {
             )
         }
         assertTrue(!html.contains("class=\""), "BreadcrumbsItem defaults emits no class")
+        assertTrue(html.endsWith("</li></ul>"), "BreadcrumbsItem closes")
     }
 
     @Test
@@ -85,10 +95,7 @@ class BreadcrumbsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("zz-extra", actualClasses, "BreadcrumbsItem all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "BreadcrumbsItem id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "BreadcrumbsItem attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "BreadcrumbsItem content")
+        assertRendered(html, "zz-extra", "BreadcrumbsItem all flags", closes = "</li></ul>")
+        assertCommonFlags(html, "BreadcrumbsItem")
     }
 }

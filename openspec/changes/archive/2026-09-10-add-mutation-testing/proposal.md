@@ -12,6 +12,7 @@
 - **BREAKING (for contributors, not consumers):** once sharp, a merge that lets the mutation score fall below the threshold on the scoped classes fails the build. Published artifacts and API are unchanged.
 - Staged rollout: wire PIT + report first (no gate), measure surviving mutants, strengthen tests until they are all killed, then sharpen the threshold as the final step.
 - Depends on `enforce-100-percent-coverage` (mutation testing assumes the code is already fully covered; it strengthens those tests).
+- Clears the build's four existing Gradle 10 incompatibilities (section 8 of `tasks.md`). Unplanned, and no capability of its own — but this change adds a Gradle plugin and a CI job to that build, and doing so on a build that announces itself as Gradle 10 incompatible is how the warning becomes permanent.
 
 ## Capabilities
 

@@ -9,13 +9,27 @@ import kotlinx.html.stream.createHTML
 
 class LinkCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun link_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link", actualClasses, "Link defaults")
+        assertRendered(html, "link", "Link defaults", closes = "</a></div>")
     }
 
     @Test
@@ -29,11 +43,8 @@ class LinkCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-hover zz-extra", actualClasses, "Link all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Link id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Link attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Link content")
+        assertRendered(html, "link link-hover zz-extra", "Link all flags", closes = "</a></div>")
+        assertCommonFlags(html, "Link")
     }
 
     @Test
@@ -43,8 +54,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-neutral", actualClasses, "Link variant Neutral")
+        assertRendered(html, "link link-neutral", "Link variant Neutral")
     }
 
     @Test
@@ -54,8 +64,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-primary", actualClasses, "Link variant Primary")
+        assertRendered(html, "link link-primary", "Link variant Primary")
     }
 
     @Test
@@ -65,8 +74,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-secondary", actualClasses, "Link variant Secondary")
+        assertRendered(html, "link link-secondary", "Link variant Secondary")
     }
 
     @Test
@@ -76,8 +84,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-accent", actualClasses, "Link variant Accent")
+        assertRendered(html, "link link-accent", "Link variant Accent")
     }
 
     @Test
@@ -87,8 +94,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-success", actualClasses, "Link variant Success")
+        assertRendered(html, "link link-success", "Link variant Success")
     }
 
     @Test
@@ -98,8 +104,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-info", actualClasses, "Link variant Info")
+        assertRendered(html, "link link-info", "Link variant Info")
     }
 
     @Test
@@ -109,8 +114,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-warning", actualClasses, "Link variant Warning")
+        assertRendered(html, "link link-warning", "Link variant Warning")
     }
 
     @Test
@@ -120,8 +124,7 @@ class LinkCoverageTest {
                 variant = LinkVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link link-error", actualClasses, "Link variant Error")
+        assertRendered(html, "link link-error", "Link variant Error")
     }
 
     @Test
@@ -131,8 +134,7 @@ class LinkCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("link", actualClasses, "Link text")
+        assertRendered(html, "link", "Link text")
         assertTrue(html.contains("txtmark"), "Link text content")
     }
 }

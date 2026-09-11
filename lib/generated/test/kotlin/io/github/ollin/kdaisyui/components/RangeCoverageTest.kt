@@ -9,13 +9,28 @@ import kotlinx.html.stream.createHTML
 
 class RangeCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun range_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range", actualClasses, "Range defaults")
+        assertRendered(html, "range", "Range defaults")
+        assertTrue(html.contains("type=\""), "Range sets type")
     }
 
     @Test
@@ -33,14 +48,18 @@ class RangeCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-vertical zz-extra", actualClasses, "Range all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Range id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Range attrs")
+        assertRendered(html, "range range-vertical zz-extra", "Range all flags")
+        assertCommonFlags(html, "Range", content = false)
         assertTrue(html.contains("min=\"x\""), "Range min")
         assertTrue(html.contains("max=\"x\""), "Range max")
         assertTrue(html.contains("value=\"x\""), "Range value")
         assertTrue(html.contains("step=\"x\""), "Range step")
+        assertTrue(html.contains("type=\""), "Range sets type")
+        assertTrue(html.contains("min=\""), "Range sets min")
+        assertTrue(html.contains("max=\""), "Range sets max")
+        assertTrue(html.contains("value=\""), "Range sets value")
+        assertTrue(html.contains("step=\""), "Range sets step")
+        assertTrue(html.contains("disabled=\""), "Range sets disabled")
     }
 
     @Test
@@ -50,8 +69,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-neutral", actualClasses, "Range variant Neutral")
+        assertRendered(html, "range range-neutral", "Range variant Neutral")
     }
 
     @Test
@@ -61,8 +79,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-primary", actualClasses, "Range variant Primary")
+        assertRendered(html, "range range-primary", "Range variant Primary")
     }
 
     @Test
@@ -72,8 +89,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-secondary", actualClasses, "Range variant Secondary")
+        assertRendered(html, "range range-secondary", "Range variant Secondary")
     }
 
     @Test
@@ -83,8 +99,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-accent", actualClasses, "Range variant Accent")
+        assertRendered(html, "range range-accent", "Range variant Accent")
     }
 
     @Test
@@ -94,8 +109,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-success", actualClasses, "Range variant Success")
+        assertRendered(html, "range range-success", "Range variant Success")
     }
 
     @Test
@@ -105,8 +119,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-warning", actualClasses, "Range variant Warning")
+        assertRendered(html, "range range-warning", "Range variant Warning")
     }
 
     @Test
@@ -116,8 +129,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-info", actualClasses, "Range variant Info")
+        assertRendered(html, "range range-info", "Range variant Info")
     }
 
     @Test
@@ -127,8 +139,7 @@ class RangeCoverageTest {
                 variant = RangeVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-error", actualClasses, "Range variant Error")
+        assertRendered(html, "range range-error", "Range variant Error")
     }
 
     @Test
@@ -138,8 +149,7 @@ class RangeCoverageTest {
                 size = RangeSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-xs", actualClasses, "Range size Xs")
+        assertRendered(html, "range range-xs", "Range size Xs")
     }
 
     @Test
@@ -149,8 +159,7 @@ class RangeCoverageTest {
                 size = RangeSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-sm", actualClasses, "Range size Sm")
+        assertRendered(html, "range range-sm", "Range size Sm")
     }
 
     @Test
@@ -160,8 +169,7 @@ class RangeCoverageTest {
                 size = RangeSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-md", actualClasses, "Range size Md")
+        assertRendered(html, "range range-md", "Range size Md")
     }
 
     @Test
@@ -171,8 +179,7 @@ class RangeCoverageTest {
                 size = RangeSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-lg", actualClasses, "Range size Lg")
+        assertRendered(html, "range range-lg", "Range size Lg")
     }
 
     @Test
@@ -182,7 +189,6 @@ class RangeCoverageTest {
                 size = RangeSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("range range-xl", actualClasses, "Range size Xl")
+        assertRendered(html, "range range-xl", "Range size Xl")
     }
 }

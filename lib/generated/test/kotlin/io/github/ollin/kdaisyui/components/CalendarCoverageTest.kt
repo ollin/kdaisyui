@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class CalendarCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun calendar_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class CalendarCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("cally", actualClasses, "Calendar defaults")
+        assertRendered(html, "cally", "Calendar defaults", closes = "</div></div>")
     }
 
     @Test
@@ -30,10 +44,7 @@ class CalendarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("cally zz-extra", actualClasses, "Calendar all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Calendar id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Calendar attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Calendar content")
+        assertRendered(html, "cally zz-extra", "Calendar all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Calendar")
     }
 }

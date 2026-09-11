@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class MockupPhoneCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun mockupPhone_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class MockupPhoneCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-phone", actualClasses, "MockupPhone defaults")
+        assertRendered(html, "mockup-phone", "MockupPhone defaults", closes = "</div></div>")
     }
 
     @Test
@@ -30,11 +44,8 @@ class MockupPhoneCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-phone zz-extra", actualClasses, "MockupPhone all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MockupPhone id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MockupPhone attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MockupPhone content")
+        assertRendered(html, "mockup-phone zz-extra", "MockupPhone all flags", closes = "</div></div>")
+        assertCommonFlags(html, "MockupPhone")
     }
 
     @Test
@@ -44,8 +55,7 @@ class MockupPhoneCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-phone-camera", actualClasses, "MockupPhoneCamera defaults")
+        assertRendered(html, "mockup-phone-camera", "MockupPhoneCamera defaults", closes = "</div></div>")
     }
 
     @Test
@@ -58,11 +68,8 @@ class MockupPhoneCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-phone-camera zz-extra", actualClasses, "MockupPhoneCamera all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MockupPhoneCamera id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MockupPhoneCamera attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MockupPhoneCamera content")
+        assertRendered(html, "mockup-phone-camera zz-extra", "MockupPhoneCamera all flags", closes = "</div></div>")
+        assertCommonFlags(html, "MockupPhoneCamera")
     }
 
     @Test
@@ -72,8 +79,7 @@ class MockupPhoneCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-phone-display", actualClasses, "MockupPhoneDisplay defaults")
+        assertRendered(html, "mockup-phone-display", "MockupPhoneDisplay defaults", closes = "</div></div>")
     }
 
     @Test
@@ -86,10 +92,7 @@ class MockupPhoneCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-phone-display zz-extra", actualClasses, "MockupPhoneDisplay all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MockupPhoneDisplay id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MockupPhoneDisplay attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MockupPhoneDisplay content")
+        assertRendered(html, "mockup-phone-display zz-extra", "MockupPhoneDisplay all flags", closes = "</div></div>")
+        assertCommonFlags(html, "MockupPhoneDisplay")
     }
 }

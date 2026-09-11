@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class TabCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun tab_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tabs", actualClasses, "Tab defaults")
+        assertRendered(html, "tabs", "Tab defaults", closes = "</button></div>")
     }
 
     @Test
@@ -37,11 +51,8 @@ class TabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tabs tabs-border tabs-bottom tabs-box tabs-lift tabs-tab-active tabs-tab-disabled tabs-top zz-extra", actualClasses, "Tab all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Tab id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Tab attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Tab content")
+        assertRendered(html, "tabs tabs-border tabs-bottom tabs-box tabs-lift tabs-tab-active tabs-tab-disabled tabs-top zz-extra", "Tab all flags", closes = "</button></div>")
+        assertCommonFlags(html, "Tab")
     }
 
     @Test
@@ -52,8 +63,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tabs tabs-xs", actualClasses, "Tab size Xs")
+        assertRendered(html, "tabs tabs-xs", "Tab size Xs")
     }
 
     @Test
@@ -64,8 +74,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tabs tabs-sm", actualClasses, "Tab size Sm")
+        assertRendered(html, "tabs tabs-sm", "Tab size Sm")
     }
 
     @Test
@@ -76,8 +85,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tabs tabs-md", actualClasses, "Tab size Md")
+        assertRendered(html, "tabs tabs-md", "Tab size Md")
     }
 
     @Test
@@ -88,8 +96,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tabs tabs-lg", actualClasses, "Tab size Lg")
+        assertRendered(html, "tabs tabs-lg", "Tab size Lg")
     }
 
     @Test
@@ -100,8 +107,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tabs tabs-xl", actualClasses, "Tab size Xl")
+        assertRendered(html, "tabs tabs-xl", "Tab size Xl")
     }
 
     @Test
@@ -111,8 +117,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tab", actualClasses, "TabTab defaults")
+        assertRendered(html, "tab", "TabTab defaults", closes = "</div></div>")
     }
 
     @Test
@@ -125,11 +130,8 @@ class TabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tab zz-extra", actualClasses, "TabTab all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TabTab id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TabTab attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TabTab content")
+        assertRendered(html, "tab zz-extra", "TabTab all flags", closes = "</div></div>")
+        assertCommonFlags(html, "TabTab")
     }
 
     @Test
@@ -139,8 +141,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tab-content", actualClasses, "TabTabContent defaults")
+        assertRendered(html, "tab-content", "TabTabContent defaults", closes = "</div></div>")
     }
 
     @Test
@@ -153,10 +154,7 @@ class TabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("tab-content zz-extra", actualClasses, "TabTabContent all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TabTabContent id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TabTabContent attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TabTabContent content")
+        assertRendered(html, "tab-content zz-extra", "TabTabContent all flags", closes = "</div></div>")
+        assertCommonFlags(html, "TabTabContent")
     }
 }

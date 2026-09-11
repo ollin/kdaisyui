@@ -9,13 +9,28 @@ import kotlinx.html.stream.createHTML
 
 class CheckboxCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun checkbox_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox", actualClasses, "Checkbox defaults")
+        assertRendered(html, "checkbox", "Checkbox defaults")
+        assertTrue(html.contains("type=\""), "Checkbox sets type")
     }
 
     @Test
@@ -29,10 +44,11 @@ class CheckboxCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox zz-extra", actualClasses, "Checkbox all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Checkbox id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Checkbox attrs")
+        assertRendered(html, "checkbox zz-extra", "Checkbox all flags")
+        assertCommonFlags(html, "Checkbox", content = false)
+        assertTrue(html.contains("type=\""), "Checkbox sets type")
+        assertTrue(html.contains("checked=\""), "Checkbox sets checked")
+        assertTrue(html.contains("disabled=\""), "Checkbox sets disabled")
     }
 
     @Test
@@ -42,8 +58,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Primary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-primary", actualClasses, "Checkbox variant Primary")
+        assertRendered(html, "checkbox checkbox-primary", "Checkbox variant Primary")
     }
 
     @Test
@@ -53,8 +68,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Secondary,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-secondary", actualClasses, "Checkbox variant Secondary")
+        assertRendered(html, "checkbox checkbox-secondary", "Checkbox variant Secondary")
     }
 
     @Test
@@ -64,8 +78,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Accent,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-accent", actualClasses, "Checkbox variant Accent")
+        assertRendered(html, "checkbox checkbox-accent", "Checkbox variant Accent")
     }
 
     @Test
@@ -75,8 +88,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Neutral,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-neutral", actualClasses, "Checkbox variant Neutral")
+        assertRendered(html, "checkbox checkbox-neutral", "Checkbox variant Neutral")
     }
 
     @Test
@@ -86,8 +98,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Success,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-success", actualClasses, "Checkbox variant Success")
+        assertRendered(html, "checkbox checkbox-success", "Checkbox variant Success")
     }
 
     @Test
@@ -97,8 +108,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Warning,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-warning", actualClasses, "Checkbox variant Warning")
+        assertRendered(html, "checkbox checkbox-warning", "Checkbox variant Warning")
     }
 
     @Test
@@ -108,8 +118,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Info,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-info", actualClasses, "Checkbox variant Info")
+        assertRendered(html, "checkbox checkbox-info", "Checkbox variant Info")
     }
 
     @Test
@@ -119,8 +128,7 @@ class CheckboxCoverageTest {
                 variant = CheckboxVariant.Error,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-error", actualClasses, "Checkbox variant Error")
+        assertRendered(html, "checkbox checkbox-error", "Checkbox variant Error")
     }
 
     @Test
@@ -130,8 +138,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Xs,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-xs", actualClasses, "Checkbox size Xs")
+        assertRendered(html, "checkbox checkbox-xs", "Checkbox size Xs")
     }
 
     @Test
@@ -141,8 +148,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Sm,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-sm", actualClasses, "Checkbox size Sm")
+        assertRendered(html, "checkbox checkbox-sm", "Checkbox size Sm")
     }
 
     @Test
@@ -152,8 +158,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Md,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-md", actualClasses, "Checkbox size Md")
+        assertRendered(html, "checkbox checkbox-md", "Checkbox size Md")
     }
 
     @Test
@@ -163,8 +168,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Lg,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-lg", actualClasses, "Checkbox size Lg")
+        assertRendered(html, "checkbox checkbox-lg", "Checkbox size Lg")
     }
 
     @Test
@@ -174,7 +178,6 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Xl,
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("checkbox checkbox-xl", actualClasses, "Checkbox size Xl")
+        assertRendered(html, "checkbox checkbox-xl", "Checkbox size Xl")
     }
 }

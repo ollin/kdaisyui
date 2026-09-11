@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class TextRotateCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun textRotate_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class TextRotateCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("text-rotate", actualClasses, "TextRotate defaults")
+        assertRendered(html, "text-rotate", "TextRotate defaults", closes = "</span></div>")
     }
 
     @Test
@@ -30,10 +44,7 @@ class TextRotateCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("text-rotate zz-extra", actualClasses, "TextRotate all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TextRotate id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TextRotate attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TextRotate content")
+        assertRendered(html, "text-rotate zz-extra", "TextRotate all flags", closes = "</span></div>")
+        assertCommonFlags(html, "TextRotate")
     }
 }

@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class DrawerCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun drawer_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer", actualClasses, "Drawer defaults")
+        assertRendered(html, "drawer", "Drawer defaults", closes = "</div></div>")
     }
 
     @Test
@@ -32,11 +46,8 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer drawer-end drawer-open zz-extra", actualClasses, "Drawer all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Drawer id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Drawer attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Drawer content")
+        assertRendered(html, "drawer drawer-end drawer-open zz-extra", "Drawer all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Drawer")
     }
 
     @Test
@@ -46,8 +57,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-toggle", actualClasses, "DrawerToggle defaults")
+        assertRendered(html, "drawer-toggle", "DrawerToggle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -60,11 +70,8 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-toggle zz-extra", actualClasses, "DrawerToggle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerToggle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerToggle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerToggle content")
+        assertRendered(html, "drawer-toggle zz-extra", "DrawerToggle all flags", closes = "</div></div>")
+        assertCommonFlags(html, "DrawerToggle")
     }
 
     @Test
@@ -74,8 +81,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-content", actualClasses, "DrawerContent defaults")
+        assertRendered(html, "drawer-content", "DrawerContent defaults", closes = "</div></div>")
     }
 
     @Test
@@ -88,11 +94,8 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-content zz-extra", actualClasses, "DrawerContent all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerContent id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerContent attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerContent content")
+        assertRendered(html, "drawer-content zz-extra", "DrawerContent all flags", closes = "</div></div>")
+        assertCommonFlags(html, "DrawerContent")
     }
 
     @Test
@@ -102,8 +105,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-side", actualClasses, "DrawerSide defaults")
+        assertRendered(html, "drawer-side", "DrawerSide defaults", closes = "</div></div>")
     }
 
     @Test
@@ -116,11 +118,8 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-side zz-extra", actualClasses, "DrawerSide all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerSide id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerSide attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerSide content")
+        assertRendered(html, "drawer-side zz-extra", "DrawerSide all flags", closes = "</div></div>")
+        assertCommonFlags(html, "DrawerSide")
     }
 
     @Test
@@ -130,8 +129,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-overlay", actualClasses, "DrawerOverlay defaults")
+        assertRendered(html, "drawer-overlay", "DrawerOverlay defaults", closes = "</label></div>")
     }
 
     @Test
@@ -144,11 +142,8 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-overlay zz-extra", actualClasses, "DrawerOverlay all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerOverlay id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerOverlay attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerOverlay content")
+        assertRendered(html, "drawer-overlay zz-extra", "DrawerOverlay all flags", closes = "</label></div>")
+        assertCommonFlags(html, "DrawerOverlay")
     }
 
     @Test
@@ -158,8 +153,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-button", actualClasses, "DrawerButton defaults")
+        assertRendered(html, "drawer-button", "DrawerButton defaults", closes = "</div></div>")
     }
 
     @Test
@@ -172,10 +166,7 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("drawer-button zz-extra", actualClasses, "DrawerButton all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "DrawerButton id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "DrawerButton attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "DrawerButton content")
+        assertRendered(html, "drawer-button zz-extra", "DrawerButton all flags", closes = "</div></div>")
+        assertCommonFlags(html, "DrawerButton")
     }
 }

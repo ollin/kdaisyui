@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class FieldsetCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun fieldset_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class FieldsetCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fieldset", actualClasses, "Fieldset defaults")
+        assertRendered(html, "fieldset", "Fieldset defaults", closes = "</fieldset></div>")
     }
 
     @Test
@@ -30,11 +44,8 @@ class FieldsetCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fieldset zz-extra", actualClasses, "Fieldset all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Fieldset id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Fieldset attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Fieldset content")
+        assertRendered(html, "fieldset zz-extra", "Fieldset all flags", closes = "</fieldset></div>")
+        assertCommonFlags(html, "Fieldset")
     }
 
     @Test
@@ -44,8 +55,7 @@ class FieldsetCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fieldset-legend", actualClasses, "FieldsetLegend defaults")
+        assertRendered(html, "fieldset-legend", "FieldsetLegend defaults", closes = "</div></div>")
     }
 
     @Test
@@ -58,10 +68,7 @@ class FieldsetCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("fieldset-legend zz-extra", actualClasses, "FieldsetLegend all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "FieldsetLegend id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "FieldsetLegend attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "FieldsetLegend content")
+        assertRendered(html, "fieldset-legend zz-extra", "FieldsetLegend all flags", closes = "</div></div>")
+        assertCommonFlags(html, "FieldsetLegend")
     }
 }

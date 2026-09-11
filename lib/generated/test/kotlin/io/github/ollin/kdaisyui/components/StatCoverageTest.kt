@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class StatCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun stat_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stats", actualClasses, "Stat defaults")
+        assertRendered(html, "stats", "Stat defaults", closes = "</div></div>")
     }
 
     @Test
@@ -32,11 +46,8 @@ class StatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stats stats-horizontal stats-vertical zz-extra", actualClasses, "Stat all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Stat id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Stat attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Stat content")
+        assertRendered(html, "stats stats-horizontal stats-vertical zz-extra", "Stat all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Stat")
     }
 
     @Test
@@ -46,8 +57,7 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat", actualClasses, "StatStat defaults")
+        assertRendered(html, "stat", "StatStat defaults", closes = "</div></div>")
     }
 
     @Test
@@ -60,11 +70,8 @@ class StatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat zz-extra", actualClasses, "StatStat all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStat id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStat attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStat content")
+        assertRendered(html, "stat zz-extra", "StatStat all flags", closes = "</div></div>")
+        assertCommonFlags(html, "StatStat")
     }
 
     @Test
@@ -72,8 +79,7 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatStatTitle()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-title", actualClasses, "StatStatTitle defaults")
+        assertRendered(html, "stat-title", "StatStatTitle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -86,11 +92,8 @@ class StatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-title zz-extra", actualClasses, "StatStatTitle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatTitle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatTitle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatTitle content")
+        assertRendered(html, "stat-title zz-extra", "StatStatTitle all flags", closes = "</div></div>")
+        assertCommonFlags(html, "StatStatTitle")
     }
 
     @Test
@@ -100,8 +103,7 @@ class StatCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-title", actualClasses, "StatStatTitle text")
+        assertRendered(html, "stat-title", "StatStatTitle text")
         assertTrue(html.contains("txtmark"), "StatStatTitle text content")
     }
 
@@ -110,8 +112,7 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatStatValue()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-value", actualClasses, "StatStatValue defaults")
+        assertRendered(html, "stat-value", "StatStatValue defaults", closes = "</div></div>")
     }
 
     @Test
@@ -124,11 +125,8 @@ class StatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-value zz-extra", actualClasses, "StatStatValue all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatValue id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatValue attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatValue content")
+        assertRendered(html, "stat-value zz-extra", "StatStatValue all flags", closes = "</div></div>")
+        assertCommonFlags(html, "StatStatValue")
     }
 
     @Test
@@ -138,8 +136,7 @@ class StatCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-value", actualClasses, "StatStatValue text")
+        assertRendered(html, "stat-value", "StatStatValue text")
         assertTrue(html.contains("txtmark"), "StatStatValue text content")
     }
 
@@ -148,8 +145,7 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatStatDesc()
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-desc", actualClasses, "StatStatDesc defaults")
+        assertRendered(html, "stat-desc", "StatStatDesc defaults", closes = "</div></div>")
     }
 
     @Test
@@ -162,11 +158,8 @@ class StatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-desc zz-extra", actualClasses, "StatStatDesc all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatDesc id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatDesc attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatDesc content")
+        assertRendered(html, "stat-desc zz-extra", "StatStatDesc all flags", closes = "</div></div>")
+        assertCommonFlags(html, "StatStatDesc")
     }
 
     @Test
@@ -176,8 +169,7 @@ class StatCoverageTest {
                 text = "txtmark",
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-desc", actualClasses, "StatStatDesc text")
+        assertRendered(html, "stat-desc", "StatStatDesc text")
         assertTrue(html.contains("txtmark"), "StatStatDesc text content")
     }
 
@@ -188,8 +180,7 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-figure", actualClasses, "StatStatFigure defaults")
+        assertRendered(html, "stat-figure", "StatStatFigure defaults", closes = "</div></div>")
     }
 
     @Test
@@ -202,11 +193,8 @@ class StatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-figure zz-extra", actualClasses, "StatStatFigure all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatFigure id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatFigure attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatFigure content")
+        assertRendered(html, "stat-figure zz-extra", "StatStatFigure all flags", closes = "</div></div>")
+        assertCommonFlags(html, "StatStatFigure")
     }
 
     @Test
@@ -216,8 +204,7 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-actions", actualClasses, "StatStatActions defaults")
+        assertRendered(html, "stat-actions", "StatStatActions defaults", closes = "</div></div>")
     }
 
     @Test
@@ -230,10 +217,7 @@ class StatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("stat-actions zz-extra", actualClasses, "StatStatActions all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "StatStatActions id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "StatStatActions attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "StatStatActions content")
+        assertRendered(html, "stat-actions zz-extra", "StatStatActions all flags", closes = "</div></div>")
+        assertCommonFlags(html, "StatStatActions")
     }
 }

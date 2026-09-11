@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class TimelineCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun timeline_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline", actualClasses, "Timeline defaults")
+        assertRendered(html, "timeline", "Timeline defaults", closes = "</ul></div>")
     }
 
     @Test
@@ -35,11 +49,8 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline timeline-box timeline-compact timeline-horizontal timeline-snap-icon timeline-vertical zz-extra", actualClasses, "Timeline all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Timeline id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Timeline attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Timeline content")
+        assertRendered(html, "timeline timeline-box timeline-compact timeline-horizontal timeline-snap-icon timeline-vertical zz-extra", "Timeline all flags", closes = "</ul></div>")
+        assertCommonFlags(html, "Timeline")
     }
 
     @Test
@@ -49,8 +60,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline-start", actualClasses, "TimelineStart defaults")
+        assertRendered(html, "timeline-start", "TimelineStart defaults", closes = "</div></div>")
     }
 
     @Test
@@ -63,11 +73,8 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline-start zz-extra", actualClasses, "TimelineStart all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TimelineStart id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TimelineStart attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TimelineStart content")
+        assertRendered(html, "timeline-start zz-extra", "TimelineStart all flags", closes = "</div></div>")
+        assertCommonFlags(html, "TimelineStart")
     }
 
     @Test
@@ -77,8 +84,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline-middle", actualClasses, "TimelineMiddle defaults")
+        assertRendered(html, "timeline-middle", "TimelineMiddle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -91,11 +97,8 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline-middle zz-extra", actualClasses, "TimelineMiddle all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TimelineMiddle id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TimelineMiddle attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TimelineMiddle content")
+        assertRendered(html, "timeline-middle zz-extra", "TimelineMiddle all flags", closes = "</div></div>")
+        assertCommonFlags(html, "TimelineMiddle")
     }
 
     @Test
@@ -105,8 +108,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline-end", actualClasses, "TimelineEnd defaults")
+        assertRendered(html, "timeline-end", "TimelineEnd defaults", closes = "</div></div>")
     }
 
     @Test
@@ -119,10 +121,7 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("timeline-end zz-extra", actualClasses, "TimelineEnd all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "TimelineEnd id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "TimelineEnd attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "TimelineEnd content")
+        assertRendered(html, "timeline-end zz-extra", "TimelineEnd all flags", closes = "</div></div>")
+        assertCommonFlags(html, "TimelineEnd")
     }
 }

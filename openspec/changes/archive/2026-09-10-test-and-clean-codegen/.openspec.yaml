@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-09-09
+
+# No spec-level behaviour delta: this change adds tests and restructures the generator
+# without altering a single byte of what it emits — which is exactly what the
+# generated-sources-drift job proves. Inventing a requirement to satisfy
+# `openspec validate` would put a false statement into openspec/specs/.
+skip_specs: true

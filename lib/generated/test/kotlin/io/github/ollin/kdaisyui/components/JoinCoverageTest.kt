@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class JoinCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun join_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class JoinCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("join", actualClasses, "Join defaults")
+        assertRendered(html, "join", "Join defaults", closes = "</div></div>")
     }
 
     @Test
@@ -32,10 +46,7 @@ class JoinCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("join join-horizontal join-vertical zz-extra", actualClasses, "Join all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Join id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Join attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Join content")
+        assertRendered(html, "join join-horizontal join-vertical zz-extra", "Join all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Join")
     }
 }

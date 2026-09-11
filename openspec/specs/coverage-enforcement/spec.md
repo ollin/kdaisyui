@@ -1,7 +1,26 @@
 # coverage-enforcement Specification
 
 ## Purpose
-TBD - created by archiving change enforce-100-percent-coverage. Update Purpose after archive.
+
+This library is almost entirely generated, and generated code is exactly where an untested
+path hides best: it compiles, it looks deliberate, and nobody reads 63 near-identical files
+looking for the one branch no test reaches.
+
+A 100% line-and-branch gate is therefore not perfectionism here — it is the only statement
+that survives regeneration. Any threshold below 100% is a budget, and a budget gets spent on
+whichever component was added last; at 100% a shortfall is unambiguous and points at the
+generator rather than at a judgement call about which gap was acceptable.
+
+The gate is aggregated across the published modules (`:lib`, `:ktor-integration`) and runs
+inside `check`, so it fails on a developer's machine before it fails in CI. Exclusions are
+allowed but must be written down as explicit Kover filters: the reasoning for excluding
+compiler-emitted bridges belongs next to the exclusion, where the next person can disagree
+with it.
+
+**What this capability does NOT claim.** Coverage says a line ran, not that anything checked
+what it did — a test asserting `x == x` satisfies this gate completely. That gap is the
+subject of `mutation-testing`, and the two are meant to be read together.
+
 ## Requirements
 ### Requirement: Aggregated coverage measurement
 The build SHALL measure code coverage for the published library modules (`:lib` and `:ktor-integration`) and aggregate them into a single merged report at the root project. The aggregation SHALL NOT include `:example-app`, `:e2e-tests`, or `:bom`.

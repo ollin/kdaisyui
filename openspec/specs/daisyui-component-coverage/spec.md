@@ -1,7 +1,26 @@
 # daisyui-component-coverage Specification
 
 ## Purpose
-TBD - created by archiving change adapt-daisyui-5-6. Update Purpose after archive.
+
+Keeping the Kotlin DSL faithful to the DaisyUI release it is pinned to — and keeping every
+part of the build that has an opinion about that version agreeing on one number.
+
+Four things must name the same DaisyUI version: the git submodule the generator reads, the
+generated components, the webjar `:example-app` serves, and the entry in
+`gradle/libs.versions.toml`. They can drift independently and the failure is quiet — a
+component emitting a class the served CSS does not define renders as unstyled markup, with
+no test failing. The webjar-backed constraint exists because only a subset of DaisyUI
+releases publish one, so the newest tag is usually not a usable version.
+
+This capability also carries what regeneration **cannot** see. The class-based safety net —
+generated tests, `generated-sources-drift`, `api-baseline` — keys on class names, so a new
+way to *construct* a component catches none of it: the popover modal was recorded as
+delivered while `daisyModal` still emitted only `<dialog>`, because that method adds no CSS
+class. Requirements here name those blind spots explicitly rather than trusting the net.
+
+**A note on drafting requirements in this capability:** the first one originally fixed the
+version at `5.6.3`, and reality moved past it twice. Naming a version made the requirement
+expire. State the durable constraint; leave the number to `gradle/libs.versions.toml`.
 
 ## Requirements
 

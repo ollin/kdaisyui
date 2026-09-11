@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class MockupBrowserCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun mockupBrowser_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class MockupBrowserCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-browser", actualClasses, "MockupBrowser defaults")
+        assertRendered(html, "mockup-browser", "MockupBrowser defaults", closes = "</div></div>")
     }
 
     @Test
@@ -30,11 +44,8 @@ class MockupBrowserCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-browser zz-extra", actualClasses, "MockupBrowser all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MockupBrowser id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MockupBrowser attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MockupBrowser content")
+        assertRendered(html, "mockup-browser zz-extra", "MockupBrowser all flags", closes = "</div></div>")
+        assertCommonFlags(html, "MockupBrowser")
     }
 
     @Test
@@ -44,8 +55,7 @@ class MockupBrowserCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-browser-toolbar", actualClasses, "MockupBrowserToolbar defaults")
+        assertRendered(html, "mockup-browser-toolbar", "MockupBrowserToolbar defaults", closes = "</div></div>")
     }
 
     @Test
@@ -58,10 +68,7 @@ class MockupBrowserCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("mockup-browser-toolbar zz-extra", actualClasses, "MockupBrowserToolbar all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "MockupBrowserToolbar id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "MockupBrowserToolbar attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "MockupBrowserToolbar content")
+        assertRendered(html, "mockup-browser-toolbar zz-extra", "MockupBrowserToolbar all flags", closes = "</div></div>")
+        assertCommonFlags(html, "MockupBrowserToolbar")
     }
 }

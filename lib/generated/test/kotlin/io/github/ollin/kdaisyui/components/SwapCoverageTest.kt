@@ -9,6 +9,21 @@ import kotlinx.html.stream.createHTML
 
 class SwapCoverageTest {
 
+    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
+        assertEquals(
+            classes,
+            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
+            label,
+        )
+        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    }
+
+    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
+        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    }
+
     @Test
     fun swap_defaults() {
         val html = createHTML(prettyPrint = false).div {
@@ -16,8 +31,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap", actualClasses, "Swap defaults")
+        assertRendered(html, "swap", "Swap defaults", closes = "</label></div>")
     }
 
     @Test
@@ -33,11 +47,8 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap swap-active swap-flip swap-rotate zz-extra", actualClasses, "Swap all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "Swap id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "Swap attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "Swap content")
+        assertRendered(html, "swap swap-active swap-flip swap-rotate zz-extra", "Swap all flags", closes = "</label></div>")
+        assertCommonFlags(html, "Swap")
     }
 
     @Test
@@ -47,8 +58,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap-on", actualClasses, "SwapOn defaults")
+        assertRendered(html, "swap-on", "SwapOn defaults", closes = "</div></div>")
     }
 
     @Test
@@ -61,11 +71,8 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap-on zz-extra", actualClasses, "SwapOn all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "SwapOn id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "SwapOn attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "SwapOn content")
+        assertRendered(html, "swap-on zz-extra", "SwapOn all flags", closes = "</div></div>")
+        assertCommonFlags(html, "SwapOn")
     }
 
     @Test
@@ -75,8 +82,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap-off", actualClasses, "SwapOff defaults")
+        assertRendered(html, "swap-off", "SwapOff defaults", closes = "</div></div>")
     }
 
     @Test
@@ -89,11 +95,8 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap-off zz-extra", actualClasses, "SwapOff all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "SwapOff id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "SwapOff attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "SwapOff content")
+        assertRendered(html, "swap-off zz-extra", "SwapOff all flags", closes = "</div></div>")
+        assertCommonFlags(html, "SwapOff")
     }
 
     @Test
@@ -103,8 +106,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap-indeterminate", actualClasses, "SwapIndeterminate defaults")
+        assertRendered(html, "swap-indeterminate", "SwapIndeterminate defaults", closes = "</div></div>")
     }
 
     @Test
@@ -117,10 +119,7 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals("swap-indeterminate zz-extra", actualClasses, "SwapIndeterminate all flags")
-        assertTrue(html.contains("id=\"x-cov-id\""), "SwapIndeterminate id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "SwapIndeterminate attrs")
-        assertTrue(html.contains("data-content=\"yes\""), "SwapIndeterminate content")
+        assertRendered(html, "swap-indeterminate zz-extra", "SwapIndeterminate all flags", closes = "</div></div>")
+        assertCommonFlags(html, "SwapIndeterminate")
     }
 }

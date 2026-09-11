@@ -1,32 +1,77 @@
 /**
- * @typedef {Object} ClassEntry
- * @property {string} class - CSS class name (e.g., 'btn-primary')
- * @property {string} desc - Description
- * @property {boolean} [default] - Whether this is the default (for sizes)
+ * All three shapes below were already written in this file, as JSDoc `@typedef` blocks that
+ * described the parsed YAML precisely and that nothing ever checked. Converting them is the
+ * clearest win in the port: the knowledge existed, it was just unenforced.
  */
+
+/** One entry under a `classnames` category, as written in the submodule's YAML. */
+export interface ClassEntry {
+  /** CSS class name, e.g. `btn-primary`. May arrive quoted; callers strip the quotes. */
+  class: string
+  desc: string
+  /** Only meaningful under `size`, where exactly one entry is the default. */
+  default?: boolean
+}
 
 /**
- * @typedef {Object} Classnames
- * @property {ClassEntry[]} [component] - Base class
- * @property {ClassEntry[]} [part] - Sub-components
- * @property {ClassEntry[]} [style] - Style variants
- * @property {ClassEntry[]} [color] - Color variants
- * @property {ClassEntry[]} [size] - Size variants
- * @property {ClassEntry[]} [modifier] - Modifiers
- * @property {ClassEntry[]} [behavior] - Behavior classes
- * @property {ClassEntry[]} [direction] - Direction variants
- * @property {ClassEntry[]} [placement] - Placement variants
+ * The `classnames` block. Every category is optional because a component declares only the
+ * ones it has — `divider` has no `size`, `button` has no `placement`.
  */
+export interface Classnames {
+  component?: ClassEntry[]
+  part?: ClassEntry[]
+  style?: ClassEntry[]
+  color?: ClassEntry[]
+  size?: ClassEntry[]
+  modifier?: ClassEntry[]
+  behavior?: ClassEntry[]
+  direction?: ClassEntry[]
+  placement?: ClassEntry[]
+}
 
 /**
- * @typedef {Object} FrontmatterData
- * @property {string} title - Component title
- * @property {string} desc - Component description
- * @property {string} source - CSS source URL
- * @property {Classnames} classnames - Class categories
+ * A category name, derived from `Classnames` so the two cannot drift.
+ *
+ * This is the annotation that pays here. Callers index `classnames` by a string — and
+ * `test-generator.ts` keeps a hand-written list of five of them. A typo returned `undefined`,
+ * the caller's `?? []` swallowed it, and the component silently lost every modifier in that
+ * category. Now it is a call-site error.
  */
+export type ClassCategory = keyof Classnames
 
-export function parseFrontmatter(content) {
+/** A parsed `+page.md` frontmatter block. */
+export interface FrontmatterData {
+  title?: string
+  desc?: string
+  /** CSS source URL. */
+  source?: string
+  classnames?: Classnames
+  [key: string]: unknown
+}
+
+/** What this hand-rolled YAML reader can produce for a scalar. */
+type YamlScalar = string | number | boolean
+
+/**
+ * A component's directory name, e.g. `file-input` — what addresses a folder on disk.
+ */
+export type ComponentName = string & { readonly __brand: 'ComponentName' }
+
+/**
+ * The same component's Kotlin-facing name, e.g. `FileInput` — what becomes `daisyFileInput`.
+ *
+ * Same distinction, same failure, as `KebabName`/`PascalName` in the heroicon parser:
+ * `toPascalCase` applied to an already-pascal name returns it unchanged, so the mistake
+ * produces a plausible value rather than an error.
+ *
+ * Branding these also answers a real CodeScene finding rather than a stylistic preference.
+ * Annotating this file's arguments as `string` raised **String Heavy Function Arguments** at
+ * 41.7% — a smell that was always present and became visible only once the types were
+ * written down. The `.js` version scored 0 on it because nothing could see the strings.
+ */
+export type PascalComponentName = string & { readonly __brand: 'PascalComponentName' }
+
+export function parseFrontmatter(content: string): FrontmatterData | null {
   const match = content.match(/^---\n([\s\S]*?)\n---/)
   if (!match) return null
   return parseYamlFrontmatter(match[1])
@@ -136,7 +181,7 @@ function parseYamlFrontmatter(yaml) {
   return result
 }
 
-function parseValue(value) {
+function parseValue(value: string): YamlScalar {
   if (!value) return ''
   if ((value.startsWith("'") && value.endsWith("'")) ||
       (value.startsWith('"') && value.endsWith('"'))) {
@@ -154,8 +199,9 @@ function parseValue(value) {
  * @param {string} dirPath - e.g., '/path/to/components/button'
  * @returns {string} - e.g., 'button'
  */
-export function getComponentName(dirPath) {
-  return dirPath.split('/').pop()
+export function getComponentName(dirPath: string): ComponentName {
+  // `!` because `split` always yields at least one element, even for the empty string.
+  return dirPath.split('/').pop()! as ComponentName
 }
 
 /**
@@ -163,11 +209,14 @@ export function getComponentName(dirPath) {
  * @param {string} name - e.g., 'button'
  * @returns {string} - e.g., 'Button'
  */
-export function toPascalCase(name) {
-  return name.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('')
+export function toPascalCase(name: ComponentName): PascalComponentName {
+  return name
+    .split('-')
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join('') as PascalComponentName
 }
 
-export function getBaseClass(classnames) {
+export function getBaseClass(classnames: Classnames | undefined): string | null {
   if (!classnames?.component?.length) return null
   return classnames.component[0].class.replace(/^['"]|['"]$/g, '')
 }
@@ -178,7 +227,10 @@ export function getBaseClass(classnames) {
  * @param {string} category
  * @returns {string[]}
  */
-export function getClassesByCategory(classnames, category) {
+export function getClassesByCategory(
+  classnames: Classnames | undefined,
+  category: ClassCategory,
+): string[] {
   if (!classnames?.[category]) return []
   return classnames[category].map(entry => {
     const cls = entry.class
@@ -192,7 +244,10 @@ export function getClassesByCategory(classnames, category) {
  * @param {string} category
  * @returns {Array<{class: string, desc: string, default?: boolean}>}
  */
-export function getEntriesByCategory(classnames, category) {
+export function getEntriesByCategory(
+  classnames: Classnames | undefined,
+  category: ClassCategory,
+): ClassEntry[] {
   if (!classnames?.[category]) return []
   return classnames[category].map(entry => ({
     class: (entry.class || '').replace(/^['"]|['"]$/g, ''),
@@ -201,7 +256,7 @@ export function getEntriesByCategory(classnames, category) {
   }))
 }
 
-export function getDefaultSize(classnames) {
+export function getDefaultSize(classnames: Classnames | undefined): string | null {
   if (!classnames?.size) return null
   const defaultEntry = classnames.size.find(entry => entry.default === true)
   if (!defaultEntry) return null
@@ -214,16 +269,16 @@ import path from 'path'
 const DAISYUI_DOCS_PATH = path.resolve(import.meta.dirname, '../../../daisyui/packages/docs')
 const COMPONENTS_PATH = path.join(DAISYUI_DOCS_PATH, 'src/routes/(routes)/components')
 
-export function getAllComponentDirs() {
+export function getAllComponentDirs(): ComponentName[] {
   return fs.readdirSync(COMPONENTS_PATH)
-    .filter(f => {
+    .filter((f) => {
       const stat = fs.statSync(path.join(COMPONENTS_PATH, f))
       return stat.isDirectory() && fs.existsSync(path.join(COMPONENTS_PATH, f, '+page.md'))
     })
-    .sort()
+    .sort() as ComponentName[]
 }
 
-export function readComponentFrontmatter(componentName) {
+export function readComponentFrontmatter(componentName: ComponentName): FrontmatterData | null {
   const filePath = path.join(COMPONENTS_PATH, componentName, '+page.md')
   if (!fs.existsSync(filePath)) return null
   return parseFrontmatter(fs.readFileSync(filePath, 'utf8'))

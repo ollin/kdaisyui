@@ -1,7 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'node:url'
-import { getAllComponentDirs, readComponentFrontmatter, toPascalCase } from './parser/frontmatter.js'
+import {
+  getAllComponentDirs,
+  readComponentFrontmatter,
+  toPascalCase,
+  type ClassCategory,
+} from './parser/frontmatter.ts'
 import { toCamelCase } from './classifier.js'
 
 /**
@@ -133,7 +138,11 @@ function toClassName(componentName) {
 
 // The five frontmatter sections whose entries become component parameters. `component` is
 // not among them: it names the element itself, not a modifier of it.
-const MODIFIER_CATEGORIES = ['placement', 'modifier', 'direction', 'behavior', 'style']
+// `ClassCategory[]`, not `string[]`. This hand-written list is indexed straight into the
+// parsed YAML, and the lookup is `classnames?.[category]` — so a typo here returns undefined,
+// the `?? []` below swallows it, and the component silently loses every modifier in that
+// category with nothing failing. The type is what makes that a mistake you cannot make.
+const MODIFIER_CATEGORIES: ClassCategory[] = ['placement', 'modifier', 'direction', 'behavior', 'style']
 
 /**
  * Every class named under the modifier categories, in document order.

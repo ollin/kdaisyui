@@ -1,4 +1,4 @@
-import { toPascalCase as toPascalCaseBase, getBaseClass, getClassesByCategory, getEntriesByCategory, getDefaultSize } from './parser/frontmatter.js'
+import { toPascalCase as toPascalCaseBase, getBaseClass, getClassesByCategory, getEntriesByCategory, getDefaultSize } from './parser/frontmatter.ts'
 
 export function toPascalCase(name) {
   return toPascalCaseBase(name)

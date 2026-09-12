@@ -295,8 +295,8 @@ public final class io/github/ollin/kdaisyui/components/FieldsetKt {
 }
 
 public final class io/github/ollin/kdaisyui/components/FileInputKt {
-	public static final fun daisyFileInput (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/components/FileInputVariant;Lio/github/ollin/kdaisyui/components/FileInputSize;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyFileInput$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/components/FileInputVariant;Lio/github/ollin/kdaisyui/components/FileInputSize;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFileInput (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/components/FileInputVariant;Lio/github/ollin/kdaisyui/components/FileInputSize;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyFileInput$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/components/FileInputVariant;Lio/github/ollin/kdaisyui/components/FileInputSize;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/FileInputSize : java/lang/Enum {
@@ -461,8 +461,8 @@ public final class io/github/ollin/kdaisyui/components/LoadingSize : java/lang/E
 }
 
 public final class io/github/ollin/kdaisyui/components/MaskKt {
-	public static final fun daisyMask (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZZZZZZZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyMask$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZZZZZZZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMask (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZZZZZZZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyMask$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZZZZZZZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/MegamenuKt {
@@ -882,8 +882,8 @@ public final class io/github/ollin/kdaisyui/components/TextareaVariant : java/la
 }
 
 public final class io/github/ollin/kdaisyui/components/ThemeControllerKt {
-	public static final fun daisyThemeController (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyThemeController$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyThemeController (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyThemeController$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/TimelineKt {

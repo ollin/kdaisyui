@@ -28,7 +28,7 @@ fun FlowContent.daisyMegamenu(
 fun FlowContent.daisyMegamenuActive(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
+    attrs: (DIV.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
 ```

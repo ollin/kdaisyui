@@ -4,6 +4,12 @@ import { getAllComponentDirs, readComponentFrontmatter, getClassesByCategory } f
 import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter } from './classifier.ts'
 import { generateKotlinFile } from './generator-new.ts'
+import { documentedElementFor } from './parser/documented-element.ts'
+import {
+  crossCheckElements,
+  describeCrossCheckFailure,
+  type ElementObservation,
+} from './element-cross-check.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -52,6 +58,33 @@ function loadConfig() {
   return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
 }
 
+/** What the element heuristic chose for one component, beside what DaisyUI documents. */
+function observeElement(componentName, element, frontmatter): ElementObservation {
+  return {
+    componentDir: componentName,
+    chosen: (element ?? 'DIV').toUpperCase(),
+    documented: documentedElementFor(componentName, frontmatter.classnames.component[0].class),
+  }
+}
+
+/**
+ * Runs after the files are written, deliberately: a failure here means the chosen element is
+ * wrong, and seeing the output it produced is what makes that diagnosable. The exit code still
+ * fails the Gradle task, so nothing ships on it.
+ */
+function reportCrossCheck(
+  observations: readonly ElementObservation[],
+  exceptions: Readonly<Record<string, { reason: string; issue: number }>>,
+): void {
+  const crossCheck = crossCheckElements(observations, exceptions)
+  for (const componentDir of crossCheck.excused) {
+    console.log(`  ⚠ ${componentDir}: element disagrees with DaisyUI, excused — see #${exceptions[componentDir].issue}`)
+  }
+  if (crossCheck.findings.length === 0) return
+  console.error(`\n${describeCrossCheckFailure(crossCheck)}`)
+  process.exitCode = 1
+}
+
 function main() {
   console.log('Generating kdaisyui components from DaisyUI source...\n')
   
@@ -64,6 +97,7 @@ function main() {
   let generated = 0
   let skipped = 0
   const allClasses = []
+  const observations: ElementObservation[] = []
   
   for (const componentName of componentDirs) {
     if (config.skip?.includes(componentName)) {
@@ -91,7 +125,11 @@ function main() {
     // but does not function — see componentElements in codegen-config.json.
     const element = config.componentElements?.[componentName]
       ?? getElementForComponent(elementRules, componentName)
-    
+
+    // What the heuristic chose, beside what DaisyUI documents. Judged after the loop so the
+    // whole set is reportable at once — dying on the first would hide the rest.
+    observations.push(observeElement(componentName, element, frontmatter))
+
     const kotlin = generateKotlinFile(classified, { primaryElement: element }, config)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
     
@@ -109,6 +147,8 @@ function main() {
   console.log(`\nGenerated ${generated} components, skipped ${skipped}`)
   console.log(`Output: ${OUTPUT_DIR}`)
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
+
+  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {})
 }
 
 main()

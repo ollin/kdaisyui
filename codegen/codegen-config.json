@@ -1,4 +1,14 @@
 {
+  "elementCrossCheckExceptions": {
+    "tab": {
+      "reason": "Container and item are inverted, not merely the wrong element: daisyTab emits <button class=\"tabs\"> and daisyTabTab emits <div class=\"tab\">. Fixing it means swapping the component/part classification, which renames every function in the file.",
+      "issue": 342
+    },
+    "calendar": {
+      "reason": "DaisyUI documents Cally's custom element <calendar-date>, and kotlinx.html has no tag class for a custom element. Needs a decision — a generic custom-tag escape hatch, or skipping the component — rather than an element swap.",
+      "issue": 343
+    }
+  },
   "skip": ["accordion", "pagination"],
   "textParams": ["button", "badge", "link", "kbd", "label", "card-title", "stat-value", "stat-desc"],
   "roles": {

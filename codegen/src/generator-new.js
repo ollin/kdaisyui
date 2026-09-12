@@ -1,4 +1,4 @@
-import { toPascalCase, toCamelCase } from './classifier.js'
+import { toPascalCase, toCamelCase } from './classifier.ts'
 
 const KOTLIN_KEYWORDS = new Set(['object', 'class', 'fun', 'val', 'var', 'if', 'else', 'when', 'for', 'while', 'return', 'true', 'false', 'null'])
 

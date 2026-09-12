@@ -7,7 +7,7 @@ import {
   toPascalCase,
   type ClassCategory,
 } from './parser/frontmatter.ts'
-import { toCamelCase } from './classifier.js'
+import { toCamelCase } from './classifier.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:

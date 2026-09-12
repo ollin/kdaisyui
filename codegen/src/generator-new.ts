@@ -1,375 +1,178 @@
-import { toPascalCase, toCamelCase, type ClassifiedComponent } from './classifier.ts'
+/**
+ * How KOTLIN states a component's generated API.
+ *
+ * What that API IS now lives in `component-shape.ts`, because `docs/reference/*.md` states the
+ * same thing in Markdown and the two must not disagree. This file renders; it no longer decides.
+ *
+ * The one exception is function BODIES, which stay here in full. They need `extras[].apply`,
+ * roles and input types, none of which a Markdown page documents, so modelling them would add a
+ * shape with exactly one consumer.
+ */
+
+import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
 import type { ElementRule } from './parser/llms-txt.ts'
+import {
+  booleanParameterClasses,
+  buildComponentShape,
+  escapeKotlinKeyword,
+  readComponentConfig,
+  staticAttributeDoc,
+  type ComponentConfig,
+  type ComponentShape,
+  type EnumShape,
+  type ExtraParameter,
+  type FunctionShape,
+  type ParameterShape,
+  type StaticAttribute,
+} from './component-shape.ts'
 
-const KOTLIN_KEYWORDS = new Set(['object', 'class', 'fun', 'val', 'var', 'if', 'else', 'when', 'for', 'while', 'return', 'true', 'false', 'null'])
-
-function escapeKotlinKeyword(name) {
-  return KOTLIN_KEYWORDS.has(name) ? `_${name}` : name
-}
-
-function htmlTagFor(element) {
-  const exceptions = { 
-    FIELDSET: 'fieldSet', 
-    INPUT: 'input',
-    TEXTAREA: 'textArea'
-  }
-  return exceptions[element] ?? element.toLowerCase()
-}
-
-function generateEnum(enumName, prefix, values, descs, categoryLabel) {
-  if (!values || values.length === 0) return ''
-  const kdoc = descs && Object.keys(descs).length > 0
-    ? `/** ${categoryLabel} for this component (CSS prefix: \`${prefix}-\`) */\n`
+function renderEnum(shape: EnumShape): string {
+  const kdoc = shape.documented
+    ? `/** ${shape.categoryLabel} for this component (CSS prefix: \`${shape.prefix}-\`) */\n`
     : ''
-  const entries = values.map(v => {
-    const desc = descs?.[v]
-    const cssClass = `${prefix}-${v}`
-    const entryLine = `    ${toPascalCase(v)}("${cssClass}"),`
-    const kdocParts = [`CSS: \`${cssClass}\``]
-    if (desc) kdocParts.push(desc)
-    return `    /** ${kdocParts.join(' — ')} */\n${entryLine}`
-  }).join('\n')
-  return `${kdoc}enum class ${enumName}(internal val className: String) {\n${entries}\n}\n`
+  const entries = shape.entries
+    .map(entry => {
+      const kdocParts = [`CSS: \`${entry.cssClass}\``]
+      if (entry.desc) kdocParts.push(entry.desc)
+      return `    /** ${kdocParts.join(' — ')} */\n    ${entry.name}("${entry.cssClass}"),`
+    })
+    .join('\n')
+  return `${kdoc}enum class ${shape.name}(internal val className: String) {\n${entries}\n}\n`
 }
 
-function generateVariantEnum(classified) {
-  if (classified.colors.length === 0) return ''
-  return generateEnum(`${classified.componentName}Variant`, classified.prefix, classified.colors, classified.descs, 'Color variants')
+function renderParameter(parameter: ParameterShape): string {
+  const defaulted = parameter.default === null ? '' : ` = ${parameter.default}`
+  return `    ${parameter.name}: ${parameter.type}${defaulted},`
 }
 
-function generateSizeEnum(classified) {
-  if (classified.sizes.length === 0) return ''
-  return generateEnum(`${classified.componentName}Size`, classified.prefix, classified.sizes, classified.descs, 'Size variants')
+/** The `Renders <tag ...>` clause every generated function's summary line ends with. */
+function rendersClause(shape: FunctionShape): string {
+  const attrs = staticAttributeDoc(shape.staticAttributes)
+  return shape.cssClass === null
+    ? `Structural wrapper. Renders \`<${shape.tagBuilder}${attrs}>\`.`
+    : `Renders \`<${shape.tagBuilder} class="${shape.cssClass} ..."${attrs}>\`.`
 }
 
-function getAllBooleanParams(classified, extras, config, componentName) {
-  const extraNames = new Set((extras || []).map(e => e.name))
-  const booleans = []
-  
-  for (const s of classified.styles) {
-    if (!extraNames.has(toCamelCase(s))) {
-      booleans.push(s)
-    }
-  }
-  for (const m of classified.modifiers) {
-    if (!extraNames.has(toCamelCase(m))) {
-      booleans.push(m)
-    }
-  }
-  for (const b of classified.behaviors) {
-    if (!extraNames.has(toCamelCase(b))) {
-      booleans.push(b)
-    }
-  }
-  for (const d of classified.directions) {
-    if (!extraNames.has(toCamelCase(d))) {
-      booleans.push(d)
-    }
-  }
-  for (const p of classified.placements) {
-    if (!extraNames.has(toCamelCase(p))) {
-      booleans.push(p)
-    }
-  }
-  
-  const additionalBooleans = config?.additionalBooleans?.[componentName.toLowerCase()] || []
-  for (const b of additionalBooleans) {
-    if (!booleans.includes(b) && !extraNames.has(toCamelCase(b))) {
-      booleans.push(b)
-    }
-  }
-  
-  return booleans.sort()
+function summaryLine(shape: FunctionShape): string {
+  const clause = rendersClause(shape)
+  return shape.desc ? `${shape.desc} ${clause}` : clause
 }
 
-/** Renders static attributes as they read in a KDoc `Renders <tag ...>` line. */
-function staticAttributeDoc(entries) {
-  return entries
-    .map(([name, value]) => (value === '' ? ` ${name}` : ` ${name}="${value}"`))
-    .join('')
+/**
+ * Only the main function documents its parameters. Parts and custom parts get a one-line
+ * comment — they all take the same four or five escape-hatch parameters, and repeating those
+ * `@param` lines across every part of every component says nothing a reader does not know.
+ */
+function renderKdoc(shape: FunctionShape): string {
+  const lines = [summaryLine(shape)]
+  if (shape.kind === 'main') {
+    for (const parameter of shape.parameters) {
+      lines.push(parameter.doc ? `@param ${parameter.name} — ${parameter.doc}` : `@param ${parameter.name}`)
+    }
+  }
+  if (lines.length === 1) return `/** ${lines[0]} */\n`
+  return `/**\n * ${lines.join('\n * ')}\n */\n`
+}
+
+function renderFunction(shape: FunctionShape, body: string): string {
+  const params = shape.parameters.map(renderParameter).join('\n')
+  return `${renderKdoc(shape)}fun ${shape.receiver}.${shape.name}(\n${params}\n) {\n    ${shape.tagBuilder} {\n${body}\n    }\n}`
 }
 
 /** Renders static attributes as kotlinx.html body lines, indented for a tag block. */
-function staticAttributeLines(entries) {
+function staticAttributeLines(entries: readonly StaticAttribute[]): string[] {
   return entries.map(
     ([name, value]) => `        attributes[${JSON.stringify(name)}] = ${JSON.stringify(value)}`,
   )
 }
 
-/** Reads a component-keyed config section, e.g. `roles.button`. */
-function componentSetting(config, section, componentName, fallback) {
-  return config?.[section]?.[componentName.toLowerCase()] ?? fallback
+function applyLines(extras: readonly ExtraParameter[]): string[] {
+  return extras.flatMap(extra => extra.apply.trim().split('\n').map(line => `        ${line}`))
 }
 
-/** Tests membership in a config section that is a flat list of component names. */
-function componentListed(config, section, componentName) {
-  return config?.[section]?.includes(componentName.toLowerCase()) ?? false
+/** The `content` / `text` tail shared by every function that can take children. */
+function contentLines(hasTextParam: boolean): string[] {
+  if (!hasTextParam) return ['        content()']
+  return [
+    '        when {',
+    '            content != null -> content()',
+    '            text != null -> +text',
+    '        }',
+  ]
 }
 
-function generateMainFunction(classified, element, config) {
-  const { componentName, prefix, desc, descs } = classified
-  const htmlTag = htmlTagFor(element)
-  const extras = componentSetting(config, 'extras', componentName, [])
-  const booleans = getAllBooleanParams(classified, extras, config, componentName)
-  const hasTextParam = componentListed(config, 'textParams', componentName)
-  const noContent = componentListed(config, 'noContent', componentName)
-  const role = componentSetting(config, 'roles', componentName)
-  const fixedInputType = componentSetting(config, 'inputTypes', componentName)
-  const componentAttributes = Object.entries(componentSetting(config, 'componentAttributes', componentName, {}))
-  
-  const kdoc = generateFunctionKdoc(classified, element, { booleans, extras, hasTextParam, noContent, componentAttributes })
+function mainFunctionBody(
+  classified: ClassifiedComponent,
+  shape: FunctionShape,
+  componentConfig: ComponentConfig,
+): string {
+  const { prefix } = classified
+  const { extras, hasTextParam, noContent, role, inputType } = componentConfig
 
-  const params = []
-  if (hasTextParam) params.push('    text: String? = null,')
-  params.push('    id: HtmlId? = null,')
-  if (classified.colors.length > 0) {
-    params.push(`    variant: ${componentName}Variant? = null,`)
-  }
-  if (classified.sizes.length > 0) {
-    params.push(`    size: ${componentName}Size? = null,`)
-  }
-  for (const b of booleans) {
-    params.push(`    ${escapeKotlinKeyword(toCamelCase(b))}: Boolean = false,`)
-  }
-  for (const extra of extras) {
-    params.push(`    ${extra.name}: ${extra.type} = ${extra.default},`)
-  }
-  params.push('    extraClasses: String? = null,')
-  if (!noContent) {
-    params.push(`    attrs: (${element}.() -> Unit)? = null,`)
-    if (hasTextParam) {
-      params.push(`    content: (${element}.() -> Unit)? = null,`)
-    } else {
-      params.push(`    content: (${element}.() -> Unit),`)
-    }
-  } else {
-    params.push(`    attrs: (${element}.() -> Unit)? = null,`)
-  }
-  
-  const body = generateFunctionBody(classified, element, { extras, role, fixedInputType, hasTextParam, booleans, noContent, componentAttributes })
-  
-  return `${kdoc}fun FlowContent.daisy${componentName}(\n${params.join('\n')}\n) {\n    ${htmlTag} {\n${body}\n    }\n}`
-}
-
-function generateFunctionKdoc(classified, element, options) {
-  const { componentName, desc, descs, prefix } = classified
-  const { booleans, extras, hasTextParam, noContent, componentAttributes } = options
-  const htmlTag = htmlTagFor(element)
-  const lines = []
-
-  const rendersTag = `Renders \`<${htmlTag} class="${prefix} ..."${staticAttributeDoc(componentAttributes)}>\`.`
-  const firstLine = desc ? `${desc} ${rendersTag}` : rendersTag
-  lines.push(firstLine)
-
-  if (hasTextParam) {
-    lines.push('@param text — Shortcut for inline text content (mutually exclusive with [content])')
-  }
-  lines.push('@param id — Type-safe HTML id attribute from [HtmlId] hierarchy')
-  if (classified.colors.length > 0) {
-    lines.push(`@param variant — Color variant`)
-  }
-  if (classified.sizes.length > 0) {
-    lines.push(`@param size — Size variant`)
-  }
-  for (const b of booleans) {
-    const bDesc = descs?.[b]
-    const paramName = escapeKotlinKeyword(toCamelCase(b))
-    lines.push(bDesc ? `@param ${paramName} — ${bDesc}` : `@param ${paramName}`)
-  }
-  for (const extra of extras) {
-    lines.push(`@param ${extra.name}`)
-  }
-  lines.push('@param extraClasses — Additional CSS classes appended after the generated ones')
-  lines.push('@param attrs — Direct access to the underlying kotlinx.html tag attributes')
-  if (!noContent) {
-    if (hasTextParam) {
-      lines.push('@param content — Nested HTML content (takes precedence over [text] if both are set)')
-    } else {
-      lines.push('@param content — Nested HTML content')
-    }
-  }
-
-  if (lines.length === 1) {
-    return `/** ${lines[0]} */\n`
-  }
-  return `/**\n * ${lines.join('\n * ')}\n */\n`
-}
-
-function generateFunctionBody(classified, element, options) {
-  const { prefix, styles } = classified
-  const { extras, role, fixedInputType, hasTextParam, booleans, noContent, componentAttributes } = options
-  const lines = []
-  
-  lines.push(`        if (id != null) attributes["id"] = id.id`)
-  lines.push(...staticAttributeLines(componentAttributes))
+  const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
+  lines.push(...staticAttributeLines(shape.staticAttributes))
   if (role) lines.push(`        role = "${role}"`)
-  if (fixedInputType) lines.push(`        type = InputType.${fixedInputType}`)
-  
-  const beforeExtras = (extras || []).filter(e => e.position === 'before_classes')
-  for (const extra of beforeExtras) {
-    for (const line of extra.apply.trim().split('\n')) {
-      lines.push(`        ${line}`)
-    }
-  }
-  
+  if (inputType) lines.push(`        type = InputType.${inputType}`)
+  lines.push(...applyLines(extras.filter(extra => extra.position === 'before_classes')))
+
   lines.push(`        addClassNames("${prefix}")`)
-  
-  if (classified.colors.length > 0) {
-    lines.push(`        if (variant != null) addClassNames(variant.className)`)
+  if (classified.colors.length > 0) lines.push('        if (variant != null) addClassNames(variant.className)')
+  if (classified.sizes.length > 0) lines.push('        if (size != null) addClassNames(size.className)')
+  for (const cls of booleanParameterClasses(classified, componentConfig)) {
+    lines.push(`        if (${escapeKotlinKeyword(toCamelCase(cls))}) addClassNames("${prefix}-${cls}")`)
   }
-  if (classified.sizes.length > 0) {
-    lines.push(`        if (size != null) addClassNames(size.className)`)
-  }
-  
-  for (const b of booleans) {
-    lines.push(`        if (${escapeKotlinKeyword(toCamelCase(b))}) addClassNames("${prefix}-${b}")`)
-  }
-  
-  const afterExtras = (extras || []).filter(e => e.position !== 'before_classes')
-  for (const extra of afterExtras) {
-    for (const line of extra.apply.trim().split('\n')) {
-      lines.push(`        ${line}`)
-    }
-  }
-  
-  lines.push(`        addClassNames(extraClasses)`)
-  if (!noContent) {
-    lines.push(`        if (attrs != null) attrs()`)
-    
-    if (hasTextParam) {
-      lines.push(`        when {`)
-      lines.push(`            content != null -> content()`)
-      lines.push(`            text != null -> +text`)
-      lines.push(`        }`)
-    } else {
-      lines.push(`        content()`)
-    }
-  } else {
-    lines.push(`        if (attrs != null) attrs()`)
-  }
-  
+  lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
+
+  lines.push('        addClassNames(extraClasses)')
+  lines.push('        if (attrs != null) attrs()')
+  if (!noContent) lines.push(...contentLines(hasTextParam))
+
   return lines.join('\n')
 }
 
-function generatePartFunction(classified, partClass, element, config) {
-  const componentName = classified.componentName
-  const partPascal = toPascalCase(stripClassPrefix(classified.prefix, partClass))
-  const htmlTag = htmlTagFor(element)
-  const hasTextParam = config?.textParams?.includes(partClass) || partClass.includes('title')
-  const partDesc = classified.descs?.[partClass] || ''
+/** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
+function secondaryFunctionBody(shape: FunctionShape): string {
+  const hasTextParam = shape.parameters.some(parameter => parameter.name === 'text')
 
-  const kdocLine = partDesc
-    ? `${partDesc} Renders \`<${htmlTag} class="${partClass} ...">\`.`
-    : `Renders \`<${htmlTag} class="${partClass} ...">\`.`
-  const kdoc = `/** ${kdocLine} */\n`
+  const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
+  lines.push(...staticAttributeLines(shape.staticAttributes))
+  if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
+  lines.push('        addClassNames(extraClasses)')
+  lines.push('        if (attrs != null) attrs()')
+  lines.push(...contentLines(hasTextParam))
 
-  const params = []
-  if (hasTextParam) params.push('    text: String? = null,')
-  params.push('    id: HtmlId? = null,')
-  params.push('    extraClasses: String? = null,')
-  params.push(`    attrs: (${element}.() -> Unit)? = null,`)
-  if (hasTextParam) {
-    params.push(`    content: (${element}.() -> Unit)? = null,`)
-  } else {
-    params.push(`    content: (${element}.() -> Unit),`)
-  }
-  
-  const body = []
-  body.push(`        if (id != null) attributes["id"] = id.id`)
-  body.push(`        addClassNames("${partClass}")`)
-  body.push(`        addClassNames(extraClasses)`)
-  body.push(`        if (attrs != null) attrs()`)
-  
-  if (hasTextParam) {
-    body.push(`        when {`)
-    body.push(`            content != null -> content()`)
-    body.push(`            text != null -> +text`)
-    body.push(`        }`)
-  } else {
-    body.push(`        content()`)
-  }
-  
-  return `${kdoc}fun FlowContent.daisy${componentName}${partPascal}(\n${params.join('\n')}\n) {\n    ${htmlTag} {\n${body.join('\n')}\n    }\n}`
+  return lines.join('\n')
 }
 
-function generateCustomPartFunction(classified, part) {
-  const componentName = classified.componentName
-  const element = part.element
-  const htmlTag = htmlTagFor(element)
-  const cssClass = part.cssClass
-  const receiver = part.receiver || 'FlowContent'
-  const staticAttributes = Object.entries(part.staticAttributes || {})
-
-  const attrDoc = staticAttributeDoc(staticAttributes)
-  const kdocLine = cssClass
-    ? `Renders \`<${htmlTag} class="${cssClass} ..."${attrDoc}>\`.`
-    : `Structural wrapper. Renders \`<${htmlTag}${attrDoc}>\`.`
-  const kdoc = `/** ${kdocLine} */\n`
-
-  const params = []
-  params.push('    id: HtmlId? = null,')
-  params.push('    extraClasses: String? = null,')
-  params.push(`    attrs: (${element}.() -> Unit)? = null,`)
-  params.push(`    content: (${element}.() -> Unit),`)
-
-  const body = []
-  body.push(`        if (id != null) attributes["id"] = id.id`)
-  body.push(...staticAttributeLines(staticAttributes))
-  if (cssClass) {
-    body.push(`        addClassNames("${cssClass}")`)
-  }
-  body.push(`        addClassNames(extraClasses)`)
-  body.push(`        if (attrs != null) attrs()`)
-  body.push(`        content()`)
-
-  return `${kdoc}fun ${receiver}.daisy${componentName}${part.name}(\n${params.join('\n')}\n) {\n    ${htmlTag} {\n${body.join('\n')}\n    }\n}`
+function renderBody(
+  shape: FunctionShape,
+  classified: ClassifiedComponent,
+  componentConfig: ComponentConfig,
+): string {
+  return shape.kind === 'main'
+    ? mainFunctionBody(classified, shape, componentConfig)
+    : secondaryFunctionBody(shape)
 }
 
-function stripClassPrefix(prefix, className) {
-  if (className.startsWith(prefix + '-')) {
-    return className.slice(prefix.length + 1)
-  }
-  return className
-}
-
-function collectImports(classified, element, config) {
+function collectImports(shape: ComponentShape, componentConfig: ComponentConfig): string[] {
   const imports = new Set([
     'io.github.ollin.kdaisyui.core.HtmlId',
     'io.github.ollin.kdaisyui.core.addClassNames',
     'kotlinx.html.FlowContent',
   ])
-  
-  imports.add(`kotlinx.html.${element}`)
-  imports.add(`kotlinx.html.${htmlTagFor(element)}`)
-  
-  if (config?.roles?.[classified.componentName.toLowerCase()]) {
-    imports.add('kotlinx.html.role')
+
+  for (const fn of shape.functions) {
+    imports.add(`kotlinx.html.${fn.element}`)
+    imports.add(`kotlinx.html.${fn.tagBuilder}`)
+    if (fn.receiver !== 'FlowContent') imports.add(`kotlinx.html.${fn.receiver}`)
   }
-  if (config?.inputTypes?.[classified.componentName.toLowerCase()]) {
-    imports.add('kotlinx.html.InputType')
+
+  if (componentConfig.role) imports.add('kotlinx.html.role')
+  if (componentConfig.inputType) imports.add('kotlinx.html.InputType')
+  for (const extra of componentConfig.extras) {
+    for (const imported of extra.imports ?? []) imports.add(imported)
   }
-  
-  for (const extra of (config?.extras?.[classified.componentName.toLowerCase()] || [])) {
-    for (const imp of (extra.imports || [])) {
-      imports.add(imp)
-    }
-  }
-  
-  for (const part of classified.parts) {
-    const partElement = partElementFor(part, config)
-    imports.add(`kotlinx.html.${partElement}`)
-    imports.add(`kotlinx.html.${htmlTagFor(partElement)}`)
-  }
-  
-  const customParts = config?.customParts?.[classified.componentName.toLowerCase()] || []
-  for (const part of customParts) {
-    imports.add(`kotlinx.html.${part.element}`)
-    imports.add(`kotlinx.html.${htmlTagFor(part.element)}`)
-    if (part.receiver && part.receiver !== 'FlowContent') {
-      imports.add(`kotlinx.html.${part.receiver}`)
-    }
-  }
-  
+
   // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
   // ahead of kotlin/kotlinx, so no special-casing is needed to group it first.
   return [...imports].sort((a, b) => a.localeCompare(b))
@@ -393,60 +196,32 @@ export function generateKotlinFile(
   chosenElement: Pick<ElementRule, 'primaryElement'>,
   config,
 ) {
-  const componentName = classified.componentName.toLowerCase()
-  const element = chosenElement.primaryElement?.toUpperCase() || 'DIV'
-  const imports = collectImports(classified, element, config)
-  
+  // Lower-casing the PascalCase name, which is WRONG for every multi-word component:
+  // `FileInput` yields `fileinput`, and `components/fileinput/+page.md` does not exist. Left
+  // exactly as it was so this refactoring changes no byte; `ComponentSource.componentDir` is
+  // where the correct value belongs, and switching to it rewrites nine files, so it is its
+  // own commit.
+  const sourceDir = classified.componentName.toLowerCase()
+  const shape = buildComponentShape(
+    classified,
+    { componentDir: sourceDir, element: chosenElement.primaryElement },
+    config,
+  )
+  const componentConfig = readComponentConfig(config, classified.componentName)
+
   const header = [
     `// GENERATED — DO NOT EDIT`,
-    `// Source: daisyui/packages/docs/src/routes/(routes)/components/${componentName}/+page.md`,
+    `// Source: daisyui/packages/docs/src/routes/(routes)/components/${shape.componentDir}/+page.md`,
     `// Regenerate: cd codegen && npm run generate`,
     ``,
     `package io.github.ollin.kdaisyui.components`,
     ``,
-    ...imports.map(i => `import ${i}`),
+    ...collectImports(shape, componentConfig).map(i => `import ${i}`),
   ].join('\n')
-  
-  const enums = [
-    generateVariantEnum(classified),
-    generateSizeEnum(classified),
-  ].filter(Boolean).join('\n')
-  
-  const mainFn = generateMainFunction(classified, element, config)
-  
-  const partFns = classified.parts.map(partClass => {
-    const partElement = partElementFor(partClass, config)
-    return generatePartFunction(classified, partClass, partElement, config)
-  })
-  
-  const customParts = config?.customParts?.[classified.componentName.toLowerCase()] || []
-  const customPartFns = customParts.map(part => generateCustomPartFunction(classified, part))
-  
-  const body = [enums, mainFn, ...partFns, ...customPartFns].filter(Boolean).join('\n\n')
-  
+
+  const enums = shape.enums.map(renderEnum).join('\n')
+  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig)))
+  const body = [enums, ...functions].filter(Boolean).join('\n\n')
+
   return `${header}\n\n${body}\n`
-}
-
-/**
- * The element a sub-component part renders as. `subComponentElements` wins over the heuristic
- * below, which guesses from the part's name and cannot know when the choice is load-bearing —
- * `megamenu-active` must be a `<span>` because the panels beside it are selected by
- * `:nth-of-type`, and no amount of reading its name says so.
- */
-function partElementFor(partName, config) {
-  return config?.subComponentElements?.[partName] ?? inferPartElement(partName)
-}
-
-function inferPartElement(partName) {
-  if (partName === 'stat-title') return 'DIV'
-  if (partName === 'card-title') return 'H2'
-  if (partName.includes('title')) return 'H2'
-  if (partName.includes('actions')) return 'DIV'
-  if (partName.includes('body')) return 'DIV'
-  if (partName.includes('header')) return 'DIV'
-  if (partName.includes('footer')) return 'DIV'
-  if (partName.includes('side')) return 'DIV'
-  if (partName.includes('overlay')) return 'LABEL'
-  if (partName.includes('content')) return 'DIV'
-  return 'DIV'
 }

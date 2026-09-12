@@ -3,3 +3,8 @@
 # The diff stays viewable on expand — that reviewability is the point of
 # committing these files, so do NOT add -diff here.
 lib/generated/** linguist-generated=true
+
+# Generated Markdown (the per-component reference pages and their index), on the
+# same terms and for the same reason. docs/reference.md is the hand-written entry
+# point and is deliberately NOT listed.
+docs/reference/** linguist-generated=true

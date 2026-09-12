@@ -55,11 +55,16 @@ Tracks DaisyUI 5.7.16, up from 5.5.20. **66 components**, up from 63.
 
 **New components**
 
+<!-- Hand-maintained. The pages this table links to are generated from DaisyUI and
+     drift-checked; these three rows are not, and they have already been wrong: the
+     Megamenu row omitted daisyMegamenuPanel from 0.2.0 until 2026-09-12. Check them
+     against docs/reference/ when a release adds a function. -->
+
 | Component | Function | What it does |
 |---|---|---|
 | [Aura](docs/reference/aura.md) | `daisyAura` | Border light effect wrapping a component — `dual`, `glow`, `gold`, `holo`, `rainbow`, `silver` |
 | [Otp](docs/reference/otp.md) | `daisyOtp` | One-time password / verification code input, 8 colours, `joined` |
-| [Megamenu](docs/reference/megamenu.md) | `daisyMegamenu`, `daisyMegamenuActive` | Horizontal menu with popover navigation blocks — `full`, `vertical`, `wide` |
+| [Megamenu](docs/reference/megamenu.md) | `daisyMegamenu`, `daisyMegamenuActive`, `daisyMegamenuPanel` | Horizontal menu with popover navigation blocks — `full`, `vertical`, `wide` |
 
 **New on existing components**
 

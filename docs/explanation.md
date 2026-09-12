@@ -98,6 +98,35 @@ When you write `daisyButton(variant = ButtonVariant.Primary, extraClasses = "w-f
 
 This means you can safely add Tailwind utilities, custom classes, or any CSS class without worrying about duplicates or broken attributes.
 
+## Common parameters
+
+Every component accepts these escape-hatch parameters:
+
+| Parameter | Type | Description |
+|---|---|---|
+| `extraClasses` | `String?` | Additional CSS classes, merged safely (no duplicates) |
+| `attrs` | `(TAG.() -> Unit)?` | Direct access to the underlying kotlinx.html tag |
+| `content` | `(TAG.() -> Unit)?` | Nested HTML content (not all components) |
+
+---
+
+## Core utility
+
+### `addClassNames` — `io.github.ollin.kdaisyui.core`
+
+```kotlin
+fun Tag.addClassNames(vararg classNames: String)
+fun Tag.addClassNames(classNames: String?)
+```
+
+Merges CSS class tokens into the `class` attribute safely: deduplicates, handles null and whitespace, preserves insertion order. Used internally by all components. Also available for raw kotlinx.html elements:
+
+```kotlin
+div {
+    addClassNames("flex items-center gap-4")
+}
+```
+
 ## Architecture: thin wrappers, not abstractions
 
 Each kdaisyui component function is a thin wrapper around the corresponding HTML tag:
@@ -173,3 +202,9 @@ The server is the single source of truth for all UI rendering. There is no clien
 The result is a fully styled, interactive application rendered entirely on the server — the DevTrack example app included in this repository:
 
 ![DevTrack — full page rendered by Ktor + kdaisyui + htmx](screenshots/full-page.png)
+
+## Requirements
+
+- JDK: see [`.tool-versions`](../.tool-versions) → `java` (toolchain configured in [`buildSrc/.../kdaisyui.kotlin-library-conventions.gradle.kts`](../buildSrc/src/main/kotlin/kdaisyui.kotlin-library-conventions.gradle.kts))
+- Kotlin: see [`gradle/libs.versions.toml`](../gradle/libs.versions.toml) → `kotlin`
+- kotlinx-html: see [`gradle/libs.versions.toml`](../gradle/libs.versions.toml) → `kotlinx-html`

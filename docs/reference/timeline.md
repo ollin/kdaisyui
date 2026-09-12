@@ -1,3 +1,9 @@
+<!--
+GENERATED — DO NOT EDIT
+Source: daisyui/packages/docs/src/routes/(routes)/components/timeline/+page.md
+Regenerate: just generate
+-->
+
 # Timeline
 
 [DaisyUI documentation →](https://daisyui.com/components/timeline/)
@@ -6,6 +12,7 @@ Vertical or horizontal timeline. Renders `<ul class="timeline ...">`.
 
 ```kotlin
 fun FlowContent.daisyTimeline(
+    id: HtmlId? = null,
     box: Boolean = false,
     compact: Boolean = false,
     horizontal: Boolean = false,
@@ -19,6 +26,7 @@ fun FlowContent.daisyTimeline(
 
 ```kotlin
 fun FlowContent.daisyTimelineStart(
+    id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -27,6 +35,7 @@ fun FlowContent.daisyTimelineStart(
 
 ```kotlin
 fun FlowContent.daisyTimelineMiddle(
+    id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -35,6 +44,7 @@ fun FlowContent.daisyTimelineMiddle(
 
 ```kotlin
 fun FlowContent.daisyTimelineEnd(
+    id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

@@ -45,7 +45,7 @@ require an empty diff.
 - [ ] 2.2 `codegen/src/index-new.js` → `.ts` (refactoring)
 - [ ] 2.3 `codegen/src/index-heroicons.js` → `.ts` (refactoring)
 - [ ] 2.4 `codegen/src/classifier.js`, `generator-new.js`, `generator-heroicons.js` → `.ts` (refactoring; one commit each if any needs real thought, one commit total if they are mechanical)
-- [~] 2.5 `codegen/src/parser/*.js` → `.ts` — frontmatter, llms-txt, svg-heroicons (refactoring) — **the highest-value annotations in the change**: this is the boundary where hand-written YAML from a submodule becomes typed data, and where every defect found so far actually lived
+- [x] 2.5 `codegen/src/parser/*.js` → `.ts` — frontmatter, llms-txt, svg-heroicons (refactoring) — **the highest-value annotations in the change**: this is the boundary where hand-written YAML from a submodule becomes typed data, and where every defect found so far actually lived. **Confirmed.** All three ported; every one had a JSDoc `@typedef` describing shapes that nothing checked, and converting those was the bulk of the value. `html-names.ts` was added because brands are nominal and two `TagName` declarations would be two incompatible types.
 
   **`svg-heroicons.ts` done, taken out of order** to test branded types on the smallest file
   where two string KINDS coexist. `KebabName` / `PascalName`, two casts, and `IconPaths`
@@ -63,7 +63,12 @@ require an empty diff.
   made it measurable.* Its remedy is Object Calisthenics rule 3, and branding
   `ComponentName` / `PascalComponentName` cleared it (7.02 → 7.24).
 
-  Remaining: `llms-txt.js`.
+  **`llms-txt.ts` done.** Its `ElementRule.elements` / `primaryElement` turned out to be TAG
+  names — the concept `test-generator.ts` had already branded — which is what forced
+  `html-names.ts` into existence. Its `ComponentName` is the same identifier as the
+  directory name on disk, and the type now says so.
+
+  Section 2.5 complete.
 
 - [ ] 2.6 Refactor `parseYamlFrontmatter` — cc 32, nesting depth 5, eight bumps — and `parseValue` — cc 10 plus a complex conditional (refactoring) — **pre-existing complexity, surfaced not caused by the port.** A hand-rolled YAML reader in one loop with four mutable locals; the same shape `parseTestCases` had before `test-and-clean-codegen` split it, and the same fix applies. Deliberately NOT done inside a rename commit, where the byte-identical criterion could not distinguish a port from a restructuring. Write characterization tests first: this file currently has none.
 

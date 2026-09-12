@@ -5,15 +5,28 @@ on; a red result there rewrites the plan rather than being worked around.
 
 ## 1. Check the assumptions before building on them
 
-- [ ] 1.1 `. r (internal)` Assert in a codegen unit test that the current `noContent` list is
-  exactly the set of components whose element is void. Green says deriving loses nothing; red says
-  the rule is too narrow and **the change must be rewritten**.
-- [ ] 1.2 `. r (internal)` Assert that the docs route — the tag carrying `$$<componentClass>` in a
-  fenced ```html block of `+page.md` — yields an element for all 66 components, and that it
-  disagrees with the generator exactly three times (`otp`, `tab`, `calendar`). A fourth
-  disagreement is a finding that belongs in the proposal before the guard lands.
-- [ ] 1.3 `. r (internal)` Assert that exactly two config entries are unreachable, both in
-  `noContent`. More would mean the consumption guard cannot land green.
+**Corrected before starting.** These were written as codegen unit tests. They cannot be: all three
+are statements about the real DaisyUI submodule, and `codegen-tests` runs **without submodules** by
+an explicit decision whose comment names this exact situation — *"If this job ever needs either,
+that is the signal that the tests have drifted into integration territory which
+generated-sources-drift already covers end to end."* A test that skips when the submodule is absent
+is a test that does not run in CI, which is worse than none.
+
+All three are also one-time facts about the current tree: 1.1 and 1.3 describe a config section
+this change deletes, so no permanent test could outlive them.
+
+So Section 1 is **measurement, recorded in `design.md`**, with throwaway probes under `./tmp/`. The
+parts that deserve to be permanent are guards inside the generator, exercised by
+`generated-sources-drift`, which does have the submodule — see 3.2.
+
+- [ ] 1.1 `. d` Measure: is the `noContent` list exactly the set of components whose element is
+  void? Anything else means the rule is too narrow and **the change must be rewritten**.
+- [ ] 1.2 `. d` Measure: does the docs route — the tag carrying `$$<componentClass>` in a fenced
+  ```html block of `+page.md` — yield an element for all 66, and disagree with the generator
+  exactly three times (`otp`, `tab`, `calendar`)? A fourth disagreement belongs in the proposal
+  before the guard lands.
+- [ ] 1.3 `. d` Measure: are exactly two config entries unreachable, both in `noContent`? More
+  would mean the consumption guard cannot land green.
 
 ## 2. The void-element rule
 
@@ -34,6 +47,12 @@ on; a red result there rewrites the plan rather than being worked around.
   `modal` (`<dialog>`) — three of the nine the old route could not answer.
 - [ ] 3.2 `^ F (internal)` Fail generation when the chosen element disagrees and no exception is
   recorded, naming component, chosen and documented element.
+- [ ] 3.2a `^ F (internal)` Fail generation when the docs route has **no opinion** for a component.
+  Added by the section 1 correction: the measurement that it answers all 66 today is a fact about
+  today, and a future component whose docs page carries no `$$`-marked example would leave the
+  cross-check silently unable to check it — the precise failure this change exists to end. This is
+  the permanent form of task 1.2, and it lives here because `generated-sources-drift` has the
+  submodule that `codegen-tests` deliberately does not.
 - [ ] 3.3 `^ F (internal)` Fail generation on an exception that is no longer needed, so the list
   cannot accumulate.
 - [ ] 3.4 `. d` Record the `tab` and `calendar` exceptions with a reason and a tracking issue each.

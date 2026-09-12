@@ -105,8 +105,15 @@ require an empty diff.
 
 ## 3. Make the new constraints enforceable by something other than memory
 
-- [ ] 3.1 Record the erasable-syntax rules in `codegen/README.md` or `AGENTS.md` — no `enum`/`namespace`/parameter properties/decorators, `import type` mandatory, `.ts` extensions mandatory in specifiers (documentation)
-- [ ] 3.2 Confirm `just generate` runs end to end from a clean checkout and that `generated-sources-drift` is green in CI (documentation; evidence into the change)
+- [x] 3.1 Record the erasable-syntax rules in `codegen/README.md` or `AGENTS.md` — no `enum`/`namespace`/parameter properties/decorators, `import type` mandatory, `.ts` extensions mandatory in specifiers (documentation) — written into the `kdaisyui-codegen` skill, split by how each rule FAILS (loudly at startup vs silently at runtime), plus a section on where types actually paid so "add more types" is not the lesson taken away. Seventeen stale `.js` paths in that skill were corrected. `AGENTS.md` gets the short form.
+- [x] 3.2 Confirm `just generate` runs end to end from a clean checkout and that `generated-sources-drift` is green in CI (documentation; evidence into the change) — written to `results.md`. All four generators re-run, tree clean, **390 files byte-identical**. `check --warning-mode all` green with `Problems: 0`; koverVerify 100%; `checkKotlinAbi` unchanged; `:lib:pitest` still 100% test strength; 32 codegen tests.
+
+  **The change-set gate fails against `main`, and the reason belongs in the record:**
+  `frontmatter.ts` reports Primitive Obsession and String Heavy Arguments at 51.4% with
+  `value-before: 0`. A zero baseline does not mean the code was clean — it means it was
+  **unmeasurable**, because the `.js` file had no annotations for CodeScene to read. The
+  per-commit safeguard, comparing `.ts` to `.ts`, calls the same work **improved** with five
+  categories fixed. Both scans are right about different things.
 
 ## Explicitly NOT in this change
 

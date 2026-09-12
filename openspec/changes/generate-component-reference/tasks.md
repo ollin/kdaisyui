@@ -19,7 +19,7 @@ generator is wired into the build.
 
 ## 2. Enabling refactorings — generated Kotlin stays byte-identical
 
-- [ ] 2.1 `. r (internal)` Pin the current Kotlin output: confirm `just generate` leaves
+- [x] 2.1 `. r (internal)` Pin the current Kotlin output: confirm `just generate` leaves
   `lib/generated/**` unchanged, so every later task has a zero-diff baseline to prove against.
 - [ ] 2.2 `^ r (internal)` Extract from the Kotlin emitter whatever the Markdown emitter also
   needs — the per-function rendered tag, receiver type, parameter list and defaults — into a

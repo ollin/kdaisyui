@@ -107,7 +107,10 @@ function mainFunctionBody(
   componentConfig: ComponentConfig,
 ): string {
   const { prefix } = classified
-  const { extras, hasTextParam, noContent, role, inputType } = componentConfig
+  const { extras, hasTextParam, role, inputType } = componentConfig
+  // The body follows the SIGNATURE rather than re-deriving the rule: if the shape declares no
+  // `content` parameter, there is nothing to call, and the two can never disagree.
+  const takesContent = shape.parameters.some(parameter => parameter.name === 'content')
 
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
@@ -125,7 +128,7 @@ function mainFunctionBody(
 
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')
-  if (!noContent) lines.push(...contentLines(hasTextParam))
+  if (takesContent) lines.push(...contentLines(hasTextParam))
 
   return lines.join('\n')
 }

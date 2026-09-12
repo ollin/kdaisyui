@@ -467,7 +467,7 @@ function mainFunctionShape(
   element: TagClass,
   componentConfig: ComponentConfig,
 ): FunctionShape {
-  const { hasTextParam, noContent } = componentConfig
+  const { hasTextParam } = componentConfig
 
   // Declaration order, which the generated signatures and their doc comments both follow.
   const parameters: ParameterShape[] = [
@@ -478,7 +478,9 @@ function mainFunctionShape(
     ...extraParameters(componentConfig.extras),
     EXTRA_CLASSES_PARAMETER,
     attrsParameter(element),
-    ...(noContent ? [] : [contentParameter(element, hasTextParam)]),
+    // Derived from the element, not configured: an element the HTML specification calls void
+    // cannot hold children, so offering a lambda that writes some is offering a lie.
+    ...(isVoidElement(element) ? [] : [contentParameter(element, hasTextParam)]),
   ]
 
   return {

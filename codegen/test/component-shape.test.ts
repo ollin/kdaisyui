@@ -154,10 +154,33 @@ describe('buildComponentShape', () => {
     assert.equal(optional.functions[0].parameters.at(-1)?.type, '(DIV.() -> Unit)?')
   })
 
-  test('noContent drops the content parameter entirely', () => {
-    const shape = buildComponentShape(classified(), { componentDir: 'card', element: 'DIV' }, { noContent: ['card'] })
+  test('a void element takes no content parameter, whatever the config says', () => {
+    // The three defects this replaced: `file-input` and `theme-controller` were listed under a
+    // key the lookup never used, and `mask` — an <img> — was never listed at all.
+    for (const element of ['INPUT', 'IMG', 'BR', 'HR']) {
+      const shape = buildComponentShape(classified(), { componentDir: 'x', element }, {})
+      assert.deepEqual(
+        names(shape.functions[0].parameters),
+        ['id', 'extraClasses', 'attrs'],
+        `<${element.toLowerCase()}> must not take content`,
+      )
+    }
+  })
 
-    assert.deepEqual(names(shape.functions[0].parameters), ['id', 'extraClasses', 'attrs'])
+  test('an element that may have children keeps its content parameter', () => {
+    for (const element of ['DIV', 'LABEL', 'SELECT', 'TEXTAREA']) {
+      const shape = buildComponentShape(classified(), { componentDir: 'x', element }, {})
+      assert.ok(
+        names(shape.functions[0].parameters).includes('content'),
+        `<${element.toLowerCase()}> must take content`,
+      )
+    }
+  })
+
+  test('a void element suppresses content even where a text shortcut exists', () => {
+    const shape = buildComponentShape(classified(), { componentDir: 'card', element: 'INPUT' }, { textParams: ['card'] })
+
+    assert.deepEqual(names(shape.functions[0].parameters), ['text', 'id', 'extraClasses', 'attrs'])
   })
 
   test('reports componentAttributes as the main function static attributes', () => {

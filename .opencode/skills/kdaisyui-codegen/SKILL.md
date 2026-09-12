@@ -1,16 +1,18 @@
 ---
 name: kdaisyui-codegen
 description: >-
-  Changing how kdaisyui components, icons or component tests are generated - the codegen-config.json
-  knobs, the classifier, the three generator entry points, adding a DaisyUI component, or fixing a
-  wrong CSS-class-to-Kotlin mapping. NOT for merely using the generated components.
+  Changing how kdaisyui components, icons, component tests or the docs/reference pages are
+  generated - the codegen-config.json knobs, the classifier, the five generator entry points,
+  adding a DaisyUI component, or fixing a wrong CSS-class-to-Kotlin mapping. NOT for merely using
+  the generated components.
 ---
 
 # kdaisyui — Codegen
 
-All components, the Heroicons wrappers and most component tests are **generated**. Hand-written
-Kotlin exists only in `lib/src/main/kotlin/io/github/ollin/kdaisyui/core/` (`ClassNames.kt`,
-`TagId.kt`) and `ktor-integration/`.
+All components, the Heroicons wrappers, most component tests **and every page under
+`docs/reference/`** are **generated**. Hand-written Kotlin exists only in
+`lib/src/main/kotlin/io/github/ollin/kdaisyui/core/` (`ClassNames.kt`, `TagId.kt`) and
+`ktor-integration/`.
 
 ## Generation is wired into the build — you rarely run it by hand
 
@@ -21,18 +23,25 @@ From `lib/build.gradle.kts`:
 | `generateComponents` | `codegen/src/index-new.ts` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/components/` |
 | `generateHeroicons` | `codegen/src/index-heroicons.ts` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/icons/` |
 | `generateComponentTests` | `codegen/src/test-generator.ts` | `lib/generated/test/kotlin/io/github/ollin/kdaisyui/components/` |
+| `generateHeroiconTests` | `codegen/src/test-generator-heroicons.ts` | `lib/generated/test/kotlin/io/github/ollin/kdaisyui/icons/` |
+| `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/` |
+
+The fifth is the only one that is not Kotlin, and the only one writing outside `lib/`. It reads
+the same parsed frontmatter and the same classified model as `generateComponents`, which is the
+point: a component whose rendered element changes cannot update one without the other.
 
 That output is **committed**, and **compilation does not depend on these tasks**. A clone
 builds and tests with no Node, no npm and no git submodules; only regeneration needs them:
 
 ```
-just generate      # all three tasks, then shows the resulting diff
+just generate      # all five tasks, then shows the resulting diff
 ```
 
 What keeps the committed output honest is CI's `generated-sources-drift` job: it regenerates
-and fails if `lib/generated` changed. So the loop is regenerate → review the diff → commit it.
+and fails if `lib/generated` **or `docs/reference`** changed. So the loop is regenerate → review
+the diff → commit it.
 
-So **no build regenerates** — `just generate` is the only way, and it drives the same three
+So **no build regenerates** — `just generate` is the only way, and it drives the same five
 Gradle tasks rather than a separate npm path.
 
 Submodules are pinned and checked out automatically: `checkoutDaisyuiTag` and
@@ -127,10 +136,39 @@ Consumers never hardcode class strings — they use the enums, or `extraClasses`
 
 ## Never edit generated files
 
-`lib/generated/**` is committed and readable — deliberately, so the API and every DaisyUI
-bump can be reviewed. It is still not yours to edit: `just generate` overwrites it wholesale,
-and CI's `generated-sources-drift` job fails any commit that hand-edited it. Change the
-pipeline instead.
+`lib/generated/**` **and `docs/reference/**`** are committed and readable — deliberately, so the
+API, its documentation and every DaisyUI bump can be reviewed. Neither is yours to edit: `just
+generate` overwrites both wholesale, and CI's `generated-sources-drift` job fails any commit that
+hand-edited either. Change the pipeline instead.
+
+`docs/reference/` joined that list on 2026-09-12 after five days in which
+`docs/reference/megamenu.md` documented a `DIV` lambda receiver for a function taking a `SPAN`,
+and shipped wrong in v0.4.0. Every page carries a `<!-- GENERATED — DO NOT EDIT -->` comment
+naming the DaisyUI source it came from.
+
+`docs/reference.md` — the singular file, the hand-written entry point — is **not** generated.
+Neither is anything else under `docs/`.
+
+### The one fact on a page that is not derivable
+
+A page's one-line editorial description is hand-written and lives in
+`codegen-config.json` → `docSummaries`, keyed by DaisyUI's **directory** name (`file-input`):
+
+```json
+"docSummaries": {
+  "card": { "summary": "Content containers with body and title" },
+  "megamenu": { "summary": "Horizontal menu with popover navigation blocks", "description": "…" }
+}
+```
+
+`summary` is the index-table cell and the page's opening sentence; the optional `description` is a
+longer opening paragraph, used by three components. A component with no entry falls back to the
+first sentence of DaisyUI's own `desc` and the generator warns — so a DaisyUI bump is never
+blocked, but a new component wants a summary added.
+
+All 66 descriptions were hand-written: **none** matched DaisyUI's `desc`. Do not "simplify" this
+away by using the frontmatter text; `index.md` is a 66-row table with a one-cell Description
+column and some DaisyUI descriptions run to 48 words.
 
 ## The codegen is TypeScript, run directly by Node — no build step
 
@@ -195,10 +233,25 @@ defect that prompted the port. What pays:
 | Component needs a second wrapper / an alternative construction method | → `customParts` |
 | Main component must always carry an attribute (e.g. `popover`) | → `componentAttributes` |
 | A sub-component part must be a specific element | → `subComponentElements` |
+| A reference page's one-line description is wrong or missing | → `docSummaries` |
 | CSS class lands in the wrong category | `codegen/src/classifier.ts` |
+| **What functions a component has, their parameters or their element** | `codegen/src/component-shape.ts` |
 | Kotlin output shape is wrong | `codegen/src/generator-new.ts` |
+| Reference page layout is wrong | `codegen/src/generator-docs.ts` |
 | Generated tests are wrong | `codegen/src/test-generator.ts` |
 | Icon output is wrong | `codegen/src/generator-heroicons.ts` |
+
+**`component-shape.ts` is the one to reach for first.** It answers *what* a component's API is —
+functions, parameters, defaults, the element each renders — and both emitters render from it.
+Changing a parameter list there changes the Kotlin and the documentation together, which is the
+whole reason it exists. `generator-new.ts` and `generator-docs.ts` only decide how their language
+says it.
+
+Three element names live on the shape and they are not interchangeable: `element` is the
+kotlinx.html tag CLASS (`FIELDSET`, also the lambda receiver type), `tagBuilder` is the builder
+the generated Kotlin calls (`fieldSet`), and `htmlTag` is the actual HTML element prose must name
+(`fieldset`). All three are branded, because picking the wrong one produces a plausible value
+rather than an error.
 
 `extras` entries are full code fragments, not flags:
 
@@ -301,8 +354,13 @@ daisyui/packages/docs/src/routes/(routes)/components/<name>/+page.md   (YAML fro
   → codegen/src/parser/frontmatter.ts
   → codegen/src/parser/llms-txt.ts      (element rules from DaisyUI llms.txt)
   → codegen/src/classifier.ts           (colors / sizes / styles / modifiers / parts)
-  → codegen/src/generator-new.ts
+  → codegen/src/component-shape.ts      (what the API IS: functions, parameters, elements)
+      ├→ codegen/src/generator-new.ts     → lib/generated/**  (Kotlin)
+      └→ codegen/src/generator-docs.ts    → docs/reference/**  (Markdown, + docSummaries)
 ```
+
+The fork at `component-shape.ts` is the load-bearing part: both emitters read one description of
+the API, so they cannot disagree about it.
 
 Heroicons runs a separate path: `parser/svg-heroicons.ts` → `generator-heroicons.ts`.
 
@@ -310,7 +368,10 @@ Heroicons runs a separate path: `parser/svg-heroicons.ts` → `generator-heroico
 
 1. `mcp_Gradle_gradle` → `:lib:generateComponents` (compiling no longer regenerates — the
    build reads the committed sources), or run configuration `kdaisyUI [:lib:generateComponents]`
-2. `:lib:test`
-3. Inspect the produced file under `lib/generated/…` — read only, never edit
-4. Review `git diff -- lib/generated` and commit it. An unreviewed regeneration diff is the
-   thing this layout exists to prevent, and CI fails if you leave it uncommitted
+2. `:lib:testCodegen` — the codegen's own unit tests, which pin the shape both emitters read
+3. `:lib:test`
+4. `:lib:generateReferenceDocs` whenever the change can reach a signature, an element or a
+   parameter — which is nearly always, since the pages document exactly those
+5. Inspect the produced files under `lib/generated/…` and `docs/reference/…` — read only, never edit
+6. Review `git diff -- lib/generated docs/reference` and commit it. An unreviewed regeneration
+   diff is the thing this layout exists to prevent, and CI fails if you leave it uncommitted

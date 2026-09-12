@@ -10,12 +10,24 @@ holds one line, the project version.
 
 ## The one rule
 
-**Components, icons and most tests are GENERATED.** Never edit anything under
-`lib/generated/**`. It *is* committed and it *is* readable — that is the point, it is how the
-API and a DaisyUI bump become reviewable — but it is overwritten wholesale by `just generate`,
-and CI's `generated-sources-drift` job fails any commit whose generated output no longer
-matches its inputs. A hand edit therefore does not survive and does not merge. Change the
-codegen pipeline instead → skill **`kdaisyui-codegen`**.
+**Components, icons, most tests and the per-component reference pages are GENERATED.** Never
+edit anything under `lib/generated/**` or `docs/reference/**`. Both *are* committed and *are*
+readable — that is the point, it is how the API, its documentation and a DaisyUI bump become
+reviewable — but both are overwritten wholesale by `just generate`, and CI's
+`generated-sources-drift` job fails any commit whose generated output no longer matches its
+inputs. A hand edit therefore does not survive and does not merge. Change the codegen pipeline
+instead → skill **`kdaisyui-codegen`**.
+
+`docs/reference/**` joined that rule on 2026-09-12, and the reason is worth keeping: while the
+pages were hand-written, five of the 66 named a CSS class DaisyUI does not ship (`button.md` said
+`class="button"`, not `btn`), `megamenu.md` documented a `DIV` lambda receiver for a function
+taking a `SPAN` and shipped that way in v0.4.0, four pages were missing five functions between
+them, and no signature on any page mentioned the `id` parameter every function takes. Nothing
+failed, because nothing checked them.
+
+Note the singular: **`docs/reference.md`** is the hand-written entry point and is NOT generated.
+Nothing else under `docs/` is either. One editorial fact per page is hand-written too — its
+one-line description, in `codegen-config.json` → `docSummaries`.
 
 The build does **not** run the generators: a clone compiles and tests with no Node, no npm and no
 git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
@@ -152,7 +164,7 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 ## Anti-patterns
 
-- Editing `lib/generated/**`
+- Editing `lib/generated/**` or `docs/reference/**`
 - Hardcoding CSS class strings instead of using the generated enums
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
 - Assuming there is no release automation — there is, see `kdaisyui-release`

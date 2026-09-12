@@ -64,15 +64,15 @@ Landed first and on its own, so the build wiring is provable before anything dep
 
 ## 2. The void-element rule
 
-- [ ] 2.1 `^ r (internal)` Add the void-element set to `component-shape.ts` with a comment naming
+- [x] 2.1 `^ r (internal)` Add the void-element set to `component-shape.ts` with a comment naming
   the HTML specification, and a predicate on `TagClass`. Nothing reads it yet.
-- [ ] 2.2 `^ B (internal)` Derive the content parameter from the element instead of
+- [x] 2.2 `^ B (internal)` Derive the content parameter from the element instead of
   `ComponentConfig.noContent`. Test first: the failing assertion is that `daisyMask`,
   `daisyFileInput` and `daisyThemeController` declare no `content`.
-- [ ] 2.3 `. d` Delete the `noContent` section from `codegen-config.json`.
-- [ ] 2.4 `^ B` Regenerate; read the diff — three component files and their tests lose a parameter,
+- [x] 2.3 `. d` Delete the `noContent` section from `codegen-config.json`.
+- [x] 2.4 `^ B` Regenerate; read the diff — three component files and their tests lose a parameter,
   nothing else. Commit generated Kotlin and tests.
-- [ ] 2.5 `^ B` Regenerate `docs/reference/` and commit.
+- [x] 2.5 `^ B` Regenerate `docs/reference/` and commit.
 
 ## 3. The element cross-check
 

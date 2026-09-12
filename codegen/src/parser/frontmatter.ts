@@ -77,120 +77,162 @@ export function parseFrontmatter(content: string): FrontmatterData | null {
   return parseYamlFrontmatter(match[1])
 }
 
-function parseYamlFrontmatter(yaml) {
-  const result = {}
-  const lines = yaml.split('\n')
-  let currentKey = null
-  let currentCategory = null
-  let currentObject = null
-  
-  for (const line of lines) {
-    const trimmed = line.trim()
-    if (!trimmed) continue
-    
-    const lineIndent = line.search(/\S/)
-    const isTopLevel = lineIndent === 0
-    const isSecondLevel = lineIndent === 2
-    const isThirdLevel = lineIndent === 4
-    
-    if (isTopLevel) {
-      const colonIndex = trimmed.indexOf(':')
-      if (colonIndex === -1) continue
-      
-      const key = trimmed.slice(0, colonIndex).trim()
-      const value = trimmed.slice(colonIndex + 1).trim()
-      
-      if (value) {
-        result[key] = parseValue(value)
-        currentKey = null
-        currentCategory = null
-      } else {
-        currentKey = key
-        if (key === 'classnames') {
-          result[key] = {}
-        } else {
-          result[key] = []
-        }
-      }
-    } else if (isSecondLevel && currentKey === 'classnames') {
-      if (trimmed.startsWith('- ')) {
-        const itemText = trimmed.slice(2).trim()
-        if (itemText.includes(':')) {
-          const obj = {}
-          const colonIndex = itemText.indexOf(':')
-          const key = itemText.slice(0, colonIndex).trim()
-          const value = itemText.slice(colonIndex + 1).trim()
-          obj[key] = parseValue(value)
-          if (currentCategory && result.classnames[currentCategory]) {
-            result.classnames[currentCategory].push(obj)
-            currentObject = obj
-          }
-        } else {
-          if (currentCategory && result.classnames[currentCategory]) {
-            result.classnames[currentCategory].push({ class: parseValue(itemText) })
-            currentObject = null
-          }
-        }
-      } else {
-        const colonIndex = trimmed.indexOf(':')
-        if (colonIndex === -1) continue
-        const key = trimmed.slice(0, colonIndex).trim()
-        result.classnames[key] = []
-        currentCategory = key
-        currentObject = null
-      }
-    } else if (isThirdLevel && currentKey === 'classnames') {
-      if (trimmed.startsWith('- ')) {
-        const itemText = trimmed.slice(2).trim()
-        if (itemText.includes(':')) {
-          const obj = {}
-          const colonIndex = itemText.indexOf(':')
-          const key = itemText.slice(0, colonIndex).trim()
-          const value = itemText.slice(colonIndex + 1).trim()
-          obj[key] = parseValue(value)
-          if (currentCategory && result.classnames[currentCategory]) {
-            result.classnames[currentCategory].push(obj)
-            currentObject = obj
-          }
-        } else {
-          if (currentCategory && result.classnames[currentCategory]) {
-            result.classnames[currentCategory].push({ class: parseValue(itemText) })
-            currentObject = null
-          }
-        }
-      } else if (trimmed.includes(':') && currentObject) {
-        const colonIndex = trimmed.indexOf(':')
-        const key = trimmed.slice(0, colonIndex).trim()
-        const value = trimmed.slice(colonIndex + 1).trim()
-        currentObject[key] = parseValue(value)
-      }
-    } else if (isThirdLevel && currentObject) {
-      const colonIndex = trimmed.indexOf(':')
-      if (colonIndex !== -1) {
-        const key = trimmed.slice(0, colonIndex).trim()
-        const value = trimmed.slice(colonIndex + 1).trim()
-        currentObject[key] = parseValue(value)
-      }
-    } else if (isSecondLevel && Array.isArray(result[currentKey])) {
-      if (trimmed.startsWith('- ')) {
-        result[currentKey].push(parseValue(trimmed.slice(2).trim()))
-      }
-    }
+/**
+ * Where the reader is in the document.
+ *
+ * These four were loose locals threaded through one loop, which is what made the function
+ * cc 32 with eight bumps: every branch could touch any of them, so none could be read
+ * without simulating the whole scan. Collected here, each handler below states exactly
+ * which parts of the position it moves.
+ */
+interface Scan {
+  result: FrontmatterData
+  /** The top-level key currently open, or null after a scalar. */
+  currentKey: string | null
+  /** The `classnames` category currently open. */
+  currentCategory: string | null
+  /** The list item currently open, which indented `key: value` lines extend. */
+  currentObject: Record<string, YamlScalar> | null
+}
+
+/** `key: value` split on the FIRST colon, so a value may contain colons. URLs do. */
+function splitOnFirstColon(text: string): { key: string; value: string } | null {
+  const colonIndex = text.indexOf(':')
+  if (colonIndex === -1) return null
+  return {
+    key: text.slice(0, colonIndex).trim(),
+    value: text.slice(colonIndex + 1).trim(),
   }
-  
-  return result
+}
+
+function startTopLevelKey(scan: Scan, key: string): void {
+  scan.currentKey = key
+  // `classnames` is the only mapping; every other block key is a list. Note this ALSO
+  // makes an empty `tags:` an empty array rather than an empty string, which the tests pin.
+  scan.result[key] = key === 'classnames' ? {} : []
+  scan.currentCategory = null
+}
+
+function setTopLevelScalar(scan: Scan, key: string, value: string): void {
+  scan.result[key] = parseValue(value)
+  scan.currentKey = null
+  scan.currentCategory = null
+}
+
+/**
+ * A `- ` entry under a `classnames` category.
+ *
+ * This was written out TWICE, once for indent 2 and once for indent 4, character for
+ * character. Collapsing the duplication is most of what this refactoring does — the two
+ * copies were four of the function's eight bumps.
+ */
+function pushCategoryItem(scan: Scan, itemText: string): void {
+  const category = scan.currentCategory
+  const categories = scan.result.classnames as Record<string, Record<string, YamlScalar>[]>
+  // An item before any category has nowhere to go and is dropped, as it always was.
+  if (!category || !categories?.[category]) return
+
+  const pair = splitOnFirstColon(itemText)
+  const item = pair ? { [pair.key]: parseValue(pair.value) } : { class: parseValue(itemText) }
+  categories[category].push(item)
+  // Only a `key: value` item can be extended by the indented lines that follow it.
+  scan.currentObject = pair ? item : null
+}
+
+function startCategory(scan: Scan, key: string): void {
+  ;(scan.result.classnames as Record<string, unknown>)[key] = []
+  scan.currentCategory = key
+  scan.currentObject = null
+}
+
+function extendCurrentObject(scan: Scan, trimmed: string): void {
+  const pair = splitOnFirstColon(trimmed)
+  if (pair && scan.currentObject) scan.currentObject[pair.key] = parseValue(pair.value)
+}
+
+/** The text of a `- ` list entry. */
+function itemTextOf(trimmed: string): string {
+  return trimmed.slice(2).trim()
+}
+
+function scanTopLevel(scan: Scan, trimmed: string): void {
+  const pair = splitOnFirstColon(trimmed)
+  if (!pair) return
+  if (pair.value) setTopLevelScalar(scan, pair.key, pair.value)
+  else startTopLevelKey(scan, pair.key)
+}
+
+function scanSecondLevel(scan: Scan, trimmed: string): void {
+  const isItem = trimmed.startsWith('- ')
+
+  if (scan.currentKey === 'classnames') {
+    if (isItem) return pushCategoryItem(scan, itemTextOf(trimmed))
+    const pair = splitOnFirstColon(trimmed)
+    if (pair) startCategory(scan, pair.key)
+    return
+  }
+
+  const openList = scan.result[scan.currentKey as string]
+  if (isItem && Array.isArray(openList)) openList.push(parseValue(itemTextOf(trimmed)))
+}
+
+function scanThirdLevel(scan: Scan, trimmed: string): void {
+  if (scan.currentKey === 'classnames' && trimmed.startsWith('- ')) {
+    return pushCategoryItem(scan, itemTextOf(trimmed))
+  }
+  if (scan.currentObject) extendCurrentObject(scan, trimmed)
+}
+
+/**
+ * Takes the RAW line and trims it itself, rather than accepting both forms.
+ *
+ * Two `string` parameters holding the same line in different states is a swap waiting to
+ * happen, and a silent one: `search(/\S/)` on an already-trimmed line is always 0, so every
+ * line would look top-level and the whole document would parse as scalars. One parameter
+ * makes that unwritable.
+ */
+function scanLine(scan: Scan, line: string): void {
+  const trimmed = line.trim()
+  if (!trimmed) return
+
+  // Dispatch is on EXACTLY 0, 2 or 4 — a line indented six spaces matches nothing and is
+  // silently dropped. Pinned by test; preserved here deliberately.
+  const indent = line.search(/\S/)
+  if (indent === 0) return scanTopLevel(scan, trimmed)
+  if (indent === 2) return scanSecondLevel(scan, trimmed)
+  if (indent === 4) return scanThirdLevel(scan, trimmed)
+}
+
+function parseYamlFrontmatter(yaml: string): FrontmatterData {
+  const scan: Scan = { result: {}, currentKey: null, currentCategory: null, currentObject: null }
+
+  for (const line of yaml.split('\n')) scanLine(scan, line)
+
+  return scan.result
+}
+
+/** Wrapped in a matching pair of single or double quotes. */
+function isQuoted(value: string): boolean {
+  return (
+    (value.startsWith("'") && value.endsWith("'")) ||
+    (value.startsWith('"') && value.endsWith('"'))
+  )
+}
+
+/**
+ * Numeric to YAML's eye. `Number('')` is 0, so the emptiness check is load-bearing rather
+ * than defensive — without it an all-whitespace value would parse as the number zero.
+ */
+function isNumeric(value: string): boolean {
+  return value.trim() !== '' && !isNaN(Number(value))
 }
 
 function parseValue(value: string): YamlScalar {
   if (!value) return ''
-  if ((value.startsWith("'") && value.endsWith("'")) ||
-      (value.startsWith('"') && value.endsWith('"'))) {
-    return value.slice(1, -1)
-  }
+  if (isQuoted(value)) return value.slice(1, -1)
   if (value === 'true') return true
   if (value === 'false') return false
-  const num = Number(value)
-  if (!isNaN(num) && value.trim() !== '') return num
+  if (isNumeric(value)) return Number(value)
   return value
 }
 

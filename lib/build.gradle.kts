@@ -304,6 +304,29 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     outputs.dir(outputDir)
 }
 
+// The fifth generated output, and the only one that is not Kotlin. Its input is the same parsed
+// DaisyUI frontmatter the components come from, so a component whose rendered element changes
+// cannot update one without the other — which is exactly what went wrong before this existed:
+// docs/reference/megamenu.md documented a DIV lambda receiver for five days after the element
+// became a <span>, and shipped that way in v0.4.0.
+//
+// Output lives in docs/, not in this module, because it is repository prose rather than library
+// source. The task still belongs here: it reads the same submodule and the same config.
+tasks.register<Exec>("generateReferenceDocs") {
+    group = "codegen"
+    description = "Regenerate the component reference pages in docs/reference from DaisyUI source"
+    dependsOn(checkoutDaisyuiTag)
+    workingDir = rootProject.file("codegen")
+    val outputDir = rootProject.layout.projectDirectory.dir("docs/reference")
+    doFirst { outputDir.asFile.mkdirs() }
+    commandLine("sh", "-c", "node src/index-docs.ts --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("daisyui/packages/docs"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/codegen-config.json"))
+    outputs.dir(outputDir)
+}
+
 val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     group = "codegen"
     description = "Regenerate Kotlin icon functions from Heroicons SVG source (git submodule)"

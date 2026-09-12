@@ -218,17 +218,36 @@ pitest {
     testStrengthThreshold.set(100)
 }
 
+// The codegen stopped being dependency-free on 2026-09-12: it parses DaisyUI's documented
+// markup with a real HTML parser, because a regex over markup is unreadable and — measured on
+// the three constructs that defeat it — also wrong. So every task that runs Node against
+// `codegen/` installs first.
+//
+// `npm ci`, not `npm install`: it installs exactly what the lockfile pins and fails when
+// `package.json` and the lockfile disagree. A generator whose output is drift-checked cannot
+// have a parser that floats between machines.
+//
+// The cost this reintroduces, named because it was deliberately removed once: regeneration now
+// needs the network on a cold `node_modules`. It does NOT touch the promise that a clone
+// compiles and tests without Node — `check` still runs no generator.
+val installCodegenDeps = tasks.register<Exec>("installCodegenDeps") {
+    group = "codegen"
+    description = "Install the codegen's npm dependencies (needs network on a cold node_modules)"
+    workingDir = rootProject.file("codegen")
+    commandLine("sh", "-c", "npm ci")
+    inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
+    outputs.dir(rootProject.file("codegen/node_modules"))
+}
+
 val generateComponents = tasks.register<Exec>("generateComponents") {
     group = "codegen"
     description = "Regenerate Kotlin components from DaisyUI source (git submodule)"
-    dependsOn(checkoutDaisyuiTag)
+    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
     workingDir = rootProject.file("codegen")
     val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
     val classList = generatedResourcesDir.file("kdaisyui-classes.txt")
     doFirst { outputDir.asFile.mkdirs() }
-    // No `npm install`: the codegen declares no dependencies, so it installed nothing and
-    // only cost a network round-trip. Regeneration now works offline. Add it back here and
-    // in the other two generator tasks if a dependency is ever introduced.
     commandLine(
         "sh", "-c",
         "node src/index-new.ts --output-dir=\"${outputDir.asFile.absolutePath}\"" +
@@ -245,7 +264,7 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
 val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     group = "codegen"
     description = "Regenerate Kotlin component tests from DaisyUI source (git submodule)"
-    dependsOn(checkoutDaisyuiTag)
+    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
     workingDir = rootProject.file("codegen")
     val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/components")
     // The coverage tests are produced by reading the generated components back, so
@@ -268,11 +287,13 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
 // submodules. Only regeneration may need them, and this task is part of that world. CI runs
 // it as its own job, next to `generated-sources-drift`.
 //
-// `node --test` needs no dependency — the runner ships with the Node pinned in
-// `.tool-versions`, which keeps `codegen/package.json` free of dependencies.
+// The test RUNNER still needs no dependency — it ships with the Node pinned in
+// `.tool-versions`. The tests themselves now do, since the modules they import parse HTML,
+// so this installs like the generators do.
 tasks.register<Exec>("testCodegen") {
     group = "codegen"
     description = "Run the codegen unit tests (needs Node; not part of `check`)"
+    dependsOn(installCodegenDeps)
     workingDir = rootProject.file("codegen")
     // Delegates to the npm script rather than repeating `node --test test/`, so the
     // invocation is defined once. CI runs the same `npm test`, and a change to one cannot
@@ -293,7 +314,7 @@ tasks.register<Exec>("testCodegen") {
 val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     group = "codegen"
     description = "Regenerate exhaustive Kotlin icon render tests from Heroicons SVG source (git submodule)"
-    dependsOn(checkoutHeroiconsTag)
+    dependsOn(checkoutHeroiconsTag, installCodegenDeps)
     workingDir = rootProject.file("codegen")
     val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/icons")
     doFirst { outputDir.asFile.mkdirs() }
@@ -315,7 +336,7 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
 tasks.register<Exec>("generateReferenceDocs") {
     group = "codegen"
     description = "Regenerate the component reference pages in docs/reference from DaisyUI source"
-    dependsOn(checkoutDaisyuiTag)
+    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
     workingDir = rootProject.file("codegen")
     val outputDir = rootProject.layout.projectDirectory.dir("docs/reference")
     doFirst { outputDir.asFile.mkdirs() }
@@ -330,7 +351,7 @@ tasks.register<Exec>("generateReferenceDocs") {
 val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     group = "codegen"
     description = "Regenerate Kotlin icon functions from Heroicons SVG source (git submodule)"
-    dependsOn(checkoutHeroiconsTag)
+    dependsOn(checkoutHeroiconsTag, installCodegenDeps)
     workingDir = rootProject.file("codegen")
     val outputDir = generatedMainDir.dir("io/github/ollin/kdaisyui/icons")
     doFirst { outputDir.asFile.mkdirs() }

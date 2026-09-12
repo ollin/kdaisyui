@@ -1,13 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import {
-  getAllComponentDirs,
-  readComponentFrontmatter,
-  type ComponentName,
-} from './parser/frontmatter.ts'
-import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
-import { classifyFromFrontmatter } from './classifier.ts'
-import { buildComponentShape, type ComponentShape } from './component-shape.ts'
+import { readComponentSet } from './component-set.ts'
+import type { ComponentShape } from './component-shape.ts'
 import {
   docFileNameFor,
   generateComponentPage,
@@ -34,23 +28,6 @@ function loadConfig() {
   return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
 }
 
-/**
- * The shape of a component that gets a page, or null for one that does not.
- *
- * The two skip conditions are exactly `index-new.ts`'s, and must stay so: a page has to exist for
- * precisely the components that have a generated Kotlin file, or the index links at nothing.
- */
-function shapeFor(componentName: string, config, elementRules): ComponentShape | null {
-  if (config.skip?.includes(componentName)) return null
-
-  const frontmatter = readComponentFrontmatter(componentName as ComponentName)
-  if (!frontmatter?.classnames?.component?.length) return null
-
-  const classified = classifyFromFrontmatter(frontmatter, componentName as ComponentName)
-  const element = config.componentElements?.[componentName] ?? getElementForComponent(elementRules, componentName)
-  return buildComponentShape(classified, { componentDir: componentName, element }, config)
-}
-
 interface Written {
   readonly shapes: ComponentShape[]
   /** File names written this run, so the stale ones can be told apart. */
@@ -61,12 +38,9 @@ interface Written {
 }
 
 function writeComponentPages(config, docSummaries: Readonly<Record<string, DocSummary>>): Written {
-  const elementRules = parseLlmsTxt()
-  const componentDirs = getAllComponentDirs()
-
-  const documented = componentDirs
-    .map(componentDir => ({ componentDir, shape: shapeFor(componentDir, config, elementRules) }))
-    .filter((entry): entry is { componentDir: string; shape: ComponentShape } => entry.shape !== null)
+  // One shared definition of which components get generated — a page must exist for precisely
+  // the components that have a generated Kotlin file, or the index links at nothing.
+  const { generated: documented, skipped } = readComponentSet(config)
 
   const fileNames = new Set<string>()
   const withoutSummary: string[] = []
@@ -84,7 +58,7 @@ function writeComponentPages(config, docSummaries: Readonly<Record<string, DocSu
   return {
     shapes: documented.map(entry => entry.shape),
     fileNames,
-    skipped: componentDirs.length - documented.length,
+    skipped: skipped.length,
     withoutSummary,
   }
 }

@@ -125,8 +125,13 @@ Landed first and on its own, so the build wiring is provable before anything dep
 - [ ] 6.1 `^ F (internal)` Emit a stable Kotlin signature dump from `ComponentShape` — name,
   receiver, parameter names, types with lambda receivers, order, defaults. Unit-tested for
   stability: same shape in, byte-identical dump out.
-- [ ] 6.2 `^ F (internal)` Add `updateComponentApi` and `checkComponentApi` tasks. `check` depends
-  on the second; **`just generate` must not run the first** — that is what makes it a gate.
+- [ ] 6.2 `^ F (internal)` Add `updateComponentApi` and `checkComponentApi` tasks.
+  **`just generate` must not run the first** — that is what makes it a gate.
+  **Corrected before doing it:** this said `check` depends on the second. It must not.
+  `checkComponentApi` reads the DaisyUI submodule and runs Node, and `AGENTS.md` promises a
+  clone compiles and tests with neither. Wiring it into `check` would break that promise for
+  the sake of a gate — so it lives in CI alongside `generated-sources-drift`, which is where
+  the other submodule-and-Node check already lives, and `check` stays clean.
 - [ ] 6.3 `. d` Commit the baseline `lib/api/components.api`.
 - [ ] 6.4 `^ F (internal)` Add the CI step, alongside `api-baseline` rather than inside it, so an
   erased-by-JVM change and a JVM-visible one are distinguishable in the checks list.

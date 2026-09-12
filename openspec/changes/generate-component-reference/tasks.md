@@ -24,12 +24,17 @@ generator is wired into the build.
 - [ ] 2.2 `^ r (internal)` Extract from the Kotlin emitter whatever the Markdown emitter also
   needs — the per-function rendered tag, receiver type, parameter list and defaults — into a
   shared shape. Verify `lib/generated/**` is byte-identical.
+- [ ] 2.3 `. d` Move the 66 editorial summaries into `codegen-config.json` → `docSummaries`,
+  verbatim from the pages, plus the longer page `description` for the three that have one
+  (`aura`, `megamenu`, `otp`). Pure data move — nothing reads the section yet. Added by the
+  section 1 finding; see `design.md` decision 5.
 
 ## 3. The Markdown emitter
 
 - [ ] 3.1 `^ F (internal)` Emit one component page from the shared shape, with the
-  `GENERATED — DO NOT EDIT` header naming its DaisyUI input. Test against the `card` expectation
-  from 1.1.
+  `GENERATED — DO NOT EDIT` header naming its DaisyUI input. The description comes from
+  `docSummaries`, falling back to the first sentence of the frontmatter `desc` when absent.
+  Test against the `card` expectation from 1.1.
 - [ ] 3.2 `^ F (internal)` Emit the pages for the three shapes from 1.3.
 - [ ] 3.3 `^ F (internal)` Emit `docs/reference/index.md`'s component table.
 

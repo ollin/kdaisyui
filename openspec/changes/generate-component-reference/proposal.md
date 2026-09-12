@@ -73,6 +73,11 @@ notes, but it is a codegen *output* decision, not a documentation one.
 
 - **New**: a Markdown generator in `codegen/src/`, plus a Gradle task alongside the existing
   `generateComponents` / `generateComponentTests` / `generateHeroicons` tasks.
+- **New**: a `docSummaries` section in `codegen/codegen-config.json`, holding the 66 existing
+  editorial one-liners. The probe in section 1 of `tasks.md` established that these are the one
+  element of a page no parser can derive — 0 of 66 match DaisyUI's own description — and that
+  DaisyUI's cannot replace them because `index.md`'s table has a one-cell Description column.
+  See `design.md` decision 5.
 - **Rewritten**: 66 files under `docs/reference/` and `docs/reference/index.md`.
 - **Edited by hand, once**: `docs/explanation.md` receives the three prose sections;
   `README.md`'s component table row for Megamenu is corrected by the regeneration only if that

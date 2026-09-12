@@ -20,13 +20,33 @@ The fourth category arrived with `rejoin-main`:
 it the aggregated coverage gate cannot be met, so the categories and the gate are not
 independent.
 
-**Assumed** — that the reference pages contain nothing a reader needs which the codegen does
-not already hold. A survey on 2026-09-12 found every element of all 66 pages derivable from the
-parsed DaisyUI frontmatter and the classified component model: heading, DaisyUI docs link,
-description, rendered tag, and one signature block per generated function.
+A reference page's inputs are the parsed DaisyUI frontmatter, the classified component model,
+and a committed editorial summary per component. The summary is an input to the generator like
+any other, not an exception to generation.
+
+**Verified, and it refuted the assumption it replaces.** The original wording claimed every
+element of all 66 pages was derivable from the frontmatter and the model alone, naming the
+description among them. Measured over all 66 non-skipped components on 2026-09-12: no page
+carries a `##` heading, so there is no prose, example or note outside the template — but **0 of
+66 descriptions match the frontmatter `desc`**. All 66 are hand-written editorial summaries
+(`card`: "Content containers with body and title" against DaisyUI's "Cards are used to group and
+display content in a way that is easily readable"). The description is editorial, and no parser
+can derive it.
+
+It is not derivable and it cannot be dropped either, for a mechanical reason: `index.md` is a
+66-row table with a one-cell Description column, and DaisyUI's `desc` runs to 48 words for
+`aura`. Hence the third input. 63 of 66 components need one line of it; `aura`, `megamenu` and
+`otp` say more on the page than in the table and carry a second, longer field.
+
 *Wrong if:* regenerating a page loses information a reader relied on — the check is a diff of
 all 66 generated pages against the hand-written ones, where every difference must be either a
 correction or a deliberate template decision, never a loss.
+
+The same measurement established what generating **corrects**, which is the requirement's reason
+for existing: `id: HtmlId? = null` is the second parameter of every generated function and
+appears in **no** hand-written signature on **any** page; `drawer.md` omits `daisyDrawerButton`;
+`megamenu.md` omits `daisyMegamenuPanel`, types `daisyMegamenuActive`'s lambda as `DIV` where the
+code says `SPAN`, and omits the `popover` attribute.
 
 #### Scenario: Reading a component signature without building
 
@@ -58,6 +78,13 @@ correction or a deliberate template decision, never a loss.
 
 - **WHEN** a DaisyUI release adds a part that the codegen turns into a new generated function
 - **THEN** that function appears in the component's reference page without anyone editing it
+
+#### Scenario: A new component arrives with no editorial summary
+
+- **WHEN** a DaisyUI release adds a component for which no editorial summary is committed
+- **THEN** its reference page is still generated, describing it from the first sentence of its
+  DaisyUI description
+- **AND** the build does not fail for the missing summary
 
 ### Requirement: Committed output that no longer matches its inputs is rejected
 

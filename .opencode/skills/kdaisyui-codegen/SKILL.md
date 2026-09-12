@@ -173,9 +173,28 @@ column and some DaisyUI descriptions run to 48 words.
 ## The codegen is TypeScript, run directly by Node — no build step
 
 Since 2026-09-11, `codegen/src/**` is `.ts` and Node executes it as-is. Type stripping is
-stable and on by default in the Node pinned by `.tool-versions`. There is **no compile step,
-no emitted JavaScript, and still zero dependencies** in `codegen/package.json` — which is what
-keeps `just generate` the only thing in the repository that needs Node at all.
+stable and on by default in the Node pinned by `.tool-versions`. There is **no compile step and
+no emitted JavaScript**, which is what keeps `just generate` the only thing in the repository
+that needs Node at all.
+
+**Zero dependencies ended on 2026-09-12.** `codegen/package.json` now has exactly one:
+`htmlparser2`, pinned exactly. The element cross-check reads the markup DaisyUI documents, and a
+regex over markup is unreadable — and measurably wrong on a `>` inside an attribute value, on an
+HTML comment, and on `<script>` content. The `--save-exact` pin is deliberate: a generator whose
+output is drift-checked cannot have a parser that floats.
+
+Consequences to know before touching the build:
+
+- Every task that runs Node against `codegen/` depends on `installCodegenDeps` (`npm ci`), and
+  regeneration needs the network on a cold `node_modules`.
+- `package-lock.json` is a declared **input** of all five generator tasks and `testCodegen`. Adding
+  a generator without it means a parser upgrade leaves Gradle reporting UP-TO-DATE.
+- Both Node-running CI jobs read `.tool-versions`; `generated-sources-drift` previously used the
+  runner's Node and no longer does.
+
+A second dependency is a decision, not a habit. The next obvious candidate is named rather than
+hidden: `parseYamlFrontmatter` is a hand-rolled YAML reader, and YAML is far harder than finding a
+start tag.
 
 **Nothing type-checks it.** Node strips types without checking them, and there is deliberately
 no `tsc` step. Types serve the editor and the reader; the gates are the codegen unit tests and

@@ -68,9 +68,13 @@ the same sections twice.
 ## Impact
 
 - **New dependency**: `markdown-magic`, or a small purpose-built transform. This is the change's
-  central cost and its first task decides it, because `AGENTS.md` records `codegen/`'s
-  zero-dependency property as deliberate. If the tool is adopted it goes in its **own package**,
-  not in `codegen/`, so that property survives where it was declared.
+  central cost and its first task decides it by measuring the footprint against the number of
+  snippets and transforms actually needed. If the tool is adopted it goes in its **own package**,
+  not in `codegen/`, because a documentation tool has no business in the dependency tree that
+  generates the library.
+  **Corrected 2026-09-12:** this justified the separation by `codegen/`'s zero-dependency
+  property, which `verify-generator-assertions` has since spent on an HTML parser. The separation
+  stands on its own reasoning; the appeal to an unbroken promise does not.
 - **Edited**: `docs/how-to.md`, `docs/tutorials/**`, `docs/explanation.md`, `README.md`.
 - **Edited**: `example-app/**` gains region markers in comments.
 - **CI**: one more check.

@@ -32,11 +32,20 @@ one-line description, in `codegen-config.json` → `docSummaries`.
 The build does **not** run the generators: a clone compiles and tests with no Node, no npm and no
 git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
 
-`codegen/` is **TypeScript executed directly by Node** — no build step, no emitted JavaScript,
-zero dependencies. Nothing type-checks it, by decision; the gates are its unit tests
-(`./gradlew :lib:testCodegen`) and `generated-sources-drift`. Code there must stay inside
-*erasable* syntax — no `enum`, no `namespace` with runtime code, `import type` mandatory for
-types, `.ts` mandatory in import specifiers. → skill **`kdaisyui-codegen`**.
+`codegen/` is **TypeScript executed directly by Node** — no build step, no emitted JavaScript.
+Nothing type-checks it, by decision; the gates are its unit tests (`./gradlew :lib:testCodegen`)
+and `generated-sources-drift`. Code there must stay inside *erasable* syntax — no `enum`, no
+`namespace` with runtime code, `import type` mandatory for types, `.ts` mandatory in import
+specifiers. → skill **`kdaisyui-codegen`**.
+
+It had **zero dependencies until 2026-09-12** and now has exactly one: an HTML parser, because
+the generator reads the markup DaisyUI documents and a regex over markup is unreadable and — on
+the three constructs that defeat it — wrong. So regeneration runs `npm ci` first, via
+`installCodegenDeps`, and needs the network on a cold `node_modules`. Adding a second dependency
+is a decision, not a habit: weigh it.
+
+That does **not** change the paragraph above it. `check` still runs no generator, so a clone
+compiles and tests with no Node, no npm and no submodules.
 
 **One host requirement was added deliberately: `:example-app` compiles its stylesheet in a Docker
 container**, so `./gradlew check` needs Docker — `:e2e-tests` depends on `:example-app:classes`.

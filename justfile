@@ -12,14 +12,15 @@ default:
 build:
     ./gradlew build :lib:publishToMavenLocal
 
-# Regenerate the committed Kotlin sources in lib/generated and show what changed.
-# The build never does this by itself — committed output plus CI's drift check
-# is what keeps lib/generated honest. Needs Node and the git submodules.
+# Regenerate the committed sources in lib/generated and the reference pages in
+# docs/reference, and show what changed. The build never does this by itself —
+# committed output plus CI's drift check is what keeps both honest. Needs Node
+# and the git submodules.
 generate:
-    ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests
+    ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs
     @echo
-    @git status --short lib/generated || true
-    @git --no-pager diff --stat -- lib/generated || true
+    @git status --short lib/generated docs/reference || true
+    @git --no-pager diff --stat -- lib/generated docs/reference || true
 
 # Re-dump the committed public API baseline in lib/api and show what changed.
 # Only run this when an API change is intended: the diff is the change, and a

@@ -95,13 +95,18 @@ require an empty diff.
   Most of the win was a single duplication: the `- ` list-item block was written out twice,
   character for character, for indent 2 and indent 4 — four of the eight bumps.
 
-  **Two findings were introduced and are declined, with reason.** Primitive Obsession and
-  String Heavy Function Arguments both went 25% → 51.4%, because the module went from 11
-  functions to 24 and small functions take strings. *The two metrics pull against each
-  other:* decomposing a large function necessarily multiplies its primitive parameters. The
-  one that improved is the one that was hurting a reader, and the remaining arguments are
-  `trimmed`, `value`, `key` — text in a text parser, with no kinds left to separate once
-  line-versus-trimmed was removed by giving `scanLine` a single parameter.
+  Two findings were introduced — Primitive Obsession and String Heavy Function Arguments,
+  25% → 51.4% — and were **initially declined as metric-chasing. That was wrong.**
+
+  **Fixed afterwards: the file is now 10.0 with zero findings**, ratio 51.4% → 23.5%. The
+  error in the reasoning was conflating *branding a string that is merely text* (ceremony,
+  correctly declined) with *introducing the domain object the code keeps re-deriving* (not
+  ceremony, and missing). `Line` and `KeyValue` are that object: every handler was taking
+  `trimmed: string`, re-deriving `startsWith('- ')`, and working without the indent the
+  caller had to keep separately.
+
+  The decomposition-versus-primitives tension was real but never a dilemma — decomposing the
+  parser is what made the missing abstraction visible.
 
 ## 3. Make the new constraints enforceable by something other than memory
 

@@ -95,8 +95,46 @@ interface Scan {
   currentObject: Record<string, YamlScalar> | null
 }
 
-/** `key: value` split on the FIRST colon, so a value may contain colons. URLs do. */
-function splitOnFirstColon(text: string): { key: string; value: string } | null {
+/** A `key: value` pair, split on the FIRST colon so a value may contain colons. URLs do. */
+interface KeyValue {
+  readonly key: string
+  readonly value: string
+}
+
+/**
+ * One line of the frontmatter block, read once into everything the scan dispatches on.
+ *
+ * Handing `trimmed: string` down made each handler re-derive `startsWith('- ')` and threw
+ * the indent away, so the caller had to keep the raw line as well — the swap that
+ * `scanLine` previously carried a warning comment about. A line that knows its own shape
+ * removes both the repetition and the chance of passing the wrong one.
+ */
+interface Line {
+  /** Column of the first non-space character. Dispatch is on EXACTLY 0, 2 or 4. */
+  readonly indent: number
+  /** The line with surrounding whitespace removed. */
+  readonly text: string
+  /** Whether this is a `- ` list entry. */
+  readonly isItem: boolean
+  /** A list entry's text without its `- ` marker; empty for anything else. */
+  readonly itemText: string
+}
+
+/** Null for a blank line, which carries no position and no content. */
+function readLine(raw: string): Line | null {
+  const text = raw.trim()
+  if (!text) return null
+
+  const isItem = text.startsWith('- ')
+  return {
+    indent: raw.search(/\S/),
+    text,
+    isItem,
+    itemText: isItem ? text.slice(2).trim() : '',
+  }
+}
+
+function splitOnFirstColon(text: string): KeyValue | null {
   const colonIndex = text.indexOf(':')
   if (colonIndex === -1) return null
   return {
@@ -105,16 +143,16 @@ function splitOnFirstColon(text: string): { key: string; value: string } | null 
   }
 }
 
-function startTopLevelKey(scan: Scan, key: string): void {
-  scan.currentKey = key
+function startTopLevelKey(scan: Scan, pair: KeyValue): void {
+  scan.currentKey = pair.key
   // `classnames` is the only mapping; every other block key is a list. Note this ALSO
   // makes an empty `tags:` an empty array rather than an empty string, which the tests pin.
-  scan.result[key] = key === 'classnames' ? {} : []
+  scan.result[pair.key] = pair.key === 'classnames' ? {} : []
   scan.currentCategory = null
 }
 
-function setTopLevelScalar(scan: Scan, key: string, value: string): void {
-  scan.result[key] = parseValue(value)
+function setTopLevelScalar(scan: Scan, pair: KeyValue): void {
+  scan.result[pair.key] = parseValue(pair.value)
   scan.currentKey = null
   scan.currentCategory = null
 }
@@ -126,87 +164,71 @@ function setTopLevelScalar(scan: Scan, key: string, value: string): void {
  * character. Collapsing the duplication is most of what this refactoring does — the two
  * copies were four of the function's eight bumps.
  */
-function pushCategoryItem(scan: Scan, itemText: string): void {
+function pushCategoryItem(scan: Scan, line: Line): void {
   const category = scan.currentCategory
   const categories = scan.result.classnames as Record<string, Record<string, YamlScalar>[]>
   // An item before any category has nowhere to go and is dropped, as it always was.
   if (!category || !categories?.[category]) return
 
-  const pair = splitOnFirstColon(itemText)
-  const item = pair ? { [pair.key]: parseValue(pair.value) } : { class: parseValue(itemText) }
+  const pair = splitOnFirstColon(line.itemText)
+  const item = pair
+    ? { [pair.key]: parseValue(pair.value) }
+    : { class: parseValue(line.itemText) }
   categories[category].push(item)
   // Only a `key: value` item can be extended by the indented lines that follow it.
   scan.currentObject = pair ? item : null
 }
 
-function startCategory(scan: Scan, key: string): void {
-  ;(scan.result.classnames as Record<string, unknown>)[key] = []
-  scan.currentCategory = key
+function startCategory(scan: Scan, pair: KeyValue): void {
+  ;(scan.result.classnames as Record<string, unknown>)[pair.key] = []
+  scan.currentCategory = pair.key
   scan.currentObject = null
 }
 
-function extendCurrentObject(scan: Scan, trimmed: string): void {
-  const pair = splitOnFirstColon(trimmed)
+function extendCurrentObject(scan: Scan, line: Line): void {
+  const pair = splitOnFirstColon(line.text)
   if (pair && scan.currentObject) scan.currentObject[pair.key] = parseValue(pair.value)
 }
 
-/** The text of a `- ` list entry. */
-function itemTextOf(trimmed: string): string {
-  return trimmed.slice(2).trim()
-}
-
-function scanTopLevel(scan: Scan, trimmed: string): void {
-  const pair = splitOnFirstColon(trimmed)
+function scanTopLevel(scan: Scan, line: Line): void {
+  const pair = splitOnFirstColon(line.text)
   if (!pair) return
-  if (pair.value) setTopLevelScalar(scan, pair.key, pair.value)
-  else startTopLevelKey(scan, pair.key)
+  if (pair.value) setTopLevelScalar(scan, pair)
+  else startTopLevelKey(scan, pair)
 }
 
-function scanSecondLevel(scan: Scan, trimmed: string): void {
-  const isItem = trimmed.startsWith('- ')
-
+function scanSecondLevel(scan: Scan, line: Line): void {
   if (scan.currentKey === 'classnames') {
-    if (isItem) return pushCategoryItem(scan, itemTextOf(trimmed))
-    const pair = splitOnFirstColon(trimmed)
-    if (pair) startCategory(scan, pair.key)
+    if (line.isItem) return pushCategoryItem(scan, line)
+    const pair = splitOnFirstColon(line.text)
+    if (pair) startCategory(scan, pair)
     return
   }
 
   const openList = scan.result[scan.currentKey as string]
-  if (isItem && Array.isArray(openList)) openList.push(parseValue(itemTextOf(trimmed)))
+  if (line.isItem && Array.isArray(openList)) openList.push(parseValue(line.itemText))
 }
 
-function scanThirdLevel(scan: Scan, trimmed: string): void {
-  if (scan.currentKey === 'classnames' && trimmed.startsWith('- ')) {
-    return pushCategoryItem(scan, itemTextOf(trimmed))
-  }
-  if (scan.currentObject) extendCurrentObject(scan, trimmed)
+function scanThirdLevel(scan: Scan, line: Line): void {
+  if (scan.currentKey === 'classnames' && line.isItem) return pushCategoryItem(scan, line)
+  if (scan.currentObject) extendCurrentObject(scan, line)
 }
 
-/**
- * Takes the RAW line and trims it itself, rather than accepting both forms.
- *
- * Two `string` parameters holding the same line in different states is a swap waiting to
- * happen, and a silent one: `search(/\S/)` on an already-trimmed line is always 0, so every
- * line would look top-level and the whole document would parse as scalars. One parameter
- * makes that unwritable.
- */
-function scanLine(scan: Scan, line: string): void {
-  const trimmed = line.trim()
-  if (!trimmed) return
-
+function scanLine(scan: Scan, line: Line): void {
   // Dispatch is on EXACTLY 0, 2 or 4 — a line indented six spaces matches nothing and is
   // silently dropped. Pinned by test; preserved here deliberately.
-  const indent = line.search(/\S/)
-  if (indent === 0) return scanTopLevel(scan, trimmed)
-  if (indent === 2) return scanSecondLevel(scan, trimmed)
-  if (indent === 4) return scanThirdLevel(scan, trimmed)
+  if (line.indent === 0) return scanTopLevel(scan, line)
+  if (line.indent === 2) return scanSecondLevel(scan, line)
+  if (line.indent === 4) return scanThirdLevel(scan, line)
 }
 
 function parseYamlFrontmatter(yaml: string): FrontmatterData {
   const scan: Scan = { result: {}, currentKey: null, currentCategory: null, currentObject: null }
 
-  for (const line of yaml.split('\n')) scanLine(scan, line)
+  for (const raw of yaml.split('\n')) {
+    const line = readLine(raw)
+    if (line) scanLine(scan, line)
+  }
 
   return scan.result
 }

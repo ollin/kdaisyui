@@ -43,9 +43,15 @@ generator is wired into the build.
 - [x] 4.1 `. d` Move **Common parameters**, **Core utility** and **Requirements**
   (`docs/reference/index.md:85-118`) into `docs/explanation.md`, next to the existing class-merging
   material. No wording changes in this commit — a move that also edits is not a move.
-- [ ] 4.2 `. d` Repoint every link to the moved sections. `docs/reference.md`,
+- [x] 4.2 `. d` Repoint every link to the moved sections. `docs/reference.md`,
   `docs/tutorials/index.md` and `docs/tutorials/getting-started.md` link into `reference/`;
   check each.
+  **Nothing to repoint.** Searched every `.md` in the repository for the three section
+  anchors (`#common-parameters`, `#core-utility`, `#requirements`) and for links into
+  `docs/reference/`: no link targeted a moved section. `docs/reference.md:7` points at
+  `reference/index.md`, which still holds the table; `docs/tutorials/index.md:30` points at
+  `docs/reference.md`; `getting-started.md` links only to the repository root and to
+  `build-a-dashboard.md`. The task's premise was wrong, which is the finding.
 
 ## 5. Wire it up
 

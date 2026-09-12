@@ -89,6 +89,14 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 
 ## Available components (66)
 
+<!-- HAND-MAINTAINED, and the largest remaining copy of facts that exist in the codegen.
+     docs/reference/ is generated from the DaisyUI submodule and CI rejects any drift; this
+     table and the "Detailed component signatures" section below are neither, and both have
+     already been wrong — the Megamenu and Drawer rows were missing daisyMegamenuPanel and
+     daisyDrawerButton, and no signature here mentions the `id: HtmlId?` parameter every
+     generated function takes. Check against docs/reference/ before trusting a signature here.
+     Generating this file is tracked as its own change. -->
+
 | Component | Function | Description | Variants | Sizes |
 |---|---|---|---|---|
 | Alert | `daisyAlert` | Status messages and notifications | Info, Success, Warning, Error | — |
@@ -107,7 +115,7 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 | Diff | `daisyDiff` | Side-by-side comparison | — | — |
 | Divider | `daisyDivider` | Visual separators | — | — |
 | Dock | `daisyDock` | macOS-style dock | — | — |
-| Drawer | `daisyDrawer`, `daisyDrawerToggle`, `daisyDrawerContent`, `daisyDrawerSide`, `daisyDrawerOverlay` | Sidebar layout with toggle | — | — |
+| Drawer | `daisyDrawer`, `daisyDrawerToggle`, `daisyDrawerContent`, `daisyDrawerSide`, `daisyDrawerOverlay`, `daisyDrawerButton` | Sidebar layout with toggle | — | — |
 | Dropdown | `daisyDropdown`, `daisyDropdownContent` | Context menus and action lists | — | — |
 | Fab | `daisyFab` | Floating action button | — | — |
 | Fieldset | `daisyFieldset` | Groups related form controls | — | — |
@@ -126,7 +134,7 @@ Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 | List | `daisyList` | Styled list | — | — |
 | Loading | `daisyLoading` | Loading spinners | — | Xs–Xl |
 | Mask | `daisyMask` | CSS mask shapes | — | — |
-| Megamenu | `daisyMegamenu`, `daisyMegamenuActive` | Horizontal menu with popover navigation blocks | full, vertical, wide | Xs–Xl |
+| Megamenu | `daisyMegamenu`, `daisyMegamenuActive`, `daisyMegamenuPanel` | Horizontal menu with popover navigation blocks | full, vertical, wide | Xs–Xl |
 | Menu | `daisyMenu`, `daisyMenuTitle`, `daisyMenuDropdown`, `daisyMenuDropdownToggle` | Navigation lists with submenus | — | Xs–Xl |
 | MockupBrowser | `daisyMockupBrowser` | Browser frame mockup | — | — |
 | MockupCode | `daisyMockupCode` | Code block mockup | — | — |

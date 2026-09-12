@@ -82,12 +82,20 @@ function firstSentence(text: string): string {
   return (end === -1 ? text : text.slice(0, end)).replace(/\.$/, '')
 }
 
-/** Word for word what the Kotlin doc comment says, so the two cannot describe different HTML. */
+/**
+ * What the component renders, in HTML.
+ *
+ * `htmlTag` and not `tagBuilder`: for `fieldset`, `textarea` and `input` the kotlinx.html builder
+ * is spelled differently from the element, and a reference page must say `<fieldset>` — which is
+ * HTML — rather than `<fieldSet>`, which is not an element. The hand-written pages already got
+ * this right; the generated Kotlin doc comments say `fieldSet` and are wrong about it, but fixing
+ * them changes generated Kotlin and so belongs in its own commit.
+ */
 function rendersClause(shape: FunctionShape): string {
   const attrs = staticAttributeDoc(shape.staticAttributes)
   return shape.cssClass === null
-    ? `Structural wrapper. Renders \`<${shape.tagBuilder}${attrs}>\`.`
-    : `Renders \`<${shape.tagBuilder} class="${shape.cssClass} ..."${attrs}>\`.`
+    ? `Structural wrapper. Renders \`<${shape.htmlTag}${attrs}>\`.`
+    : `Renders \`<${shape.htmlTag} class="${shape.cssClass} ..."${attrs}>\`.`
 }
 
 /**
@@ -118,6 +126,81 @@ function signatureBlock(shape: FunctionShape, leadingComments: readonly string[]
     ...parameters,
     ')',
     '```',
+  ].join('\n')
+}
+
+/**
+ * The fixed preamble of `docs/reference/index.md`.
+ *
+ * A constant rather than an input, because it says nothing per-component and nothing that a
+ * DaisyUI release can change. Everything on that page that WAS prose — Common parameters, Core
+ * utility, Requirements — moves to `docs/explanation.md`, which is where prose lives and is not
+ * generated.
+ */
+const INDEX_PREAMBLE = [
+  '# Component reference',
+  '',
+  'Type-safe [DaisyUI](https://daisyui.com/) components for [kotlinx.html](https://github.com/Kotlin/kotlinx.html).',
+  'All components are extension functions on `FlowContent`:',
+  '',
+  '```kotlin',
+  'import io.github.ollin.kdaisyui.components.*',
+  '```',
+  '',
+  '---',
+  '',
+  '## All components',
+  '',
+]
+
+/**
+ * Case-insensitively by display name, which is the order the hand-written index already uses.
+ *
+ * Not by directory name, and the difference is visible: `text-rotate` sorts before `textarea` by
+ * code unit because `-` is below `a`, while the page lists Textarea first. Compared on the
+ * lower-cased names rather than through `localeCompare`, so `Hover3d` keeps its place ahead of
+ * `HoverGallery` regardless of locale.
+ */
+function byDisplayName(a: ComponentShape, b: ComponentShape): number {
+  const left = a.componentName.toLowerCase()
+  const right = b.componentName.toLowerCase()
+  if (left < right) return -1
+  return left > right ? 1 : 0
+}
+
+/** One row: the component, its one-line summary, and the element it renders. */
+function indexRow(shape: ComponentShape, docSummary: DocSummary | undefined): string {
+  const main = shape.functions[0]
+  const summary = docSummary?.summary ?? firstSentence(main.desc)
+  return `| [${shape.componentName}](${docFileNameFor(shape.componentDir)}.md) | ${summary} | \`<${main.htmlTag}>\` |`
+}
+
+/**
+ * `docs/reference/index.md`: the table of all components.
+ *
+ * Generated whole rather than injected into, because a file that is half generated has no header
+ * that can honestly say either — see the change's design.md, decision 2.
+ */
+export function generateIndexPage(
+  shapes: readonly ComponentShape[],
+  docSummaries: Readonly<Record<string, DocSummary>>,
+): string {
+  const rows = [...shapes]
+    .sort(byDisplayName)
+    .map(shape => indexRow(shape, docSummaries[shape.componentDir]))
+
+  return [
+    '<!--',
+    'GENERATED — DO NOT EDIT',
+    'Source: daisyui/packages/docs/src/routes/(routes)/components/',
+    'Regenerate: just generate',
+    '-->',
+    '',
+    ...INDEX_PREAMBLE,
+    '| Component | Description | Tag |',
+    '|---|---|---|',
+    ...rows,
+    '',
   ].join('\n')
 }
 

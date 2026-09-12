@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { docFileNameFor, generateComponentPage } from '../src/generator-docs.ts'
+import { docFileNameFor, generateComponentPage, generateIndexPage } from '../src/generator-docs.ts'
 import { buildComponentShape } from '../src/component-shape.ts'
 import type { ClassifiedComponent } from '../src/classifier.ts'
 
@@ -206,5 +206,74 @@ fun FlowContent.daisyCardActions(
     assert.ok(!result.includes('// Type-safe HTML id'))
     assert.ok(!result.includes('// Additional CSS classes'))
     assert.ok(result.includes('// dash style'))
+  })
+
+  test('names the HTML element, not the kotlinx.html builder', () => {
+    // `<fieldSet>` is not an HTML element. The lambda receiver type still is `FIELDSET`.
+    const result = page(classified({ componentName: 'Fieldset', prefix: 'fieldset' }), 'fieldset', 'FIELDSET', {
+      summary: 'Groups related form controls',
+    })
+
+    assert.match(result, /Renders `<fieldset class="fieldset \.\.\.">`\./)
+    assert.ok(!result.includes('<fieldSet class'))
+    assert.match(result, /attrs: \(FIELDSET\.\(\) -> Unit\)\? = null,/)
+  })
+})
+
+describe('generateIndexPage', () => {
+  const shape = (name: string, dir: string, element: string) =>
+    buildComponentShape(classified({ componentName: name, prefix: dir }), { componentDir: dir, element }, {})
+
+  test('emits one row per component, with its summary and rendered element', () => {
+    const result = generateIndexPage([shape('Card', 'card', 'DIV')], {
+      card: { summary: 'Content containers with body and title' },
+    })
+
+    assert.match(result, /^\| Component \| Description \| Tag \|$/m)
+    assert.match(result, /^\| \[Card\]\(card\.md\) \| Content containers with body and title \| `<div>` \|$/m)
+  })
+
+  test('links the camelCase file name for a multi-word component', () => {
+    const result = generateIndexPage([shape('FileInput', 'file-input', 'INPUT')], {
+      'file-input': { summary: 'File upload input field' },
+    })
+
+    assert.match(result, /\| \[FileInput\]\(fileInput\.md\) \|/)
+  })
+
+  test('uses the short summary even where a longer page description exists', () => {
+    const result = generateIndexPage([shape('Megamenu', 'megamenu', 'DIV')], {
+      megamenu: { summary: 'Horizontal menu with popover navigation blocks', description: 'A much longer paragraph' },
+    })
+
+    assert.match(result, /\| Horizontal menu with popover navigation blocks \|/)
+    assert.ok(!result.includes('A much longer paragraph'))
+  })
+
+  test('sorts case-insensitively by display name, which directory order gets wrong', () => {
+    const result = generateIndexPage(
+      [
+        shape('TextRotate', 'text-rotate', 'SPAN'),
+        shape('Textarea', 'textarea', 'TEXTAREA'),
+        shape('HoverGallery', 'hover-gallery', 'FIGURE'),
+        shape('Hover3d', 'hover-3d', 'DIV'),
+      ],
+      {},
+    )
+
+    const order = [...result.matchAll(/^\| \[(\w+)\]/gm)].map(m => m[1])
+    assert.deepEqual(order, ['Hover3d', 'HoverGallery', 'Textarea', 'TextRotate'])
+  })
+
+  test('names the HTML element in the tag column', () => {
+    const result = generateIndexPage([shape('Textarea', 'textarea', 'TEXTAREA')], {})
+
+    assert.match(result, /\| `<textarea>` \|$/m)
+  })
+
+  test('carries the do-not-edit attribution', () => {
+    const result = generateIndexPage([shape('Card', 'card', 'DIV')], {})
+
+    assert.match(result, /^<!--\nGENERATED — DO NOT EDIT\n/)
   })
 })

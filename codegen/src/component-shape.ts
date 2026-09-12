@@ -31,6 +31,16 @@ export type TagClass = string & { readonly __brand: 'TagClass' }
 /** The kotlinx.html BUILDER for a tag class, e.g. `div` for `DIV`. */
 export type TagBuilder = string & { readonly __brand: 'TagBuilder' }
 
+/**
+ * The actual HTML element name, e.g. `fieldset`.
+ *
+ * A third name rather than a second, because for three tags the builder is not the element:
+ * kotlinx.html spells them `fieldSet`, `textArea` and `input`. Prose aimed at a reader has to say
+ * `<fieldset>`, which is HTML, and not `<fieldSet>`, which is not an element at all — the
+ * hand-written reference pages get this right and the generated Kotlin doc comments do not.
+ */
+export type HtmlTagName = string & { readonly __brand: 'HtmlTagName' }
+
 /** A CSS class name, e.g. `card` or `card-title`. */
 export type CssClass = string & { readonly __brand: 'CssClass' }
 
@@ -61,6 +71,10 @@ const TAG_BUILDER_EXCEPTIONS: Record<string, string> = {
 
 export function tagBuilderFor(element: TagClass): TagBuilder {
   return (TAG_BUILDER_EXCEPTIONS[element] ?? element.toLowerCase()) as TagBuilder
+}
+
+export function htmlTagNameFor(element: TagClass): HtmlTagName {
+  return element.toLowerCase() as HtmlTagName
 }
 
 /** Renders static attributes as they read inside a `Renders <tag ...>` clause. */
@@ -251,7 +265,10 @@ export interface FunctionShape {
   readonly receiver: string
   /** The tag class, which is also the lambda receiver type in `attrs` and `content`. */
   readonly element: TagClass
+  /** What the generated Kotlin calls to open the tag. */
   readonly tagBuilder: TagBuilder
+  /** What prose should call the element. Differs from `tagBuilder` for exactly three tags. */
+  readonly htmlTag: HtmlTagName
   /** The CSS class this function puts on the element; null for a structural wrapper. */
   readonly cssClass: CssClass | null
   readonly staticAttributes: readonly StaticAttribute[]
@@ -452,6 +469,7 @@ function mainFunctionShape(
     receiver: 'FlowContent',
     element,
     tagBuilder: tagBuilderFor(element),
+    htmlTag: htmlTagNameFor(element),
     cssClass: classified.prefix === null ? null : asCssClass(classified.prefix),
     staticAttributes: componentConfig.componentAttributes,
     desc: classified.desc ?? '',
@@ -474,6 +492,7 @@ function partFunctionShape(
     receiver: 'FlowContent',
     element,
     tagBuilder: tagBuilderFor(element),
+    htmlTag: htmlTagNameFor(element),
     cssClass: partClass,
     staticAttributes: [],
     // Always empty in practice, and deliberately left so. `descs` is keyed by the class name
@@ -498,6 +517,7 @@ function customPartFunctionShape(classified: ClassifiedComponent, part: CustomPa
     receiver: part.receiver || 'FlowContent',
     element,
     tagBuilder: tagBuilderFor(element),
+    htmlTag: htmlTagNameFor(element),
     cssClass: part.cssClass === undefined ? null : asCssClass(part.cssClass),
     staticAttributes: Object.entries(part.staticAttributes ?? {}),
     desc: '',

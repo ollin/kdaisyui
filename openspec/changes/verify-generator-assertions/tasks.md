@@ -141,11 +141,11 @@ Landed first and on its own, so the build wiring is provable before anything dep
 
 ## 7. Migration and documentation
 
-- [ ] 7.1 `. d` **How to migrate** in `README.md`: `daisyFileInput`, `daisyThemeController` and
+- [x] 7.1 `. d` **How to migrate** in `README.md`: `daisyFileInput`, `daisyThemeController` and
   `daisyMask` lose their trailing lambda; `daisyOtp`'s receivers change `DIV` → `LABEL`. Say why
   for each — the element cannot hold children; the element was wrong — and note that the `otp`
   change is invisible in `lib/api/lib.api`.
-- [ ] 7.2 `. d` Update the `kdaisyui-codegen` skill: `noContent` is gone and derived, the element
+- [x] 7.2 `. d` Update the `kdaisyui-codegen` skill: `noContent` is gone and derived, the element
   is cross-checked against the docs route, config entries are consumption-checked, and there is a
   second API baseline with a different question.
 

@@ -228,6 +228,39 @@ attribution header plus a trailing newline the file lacked. The table was the pa
 be quietly wrong after a DaisyUI bump, and reproducing it exactly is the strongest evidence that
 the generator reads the same facts the humans did.
 
+## The drift gate, observed failing (task 6.2)
+
+A gate nobody has watched fail is a gate nobody should trust, which is why the job itself was
+proven this way on PR #231 rather than assumed.
+
+Throwaway branch `prove-docs-drift`, one commit, reintroducing by hand the exact defect this
+change exists to prevent: `docs/reference/megamenu.md`'s `daisyMegamenuActive` lambda receiver
+turned back from `SPAN` to `DIV`. Draft PR #339 against `main`, since the workflow triggers on
+`pull_request` and a push to a topic branch does not run it.
+
+Run [34689586943](https://github.com/ollin/kdaisyui/actions/runs/34689586943), job
+`generated-sources-drift`:
+
+```
+##[error]lib/generated or docs/reference does not match what the generators produce.
+Run 'just generate' and commit the result.
+
+ docs/reference/megamenu.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ M docs/reference/megamenu.md
+##[error]Process completed with exit code 1.
+```
+
+It failed, and it named the file.
+
+**The second half of the proof matters as much as the first.** `unit-tests`, `codegen-tests`,
+`mutation-tests` and `api-baseline` all passed on the same commit. So the failure is specific to
+this gate rather than a broken build — and, read the other way, four other gates looked at a
+reference page documenting the wrong lambda receiver and had nothing to say about it. That is
+precisely the blind spot the change closes, demonstrated rather than argued.
+
+PR closed unmerged, branch deleted from the remote and locally.
+
 ## Open question — resolved by the same probe
 
 Whether the generated pages should carry the DaisyUI class names and their descriptions, which

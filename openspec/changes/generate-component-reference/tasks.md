@@ -65,17 +65,17 @@ generator is wired into the build.
 
 ## 6. Close the loop — the part that makes it worth anything
 
-- [ ] 6.1 `^ F (internal)` Extend `generated-sources-drift` to `docs/reference/`.
-- [ ] 6.2 `. r (internal)` Prove the gate bites: hand-edit a generated page on a throwaway
+- [x] 6.1 `^ F (internal)` Extend `generated-sources-drift` to `docs/reference/`.
+- [x] 6.2 `. r (internal)` Prove the gate bites: hand-edit a generated page on a throwaway
   branch, observe the job fail and name the file, then revert. Record the run. The existing job
   was proven this way on PR #231 and the spec cites it.
 
 ## 7. The copies that remain
 
-- [ ] 7.1 `. d` Fix `README.md`'s Megamenu row by hand — it is missing `daisyMegamenuPanel`
+- [x] 7.1 `. d` Fix `README.md`'s Megamenu row by hand — it is missing `daisyMegamenuPanel`
   today — and add a comment marking the table as a hand-maintained copy that
   `verify-doc-snippets` is expected to take over.
-- [ ] 7.2 `. d` Correct the stale `.js` references left by the TypeScript port:
+- [x] 7.2 `. d` Correct the stale `.js` references left by the TypeScript port:
   `.opencode/skills/kdaisyui-testing/SKILL.md:15` and `:20`, and
   `openspec/specs/generated-sources/spec.md:22`, `:87`, `:115`. The line citations at `:87`
   moved too — `frontmatter.ts:336-342` and `index-heroicons.ts:49` are the current locations.

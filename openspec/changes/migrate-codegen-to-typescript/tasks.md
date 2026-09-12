@@ -83,7 +83,25 @@ require an empty diff.
 
   Section 2.5 complete.
 
-- [ ] 2.6 Refactor `parseYamlFrontmatter` — cc 32, nesting depth 5, eight bumps — and `parseValue` — cc 10 plus a complex conditional (refactoring) — **pre-existing complexity, surfaced not caused by the port.** A hand-rolled YAML reader in one loop with four mutable locals; the same shape `parseTestCases` had before `test-and-clean-codegen` split it, and the same fix applies. Deliberately NOT done inside a rename commit, where the byte-identical criterion could not distinguish a port from a restructuring. Write characterization tests first: this file currently has none.
+- [x] 2.6 Refactor `parseYamlFrontmatter` — cc 32, nesting depth 5, eight bumps — and `parseValue` — cc 10 plus a complex conditional (refactoring) — **pre-existing complexity, surfaced not caused by the port.** A hand-rolled YAML reader in one loop with four mutable locals; the same shape `parseTestCases` had before `test-and-clean-codegen` split it, and the same fix applies. Deliberately NOT done inside a rename commit, where the byte-identical criterion could not distinguish a port from a restructuring. Write characterization tests first: this file currently has none.
+
+  **Done. 7.24 → 9.38, verdict `improved`, five categories fixed** — Complex Method (cc 32
+  and cc 10), Complex Conditional, Bumpy Road (8 bumps), Deep Nested Complexity (depth 5),
+  Overall Code Complexity 6.09 → 3.04. Thirteen characterization tests first, green on the
+  first run, built from the shape DaisyUI actually ships rather than an invented one — the
+  parser dispatches on indent being exactly 0, 2 or 4, so a guessed fixture would have
+  pinned a different branch than production uses.
+
+  Most of the win was a single duplication: the `- ` list-item block was written out twice,
+  character for character, for indent 2 and indent 4 — four of the eight bumps.
+
+  **Two findings were introduced and are declined, with reason.** Primitive Obsession and
+  String Heavy Function Arguments both went 25% → 51.4%, because the module went from 11
+  functions to 24 and small functions take strings. *The two metrics pull against each
+  other:* decomposing a large function necessarily multiplies its primitive parameters. The
+  one that improved is the one that was hurting a reader, and the remaining arguments are
+  `trimmed`, `value`, `key` — text in a text parser, with no kinds left to separate once
+  line-versus-trimmed was removed by giving `scanLine` a single parameter.
 
 ## 3. Make the new constraints enforceable by something other than memory
 

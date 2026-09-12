@@ -47,10 +47,20 @@ the order is substantive rather than tidy.
   `generate-component-reference` moved there from `reference/index.md`.
 - [ ] 4.5 `^ F (internal)` Convert `README.md`'s snippets.
 
-## 5. Take over the README component table
+## 5. Take over the remaining hand-maintained tables
 
-- [ ] 5.1 `^ F (internal)` Inject the 66-row table from the same model the reference pages use,
-  and remove the hand-maintained-copy marker `generate-component-reference` left behind.
+**Corrected 2026-09-12, by `generate-component-reference`'s task 7.1:** the 66-row table is
+**not** in `README.md`. The README has a three-row *What's new in 0.2.0* table. The 66-row table
+is in **`llms.txt`**, together with a *Detailed component signatures* section covering all 66 —
+the largest remaining copy of facts the codegen holds, and larger than the reference pages.
+
+- [ ] 5.1 `^ F (internal)` Inject `README.md`'s three-row *What's new* table from the same model
+  the reference pages use, and remove the hand-maintained-copy marker
+  `generate-component-reference` left behind.
+- [ ] 5.2 `. d` Decide whether `llms.txt` belongs to this change at all. It needs no injector —
+  it is derivable end to end, like the reference pages — so whole-file generation in the codegen
+  may fit it better than the snippet mechanism this change brings, and that would make it its own
+  change rather than a task here. Decide against the file, not in advance.
 
 ## 6. Close the loop
 

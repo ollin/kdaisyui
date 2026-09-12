@@ -80,9 +80,12 @@ notes, but it is a codegen *output* decision, not a documentation one.
   See `design.md` decision 5.
 - **Rewritten**: 66 files under `docs/reference/` and `docs/reference/index.md`.
 - **Edited by hand, once**: `docs/explanation.md` receives the three prose sections;
-  `README.md`'s component table row for Megamenu is corrected by the regeneration only if that
-  table is itself generated — it is **not** in scope here, so it is corrected by hand in this
-  change and noted as a remaining hand-maintained copy.
+  `README.md`'s Megamenu row and `llms.txt`'s Megamenu and Drawer rows are corrected by hand, and
+  both tables are marked as remaining hand-maintained copies.
+  **Corrected during task 7.1:** this previously said the README holds the 66-component table. It
+  does not — the README has a three-row *What's new* table, and `llms.txt` holds the 66-row table
+  plus detailed signatures for all 66, making it the largest remaining copy. See `design.md`
+  decision 3.
 - **CI**: `generated-sources-drift` job scope.
 - **No new dependency.** No change to `lib`, `ktor-integration`, `bom` or any published
   artifact.

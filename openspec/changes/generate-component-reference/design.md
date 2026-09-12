@@ -45,15 +45,28 @@ parameters, the pointers to `.tool-versions` and `libs.versions.toml`. `docs/exp
 already exists for exactly this and already covers class merging, so the move puts related
 material together rather than scattering it.
 
-### 3. `README.md`'s component table stays hand-maintained — and is named as debt
+### 3. The remaining copies stay hand-maintained — and are named as debt
 
-The README lists all 66 components with their functions, which makes it a third copy of the
-same facts. It is **not** generated here: the README is a single file mixing badges, quick
-start, migration notes and the table, so generating it means the injector from decision 1.
+**Corrected during task 7.1.** This decision said the README holds a third copy of the 66
+components. It does not. The README has a three-row *What's new in 0.2.0* table, and the
+66-component copy is in **`llms.txt`** — which also carries a *Detailed component signatures*
+section for all 66, making it the largest copy of facts the codegen already holds, larger than
+the reference pages this change generates.
 
-This change fixes the table by hand and records it in the tasks as a known remaining copy. That
-is an honest deferral, not an oversight — and `verify-doc-snippets`, which brings the injector
-anyway, is where it belongs.
+Both are stale in the same way and were fixed by hand here: the Megamenu row in each omitted
+`daisyMegamenuPanel`, and `llms.txt`'s Drawer row omitted `daisyDrawerButton`. `llms.txt` carries
+one defect that was left: none of its 66 signatures mentions `id: HtmlId?`, the parameter every
+generated function takes.
+
+Neither is generated here. The README mixes badges, quick start, migration notes and a table, so
+generating it means the injector from decision 1. `llms.txt` needs no injector and is a strong
+candidate for whole-file generation from this same shape — but it is a different artifact with a
+different audience, and folding it in would double the diff this change asks a reader to adopt.
+Tracked as its own change.
+
+Both tables now carry a comment saying they are hand-maintained, naming what went wrong, and
+pointing at `docs/reference/` as the generated thing to check against. Marking is the part that
+survives a fix.
 
 ### 4. Enablers versus the desired change
 

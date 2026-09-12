@@ -24,7 +24,7 @@ generator is wired into the build.
 - [x] 2.2 `^ r (internal)` Extract from the Kotlin emitter whatever the Markdown emitter also
   needs — the per-function rendered tag, receiver type, parameter list and defaults — into a
   shared shape. Verify `lib/generated/**` is byte-identical.
-- [ ] 2.3 `. d` Move the 66 editorial summaries into `codegen-config.json` → `docSummaries`,
+- [x] 2.3 `. d` Move the 66 editorial summaries into `codegen-config.json` → `docSummaries`,
   verbatim from the pages, plus the longer page `description` for the three that have one
   (`aura`, `megamenu`, `otp`). Pure data move — nothing reads the section yet. Added by the
   section 1 finding; see `design.md` decision 5.

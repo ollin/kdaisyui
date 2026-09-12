@@ -18,9 +18,9 @@ From `lib/build.gradle.kts`:
 
 | Gradle task | Entry point | Output |
 |---|---|---|
-| `generateComponents` | `codegen/src/index-new.js` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/components/` |
-| `generateHeroicons` | `codegen/src/index-heroicons.js` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/icons/` |
-| `generateComponentTests` | `codegen/src/test-generator.js` | `lib/generated/test/kotlin/io/github/ollin/kdaisyui/components/` |
+| `generateComponents` | `codegen/src/index-new.ts` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/components/` |
+| `generateHeroicons` | `codegen/src/index-heroicons.ts` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/icons/` |
+| `generateComponentTests` | `codegen/src/test-generator.ts` | `lib/generated/test/kotlin/io/github/ollin/kdaisyui/components/` |
 
 That output is **committed**, and **compilation does not depend on these tasks**. A clone
 builds and tests with no Node, no npm and no git submodules; only regeneration needs them:
@@ -41,7 +41,7 @@ out the matching `v<version>` tag.
 
 ## Where the element and class data come from
 
-`codegen/src/parser/llms-txt.js` reads two sources, in this order:
+`codegen/src/parser/llms-txt.ts` reads two sources, in this order:
 
 1. `daisyui/packages/docs/static/llms.txt` — **gone since DaisyUI 5.5.23**, which deleted it
    in favour of a generated SvelteKit route.
@@ -132,6 +132,57 @@ bump can be reviewed. It is still not yours to edit: `just generate` overwrites 
 and CI's `generated-sources-drift` job fails any commit that hand-edited it. Change the
 pipeline instead.
 
+## The codegen is TypeScript, run directly by Node — no build step
+
+Since 2026-09-11, `codegen/src/**` is `.ts` and Node executes it as-is. Type stripping is
+stable and on by default in the Node pinned by `.tool-versions`. There is **no compile step,
+no emitted JavaScript, and still zero dependencies** in `codegen/package.json` — which is what
+keeps `just generate` the only thing in the repository that needs Node at all.
+
+**Nothing type-checks it.** Node strips types without checking them, and there is deliberately
+no `tsc` step. Types serve the editor and the reader; the gates are the codegen unit tests and
+`generated-sources-drift`, exactly as before.
+
+### Stay inside erasable syntax, or Node refuses to run the file
+
+Node erases types; it does not transpile. These produce `ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX`
+at startup, not a compile warning:
+
+| Do not use | Instead |
+|---|---|
+| `enum` | a union of string literals, or `as const` |
+| `namespace` containing runtime code | a module |
+| parameter properties (`constructor(private x)`) | an explicit field |
+| decorators, import aliases, `.tsx` | — |
+
+Two more that fail **silently or at runtime**, and cost the most time:
+
+- **`import type { X }` is mandatory for type-only imports.** Without the `type` keyword Node
+  treats it as a value import and the module fails to load at runtime.
+- **`.ts` extensions are mandatory in import specifiers.** `import './parser/frontmatter'`
+  does not resolve; it must be `'./parser/frontmatter.ts'`.
+
+Node ignores `tsconfig.json` entirely, so `paths` aliases are unavailable.
+
+### Where the types actually help
+
+Not uniformly, and it is worth knowing which before adding more. Plain annotations cannot
+distinguish two strings — `fieldSet` and `fieldset` are both `string`, which is the very
+defect that prompted the port. What pays:
+
+- **Shapes.** Every parser had a JSDoc `@typedef` that nothing checked, and three had already
+  drifted from the code — `ClassifiedComponent` documented 13 fields where 14 are returned.
+- **Unions.** `ClassCategory = keyof Classnames` makes a mistyped category name unwritable,
+  where before it returned `undefined`, got swallowed by `?? []`, and silently dropped every
+  modifier in that category.
+- **Branded names**, where two string KINDS genuinely coexist: `TagName`/`BuilderName` in
+  `html-names.ts`, `KebabName`/`PascalName`, `ComponentName`/`PascalComponentName`. Each costs
+  one cast where the value is created. Do NOT brand strings that are merely strings — four
+  fragments of one output string gain nothing and add noise.
+
+`html-names.ts` holds the shared vocabulary because brands are **nominal**: two declarations of
+`TagName` would be two incompatible types, which is worse than having none.
+
 ## Where to change what
 
 | Symptom | Edit |
@@ -144,10 +195,10 @@ pipeline instead.
 | Component needs a second wrapper / an alternative construction method | → `customParts` |
 | Main component must always carry an attribute (e.g. `popover`) | → `componentAttributes` |
 | A sub-component part must be a specific element | → `subComponentElements` |
-| CSS class lands in the wrong category | `codegen/src/classifier.js` |
-| Kotlin output shape is wrong | `codegen/src/generator-new.js` |
-| Generated tests are wrong | `codegen/src/test-generator.js` |
-| Icon output is wrong | `codegen/src/generator-heroicons.js` |
+| CSS class lands in the wrong category | `codegen/src/classifier.ts` |
+| Kotlin output shape is wrong | `codegen/src/generator-new.ts` |
+| Generated tests are wrong | `codegen/src/test-generator.ts` |
+| Icon output is wrong | `codegen/src/generator-heroicons.ts` |
 
 `extras` entries are full code fragments, not flags:
 
@@ -192,7 +243,7 @@ That produces `daisyModalPopover` emitting `<div class="modal" popover>`. An emp
 as `popover=""`, which HTML treats as the attribute's default state. The attributes are emitted
 before `extraClasses` and before `attrs()`, so a caller can still override one.
 
-`codegen/src/test-generator.js` mirrors the field: each static attribute becomes an assertion in
+`codegen/src/test-generator.ts` mirrors the field: each static attribute becomes an assertion in
 the generated test. Keep the two in step — a construction method that adds **no CSS class** is
 otherwise invisible to the whole safety net, because both the generated tests and
 `generated-sources-drift` key on class names. That blind spot is how the popover modal was
@@ -212,7 +263,7 @@ parameters, use the sibling key:
 
 That makes `daisyMegamenu` emit `<div class="megamenu …" popover>`. Same placement rules as
 `staticAttributes` — after `id`, before `extraClasses`, so `attrs()` still runs last — and
-`test-generator.js` mirrors it as a `renders_static_attributes` test.
+`test-generator.ts` mirrors it as a `renders_static_attributes` test.
 
 Two keys rather than one because they address different functions. If a third case turns up,
 that is the moment to unify them.
@@ -247,13 +298,13 @@ diff in `lib/api/lib.api`, because both lambda types erase to `Function1`.
 
 ```
 daisyui/packages/docs/src/routes/(routes)/components/<name>/+page.md   (YAML frontmatter)
-  → codegen/src/parser/frontmatter.js
-  → codegen/src/parser/llms-txt.js      (element rules from DaisyUI llms.txt)
-  → codegen/src/classifier.js           (colors / sizes / styles / modifiers / parts)
-  → codegen/src/generator-new.js
+  → codegen/src/parser/frontmatter.ts
+  → codegen/src/parser/llms-txt.ts      (element rules from DaisyUI llms.txt)
+  → codegen/src/classifier.ts           (colors / sizes / styles / modifiers / parts)
+  → codegen/src/generator-new.ts
 ```
 
-Heroicons runs a separate path: `parser/svg-heroicons.js` → `generator-heroicons.js`.
+Heroicons runs a separate path: `parser/svg-heroicons.ts` → `generator-heroicons.ts`.
 
 ## Verifying a codegen change
 

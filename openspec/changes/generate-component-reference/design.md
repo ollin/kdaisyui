@@ -155,6 +155,66 @@ enum entries, element — and the one *editorial* fact does not. Moving that one
 config file is what makes the rest generable, and it is a smaller price than the plan's fallback
 positions (abandoning, or accepting a loss).
 
+## The 66-page diff, read (task 5.4)
+
+67 files, 729 insertions, 148 deletions. The requirement is that every difference be a
+correction or a deliberate template decision and never a loss, so the diff was classified
+mechanically first and then read.
+
+**No page lost a function, an enum entry or a parameter that the code actually has.** The check
+was per file: a removed line counts as surviving only if its text reappears in the same file's
+added lines. 25 removals did not, and every one is accounted for below.
+
+### Corrections — things the hand-written pages got wrong
+
+| Page | Said | The code says |
+|---|---|---|
+| `button.md` | `class="button ..."` | `btn` |
+| `calendar.md` | `class="calendar ..."` | `cally` |
+| `hover3d.md` | `class="hover3d ..."` | `hover-3d` |
+| `stat.md` | `class="stat ..."` | `stats` |
+| `tab.md` | `class="tab ..."` | `tabs` |
+| `megamenu.md` | `<div class="megamenu ...">` | `<div class="megamenu ..." popover>` |
+| `tooltip.md` | `TooltipVariant` includes `Neutral` | it does not |
+| `validator.md` | takes a `content` lambda | it does not — `validator` is in `noContent` |
+| every page, every function | no `id` parameter | `id: HtmlId? = null` is the second parameter |
+| `breadcrumbs.md` | 1 function | 3 |
+| `drawer.md` | 5 functions | 6 — `daisyDrawerButton` was missing |
+| `megamenu.md` | 2 functions | 3 — `daisyMegamenuPanel` was missing |
+| `modal.md` | 5 functions | 6 — `daisyModalPopover` was missing |
+
+The first five are the worst of these and were invisible: a reader copying `class="button"` into
+their own HTML gets no styling at all, because that class does not exist. Five of 66 pages named
+a CSS class DaisyUI does not ship.
+
+Also corrected, silently and everywhere: `Requirements` in `index.md` pointed at
+`../.tool-versions`, which resolved to `docs/.tool-versions`. Moving the section to
+`docs/explanation.md` in task 4.1 made all three of those links resolve.
+
+### Deliberate template decisions
+
+- **One comment line per enum instead of one for both.** 12 pages. No entry set changed — checked
+  by normalising both forms and comparing — except `tooltip`, which is a correction above.
+- **Inline comments on every DaisyUI boolean.** Most of the 148 deletions are boolean parameter
+  lines reappearing with a description. Six of them had a hand-written comment already, in
+  `aura`, `megamenu` and `otp`, and those are now DaisyUI's own wording with two spaces before
+  the `//` rather than hand alignment. The hand-written phrasing was terser in places — *"dropdown
+  fills the page width"* against *"megamenu dropdown will fill the entire width of the page"* —
+  and that is a real trade, accepted because the generated one cannot go stale.
+- **Paragraphs are emitted on one line, not re-wrapped.** Affects the three pages whose
+  description was hard-wrapped: `aura`, `megamenu`, `otp`. Markdown renders both identically, and
+  a generator that re-flows prose is a generator fighting its input.
+- **One fenced block per function.** Only `megamenu.md` combined two, and it now matches the
+  other 65.
+- **The do-not-edit attribution**, five lines of HTML comment per page.
+
+### What the index proves
+
+`index.md`'s 66 table rows are byte-identical to the hand-written ones. Its whole diff is the
+attribution header plus a trailing newline the file lacked. The table was the part most likely to
+be quietly wrong after a DaisyUI bump, and reproducing it exactly is the strongest evidence that
+the generator reads the same facts the humans did.
+
 ## Open question — resolved by the same probe
 
 Whether the generated pages should carry the DaisyUI class names and their descriptions, which

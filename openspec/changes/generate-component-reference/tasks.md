@@ -6,13 +6,13 @@ generator is wired into the build.
 
 ## 1. Check the assumption that the pages are fully derivable
 
-- [ ] 1.1 `. r (internal)` Write a throwaway script under `./tmp/` that emits one component
+- [x] 1.1 `. r (internal)` Write a throwaway script under `./tmp/` that emits one component
   reference page from the classified model, for a component with several parts and an enum
   (`card`). Diff it against `docs/reference/card.md`. Record what the model cannot supply.
-- [ ] 1.2 `. d` Record the finding in `design.md`. **If anything is missing that a reader
+- [x] 1.2 `. d` Record the finding in `design.md`. **If anything is missing that a reader
   needs, revise the proposal before continuing** — including abandoning the change if the gap
   is large. This is the task the whole plan rests on.
-- [ ] 1.3 `. r (internal)` Repeat 1.1 for the three shapes most likely to break the template: a
+- [x] 1.3 `. r (internal)` Repeat 1.1 for the three shapes most likely to break the template: a
   component with no parts (`badge`), one whose parts render different elements (`drawer`, whose
   overlay is a `LABEL`), and the one that motivated this change (`megamenu`, whose
   `daisyMegamenuActive` is a `SPAN` and whose `daisyMegamenuPanel` has no class of its own).

@@ -77,6 +77,24 @@ export function htmlTagNameFor(element: TagClass): HtmlTagName {
   return element.toLowerCase() as HtmlTagName
 }
 
+/**
+ * The HTML specification's void elements: they cannot have children, at all.
+ *
+ * A closed set of fourteen, unchanged since HTML5, and the reason this is a rule rather than a
+ * config section. Whether a component may take content is not a DaisyUI fact and never was —
+ * `codegen-config.json` used to restate it as a hand-maintained list of component names, which
+ * failed in both possible directions: two entries were written in a spelling the lookup never
+ * used, and `mask` was simply never added.
+ */
+const VOID_ELEMENTS: ReadonlySet<string> = new Set([
+  'AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG',
+  'INPUT', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR',
+])
+
+export function isVoidElement(element: TagClass): boolean {
+  return VOID_ELEMENTS.has(element)
+}
+
 /** Renders static attributes as they read inside a `Renders <tag ...>` clause. */
 export function staticAttributeDoc(entries: readonly StaticAttribute[]): string {
   return entries

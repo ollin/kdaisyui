@@ -42,9 +42,22 @@ Each: rename, update its Gradle task and npm script, annotate the parser boundar
 require an empty diff.
 
 - [x] 2.1 `codegen/src/test-generator.js` → `.ts`, plus its `tool-logic`-style helpers (refactoring; the largest file, and the one whose defects motivated this) — `BuilderName` / `TagName` branded, three casts total. Branding forced a real simplification: four inlined copies of `receiver === 'FlowContent' ? 'div' : receiver.toLowerCase()` became one named `wrapperTagOf`, because each would otherwise have needed its own cast. Everything else left to inference, per 1.3.
-- [ ] 2.2 `codegen/src/index-new.js` → `.ts` (refactoring)
-- [ ] 2.3 `codegen/src/index-heroicons.js` → `.ts` (refactoring)
-- [ ] 2.4 `codegen/src/classifier.js`, `generator-new.js`, `generator-heroicons.js` → `.ts` (refactoring; one commit each if any needs real thought, one commit total if they are mechanical)
+- [x] 2.2 `codegen/src/index-new.js` → `.ts` (refactoring) — mechanical, as predicted.
+- [x] 2.3 `codegen/src/index-heroicons.js` → `.ts` (refactoring) — mechanical. **No `.js` remains in `codegen/src/`.**
+- [x] 2.4 `codegen/src/classifier.js`, `generator-new.js`, `generator-heroicons.js` → `.ts` (refactoring; one commit each if any needs real thought, one commit total if they are mechanical) — two commits, because two of the three needed real thought:
+
+  - `classifier`'s `ClassifiedComponent` typedef listed **thirteen** fields where the function
+    returns **fourteen**. `componentClass` had been returned all along, undocumented. An
+    interface cannot drift like that.
+  - `generator-new.generateKotlinFile` took `elementRules`, a name wrong twice over: not
+    plural, not a rule. The only caller passes `{ primaryElement: element }` and that is all
+    it reads. Now `chosenElement: Pick<ElementRule, 'primaryElement'>`. **Writing the type is
+    what made the name's wrongness visible** — `elementRules.primaryElement` reads perfectly
+    well and had been wrong since the function was written.
+  - `generator-heroicons` was genuinely mechanical.
+
+  `config` is left to inference throughout: it is all of `codegen-config.json`, and modelling
+  it is its own piece of work rather than a side effect of a rename.
 - [x] 2.5 `codegen/src/parser/*.js` → `.ts` — frontmatter, llms-txt, svg-heroicons (refactoring) — **the highest-value annotations in the change**: this is the boundary where hand-written YAML from a submodule becomes typed data, and where every defect found so far actually lived. **Confirmed.** All three ported; every one had a JSDoc `@typedef` describing shapes that nothing checked, and converting those was the bulk of the value. `html-names.ts` was added because brands are nominal and two `TagName` declarations would be two incompatible types.
 
   **`svg-heroicons.ts` done, taken out of order** to test branded types on the smallest file

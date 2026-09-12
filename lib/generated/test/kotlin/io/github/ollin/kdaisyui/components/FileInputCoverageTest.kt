@@ -27,9 +27,7 @@ class FileInputCoverageTest {
     @Test
     fun fileInput_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                content = { },
-            )
+            daisyFileInput()
         }
         assertRendered(html, "file-input", "FileInput defaults")
     }
@@ -42,11 +40,10 @@ class FileInputCoverageTest {
                 ghost = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
             )
         }
         assertRendered(html, "file-input file-input-ghost zz-extra", "FileInput all flags")
-        assertCommonFlags(html, "FileInput")
+        assertCommonFlags(html, "FileInput", content = false)
     }
 
     @Test
@@ -54,7 +51,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Neutral,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-neutral", "FileInput variant Neutral")
@@ -65,7 +61,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Primary,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-primary", "FileInput variant Primary")
@@ -76,7 +71,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Secondary,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-secondary", "FileInput variant Secondary")
@@ -87,7 +81,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Accent,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-accent", "FileInput variant Accent")
@@ -98,7 +91,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Info,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-info", "FileInput variant Info")
@@ -109,7 +101,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Success,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-success", "FileInput variant Success")
@@ -120,7 +111,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Warning,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-warning", "FileInput variant Warning")
@@ -131,7 +121,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 variant = FileInputVariant.Error,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-error", "FileInput variant Error")
@@ -142,7 +131,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 size = FileInputSize.Xs,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-xs", "FileInput size Xs")
@@ -153,7 +141,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 size = FileInputSize.Sm,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-sm", "FileInput size Sm")
@@ -164,7 +151,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 size = FileInputSize.Md,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-md", "FileInput size Md")
@@ -175,7 +161,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 size = FileInputSize.Lg,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-lg", "FileInput size Lg")
@@ -186,7 +171,6 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
                 size = FileInputSize.Xl,
-                content = { },
             )
         }
         assertRendered(html, "file-input file-input-xl", "FileInput size Xl")

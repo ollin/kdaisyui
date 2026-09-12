@@ -10,6 +10,12 @@ import {
   describeCrossCheckFailure,
   type ElementObservation,
 } from './element-cross-check.ts'
+import {
+  ConsumedKeyCollector,
+  describeUnreadEntries,
+  findUnreadEntries,
+  type ConsumedKeys,
+} from './config-consumption.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -85,6 +91,19 @@ function reportCrossCheck(
   process.exitCode = 1
 }
 
+/**
+ * Fails the run on any component-keyed config entry nothing read.
+ *
+ * Runs after generation for the same reason the cross-check does: the output a wrong config
+ * produced is what makes it diagnosable. The exit code still fails the Gradle task.
+ */
+function reportUnreadConfig(config, consumed: ConsumedKeys): void {
+  const unread = findUnreadEntries(config, consumed)
+  if (unread.length === 0) return
+  console.error(`\n${describeUnreadEntries(unread)}`)
+  process.exitCode = 1
+}
+
 function main() {
   console.log('Generating kdaisyui components from DaisyUI source...\n')
   
@@ -98,8 +117,16 @@ function main() {
   let skipped = 0
   const allClasses = []
   const observations: ElementObservation[] = []
-  
+  // Every identifier a config lookup could legitimately have matched this run. A section key
+  // that matches none of these was never read, and an unread key is indistinguishable from an
+  // absent one at run time — which is how two dead `noContent` entries survived.
+  const consumed = new ConsumedKeyCollector()
+
   for (const componentName of componentDirs) {
+    // Recorded before the skip checks: `skip` itself is a config section, and an entry naming
+    // a component that no longer exists must still be caught.
+    consumed.directory(componentName)
+
     if (config.skip?.includes(componentName)) {
       console.log(`  ⊘ ${componentName}: Skipped (alias)`)
       skipped++
@@ -120,6 +147,7 @@ function main() {
     }
     
     const classified = classifyFromFrontmatter(frontmatter, componentName)
+    consumed.component(classified.componentName, classified.parts)
     // The element heuristic takes the first variant in DaisyUI's Syntax block. When that
     // variant only works with attributes this generator cannot emit, the result compiles
     // but does not function — see componentElements in codegen-config.json.
@@ -149,6 +177,7 @@ function main() {
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
 
   reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {})
+  reportUnreadConfig(config, consumed.keys())
 }
 
 main()

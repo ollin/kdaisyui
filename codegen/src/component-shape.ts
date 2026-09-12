@@ -142,8 +142,6 @@ export interface ComponentConfig {
   readonly customParts: readonly CustomPart[]
   /** Whether the component takes a `text` shortcut for inline content. */
   readonly hasTextParam: boolean
-  /** Whether the component refuses children. */
-  readonly noContent: boolean
   readonly role: string | null
   /** A fixed `InputType`, for components that are always one kind of `<input>`. */
   readonly inputType: string | null
@@ -166,7 +164,6 @@ export function readComponentConfig(config, componentName: string): ComponentCon
     extras: section(config, 'extras', componentName, []),
     customParts: section(config, 'customParts', componentName, []),
     hasTextParam: listed(config, 'textParams', componentName),
-    noContent: listed(config, 'noContent', componentName),
     role: section(config, 'roles', componentName, null),
     inputType: section(config, 'inputTypes', componentName, null),
     componentAttributes: Object.entries(section(config, 'componentAttributes', componentName, {})),

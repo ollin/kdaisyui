@@ -1,7 +1,6 @@
 {
   "skip": ["accordion", "pagination"],
   "textParams": ["button", "badge", "link", "kbd", "label", "card-title", "stat-value", "stat-desc"],
-  "noContent": ["range", "toggle", "checkbox", "radio", "file-input", "theme-controller", "input", "validator"],
   "roles": {
     "alert": "alert",
     "status": "status"

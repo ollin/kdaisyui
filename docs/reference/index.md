@@ -1,3 +1,9 @@
+<!--
+GENERATED — DO NOT EDIT
+Source: daisyui/packages/docs/src/routes/(routes)/components/
+Regenerate: just generate
+-->
+
 # Component reference
 
 Type-safe [DaisyUI](https://daisyui.com/) components for [kotlinx.html](https://github.com/Kotlin/kotlinx.html).

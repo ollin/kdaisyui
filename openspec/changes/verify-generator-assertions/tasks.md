@@ -115,9 +115,9 @@ Landed first and on its own, so the build wiring is provable before anything dep
 
 ## 5. The consumption guard
 
-- [ ] 5.1 `^ F (internal)` Record consumed keys in `readComponentConfig` and fail the run on any
+- [x] 5.1 `^ F (internal)` Record consumed keys in `readComponentConfig` and fail the run on any
   component-keyed entry nothing read, naming section and key.
-- [ ] 5.2 `. r (internal)` Prove it bites: a unit test adds an unread entry and asserts the failure
+- [x] 5.2 `. r (internal)` Prove it bites: a unit test adds an unread entry and asserts the failure
   names it.
 
 ## 6. The Kotlin API baseline

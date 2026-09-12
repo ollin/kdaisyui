@@ -84,7 +84,12 @@ generator is wired into the build.
 
 ## 8. Gate and adoption
 
-- [ ] 8.1 Full green per `openspec/config.yaml` — repo-wide compile, complete suite including
+- [x] 8.1 Full green per `openspec/config.yaml` — repo-wide compile, complete suite including
   e2e, coverage, `analyze_change_set`.
-- [ ] 8.2 `openspec validate --all --strict`.
-- [ ] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt.
+  `check --warning-mode all` SUCCESS with 0 problems; `:lib:test` 1498 tests and `:e2e-tests:test`
+  19 result files, 0 failures and 0 errors, report confirmed on disk; aggregated `koverVerify`
+  SUCCESS; `analyze_change_set` against `origin/main` **passed**, one file improved and nothing
+  degraded.
+- [x] 8.2 `openspec validate --all --strict`. 8 items, 8 passed.
+- [x] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt.
+  `/home/ollin/dev/src/github.com/ollin/kdaisyui/tmp/EVALUATION-generate-component-reference.md`

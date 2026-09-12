@@ -43,6 +43,12 @@ Landed first and on its own, so the build wiring is provable before anything dep
 - [ ] 0.2 `^ F (internal)` Add an `installCodegenDeps` Gradle task running `npm ci`, and make the
   five generator tasks plus `testCodegen` depend on it. Declare `package-lock.json` as its input
   and `node_modules` as its output so Gradle can skip it when nothing moved.
+- [ ] 0.2a `^ B (internal)` Declare `package-lock.json` as an input to the five generator tasks
+  and `testCodegen`. **Found by running 0.4**: with a dependency, the generators' declared inputs
+  no longer cover everything that decides their output. A parser upgrade changes the lockfile and
+  `node_modules` but none of `codegen/src`, the submodule, `package.json` or `codegen-config.json`
+  — so Gradle calls them up to date and regeneration silently does not happen. The lockfile is the
+  right proxy for `node_modules` because `npm ci` makes it exact, and it hashes cheaply.
 - [ ] 0.3 `^ F (internal)` Add `npm ci` to CI's `codegen-tests` job — the only job that runs `npm
   test` directly rather than through Gradle.
   **Widened while doing it.** `generated-sources-drift` also runs npm now, through the Gradle

@@ -19,7 +19,7 @@ render-coverage test. `:lib:test` runs 1488 tests from them and `koverVerify` pa
 line and branch.
 
 The fourth category arrived with `rejoin-main`:
-`codegen/src/test-generator-heroicons.js` produces `HeroIconsGeneratedTest.kt`. Without
+`codegen/src/test-generator-heroicons.ts` produces `HeroIconsGeneratedTest.kt`. Without
 it the aggregated coverage gate cannot be met, so the categories and the gate are not
 independent.
 
@@ -84,7 +84,7 @@ order reverses both), so `localeCompare` really does decide it. It simply decide
 identically everywhere tried, because the identifiers are pure ASCII.
 
 Contributing factors, both checked rather than assumed: every directory read is sorted
-before use (`codegen/src/parser/frontmatter.js:218-223`, `codegen/src/index-heroicons.js:47`),
+before use (`codegen/src/parser/frontmatter.ts:336-342`, `codegen/src/index-heroicons.ts:49`),
 no timestamps or absolute paths are emitted, and `codegen/package-lock.json` is committed
 (since `c7b85cc`) so npm resolution cannot drift.
 
@@ -112,7 +112,7 @@ durability — one green run proves the job works, not that it keeps working.
 
 A generator that is missing from the drift job is worse than one that is absent, because the
 committed tree then drifts silently. That failure mode is not hypothetical: a stale input path
-in `test-generator.js` removed 66 coverage files and 8% line coverage while every build stayed
+in `test-generator.ts` removed 66 coverage files and 8% line coverage while every build stayed
 green, and it was caught by regenerating rather than by any test.
 
 #### Scenario: Someone edits generated output by hand

@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
-import { getAllComponentDirs, readComponentFrontmatter, getClassesByCategory } from './parser/frontmatter.js'
-import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.js'
-import { classifyFromFrontmatter } from './classifier.js'
-import { generateKotlinFile } from './generator-new.js'
+import { getAllComponentDirs, readComponentFrontmatter, getClassesByCategory } from './parser/frontmatter.ts'
+import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
+import { classifyFromFrontmatter } from './classifier.ts'
+import { generateKotlinFile } from './generator-new.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -14,7 +14,7 @@ const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generate
 // file the scanner reads, and the jar carries no Kotlin sources.
 const DEFAULT_CLASS_LIST = path.resolve(import.meta.dirname, '../../lib/generated/main/resources/kdaisyui-classes.txt')
 
-function parseArg(flag, fallback) {
+function parseArg(flag: string, fallback: string): string {
   for (const arg of process.argv) {
     if (arg.startsWith(`${flag}=`)) return arg.slice(flag.length + 1)
   }

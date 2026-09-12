@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'node:url'
-import { parseIconFiles } from './parser/svg-heroicons.js'
+import { parseIconFiles, type IconPaths } from './parser/svg-heroicons.ts'
 
 const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
 // `lib/generated/test/`, NOT `lib/src/test/`. This file's output is generated, and the
@@ -13,7 +13,7 @@ const DEFAULT_OUTPUT_DIR = path.resolve(
   '../../lib/generated/test/kotlin/io/github/ollin/kdaisyui/icons',
 )
 
-function parseOutputDir() {
+function parseOutputDir(): string {
   for (const arg of process.argv) {
     if (arg.startsWith('--output-dir=')) {
       return arg.slice('--output-dir='.length)
@@ -35,6 +35,13 @@ const directories = {
 // HeroIconSize.dimension and is independent of the icon's available variants.
 const SIZE_DIMENSION = { Sm: 16, Md: 20, Lg: 24 }
 
+/** The three sizes `HeroIconSize` declares. Derived so the two cannot drift apart. */
+type IconSize = keyof typeof SIZE_DIMENSION
+
+// `IconPaths` is imported rather than declared here: it describes what the parser PRODUCES,
+// so the parser is where it belongs. It was briefly duplicated in task 1.3, which is how a
+// shape drifts — two declarations, one of them eventually stale.
+
 /**
  * Compute the viewBox the function will emit for a Solid render at a given size,
  * mirroring the branch shape produced by generator-heroicons.js:
@@ -42,7 +49,7 @@ const SIZE_DIMENSION = { Sm: 16, Md: 20, Lg: 24 }
  *   - icons with solid20 only:      Sm -> else(24), Md -> 20, Lg -> 24
  *   - icons with neither:           any -> 24
  */
-function solidViewBox(size, struct) {
+function solidViewBox(size: IconSize, struct: IconPaths): string {
   const hasSolid16 = !!struct.solid16
   const hasSolid20 = !!struct.solid20
   if (size === 'Sm') return hasSolid16 ? '0 0 16 16' : '0 0 24 24'
@@ -56,11 +63,16 @@ function solidViewBox(size, struct) {
  * full class list (size + variant + optional extraClasses), and width/height —
  * which uniquely identifies the selected `when` branch for every icon shape.
  */
-function svgOpenFragment(viewBox, classes, dimension) {
+function svgOpenFragment(viewBox: string, classes: string, dimension: number): string {
   return `viewBox="${viewBox}" class="${classes}" width="${dimension}" height="${dimension}">`
 }
 
-function renderAssertion(fnName, callArgs, fragment, label) {
+// Four strings in a fixed order, and the types say so and nothing more. Swapping `fragment`
+// and `label` type-checks perfectly and produces nonsense — the same shape of defect that
+// motivated this change (a kotlinx.html builder name passed where an HTML tag name was
+// meant). Plain annotations do NOT catch it; only branded types would, at a cost this
+// change has not taken on. Recorded rather than papered over.
+function renderAssertion(fnName: string, callArgs: string, fragment: string, label: string): string {
   return `        run {
             val html = createHTML(prettyPrint = false).div { ${fnName}(${callArgs}) }
             assertTrue(
@@ -70,7 +82,7 @@ function renderAssertion(fnName, callArgs, fragment, label) {
         }`
 }
 
-function generateIconTest(pascalName, struct) {
+function generateIconTest(pascalName: string, struct: IconPaths): string {
   const fnName = `heroIcon${pascalName}`
   const outlineFragment = svgOpenFragment(
     '0 0 24 24',
@@ -137,7 +149,8 @@ function main() {
   const sorted = [...icons.keys()].sort()
 
   const methods = sorted
-    .map((pascalName) => generateIconTest(pascalName, icons.get(pascalName)))
+    // `!` because the key came from `icons.keys()` — present by construction.
+    .map((pascalName) => generateIconTest(pascalName, icons.get(pascalName)!))
     .join('\n')
 
   const kotlin = `// GENERATED — DO NOT EDIT
@@ -163,8 +176,9 @@ ${methods}}
 }
 
 // Run only when invoked directly. Without this, importing the module to test anything in it
-// regenerates 324 icon tests as a side effect — and `node --test`'s default patterns include
-// `**/test-*.js`, so a bare invocation treats this very file as a test and executes it.
+// regenerates 324 icon tests as a side effect — and `node --test`'s default patterns match
+// `test-*` regardless of extension, so a bare invocation treats this very file as a test and
+// executes it.
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main()
 }

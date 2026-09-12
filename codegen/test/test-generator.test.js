@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { parseTestCases, buildClassMappings } from '../src/test-generator.js'
+import { parseTestCases, buildClassMappings } from '../src/test-generator.ts'
 
 // Characterization tests: they pin what `parseTestCases` does TODAY, so section 2 can
 // restructure it and know immediately whether anything moved. They were green on the

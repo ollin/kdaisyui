@@ -20,6 +20,12 @@ codegen pipeline instead → skill **`kdaisyui-codegen`**.
 The build does **not** run the generators: a clone compiles and tests with no Node, no npm and no
 git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
 
+`codegen/` is **TypeScript executed directly by Node** — no build step, no emitted JavaScript,
+zero dependencies. Nothing type-checks it, by decision; the gates are its unit tests
+(`./gradlew :lib:testCodegen`) and `generated-sources-drift`. Code there must stay inside
+*erasable* syntax — no `enum`, no `namespace` with runtime code, `import type` mandatory for
+types, `.ts` mandatory in import specifiers. → skill **`kdaisyui-codegen`**.
+
 **One host requirement was added deliberately: `:example-app` compiles its stylesheet in a Docker
 container**, so `./gradlew check` needs Docker — `:e2e-tests` depends on `:example-app:classes`.
 `:lib`, `:ktor-integration` and `:bom` stay free of it, and Docker was chosen precisely so the

@@ -31,11 +31,11 @@ generator is wired into the build.
 
 ## 3. The Markdown emitter
 
-- [ ] 3.1 `^ F (internal)` Emit one component page from the shared shape, with the
+- [x] 3.1 `^ F (internal)` Emit one component page from the shared shape, with the
   `GENERATED — DO NOT EDIT` header naming its DaisyUI input. The description comes from
   `docSummaries`, falling back to the first sentence of the frontmatter `desc` when absent.
   Test against the `card` expectation from 1.1.
-- [ ] 3.2 `^ F (internal)` Emit the pages for the three shapes from 1.3.
+- [x] 3.2 `^ F (internal)` Emit the pages for the three shapes from 1.3.
 - [ ] 3.3 `^ F (internal)` Emit `docs/reference/index.md`'s component table.
 
 ## 4. Move the prose out of `index.md`

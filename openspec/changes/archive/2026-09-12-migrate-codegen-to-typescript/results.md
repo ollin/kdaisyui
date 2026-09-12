@@ -82,13 +82,28 @@ Note the two scans disagree, and both are right about different things:
 | `.ts` before → `.ts` after (pre-commit safeguard, task 2.6) | **improved**, five categories fixed |
 | `.js` on main → `.ts` here (change-set) | **degraded**, two categories introduced |
 
-The second half of the ratio is real and declined deliberately: the module went from 11
-functions to **24**, because 2.6 decomposed a cc-32 function. Decomposition necessarily
-multiplies primitive parameters, so Primitive Obsession pulls *directly against* Complex Method
-and Bumpy Road. Both cannot be satisfied. The finding that improved is the one that was
-hurting a reader; the arguments left are `trimmed`, `value` and `key` — text in a text parser,
-with no kinds left to separate once `line`-versus-`trimmed` was removed by giving `scanLine` a
-single parameter.
+The second half of the ratio was initially **declined as metric-chasing. That was wrong, and
+it was fixed — `frontmatter.ts` is now 10.0 with zero findings**, the ratio 51.4% → 23.5%,
+verdict `improved`.
 
-Branding them to move a percentage would be metric-chasing, and this change has already
-established where branding pays and where it does not.
+The mistake in the reasoning is worth more than the fix. I had conflated two different moves:
+
+| Move | Verdict |
+|---|---|
+| Brand a string that is merely text (`trimmed`, `value`) | ceremony — correctly declined |
+| Introduce the domain object the code keeps re-deriving | **not ceremony, and it was missing** |
+
+`Line` was that object. Every handler took `trimmed: string` and re-derived
+`startsWith('- ')`, and the indent had already been discarded by the time they saw it — which
+is precisely why the caller had to carry the raw line as well, and why `scanLine` needed a
+comment warning about the swap. Read once, a line knows its indent, its text, whether it is a
+list entry, and what that entry says.
+
+`KeyValue` was the second, and it was already there as the anonymous return type of
+`splitOnFirstColon`. Naming it let four handlers take one argument instead of two loose
+strings.
+
+So the decomposition-versus-primitives tension was real but not a dilemma: the answer was not
+to pick a side, it was to notice that a decomposed parser had made the missing abstraction
+obvious. What remains primitive is genuinely primitive — `readLine` at the boundary,
+`splitOnFirstColon`, and `parseValue` with its two predicates.

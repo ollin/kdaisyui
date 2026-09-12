@@ -329,6 +329,46 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     outputs.dir(outputDir)
 }
 
+// The SECOND API baseline, and it answers a different question from `checkKotlinAbi`.
+//
+// `lib/api/lib.api` is a dump of JVM descriptors, which carry no lambda receiver types, no
+// parameter names — part of the API in Kotlin, because callers use named arguments — and no
+// default values. Measured on `verify-generator-assertions`: `daisyOtp` moved from `DIV` to
+// `LABEL`, breaking every caller's lambda body, and that file showed NO diff. The hand-written
+// example app still compiled too, because its lambda used only `span { }`.
+//
+// So both are kept. Removing a parameter is visible in the JVM dump (the arity changes);
+// changing a receiver is visible only here.
+//
+// `updateComponentApi` is deliberately NOT part of `just generate`. A baseline rewritten by the
+// same command that regenerates the code would follow every change in silence, which is the
+// failure being fixed. It is run on purpose, after reading the diff.
+val checkComponentApi = tasks.register<Exec>("checkComponentApi") {
+    group = "verification"
+    description = "Fail if the generated components' Kotlin API no longer matches lib/api/components.api"
+    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
+    workingDir = rootProject.file("codegen")
+    val baseline = rootProject.layout.projectDirectory.file("lib/api/components.api")
+    commandLine("sh", "-c", "node src/index-component-api.ts --check --baseline=\"${baseline.asFile.absolutePath}\"")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("daisyui/packages/docs"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
+    inputs.file(rootProject.file("codegen/codegen-config.json"))
+    inputs.file(baseline)
+    outputs.upToDateWhen { false }
+}
+
+tasks.register<Exec>("updateComponentApi") {
+    group = "codegen"
+    description = "Rewrite lib/api/components.api from the current component shapes — read the diff"
+    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
+    workingDir = rootProject.file("codegen")
+    val baseline = rootProject.layout.projectDirectory.file("lib/api/components.api")
+    commandLine("sh", "-c", "node src/index-component-api.ts --baseline=\"${baseline.asFile.absolutePath}\"")
+    outputs.upToDateWhen { false }
+}
+
 // The fifth generated output, and the only one that is not Kotlin. Its input is the same parsed
 // DaisyUI frontmatter the components come from, so a component whose rendered element changes
 // cannot update one without the other — which is exactly what went wrong before this existed:

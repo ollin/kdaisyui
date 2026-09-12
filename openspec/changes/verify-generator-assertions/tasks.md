@@ -33,9 +33,13 @@ parts that deserve to be permanent are guards inside the generator, exercised by
 Prerequisite for section 3, and a reversal of a recorded property — see `design.md` decision 0.
 Landed first and on its own, so the build wiring is provable before anything depends on it.
 
-- [ ] 0.1 `! F (internal)` Add the HTML parser to `codegen/package.json`, pin it, commit a real
-  `codegen/package-lock.json`. `!` rather than `^`: this one cannot be proven by a test, only by
-  the build going green afterwards.
+- [ ] 0.1 `. r (internal)` Add the HTML parser to `codegen/package.json`, pin it exactly, commit a
+  real `codegen/package-lock.json`.
+  **Label corrected before doing it.** This said `! F (internal)`, on the premise that it "cannot
+  be proven by a test, only by the build going green". That premise is false: nothing imports the
+  package yet, so no behaviour changes and the proof is that regeneration still produces
+  byte-identical output. Zero behaviour means a lowercase letter, and provable means `.` — so
+  `. r`, not `! F`. Risk is claimed by evidence, not by how large a change feels.
 - [ ] 0.2 `^ F (internal)` Add an `installCodegenDeps` Gradle task running `npm ci`, and make the
   five generator tasks plus `testCodegen` depend on it. Declare `package-lock.json` as its input
   and `node_modules` as its output so Gradle can skip it when nothing moved.

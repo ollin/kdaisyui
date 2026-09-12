@@ -62,7 +62,7 @@ import io.github.ollin.kdaisyui.components.*
 | [MockupWindow](mockupWindow.md) | Desktop window mockup frame | `<div>` |
 | [Modal](modal.md) | Modal dialogs | `<dialog>` |
 | [Navbar](navbar.md) | Navigation bar layout | `<div>` |
-| [Otp](otp.md) | One-time password / verification code input | `<div>` |
+| [Otp](otp.md) | One-time password / verification code input | `<label>` |
 | [Progress](progress.md) | Progress bar indicator | `<progress>` |
 | [RadialProgress](radialProgress.md) | Circular progress indicator | `<div>` |
 | [Radio](radio.md) | Single-choice option groups | `<input>` |

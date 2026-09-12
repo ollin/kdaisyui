@@ -18,7 +18,7 @@ reachable and the plan is rewritten rather than forced.
   is the evidence), and a `.js` test importing a `.ts` module works, because stripping is
   decided per file by extension rather than by the importer.
 
-- [ ] 1.2 Rename its test to `.ts` and confirm `:lib:testCodegen` still passes (refactoring) — `node --test` must discover and strip a `.ts` test; if it does not, that is a finding worth recording before porting anything else.
+- [x] 1.2 Rename its test to `.ts` and confirm `:lib:testCodegen` still passes (refactoring) — `node --test` must discover and strip a `.ts` test; if it does not, that is a finding worth recording before porting anything else. **Done**, and it was tidiness rather than a second gamble: 1.1 had already shown stripping is decided per file by extension, since a `.js` test importing a `.ts` module worked. The runner's default discovery patterns match a `.ts` test too.
 - [x] 1.3 Add the first real annotations to that file: the parsed-icon shape and the exported `DEFAULT_OUTPUT_DIR` (feature-test; small) — the point at which we learn whether types say anything the code did not already say. **If they do not, stop and reconsider the change** rather than continuing out of consistency.
 
   **Verdict: continue, with the argument narrowed.** `IconPaths` and

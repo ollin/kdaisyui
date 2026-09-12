@@ -107,11 +107,11 @@ Landed first and on its own, so the build wiring is provable before anything dep
 
 ## 4. The citations
 
-- [ ] 4.1 `^ B (internal)` Build the `// Source:` header from `ComponentSource.componentDir`.
+- [x] 4.1 `^ B (internal)` Build the `// Source:` header from `ComponentSource.componentDir`.
   Test first: a multi-word component cites its real directory.
-- [ ] 4.2 `^ B (internal)` Use `htmlTag` rather than `tagBuilder` in generated doc-comment prose,
+- [x] 4.2 `^ B (internal)` Use `htmlTag` rather than `tagBuilder` in generated doc-comment prose,
   leaving emitted code on `tagBuilder`. Test first, with `FIELDSET`.
-- [ ] 4.3 `. B` Regenerate and commit: 10 headers and 2 doc comments change, no signature does.
+- [x] 4.3 `. B` Regenerate and commit: 10 headers and 2 doc comments change, no signature does.
 
 ## 5. The consumption guard
 

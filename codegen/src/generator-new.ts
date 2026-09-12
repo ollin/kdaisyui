@@ -1,4 +1,5 @@
-import { toPascalCase, toCamelCase } from './classifier.ts'
+import { toPascalCase, toCamelCase, type ClassifiedComponent } from './classifier.ts'
+import type { ElementRule } from './parser/llms-txt.ts'
 
 const KOTLIN_KEYWORDS = new Set(['object', 'class', 'fun', 'val', 'var', 'if', 'else', 'when', 'for', 'while', 'return', 'true', 'false', 'null'])
 
@@ -374,9 +375,26 @@ function collectImports(classified, element, config) {
   return [...imports].sort((a, b) => a.localeCompare(b))
 }
 
-export function generateKotlinFile(classified, elementRules, config) {
+/**
+ * Emit one component's Kotlin file.
+ *
+ * The second parameter was called `elementRules`, which was wrong twice over: it is not
+ * plural and it is not a rule. The only call site passes an ad-hoc
+ * `{ primaryElement: element }`, and only that one field is ever read — so the type says
+ * `Pick<ElementRule, 'primaryElement'>` and the name says what it holds. Writing the type
+ * is what made the name's wrongness visible.
+ *
+ * `config` is deliberately left to inference: it is the whole of `codegen-config.json`,
+ * a large object with per-component sections, and modelling it properly is its own piece
+ * of work rather than a side effect of a rename.
+ */
+export function generateKotlinFile(
+  classified: ClassifiedComponent,
+  chosenElement: Pick<ElementRule, 'primaryElement'>,
+  config,
+) {
   const componentName = classified.componentName.toLowerCase()
-  const element = elementRules.primaryElement?.toUpperCase() || 'DIV'
+  const element = chosenElement.primaryElement?.toUpperCase() || 'DIV'
   const imports = collectImports(classified, element, config)
   
   const header = [

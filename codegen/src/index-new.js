@@ -3,7 +3,7 @@ import path from 'path'
 import { getAllComponentDirs, readComponentFrontmatter, getClassesByCategory } from './parser/frontmatter.ts'
 import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter } from './classifier.ts'
-import { generateKotlinFile } from './generator-new.js'
+import { generateKotlinFile } from './generator-new.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.

@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { parseIconFiles } from './parser/svg-heroicons.ts'
-import { generateKotlinFile } from './generator-heroicons.js'
+import { generateKotlinFile } from './generator-heroicons.ts'
 
 const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
 // Committed generated root — a sibling of lib/src/, never inside it.

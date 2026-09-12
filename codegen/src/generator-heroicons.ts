@@ -1,4 +1,11 @@
-export function generateKotlinFile(pascalName, struct) {
+import type { IconPaths, PascalName } from './parser/svg-heroicons.ts'
+
+/**
+ * Emit one `heroIcon*` function. `struct` carries a null per variant the icon does not
+ * ship, and the `when` branches below read exactly those fields — so the nullability in
+ * `IconPaths` is the branch table, not decoration.
+ */
+export function generateKotlinFile(pascalName: PascalName, struct: IconPaths): string {
   const fnName = `heroIcon${pascalName}`
 
   function kebabFromPascal(pascal) {

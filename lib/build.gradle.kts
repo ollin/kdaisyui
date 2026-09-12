@@ -231,7 +231,7 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     // in the other two generator tasks if a dependency is ever introduced.
     commandLine(
         "sh", "-c",
-        "node src/index-new.js --output-dir=\"${outputDir.asFile.absolutePath}\"" +
+        "node src/index-new.ts --output-dir=\"${outputDir.asFile.absolutePath}\"" +
             " --class-list=\"${classList.asFile.absolutePath}\""
     )
     inputs.dir(rootProject.file("codegen/src"))

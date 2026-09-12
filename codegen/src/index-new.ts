@@ -14,7 +14,7 @@ const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generate
 // file the scanner reads, and the jar carries no Kotlin sources.
 const DEFAULT_CLASS_LIST = path.resolve(import.meta.dirname, '../../lib/generated/main/resources/kdaisyui-classes.txt')
 
-function parseArg(flag, fallback) {
+function parseArg(flag: string, fallback: string): string {
   for (const arg of process.argv) {
     if (arg.startsWith(`${flag}=`)) return arg.slice(flag.length + 1)
   }

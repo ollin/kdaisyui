@@ -36,7 +36,7 @@ generator is wired into the build.
   `docSummaries`, falling back to the first sentence of the frontmatter `desc` when absent.
   Test against the `card` expectation from 1.1.
 - [x] 3.2 `^ F (internal)` Emit the pages for the three shapes from 1.3.
-- [ ] 3.3 `^ F (internal)` Emit `docs/reference/index.md`'s component table.
+- [x] 3.3 `^ F (internal)` Emit `docs/reference/index.md`'s component table.
 
 ## 4. Move the prose out of `index.md`
 

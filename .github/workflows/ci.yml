@@ -10,10 +10,18 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  # Keeps the committed lib/generated honest. Before this job existed the build
-  # itself regenerated on every compile, so drift was impossible; now that the
-  # build reads committed sources instead, this is what replaces that guarantee.
-  # It is the only job that needs Node and the git submodules.
+  # Keeps the committed lib/generated and docs/reference honest. Before this job
+  # existed the build itself regenerated on every compile, so drift was impossible;
+  # now that the build reads committed sources instead, this is what replaces that
+  # guarantee. It is the only job that needs Node and the git submodules.
+  #
+  # Every generator belongs here. A generator missing from this job is worse than
+  # one that does not exist, because the committed tree then drifts in silence: a
+  # stale input path in test-generator.ts once removed 66 coverage files and 8% line
+  # coverage while every build stayed green. docs/reference was outside this job
+  # until now, and it cost the same way with a slower fuse — megamenu.md documented
+  # a DIV lambda receiver for five days after the element became a <span>, and
+  # shipped wrong in v0.4.0.
   generated-sources-drift:
     name: generated-sources-drift
     runs-on: ubuntu-latest
@@ -30,21 +38,23 @@ jobs:
           cache: gradle
 
       - name: Regenerate
-        run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests --no-daemon
+        run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs --no-daemon
 
       - name: Fail if the committed sources no longer match their inputs
         run: |
           # --porcelain also reports untracked files, so a newly added component
-          # counts as drift rather than slipping through as "no diff".
-          if [ -n "$(git status --porcelain -- lib/generated)" ]; then
-            echo "::error::lib/generated does not match what the generators produce."
+          # counts as drift rather than slipping through as "no diff". It also
+          # reports deletions, which is what catches a page the generator no longer
+          # produces.
+          if [ -n "$(git status --porcelain -- lib/generated docs/reference)" ]; then
+            echo "::error::lib/generated or docs/reference does not match what the generators produce."
             echo "Run 'just generate' and commit the result."
             echo
-            git --no-pager diff --stat -- lib/generated
-            git status --porcelain -- lib/generated
+            git --no-pager diff --stat -- lib/generated docs/reference
+            git status --porcelain -- lib/generated docs/reference
             exit 1
           fi
-          echo "lib/generated matches its inputs."
+          echo "lib/generated and docs/reference match their inputs."
 
   # The codegen's own unit tests. Deliberately not part of `./gradlew check`: AGENTS.md
   # promises a clone builds and tests with no Node, so anything needing Node lives in its

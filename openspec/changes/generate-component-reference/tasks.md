@@ -40,7 +40,7 @@ generator is wired into the build.
 
 ## 4. Move the prose out of `index.md`
 
-- [ ] 4.1 `. d` Move **Common parameters**, **Core utility** and **Requirements**
+- [x] 4.1 `. d` Move **Common parameters**, **Core utility** and **Requirements**
   (`docs/reference/index.md:85-118`) into `docs/explanation.md`, next to the existing class-merging
   material. No wording changes in this commit — a move that also edits is not a move.
 - [ ] 4.2 `. d` Repoint every link to the moved sections. `docs/reference.md`,

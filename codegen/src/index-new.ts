@@ -130,7 +130,7 @@ function main() {
     // whole set is reportable at once — dying on the first would hide the rest.
     observations.push(observeElement(componentName, element, frontmatter))
 
-    const kotlin = generateKotlinFile(classified, { primaryElement: element }, config)
+    const kotlin = generateKotlinFile(classified, { componentDir: componentName, element }, config)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
     
     fs.mkdirSync(OUTPUT_DIR, { recursive: true })

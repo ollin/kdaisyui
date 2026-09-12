@@ -10,7 +10,6 @@
  */
 
 import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
-import type { ElementRule } from './parser/llms-txt.ts'
 import {
   booleanParameterClasses,
   buildComponentShape,
@@ -19,6 +18,7 @@ import {
   staticAttributeDoc,
   type ComponentConfig,
   type ComponentShape,
+  type ComponentSource,
   type EnumShape,
   type ExtraParameter,
   type FunctionShape,
@@ -184,11 +184,10 @@ function collectImports(shape: ComponentShape, componentConfig: ComponentConfig)
 /**
  * Emit one component's Kotlin file.
  *
- * The second parameter was called `elementRules`, which was wrong twice over: it is not
- * plural and it is not a rule. The only call site passes an ad-hoc
- * `{ primaryElement: element }`, and only that one field is ever read — so the type says
- * `Pick<ElementRule, 'primaryElement'>` and the name says what it holds. Writing the type
- * is what made the name's wrongness visible.
+ * The second parameter is the `ComponentSource` the shape already models: where the component
+ * was read from, and which element it renders. It used to be an ad-hoc
+ * `Pick<ElementRule, 'primaryElement'>` carrying only the element, which is why the
+ * attribution had to invent a directory name and invented a wrong one.
  *
  * `config` is deliberately left to inference: it is the whole of `codegen-config.json`,
  * a large object with per-component sections, and modelling it properly is its own piece
@@ -196,20 +195,10 @@ function collectImports(shape: ComponentShape, componentConfig: ComponentConfig)
  */
 export function generateKotlinFile(
   classified: ClassifiedComponent,
-  chosenElement: Pick<ElementRule, 'primaryElement'>,
+  source: ComponentSource,
   config,
 ) {
-  // Lower-casing the PascalCase name, which is WRONG for every multi-word component:
-  // `FileInput` yields `fileinput`, and `components/fileinput/+page.md` does not exist. Left
-  // exactly as it was so this refactoring changes no byte; `ComponentSource.componentDir` is
-  // where the correct value belongs, and switching to it rewrites nine files, so it is its
-  // own commit.
-  const sourceDir = classified.componentName.toLowerCase()
-  const shape = buildComponentShape(
-    classified,
-    { componentDir: sourceDir, element: chosenElement.primaryElement },
-    config,
-  )
+  const shape = buildComponentShape(classified, source, config)
   const componentConfig = readComponentConfig(config, classified.componentName)
 
   const header = [

@@ -45,6 +45,11 @@ Landed first and on its own, so the build wiring is provable before anything dep
   and `node_modules` as its output so Gradle can skip it when nothing moved.
 - [ ] 0.3 `^ F (internal)` Add `npm ci` to CI's `codegen-tests` job — the only job that runs `npm
   test` directly rather than through Gradle.
+  **Widened while doing it.** `generated-sources-drift` also runs npm now, through the Gradle
+  tasks, and it had **no** `setup-node` at all — it used whatever Node the runner shipped. That
+  was tolerable while the generators only executed a script; with `npm ci` the npm version
+  decides how a lockfile is installed, and `ci.yml` already warns that a Node mismatch is not
+  loud. Both Node-running jobs now read `.tool-versions`.
 - [ ] 0.4 `. r (internal)` Prove regeneration still works end to end from a clean `node_modules`:
   delete it, run `just generate`, confirm `lib/generated` and `docs/reference` come out unchanged.
 - [ ] 0.5 `. d` Correct the three places that record zero dependencies: `AGENTS.md`,

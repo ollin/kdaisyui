@@ -79,7 +79,7 @@ generator is wired into the build.
   `.opencode/skills/kdaisyui-testing/SKILL.md:15` and `:20`, and
   `openspec/specs/generated-sources/spec.md:22`, `:87`, `:115`. The line citations at `:87`
   moved too — `frontmatter.ts:336-342` and `index-heroicons.ts:49` are the current locations.
-- [ ] 7.3 `. d` Update `AGENTS.md` and the `kdaisyui-codegen` skill: `docs/reference/**` joins
+- [x] 7.3 `. d` Update `AGENTS.md` and the `kdaisyui-codegen` skill: `docs/reference/**` joins
   the never-hand-edit list, and the codegen gains a fifth output.
 
 ## 8. Gate and adoption

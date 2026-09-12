@@ -33,32 +33,32 @@ parts that deserve to be permanent are guards inside the generator, exercised by
 Prerequisite for section 3, and a reversal of a recorded property — see `design.md` decision 0.
 Landed first and on its own, so the build wiring is provable before anything depends on it.
 
-- [ ] 0.1 `. r (internal)` Add the HTML parser to `codegen/package.json`, pin it exactly, commit a
+- [x] 0.1 `. r (internal)` Add the HTML parser to `codegen/package.json`, pin it exactly, commit a
   real `codegen/package-lock.json`.
   **Label corrected before doing it.** This said `! F (internal)`, on the premise that it "cannot
   be proven by a test, only by the build going green". That premise is false: nothing imports the
   package yet, so no behaviour changes and the proof is that regeneration still produces
   byte-identical output. Zero behaviour means a lowercase letter, and provable means `.` — so
   `. r`, not `! F`. Risk is claimed by evidence, not by how large a change feels.
-- [ ] 0.2 `^ F (internal)` Add an `installCodegenDeps` Gradle task running `npm ci`, and make the
+- [x] 0.2 `^ F (internal)` Add an `installCodegenDeps` Gradle task running `npm ci`, and make the
   five generator tasks plus `testCodegen` depend on it. Declare `package-lock.json` as its input
   and `node_modules` as its output so Gradle can skip it when nothing moved.
-- [ ] 0.2a `^ B (internal)` Declare `package-lock.json` as an input to the five generator tasks
+- [x] 0.2a `^ B (internal)` Declare `package-lock.json` as an input to the five generator tasks
   and `testCodegen`. **Found by running 0.4**: with a dependency, the generators' declared inputs
   no longer cover everything that decides their output. A parser upgrade changes the lockfile and
   `node_modules` but none of `codegen/src`, the submodule, `package.json` or `codegen-config.json`
   — so Gradle calls them up to date and regeneration silently does not happen. The lockfile is the
   right proxy for `node_modules` because `npm ci` makes it exact, and it hashes cheaply.
-- [ ] 0.3 `^ F (internal)` Add `npm ci` to CI's `codegen-tests` job — the only job that runs `npm
+- [x] 0.3 `^ F (internal)` Add `npm ci` to CI's `codegen-tests` job — the only job that runs `npm
   test` directly rather than through Gradle.
   **Widened while doing it.** `generated-sources-drift` also runs npm now, through the Gradle
   tasks, and it had **no** `setup-node` at all — it used whatever Node the runner shipped. That
   was tolerable while the generators only executed a script; with `npm ci` the npm version
   decides how a lockfile is installed, and `ci.yml` already warns that a Node mismatch is not
   loud. Both Node-running jobs now read `.tool-versions`.
-- [ ] 0.4 `. r (internal)` Prove regeneration still works end to end from a clean `node_modules`:
+- [x] 0.4 `. r (internal)` Prove regeneration still works end to end from a clean `node_modules`:
   delete it, run `just generate`, confirm `lib/generated` and `docs/reference` come out unchanged.
-- [ ] 0.5 `. d` Correct the three places that record zero dependencies: `AGENTS.md`,
+- [x] 0.5 `. d` Correct the three places that record zero dependencies: `AGENTS.md`,
   `lib/build.gradle.kts:229` and the `kdaisyui-codegen` skill. Say what replaced the property and
   why, not just that it is gone.
 

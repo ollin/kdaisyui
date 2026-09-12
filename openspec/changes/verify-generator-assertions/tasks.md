@@ -76,29 +76,29 @@ Landed first and on its own, so the build wiring is provable before anything dep
 
 ## 3. The element cross-check
 
-- [ ] 3.1 `^ F (internal)` Parse the documented root element from `+page.md`'s fenced ```html
+- [x] 3.1 `^ F (internal)` Parse the documented root element from `+page.md`'s fenced ```html
   blocks via the `$$` marker, **using the parser from section 0 — no regex over HTML**. Unit-tested
   with inline fixtures against `swap` (`<label>`), `menu` (`<ul>`) and `modal` (`<dialog>`) — three
   of the nine the old route could not answer — plus the three constructs a regex gets wrong: a `>`
   inside a quoted attribute value, an HTML comment, and a `<script>` block.
-- [ ] 3.2 `^ F (internal)` Fail generation when the chosen element disagrees and no exception is
+- [x] 3.2 `^ F (internal)` Fail generation when the chosen element disagrees and no exception is
   recorded, naming component, chosen and documented element.
-- [ ] 3.2a `^ F (internal)` Fail generation when the docs route has **no opinion** for a component.
+- [x] 3.2a `^ F (internal)` Fail generation when the docs route has **no opinion** for a component.
   Added by the section 1 correction: the measurement that it answers all 66 today is a fact about
   today, and a future component whose docs page carries no `$$`-marked example would leave the
   cross-check silently unable to check it — the precise failure this change exists to end. This is
   the permanent form of task 1.2, and it lives here because `generated-sources-drift` has the
   submodule that `codegen-tests` deliberately does not.
-- [ ] 3.3 `^ F (internal)` Fail generation on an exception that is no longer needed, so the list
+- [x] 3.3 `^ F (internal)` Fail generation on an exception that is no longer needed, so the list
   cannot accumulate.
-- [ ] 3.4 `. d` Record the `tab` and `calendar` exceptions with a reason and a tracking issue each.
+- [x] 3.4 `. d` Record the `tab` and `calendar` exceptions with a reason and a tracking issue each.
   Open those two issues first — an exception pointing at nothing is the thing this guard exists to
   prevent.
-- [ ] 3.5 `^ B` Add `componentElements: {"otp": "label"}`; regenerate; commit Kotlin, tests and
+- [x] 3.5 `^ B` Add `componentElements: {"otp": "label"}`; regenerate; commit Kotlin, tests and
   reference pages.
-- [ ] 3.6 `^ B` Follow the receiver change in `example-app/.../WhatsNewFragment.kt`, and confirm the
+- [x] 3.6 `^ B` Follow the receiver change in `example-app/.../WhatsNewFragment.kt`, and confirm the
   E2E scenario covering that page still passes.
-- [ ] 3.7 `! d` Re-dump `lib/api/lib.api` and **read the diff** rather than accepting it. All four
+- [x] 3.7 `! d` Re-dump `lib/api/lib.api` and **read the diff** rather than accepting it. All four
   breaking edits have landed by now, so one dump covers them.
   **Task added after the fact.** The first draft had this as 2.6 and the rewrite lost it, which
   `check` found by failing: `checkKotlinAbi` is part of `check` and had been red since 2.4. Its

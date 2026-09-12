@@ -52,6 +52,16 @@ jobs:
       - name: Regenerate
         run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs --no-daemon
 
+      # Beside the drift check rather than in `check`, for the same reason the generators are:
+      # it reads the submodule and runs Node, and a clone must compile and test with neither.
+      #
+      # A separate step from the drift check, not folded into it, because the two answer
+      # different questions. Drift asks whether the committed output matches its inputs;
+      # this asks whether the Kotlin API changed — and the API baseline is updated by an
+      # explicit task, so a change here is meant to fail until a human has read the diff.
+      - name: Fail if the components' Kotlin API no longer matches its baseline
+        run: ./gradlew :lib:checkComponentApi --no-daemon
+
       - name: Fail if the committed sources no longer match their inputs
         run: |
           # --porcelain also reports untracked files, so a newly added component

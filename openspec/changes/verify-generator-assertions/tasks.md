@@ -98,6 +98,12 @@ Landed first and on its own, so the build wiring is provable before anything dep
   reference pages.
 - [ ] 3.6 `^ B` Follow the receiver change in `example-app/.../WhatsNewFragment.kt`, and confirm the
   E2E scenario covering that page still passes.
+- [ ] 3.7 `! d` Re-dump `lib/api/lib.api` and **read the diff** rather than accepting it. All four
+  breaking edits have landed by now, so one dump covers them.
+  **Task added after the fact.** The first draft had this as 2.6 and the rewrite lost it, which
+  `check` found by failing: `checkKotlinAbi` is part of `check` and had been red since 2.4. Its
+  output is also the measured proof of defect 6 — three removed parameters appear in the diff and
+  `daisyOtp`'s changed receiver does not — so the dump is evidence, not bookkeeping.
 
 ## 4. The citations
 

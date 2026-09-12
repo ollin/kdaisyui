@@ -45,12 +45,22 @@ function renderParameter(parameter: ParameterShape): string {
   return `    ${parameter.name}: ${parameter.type}${defaulted},`
 }
 
-/** The `Renders <tag ...>` clause every generated function's summary line ends with. */
+/**
+ * The `Renders <tag ...>` clause every generated function's summary line ends with.
+ *
+ * `htmlTag` and not `tagBuilder`: kotlinx.html spells three tags differently from the HTML it
+ * emits, so the builder name is not an element name. This comment used to say
+ * `Renders <fieldSet class="fieldset ...">`, and `<fieldSet>` is not an element — a reader
+ * copying it into markup gets nothing. The reference pages have always named the element; only
+ * this emitter conflated the two.
+ *
+ * The emitted CODE still calls `tagBuilder`, because that is the function that exists.
+ */
 function rendersClause(shape: FunctionShape): string {
   const attrs = staticAttributeDoc(shape.staticAttributes)
   return shape.cssClass === null
-    ? `Structural wrapper. Renders \`<${shape.tagBuilder}${attrs}>\`.`
-    : `Renders \`<${shape.tagBuilder} class="${shape.cssClass} ..."${attrs}>\`.`
+    ? `Structural wrapper. Renders \`<${shape.htmlTag}${attrs}>\`.`
+    : `Renders \`<${shape.htmlTag} class="${shape.cssClass} ..."${attrs}>\`.`
 }
 
 function summaryLine(shape: FunctionShape): string {

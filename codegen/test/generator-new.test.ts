@@ -52,3 +52,40 @@ describe('the // Source: attribution', () => {
     assert.match(kotlin, /components\/card\/\+page\.md/)
   })
 })
+
+describe('the doc comment', () => {
+  test('names the HTML element, not the kotlinx.html builder', () => {
+    // `<fieldSet>` and `<textArea>` are not HTML elements. The reference pages already got
+    // this right; only the Kotlin emitter conflated the builder with the element.
+    const kotlin = generateKotlinFile(
+      classified({ componentName: 'Fieldset', componentClass: 'Fieldset', prefix: 'fieldset' }),
+      { componentDir: 'fieldset', element: 'FIELDSET' },
+      {},
+    )
+
+    assert.match(kotlin, /Renders `<fieldset class="fieldset \.\.\.">`\./)
+    assert.ok(!kotlin.includes('<fieldSet class'))
+  })
+
+  test('still CALLS the builder, which is a different name', () => {
+    const kotlin = generateKotlinFile(
+      classified({ componentName: 'Textarea', componentClass: 'Textarea', prefix: 'textarea' }),
+      { componentDir: 'textarea', element: 'TEXTAREA' },
+      {},
+    )
+
+    assert.match(kotlin, /Renders `<textarea class="textarea \.\.\.">`\./)
+    assert.match(kotlin, /^ {4}textArea \{$/m)
+    assert.match(kotlin, /attrs: \(TEXTAREA\.\(\) -> Unit\)\? = null,/)
+  })
+
+  test('leaves a part comment on the element too', () => {
+    const kotlin = generateKotlinFile(
+      classified({ componentName: 'Fieldset', componentClass: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend'] }),
+      { componentDir: 'fieldset', element: 'FIELDSET' },
+      {},
+    )
+
+    assert.ok(!kotlin.includes('<fieldSet'))
+  })
+})

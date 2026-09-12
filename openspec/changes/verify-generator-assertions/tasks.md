@@ -151,8 +151,8 @@ Landed first and on its own, so the build wiring is provable before anything dep
 
 ## 8. Gate and adoption
 
-- [ ] 8.1 Full green per `openspec/config.yaml` — repo-wide compile, complete suite including e2e,
+- [x] 8.1 Full green per `openspec/config.yaml` — repo-wide compile, complete suite including e2e,
   coverage, `analyze_change_set`.
-- [ ] 8.2 `openspec validate --all --strict`.
-- [ ] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt. Name the breaking surface —
+- [x] 8.2 `openspec validate --all --strict`.
+- [x] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt. Name the breaking surface —
   four functions — and the two deferred defects explicitly.

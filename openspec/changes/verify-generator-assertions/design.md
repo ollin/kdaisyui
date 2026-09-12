@@ -150,6 +150,46 @@ still uses `tagBuilder` for both, which is right for emitted code and wrong for 
 **Verified**: exactly two files are affected, `Fieldset.kt` and `Textarea.kt`. `INPUT` spells
 builder and element identically.
 
+## Section 1 measured, 2026-09-12
+
+Against DaisyUI 5.7.17, all 66 non-skipped components. Throwaway probe under `./tmp/`; not a unit
+test, for the reason recorded in `tasks.md`.
+
+**1.1 — `noContent` adds nothing to the HTML rule.** Zero components are listed that are not void,
+so deriving loses nothing. Nine components render a void element; eight entries exist, of which
+**six are actually reachable** and one void component (`mask`) was never listed at all. The
+assumption holds and the change proceeds.
+
+**1.2 — the docs route answers all 66, and disagrees exactly three times.**
+
+```
+no opinion: 0
+calendar   generator=<div>     docs=<calendar-date>
+otp        generator=<div>     docs=<label>
+tab        generator=<button>  docs=<div>
+self-closing vs HTML void set: agree everywhere
+```
+
+As planned, with one refinement: `calendar`'s documented element is `<calendar-date>`, Cally's
+custom element. An earlier probe reported it as `calendar` because its tag regex stopped at the
+hyphen — a parsing artefact in the probe, not in the data. The refined reading makes the deferral
+reason sharper: this is not a kotlinx.html tag that was chosen wrongly, it is an element
+kotlinx.html has no tag class for at all.
+
+The self-closing line is worth keeping: DaisyUI's convention and the HTML void set agree on every
+component where both speak, so the rule and the cross-check corroborate rather than compete.
+
+**1.3 — exactly two config entries are unreachable, both in `noContent`.**
+
+```
+noContent[] "file-input"
+noContent[] "theme-controller"
+```
+
+Checked across all component-keyed sections, including `subComponentElements` by part class and
+the three directory-keyed sections. Since this change deletes `noContent`, the consumption guard
+lands green and any later failure is a new finding rather than inherited debt.
+
 ## Risks / Trade-offs
 
 **Consumers passing an empty lambda stop compiling, and `otp` callers change silently at the type

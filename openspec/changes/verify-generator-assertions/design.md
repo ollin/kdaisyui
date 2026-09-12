@@ -24,6 +24,51 @@ makes safe to defer.
 
 ## Decisions
 
+### 0. The codegen takes its first dependency, and an HTML parser is what it is for
+
+**Decided by Oliver, 2026-09-12, reversing a recorded property.** The extraction was first written
+as a regex over the fenced examples, defended here as consistent with the existing house style.
+That defence was wrong: 27 regex sites are accumulated debt, not a reason for a 28th, and "everyone
+already does it" is status quo dressed as an argument.
+
+What this reverses, in three places that must be corrected with it:
+
+- `AGENTS.md`: "no build step, no emitted JavaScript, zero dependencies".
+- `lib/build.gradle.kts:229`: "No `npm install`: the codegen declares no dependencies, so it
+  installed nothing".
+- the `kdaisyui-codegen` skill, which repeats both.
+
+What it costs, measured rather than guessed: `codegen/package.json` has neither `dependencies` nor
+`devDependencies`; CI's `codegen-tests` job runs checkout → setup-node → `npm test` with **no
+install step**; and the five Gradle generator tasks invoke `node src/…` directly. So the price is
+an install step in CI and a task the five generators depend on, a real lockfile, supply-chain
+surface, and a network requirement during regeneration that was not there before.
+
+What it does **not** cost: the promise that a clone compiles and tests with no Node, no npm and no
+submodules. `check` never runs a generator, and that is unchanged.
+
+**Consequence that touches a measurement this change already recorded.** A spec-compliant HTML
+parser normalises away source-level self-closing notation — per the HTML specification the `/` in
+`<img />` is ignored, and `<div />` parses as an open `<div>`. So the 57-of-57 agreement between
+DaisyUI's self-closing convention and the HTML void set, recorded under *Section 1 measured*,
+becomes a one-time finding the generator can no longer reproduce.
+
+That is acceptable, and the reason is worth stating precisely: the self-closing convention was
+never the **rule**. The rule is the HTML void-element set, which needs no parsing at all. The
+convention was corroborating evidence for that rule, gathered once. What the cross-check actually
+needs from the docs is the **element name**, and that is exactly what a parser gives correctly and
+a regex gives approximately.
+
+**Candidate**: `htmlparser2` with `domutils.findOne`, which reduces the call site to one
+expression and whose `domutils` comes with it rather than as a second top-level dependency. The
+task pins the version and records the choice; `parse5` is the alternative if spec-exactness matters
+more than call-site brevity.
+
+**And the obvious next candidate is named rather than left implicit:** `parseYamlFrontmatter` is a
+hand-rolled YAML reader, and YAML is a far harder format than "find a start tag". Having opened the
+dependency budget for the smaller risk, leaving the larger one hand-rolled is incoherent. It is a
+follow-up rather than more scope here.
+
 ### 1. The authority for the element is DaisyUI's own documentation, and this took two attempts
 
 **First draft:** the HTML specification alone decides whether a component may have children, and
@@ -51,7 +96,10 @@ guess. **Measured: this route has an opinion for all 66 components — zero sile
 | | HTML spec | `skills/` Syntax | docs `+page.md` |
 |---|---|---|---|
 | Components answered | 66 (element always known) | 57 | **66** |
-| Answers | may it have children | element + self-closing | element + self-closing |
+| Answers | may it have children | element | element |
+
+(Both markdown routes also carry DaisyUI's self-closing convention, which decision 0 puts out of
+reach: an HTML parser normalises it away. It was corroboration, never the rule.)
 
 **Chosen:** the HTML void set remains the *rule* for content, because it is a closed set that
 cannot be ambiguous; the docs route is the *cross-check* for the element, because it is complete

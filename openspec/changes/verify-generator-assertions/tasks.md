@@ -28,6 +28,25 @@ parts that deserve to be permanent are guards inside the generator, exercised by
 - [x] 1.3 `. d` Measure: are exactly two config entries unreachable, both in `noContent`? More
   would mean the consumption guard cannot land green.
 
+## 0. The codegen's first dependency
+
+Prerequisite for section 3, and a reversal of a recorded property — see `design.md` decision 0.
+Landed first and on its own, so the build wiring is provable before anything depends on it.
+
+- [ ] 0.1 `! F (internal)` Add the HTML parser to `codegen/package.json`, pin it, commit a real
+  `codegen/package-lock.json`. `!` rather than `^`: this one cannot be proven by a test, only by
+  the build going green afterwards.
+- [ ] 0.2 `^ F (internal)` Add an `installCodegenDeps` Gradle task running `npm ci`, and make the
+  five generator tasks plus `testCodegen` depend on it. Declare `package-lock.json` as its input
+  and `node_modules` as its output so Gradle can skip it when nothing moved.
+- [ ] 0.3 `^ F (internal)` Add `npm ci` to CI's `codegen-tests` job — the only job that runs `npm
+  test` directly rather than through Gradle.
+- [ ] 0.4 `. r (internal)` Prove regeneration still works end to end from a clean `node_modules`:
+  delete it, run `just generate`, confirm `lib/generated` and `docs/reference` come out unchanged.
+- [ ] 0.5 `. d` Correct the three places that record zero dependencies: `AGENTS.md`,
+  `lib/build.gradle.kts:229` and the `kdaisyui-codegen` skill. Say what replaced the property and
+  why, not just that it is gone.
+
 ## 2. The void-element rule
 
 - [ ] 2.1 `^ r (internal)` Add the void-element set to `component-shape.ts` with a comment naming
@@ -43,8 +62,10 @@ parts that deserve to be permanent are guards inside the generator, exercised by
 ## 3. The element cross-check
 
 - [ ] 3.1 `^ F (internal)` Parse the documented root element from `+page.md`'s fenced ```html
-  blocks via the `$$` marker. Unit-tested against `swap` (`<label>`), `menu` (`<ul>`) and
-  `modal` (`<dialog>`) — three of the nine the old route could not answer.
+  blocks via the `$$` marker, **using the parser from section 0 — no regex over HTML**. Unit-tested
+  with inline fixtures against `swap` (`<label>`), `menu` (`<ul>`) and `modal` (`<dialog>`) — three
+  of the nine the old route could not answer — plus the three constructs a regex gets wrong: a `>`
+  inside a quoted attribute value, an HTML comment, and a `<script>` block.
 - [ ] 3.2 `^ F (internal)` Fail generation when the chosen element disagrees and no exception is
   recorded, naming component, chosen and documented element.
 - [ ] 3.2a `^ F (internal)` Fail generation when the docs route has **no opinion** for a component.

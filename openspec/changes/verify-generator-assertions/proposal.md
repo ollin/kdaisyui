@@ -81,5 +81,9 @@ default in review. Invisible where people look, hidden where it is visible.
 - **Changed by hand**: `example-app/.../WhatsNewFragment.kt` calls `daisyOtp` and follows the
   receiver change; E2E coverage of that page is re-checked.
 - **Removed**: the `noContent` config section, eight entries.
-- **No new dependency.** Both authorities are already present: the HTML specification's
-  void-element set, and the DaisyUI submodule already parsed for everything else.
+- **A new dependency, deliberately.** The codegen takes an HTML parser and gives up its
+  zero-dependency property — decided 2026-09-12, because a regex over HTML is unreadable and the
+  existing 27 regex sites are debt rather than precedent. Costs an `npm ci` step in CI and in the
+  Gradle generator tasks, a real lockfile, and a network requirement during regeneration. Does
+  **not** cost the promise that a clone compiles and tests with no Node — `check` never runs a
+  generator. See `design.md` decision 0.

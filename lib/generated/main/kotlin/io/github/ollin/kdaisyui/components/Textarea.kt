@@ -44,7 +44,7 @@ enum class TextareaSize(internal val className: String) {
 
 
 /**
- * Textarea allows users to enter text in multiple lines. Renders `<textArea class="textarea ...">`.
+ * Textarea allows users to enter text in multiple lines. Renders `<textarea class="textarea ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
  * @param size — Size variant

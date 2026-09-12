@@ -13,7 +13,7 @@ import kotlinx.html.FIELDSET
 import kotlinx.html.FlowContent
 
 /**
- * Fieldset is a container for grouping related form elements. It includes fieldset-legend as a title and label as a description. Renders `<fieldSet class="fieldset ...">`.
+ * Fieldset is a container for grouping related form elements. It includes fieldset-legend as a title and label as a description. Renders `<fieldset class="fieldset ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes

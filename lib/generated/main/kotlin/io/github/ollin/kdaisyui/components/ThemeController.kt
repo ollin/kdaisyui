@@ -1,5 +1,5 @@
 // GENERATED — DO NOT EDIT
-// Source: daisyui/packages/docs/src/routes/(routes)/components/themecontroller/+page.md
+// Source: daisyui/packages/docs/src/routes/(routes)/components/theme-controller/+page.md
 // Regenerate: cd codegen && npm run generate
 
 package io.github.ollin.kdaisyui.components

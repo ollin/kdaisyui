@@ -1,18 +1,29 @@
-/**
- * @typedef {Object} ElementRule
- * @property {string} component - Component name (e.g., 'button')
- * @property {string[]} elements - Allowed HTML elements (e.g., ['button', 'a', 'input'])
- * @property {string} primaryElement - Primary element to use
- */
-
 import fs from 'fs'
 import path from 'path'
+import type { TagName } from '../html-names.ts'
+import type { ComponentName } from './frontmatter.ts'
+
+/**
+ * Which HTML elements DaisyUI's own documentation says a component may be built from.
+ *
+ * `elements` and `primaryElement` are TAG names, sharing the brand `test-generator.ts`
+ * writes into Kotlin — this is the boundary where documentation becomes a type, so it is
+ * the right place to say which kind of string these are.
+ *
+ * `primaryElement` is null until the two passes at the end of `parseLlmsTxtContent` fill
+ * it in, which is why it is nullable rather than merely optional.
+ */
+export interface ElementRule {
+  component: ComponentName
+  elements: TagName[]
+  primaryElement: TagName | null
+}
 
 const DAISYUI_ROOT = path.resolve(import.meta.dirname, '../../../daisyui')
 const STATIC_LLMS_TXT = path.join(DAISYUI_ROOT, 'packages/docs/static/llms.txt')
 const COMPONENT_SKILLS_DIR = path.join(DAISYUI_ROOT, 'skills/daisyui/components')
 
-function readElementRuleSource() {
+function readElementRuleSource(): string {
   if (fs.existsSync(STATIC_LLMS_TXT)) {
     return fs.readFileSync(STATIC_LLMS_TXT, 'utf8')
   }
@@ -29,18 +40,15 @@ function readElementRuleSource() {
   )
 }
 
-/**
- * @returns {Map<string, ElementRule>}
- */
-export function parseLlmsTxt() {
+export function parseLlmsTxt(): Map<ComponentName, ElementRule> {
   return parseLlmsTxtContent(readElementRuleSource())
 }
 
-function parseLlmsTxtContent(content) {
-  const rules = new Map()
-  const syntaxBlocks = new Map()
+function parseLlmsTxtContent(content: string): Map<ComponentName, ElementRule> {
+  const rules = new Map<ComponentName, ElementRule>()
+  const syntaxBlocks = new Map<ComponentName, string[]>()
   const lines = content.split('\n')
-  let currentComponent = null
+  let currentComponent: ComponentName | null = null
   let inSyntaxSection = false
   let inRulesSection = false
   
@@ -48,7 +56,8 @@ function parseLlmsTxtContent(content) {
     const line = lines[i]
     
     if (line.startsWith('### ')) {
-      currentComponent = line.slice(4).trim()
+      // A `### ` heading names a component; this is where a ComponentName is created.
+      currentComponent = line.slice(4).trim() as ComponentName
       inSyntaxSection = false
       inRulesSection = false
       rules.set(currentComponent, {
@@ -71,15 +80,16 @@ function parseLlmsTxtContent(content) {
         continue
       }
       if (line.trim()) {
-        syntaxBlocks.get(currentComponent).push(line)
+        syntaxBlocks.get(currentComponent)!.push(line)
       }
     } else if (inRulesSection && currentComponent) {
       if (line.includes('<') && line.includes('>')) {
         const elements = line.match(/<(\w+)>/g)
         if (elements) {
-          const rule = rules.get(currentComponent)
+          const rule = rules.get(currentComponent)!
           for (const el of elements) {
-            const element = el.slice(1, -1)
+            // `<button>` in the Rules prose — the second place a TagName is created.
+            const element = el.slice(1, -1) as TagName
             if (!rule.elements.includes(element)) {
               rule.elements.push(element)
             }
@@ -109,11 +119,15 @@ function parseLlmsTxtContent(content) {
   return rules
 }
 
-function findComponentInSyntax(syntaxBlock, componentName) {
+function findComponentInSyntax(
+  syntaxBlock: string[],
+  componentName: ComponentName,
+): { element: TagName; baseClass: string } | null {
   for (const line of syntaxBlock) {
     const elementMatch = line.match(/<(\w+)[\s>]/)
     if (elementMatch) {
-      const element = elementMatch[1]
+      // The opening tag of a documented example — the third place a TagName is created.
+      const element = elementMatch[1] as TagName
       const classMatch = line.match(/class="([^"]+)"/)
       if (classMatch) {
         const classes = classMatch[1].split(/\s+/)
@@ -127,14 +141,24 @@ function findComponentInSyntax(syntaxBlock, componentName) {
   return null
 }
 
-export function getElementForComponent(rules, componentName) {
+// `div` is the documented fallback for a component DaisyUI says nothing about. It is a tag
+// name like any other, so it is branded once here rather than cast at each return.
+const DIV = 'div' as TagName
+
+export function getElementForComponent(
+  rules: Map<ComponentName, ElementRule>,
+  componentName: ComponentName,
+): TagName {
   const rule = rules.get(componentName)
-  if (!rule) return 'div'
-  return rule.primaryElement || 'div'
+  if (!rule) return DIV
+  return rule.primaryElement || DIV
 }
 
-export function getAllowedElements(rules, componentName) {
+export function getAllowedElements(
+  rules: Map<ComponentName, ElementRule>,
+  componentName: ComponentName,
+): TagName[] {
   const rule = rules.get(componentName)
-  if (!rule) return ['div']
-  return rule.elements.length > 0 ? rule.elements : ['div']
+  if (!rule) return [DIV]
+  return rule.elements.length > 0 ? rule.elements : [DIV]
 }

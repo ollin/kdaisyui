@@ -10,23 +10,21 @@ import {
 import { toCamelCase } from './classifier.js'
 
 /**
- * The two string kinds this generator confuses most easily, and the defect that motivated
- * the whole TypeScript port.
+ * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
+ * `add-mutation-testing` task 4.1 asserted `</fieldSet>`, and only `FieldsetCoverageTest`
+ * and `TextareaCoverageTest` noticed, because every other component is a `div` where the
+ * two names coincide.
  *
- * A kotlinx.html BUILDER is the Kotlin function you call — `fieldSet`, `textArea`, `div`.
- * A TAG is what it emits — `fieldset`, `textarea`, `div`. They are equal for most elements
- * and different for exactly the ones that matter, so a mistake survives every test that
- * uses a `div` and fails on the two that do not. That is precisely what happened in
- * `add-mutation-testing` task 4.1: `</fieldSet>` was asserted, and only `FieldsetCoverageTest`
- * and `TextareaCoverageTest` noticed.
+ * They live in `html-names.ts` rather than here, since `llms-txt.ts` reads tag names out of
+ * DaisyUI's docs and this file writes them into Kotlin — one nominal type, or they cannot
+ * be compared at all.
  *
- * Branding them turns that into a call-site error. The total cost is THREE casts, each at a
- * point where a name genuinely comes into existence: `parseEmittedBuilder` (read out of a
- * generated body), `htmlTagForFn` (lowercased, and immediately validated by round-tripping),
- * and `wrapperTagOf` (derived from a Kotlin receiver type). Everything downstream is checked.
+ * Branding costs THREE casts here, each where a name genuinely comes into existence:
+ * `parseEmittedBuilder` (read out of a generated body), `htmlTagForFn` (lowercased and
+ * immediately validated by round-tripping), and `wrapperTagOf` (derived from a Kotlin
+ * receiver type). Everything downstream is checked.
  */
-export type BuilderName = string & { readonly __brand: 'BuilderName' }
-export type TagName = string & { readonly __brand: 'TagName' }
+import type { BuilderName, TagName } from './html-names.ts'
 
 const DOCS_DIR = path.resolve(import.meta.dirname, '../../daisyui/packages/docs/src/routes/(routes)/components')
 // Committed generated root — a sibling of lib/src/, never inside it.

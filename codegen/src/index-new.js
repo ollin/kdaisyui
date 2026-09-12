@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { getAllComponentDirs, readComponentFrontmatter, getClassesByCategory } from './parser/frontmatter.ts'
-import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.js'
+import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter } from './classifier.js'
 import { generateKotlinFile } from './generator-new.js'
 

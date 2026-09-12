@@ -256,6 +256,7 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
     outputs.dir(outputDir)
     outputs.file(classList)
@@ -278,6 +279,7 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
     outputs.dir(outputDir)
 }
@@ -307,6 +309,7 @@ tasks.register<Exec>("testCodegen") {
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("codegen/test"))
     inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
     // No declared output, so Gradle must never call this up-to-date and skip it.
     outputs.upToDateWhen { false }
 }
@@ -322,6 +325,7 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
     outputs.dir(outputDir)
 }
 
@@ -344,6 +348,7 @@ tasks.register<Exec>("generateReferenceDocs") {
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
     outputs.dir(outputDir)
 }
@@ -359,6 +364,7 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
     outputs.dir(outputDir)
 }
 

@@ -58,8 +58,8 @@ generator is wired into the build.
 - [x] 5.1 `^ F (internal)` Add the Gradle task alongside `generateComponents`,
   `generateComponentTests`, `generateHeroicons`, `generateHeroiconTests`.
 - [x] 5.2 `. F (internal)` Add it to `just generate`.
-- [ ] 5.3 `^ F (internal)` Generate all 66 pages plus the index, and commit them.
-- [ ] 5.4 `. d` Read the full diff of all 66 pages against what they replaced. Every difference
+- [x] 5.3 `^ F (internal)` Generate all 66 pages plus the index, and commit them.
+- [x] 5.4 `. d` Read the full diff of all 66 pages against what they replaced. Every difference
   is a correction or a deliberate template decision; record any that is neither and fix it
   before the drift job is extended.
 

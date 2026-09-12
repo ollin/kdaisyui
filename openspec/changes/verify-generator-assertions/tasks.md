@@ -19,13 +19,13 @@ So Section 1 is **measurement, recorded in `design.md`**, with throwaway probes 
 parts that deserve to be permanent are guards inside the generator, exercised by
 `generated-sources-drift`, which does have the submodule — see 3.2.
 
-- [ ] 1.1 `. d` Measure: is the `noContent` list exactly the set of components whose element is
+- [x] 1.1 `. d` Measure: is the `noContent` list exactly the set of components whose element is
   void? Anything else means the rule is too narrow and **the change must be rewritten**.
-- [ ] 1.2 `. d` Measure: does the docs route — the tag carrying `$$<componentClass>` in a fenced
+- [x] 1.2 `. d` Measure: does the docs route — the tag carrying `$$<componentClass>` in a fenced
   ```html block of `+page.md` — yield an element for all 66, and disagree with the generator
   exactly three times (`otp`, `tab`, `calendar`)? A fourth disagreement belongs in the proposal
   before the guard lands.
-- [ ] 1.3 `. d` Measure: are exactly two config entries unreachable, both in `noContent`? More
+- [x] 1.3 `. d` Measure: are exactly two config entries unreachable, both in `noContent`? More
   would mean the consumption guard cannot land green.
 
 ## 2. The void-element rule

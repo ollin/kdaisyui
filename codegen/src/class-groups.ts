@@ -32,11 +32,9 @@
  * and the axes of a group that carries two are declared in `enumNames` and CHECKED here
  * against the measurement.
  */
-import { readFileSync } from 'node:fs'
-import path from 'node:path'
 import type { ClassifiedComponent } from './classifier.ts'
-
-const EXCLUSIVITY_PATH = path.resolve(import.meta.dirname, '../exclusivity.json')
+import { ClassPair, GroupKey } from './measurement.ts'
+import type { Measurement, MeasuredPairs } from './measurement.ts'
 
 /** The five categories DaisyUI's frontmatter uses, minus `colors` and `sizes`. */
 export type GroupCategory = 'styles' | 'modifiers' | 'behaviors' | 'directions' | 'placements'
@@ -48,19 +46,6 @@ export const GROUP_CATEGORIES: readonly GroupCategory[] = [
   'directions',
   'placements',
 ]
-
-/** What the browser did when two classes of one group were worn at once. */
-export type Verdict = 'exclusive' | 'compose' | 'same'
-
-/** One group's measured pairs, each list holding keys of the form `a|b`. */
-export interface MeasuredGroup {
-  readonly exclusive?: readonly string[]
-  readonly compose?: readonly string[]
-  readonly same?: readonly string[]
-}
-
-/** `groups` from `exclusivity.json`: directory name → category → measured pairs. */
-export type Exclusivity = Readonly<Record<string, Readonly<Record<string, MeasuredGroup>>>>
 
 /**
  * One enum to generate: its name, where its members came from, and which they are.
@@ -98,98 +83,66 @@ export type EnumNameEntry = string | readonly EnumSplit[]
 /** `enumNames` from the config: component directory name → category → name or split. */
 export type EnumNames = Readonly<Record<string, Readonly<Record<string, EnumNameEntry>>>>
 
-/**
- * The committed measurement.
- *
- * Read from disk rather than imported, so a JSON syntax error names the file instead of
- * failing somewhere inside a module graph.
- */
-export function loadExclusivity(): Exclusivity {
-  return JSON.parse(readFileSync(EXCLUSIVITY_PATH, 'utf8')).groups
-}
-
 export class GroupNamingError extends Error {}
 
 /** The measurement and the configuration disagree — one of them has to be corrected. */
 export class ExclusivityError extends Error {}
 
-function membersOf(classified: ClassifiedComponent, category: GroupCategory): readonly string[] {
-  return classified[category]
-}
-
-/**
- * The verdict for one pair, whichever order it was recorded in.
- *
- * `undefined` means the pair was never measured — a group DaisyUI has added since, or a
- * component whose docs carry no usable example. Unmeasured is not established, so callers
- * treat it the way they treat `compose`.
- */
-function verdictOf(measured: MeasuredGroup, a: string, b: string): Verdict | undefined {
-  for (const verdict of ['exclusive', 'compose', 'same'] as const) {
-    const pairs = measured[verdict] ?? []
-    if (pairs.includes(`${a}|${b}`) || pairs.includes(`${b}|${a}`)) return verdict
-  }
-  return undefined
-}
-
-/** Every pair of `members` that the measurement does NOT call exclusive. */
-function nonExclusivePairs(
-  measured: MeasuredGroup,
-  members: readonly string[],
-): readonly string[] {
-  const offenders: string[] = []
-  for (let i = 0; i < members.length; i++) {
-    for (let j = i + 1; j < members.length; j++) {
-      const verdict = verdictOf(measured, members[i], members[j])
-      if (verdict === 'exclusive') continue
-      offenders.push(`${members[i]}|${members[j]} is ${verdict ?? 'unmeasured'}`)
-    }
-  }
-  return offenders
+/** One group under consideration: who it belongs to and which classes it holds. */
+interface Group {
+  readonly componentName: string
+  readonly key: GroupKey
+  readonly members: readonly string[]
 }
 
 function splitsFor(entry: EnumNameEntry, members: readonly string[]): readonly EnumSplit[] {
   return typeof entry === 'string' ? [{ name: entry, members }] : entry
 }
 
-function checkSplitCoverage(
-  component: string,
-  category: GroupCategory,
-  members: readonly string[],
-  splits: readonly EnumSplit[],
-): void {
+/** Every pair drawn from two different axes of the same group. */
+function crossAxisPairs(splits: readonly EnumSplit[]): ClassPair[] {
+  return splits.flatMap((split, index) =>
+    splits
+      .slice(index + 1)
+      .flatMap((other) =>
+        split.members.flatMap((left) => other.members.map((right) => new ClassPair(left, right))),
+      ),
+  )
+}
+
+function quoted(members: readonly string[]): string {
+  return members.map((member) => `"${member}"`).join(', ')
+}
+
+function checkSplitCoverage(group: Group, splits: readonly EnumSplit[]): void {
   const claimed = splits.flatMap((split) => split.members)
-  const unknown = claimed.filter((member) => !members.includes(member))
+  const unknown = claimed.filter((member) => !group.members.includes(member))
   if (unknown.length > 0) {
     throw new GroupNamingError(
-      `enumNames.${component}.${category} names ${unknown.map((m) => `"${m}"`).join(', ')}, ` +
-        `which DaisyUI does not list. Members are: ${members.join(', ')}.`,
+      `enumNames.${group.key} names ${quoted(unknown)}, which DaisyUI does not list. ` +
+        `Members are: ${group.members.join(', ')}.`,
     )
   }
-  const unclaimed = members.filter((member) => !claimed.includes(member))
+
+  const unclaimed = group.members.filter((member) => !claimed.includes(member))
   if (unclaimed.length > 0) {
     throw new GroupNamingError(
-      `enumNames.${component}.${category} leaves ${unclaimed.map((m) => `"${m}"`).join(', ')} ` +
-        `unassigned. Every member of a split group must belong to an axis, otherwise a new ` +
-        `DaisyUI class silently becomes a boolean.`,
+      `enumNames.${group.key} leaves ${quoted(unclaimed)} unassigned. Every member of a split ` +
+        `group must belong to an axis, otherwise a new DaisyUI class silently becomes a boolean.`,
     )
   }
 }
 
 /** Each declared axis must be a clique of `exclusive` verdicts, or the enum is a lie. */
-function checkAxisIsExclusive(
-  component: string,
-  category: GroupCategory,
-  measured: MeasuredGroup,
-  split: EnumSplit,
-): void {
-  const offenders = nonExclusivePairs(measured, split.members)
+function checkAxisIsExclusive(group: Group, measured: MeasuredPairs, split: EnumSplit): void {
+  const offenders = measured.describeNonExclusive(split.members)
   if (offenders.length === 0) return
+
   throw new ExclusivityError(
-    `enumNames.${component}.${category} makes ${split.members.join(', ')} one choice, but the ` +
-      `measurement says ${offenders.join('; ')}. An enum would make that combination ` +
-      `impossible to express. Either drop the entry and let these stay boolean, or split the ` +
-      `axis so every pair within it is exclusive.`,
+    `enumNames.${group.key} makes ${split.members.join(', ')} one choice, but the measurement ` +
+      `says ${offenders.join('; ')}. An enum would make that combination impossible to ` +
+      `express. Either drop the entry and let these stay boolean, or split the axis so every ` +
+      `pair within it is exclusive.`,
   )
 }
 
@@ -199,39 +152,58 @@ function checkAxisIsExclusive(
  * If every cross pair is exclusive too, the group is one clique and one enum says so more
  * simply — two enums would then let a caller set two answers to the same question.
  */
-function checkSplitIsEarned(
-  component: string,
-  category: GroupCategory,
-  measured: MeasuredGroup,
-  splits: readonly EnumSplit[],
-): void {
-  for (let i = 0; i < splits.length; i++) {
-    for (let j = i + 1; j < splits.length; j++) {
-      for (const left of splits[i].members) {
-        for (const right of splits[j].members) {
-          if (verdictOf(measured, left, right) !== 'exclusive') return
-        }
-      }
-    }
-  }
+function checkSplitIsEarned(group: Group, measured: MeasuredPairs, splits: readonly EnumSplit[]): void {
+  const composing = crossAxisPairs(splits).some((pair) => !measured.isExclusive(pair))
+  if (composing) return
+
   throw new ExclusivityError(
-    `enumNames.${component}.${category} splits into ${splits.map((s) => s.name).join(' and ')}, ` +
-      `but every pair across those axes is exclusive, so the group is a single choice. Use one ` +
+    `enumNames.${group.key} splits into ${splits.map((split) => split.name).join(' and ')}, but ` +
+      `every pair across those axes is exclusive, so the group is a single choice. Use one ` +
       `enum — two would let a caller answer the same question twice.`,
   )
 }
 
-function requireName(
-  component: string,
-  category: GroupCategory,
-  members: readonly string[],
-): never {
+function requireName(group: Group): never {
   throw new GroupNamingError(
-    `${component}.${category} has ${members.length} members (${members.join(', ')}) and the ` +
+    `${group.key} has ${group.members.length} members (${group.members.join(', ')}) and the ` +
       `measurement says every pair of them is mutually exclusive, so they are one choice and ` +
       `must become an enum — and only a human can say what the question is. Add ` +
-      `enumNames.${component}.${category}.`,
+      `enumNames.${group.key}.`,
   )
+}
+
+/**
+ * A group nobody named stays boolean — unless the measurement says it is a choice.
+ *
+ * A single member answers no question on its own, and an unmeasured or composing group is not
+ * a choice either. Only the third case is a build failure.
+ */
+function unnamedGroup(group: Group, measured: MeasuredPairs): GroupClassification {
+  const isChoice = group.members.length > 1 && measured.describeNonExclusive(group.members).length === 0
+  if (isChoice) requireName(group)
+  return { enums: [], booleans: [...group.members] }
+}
+
+/** A named group becomes one enum per declared axis, each checked against the measurement. */
+function namedGroup(
+  group: Group,
+  entry: EnumNameEntry,
+  measured: MeasuredPairs,
+): GroupClassification {
+  const splits = splitsFor(entry, group.members)
+
+  checkSplitCoverage(group, splits)
+  for (const split of splits) checkAxisIsExclusive(group, measured, split)
+  if (splits.length > 1) checkSplitIsEarned(group, measured, splits)
+
+  return {
+    enums: splits.map((split) => ({
+      enumName: `${group.componentName}${split.name}`,
+      category: group.key.category as GroupCategory,
+      members: split.members,
+    })),
+    booleans: [],
+  }
 }
 
 /**
@@ -244,40 +216,25 @@ export function classifyGroups(
   classified: ClassifiedComponent,
   component: string,
   enumNames: EnumNames,
-  exclusivity: Exclusivity,
+  measurement: Measurement,
 ): GroupClassification {
   const configured = enumNames[component] ?? {}
-  const measuredCategories = exclusivity[component] ?? {}
   const enums: EnumGroup[] = []
   const booleans: string[] = []
 
   for (const category of GROUP_CATEGORIES) {
-    const members = membersOf(classified, category)
+    const members = classified[category]
     if (members.length === 0) continue
 
-    const measured = measuredCategories[category] ?? {}
+    const key = new GroupKey(component, category)
+    const group: Group = { componentName: classified.componentName, key, members }
+    const measured = measurement.forGroup(key)
     const entry = configured[category]
+    const decided =
+      entry === undefined ? unnamedGroup(group, measured) : namedGroup(group, entry, measured)
 
-    if (entry === undefined) {
-      // A single member answers no question on its own, and an unmeasured or composing group
-      // is not a choice — either way the classes stay independent flags.
-      const exclusiveThroughout = members.length > 1 && nonExclusivePairs(measured, members).length === 0
-      if (exclusiveThroughout) requireName(component, category, members)
-      booleans.push(...members)
-      continue
-    }
-
-    const splits = splitsFor(entry, members)
-    checkSplitCoverage(component, category, members, splits)
-    for (const split of splits) checkAxisIsExclusive(component, category, measured, split)
-    if (splits.length > 1) checkSplitIsEarned(component, category, measured, splits)
-    for (const split of splits) {
-      enums.push({
-        enumName: `${classified.componentName}${split.name}`,
-        category,
-        members: split.members,
-      })
-    }
+    enums.push(...decided.enums)
+    booleans.push(...decided.booleans)
   }
 
   return { enums, booleans }

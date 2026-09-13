@@ -440,6 +440,57 @@ non-editorial config. The argument against them is not that exclusivity is deriv
 just showed it is not — but that the *name* can default to the category and be overridden only
 where a human word is clearly better.
 
+## Probe 2: the examples veto what the CSS gets wrong — 2026-09-13
+
+Example co-occurrence is **asymmetric** evidence, and the asymmetry is what makes it useful:
+
+```
+observed together  ->  certainly NOT mutually exclusive   (a fact)
+never together     ->  weak evidence of exclusivity       (could be unexemplified)
+```
+
+It can never establish an axis. It can only refute one. Measured over all 44 multi-member
+groups (`tmp/probe-cooccurrence.ts`): **6 groups carry evidence, 38 are silent.**
+
+**All four two-axis placements come out exactly right, and the structure is explicit:**
+
+```
+Indicator   {start center end} × {top middle bottom}   9 pairs, no pair within an axis
+Toast       {start center end} × {top middle}          6 pairs
+Dropdown    {center end}       × {top bottom left right}
+Tooltip     {top bottom left right} × {start end}
+```
+
+Never `start+center`, never `top+middle` — the co-occurrence graph is complete-multipartite, and
+its colour classes *are* the axes. `Modal.placements` shows no co-occurrence at all, consistent
+with the one axis the CSS also reported.
+
+**Every false merge the CSS probe produced is refuted here.** `Dropdown` and `Tooltip` were the
+two worst CSS errors — sides and alignments collapsed into one seven-member axis — and the
+examples separate them cleanly. `Table.modifiers` is refuted by `pin-rows+pin-cols`,
+`Avatar.modifiers` by `online+placeholder`. Three for three on the merges.
+
+The false *splits* — `link` off `Button.styles`, `square` off `Mask.styles`, `border` off
+`Tab.styles` — are not contradicted by any example, so the default "same category, never observed
+together" gives the right answer for all three.
+
+### The two sources are complementary, and neither is sufficient
+
+| | CSS declarations | documented examples |
+|---|---|---|
+| covers | every group | 6 of 44 |
+| establishes an axis | unreliably | never |
+| refutes an axis | no | authoritatively |
+| fails by | false merges *and* false splits | silence |
+
+Where the examples speak they are authoritative; where they are silent the CSS still carries a
+signal. `dropdown-start` is the case that needs both: no example pairs it with anything, and only
+the shared `--anchor-h` puts it with `center` and `end`.
+
+So the answer to "can this be decided deterministically" is **no, not from either source alone,
+and not from both for 38 of 44 groups** — but the four splits that would otherwise have been
+hand-configured are now derived, and the two heuristics disagreeing is a signal worth failing on.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

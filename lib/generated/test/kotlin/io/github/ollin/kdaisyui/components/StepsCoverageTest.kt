@@ -39,14 +39,12 @@ class StepsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySteps(
                 id = htmlId("x-cov-id"),
-                horizontal = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "steps steps-horizontal steps-vertical zz-extra", "Steps all flags", closes = "</ul></div>")
+        assertRendered(html, "steps zz-extra", "Steps all flags", closes = "</ul></div>")
         assertCommonFlags(html, "Steps")
     }
 
@@ -136,6 +134,28 @@ class StepsCoverageTest {
             )
         }
         assertRendered(html, "steps steps-step-error", "Steps variant StepError")
+    }
+
+    @Test
+    fun steps_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySteps(
+                direction = StepsDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "steps steps-vertical", "Steps direction Vertical")
+    }
+
+    @Test
+    fun steps_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySteps(
+                direction = StepsDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "steps steps-horizontal", "Steps direction Horizontal")
     }
 
     @Test

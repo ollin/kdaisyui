@@ -11,10 +11,10 @@ Regenerate: just generate
 Key metrics and numbers. Renders `<div class="stats ...">`.
 
 ```kotlin
+// StatDirection: Horizontal | Vertical
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
+    direction: StatDirection? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

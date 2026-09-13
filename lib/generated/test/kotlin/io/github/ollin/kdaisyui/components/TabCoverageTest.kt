@@ -40,18 +40,16 @@ class TabCoverageTest {
             daisyTab(
                 id = htmlId("x-cov-id"),
                 border = true,
-                bottom = true,
                 box = true,
                 lift = true,
                 tabActive = true,
                 tabDisabled = true,
-                top = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tabs tabs-border tabs-bottom tabs-box tabs-lift tabs-tab-active tabs-tab-disabled tabs-top zz-extra", "Tab all flags", closes = "</button></div>")
+        assertRendered(html, "tabs tabs-border tabs-box tabs-lift tabs-tab-active tabs-tab-disabled zz-extra", "Tab all flags", closes = "</button></div>")
         assertCommonFlags(html, "Tab")
     }
 
@@ -108,6 +106,28 @@ class TabCoverageTest {
             )
         }
         assertRendered(html, "tabs tabs-xl", "Tab size Xl")
+    }
+
+    @Test
+    fun tab_placement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTab(
+                placement = TabPlacement.Top,
+                content = { },
+            )
+        }
+        assertRendered(html, "tabs tabs-top", "Tab placement Top")
+    }
+
+    @Test
+    fun tab_placement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTab(
+                placement = TabPlacement.Bottom,
+                content = { },
+            )
+        }
+        assertRendered(html, "tabs tabs-bottom", "Tab placement Bottom")
     }
 
     @Test

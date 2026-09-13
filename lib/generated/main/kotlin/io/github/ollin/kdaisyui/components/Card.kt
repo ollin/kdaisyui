@@ -26,15 +26,29 @@ enum class CardSize(internal val className: String) {
     Xl("card-xl"),
 }
 
+/** Style variants for this component (CSS prefix: `card-`) */
+enum class CardStyle(internal val className: String) {
+    /** CSS: `card-border` — Adds border to <card> */
+    Border("card-border"),
+    /** CSS: `card-dash` — dash style */
+    Dash("card-dash"),
+}
+
+/** Modifier variants for this component (CSS prefix: `card-`) */
+enum class CardModifier(internal val className: String) {
+    /** CSS: `card-side` — The image in <figure> will be on to the side */
+    Side("card-side"),
+    /** CSS: `card-image-full` — The image in <figure> element will be the background */
+    ImageFull("card-image-full"),
+}
+
 
 /**
  * Cards are used to group and display content in a way that is easily readable. Renders `<div class="card ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param border — Adds border to <card>
- * @param dash — dash style
- * @param imageFull — The image in <figure> element will be the background
- * @param side — The image in <figure> will be on to the side
+ * @param style — Style variant
+ * @param modifier — Modifier variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -42,10 +56,8 @@ enum class CardSize(internal val className: String) {
 fun FlowContent.daisyCard(
     id: HtmlId? = null,
     size: CardSize? = null,
-    border: Boolean = false,
-    dash: Boolean = false,
-    imageFull: Boolean = false,
-    side: Boolean = false,
+    style: CardStyle? = null,
+    modifier: CardModifier? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -54,10 +66,8 @@ fun FlowContent.daisyCard(
         if (id != null) attributes["id"] = id.id
         addClassNames("card")
         if (size != null) addClassNames(size.className)
-        if (border) addClassNames("card-border")
-        if (dash) addClassNames("card-dash")
-        if (imageFull) addClassNames("card-image-full")
-        if (side) addClassNames("card-side")
+        if (style != null) addClassNames(style.className)
+        if (modifier != null) addClassNames(modifier.className)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

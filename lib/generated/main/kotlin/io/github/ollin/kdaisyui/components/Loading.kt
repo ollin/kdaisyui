@@ -24,17 +24,28 @@ enum class LoadingSize(internal val className: String) {
     Xl("loading-xl"),
 }
 
+/** Style variants for this component (CSS prefix: `loading-`) */
+enum class LoadingStyle(internal val className: String) {
+    /** CSS: `loading-spinner` — spinner animation */
+    Spinner("loading-spinner"),
+    /** CSS: `loading-dots` — dots animation */
+    Dots("loading-dots"),
+    /** CSS: `loading-ring` — ring animation */
+    Ring("loading-ring"),
+    /** CSS: `loading-ball` — ball animation */
+    Ball("loading-ball"),
+    /** CSS: `loading-bars` — bars animation */
+    Bars("loading-bars"),
+    /** CSS: `loading-infinity` — infinity animation */
+    Infinity("loading-infinity"),
+}
+
 
 /**
  * Loading shows an animation to indicate that something is loading. Renders `<span class="loading ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param ball — ball animation
- * @param bars — bars animation
- * @param dots — dots animation
- * @param infinity — infinity animation
- * @param ring — ring animation
- * @param spinner — spinner animation
+ * @param style — Style variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -42,12 +53,7 @@ enum class LoadingSize(internal val className: String) {
 fun FlowContent.daisyLoading(
     id: HtmlId? = null,
     size: LoadingSize? = null,
-    ball: Boolean = false,
-    bars: Boolean = false,
-    dots: Boolean = false,
-    infinity: Boolean = false,
-    ring: Boolean = false,
-    spinner: Boolean = false,
+    style: LoadingStyle? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
@@ -56,12 +62,7 @@ fun FlowContent.daisyLoading(
         if (id != null) attributes["id"] = id.id
         addClassNames("loading")
         if (size != null) addClassNames(size.className)
-        if (ball) addClassNames("loading-ball")
-        if (bars) addClassNames("loading-bars")
-        if (dots) addClassNames("loading-dots")
-        if (infinity) addClassNames("loading-infinity")
-        if (ring) addClassNames("loading-ring")
-        if (spinner) addClassNames("loading-spinner")
+        if (style != null) addClassNames(style.className)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

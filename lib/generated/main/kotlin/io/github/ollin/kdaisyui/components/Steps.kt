@@ -32,13 +32,20 @@ enum class StepsVariant(internal val className: String) {
     StepError("steps-step-error"),
 }
 
+/** Direction variants for this component (CSS prefix: `steps-`) */
+enum class StepsDirection(internal val className: String) {
+    /** CSS: `steps-vertical` — Vertical layout */
+    Vertical("steps-vertical"),
+    /** CSS: `steps-horizontal` — Makes steps horizontal */
+    Horizontal("steps-horizontal"),
+}
+
 
 /**
  * Steps can be used to show a list of steps in a process. Renders `<ul class="steps ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
- * @param horizontal — Makes steps horizontal
- * @param vertical — Vertical layout
+ * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -46,8 +53,7 @@ enum class StepsVariant(internal val className: String) {
 fun FlowContent.daisySteps(
     id: HtmlId? = null,
     variant: StepsVariant? = null,
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
+    direction: StepsDirection? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -56,8 +62,7 @@ fun FlowContent.daisySteps(
         if (id != null) attributes["id"] = id.id
         addClassNames("steps")
         if (variant != null) addClassNames(variant.className)
-        if (horizontal) addClassNames("steps-horizontal")
-        if (vertical) addClassNames("steps-vertical")
+        if (direction != null) addClassNames(direction.className)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

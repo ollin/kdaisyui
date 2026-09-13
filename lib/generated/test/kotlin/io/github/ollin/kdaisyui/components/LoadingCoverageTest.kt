@@ -39,18 +39,12 @@ class LoadingCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLoading(
                 id = htmlId("x-cov-id"),
-                ball = true,
-                bars = true,
-                dots = true,
-                infinity = true,
-                ring = true,
-                spinner = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "loading loading-ball loading-bars loading-dots loading-infinity loading-ring loading-spinner zz-extra", "Loading all flags", closes = "</span></div>")
+        assertRendered(html, "loading zz-extra", "Loading all flags", closes = "</span></div>")
         assertCommonFlags(html, "Loading")
     }
 
@@ -107,5 +101,71 @@ class LoadingCoverageTest {
             )
         }
         assertRendered(html, "loading loading-xl", "Loading size Xl")
+    }
+
+    @Test
+    fun loading_style_spinner() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLoading(
+                style = LoadingStyle.Spinner,
+                content = { },
+            )
+        }
+        assertRendered(html, "loading loading-spinner", "Loading style Spinner")
+    }
+
+    @Test
+    fun loading_style_dots() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLoading(
+                style = LoadingStyle.Dots,
+                content = { },
+            )
+        }
+        assertRendered(html, "loading loading-dots", "Loading style Dots")
+    }
+
+    @Test
+    fun loading_style_ring() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLoading(
+                style = LoadingStyle.Ring,
+                content = { },
+            )
+        }
+        assertRendered(html, "loading loading-ring", "Loading style Ring")
+    }
+
+    @Test
+    fun loading_style_ball() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLoading(
+                style = LoadingStyle.Ball,
+                content = { },
+            )
+        }
+        assertRendered(html, "loading loading-ball", "Loading style Ball")
+    }
+
+    @Test
+    fun loading_style_bars() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLoading(
+                style = LoadingStyle.Bars,
+                content = { },
+            )
+        }
+        assertRendered(html, "loading loading-bars", "Loading style Bars")
+    }
+
+    @Test
+    fun loading_style_infinity() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLoading(
+                style = LoadingStyle.Infinity,
+                content = { },
+            )
+        }
+        assertRendered(html, "loading loading-infinity", "Loading style Infinity")
     }
 }

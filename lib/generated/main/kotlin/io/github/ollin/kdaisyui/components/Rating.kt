@@ -29,8 +29,8 @@ enum class RatingSize(internal val className: String) {
  * Rating is a set of radio buttons that allow the user to rate something. Renders `<div class="rating ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param half — To shows half of the shapes. Useful for half star ratings
- * @param hidden — For the first radio to make it hidden so user can clear the rating
+ * @param halfStars — To shows half of the shapes. Useful for half star ratings
+ * @param clearOption — For the first radio to make it hidden so user can clear the rating
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -38,8 +38,8 @@ enum class RatingSize(internal val className: String) {
 fun FlowContent.daisyRating(
     id: HtmlId? = null,
     size: RatingSize? = null,
-    half: Boolean = false,
-    hidden: Boolean = false,
+    halfStars: Boolean = false,
+    clearOption: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -48,8 +48,8 @@ fun FlowContent.daisyRating(
         if (id != null) attributes["id"] = id.id
         addClassNames("rating")
         if (size != null) addClassNames(size.className)
-        if (half) addClassNames("rating-half")
-        if (hidden) addClassNames("rating-hidden")
+        if (halfStars) addClassNames("rating-half")
+        if (clearOption) addClassNames("rating-hidden")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

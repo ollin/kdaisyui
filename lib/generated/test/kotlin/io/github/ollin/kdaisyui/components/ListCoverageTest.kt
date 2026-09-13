@@ -39,14 +39,34 @@ class ListCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyList(
                 id = htmlId("x-cov-id"),
-                colGrow = true,
-                colWrap = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "list list-col-grow list-col-wrap zz-extra", "List all flags", closes = "</ul></div>")
+        assertRendered(html, "list zz-extra", "List all flags", closes = "</ul></div>")
         assertCommonFlags(html, "List")
+    }
+
+    @Test
+    fun list_modifier_colwrap() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyList(
+                modifier = ListModifier.ColWrap,
+                content = { },
+            )
+        }
+        assertRendered(html, "list list-col-wrap", "List modifier ColWrap")
+    }
+
+    @Test
+    fun list_modifier_colgrow() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyList(
+                modifier = ListModifier.ColGrow,
+                content = { },
+            )
+        }
+        assertRendered(html, "list list-col-grow", "List modifier ColGrow")
     }
 }

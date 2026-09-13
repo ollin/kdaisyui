@@ -12,14 +12,14 @@ Status messages and notifications. Renders `<div class="alert ...">`.
 
 ```kotlin
 // AlertVariant: Info | Success | Warning | Error
+// AlertDirection: Vertical | Horizontal
 fun FlowContent.daisyAlert(
     id: HtmlId? = null,
     variant: AlertVariant? = null,
+    direction: AlertDirection? = null,
     dash: Boolean = false,  // dash outline style
-    horizontal: Boolean = false,  // Horizontal layout, good for desktop
     outline: Boolean = false,  // outline style
     soft: Boolean = false,  // soft style
-    vertical: Boolean = false,  // Vertical layout, good for mobile
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

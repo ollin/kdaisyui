@@ -39,7 +39,7 @@ class TimelineCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTimeline(
                 id = htmlId("x-cov-id"),
-                box = true,
+                boxed = true,
                 compact = true,
                 horizontal = true,
                 snapIcon = true,

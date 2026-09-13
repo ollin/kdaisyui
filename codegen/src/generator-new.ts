@@ -13,6 +13,7 @@ import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
 import {
   booleanParameterClasses,
   allBooleans,
+  booleanParameterName,
   buildComponentShape,
   escapeKotlinKeyword,
   readComponentConfig,
@@ -140,7 +141,7 @@ function mainFunctionBody(
     lines.push(`        if (${parameter} != null) addClassNames(${parameter}.className)`)
   }
   for (const cls of booleanParameterClasses(classified, componentConfig, groups)) {
-    lines.push(`        if (${escapeKotlinKeyword(toCamelCase(cls))}) addClassNames("${prefix}-${cls}")`)
+    lines.push(`        if (${booleanParameterName(cls, componentConfig)}) addClassNames("${prefix}-${cls}")`)
   }
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
 
@@ -219,7 +220,7 @@ export function generateKotlinFile(
   groups: GroupClassification = allBooleans(classified),
 ) {
   const shape = buildComponentShape(classified, source, config, groups)
-  const componentConfig = readComponentConfig(config, classified.componentName)
+  const componentConfig = readComponentConfig(config, classified.componentName, source.componentDir)
 
   const header = [
     `// GENERATED — DO NOT EDIT`,

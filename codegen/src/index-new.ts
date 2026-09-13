@@ -4,6 +4,8 @@ import { getAllComponentDirs, readComponentFrontmatter, getClassesByCategory } f
 import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter } from './classifier.ts'
 import { generateKotlinFile } from './generator-new.ts'
+import { classifyGroups } from './class-groups.ts'
+import { loadMeasurement } from './measurement.ts'
 import { documentedElementFor } from './parser/documented-element.ts'
 import {
   crossCheckElements,
@@ -121,6 +123,8 @@ function main() {
   // that matches none of these was never read, and an unread key is indistinguishable from an
   // absent one at run time — which is how two dead `noContent` entries survived.
   const consumed = new ConsumedKeyCollector()
+  // One file describing every component, so it is read once rather than 66 times.
+  const measurement = loadMeasurement()
 
   for (const componentName of componentDirs) {
     // Recorded before the skip checks: `skip` itself is a config section, and an entry naming
@@ -158,7 +162,11 @@ function main() {
     // whole set is reportable at once — dying on the first would hide the rest.
     observations.push(observeElement(componentName, element, frontmatter))
 
-    const kotlin = generateKotlinFile(classified, { componentDir: componentName, element }, config)
+    // Which class groups are one choice, measured rather than assumed. Throws when the
+    // measurement calls a group a choice that `enumNames` has not named.
+    const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, measurement)
+
+    const kotlin = generateKotlinFile(classified, { componentDir: componentName, element }, config, groups)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
     
     fs.mkdirSync(OUTPUT_DIR, { recursive: true })

@@ -11,14 +11,12 @@ Regenerate: just generate
 Toast notification container. Renders `<div class="toast ...">`.
 
 ```kotlin
+// ToastVerticalPlacement: Top | Middle | Bottom
+// ToastHorizontalPlacement: Start | Center | End
 fun FlowContent.daisyToast(
     id: HtmlId? = null,
-    bottom: Boolean = false,  // align vertically to bottom
-    center: Boolean = false,  // align horizontally to the center
-    end: Boolean = false,  // align horizontally to the right
-    middle: Boolean = false,  // align vertically to middle
-    start: Boolean = false,  // align horizontally to the left
-    top: Boolean = false,  // align vertically to top
+    verticalPlacement: ToastVerticalPlacement? = null,
+    horizontalPlacement: ToastHorizontalPlacement? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

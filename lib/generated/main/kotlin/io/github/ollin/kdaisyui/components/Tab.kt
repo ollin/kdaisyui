@@ -26,18 +26,25 @@ enum class TabSize(internal val className: String) {
     Xl("tabs-xl"),
 }
 
+/** Placement variants for this component (CSS prefix: `tabs-`) */
+enum class TabPlacement(internal val className: String) {
+    /** CSS: `tabs-top` — Puts tab buttons on top of the tab-content (default) */
+    Top("tabs-top"),
+    /** CSS: `tabs-bottom` — Puts tabs on under the tab-content */
+    Bottom("tabs-bottom"),
+}
+
 
 /**
  * Tabs can be used to show a list of links in a tabbed format. Renders `<button class="tabs ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
+ * @param placement — Placement variant
  * @param border — bottom border style
- * @param bottom — Puts tabs on under the tab-content
  * @param box — box style
  * @param lift — lift style
  * @param tabActive — Makes a single tab look active
  * @param tabDisabled — Makes a single tab look disabled
- * @param top — Puts tab buttons on top of the tab-content (default)
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -45,13 +52,12 @@ enum class TabSize(internal val className: String) {
 fun FlowContent.daisyTab(
     id: HtmlId? = null,
     size: TabSize? = null,
+    placement: TabPlacement? = null,
     border: Boolean = false,
-    bottom: Boolean = false,
     box: Boolean = false,
     lift: Boolean = false,
     tabActive: Boolean = false,
     tabDisabled: Boolean = false,
-    top: Boolean = false,
     extraClasses: String? = null,
     attrs: (BUTTON.() -> Unit)? = null,
     content: (BUTTON.() -> Unit),
@@ -60,13 +66,12 @@ fun FlowContent.daisyTab(
         if (id != null) attributes["id"] = id.id
         addClassNames("tabs")
         if (size != null) addClassNames(size.className)
+        if (placement != null) addClassNames(placement.className)
         if (border) addClassNames("tabs-border")
-        if (bottom) addClassNames("tabs-bottom")
         if (box) addClassNames("tabs-box")
         if (lift) addClassNames("tabs-lift")
         if (tabActive) addClassNames("tabs-tab-active")
         if (tabDisabled) addClassNames("tabs-tab-disabled")
-        if (top) addClassNames("tabs-top")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

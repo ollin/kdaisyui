@@ -149,6 +149,14 @@ export interface ComponentConfig {
   readonly componentAttributes: readonly StaticAttribute[]
   /** Booleans no class category declares, e.g. a modifier DaisyUI documents only in prose. */
   readonly additionalBooleans: readonly string[]
+  /**
+   * Boolean parameters whose generated name does not say what `true` means.
+   *
+   * `rating-hidden` becomes `hidden`, which reads as "hide the rating" and in fact adds the
+   * option to clear it. The class name is DaisyUI's and cannot change; the parameter is ours.
+   * Keyed by class suffix, e.g. `{ "hidden": "clearOption" }`.
+   */
+  readonly parameterNames: Readonly<Record<string, string>>
 }
 
 function section(config, name: string, componentName: string, fallback) {
@@ -160,8 +168,15 @@ function listed(config, name: string, componentName: string): boolean {
 }
 
 /** Reads the whole of one component's configuration, so no caller needs a section literal. */
-export function readComponentConfig(config, componentName: string): ComponentConfig {
+export function readComponentConfig(
+  config,
+  componentName: string,
+  componentDir = componentName.toLowerCase(),
+): ComponentConfig {
   return {
+    // The one directory-keyed entry in here. `parameterNames` names DaisyUI classes, and
+    // DaisyUI's key for a component is its directory — `file-input`, not `fileinput`.
+    parameterNames: config?.parameterNames?.[componentDir] ?? {},
     extras: section(config, 'extras', componentName, []),
     customParts: section(config, 'customParts', componentName, []),
     hasTextParam: listed(config, 'textParams', componentName),
@@ -263,6 +278,15 @@ export function booleanParameterClasses(
   }
 
   return booleans.sort()
+}
+
+/**
+ * The parameter a boolean class arrives as — its camelCase name, unless the config renames it.
+ *
+ * Shared with the Kotlin body emitter, which has to write the same identifier it declared.
+ */
+export function booleanParameterName(cls: string, componentConfig: ComponentConfig): string {
+  return escapeKotlinKeyword(componentConfig.parameterNames[cls] ?? toCamelCase(cls))
 }
 
 /** One parameter of one generated function. */
@@ -416,6 +440,11 @@ function escapeHatchParameters(element: TagClass, hasTextParam: boolean): Parame
   ]
 }
 
+/** `verticalPlacement` back to `VerticalPlacement` — the suffix the config actually wrote. */
+function capitalised(name: string): string {
+  return name.charAt(0).toUpperCase() + name.slice(1)
+}
+
 function enumShapes(classified: ClassifiedComponent, groups: GroupClassification): EnumShape[] {
   const documented = Object.keys(classified.descs ?? {}).length > 0
 
@@ -441,7 +470,9 @@ function enumShapes(classified: ClassifiedComponent, groups: GroupClassification
     build(named('Size'), 'Size variants', classified.sizes),
     // The measured ones. `colors` and `sizes` never needed measuring — a component wears one
     // colour and one size by construction, which is why they were enums from the start.
-    ...groups.enums.map(group => build(group.enumName, `${group.category} variants`, group.members)),
+    // `Style variants`, not `styles variants`: the configured suffix reads as a noun, the
+    // frontmatter category it came from is a plural bucket name.
+    ...groups.enums.map(group => build(group.enumName, `${capitalised(group.parameterName)} variants`, group.members)),
   ].filter((shape): shape is EnumShape => shape !== null)
 }
 
@@ -462,7 +493,7 @@ function enumParameters(
       name: escapeKotlinKeyword(group.parameterName),
       type: `${group.enumName}?`,
       default: 'null',
-      doc: `${group.category} variant`,
+      doc: `${capitalised(group.parameterName)} variant`,
     })
   }
   return parameters
@@ -474,7 +505,7 @@ function booleanParameters(
   groups: GroupClassification,
 ): ParameterShape[] {
   return booleanParameterClasses(classified, componentConfig, groups).map(cls => ({
-    name: escapeKotlinKeyword(toCamelCase(cls)),
+    name: booleanParameterName(cls, componentConfig),
     type: 'Boolean',
     default: 'false',
     doc: classified.descs?.[cls] ?? null,
@@ -591,7 +622,7 @@ export function buildComponentShape(
   config,
   groups: GroupClassification = allBooleans(classified),
 ): ComponentShape {
-  const componentConfig = readComponentConfig(config, classified.componentName)
+  const componentConfig = readComponentConfig(config, classified.componentName, source.componentDir)
   const rootElement = asTagClass(source.element || 'DIV')
 
   return {

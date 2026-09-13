@@ -30,15 +30,22 @@ enum class DividerVariant(internal val className: String) {
     Error("divider-error"),
 }
 
+/** Direction variants for this component (CSS prefix: `divider-`) */
+enum class DividerDirection(internal val className: String) {
+    /** CSS: `divider-vertical` — Divide vertical elements (on top of each other) */
+    Vertical("divider-vertical"),
+    /** CSS: `divider-horizontal` — Divide horizontal elements (next to each other) */
+    Horizontal("divider-horizontal"),
+}
+
 
 /**
  * Divider will be used to separate content vertically or horizontally. Renders `<div class="divider ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
+ * @param direction — Direction variant
  * @param end — Pushes the divider text to the end
- * @param horizontal — Divide horizontal elements (next to each other)
  * @param start — Pushes the divider text to the start
- * @param vertical — Divide vertical elements (on top of each other)
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -46,10 +53,9 @@ enum class DividerVariant(internal val className: String) {
 fun FlowContent.daisyDivider(
     id: HtmlId? = null,
     variant: DividerVariant? = null,
+    direction: DividerDirection? = null,
     end: Boolean = false,
-    horizontal: Boolean = false,
     start: Boolean = false,
-    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -58,10 +64,9 @@ fun FlowContent.daisyDivider(
         if (id != null) attributes["id"] = id.id
         addClassNames("divider")
         if (variant != null) addClassNames(variant.className)
+        if (direction != null) addClassNames(direction.className)
         if (end) addClassNames("divider-end")
-        if (horizontal) addClassNames("divider-horizontal")
         if (start) addClassNames("divider-start")
-        if (vertical) addClassNames("divider-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

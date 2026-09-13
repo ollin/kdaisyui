@@ -13,7 +13,7 @@ Vertical or horizontal timeline. Renders `<ul class="timeline ...">`.
 ```kotlin
 fun FlowContent.daisyTimeline(
     id: HtmlId? = null,
-    box: Boolean = false,
+    boxed: Boolean = false,
     compact: Boolean = false,
     horizontal: Boolean = false,
     snapIcon: Boolean = false,

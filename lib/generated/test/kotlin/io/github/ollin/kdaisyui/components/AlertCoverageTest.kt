@@ -41,16 +41,14 @@ class AlertCoverageTest {
             daisyAlert(
                 id = htmlId("x-cov-id"),
                 dash = true,
-                horizontal = true,
                 outline = true,
                 soft = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "alert alert-dash alert-horizontal alert-outline alert-soft alert-vertical zz-extra", "Alert all flags", closes = "</div></div>")
+        assertRendered(html, "alert alert-dash alert-outline alert-soft zz-extra", "Alert all flags", closes = "</div></div>")
         assertCommonFlags(html, "Alert")
         assertTrue(html.contains("role=\""), "Alert sets role")
     }
@@ -97,5 +95,27 @@ class AlertCoverageTest {
             )
         }
         assertRendered(html, "alert alert-error", "Alert variant Error")
+    }
+
+    @Test
+    fun alert_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlert(
+                direction = AlertDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "alert alert-vertical", "Alert direction Vertical")
+    }
+
+    @Test
+    fun alert_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlert(
+                direction = AlertDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "alert alert-horizontal", "Alert direction Horizontal")
     }
 }

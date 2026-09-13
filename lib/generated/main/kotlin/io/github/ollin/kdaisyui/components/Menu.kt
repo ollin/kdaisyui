@@ -28,18 +28,25 @@ enum class MenuSize(internal val className: String) {
     Xl("menu-xl"),
 }
 
+/** Direction variants for this component (CSS prefix: `menu-`) */
+enum class MenuDirection(internal val className: String) {
+    /** CSS: `menu-vertical` — Vertical menu (default) */
+    Vertical("menu-vertical"),
+    /** CSS: `menu-horizontal` — Horizontal menu */
+    Horizontal("menu-horizontal"),
+}
+
 
 /**
  * Menu is used to display a list of links vertically or horizontally. Renders `<ul class="menu ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
+ * @param direction — Direction variant
  * @param active — For the element inside <li> to look active
  * @param disabled — For the element inside <li> to look disabled
  * @param dropdownShow — Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
- * @param focus — For the element inside <li> to look focused
- * @param horizontal — Horizontal menu
+ * @param focused — For the element inside <li> to look focused
  * @param paged — Shows one level at a time and turns the open summary into a back button
- * @param vertical — Vertical menu (default)
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -47,13 +54,12 @@ enum class MenuSize(internal val className: String) {
 fun FlowContent.daisyMenu(
     id: HtmlId? = null,
     size: MenuSize? = null,
+    direction: MenuDirection? = null,
     active: Boolean = false,
     disabled: Boolean = false,
     dropdownShow: Boolean = false,
-    focus: Boolean = false,
-    horizontal: Boolean = false,
+    focused: Boolean = false,
     paged: Boolean = false,
-    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -62,13 +68,12 @@ fun FlowContent.daisyMenu(
         if (id != null) attributes["id"] = id.id
         addClassNames("menu")
         if (size != null) addClassNames(size.className)
+        if (direction != null) addClassNames(direction.className)
         if (active) addClassNames("menu-active")
         if (disabled) addClassNames("menu-disabled")
         if (dropdownShow) addClassNames("menu-dropdown-show")
-        if (focus) addClassNames("menu-focus")
-        if (horizontal) addClassNames("menu-horizontal")
+        if (focused) addClassNames("menu-focus")
         if (paged) addClassNames("menu-paged")
-        if (vertical) addClassNames("menu-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

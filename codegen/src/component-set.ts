@@ -18,6 +18,8 @@ import {
 import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter, type ClassifiedComponent } from './classifier.ts'
 import { buildComponentShape, type ComponentShape } from './component-shape.ts'
+import { classifyGroups, type GroupClassification } from './class-groups.ts'
+import { loadMeasurement, type Measurement } from './measurement.ts'
 
 /** Why a component produces no output. Reported rather than swallowed, so a caller can log it. */
 export type SkipReason = 'configured-skip' | 'no-frontmatter' | 'no-component-class'
@@ -53,7 +55,12 @@ function elementFor(componentDir: ComponentName, config, elementRules): string |
   return config.componentElements?.[componentDir] ?? getElementForComponent(elementRules, componentDir)
 }
 
-function classify(componentDir: ComponentName, config, elementRules): GeneratedComponent | SkipReason {
+function classify(
+  componentDir: ComponentName,
+  config,
+  elementRules,
+  measurement: Measurement,
+): GeneratedComponent | SkipReason {
   if (config.skip?.includes(componentDir)) return 'configured-skip'
 
   const frontmatter = readComponentFrontmatter(componentDir)
@@ -62,22 +69,34 @@ function classify(componentDir: ComponentName, config, elementRules): GeneratedC
 
   const classified = classifyFromFrontmatter(frontmatter, componentDir)
   const element = elementFor(componentDir, config, elementRules)
+  // Which class groups are one choice, decided by the browser rather than by their category.
+  // Throws when the measurement says a group is a choice and `enumNames` has not named it —
+  // silence there would reintroduce contradictory booleans by accident.
+  const groups: GroupClassification = classifyGroups(
+    classified,
+    componentDir,
+    config.enumNames ?? {},
+    measurement,
+  )
   return {
     componentDir,
     classified,
     frontmatter,
-    shape: buildComponentShape(classified, { componentDir, element }, config),
+    shape: buildComponentShape(classified, { componentDir, element }, config, groups),
   }
 }
 
 /** Every component that produces output, and every one that does not, with the reason. */
 export function readComponentSet(config): ComponentSet {
   const elementRules = parseLlmsTxt()
+  // Read once for the whole run: it is one file describing every component, and re-reading it
+  // per component would make a 66-way loop do 66 times the I/O for the same answer.
+  const measurement = loadMeasurement()
   const generated: GeneratedComponent[] = []
   const skipped: SkippedComponent[] = []
 
   for (const componentDir of getAllComponentDirs() as ComponentName[]) {
-    const result = classify(componentDir, config, elementRules)
+    const result = classify(componentDir, config, elementRules, measurement)
     if (typeof result === 'string') skipped.push({ componentDir, reason: result })
     else generated.push(result)
   }

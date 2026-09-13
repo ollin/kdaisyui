@@ -15,7 +15,7 @@ import kotlinx.html.UL
 /**
  * Timeline component shows a list of events in chronological order. Renders `<ul class="timeline ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param box
+ * @param boxed
  * @param compact
  * @param horizontal
  * @param snapIcon
@@ -26,7 +26,7 @@ import kotlinx.html.UL
  */
 fun FlowContent.daisyTimeline(
     id: HtmlId? = null,
-    box: Boolean = false,
+    boxed: Boolean = false,
     compact: Boolean = false,
     horizontal: Boolean = false,
     snapIcon: Boolean = false,
@@ -38,7 +38,7 @@ fun FlowContent.daisyTimeline(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline")
-        if (box) addClassNames("timeline-box")
+        if (boxed) addClassNames("timeline-box")
         if (compact) addClassNames("timeline-compact")
         if (horizontal) addClassNames("timeline-horizontal")
         if (snapIcon) addClassNames("timeline-snap-icon")

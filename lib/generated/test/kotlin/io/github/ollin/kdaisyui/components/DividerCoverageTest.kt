@@ -40,15 +40,13 @@ class DividerCoverageTest {
             daisyDivider(
                 id = htmlId("x-cov-id"),
                 end = true,
-                horizontal = true,
                 start = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "divider divider-end divider-horizontal divider-start divider-vertical zz-extra", "Divider all flags", closes = "</div></div>")
+        assertRendered(html, "divider divider-end divider-start zz-extra", "Divider all flags", closes = "</div></div>")
         assertCommonFlags(html, "Divider")
     }
 
@@ -138,5 +136,27 @@ class DividerCoverageTest {
             )
         }
         assertRendered(html, "divider divider-error", "Divider variant Error")
+    }
+
+    @Test
+    fun divider_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider(
+                direction = DividerDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "divider divider-vertical", "Divider direction Vertical")
+    }
+
+    @Test
+    fun divider_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider(
+                direction = DividerDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "divider divider-horizontal", "Divider direction Horizontal")
     }
 }

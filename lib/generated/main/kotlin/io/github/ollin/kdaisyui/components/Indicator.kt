@@ -10,27 +10,38 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+enum class IndicatorVerticalPlacement(internal val className: String) {
+    /** CSS: `indicator-top` */
+    Top("indicator-top"),
+    /** CSS: `indicator-middle` */
+    Middle("indicator-middle"),
+    /** CSS: `indicator-bottom` */
+    Bottom("indicator-bottom"),
+}
+
+enum class IndicatorHorizontalPlacement(internal val className: String) {
+    /** CSS: `indicator-start` */
+    Start("indicator-start"),
+    /** CSS: `indicator-center` */
+    Center("indicator-center"),
+    /** CSS: `indicator-end` */
+    End("indicator-end"),
+}
+
+
 /**
  * Indicators are used to place an element on the corner of another element. Renders `<div class="indicator ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param bottom
- * @param center
- * @param end
- * @param middle
- * @param start
- * @param top
+ * @param verticalPlacement — VerticalPlacement variant
+ * @param horizontalPlacement — HorizontalPlacement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyIndicator(
     id: HtmlId? = null,
-    bottom: Boolean = false,
-    center: Boolean = false,
-    end: Boolean = false,
-    middle: Boolean = false,
-    start: Boolean = false,
-    top: Boolean = false,
+    verticalPlacement: IndicatorVerticalPlacement? = null,
+    horizontalPlacement: IndicatorHorizontalPlacement? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -38,12 +49,8 @@ fun FlowContent.daisyIndicator(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("indicator")
-        if (bottom) addClassNames("indicator-bottom")
-        if (center) addClassNames("indicator-center")
-        if (end) addClassNames("indicator-end")
-        if (middle) addClassNames("indicator-middle")
-        if (start) addClassNames("indicator-start")
-        if (top) addClassNames("indicator-top")
+        if (verticalPlacement != null) addClassNames(verticalPlacement.className)
+        if (horizontalPlacement != null) addClassNames(horizontalPlacement.className)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

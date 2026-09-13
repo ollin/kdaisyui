@@ -11,12 +11,11 @@ Regenerate: just generate
 Slideshow of images or content. Renders `<div class="carousel ...">`.
 
 ```kotlin
+// CarouselModifier: Start | Center | End
 fun FlowContent.daisyCarousel(
     id: HtmlId? = null,
-    center: Boolean = false,  // Snap elements to center
-    end: Boolean = false,  // Snap elements to end
+    modifier: CarouselModifier? = null,
     horizontal: Boolean = false,  // Horizontal layout (default)
-    start: Boolean = false,  // Snap elements to start
     vertical: Boolean = false,  // Vertical layout
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

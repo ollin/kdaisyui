@@ -11,10 +11,10 @@ Regenerate: just generate
 Styled list layout. Renders `<ul class="list ...">`.
 
 ```kotlin
+// ListModifier: ColWrap | ColGrow
 fun FlowContent.daisyList(
     id: HtmlId? = null,
-    colGrow: Boolean = false,  // For one of direct children of list-row to make it fill the remaining space
-    colWrap: Boolean = false,  // For one of direct children of list-row to push it to the next line
+    modifier: ListModifier? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),

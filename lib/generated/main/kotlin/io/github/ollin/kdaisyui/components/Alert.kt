@@ -23,16 +23,23 @@ enum class AlertVariant(internal val className: String) {
     Error("alert-error"),
 }
 
+/** Direction variants for this component (CSS prefix: `alert-`) */
+enum class AlertDirection(internal val className: String) {
+    /** CSS: `alert-vertical` — Vertical layout, good for mobile */
+    Vertical("alert-vertical"),
+    /** CSS: `alert-horizontal` — Horizontal layout, good for desktop */
+    Horizontal("alert-horizontal"),
+}
+
 
 /**
  * Alert informs users about important events. Renders `<div class="alert ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
+ * @param direction — Direction variant
  * @param dash — dash outline style
- * @param horizontal — Horizontal layout, good for desktop
  * @param outline — outline style
  * @param soft — soft style
- * @param vertical — Vertical layout, good for mobile
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -40,11 +47,10 @@ enum class AlertVariant(internal val className: String) {
 fun FlowContent.daisyAlert(
     id: HtmlId? = null,
     variant: AlertVariant? = null,
+    direction: AlertDirection? = null,
     dash: Boolean = false,
-    horizontal: Boolean = false,
     outline: Boolean = false,
     soft: Boolean = false,
-    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -54,11 +60,10 @@ fun FlowContent.daisyAlert(
         role = "alert"
         addClassNames("alert")
         if (variant != null) addClassNames(variant.className)
+        if (direction != null) addClassNames(direction.className)
         if (dash) addClassNames("alert-dash")
-        if (horizontal) addClassNames("alert-horizontal")
         if (outline) addClassNames("alert-outline")
         if (soft) addClassNames("alert-soft")
-        if (vertical) addClassNames("alert-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

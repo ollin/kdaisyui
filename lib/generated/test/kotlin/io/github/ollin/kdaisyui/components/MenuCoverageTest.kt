@@ -42,16 +42,14 @@ class MenuCoverageTest {
                 active = true,
                 disabled = true,
                 dropdownShow = true,
-                focus = true,
-                horizontal = true,
+                focused = true,
                 paged = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu menu-active menu-disabled menu-dropdown-show menu-focus menu-horizontal menu-paged menu-vertical zz-extra", "Menu all flags", closes = "</ul></div>")
+        assertRendered(html, "menu menu-active menu-disabled menu-dropdown-show menu-focus menu-paged zz-extra", "Menu all flags", closes = "</ul></div>")
         assertCommonFlags(html, "Menu")
     }
 
@@ -108,6 +106,28 @@ class MenuCoverageTest {
             )
         }
         assertRendered(html, "menu menu-xl", "Menu size Xl")
+    }
+
+    @Test
+    fun menu_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenu(
+                direction = MenuDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "menu menu-vertical", "Menu direction Vertical")
+    }
+
+    @Test
+    fun menu_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenu(
+                direction = MenuDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "menu menu-horizontal", "Menu direction Horizontal")
     }
 
     @Test

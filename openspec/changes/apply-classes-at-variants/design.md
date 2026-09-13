@@ -636,6 +636,45 @@ markup and settles that `ButtonEmphasis` is not one enum.
 `TabAppearance` joins the withdrawn list. That is four hand-chosen enums the measurement has now
 removed — `CardLayout`, `ListColumn`, `SwapAnimation`, `TabAppearance` — and one it has split.
 
+## The pairwise measurement is sound; grouping it into axes is not
+
+Turning the measured pairs into axes by connected components — *a and b share an axis when one is
+inert against the other* — reproduces `Indicator` and `Toast` perfectly and then fails twice:
+
+```
+Tooltip.placements   ONE axis of all seven      expected {top bottom left right} + {start center end}
+Dropdown.placements  FOUR axes, left and right alone   expected two
+```
+
+`Tooltip` collapses because `top` is inert against `start`, `center` **and** `end` as well as
+against the other sides, so transitivity merges both axes through it. `Dropdown` fragments
+because `left|right` composes, which no physical dropdown does.
+
+**Exclusivity is not transitive, and an axis is a clique rather than a connected component.**
+Under `Tooltip`, `{top, bottom, left, right}` is a clique and `{start, center, end}` is a clique —
+both correct — but `top` belongs to both, so the cliques overlap and a partition has to choose.
+
+### The synthesis that works, using evidence already gathered
+
+| step | source | status |
+|---|---|---|
+| is this pair exclusive? | rendering (probe 4b) | **solved**, all 44 groups |
+| which axis does a member belong to? | example co-occurrence (probe 2) | solved for the 4 groups that need it |
+
+Probe 2 produced a complete bipartite co-occurrence graph for exactly `Indicator`, `Toast`,
+`Dropdown` and `Tooltip` — the four groups where the partition is ambiguous. Two classes observed
+together are provably on different axes, which is precisely the constraint clique-covering lacks.
+
+So the rule is: **rendering decides exclusivity, co-occurrence decides the axis split, and a
+group where neither speaks stays boolean.** Each source is used only where it is authoritative,
+and neither is asked to establish what it cannot.
+
+### What is committed and what is not
+
+The measurement is committed as **pairwise verdicts**, not as axes. The verdicts are what was
+observed; the axes are an inference over them, and an inference that has now been wrong twice
+does not belong in a data file pretending to be a measurement.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

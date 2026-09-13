@@ -64,23 +64,35 @@ The class column shows the SUFFIX; the real class is `<component>-<suffix>`, so 
 **Two of these were withdrawn earlier and came back.** Rows 3 and 7 were dropped when no source
 settled them; the browser calls both pairs exclusive.
 
-### One risk the `…Modifier` names carry — rows 3, 4, 7, 10
+### The `…Modifier` naming worry is already handled — correcting an earlier draft
 
-`modifier` is DaisyUI's catch-all category, and these four groups happen to hold ALL of their
-component's modifiers today. `CardModifier` is therefore accurate right now and would start
-lying the moment DaisyUI adds a card modifier that composes: some modifiers would be enum
-constants and others booleans, under a name claiming to cover the category.
+An earlier version of this file listed a risk here: `CardModifier` names DaisyUI's whole
+`modifier` category, so a modifier added later that COMPOSES would leave some modifiers as enum
+constants and others as booleans, under a name claiming to cover both.
 
-`direction`, `style` and `placement` do not have this problem to the same degree — they are
-narrower categories, and `verifyExclusivity` fails the build when any of them gains a member,
-so the lie cannot land silently either way.
+**That cannot happen, and I should have checked before writing it as an open question.** Naming
+a group with a plain string makes the enum cover every member of the group, and
+`checkAxisIsExclusive` then requires every pair of them to be exclusive. So:
 
-If that risk bothers you, the Alternative column for those four rows is the answer: those names
-describe the group rather than the category, so a new member cannot make them false.
+| what DaisyUI does | what happens |
+|---|---|
+| adds a member that is exclusive with the rest | enum gains a constant; the name stays true |
+| adds a member that composes | **the run stops** — `ExclusivityError` naming the pair |
+| adds a member nobody measured yet | **CI stops** — `verifyExclusivity` names the group |
+| removes a member | enum loses a constant; the name stays true |
 
-Row 9 is the one I would take from the Alternative column regardless — `MaskShape` for fifteen
-shapes is both closer to what the caller is doing AND unambiguous in the docs, since DaisyUI's
-own Mask page is a grid of shapes.
+There is no fourth path, because a named group cannot cover only part of its category either —
+`checkSplitCoverage` rejects an axis list that leaves a member unassigned.
+
+Pinned by `withdraws an enum when DaisyUI adds a member that composes` in
+`codegen/test/class-groups.test.ts`, written for this question.
+
+So the Alternative column for rows 3, 4, 7 and 10 is now purely a readability preference, not a
+mitigation. Choose on how it reads.
+
+Row 9 is the one I would still take from the Alternative column — `MaskShape` for fifteen shapes
+is closer to what the caller is doing AND no harder to find in the docs, since DaisyUI's own
+Mask page is a grid of shapes rather than a style table.
 
 ---
 

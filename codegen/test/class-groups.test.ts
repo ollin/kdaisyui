@@ -164,6 +164,37 @@ describe('classifyGroups', () => {
     )
   })
 
+  it('withdraws an enum when DaisyUI adds a member that composes', () => {
+    // Naming an enum after DaisyUI's category — `CardModifier` for the whole `modifier`
+    // category — is only honest while every member of that category belongs to the enum. A new
+    // composing member would leave some modifiers as constants and others as booleans, under a
+    // name claiming to cover both.
+    //
+    // It cannot land silently: a named group is checked across ALL its members, so the run
+    // stops and a human decides whether to drop the enum or split it.
+    assert.throws(
+      () =>
+        classifyGroups(
+          component({ componentName: 'Card', modifiers: ['side', 'image-full', 'newcomer'] }),
+          'card',
+          { card: { modifiers: 'Modifier' } },
+          measured({
+            card: {
+              modifiers: {
+                exclusive: ['side|image-full'],
+                compose: ['side|newcomer', 'image-full|newcomer'],
+              },
+            },
+          }),
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof ExclusivityError)
+        assert.match(error.message, /side\|newcomer is compose/)
+        return true
+      },
+    )
+  })
+
   it('rejects a split whose axes are exclusive across as well as within', () => {
     // Every cross pair exclusive means one clique, and two enums would let a caller answer
     // the same question twice.

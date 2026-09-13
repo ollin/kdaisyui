@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.a
 import kotlinx.html.A
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `link-`) */
-enum class LinkVariant(internal val className: String) {
+enum class LinkVariant(internal val className: String) : ClassValues<LinkVariant> {
     /** CSS: `link-neutral` — neutral color */
     Neutral("link-neutral"),
     /** CSS: `link-primary` — primary color */
@@ -28,6 +29,9 @@ enum class LinkVariant(internal val className: String) {
     Warning("link-warning"),
     /** CSS: `link-error` — error color */
     Error("link-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -44,7 +48,7 @@ enum class LinkVariant(internal val className: String) {
 fun FlowContent.daisyLink(
     text: String? = null,
     id: HtmlId? = null,
-    variant: LinkVariant? = null,
+    variant: ClassValues<LinkVariant>? = null,
     hover: Boolean = false,
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
@@ -53,7 +57,7 @@ fun FlowContent.daisyLink(
     a {
         if (id != null) attributes["id"] = id.id
         addClassNames("link")
-        if (variant != null) addClassNames(variant.className)
+        addClassNames(variant)
         if (hover) addClassNames("link-hover")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -13,7 +14,7 @@ import kotlinx.html.ul
 import kotlinx.html.UL
 
 /** Color variants for this component (CSS prefix: `steps-`) */
-enum class StepsVariant(internal val className: String) {
+enum class StepsVariant(internal val className: String) : ClassValues<StepsVariant> {
     /** CSS: `steps-step-neutral` — neutral color */
     StepNeutral("steps-step-neutral"),
     /** CSS: `steps-step-primary` — primary color */
@@ -30,14 +31,20 @@ enum class StepsVariant(internal val className: String) {
     StepWarning("steps-step-warning"),
     /** CSS: `steps-step-error` — error color */
     StepError("steps-step-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Direction variants for this component (CSS prefix: `steps-`) */
-enum class StepsDirection(internal val className: String) {
+enum class StepsDirection(internal val className: String) : ClassValues<StepsDirection> {
     /** CSS: `steps-vertical` — Vertical layout */
     Vertical("steps-vertical"),
     /** CSS: `steps-horizontal` — Makes steps horizontal */
     Horizontal("steps-horizontal"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -52,8 +59,8 @@ enum class StepsDirection(internal val className: String) {
  */
 fun FlowContent.daisySteps(
     id: HtmlId? = null,
-    variant: StepsVariant? = null,
-    direction: StepsDirection? = null,
+    variant: ClassValues<StepsVariant>? = null,
+    direction: ClassValues<StepsDirection>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -61,8 +68,8 @@ fun FlowContent.daisySteps(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("steps")
-        if (variant != null) addClassNames(variant.className)
-        if (direction != null) addClassNames(direction.className)
+        addClassNames(variant)
+        addClassNames(direction)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

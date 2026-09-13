@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
-enum class ToggleVariant(internal val className: String) {
+enum class ToggleVariant(internal val className: String) : ClassValues<ToggleVariant> {
     /** CSS: `toggle-primary` */
     Primary("toggle-primary"),
     /** CSS: `toggle-secondary` */
@@ -28,9 +29,12 @@ enum class ToggleVariant(internal val className: String) {
     Info("toggle-info"),
     /** CSS: `toggle-error` */
     Error("toggle-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
-enum class ToggleSize(internal val className: String) {
+enum class ToggleSize(internal val className: String) : ClassValues<ToggleSize> {
     /** CSS: `toggle-xs` */
     Xs("toggle-xs"),
     /** CSS: `toggle-sm` */
@@ -41,6 +45,9 @@ enum class ToggleSize(internal val className: String) {
     Lg("toggle-lg"),
     /** CSS: `toggle-xl` */
     Xl("toggle-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -56,8 +63,8 @@ enum class ToggleSize(internal val className: String) {
  */
 fun FlowContent.daisyToggle(
     id: HtmlId? = null,
-    variant: ToggleVariant? = null,
-    size: ToggleSize? = null,
+    variant: ClassValues<ToggleVariant>? = null,
+    size: ClassValues<ToggleSize>? = null,
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
@@ -67,8 +74,8 @@ fun FlowContent.daisyToggle(
         if (id != null) attributes["id"] = id.id
         type = InputType.checkBox
         addClassNames("toggle")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (checked) this.checked = true
         if (disabled) this.disabled = true
         addClassNames(extraClasses)

@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `divider-`) */
-enum class DividerVariant(internal val className: String) {
+enum class DividerVariant(internal val className: String) : ClassValues<DividerVariant> {
     /** CSS: `divider-neutral` — neutral color */
     Neutral("divider-neutral"),
     /** CSS: `divider-primary` — primary color */
@@ -28,14 +29,20 @@ enum class DividerVariant(internal val className: String) {
     Info("divider-info"),
     /** CSS: `divider-error` — error color */
     Error("divider-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Direction variants for this component (CSS prefix: `divider-`) */
-enum class DividerDirection(internal val className: String) {
+enum class DividerDirection(internal val className: String) : ClassValues<DividerDirection> {
     /** CSS: `divider-vertical` — Divide vertical elements (on top of each other) */
     Vertical("divider-vertical"),
     /** CSS: `divider-horizontal` — Divide horizontal elements (next to each other) */
     Horizontal("divider-horizontal"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -52,8 +59,8 @@ enum class DividerDirection(internal val className: String) {
  */
 fun FlowContent.daisyDivider(
     id: HtmlId? = null,
-    variant: DividerVariant? = null,
-    direction: DividerDirection? = null,
+    variant: ClassValues<DividerVariant>? = null,
+    direction: ClassValues<DividerDirection>? = null,
     end: Boolean = false,
     start: Boolean = false,
     extraClasses: String? = null,
@@ -63,8 +70,8 @@ fun FlowContent.daisyDivider(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("divider")
-        if (variant != null) addClassNames(variant.className)
-        if (direction != null) addClassNames(direction.className)
+        addClassNames(variant)
+        addClassNames(direction)
         if (end) addClassNames("divider-end")
         if (start) addClassNames("divider-start")
         addClassNames(extraClasses)

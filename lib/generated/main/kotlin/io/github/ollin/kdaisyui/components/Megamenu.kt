@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -13,7 +14,7 @@ import kotlinx.html.span
 import kotlinx.html.SPAN
 
 /** Size variants for this component (CSS prefix: `megamenu-`) */
-enum class MegamenuSize(internal val className: String) {
+enum class MegamenuSize(internal val className: String) : ClassValues<MegamenuSize> {
     /** CSS: `megamenu-xs` — Extra small size */
     Xs("megamenu-xs"),
     /** CSS: `megamenu-sm` — Small size */
@@ -24,6 +25,9 @@ enum class MegamenuSize(internal val className: String) {
     Lg("megamenu-lg"),
     /** CSS: `megamenu-xl` — Extra large size */
     Xl("megamenu-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -40,7 +44,7 @@ enum class MegamenuSize(internal val className: String) {
  */
 fun FlowContent.daisyMegamenu(
     id: HtmlId? = null,
-    size: MegamenuSize? = null,
+    size: ClassValues<MegamenuSize>? = null,
     full: Boolean = false,
     vertical: Boolean = false,
     wide: Boolean = false,
@@ -52,7 +56,7 @@ fun FlowContent.daisyMegamenu(
         if (id != null) attributes["id"] = id.id
         attributes["popover"] = ""
         addClassNames("megamenu")
-        if (size != null) addClassNames(size.className)
+        addClassNames(size)
         if (full) addClassNames("megamenu-full")
         if (vertical) addClassNames("megamenu-vertical")
         if (wide) addClassNames("megamenu-wide")

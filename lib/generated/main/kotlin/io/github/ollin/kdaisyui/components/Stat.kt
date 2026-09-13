@@ -5,16 +5,20 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-enum class StatDirection(internal val className: String) {
+enum class StatDirection(internal val className: String) : ClassValues<StatDirection> {
     /** CSS: `stats-horizontal` */
     Horizontal("stats-horizontal"),
     /** CSS: `stats-vertical` */
     Vertical("stats-vertical"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -28,7 +32,7 @@ enum class StatDirection(internal val className: String) {
  */
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
-    direction: StatDirection? = null,
+    direction: ClassValues<StatDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -36,7 +40,7 @@ fun FlowContent.daisyStat(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stats")
-        if (direction != null) addClassNames(direction.className)
+        addClassNames(direction)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

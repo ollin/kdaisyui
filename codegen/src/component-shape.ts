@@ -476,6 +476,21 @@ function enumShapes(classified: ClassifiedComponent, groups: GroupClassification
   ].filter((shape): shape is EnumShape => shape !== null)
 }
 
+/**
+ * The Kotlin type of a parameter carrying one exclusive group.
+ *
+ * `ClassValues<ButtonSize>?` rather than `ButtonSize?`, so the one parameter accepts a bare entry,
+ * an entry at a Tailwind variant, and any combination of those — `ButtonSize.Lg`,
+ * `at(Breakpoint.Lg, ButtonSize.Lg)`, and the `btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl`
+ * pattern DaisyUI's own button page documents.
+ *
+ * The enum name stays the type ARGUMENT, and `ClassValues` is invariant in it, so the widening is
+ * only in what may be applied and never in which group may answer which parameter.
+ */
+function groupParameterType(enumName: string): string {
+  return `ClassValues<${enumName}>?`
+}
+
 /** The enum-typed parameters: the two that were always enums, then the measured ones. */
 function enumParameters(
   classified: ClassifiedComponent,
@@ -483,15 +498,15 @@ function enumParameters(
 ): ParameterShape[] {
   const parameters: ParameterShape[] = []
   if (classified.colors.length > 0) {
-    parameters.push({ name: 'variant', type: `${classified.componentName}Variant?`, default: 'null', doc: 'Color variant' })
+    parameters.push({ name: 'variant', type: groupParameterType(`${classified.componentName}Variant`), default: 'null', doc: 'Color variant' })
   }
   if (classified.sizes.length > 0) {
-    parameters.push({ name: 'size', type: `${classified.componentName}Size?`, default: 'null', doc: 'Size variant' })
+    parameters.push({ name: 'size', type: groupParameterType(`${classified.componentName}Size`), default: 'null', doc: 'Size variant' })
   }
   for (const group of groups.enums) {
     parameters.push({
       name: escapeKotlinKeyword(group.parameterName),
-      type: `${group.enumName}?`,
+      type: groupParameterType(group.enumName),
       default: 'null',
       doc: `${capitalised(group.parameterName)} variant`,
     })

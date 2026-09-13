@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.kbd
 import kotlinx.html.KBD
 
 /** Size variants for this component (CSS prefix: `kbd-`) */
-enum class KbdSize(internal val className: String) {
+enum class KbdSize(internal val className: String) : ClassValues<KbdSize> {
     /** CSS: `kbd-xs` — Extra small size */
     Xs("kbd-xs"),
     /** CSS: `kbd-sm` — Small size */
@@ -22,6 +23,9 @@ enum class KbdSize(internal val className: String) {
     Lg("kbd-lg"),
     /** CSS: `kbd-xl` — Extra large size */
     Xl("kbd-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -37,7 +41,7 @@ enum class KbdSize(internal val className: String) {
 fun FlowContent.daisyKbd(
     text: String? = null,
     id: HtmlId? = null,
-    size: KbdSize? = null,
+    size: ClassValues<KbdSize>? = null,
     extraClasses: String? = null,
     attrs: (KBD.() -> Unit)? = null,
     content: (KBD.() -> Unit)? = null,
@@ -45,7 +49,7 @@ fun FlowContent.daisyKbd(
     kbd {
         if (id != null) attributes["id"] = id.id
         addClassNames("kbd")
-        if (size != null) addClassNames(size.className)
+        addClassNames(size)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         when {

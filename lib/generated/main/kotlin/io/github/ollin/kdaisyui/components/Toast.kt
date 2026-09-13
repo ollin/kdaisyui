@@ -5,29 +5,36 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** VerticalPlacement variants for this component (CSS prefix: `toast-`) */
-enum class ToastVerticalPlacement(internal val className: String) {
+enum class ToastVerticalPlacement(internal val className: String) : ClassValues<ToastVerticalPlacement> {
     /** CSS: `toast-top` — align vertically to top */
     Top("toast-top"),
     /** CSS: `toast-middle` — align vertically to middle */
     Middle("toast-middle"),
     /** CSS: `toast-bottom` — align vertically to bottom */
     Bottom("toast-bottom"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** HorizontalPlacement variants for this component (CSS prefix: `toast-`) */
-enum class ToastHorizontalPlacement(internal val className: String) {
+enum class ToastHorizontalPlacement(internal val className: String) : ClassValues<ToastHorizontalPlacement> {
     /** CSS: `toast-start` — align horizontally to the left */
     Start("toast-start"),
     /** CSS: `toast-center` — align horizontally to the center */
     Center("toast-center"),
     /** CSS: `toast-end` — align horizontally to the right */
     End("toast-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -42,8 +49,8 @@ enum class ToastHorizontalPlacement(internal val className: String) {
  */
 fun FlowContent.daisyToast(
     id: HtmlId? = null,
-    verticalPlacement: ToastVerticalPlacement? = null,
-    horizontalPlacement: ToastHorizontalPlacement? = null,
+    verticalPlacement: ClassValues<ToastVerticalPlacement>? = null,
+    horizontalPlacement: ClassValues<ToastHorizontalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -51,8 +58,8 @@ fun FlowContent.daisyToast(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("toast")
-        if (verticalPlacement != null) addClassNames(verticalPlacement.className)
-        if (horizontalPlacement != null) addClassNames(horizontalPlacement.className)
+        addClassNames(verticalPlacement)
+        addClassNames(horizontalPlacement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

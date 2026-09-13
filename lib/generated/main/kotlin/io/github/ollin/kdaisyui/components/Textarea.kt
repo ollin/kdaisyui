@@ -5,12 +5,13 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.textArea
 import kotlinx.html.TEXTAREA
 
-enum class TextareaVariant(internal val className: String) {
+enum class TextareaVariant(internal val className: String) : ClassValues<TextareaVariant> {
     /** CSS: `textarea-neutral` */
     Neutral("textarea-neutral"),
     /** CSS: `textarea-primary` */
@@ -27,9 +28,12 @@ enum class TextareaVariant(internal val className: String) {
     Warning("textarea-warning"),
     /** CSS: `textarea-error` */
     Error("textarea-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
-enum class TextareaSize(internal val className: String) {
+enum class TextareaSize(internal val className: String) : ClassValues<TextareaSize> {
     /** CSS: `textarea-xs` */
     Xs("textarea-xs"),
     /** CSS: `textarea-sm` */
@@ -40,6 +44,9 @@ enum class TextareaSize(internal val className: String) {
     Lg("textarea-lg"),
     /** CSS: `textarea-xl` */
     Xl("textarea-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -55,8 +62,8 @@ enum class TextareaSize(internal val className: String) {
  */
 fun FlowContent.daisyTextarea(
     id: HtmlId? = null,
-    variant: TextareaVariant? = null,
-    size: TextareaSize? = null,
+    variant: ClassValues<TextareaVariant>? = null,
+    size: ClassValues<TextareaSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
     attrs: (TEXTAREA.() -> Unit)? = null,
@@ -65,8 +72,8 @@ fun FlowContent.daisyTextarea(
     textArea {
         if (id != null) attributes["id"] = id.id
         addClassNames("textarea")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (ghost) addClassNames("textarea-ghost")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

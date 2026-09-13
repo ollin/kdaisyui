@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.label
 import kotlinx.html.LABEL
 
 /** Color variants for this component (CSS prefix: `otp-`) */
-enum class OtpVariant(internal val className: String) {
+enum class OtpVariant(internal val className: String) : ClassValues<OtpVariant> {
     /** CSS: `otp-neutral` — neutral color */
     Neutral("otp-neutral"),
     /** CSS: `otp-primary` — primary color */
@@ -28,10 +29,13 @@ enum class OtpVariant(internal val className: String) {
     Warning("otp-warning"),
     /** CSS: `otp-error` — error color */
     Error("otp-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Size variants for this component (CSS prefix: `otp-`) */
-enum class OtpSize(internal val className: String) {
+enum class OtpSize(internal val className: String) : ClassValues<OtpSize> {
     /** CSS: `otp-xs` — Extra small size */
     Xs("otp-xs"),
     /** CSS: `otp-sm` — Small size */
@@ -42,6 +46,9 @@ enum class OtpSize(internal val className: String) {
     Lg("otp-lg"),
     /** CSS: `otp-xl` — Extra large size */
     Xl("otp-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -57,8 +64,8 @@ enum class OtpSize(internal val className: String) {
  */
 fun FlowContent.daisyOtp(
     id: HtmlId? = null,
-    variant: OtpVariant? = null,
-    size: OtpSize? = null,
+    variant: ClassValues<OtpVariant>? = null,
+    size: ClassValues<OtpSize>? = null,
     joined: Boolean = false,
     extraClasses: String? = null,
     attrs: (LABEL.() -> Unit)? = null,
@@ -67,8 +74,8 @@ fun FlowContent.daisyOtp(
     label {
         if (id != null) attributes["id"] = id.id
         addClassNames("otp")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (joined) addClassNames("otp-joined")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

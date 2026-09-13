@@ -5,17 +5,21 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Direction variants for this component (CSS prefix: `join-`) */
-enum class JoinDirection(internal val className: String) {
+enum class JoinDirection(internal val className: String) : ClassValues<JoinDirection> {
     /** CSS: `join-vertical` — Show items vertically */
     Vertical("join-vertical"),
     /** CSS: `join-horizontal` — Show items horizontally */
     Horizontal("join-horizontal"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -29,7 +33,7 @@ enum class JoinDirection(internal val className: String) {
  */
 fun FlowContent.daisyJoin(
     id: HtmlId? = null,
-    direction: JoinDirection? = null,
+    direction: ClassValues<JoinDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -37,7 +41,7 @@ fun FlowContent.daisyJoin(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("join")
-        if (direction != null) addClassNames(direction.className)
+        addClassNames(direction)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

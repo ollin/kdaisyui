@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
-enum class InputVariant(internal val className: String) {
+enum class InputVariant(internal val className: String) : ClassValues<InputVariant> {
     /** CSS: `input-neutral` */
     Neutral("input-neutral"),
     /** CSS: `input-primary` */
@@ -28,9 +29,12 @@ enum class InputVariant(internal val className: String) {
     Warning("input-warning"),
     /** CSS: `input-error` */
     Error("input-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
-enum class InputSize(internal val className: String) {
+enum class InputSize(internal val className: String) : ClassValues<InputSize> {
     /** CSS: `input-xs` */
     Xs("input-xs"),
     /** CSS: `input-sm` */
@@ -41,6 +45,9 @@ enum class InputSize(internal val className: String) {
     Lg("input-lg"),
     /** CSS: `input-xl` */
     Xl("input-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -59,8 +66,8 @@ enum class InputSize(internal val className: String) {
  */
 fun FlowContent.daisyInput(
     id: HtmlId? = null,
-    variant: InputVariant? = null,
-    size: InputSize? = null,
+    variant: ClassValues<InputVariant>? = null,
+    size: ClassValues<InputSize>? = null,
     ghost: Boolean = false,
     type: InputType = InputType.text,
     placeholder: String? = null,
@@ -73,8 +80,8 @@ fun FlowContent.daisyInput(
         if (id != null) attributes["id"] = id.id
         this.type = type
         addClassNames("input")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (ghost) addClassNames("input-ghost")
         if (placeholder != null) this.placeholder = placeholder
         if (value != null) this.value = value

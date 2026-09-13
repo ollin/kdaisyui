@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
-enum class CheckboxVariant(internal val className: String) {
+enum class CheckboxVariant(internal val className: String) : ClassValues<CheckboxVariant> {
     /** CSS: `checkbox-primary` */
     Primary("checkbox-primary"),
     /** CSS: `checkbox-secondary` */
@@ -28,9 +29,12 @@ enum class CheckboxVariant(internal val className: String) {
     Info("checkbox-info"),
     /** CSS: `checkbox-error` */
     Error("checkbox-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
-enum class CheckboxSize(internal val className: String) {
+enum class CheckboxSize(internal val className: String) : ClassValues<CheckboxSize> {
     /** CSS: `checkbox-xs` */
     Xs("checkbox-xs"),
     /** CSS: `checkbox-sm` */
@@ -41,6 +45,9 @@ enum class CheckboxSize(internal val className: String) {
     Lg("checkbox-lg"),
     /** CSS: `checkbox-xl` */
     Xl("checkbox-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -56,8 +63,8 @@ enum class CheckboxSize(internal val className: String) {
  */
 fun FlowContent.daisyCheckbox(
     id: HtmlId? = null,
-    variant: CheckboxVariant? = null,
-    size: CheckboxSize? = null,
+    variant: ClassValues<CheckboxVariant>? = null,
+    size: ClassValues<CheckboxSize>? = null,
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
@@ -67,8 +74,8 @@ fun FlowContent.daisyCheckbox(
         if (id != null) attributes["id"] = id.id
         type = InputType.checkBox
         addClassNames("checkbox")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (checked) this.checked = true
         if (disabled) this.disabled = true
         addClassNames(extraClasses)

@@ -53,7 +53,10 @@ describe('what the JVM baseline cannot see', () => {
       shape(classified({ sizes: ['xs'], modifiers: ['side'] }), 'card', 'DIV'),
     ])
 
-    assert.match(dump, /size: CardSize\? = null/)
+    // `ClassValues<CardSize>?`, not `CardSize?`: the holder is what lets one parameter take a bare
+    // entry, an entry at a Tailwind variant, and combinations of those. The enum name stays the
+    // type argument, so the dump still records WHICH group answers this parameter.
+    assert.match(dump, /size: ClassValues<CardSize>\? = null/)
     assert.match(dump, /side: Boolean = false/)
   })
 

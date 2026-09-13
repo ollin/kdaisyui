@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.details
 import kotlinx.html.DETAILS
@@ -13,13 +14,16 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** AlignPlacement variants for this component (CSS prefix: `dropdown-`) */
-enum class DropdownAlignPlacement(internal val className: String) {
+enum class DropdownAlignPlacement(internal val className: String) : ClassValues<DropdownAlignPlacement> {
     /** CSS: `dropdown-start` — Align horizontally to start of button */
     Start("dropdown-start"),
     /** CSS: `dropdown-center` — Align horizontally to center of button */
     Center("dropdown-center"),
     /** CSS: `dropdown-end` — Align horizontally to end of button */
     End("dropdown-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -43,7 +47,7 @@ enum class DropdownAlignPlacement(internal val className: String) {
  */
 fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
-    alignPlacement: DropdownAlignPlacement? = null,
+    alignPlacement: ClassValues<DropdownAlignPlacement>? = null,
     close: Boolean = false,
     openOnHover: Boolean = false,
     open: Boolean = false,
@@ -61,7 +65,7 @@ fun FlowContent.daisyDropdown(
     details {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown")
-        if (alignPlacement != null) addClassNames(alignPlacement.className)
+        addClassNames(alignPlacement)
         if (close) addClassNames("dropdown-close")
         if (openOnHover) addClassNames("dropdown-hover")
         if (open) addClassNames("dropdown-open")

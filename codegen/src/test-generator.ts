@@ -450,7 +450,11 @@ function matchDelimiter(str, openIdx, open, close) {
 /** Map enumTypeName -> [{ entry, css }] for class-mapping enums in the file. */
 function parseEnumDefinitions(content) {
   const enums = {}
-  const re = /enum class (\w+)\(internal val className: String\)\s*\{([\s\S]*?)\n\}/g
+  // `[^{]*` spans the supertype clause every generated enum now carries —
+  // `: ClassValues<ButtonSize>` — without this needing to restate it. The entry pattern below
+  // ignores the `override val classNames` member for the same reason: it matches only lines that
+  // are an identifier followed by a quoted string.
+  const re = /enum class (\w+)\(internal val className: String\)[^{]*\{([\s\S]*?)\n\}/g
   let m
   while ((m = re.exec(content)) !== null) {
     const entries = []
@@ -512,7 +516,7 @@ const PARAM_KIND_RULES = [
   [(c) => c.name === 'content', (c) => (c.nullable ? 'contentOptional' : 'contentRequired')],
   [(c) => c.name === 'text' && c.baseType === 'String', 'text'],
   [(c) => c.nullable && c.baseType === 'String', 'nullableString'],
-  [(c) => c.nullable && c.enums[c.baseType], 'enumClass'],
+  [(c) => c.nullable && c.enums[c.enumType], 'enumClass'],
   [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
   [(c) => !c.nullable && c.hasDefault, 'presetNonNull'],
 ]
@@ -524,6 +528,21 @@ function paramKind(ctx) {
   return 'other'
 }
 
+/**
+ * The generated enum a parameter carries, unwrapped from the holder type.
+ *
+ * An exclusive group arrives as `ClassValues<ButtonSize>?`, not `ButtonSize?`, so that one
+ * parameter accepts a bare entry, an entry at a Tailwind variant, and combinations of those. The
+ * TEST still has to name `ButtonSize` to write `ButtonSize.Lg`, so the wrapper is peeled here —
+ * in one place, rather than at each of the three sites that need the enum's own name.
+ *
+ * A type that is not a holder is returned unchanged, which is what keeps `ButtonType` (a
+ * kotlinx.html enum, never wrapped) matching its own rule.
+ */
+function groupEnumOf(baseType: string): string {
+  return baseType.match(/^ClassValues<(\w+)>$/)?.[1] ?? baseType
+}
+
 function classifyParam(raw, enums) {
   const colon = raw.indexOf(':')
   const name = raw.slice(0, colon).trim()
@@ -532,8 +551,9 @@ function classifyParam(raw, enums) {
   const type = (eq >= 0 ? rest.slice(0, eq) : rest).trim()
   const nullable = type.endsWith('?')
   const baseType = (nullable ? type.slice(0, -1) : type).trim()
-  const kind = paramKind({ name, baseType, nullable, hasDefault: eq >= 0, enums })
-  return { name, type, baseType, nullable, hasDefault: eq >= 0, kind, enumEntries: kind === 'enumClass' ? enums[baseType] : null }
+  const enumType = groupEnumOf(baseType)
+  const kind = paramKind({ name, baseType, enumType, nullable, hasDefault: eq >= 0, enums })
+  return { name, type, baseType, enumType, nullable, hasDefault: eq >= 0, kind, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
 }
 
 /** The single unguarded `addClassNames("...")` that names this element. */
@@ -812,7 +832,9 @@ function enumArmTests(ctx) {
   let tests = ''
   for (const e of ctx.params.filter((p) => p.kind === 'enumClass')) {
     for (const { entry, css } of e.enumEntries) {
-      const args = ctx.required ? [`${e.name} = ${e.baseType}.${entry}`, 'content = { }'] : [`${e.name} = ${e.baseType}.${entry}`]
+      // `enumType`, not `baseType`: the parameter is typed `ClassValues<ButtonSize>?` and the
+      // value written into the test is `ButtonSize.Lg`.
+      const args = ctx.required ? [`${e.name} = ${e.enumType}.${entry}`, 'content = { }'] : [`${e.name} = ${e.enumType}.${entry}`]
       const asserts = [renderedAssert(ctx, sortedClasses([ctx.base, css]), `${ctx.daisyName} ${e.name} ${entry}`, false)]
       tests += wrapTest(ctx, `${ctx.fnBase}_${e.name}_${entry.toLowerCase()}`, args, asserts)
     }

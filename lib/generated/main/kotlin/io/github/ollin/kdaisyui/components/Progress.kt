@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.progress
 import kotlinx.html.PROGRESS
 
 /** Color variants for this component (CSS prefix: `progress-`) */
-enum class ProgressVariant(internal val className: String) {
+enum class ProgressVariant(internal val className: String) : ClassValues<ProgressVariant> {
     /** CSS: `progress-neutral` — neutral color */
     Neutral("progress-neutral"),
     /** CSS: `progress-primary` — primary color */
@@ -28,6 +29,9 @@ enum class ProgressVariant(internal val className: String) {
     Warning("progress-warning"),
     /** CSS: `progress-error` — error color */
     Error("progress-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -41,7 +45,7 @@ enum class ProgressVariant(internal val className: String) {
  */
 fun FlowContent.daisyProgress(
     id: HtmlId? = null,
-    variant: ProgressVariant? = null,
+    variant: ClassValues<ProgressVariant>? = null,
     extraClasses: String? = null,
     attrs: (PROGRESS.() -> Unit)? = null,
     content: (PROGRESS.() -> Unit),
@@ -49,7 +53,7 @@ fun FlowContent.daisyProgress(
     progress {
         if (id != null) attributes["id"] = id.id
         addClassNames("progress")
-        if (variant != null) addClassNames(variant.className)
+        addClassNames(variant)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

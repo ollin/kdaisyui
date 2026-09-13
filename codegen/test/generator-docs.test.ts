@@ -75,7 +75,7 @@ Content containers with body and title. Renders \`<div class="card ...">\`.
 // CardSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyCard(
     id: HtmlId? = null,
-    size: CardSize? = null,
+    size: ClassValues<CardSize>? = null,
     border: Boolean = false,  // Adds border to <card>
     dash: Boolean = false,  // dash style
     imageFull: Boolean = false,  // The image in <figure> element will be the background

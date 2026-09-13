@@ -5,27 +5,34 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-enum class IndicatorVerticalPlacement(internal val className: String) {
+enum class IndicatorVerticalPlacement(internal val className: String) : ClassValues<IndicatorVerticalPlacement> {
     /** CSS: `indicator-top` */
     Top("indicator-top"),
     /** CSS: `indicator-middle` */
     Middle("indicator-middle"),
     /** CSS: `indicator-bottom` */
     Bottom("indicator-bottom"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
-enum class IndicatorHorizontalPlacement(internal val className: String) {
+enum class IndicatorHorizontalPlacement(internal val className: String) : ClassValues<IndicatorHorizontalPlacement> {
     /** CSS: `indicator-start` */
     Start("indicator-start"),
     /** CSS: `indicator-center` */
     Center("indicator-center"),
     /** CSS: `indicator-end` */
     End("indicator-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -40,8 +47,8 @@ enum class IndicatorHorizontalPlacement(internal val className: String) {
  */
 fun FlowContent.daisyIndicator(
     id: HtmlId? = null,
-    verticalPlacement: IndicatorVerticalPlacement? = null,
-    horizontalPlacement: IndicatorHorizontalPlacement? = null,
+    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
+    horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -49,8 +56,8 @@ fun FlowContent.daisyIndicator(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("indicator")
-        if (verticalPlacement != null) addClassNames(verticalPlacement.className)
-        if (horizontalPlacement != null) addClassNames(horizontalPlacement.className)
+        addClassNames(verticalPlacement)
+        addClassNames(horizontalPlacement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

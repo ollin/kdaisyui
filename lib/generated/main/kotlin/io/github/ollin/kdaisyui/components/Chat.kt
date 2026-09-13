@@ -5,12 +5,13 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-enum class ChatVariant(internal val className: String) {
+enum class ChatVariant(internal val className: String) : ClassValues<ChatVariant> {
     /** CSS: `chat-bubble-neutral` */
     BubbleNeutral("chat-bubble-neutral"),
     /** CSS: `chat-bubble-primary` */
@@ -27,6 +28,9 @@ enum class ChatVariant(internal val className: String) {
     BubbleWarning("chat-bubble-warning"),
     /** CSS: `chat-bubble-error` */
     BubbleError("chat-bubble-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -42,7 +46,7 @@ enum class ChatVariant(internal val className: String) {
  */
 fun FlowContent.daisyChat(
     id: HtmlId? = null,
-    variant: ChatVariant? = null,
+    variant: ClassValues<ChatVariant>? = null,
     end: Boolean = false,
     start: Boolean = false,
     extraClasses: String? = null,
@@ -52,7 +56,7 @@ fun FlowContent.daisyChat(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("chat")
-        if (variant != null) addClassNames(variant.className)
+        addClassNames(variant)
         if (end) addClassNames("chat-end")
         if (start) addClassNames("chat-start")
         addClassNames(extraClasses)

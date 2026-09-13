@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -15,7 +16,7 @@ import kotlinx.html.ul
 import kotlinx.html.UL
 
 /** Size variants for this component (CSS prefix: `menu-`) */
-enum class MenuSize(internal val className: String) {
+enum class MenuSize(internal val className: String) : ClassValues<MenuSize> {
     /** CSS: `menu-xs` — Extra small size */
     Xs("menu-xs"),
     /** CSS: `menu-sm` — Small size */
@@ -26,14 +27,20 @@ enum class MenuSize(internal val className: String) {
     Lg("menu-lg"),
     /** CSS: `menu-xl` — Extra large size */
     Xl("menu-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Direction variants for this component (CSS prefix: `menu-`) */
-enum class MenuDirection(internal val className: String) {
+enum class MenuDirection(internal val className: String) : ClassValues<MenuDirection> {
     /** CSS: `menu-vertical` — Vertical menu (default) */
     Vertical("menu-vertical"),
     /** CSS: `menu-horizontal` — Horizontal menu */
     Horizontal("menu-horizontal"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -53,8 +60,8 @@ enum class MenuDirection(internal val className: String) {
  */
 fun FlowContent.daisyMenu(
     id: HtmlId? = null,
-    size: MenuSize? = null,
-    direction: MenuDirection? = null,
+    size: ClassValues<MenuSize>? = null,
+    direction: ClassValues<MenuDirection>? = null,
     active: Boolean = false,
     disabled: Boolean = false,
     dropdownShow: Boolean = false,
@@ -67,8 +74,8 @@ fun FlowContent.daisyMenu(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu")
-        if (size != null) addClassNames(size.className)
-        if (direction != null) addClassNames(direction.className)
+        addClassNames(size)
+        addClassNames(direction)
         if (active) addClassNames("menu-active")
         if (disabled) addClassNames("menu-disabled")
         if (dropdownShow) addClassNames("menu-dropdown-show")

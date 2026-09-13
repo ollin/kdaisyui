@@ -5,12 +5,13 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 
-enum class FileInputVariant(internal val className: String) {
+enum class FileInputVariant(internal val className: String) : ClassValues<FileInputVariant> {
     /** CSS: `file-input-neutral` */
     Neutral("file-input-neutral"),
     /** CSS: `file-input-primary` */
@@ -27,9 +28,12 @@ enum class FileInputVariant(internal val className: String) {
     Warning("file-input-warning"),
     /** CSS: `file-input-error` */
     Error("file-input-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
-enum class FileInputSize(internal val className: String) {
+enum class FileInputSize(internal val className: String) : ClassValues<FileInputSize> {
     /** CSS: `file-input-xs` */
     Xs("file-input-xs"),
     /** CSS: `file-input-sm` */
@@ -40,6 +44,9 @@ enum class FileInputSize(internal val className: String) {
     Lg("file-input-lg"),
     /** CSS: `file-input-xl` */
     Xl("file-input-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -54,8 +61,8 @@ enum class FileInputSize(internal val className: String) {
  */
 fun FlowContent.daisyFileInput(
     id: HtmlId? = null,
-    variant: FileInputVariant? = null,
-    size: FileInputSize? = null,
+    variant: ClassValues<FileInputVariant>? = null,
+    size: ClassValues<FileInputSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
@@ -63,8 +70,8 @@ fun FlowContent.daisyFileInput(
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("file-input")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (ghost) addClassNames("file-input-ghost")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

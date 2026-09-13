@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.img
 import kotlinx.html.IMG
 
 /** Shape variants for this component (CSS prefix: `mask-`) */
-enum class MaskShape(internal val className: String) {
+enum class MaskShape(internal val className: String) : ClassValues<MaskShape> {
     /** CSS: `mask-squircle` — squircle */
     Squircle("mask-squircle"),
     /** CSS: `mask-heart` — heart */
@@ -42,14 +43,20 @@ enum class MaskShape(internal val className: String) {
     Triangle3("mask-triangle-3"),
     /** CSS: `mask-triangle-4` — triangle pointing right */
     Triangle4("mask-triangle-4"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Modifier variants for this component (CSS prefix: `mask-`) */
-enum class MaskModifier(internal val className: String) {
+enum class MaskModifier(internal val className: String) : ClassValues<MaskModifier> {
     /** CSS: `mask-half-1` — Crops only the first half of mask */
     Half1("mask-half-1"),
     /** CSS: `mask-half-2` — Crops only the second half of mask */
     Half2("mask-half-2"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -63,16 +70,16 @@ enum class MaskModifier(internal val className: String) {
  */
 fun FlowContent.daisyMask(
     id: HtmlId? = null,
-    shape: MaskShape? = null,
-    modifier: MaskModifier? = null,
+    shape: ClassValues<MaskShape>? = null,
+    modifier: ClassValues<MaskModifier>? = null,
     extraClasses: String? = null,
     attrs: (IMG.() -> Unit)? = null,
 ) {
     img {
         if (id != null) attributes["id"] = id.id
         addClassNames("mask")
-        if (shape != null) addClassNames(shape.className)
-        if (modifier != null) addClassNames(modifier.className)
+        addClassNames(shape)
+        addClassNames(modifier)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }

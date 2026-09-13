@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -13,7 +14,7 @@ import kotlinx.html.h2
 import kotlinx.html.H2
 
 /** Size variants for this component (CSS prefix: `card-`) */
-enum class CardSize(internal val className: String) {
+enum class CardSize(internal val className: String) : ClassValues<CardSize> {
     /** CSS: `card-xs` — Extra small size */
     Xs("card-xs"),
     /** CSS: `card-sm` — Small size */
@@ -24,22 +25,31 @@ enum class CardSize(internal val className: String) {
     Lg("card-lg"),
     /** CSS: `card-xl` — Extra large size */
     Xl("card-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Style variants for this component (CSS prefix: `card-`) */
-enum class CardStyle(internal val className: String) {
+enum class CardStyle(internal val className: String) : ClassValues<CardStyle> {
     /** CSS: `card-border` — Adds border to <card> */
     Border("card-border"),
     /** CSS: `card-dash` — dash style */
     Dash("card-dash"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Modifier variants for this component (CSS prefix: `card-`) */
-enum class CardModifier(internal val className: String) {
+enum class CardModifier(internal val className: String) : ClassValues<CardModifier> {
     /** CSS: `card-side` — The image in <figure> will be on to the side */
     Side("card-side"),
     /** CSS: `card-image-full` — The image in <figure> element will be the background */
     ImageFull("card-image-full"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -55,9 +65,9 @@ enum class CardModifier(internal val className: String) {
  */
 fun FlowContent.daisyCard(
     id: HtmlId? = null,
-    size: CardSize? = null,
-    style: CardStyle? = null,
-    modifier: CardModifier? = null,
+    size: ClassValues<CardSize>? = null,
+    style: ClassValues<CardStyle>? = null,
+    modifier: ClassValues<CardModifier>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -65,9 +75,9 @@ fun FlowContent.daisyCard(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("card")
-        if (size != null) addClassNames(size.className)
-        if (style != null) addClassNames(style.className)
-        if (modifier != null) addClassNames(modifier.className)
+        addClassNames(size)
+        addClassNames(style)
+        addClassNames(modifier)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

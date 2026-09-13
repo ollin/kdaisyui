@@ -5,17 +5,21 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.ul
 import kotlinx.html.UL
 
 /** Modifier variants for this component (CSS prefix: `list-`) */
-enum class ListModifier(internal val className: String) {
+enum class ListModifier(internal val className: String) : ClassValues<ListModifier> {
     /** CSS: `list-col-wrap` — For one of direct children of list-row to push it to the next line */
     ColWrap("list-col-wrap"),
     /** CSS: `list-col-grow` — For one of direct children of list-row to make it fill the remaining space */
     ColGrow("list-col-grow"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -29,7 +33,7 @@ enum class ListModifier(internal val className: String) {
  */
 fun FlowContent.daisyList(
     id: HtmlId? = null,
-    modifier: ListModifier? = null,
+    modifier: ClassValues<ListModifier>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -37,7 +41,7 @@ fun FlowContent.daisyList(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("list")
-        if (modifier != null) addClassNames(modifier.className)
+        addClassNames(modifier)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

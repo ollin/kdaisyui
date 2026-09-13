@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.input
@@ -12,7 +13,7 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
 /** Color variants for this component (CSS prefix: `radio-`) */
-enum class RadioVariant(internal val className: String) {
+enum class RadioVariant(internal val className: String) : ClassValues<RadioVariant> {
     /** CSS: `radio-neutral` — neutral color */
     Neutral("radio-neutral"),
     /** CSS: `radio-primary` — primary color */
@@ -29,10 +30,13 @@ enum class RadioVariant(internal val className: String) {
     Info("radio-info"),
     /** CSS: `radio-error` — error color */
     Error("radio-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Size variants for this component (CSS prefix: `radio-`) */
-enum class RadioSize(internal val className: String) {
+enum class RadioSize(internal val className: String) : ClassValues<RadioSize> {
     /** CSS: `radio-xs` — Extra small size */
     Xs("radio-xs"),
     /** CSS: `radio-sm` — Small size */
@@ -43,6 +47,9 @@ enum class RadioSize(internal val className: String) {
     Lg("radio-lg"),
     /** CSS: `radio-xl` — Extra large size */
     Xl("radio-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -59,8 +66,8 @@ enum class RadioSize(internal val className: String) {
  */
 fun FlowContent.daisyRadio(
     id: HtmlId? = null,
-    variant: RadioVariant? = null,
-    size: RadioSize? = null,
+    variant: ClassValues<RadioVariant>? = null,
+    size: ClassValues<RadioSize>? = null,
     name: String? = null,
     checked: Boolean = false,
     disabled: Boolean = false,
@@ -71,8 +78,8 @@ fun FlowContent.daisyRadio(
         if (id != null) attributes["id"] = id.id
         type = InputType.radio
         addClassNames("radio")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (name != null) this.name = name
         if (checked) this.checked = true
         if (disabled) this.disabled = true

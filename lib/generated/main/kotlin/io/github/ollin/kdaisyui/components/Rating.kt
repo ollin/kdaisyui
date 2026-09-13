@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Size variants for this component (CSS prefix: `rating-`) */
-enum class RatingSize(internal val className: String) {
+enum class RatingSize(internal val className: String) : ClassValues<RatingSize> {
     /** CSS: `rating-xs` — Extra small size */
     Xs("rating-xs"),
     /** CSS: `rating-sm` — Small size */
@@ -22,6 +23,9 @@ enum class RatingSize(internal val className: String) {
     Lg("rating-lg"),
     /** CSS: `rating-xl` — Extra large size */
     Xl("rating-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -37,7 +41,7 @@ enum class RatingSize(internal val className: String) {
  */
 fun FlowContent.daisyRating(
     id: HtmlId? = null,
-    size: RatingSize? = null,
+    size: ClassValues<RatingSize>? = null,
     halfStars: Boolean = false,
     clearOption: Boolean = false,
     extraClasses: String? = null,
@@ -47,7 +51,7 @@ fun FlowContent.daisyRating(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("rating")
-        if (size != null) addClassNames(size.className)
+        addClassNames(size)
         if (halfStars) addClassNames("rating-half")
         if (clearOption) addClassNames("rating-hidden")
         addClassNames(extraClasses)

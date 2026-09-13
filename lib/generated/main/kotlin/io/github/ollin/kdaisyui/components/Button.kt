@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.button
 import kotlinx.html.BUTTON
@@ -12,7 +13,7 @@ import kotlinx.html.ButtonType
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `btn-`) */
-enum class ButtonVariant(internal val className: String) {
+enum class ButtonVariant(internal val className: String) : ClassValues<ButtonVariant> {
     /** CSS: `btn-neutral` — neutral color */
     Neutral("btn-neutral"),
     /** CSS: `btn-primary` — primary color */
@@ -29,10 +30,13 @@ enum class ButtonVariant(internal val className: String) {
     Warning("btn-warning"),
     /** CSS: `btn-error` — error color */
     Error("btn-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Size variants for this component (CSS prefix: `btn-`) */
-enum class ButtonSize(internal val className: String) {
+enum class ButtonSize(internal val className: String) : ClassValues<ButtonSize> {
     /** CSS: `btn-xs` — Extra small size */
     Xs("btn-xs"),
     /** CSS: `btn-sm` — Small size */
@@ -43,6 +47,9 @@ enum class ButtonSize(internal val className: String) {
     Lg("btn-lg"),
     /** CSS: `btn-xl` — Extra large size */
     Xl("btn-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -71,8 +78,8 @@ enum class ButtonSize(internal val className: String) {
 fun FlowContent.daisyButton(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ButtonVariant? = null,
-    size: ButtonSize? = null,
+    variant: ClassValues<ButtonVariant>? = null,
+    size: ClassValues<ButtonSize>? = null,
     active: Boolean = false,
     block: Boolean = false,
     circle: Boolean = false,
@@ -92,8 +99,8 @@ fun FlowContent.daisyButton(
     button {
         if (id != null) attributes["id"] = id.id
         addClassNames("btn")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (active) addClassNames("btn-active")
         if (block) addClassNames("btn-block")
         if (circle) addClassNames("btn-circle")

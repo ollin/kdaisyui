@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.button
 import kotlinx.html.BUTTON
@@ -13,7 +14,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Size variants for this component (CSS prefix: `tabs-`) */
-enum class TabSize(internal val className: String) {
+enum class TabSize(internal val className: String) : ClassValues<TabSize> {
     /** CSS: `tabs-xs` — Extra small size */
     Xs("tabs-xs"),
     /** CSS: `tabs-sm` — Small size */
@@ -24,14 +25,20 @@ enum class TabSize(internal val className: String) {
     Lg("tabs-lg"),
     /** CSS: `tabs-xl` — Extra large size */
     Xl("tabs-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Placement variants for this component (CSS prefix: `tabs-`) */
-enum class TabPlacement(internal val className: String) {
+enum class TabPlacement(internal val className: String) : ClassValues<TabPlacement> {
     /** CSS: `tabs-top` — Puts tab buttons on top of the tab-content (default) */
     Top("tabs-top"),
     /** CSS: `tabs-bottom` — Puts tabs on under the tab-content */
     Bottom("tabs-bottom"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -51,8 +58,8 @@ enum class TabPlacement(internal val className: String) {
  */
 fun FlowContent.daisyTab(
     id: HtmlId? = null,
-    size: TabSize? = null,
-    placement: TabPlacement? = null,
+    size: ClassValues<TabSize>? = null,
+    placement: ClassValues<TabPlacement>? = null,
     border: Boolean = false,
     box: Boolean = false,
     lift: Boolean = false,
@@ -65,8 +72,8 @@ fun FlowContent.daisyTab(
     button {
         if (id != null) attributes["id"] = id.id
         addClassNames("tabs")
-        if (size != null) addClassNames(size.className)
-        if (placement != null) addClassNames(placement.className)
+        addClassNames(size)
+        addClassNames(placement)
         if (border) addClassNames("tabs-border")
         if (box) addClassNames("tabs-box")
         if (lift) addClassNames("tabs-lift")

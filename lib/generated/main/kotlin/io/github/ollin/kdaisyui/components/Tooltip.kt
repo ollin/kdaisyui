@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `tooltip-`) */
-enum class TooltipVariant(internal val className: String) {
+enum class TooltipVariant(internal val className: String) : ClassValues<TooltipVariant> {
     /** CSS: `tooltip-primary` — primary color */
     Primary("tooltip-primary"),
     /** CSS: `tooltip-secondary` — secondary color */
@@ -26,10 +27,13 @@ enum class TooltipVariant(internal val className: String) {
     Warning("tooltip-warning"),
     /** CSS: `tooltip-error` — error color */
     Error("tooltip-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** SidePlacement variants for this component (CSS prefix: `tooltip-`) */
-enum class TooltipSidePlacement(internal val className: String) {
+enum class TooltipSidePlacement(internal val className: String) : ClassValues<TooltipSidePlacement> {
     /** CSS: `tooltip-top` — Put tooltip on top */
     Top("tooltip-top"),
     /** CSS: `tooltip-bottom` — Put tooltip on bottom */
@@ -38,16 +42,22 @@ enum class TooltipSidePlacement(internal val className: String) {
     Left("tooltip-left"),
     /** CSS: `tooltip-right` — Put tooltip on right */
     Right("tooltip-right"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** AlignPlacement variants for this component (CSS prefix: `tooltip-`) */
-enum class TooltipAlignPlacement(internal val className: String) {
+enum class TooltipAlignPlacement(internal val className: String) : ClassValues<TooltipAlignPlacement> {
     /** CSS: `tooltip-start` — Align tooltip on start */
     Start("tooltip-start"),
     /** CSS: `tooltip-center` — Align tooltip on center */
     Center("tooltip-center"),
     /** CSS: `tooltip-end` — Align tooltip on end */
     End("tooltip-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -64,9 +74,9 @@ enum class TooltipAlignPlacement(internal val className: String) {
  */
 fun FlowContent.daisyTooltip(
     id: HtmlId? = null,
-    variant: TooltipVariant? = null,
-    sidePlacement: TooltipSidePlacement? = null,
-    alignPlacement: TooltipAlignPlacement? = null,
+    variant: ClassValues<TooltipVariant>? = null,
+    sidePlacement: ClassValues<TooltipSidePlacement>? = null,
+    alignPlacement: ClassValues<TooltipAlignPlacement>? = null,
     open: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -75,9 +85,9 @@ fun FlowContent.daisyTooltip(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("tooltip")
-        if (variant != null) addClassNames(variant.className)
-        if (sidePlacement != null) addClassNames(sidePlacement.className)
-        if (alignPlacement != null) addClassNames(alignPlacement.className)
+        addClassNames(variant)
+        addClassNames(sidePlacement)
+        addClassNames(alignPlacement)
         if (open) addClassNames("tooltip-open")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

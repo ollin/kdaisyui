@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
 
 /** Size variants for this component (CSS prefix: `loading-`) */
-enum class LoadingSize(internal val className: String) {
+enum class LoadingSize(internal val className: String) : ClassValues<LoadingSize> {
     /** CSS: `loading-xs` — Extra small size */
     Xs("loading-xs"),
     /** CSS: `loading-sm` — Small size */
@@ -22,10 +23,13 @@ enum class LoadingSize(internal val className: String) {
     Lg("loading-lg"),
     /** CSS: `loading-xl` — Extra large size */
     Xl("loading-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Style variants for this component (CSS prefix: `loading-`) */
-enum class LoadingStyle(internal val className: String) {
+enum class LoadingStyle(internal val className: String) : ClassValues<LoadingStyle> {
     /** CSS: `loading-spinner` — spinner animation */
     Spinner("loading-spinner"),
     /** CSS: `loading-dots` — dots animation */
@@ -38,6 +42,9 @@ enum class LoadingStyle(internal val className: String) {
     Bars("loading-bars"),
     /** CSS: `loading-infinity` — infinity animation */
     Infinity("loading-infinity"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -52,8 +59,8 @@ enum class LoadingStyle(internal val className: String) {
  */
 fun FlowContent.daisyLoading(
     id: HtmlId? = null,
-    size: LoadingSize? = null,
-    style: LoadingStyle? = null,
+    size: ClassValues<LoadingSize>? = null,
+    style: ClassValues<LoadingStyle>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
@@ -61,8 +68,8 @@ fun FlowContent.daisyLoading(
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("loading")
-        if (size != null) addClassNames(size.className)
-        if (style != null) addClassNames(style.className)
+        addClassNames(size)
+        addClassNames(style)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Size variants for this component (CSS prefix: `aura-`) */
-enum class AuraSize(internal val className: String) {
+enum class AuraSize(internal val className: String) : ClassValues<AuraSize> {
     /** CSS: `aura-xs` — Extra small size */
     Xs("aura-xs"),
     /** CSS: `aura-sm` — Small size */
@@ -22,6 +23,9 @@ enum class AuraSize(internal val className: String) {
     Lg("aura-lg"),
     /** CSS: `aura-xl` — Extra large size */
     Xl("aura-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -41,7 +45,7 @@ enum class AuraSize(internal val className: String) {
  */
 fun FlowContent.daisyAura(
     id: HtmlId? = null,
-    size: AuraSize? = null,
+    size: ClassValues<AuraSize>? = null,
     dual: Boolean = false,
     glow: Boolean = false,
     gold: Boolean = false,
@@ -55,7 +59,7 @@ fun FlowContent.daisyAura(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("aura")
-        if (size != null) addClassNames(size.className)
+        addClassNames(size)
         if (dual) addClassNames("aura-dual")
         if (glow) addClassNames("aura-glow")
         if (gold) addClassNames("aura-gold")

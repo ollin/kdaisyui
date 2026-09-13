@@ -542,6 +542,61 @@ members overwrite, with no example contradicting it. Everything else stays boole
 replaces the earlier category-based default, which had `styles`, `directions` and `placements`
 becoming enums merely by living in those categories.
 
+## Probe 4: rendering decides it — and overturns the previous section
+
+Render `a`, `b` and `a b` against DaisyUI's compiled stylesheet, then compare full computed
+styles including `::before`, `::after` and the first child:
+
+```
+a b  ==  a          ->  b is inert   ->  mutually exclusive
+a b  ==  b          ->  a is inert   ->  mutually exclusive
+a b  differs from both  ->  they COMPOSE  ->  independent
+```
+
+No judgment about which declarations matter, and it answers every group rather than the 8 the
+other two sources reach. 463 cases across all 44 groups, measured in Chromium.
+
+### It refutes my reading of `button.css`, and vindicates the template
+
+```
+outline|dash  = dash wins       outline|ghost = COMPOSES
+outline|soft  = soft wins       outline|link  = COMPOSES
+soft|ghost    = ghost wins      ghost|link    = ghost wins
+```
+
+I read the cascade by eye and concluded ghost overrides outline entirely, so `btn-outline
+btn-ghost` in real markup had to be a mistake. **The browser says it composes.** `.btn-outline,
+.btn-dash` sets `--btn-border-style: solid`, which `.btn-ghost` never touches, so the combination
+keeps outline's border style and takes ghost's transparent colour — a result identical to neither.
+
+So the template was right and I was wrong, and the previous section's confident conclusion was a
+third judgment failure in the same change. **`ButtonEmphasis` as one five-member enum is refuted
+by measurement**, not by argument.
+
+### It reproduces the two-axis placements from first principles
+
+`Indicator` and `Toast`: every pair within `{start, center, end}` is inert, every pair within
+`{top, middle, bottom}` is inert, and **every cross pair composes**. That is the bipartite
+structure the documented examples showed, derived here without them.
+
+### The limitation, and it is the markup
+
+`Table.modifiers` reports `zebra|pin-rows` as inert, which is false — they plainly combine.
+`pin-rows` styles `:where(thead tr, tfoot tr)`, and the probe renders a bare `div` with one
+`span`. Same for `Collapse`, `Accordion` and `Menu`, where every pair comes back inert because
+nothing in the stub DOM can receive the rules.
+
+**A false "inert" is therefore the failure mode**, and it is the dangerous direction: it invents
+exclusivity, which is the error whose cost is asymmetric. The fix is to render DaisyUI's own
+documented example markup per component instead of a stub, which the repository already parses
+for the generated component tests.
+
+### Verdict
+
+This becomes the source of truth for exclusivity once it renders representative markup. It is the
+only one of the four probes that is a decision procedure rather than a heuristic, and the only
+one that has corrected me rather than agreed with me.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

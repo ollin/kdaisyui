@@ -17,6 +17,7 @@
  */
 
 import { toPascalCase, toCamelCase, type ClassifiedComponent } from './classifier.ts'
+import type { GroupClassification } from './class-groups.ts'
 
 /**
  * A kotlinx.html tag CLASS, e.g. `DIV`. Also the lambda receiver type in `attrs` and `content`.
@@ -221,23 +222,40 @@ function inferPartElement(partClass: CssClass): string {
  * Five class categories collapse into one sorted list, minus anything an `extras` entry already
  * covers under the same camelCase name.
  */
+/**
+ * The classification of a component whose groups nobody measured: nothing is a choice, every
+ * class is a flag.
+ *
+ * Exactly the behaviour that preceded `class-groups.ts`, named so it can be a default. A
+ * caller that forgets to pass a real classification therefore produces the OLD output rather
+ * than a broken one — and the drift check notices, because the old output is not the committed
+ * output once the config lands.
+ */
+export function allBooleans(classified: ClassifiedComponent): GroupClassification {
+  return {
+    enums: [],
+    booleans: [
+      ...classified.styles,
+      ...classified.modifiers,
+      ...classified.behaviors,
+      ...classified.directions,
+      ...classified.placements,
+    ],
+  }
+}
+
 export function booleanParameterClasses(
   classified: ClassifiedComponent,
   componentConfig: ComponentConfig,
+  groups: GroupClassification = allBooleans(classified),
 ): string[] {
   const covered = new Set(componentConfig.extras.map(e => e.name))
   const booleans: string[] = []
 
-  for (const group of [
-    classified.styles,
-    classified.modifiers,
-    classified.behaviors,
-    classified.directions,
-    classified.placements,
-  ]) {
-    for (const cls of group) {
-      if (!covered.has(toCamelCase(cls))) booleans.push(cls)
-    }
+  // Only the classes the measurement left as flags. Everything else is now an enum constant,
+  // and a class appearing in both would be settable two ways at once.
+  for (const cls of groups.booleans) {
+    if (!covered.has(toCamelCase(cls))) booleans.push(cls)
   }
 
   for (const cls of componentConfig.additionalBooleans) {
@@ -398,14 +416,14 @@ function escapeHatchParameters(element: TagClass, hasTextParam: boolean): Parame
   ]
 }
 
-function enumShapes(classified: ClassifiedComponent): EnumShape[] {
+function enumShapes(classified: ClassifiedComponent, groups: GroupClassification): EnumShape[] {
   const documented = Object.keys(classified.descs ?? {}).length > 0
 
-  const build = (suffix: string, categoryLabel: string, values: readonly string[]): EnumShape | null =>
+  const build = (name: string, categoryLabel: string, values: readonly string[]): EnumShape | null =>
     values.length === 0
       ? null
       : {
-          name: `${classified.componentName}${suffix}`,
+          name,
           prefix: classified.prefix ?? '',
           categoryLabel,
           documented,
@@ -416,14 +434,22 @@ function enumShapes(classified: ClassifiedComponent): EnumShape[] {
           })),
         }
 
+  const named = (suffix: string) => `${classified.componentName}${suffix}`
+
   return [
-    build('Variant', 'Color variants', classified.colors),
-    build('Size', 'Size variants', classified.sizes),
+    build(named('Variant'), 'Color variants', classified.colors),
+    build(named('Size'), 'Size variants', classified.sizes),
+    // The measured ones. `colors` and `sizes` never needed measuring — a component wears one
+    // colour and one size by construction, which is why they were enums from the start.
+    ...groups.enums.map(group => build(group.enumName, `${group.category} variants`, group.members)),
   ].filter((shape): shape is EnumShape => shape !== null)
 }
 
-/** The enum-typed parameters, one per populated class category. */
-function enumParameters(classified: ClassifiedComponent): ParameterShape[] {
+/** The enum-typed parameters: the two that were always enums, then the measured ones. */
+function enumParameters(
+  classified: ClassifiedComponent,
+  groups: GroupClassification,
+): ParameterShape[] {
   const parameters: ParameterShape[] = []
   if (classified.colors.length > 0) {
     parameters.push({ name: 'variant', type: `${classified.componentName}Variant?`, default: 'null', doc: 'Color variant' })
@@ -431,14 +457,23 @@ function enumParameters(classified: ClassifiedComponent): ParameterShape[] {
   if (classified.sizes.length > 0) {
     parameters.push({ name: 'size', type: `${classified.componentName}Size?`, default: 'null', doc: 'Size variant' })
   }
+  for (const group of groups.enums) {
+    parameters.push({
+      name: escapeKotlinKeyword(group.parameterName),
+      type: `${group.enumName}?`,
+      default: 'null',
+      doc: `${group.category} variant`,
+    })
+  }
   return parameters
 }
 
 function booleanParameters(
   classified: ClassifiedComponent,
   componentConfig: ComponentConfig,
+  groups: GroupClassification,
 ): ParameterShape[] {
-  return booleanParameterClasses(classified, componentConfig).map(cls => ({
+  return booleanParameterClasses(classified, componentConfig, groups).map(cls => ({
     name: escapeKotlinKeyword(toCamelCase(cls)),
     type: 'Boolean',
     default: 'false',
@@ -463,6 +498,7 @@ function mainFunctionShape(
   classified: ClassifiedComponent,
   element: TagClass,
   componentConfig: ComponentConfig,
+  groups: GroupClassification,
 ): FunctionShape {
   const { hasTextParam } = componentConfig
 
@@ -470,8 +506,8 @@ function mainFunctionShape(
   const parameters: ParameterShape[] = [
     ...(hasTextParam ? [TEXT_PARAMETER] : []),
     ID_PARAMETER,
-    ...enumParameters(classified),
-    ...booleanParameters(classified, componentConfig),
+    ...enumParameters(classified, groups),
+    ...booleanParameters(classified, componentConfig, groups),
     ...extraParameters(componentConfig.extras),
     EXTRA_CLASSES_PARAMETER,
     attrsParameter(element),
@@ -542,11 +578,18 @@ function customPartFunctionShape(classified: ClassifiedComponent, part: CustomPa
   }
 }
 
-/** Everything both emitters need about one component, derived from the classified model. */
+/**
+ * Everything both emitters need about one component, derived from the classified model.
+ *
+ * `groups` is the measured decision about which class groups are a choice — see
+ * `class-groups.ts`. It is passed in rather than computed here because it needs the whole
+ * measurement and the whole `enumNames` config, neither of which is a per-component concern.
+ */
 export function buildComponentShape(
   classified: ClassifiedComponent,
   source: ComponentSource,
   config,
+  groups: GroupClassification = allBooleans(classified),
 ): ComponentShape {
   const componentConfig = readComponentConfig(config, classified.componentName)
   const rootElement = asTagClass(source.element || 'DIV')
@@ -555,9 +598,9 @@ export function buildComponentShape(
     componentName: classified.componentName,
     componentDir: source.componentDir,
     prefix: classified.prefix === null ? null : asCssClass(classified.prefix),
-    enums: enumShapes(classified),
+    enums: enumShapes(classified, groups),
     functions: [
-      mainFunctionShape(classified, rootElement, componentConfig),
+      mainFunctionShape(classified, rootElement, componentConfig, groups),
       ...classified.parts.map(partClass => partFunctionShape(classified, asCssClass(partClass), config)),
       ...componentConfig.customParts.map(part => customPartFunctionShape(classified, part)),
     ],

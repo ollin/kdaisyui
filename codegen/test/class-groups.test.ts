@@ -50,7 +50,9 @@ describe('classifyGroups', () => {
     )
 
     assert.deepEqual(result.enums, [
-      { enumName: 'LoadingAnimation', category: 'styles', members },
+      // `parameterName` is the suffix in camelCase, so the enum and the parameter that carries
+      // it are named together: `LoadingAnimation` arrives as `animation = …`.
+      { enumName: 'LoadingAnimation', parameterName: 'animation', category: 'styles', members },
     ])
     assert.deepEqual(result.booleans, [])
   })

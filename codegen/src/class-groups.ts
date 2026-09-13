@@ -32,6 +32,7 @@
  * and the axes of a group that carries two are declared in `enumNames` and CHECKED here
  * against the measurement.
  */
+import { toCamelCase } from './classifier.ts'
 import type { ClassifiedComponent } from './classifier.ts'
 import { ClassPair, GroupKey } from './measurement.ts'
 import type { Measurement, MeasuredPairs } from './measurement.ts'
@@ -55,6 +56,8 @@ export const GROUP_CATEGORIES: readonly GroupCategory[] = [
 export interface EnumGroup {
   /** Full Kotlin name, e.g. `MaskShape` — the component name plus the configured suffix. */
   enumName: string
+  /** The parameter that carries it, e.g. `shape` — the suffix in camelCase. */
+  parameterName: string
   category: GroupCategory
   members: readonly string[]
 }
@@ -260,6 +263,7 @@ function namedGroup(
   return {
     enums: splits.map((split) => ({
       enumName: `${group.componentName}${split.name}`,
+      parameterName: toCamelCase(split.name),
       category: group.key.category as GroupCategory,
       members: split.members,
     })),

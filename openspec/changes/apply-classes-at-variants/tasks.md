@@ -39,6 +39,13 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
 
 ## 2. Classify exclusivity — 1.0 h
 
+> **Ordering correction, 2026-09-13.** Registering `enumNames` / `parameterNames` in
+> `CONFIG_SECTIONS` failed `covers every section the generators read` — the guard's own test
+> pins that list, and a section no generator reads yet is a false entry in it. So config
+> population (2.0, 2.0a) and the classification pin (2.3) move into block 3, where the
+> generator starts reading them. The classifier itself (2.2) is done and enforced by its unit
+> tests. This is the config-consumption guard working on the change that adds to it.
+
 - [ ] 2.0 `^ F (internal)` `modifiers` is boolean **by default**; an enum requires an explicit
   `enumNames` entry. Inverted from the other categories because seven of the eight groups that
   failed the name test are `modifiers` — DaisyUI's catch-all, which groups by where a class lives
@@ -51,7 +58,7 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
 - [ ] 2.1 `. d` **Decide how a two-axis placement is declared.** DaisyUI files `indicator-top` and
   `indicator-start` under one category; they are a vertical and a horizontal axis and each is
   exclusive within itself. Config, or derived from the class names, or per-component override.
-- [ ] 2.2 `^ F (internal)` Classify each group as exclusive or independent, and fail the run on a
+- [x] 2.2 `^ F (internal)` Classify each group as exclusive or independent, and fail the run on a
   group the classifier cannot decide — silence here would reintroduce boolean flags by accident.
 - [ ] 2.3 `. r (internal)` Pin the classification in a test against the measured numbers: 53 of 59
   exclusive, `avatar` and `table` modifiers independent.

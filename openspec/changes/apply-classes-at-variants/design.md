@@ -318,6 +318,50 @@ and grouping by it produces a group by accident.
 the one category that cannot be trusted, and the consumption guard catches a promotion that stops
 being justified.
 
+## A boolean must make `true` unambiguous — decided 2026-09-13
+
+Oliver's condition for leaving `modifiers` boolean by default: **only if the parameter name makes
+clear what `true` means.** Otherwise an enum, named by intention.
+
+Tested against the seven groups that stay boolean, reading `daisyui/packages/daisyui/src/components/*.css`
+rather than guessing from the class names. **Five fail**, and two of the five are actively
+misleading:
+
+| today | what the CSS does | what `true` means | renamed |
+|---|---|---|---|
+| `hidden` (rating) | `w-2 bg-transparent` | a narrow transparent item serving as the **zero** choice — it hides nothing | `clearOption` |
+| `hover` (dropdown) | `&.dropdown-hover:hover` | **opens on hover**, not "is hovered" | `openOnHover` |
+| `half` (rating) | `* { width: calc(var(--size) * 0.5) }` | **half-star granularity** | `halfStars` |
+| `focus` (menu) | `&.menu-focus, &:focus-visible` | forces the focused **appearance** without focus | `focused` |
+| `box` (timeline) | border, radius, background, shadow | content in a **card** | `boxed` |
+
+`hidden = true` is the worst: it reads as "invisible" and produces "no stars selected".
+
+Unchanged and clear: `zebra`, `pinRows`, `pinCols`, `compact`, `disabled`, `active`,
+`placeholder`.
+
+### The rule has two outs, and for all five it is the second
+
+1. **Enum** — when the members form a choice.
+2. **Rename** — when they are genuinely independent flags with bad names.
+
+An enum would be wrong here: `rating-hidden` and `rating-half` have nothing to do with each other.
+This is the mirror of the name test — there, failing to name the *group* meant the group was
+wrong; here, failing to name the *flag* means only the name was.
+
+### Where the names live
+
+`parameterNames` in `codegen-config.json`, a third editorial section beside `docSummaries` and
+`enumNames`. Decided by Oliver over the alternative of folding all three into one `naming` section
+per component: `docSummaries` already ships, so consolidating means migrating committed config for
+a tidiness gain.
+
+All three are policed by the consumption guard, so a rename for a class DaisyUI has removed fails
+the run rather than rotting.
+
+**Not derivable, and that is the point.** `toCamelCase` of `rating-hidden` gives `hidden`, which is
+exactly the wrong answer — only a human reading the CSS knows it means the clear option.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

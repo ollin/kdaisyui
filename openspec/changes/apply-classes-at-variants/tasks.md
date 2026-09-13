@@ -39,6 +39,15 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
 
 ## 2. Classify exclusivity — 1.0 h
 
+- [ ] 2.0 `^ F (internal)` `modifiers` is boolean **by default**; an enum requires an explicit
+  `enumNames` entry. Inverted from the other categories because seven of the eight groups that
+  failed the name test are `modifiers` — DaisyUI's catch-all, which groups by where a class lives
+  rather than what it means.
+- [ ] 2.0a `. d` Add `parameterNames` and rename the five booleans whose name does not make `true`
+  unambiguous: `rating-hidden` → `clearOption`, `dropdown-hover` → `openOnHover`, `rating-half` →
+  `halfStars`, `menu-focus` → `focused`, `timeline-box` → `boxed`. Each was read from the CSS; see
+  `design.md`.
+
 - [ ] 2.1 `. d` **Decide how a two-axis placement is declared.** DaisyUI files `indicator-top` and
   `indicator-start` under one category; they are a vertical and a horizontal axis and each is
   exclusive within itself. Config, or derived from the class names, or per-component override.

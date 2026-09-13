@@ -392,6 +392,54 @@ are five mutually exclusive anchor positions — vertical sheets and side sheets
 One enum, `ModalPosition`. Recorded because the earlier flag came from the pattern of the member
 names rather than from what they do, which is the mistake this section exists to avoid.
 
+## Probe: is exclusivity derivable from the CSS? — refuted 2026-09-13
+
+Hypothesis: two classes conflict iff they write the same declaration, so grouping a category's
+members by that relation yields its axes mechanically, and both the category rule and most of
+`enumNames` become derivable. Measured over all 41 multi-member groups
+(`tmp/probe-css-overlap.ts`): 25 one-axis, 11 multi-axis, 5 all-boolean.
+
+**It confirmed the three cases I was least sure of, including my own error:**
+
+```
+Indicator.placements  2-AXES  [start center end] [top middle bottom]
+Toast.placements      2-AXES  [start center end] [top middle bottom]
+Modal.placements      ONE-AXIS  [top middle bottom start end]
+```
+
+**And then it got enough wrong that it cannot run unattended.** Two failure modes:
+
+- **False merge.** `Tooltip.placements` and `Dropdown.placements` come back as ONE-AXIS with all
+  seven members, because the sides and the alignments both touch `--anchor-h`. `Table.modifiers`
+  merges `zebra pin-cols pin-rows`, which demonstrably combine.
+- **False split.** `Button.styles` splits `link` off from `outline dash soft ghost`, `Mask.styles`
+  splits `square` off from the other fourteen shapes, `Tab.styles` splits `border` from
+  `box lift`. In each case one member of a real choice is simply implemented differently.
+
+Shared declarations are evidence of *implementation*, and exclusivity is a statement about
+*meaning*. They correlate — which is why the placements came out right — but not closely enough
+to generate an API from.
+
+**Kept as a check rather than a source.** Where the heuristic and the hand classification
+disagree, one of them is wrong and it is worth knowing which. It already disagrees with three
+hand names: `Card.modifiers`, `List.modifiers` and `Swap.styles` come back ALL-BOOLEAN against
+`CardLayout`, `ListColumn` and `SwapAnimation`. Those three need re-reading.
+
+### What the config actually costs today
+
+| | entries |
+|---|---|
+| `docSummaries` | 66 |
+| the other eleven sections together | 36 |
+
+102 entries, and two thirds of them are the one section that is editorial by decision. The file
+is **not** a large legacy artefact — the consumption guard has kept it honest.
+
+That reframes the naming question: 28 `enumNames` entries would nearly **double** the
+non-editorial config. The argument against them is not that exclusivity is derivable — the probe
+just showed it is not — but that the *name* can default to the category and be overridden only
+where a human word is clearly better.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

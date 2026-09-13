@@ -32,6 +32,5 @@ fun FlowContent.daisyMask(
     triangle4: Boolean = false,  // triangle pointing right
     extraClasses: String? = null,
     attrs: (IMG.() -> Unit)? = null,
-    content: (IMG.() -> Unit),
 )
 ```

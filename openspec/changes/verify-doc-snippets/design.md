@@ -4,10 +4,17 @@ This change follows `generate-component-reference`, which handles the derivable 
 documentation with no new dependency. What is left is prose, which cannot be generated — only
 the code inside it can be kept honest.
 
-The governing constraint is the same one, from the other side: `AGENTS.md` records that
-`codegen/` has **zero dependencies**, deliberately. This change is the one that may need one.
-That is why it is separate rather than folded into the first: the dependency decision gets its
-own proposal, its own first task, and its own chance to be refused.
+The governing constraint is the same one, from the other side: this change is the one that may
+need a dependency, so the decision gets its own proposal, its own first task, and its own chance
+to be refused.
+
+**Corrected 2026-09-12.** This said `codegen/` has zero dependencies and that this change would
+be the first to need one. Both halves are now false: `verify-generator-assertions` gave `codegen/`
+an HTML parser, because a regex over markup is unreadable and measurably wrong. The reasoning
+below survives the correction — the question was never "may we ever depend on anything", it was
+"is this particular tool worth its footprint" — but the rhetorical weight is gone. Adding a
+second dependency is now an ordinary trade rather than the breaking of a promise, which makes
+decision 1 more important, not less: nothing external will refuse it for us.
 
 ## Decisions
 
@@ -32,8 +39,12 @@ The first task decides it by measuring: how many snippets, how many distinct tra
 actually needed, and what `markdown-magic`'s installed footprint is. A decision made against
 those three numbers is worth more than one made here.
 
-**Either way it lives in its own package**, not in `codegen/`. The zero-dependency property was
-declared about `codegen/` and survives intact.
+**Either way it lives in its own package**, not in `codegen/`. That was originally to protect the
+zero-dependency property, which no longer exists. The separation is still right for a better
+reason: `codegen/` reads DaisyUI and writes Kotlin and Markdown, while this tool reads the
+repository's own sources and rewrites prose. They share no input and no output, and a package
+boundary is the cheapest way to keep a documentation tool out of the dependency tree that
+generates the library.
 
 ### 2. Named regions, never line ranges
 

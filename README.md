@@ -135,6 +135,59 @@ Note that `lib/api/lib.api` does not show this change: both lambda types erase t
 `Function1`, so the ABI dump — and the `api-baseline` CI gate that reads it — cannot see a
 changed lambda receiver. That gate catches removals and arity changes, not this.
 
+**Since 0.5.0 there is a second baseline that does see it** — `lib/api/components.api`, checked
+in CI. This paragraph is kept as written because it was true when 0.4.0 shipped, and because
+that blind spot is exactly what the new baseline was built for.
+
+### How to migrate from 0.4.x
+
+Four functions change, and three of the four changes break at compile time. The fourth is the
+dangerous one.
+
+**1. `daisyFileInput`, `daisyThemeController` and `daisyMask` no longer take a `content`
+lambda.** All three render a void element — two `<input>`, one `<img>` — and HTML forbids
+children there, so anything that lambda wrote could never legally render:
+
+```kotlin
+// before
+daisyMask(circle = true) { }
+daisyFileInput(size = FileInputSize.Sm) { }
+
+// after
+daisyMask(circle = true)
+daisyFileInput(size = FileInputSize.Sm)
+```
+
+Drop the trailing `{ }`. This breaks at compile time and `lib/api/lib.api` shows it, because
+the arity changes.
+
+**2. `daisyOtp` now renders a `<label>`, not a `<div>`.** Its `attrs` and `content` lambdas
+receive `LABEL` instead of `DIV`:
+
+```kotlin
+// before
+daisyOtp(joined = true, attrs = { /* this: DIV */ }) { /* this: DIV */ }
+
+// after
+daisyOtp(joined = true, attrs = { /* this: LABEL */ }) { /* this: LABEL */ }
+```
+
+Why it changed: DaisyUI documents the component as `<label class="otp">`, and that is what
+makes a click focus the input the component wraps. As a `<div>` it did not.
+
+**This one may compile silently.** Most call sites need no edit — an empty body, `+"text"`,
+nested `span { }`, or anything reached through `attributes[…]` compiles unchanged, because both
+`DIV` and `LABEL` are `FlowContent`. The example app in this repository is one such site and
+needed no change at all. Only code naming `DIV` explicitly, or calling a `DIV`-specific member,
+breaks.
+
+So read this entry rather than relying on the compiler: a call site that keeps compiling is now
+emitting a `<label>` where it emitted a `<div>`, which changes the rendered HTML and can change
+CSS that selected on the tag.
+
+`lib/api/lib.api` does not show this change either, for the reason given above. `lib/api/components.api`
+does, and shipped in this release for that reason.
+
 ## Quick start
 
 ### 1. Add the dependency

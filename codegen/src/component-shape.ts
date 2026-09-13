@@ -77,6 +77,24 @@ export function htmlTagNameFor(element: TagClass): HtmlTagName {
   return element.toLowerCase() as HtmlTagName
 }
 
+/**
+ * The HTML specification's void elements: they cannot have children, at all.
+ *
+ * A closed set of fourteen, unchanged since HTML5, and the reason this is a rule rather than a
+ * config section. Whether a component may take content is not a DaisyUI fact and never was —
+ * `codegen-config.json` used to restate it as a hand-maintained list of component names, which
+ * failed in both possible directions: two entries were written in a spelling the lookup never
+ * used, and `mask` was simply never added.
+ */
+const VOID_ELEMENTS: ReadonlySet<string> = new Set([
+  'AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG',
+  'INPUT', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR',
+])
+
+export function isVoidElement(element: TagClass): boolean {
+  return VOID_ELEMENTS.has(element)
+}
+
 /** Renders static attributes as they read inside a `Renders <tag ...>` clause. */
 export function staticAttributeDoc(entries: readonly StaticAttribute[]): string {
   return entries
@@ -124,8 +142,6 @@ export interface ComponentConfig {
   readonly customParts: readonly CustomPart[]
   /** Whether the component takes a `text` shortcut for inline content. */
   readonly hasTextParam: boolean
-  /** Whether the component refuses children. */
-  readonly noContent: boolean
   readonly role: string | null
   /** A fixed `InputType`, for components that are always one kind of `<input>`. */
   readonly inputType: string | null
@@ -148,7 +164,6 @@ export function readComponentConfig(config, componentName: string): ComponentCon
     extras: section(config, 'extras', componentName, []),
     customParts: section(config, 'customParts', componentName, []),
     hasTextParam: listed(config, 'textParams', componentName),
-    noContent: listed(config, 'noContent', componentName),
     role: section(config, 'roles', componentName, null),
     inputType: section(config, 'inputTypes', componentName, null),
     componentAttributes: Object.entries(section(config, 'componentAttributes', componentName, {})),
@@ -449,7 +464,7 @@ function mainFunctionShape(
   element: TagClass,
   componentConfig: ComponentConfig,
 ): FunctionShape {
-  const { hasTextParam, noContent } = componentConfig
+  const { hasTextParam } = componentConfig
 
   // Declaration order, which the generated signatures and their doc comments both follow.
   const parameters: ParameterShape[] = [
@@ -460,7 +475,9 @@ function mainFunctionShape(
     ...extraParameters(componentConfig.extras),
     EXTRA_CLASSES_PARAMETER,
     attrsParameter(element),
-    ...(noContent ? [] : [contentParameter(element, hasTextParam)]),
+    // Derived from the element, not configured: an element the HTML specification calls void
+    // cannot hold children, so offering a lambda that writes some is offering a lie.
+    ...(isVoidElement(element) ? [] : [contentParameter(element, hasTextParam)]),
   ]
 
   return {

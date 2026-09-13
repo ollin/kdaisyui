@@ -10,7 +10,6 @@
  */
 
 import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
-import type { ElementRule } from './parser/llms-txt.ts'
 import {
   booleanParameterClasses,
   buildComponentShape,
@@ -19,6 +18,7 @@ import {
   staticAttributeDoc,
   type ComponentConfig,
   type ComponentShape,
+  type ComponentSource,
   type EnumShape,
   type ExtraParameter,
   type FunctionShape,
@@ -45,12 +45,22 @@ function renderParameter(parameter: ParameterShape): string {
   return `    ${parameter.name}: ${parameter.type}${defaulted},`
 }
 
-/** The `Renders <tag ...>` clause every generated function's summary line ends with. */
+/**
+ * The `Renders <tag ...>` clause every generated function's summary line ends with.
+ *
+ * `htmlTag` and not `tagBuilder`: kotlinx.html spells three tags differently from the HTML it
+ * emits, so the builder name is not an element name. This comment used to say
+ * `Renders <fieldSet class="fieldset ...">`, and `<fieldSet>` is not an element — a reader
+ * copying it into markup gets nothing. The reference pages have always named the element; only
+ * this emitter conflated the two.
+ *
+ * The emitted CODE still calls `tagBuilder`, because that is the function that exists.
+ */
 function rendersClause(shape: FunctionShape): string {
   const attrs = staticAttributeDoc(shape.staticAttributes)
   return shape.cssClass === null
-    ? `Structural wrapper. Renders \`<${shape.tagBuilder}${attrs}>\`.`
-    : `Renders \`<${shape.tagBuilder} class="${shape.cssClass} ..."${attrs}>\`.`
+    ? `Structural wrapper. Renders \`<${shape.htmlTag}${attrs}>\`.`
+    : `Renders \`<${shape.htmlTag} class="${shape.cssClass} ..."${attrs}>\`.`
 }
 
 function summaryLine(shape: FunctionShape): string {
@@ -107,7 +117,10 @@ function mainFunctionBody(
   componentConfig: ComponentConfig,
 ): string {
   const { prefix } = classified
-  const { extras, hasTextParam, noContent, role, inputType } = componentConfig
+  const { extras, hasTextParam, role, inputType } = componentConfig
+  // The body follows the SIGNATURE rather than re-deriving the rule: if the shape declares no
+  // `content` parameter, there is nothing to call, and the two can never disagree.
+  const takesContent = shape.parameters.some(parameter => parameter.name === 'content')
 
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
@@ -125,7 +138,7 @@ function mainFunctionBody(
 
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')
-  if (!noContent) lines.push(...contentLines(hasTextParam))
+  if (takesContent) lines.push(...contentLines(hasTextParam))
 
   return lines.join('\n')
 }
@@ -181,11 +194,10 @@ function collectImports(shape: ComponentShape, componentConfig: ComponentConfig)
 /**
  * Emit one component's Kotlin file.
  *
- * The second parameter was called `elementRules`, which was wrong twice over: it is not
- * plural and it is not a rule. The only call site passes an ad-hoc
- * `{ primaryElement: element }`, and only that one field is ever read — so the type says
- * `Pick<ElementRule, 'primaryElement'>` and the name says what it holds. Writing the type
- * is what made the name's wrongness visible.
+ * The second parameter is the `ComponentSource` the shape already models: where the component
+ * was read from, and which element it renders. It used to be an ad-hoc
+ * `Pick<ElementRule, 'primaryElement'>` carrying only the element, which is why the
+ * attribution had to invent a directory name and invented a wrong one.
  *
  * `config` is deliberately left to inference: it is the whole of `codegen-config.json`,
  * a large object with per-component sections, and modelling it properly is its own piece
@@ -193,20 +205,10 @@ function collectImports(shape: ComponentShape, componentConfig: ComponentConfig)
  */
 export function generateKotlinFile(
   classified: ClassifiedComponent,
-  chosenElement: Pick<ElementRule, 'primaryElement'>,
+  source: ComponentSource,
   config,
 ) {
-  // Lower-casing the PascalCase name, which is WRONG for every multi-word component:
-  // `FileInput` yields `fileinput`, and `components/fileinput/+page.md` does not exist. Left
-  // exactly as it was so this refactoring changes no byte; `ComponentSource.componentDir` is
-  // where the correct value belongs, and switching to it rewrites nine files, so it is its
-  // own commit.
-  const sourceDir = classified.componentName.toLowerCase()
-  const shape = buildComponentShape(
-    classified,
-    { componentDir: sourceDir, element: chosenElement.primaryElement },
-    config,
-  )
+  const shape = buildComponentShape(classified, source, config)
   const componentConfig = readComponentConfig(config, classified.componentName)
 
   const header = [

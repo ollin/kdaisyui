@@ -32,7 +32,6 @@ import kotlinx.html.IMG
  * @param triangle4 — triangle pointing right
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
  */
 fun FlowContent.daisyMask(
     id: HtmlId? = null,
@@ -55,7 +54,6 @@ fun FlowContent.daisyMask(
     triangle4: Boolean = false,
     extraClasses: String? = null,
     attrs: (IMG.() -> Unit)? = null,
-    content: (IMG.() -> Unit),
 ) {
     img {
         if (id != null) attributes["id"] = id.id
@@ -79,6 +77,5 @@ fun FlowContent.daisyMask(
         if (triangle4) addClassNames("mask-triangle-4")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        content()
     }
 }

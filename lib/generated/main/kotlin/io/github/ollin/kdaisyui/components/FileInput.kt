@@ -1,5 +1,5 @@
 // GENERATED — DO NOT EDIT
-// Source: daisyui/packages/docs/src/routes/(routes)/components/fileinput/+page.md
+// Source: daisyui/packages/docs/src/routes/(routes)/components/file-input/+page.md
 // Regenerate: cd codegen && npm run generate
 
 package io.github.ollin.kdaisyui.components
@@ -51,7 +51,6 @@ enum class FileInputSize(internal val className: String) {
  * @param ghost
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
  */
 fun FlowContent.daisyFileInput(
     id: HtmlId? = null,
@@ -60,7 +59,6 @@ fun FlowContent.daisyFileInput(
     ghost: Boolean = false,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
-    content: (INPUT.() -> Unit),
 ) {
     input {
         if (id != null) attributes["id"] = id.id
@@ -70,6 +68,5 @@ fun FlowContent.daisyFileInput(
         if (ghost) addClassNames("file-input-ghost")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        content()
     }
 }

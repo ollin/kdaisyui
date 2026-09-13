@@ -27,9 +27,7 @@ class MaskCoverageTest {
     @Test
     fun mask_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(
-                content = { },
-            )
+            daisyMask()
         }
         assertRendered(html, "mask", "Mask defaults")
     }
@@ -58,10 +56,9 @@ class MaskCoverageTest {
                 triangle4 = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
             )
         }
         assertRendered(html, "mask mask-circle mask-decagon mask-diamond mask-half-1 mask-half-2 mask-heart mask-hexagon mask-hexagon-2 mask-pentagon mask-square mask-squircle mask-star mask-star-2 mask-triangle mask-triangle-2 mask-triangle-3 mask-triangle-4 zz-extra", "Mask all flags")
-        assertCommonFlags(html, "Mask")
+        assertCommonFlags(html, "Mask", content = false)
     }
 }

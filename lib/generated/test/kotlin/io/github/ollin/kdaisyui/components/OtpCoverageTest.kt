@@ -31,7 +31,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp", "Otp defaults", closes = "</div></div>")
+        assertRendered(html, "otp", "Otp defaults", closes = "</label></div>")
     }
 
     @Test
@@ -45,7 +45,7 @@ class OtpCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "otp otp-joined zz-extra", "Otp all flags", closes = "</div></div>")
+        assertRendered(html, "otp otp-joined zz-extra", "Otp all flags", closes = "</label></div>")
         assertCommonFlags(html, "Otp")
     }
 

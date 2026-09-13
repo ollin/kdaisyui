@@ -20,6 +20,5 @@ fun FlowContent.daisyFileInput(
     ghost: Boolean = false,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
-    content: (INPUT.() -> Unit),
 )
 ```

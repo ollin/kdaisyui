@@ -134,6 +134,64 @@ fun FlowContent.daisyButton(
 CSS class → Kotlin: `btn-primary` → `ButtonVariant.Primary`; plain modifiers become booleans.
 Consumers never hardcode class strings — they use the enums, or `extraClasses` when nothing fits.
 
+## Three things the generator refuses to be trusted about
+
+Added by `verify-generator-assertions` (2026-09-12). Each of these once shipped a defect that
+changed no CSS class — and every other gate in this repository keys on class names, so nothing
+could see any of them.
+
+**1. Whether a component may take children is DERIVED from its element, not configured.** An
+element the HTML specification calls void cannot hold children, full stop. There is no
+`noContent` section any more; do not add one. The list that existed was a transcription of that
+rule and was wrong in both directions — two of its eight entries were spelled as directory names
+in a section read by PascalCase name, so they never matched, and `mask` renders `<img>` and was
+never listed at all. All three demanded a required `content` lambda for an element that cannot
+have one.
+
+**2. The element is cross-checked against DaisyUI's own documentation, and a disagreement fails
+the run.** The authority is the fenced ```html examples in each component's `+page.md`, where
+daisyUI class names carry a `$$` marker — so "the tag bearing `$$<componentClass>`" is a
+statement rather than an inference. That route answers all 66 components; the `skills/` Syntax
+blocks answer 57.
+
+Three disagreements exist. `otp` was fixed (`componentElements: {"otp": "label"}`). `tab` and
+`calendar` carry entries in `elementCrossCheckExceptions`, each with a reason and a tracking
+issue, and **a stale exception is itself an error** — when a component stops disagreeing its
+entry must go, or the list becomes the hand-maintained thing item 1 deleted.
+
+**3. A config entry that no lookup reads fails the run.** A mis-keyed entry is
+indistinguishable from an absent one at run time: the lookup returns `undefined`, the caller's
+`?? []` swallows it, and the component is generated as though nothing were configured. A
+key-*existence* check would not help — `file-input` is a real DaisyUI directory; the entry was
+not a typo, it was unread.
+
+`CONFIG_SECTIONS` in `codegen/src/config-consumption.ts` lists every section and how it is keyed.
+**Add a new section there or the guard cannot police it.** Two keying conventions coexist —
+`skip`, `componentElements`, `docSummaries` and `elementCrossCheckExceptions` by DaisyUI
+directory name, the rest by lower-cased PascalCase name, `subComponentElements` by part class.
+That inconsistency is the underlying defect; the guard is what makes deferring its fix safe.
+
+## Two API baselines, answering different questions
+
+| File | Sees | Updated by |
+|---|---|---|
+| `lib/api/lib.api` | JVM descriptors: added and removed members, arity changes | `:lib:updateKotlinAbi` |
+| `lib/api/components.api` | lambda receiver types, parameter names, defaults | `:lib:updateComponentApi` |
+
+JVM descriptors have no representation for a lambda's receiver, for parameter names — which are
+part of the API in Kotlin, because callers use named arguments — or for default values. So
+`daisyOtp` moving from `DIV` to `LABEL` breaks every caller's lambda body and produces **no**
+diff in `lib.api`. Measured twice: it also left the hand-written `example-app` compiling,
+because its lambda used only `span { }`.
+
+Both are kept: removing a parameter is visible in the JVM dump and not specially in the other.
+
+**Neither update task is part of `just generate`, and `checkComponentApi` is not part of
+`check`.** The first separation is the gate — a baseline rewritten by the command that
+regenerates the code would follow every change in silence. The second is the no-Node promise:
+`checkComponentApi` reads the submodule and runs Node, so it lives in CI beside
+`generated-sources-drift`.
+
 ## Never edit generated files
 
 `lib/generated/**` **and `docs/reference/**`** are committed and readable — deliberately, so the
@@ -173,9 +231,28 @@ column and some DaisyUI descriptions run to 48 words.
 ## The codegen is TypeScript, run directly by Node — no build step
 
 Since 2026-09-11, `codegen/src/**` is `.ts` and Node executes it as-is. Type stripping is
-stable and on by default in the Node pinned by `.tool-versions`. There is **no compile step,
-no emitted JavaScript, and still zero dependencies** in `codegen/package.json` — which is what
-keeps `just generate` the only thing in the repository that needs Node at all.
+stable and on by default in the Node pinned by `.tool-versions`. There is **no compile step and
+no emitted JavaScript**, which is what keeps `just generate` the only thing in the repository
+that needs Node at all.
+
+**Zero dependencies ended on 2026-09-12.** `codegen/package.json` now has exactly one:
+`htmlparser2`, pinned exactly. The element cross-check reads the markup DaisyUI documents, and a
+regex over markup is unreadable — and measurably wrong on a `>` inside an attribute value, on an
+HTML comment, and on `<script>` content. The `--save-exact` pin is deliberate: a generator whose
+output is drift-checked cannot have a parser that floats.
+
+Consequences to know before touching the build:
+
+- Every task that runs Node against `codegen/` depends on `installCodegenDeps` (`npm ci`), and
+  regeneration needs the network on a cold `node_modules`.
+- `package-lock.json` is a declared **input** of all five generator tasks and `testCodegen`. Adding
+  a generator without it means a parser upgrade leaves Gradle reporting UP-TO-DATE.
+- Both Node-running CI jobs read `.tool-versions`; `generated-sources-drift` previously used the
+  runner's Node and no longer does.
+
+A second dependency is a decision, not a habit. The next obvious candidate is named rather than
+hidden: `parseYamlFrontmatter` is a hand-rolled YAML reader, and YAML is far harder than finding a
+start tag.
 
 **Nothing type-checks it.** Node strips types without checking them, and there is deliberately
 no `tsc` step. Types serve the editor and the reader; the gates are the codegen unit tests and
@@ -227,15 +304,17 @@ defect that prompted the port. What pays:
 |---|---|
 | Component needs an extra parameter | `codegen/codegen-config.json` → `extras` |
 | Component should take inline text | → `textParams` |
-| Component must not accept children | → `noContent` |
+| Component must not accept children | **derived, not configured** — see below |
 | Wrong HTML role or input type | → `roles`, `inputTypes` |
 | Component should not be generated at all | → `skip` (currently `accordion`, `pagination`) |
 | Component needs a second wrapper / an alternative construction method | → `customParts` |
 | Main component must always carry an attribute (e.g. `popover`) | → `componentAttributes` |
 | A sub-component part must be a specific element | → `subComponentElements` |
 | A reference page's one-line description is wrong or missing | → `docSummaries` |
+| A component renders the wrong element | → `componentElements`, and see the cross-check below |
 | CSS class lands in the wrong category | `codegen/src/classifier.ts` |
 | **What functions a component has, their parameters or their element** | `codegen/src/component-shape.ts` |
+| **Which components get generated at all** | `codegen/src/component-set.ts` |
 | Kotlin output shape is wrong | `codegen/src/generator-new.ts` |
 | Reference page layout is wrong | `codegen/src/generator-docs.ts` |
 | Generated tests are wrong | `codegen/src/test-generator.ts` |
@@ -350,17 +429,22 @@ diff in `lib/api/lib.api`, because both lambda types erase to `Function1`.
 ## Pipeline
 
 ```
-daisyui/packages/docs/src/routes/(routes)/components/<name>/+page.md   (YAML frontmatter)
-  → codegen/src/parser/frontmatter.ts
-  → codegen/src/parser/llms-txt.ts      (element rules from DaisyUI llms.txt)
+daisyui/packages/docs/src/routes/(routes)/components/<name>/+page.md
+  ├ YAML frontmatter → codegen/src/parser/frontmatter.ts
+  └ fenced ```html   → codegen/src/parser/documented-element.ts   ($$-marked classes)
+  → codegen/src/parser/llms-txt.ts      (element heuristic, cross-checked against the above)
   → codegen/src/classifier.ts           (colors / sizes / styles / modifiers / parts)
+  → codegen/src/component-set.ts        (WHICH components, once, for all three emitters)
   → codegen/src/component-shape.ts      (what the API IS: functions, parameters, elements)
-      ├→ codegen/src/generator-new.ts     → lib/generated/**  (Kotlin)
-      └→ codegen/src/generator-docs.ts    → docs/reference/**  (Markdown, + docSummaries)
+      ├→ codegen/src/generator-new.ts        → lib/generated/**        (Kotlin)
+      ├→ codegen/src/generator-docs.ts       → docs/reference/**       (Markdown, + docSummaries)
+      └→ codegen/src/component-api-dump.ts   → lib/api/components.api  (Kotlin API baseline)
 ```
 
-The fork at `component-shape.ts` is the load-bearing part: both emitters read one description of
-the API, so they cannot disagree about it.
+The fork at `component-shape.ts` is the load-bearing part: all three emitters read one
+description of the API, so they cannot disagree about it. `component-set.ts` is the same idea one
+level up — it had three copies, each with a comment asking the next person to keep them
+identical, which is not how anything stays identical.
 
 Heroicons runs a separate path: `parser/svg-heroicons.ts` → `generator-heroicons.ts`.
 
@@ -372,6 +456,10 @@ Heroicons runs a separate path: `parser/svg-heroicons.ts` → `generator-heroico
 3. `:lib:test`
 4. `:lib:generateReferenceDocs` whenever the change can reach a signature, an element or a
    parameter — which is nearly always, since the pages document exactly those
-5. Inspect the produced files under `lib/generated/…` and `docs/reference/…` — read only, never edit
-6. Review `git diff -- lib/generated docs/reference` and commit it. An unreviewed regeneration
-   diff is the thing this layout exists to prevent, and CI fails if you leave it uncommitted
+5. `:lib:checkComponentApi` — fails if a signature moved. If the change is intended, run
+   `:lib:updateComponentApi`, **read** the diff, and commit it; a breaking one also needs a
+   **How to migrate** entry in `README.md`
+6. Inspect the produced files under `lib/generated/…` and `docs/reference/…` — read only, never edit
+7. Review `git diff -- lib/generated docs/reference lib/api` and commit it. An unreviewed
+   regeneration diff is the thing this layout exists to prevent, and CI fails if you leave it
+   uncommitted

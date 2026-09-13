@@ -37,8 +37,30 @@ jobs:
           java-version: 21
           cache: gradle
 
+      # This job ran the generators on whatever Node the runner happened to ship, which was
+      # tolerable while they only executed a script. Since 2026-09-12 the Gradle tasks also
+      # run `npm ci`, so the npm version decides how a lockfile is installed — and the note
+      # on the codegen-tests job applies here too: a Node mismatch is not loud. Both
+      # Node-running jobs now read the same pin.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .tool-versions
+          cache: npm
+          cache-dependency-path: codegen/package-lock.json
+
       - name: Regenerate
         run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs --no-daemon
+
+      # Beside the drift check rather than in `check`, for the same reason the generators are:
+      # it reads the submodule and runs Node, and a clone must compile and test with neither.
+      #
+      # A separate step from the drift check, not folded into it, because the two answer
+      # different questions. Drift asks whether the committed output matches its inputs;
+      # this asks whether the Kotlin API changed — and the API baseline is updated by an
+      # explicit task, so a change here is meant to fail until a human has read the diff.
+      - name: Fail if the components' Kotlin API no longer matches its baseline
+        run: ./gradlew :lib:checkComponentApi --no-daemon
 
       - name: Fail if the committed sources no longer match their inputs
         run: |
@@ -65,6 +87,10 @@ jobs:
   # checkouts, nothing compiles Kotlin. If this job ever needs either, that is the signal
   # that the tests have drifted into integration territory which generated-sources-drift
   # already covers end to end.
+  #
+  # It does need `npm ci` since 2026-09-12: the modules under test parse DaisyUI's documented
+  # markup with a real HTML parser. That is a dependency on a package, not on a checkout, so
+  # the rule above is intact — these tests still read no submodule.
   codegen-tests:
     name: codegen-tests
     runs-on: ubuntu-latest
@@ -78,6 +104,15 @@ jobs:
           # copy here would drift, and a Node mismatch is not loud: the test runner's
           # default file patterns have changed between majors.
           node-version-file: .tool-versions
+          # Cache keyed on the lockfile, which only exists because the codegen has a
+          # dependency now. Without the path, the action looks for a lockfile at the
+          # repository root and there is none.
+          cache: npm
+          cache-dependency-path: codegen/package-lock.json
+
+      - name: Install codegen dependencies
+        working-directory: codegen
+        run: npm ci
 
       - name: Run codegen unit tests
         working-directory: codegen

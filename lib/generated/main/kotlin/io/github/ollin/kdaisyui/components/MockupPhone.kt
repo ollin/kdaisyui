@@ -1,5 +1,5 @@
 // GENERATED — DO NOT EDIT
-// Source: daisyui/packages/docs/src/routes/(routes)/components/mockupphone/+page.md
+// Source: daisyui/packages/docs/src/routes/(routes)/components/mockup-phone/+page.md
 // Regenerate: cd codegen && npm run generate
 
 package io.github.ollin.kdaisyui.components

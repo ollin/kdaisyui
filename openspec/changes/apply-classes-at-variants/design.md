@@ -362,6 +362,36 @@ the run rather than rotting.
 **Not derivable, and that is the point.** `toCamelCase` of `rating-hidden` gives `hidden`, which is
 exactly the wrong answer — only a human reading the CSS knows it means the clear option.
 
+## The two-axis placements, read from the CSS — 2026-09-13
+
+Four groups were flagged as "two axes filed under one category". Reading the CSS corrects one of
+them and shows the other three are **two different patterns**, not one.
+
+| component | axis 1 | axis 2 | evidence |
+|---|---|---|---|
+| `indicator` | `IndicatorVertical` top/middle/bottom | `IndicatorHorizontal` start/center/end | sets `--indicator-t/-b/-y` vs `--indicator-s/-e/-x` |
+| `toast` | `ToastVertical` top/middle/bottom | `ToastHorizontal` start/center/end | sets `--toast-y` vs `--toast-x` |
+| `dropdown` | `DropdownSide` top/bottom/left/right | `DropdownAlign` start/center/end | sides set `--anchor-v`/`--anchor-h`; alignment sets only `--anchor-h` |
+| `tooltip` | `TooltipSide` top/bottom/left/right | `TooltipAlign` start/center/end | sides set `transform`; alignment sets `--tt-inset`, `--tt-trans` |
+
+`indicator` and `toast` are genuine X/Y coordinates. `dropdown` and `tooltip` follow the popover
+convention — **which side**, then **alignment along that side** — the same split Floating UI calls
+`placement = side + alignment`. Different enough that one shared rule would be wrong.
+
+### `modal` is NOT two axes — my flag was wrong
+
+```
+modal-top/middle/bottom   place-items-start/center/end  + w-full / w-11/12
+modal-start/end           place-items-start/end         + h-screen, w-auto
+```
+
+All five set `place-items` **and** the box's dimensions, so they conflict with each other:
+`modal-top modal-start` leaves the last `place-items` winning and the sizing contradictory. They
+are five mutually exclusive anchor positions — vertical sheets and side sheets in one axis.
+
+One enum, `ModalPosition`. Recorded because the earlier flag came from the pattern of the member
+names rather than from what they do, which is the mistake this section exists to avoid.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

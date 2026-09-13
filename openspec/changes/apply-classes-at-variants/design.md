@@ -597,6 +597,45 @@ This becomes the source of truth for exclusivity once it renders representative 
 only one of the four probes that is a decision procedure rather than a heuristic, and the only
 one that has corrected me rather than agreed with me.
 
+## Probe 4b: the same procedure on DaisyUI's own example markup
+
+Each case is now DaisyUI's documented example with the member classes injected onto the element
+that already carries the component class, and the signature spans the whole subtree plus each
+element's box. One obstacle was worth the time it cost: the docs mark that class with a `$$`
+sentinel — `class="$$btn"` — which must be stripped, or the element matches no rule and every
+pair looks identical.
+
+**Every false "inert" from the stub run is gone.** `Table` now reports `pin-rows|pin-cols` as
+composing, `Collapse` and `Accordion` report all six pairs composing, and `Rating`'s
+`half|hidden` composes — confirming by measurement the three enums withdrawn above.
+
+### A third outcome appeared, and it is not exclusivity
+
+About ten groups report `same`: the two members render **identically** in this example.
+`stack-top` and `stack-bottom` need several children to differ; `footer-horizontal` and
+`footer-vertical` need a viewport that forces the switch; `tab-active` and `tab-disabled` need a
+tab that can be either.
+
+`same` means **the probe cannot tell**, and under the asymmetric-cost rule it therefore falls to
+boolean. Reading it as exclusivity would be the invented-exclusivity error wearing a new mask.
+
+### What the measurement establishes
+
+| outcome | groups |
+|---|---|
+| one axis — every pair inert | `Loading.styles`, `Mask.styles`, `Mask.modifiers`, `Modal.placements`, `Carousel.modifiers`, `Chat.placements`, `Tab.placements`, `Dropdown.modifiers`, `Megamenu.modifiers` |
+| two axes — within inert, across composing | `Indicator.placements`, `Toast.placements`, `Tooltip.placements`, `Dropdown.placements` |
+| independent — pairs compose | `Accordion`, `Collapse`, `Timeline.modifiers`, `Tab.styles`, `Rating`, `Swap`, `Divider.placements`, `Carousel.directions`, `Button.behaviors`, `Avatar` |
+| indistinguishable here | `Stack`, `Menu.modifiers`, `Footer`, `Join`, `Pagination`, `Card.styles`, `Tab.modifiers` |
+
+`Indicator` and `Toast` return the identical bipartite structure in both runs. So does
+`Button.styles`: `outline|ghost` and `outline|link` compose, which stands across stub and real
+markup and settles that `ButtonEmphasis` is not one enum.
+
+**`Tab.styles` is new and contradicts a hand name**: `box`, `border` and `lift` all compose, so
+`TabAppearance` joins the withdrawn list. That is four hand-chosen enums the measurement has now
+removed — `CardLayout`, `ListColumn`, `SwapAnimation`, `TabAppearance` — and one it has split.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

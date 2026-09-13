@@ -86,6 +86,24 @@ each one needs; this page had the count wrong twice, so read `ci.yml` if it matt
 `pr-conventional-commits.yml` validates PR titles — and that matters more than usual here,
 because JReleaser builds the release changelog from those commit messages.
 
+## Merge wrappers stay out of the notes — configured, not remembered
+
+Two shapes of merge commit are noise in a release note: GitHub's `Merge pull request #N
+from …` wrapper, and `Merge branch 'main' into <topic>` from syncing a long-lived branch. Both
+reached v0.4.0's notes and were deleted by hand.
+
+They cannot now: the preset labels both by their message prefix into a `merge` category, and
+`build.gradle.kts` hides it. The merge commits worth reading are untouched, because a merge
+whose message is the house Conventional Commit is labelled `feat` or `fix` instead.
+
+**Do not reach for `skipMergeCommits` when you see merge noise.** It looks like the same cure
+and is the opposite: those merge commits carry the only Conventional Commits this project
+produces, so it would empty the changelog. The comment in `build.gradle.kts` says so at the
+setting; `openspec/changes/archive/2026-09-04-fix-release-changelog/` has the measurements.
+
+The half that stays discipline: **never merge `main` INTO a topic branch — rebase.** Such a
+commit is now invisible in the notes but is still noise in the history.
+
 ## A conflicted PR gets no CI at all — and looks clean doing it
 
 `pull_request` workflows run against the PR's **merge commit**. When the head branch conflicts

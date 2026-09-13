@@ -10,6 +10,18 @@ set two contradictory answers at once.
 
 The proposals are proposals. Overwrite them freely.
 
+## Decisions taken (2026-09-13)
+
+1. **Names follow DaisyUI's category** — `CardModifier`, `LoadingStyle`, `TabPlacement`.
+2. **`MaskShape` is the one exception**, because DaisyUI's Mask page is a grid of shapes.
+3. **Every component gets its OWN enums.** No type is shared between components, even where the
+   members are identical — `IndicatorVerticalPlacement` and `ToastVerticalPlacement` are
+   separate types holding the same three names. The cost is repetition; the benefit is that a
+   Toast placement cannot be passed to an Indicator, and each type's KDoc can point at its own
+   DaisyUI page.
+4. **`dropdown.placements` takes option B**, with the coverage guard kept rather than relaxed —
+   see section 2c.
+
 ## The naming rule
 
 **Stay close to DaisyUI, so a reader can find the documentation.** The enum type is named after
@@ -53,7 +65,7 @@ The class column shows the SUFFIX; the real class is `<component>-<suffix>`, so 
 | 6 | `join.directions` | `vertical` `horizontal` | `JoinDirection` | `JoinOrientation` | which way the joined items are stacked |
 | 7 | `list.modifiers` | `col-wrap` `col-grow` | `ListModifier` | `ListColumn` | which column absorbs the spare width |
 | 8 | `loading.styles` | `spinner` `dots` `ring` `ball` `bars` `infinity` | `LoadingStyle` | `LoadingAnimation` | which animation is shown |
-| 9 | `mask.styles` | `squircle` `heart` `hexagon` `hexagon-2` `decagon` `pentagon` `diamond` `square` `circle` `star` `star-2` `triangle` `triangle-2` `triangle-3` `triangle-4` | `MaskStyle` | `MaskShape` | what shape the content is masked to |
+| 9 | `mask.styles` | `squircle` `heart` `hexagon` `hexagon-2` `decagon` `pentagon` `diamond` `square` `circle` `star` `star-2` `triangle` `triangle-2` `triangle-3` `triangle-4` | **`MaskShape`** ✔ | ~~`MaskStyle`~~ | what shape the content is masked to |
 | 10 | `mask.modifiers` | `half-1` `half-2` | `MaskModifier` | `MaskHalf` | which half of the shape is kept |
 | 11 | `menu.directions` | `vertical` `horizontal` | `MenuDirection` | `MenuOrientation` | which way the menu runs |
 | 12 | `pagination.directions` | `vertical` `horizontal` | `PaginationDirection` | `PaginationOrientation` | which way the pages are laid out |
@@ -150,20 +162,57 @@ So `{top,bottom,left,right}` is not a clique, and `checkAxisIsExclusive` rejects
 because declaring it would make `dropdown-left dropdown-top` inexpressible when the browser says
 that combination reaches CSS neither class reaches alone.
 
-Three ways out. Please pick one:
+Three ways out were offered:
 
 | | Option | Cost |
 |---|---|---|
 | **A** | Leave the whole group boolean | Seven booleans; `start`/`center`/`end` lose an enum they earned |
-| **B** | One enum `DropdownAlignPlacement` (or `DropdownAlign`) = `{start,center,end}`, and `top` `bottom` `left` `right` stay boolean | Needs `checkSplitCoverage` relaxed to allow unassigned members — which currently exists to stop a new DaisyUI class silently becoming a boolean |
-| **C** | Declare the side axis anyway, overriding the measurement for this group | Makes a reachable combination inexpressible. Contradicts the asymmetric-cost rule the whole change rests on |
+| **B** | One enum `DropdownAlignPlacement` = `{start,center,end}`, and `top` `bottom` `left` `right` stay boolean | Needs the coverage guard to accept unassigned members |
+| **C** | Declare the side axis anyway, overriding the measurement | Makes a reachable combination inexpressible. Contradicts the asymmetric-cost rule |
 
-**A is the honest default and B is probably what you want**, but B changes a guard, so it is
-not mine to decide. C is listed for completeness; I would argue against it.
+**DECIDED: B** — with the guard kept rather than relaxed. See below.
 
-Worth knowing before you choose: the co-occurrence probe observed `dropdown-center`/`dropdown-end`
-together with `top`/`bottom`/`left`/`right` in DaisyUI's own docs, which is what established that
-the group has two axes at all. It says nothing about whether `left` and `top` conflict.
+Worth knowing: the co-occurrence probe observed `dropdown-center`/`dropdown-end` together with
+`top`/`bottom`/`left`/`right` in DaisyUI's own docs, which is what established that the group has
+two axes at all. It says nothing about whether `left` and `top` conflict.
+
+### How B keeps the guard: declare the booleans, do not relax the rule
+
+The coverage guard exists so a new DaisyUI class cannot silently become a boolean. Plain B
+breaks that, because "unassigned" would then mean both *deliberately a flag* and *nobody has
+looked at this yet* — and those must not look alike.
+
+Turning the leftovers into enums was considered and rejected: a single-member enum is `true`
+spelled longer, it contradicts the rule that one member answers no question, and it does not
+actually close the hole — a new class would still need a human decision about which enum it
+joins, so the config is edited either way.
+
+So the config states both halves and coverage stays total:
+
+```jsonc
+"enumNames": {
+  "dropdown": {
+    "placements": {
+      "axes": [
+        { "name": "AlignPlacement", "members": ["start", "center", "end"] }
+      ],
+      // Measured as composing with everything, including each other. Flags, on purpose.
+      "booleans": ["top", "bottom", "left", "right"]
+    }
+  }
+}
+```
+
+Every member is named exactly once, in one list or the other. A class DaisyUI adds later is in
+neither, so `checkSplitCoverage` fails exactly as it does today — the only change is that
+"boolean" becomes something a human SAYS rather than something that happens by omission.
+
+The existing forms stay: a bare string still names a whole group, and a bare array of axes still
+splits one. The object form is needed only where a group is part choice and part flags.
+
+`enumNames` is otherwise unchanged, and `checkAxisIsExclusive` still refuses `booleans` entries
+that are secretly exclusive — a pair listed as flags that the browser calls exclusive is a
+missed enum, and it should be reported rather than accepted.
 
 ---
 

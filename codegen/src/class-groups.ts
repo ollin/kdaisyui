@@ -77,8 +77,31 @@ export interface EnumSplit {
   members: readonly string[]
 }
 
-/** A configured name: one suffix for the whole group, or several axes that split it. */
-export type EnumNameEntry = string | readonly EnumSplit[]
+/**
+ * A group that is part choice and part flags.
+ *
+ * Needed by exactly one group so far, and the reason is worth keeping: `dropdown.placements`
+ * holds a clean alignment axis — `start`, `center`, `end`, every pair exclusive — beside four
+ * classes the browser says compose with everything, including each other. Declaring the sides
+ * as an axis would make `dropdown-left dropdown-top` inexpressible against a measurement that
+ * says the combination reaches CSS neither class reaches alone.
+ *
+ * The `booleans` list is what keeps the coverage guard usable. Without it, "unassigned" would
+ * mean both *deliberately a flag* and *nobody has looked at this yet*, and a class DaisyUI
+ * added later would slip through as a boolean by omission — which is the exact failure the
+ * guard exists to prevent.
+ */
+export interface EnumGroupSpec {
+  readonly axes: readonly EnumSplit[]
+  /** Members that stay individual boolean parameters, named rather than left out. */
+  readonly booleans?: readonly string[]
+}
+
+/**
+ * A configured name: one suffix for the whole group, several axes that split it, or — where the
+ * group is part choice and part flags — both halves named explicitly.
+ */
+export type EnumNameEntry = string | readonly EnumSplit[] | EnumGroupSpec
 
 /** `enumNames` from the config: component directory name → category → name or split. */
 export type EnumNames = Readonly<Record<string, Readonly<Record<string, EnumNameEntry>>>>
@@ -96,7 +119,15 @@ interface Group {
 }
 
 function splitsFor(entry: EnumNameEntry, members: readonly string[]): readonly EnumSplit[] {
-  return typeof entry === 'string' ? [{ name: entry, members }] : entry
+  if (typeof entry === 'string') return [{ name: entry, members }]
+  if (Array.isArray(entry)) return entry
+  return (entry as EnumGroupSpec).axes
+}
+
+/** Members the config declares as flags. Empty for every form but the object one. */
+function declaredBooleansFor(entry: EnumNameEntry): readonly string[] {
+  if (typeof entry === 'string' || Array.isArray(entry)) return []
+  return (entry as EnumGroupSpec).booleans ?? []
 }
 
 /** Every pair drawn from two different axes of the same group. */
@@ -114,8 +145,12 @@ function quoted(members: readonly string[]): string {
   return members.map((member) => `"${member}"`).join(', ')
 }
 
-function checkSplitCoverage(group: Group, splits: readonly EnumSplit[]): void {
-  const claimed = splits.flatMap((split) => split.members)
+function checkSplitCoverage(
+  group: Group,
+  splits: readonly EnumSplit[],
+  declaredBooleans: readonly string[],
+): void {
+  const claimed = [...splits.flatMap((split) => split.members), ...declaredBooleans]
   const unknown = claimed.filter((member) => !group.members.includes(member))
   if (unknown.length > 0) {
     throw new GroupNamingError(
@@ -127,10 +162,34 @@ function checkSplitCoverage(group: Group, splits: readonly EnumSplit[]): void {
   const unclaimed = group.members.filter((member) => !claimed.includes(member))
   if (unclaimed.length > 0) {
     throw new GroupNamingError(
-      `enumNames.${group.key} leaves ${quoted(unclaimed)} unassigned. Every member of a split ` +
-        `group must belong to an axis, otherwise a new DaisyUI class silently becomes a boolean.`,
+      `enumNames.${group.key} leaves ${quoted(unclaimed)} unassigned. Every member of a named ` +
+        `group must belong to an axis or be listed under "booleans", otherwise a new DaisyUI ` +
+        `class silently becomes a boolean by omission.`,
     )
   }
+}
+
+/**
+ * Flags the config declares must not be a choice it failed to notice.
+ *
+ * Only a WHOLE missed enum is reported. Some exclusive pairs among the flags are expected and
+ * harmless — `dropdown-top` and `dropdown-bottom` are exclusive while both compose with
+ * `dropdown-left`, so the four together are not a choice and leaving them as flags costs
+ * nothing but a useless combination.
+ */
+function checkBooleansAreNotAChoice(
+  group: Group,
+  measured: MeasuredPairs,
+  declaredBooleans: readonly string[],
+): void {
+  if (declaredBooleans.length < 2) return
+  if (measured.describeNonExclusive(declaredBooleans).length > 0) return
+
+  throw new ExclusivityError(
+    `enumNames.${group.key} lists ${declaredBooleans.join(', ')} as booleans, but the ` +
+      `measurement says every pair of them is exclusive — that is a choice, and leaving it as ` +
+      `flags lets a caller set two contradictory answers at once. Give it an axis.`,
+  )
 }
 
 /** Each declared axis must be a clique of `exclusive` verdicts, or the enum is a lie. */
@@ -191,10 +250,12 @@ function namedGroup(
   measured: MeasuredPairs,
 ): GroupClassification {
   const splits = splitsFor(entry, group.members)
+  const declaredBooleans = declaredBooleansFor(entry)
 
-  checkSplitCoverage(group, splits)
+  checkSplitCoverage(group, splits, declaredBooleans)
   for (const split of splits) checkAxisIsExclusive(group, measured, split)
   if (splits.length > 1) checkSplitIsEarned(group, measured, splits)
+  checkBooleansAreNotAChoice(group, measured, declaredBooleans)
 
   return {
     enums: splits.map((split) => ({
@@ -202,7 +263,9 @@ function namedGroup(
       category: group.key.category as GroupCategory,
       members: split.members,
     })),
-    booleans: [],
+    // In DaisyUI's order, not the config's: the generated parameter list should not change
+    // because someone reordered a list in the config.
+    booleans: group.members.filter((member) => declaredBooleans.includes(member)),
   }
 }
 

@@ -257,6 +257,116 @@ describe('classifyGroups', () => {
     )
   })
 
+  it('splits a group into one axis and some declared flags', () => {
+    // `dropdown.placements` as measured: `start|center|end` is a clean choice, while `left` and
+    // `right` compose with everything including `top` and `bottom`. Declaring the sides as an
+    // axis would make `dropdown-left dropdown-top` inexpressible.
+    const result = classifyGroups(
+      component({
+        componentName: 'Dropdown',
+        placements: ['start', 'center', 'end', 'top', 'bottom', 'left', 'right'],
+      }),
+      'dropdown',
+      {
+        dropdown: {
+          placements: {
+            axes: [{ name: 'AlignPlacement', members: ['start', 'center', 'end'] }],
+            booleans: ['top', 'bottom', 'left', 'right'],
+          },
+        },
+      },
+      measured({
+        dropdown: {
+          placements: {
+            exclusive: ['start|center', 'start|end', 'center|end', 'top|bottom'],
+            compose: ['top|left', 'top|right', 'bottom|left', 'bottom|right', 'left|right'],
+          },
+        },
+      }),
+    )
+
+    assert.deepEqual(result.enums.map((group) => group.enumName), ['DropdownAlignPlacement'])
+    assert.deepEqual(result.booleans, ['top', 'bottom', 'left', 'right'])
+  })
+
+  it('keeps DaisyUI\'s order for declared flags, not the config\'s', () => {
+    // Otherwise reordering a list in the config reorders generated parameters, and the diff
+    // claims an API change that nobody made.
+    const result = classifyGroups(
+      component({ componentName: 'Dropdown', placements: ['start', 'top', 'bottom'] }),
+      'dropdown',
+      { dropdown: { placements: { axes: [], booleans: ['bottom', 'top', 'start'] } } },
+      measured({ dropdown: { placements: { compose: ['start|top', 'start|bottom', 'top|bottom'] } } }),
+    )
+
+    assert.deepEqual(result.booleans, ['start', 'top', 'bottom'])
+  })
+
+  it('rejects a named group that leaves a member in neither list', () => {
+    // The whole point of declaring booleans: a class DaisyUI adds later is in no list and stops
+    // the run, instead of becoming a flag by omission.
+    assert.throws(
+      () =>
+        classifyGroups(
+          component({ componentName: 'Dropdown', placements: ['start', 'center', 'end', 'newcomer'] }),
+          'dropdown',
+          {
+            dropdown: {
+              placements: {
+                axes: [{ name: 'AlignPlacement', members: ['start', 'center', 'end'] }],
+                booleans: [],
+              },
+            },
+          },
+          NOT_MEASURED,
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof GroupNamingError)
+        assert.match(error.message, /"newcomer" unassigned/)
+        assert.match(error.message, /or be listed under "booleans"/)
+        return true
+      },
+    )
+  })
+
+  it('rejects declared flags that the measurement says are a choice', () => {
+    // Declaring a choice as flags is the mirror of naming flags as a choice, and costs the
+    // caller the type safety the measurement earned.
+    assert.throws(
+      () =>
+        classifyGroups(
+          component({ componentName: 'Tab', placements: ['top', 'bottom'] }),
+          'tab',
+          { tab: { placements: { axes: [], booleans: ['top', 'bottom'] } } },
+          measured({ tab: { placements: { exclusive: ['top|bottom'] } } }),
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof ExclusivityError)
+        assert.match(error.message, /lists top, bottom as booleans/)
+        assert.match(error.message, /Give it an axis/)
+        return true
+      },
+    )
+  })
+
+  it('accepts flags that hold an exclusive pair but are not a choice as a whole', () => {
+    // `top|bottom` is exclusive while both compose with `left`. Reporting that as a missed enum
+    // would fire on the one group this form exists for.
+    const result = classifyGroups(
+      component({ componentName: 'Dropdown', placements: ['top', 'bottom', 'left'] }),
+      'dropdown',
+      { dropdown: { placements: { axes: [], booleans: ['top', 'bottom', 'left'] } } },
+      measured({
+        dropdown: {
+          placements: { exclusive: ['top|bottom'], compose: ['top|left', 'bottom|left'] },
+        },
+      }),
+    )
+
+    assert.deepEqual(result.enums, [])
+    assert.deepEqual(result.booleans, ['top', 'bottom', 'left'])
+  })
+
   it('classifies every category of one component in a single pass', () => {
     const result = classifyGroups(
       component({

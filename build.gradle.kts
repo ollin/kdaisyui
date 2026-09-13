@@ -128,6 +128,19 @@ jreleaser {
                 hide {
                     uncategorized.set(true)
                     category("deps")
+                    // The preset's `merge` category catches exactly the two shapes of merge
+                    // commit nobody wants in a release note: GitHub's own `Merge pull request
+                    // #N from …` wrapper, and `Merge branch 'main' into <topic>` from syncing
+                    // a long-lived branch. Both are labelled by their message prefix.
+                    //
+                    // It does NOT hide the merge commits worth reading. A merge whose message
+                    // is the house Conventional Commit — `feat: …` — is labelled `feat` and
+                    // lands in Features, which is the whole reason `skipMergeCommits` stays
+                    // false above. The two settings look interchangeable and are opposites.
+                    //
+                    // Added after v0.4.0, whose notes had to be edited by hand to remove these.
+                    // A hand-edited release note is a process that failed once and will again.
+                    category("merge")
                 }
             }
         }

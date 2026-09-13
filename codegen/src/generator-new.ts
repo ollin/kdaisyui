@@ -12,6 +12,7 @@
 import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
 import {
   booleanParameterClasses,
+  allBooleans,
   buildComponentShape,
   escapeKotlinKeyword,
   readComponentConfig,
@@ -25,6 +26,7 @@ import {
   type ParameterShape,
   type StaticAttribute,
 } from './component-shape.ts'
+import type { GroupClassification } from './class-groups.ts'
 
 function renderEnum(shape: EnumShape): string {
   const kdoc = shape.documented
@@ -115,6 +117,7 @@ function mainFunctionBody(
   classified: ClassifiedComponent,
   shape: FunctionShape,
   componentConfig: ComponentConfig,
+  groups: GroupClassification,
 ): string {
   const { prefix } = classified
   const { extras, hasTextParam, role, inputType } = componentConfig
@@ -131,7 +134,12 @@ function mainFunctionBody(
   lines.push(`        addClassNames("${prefix}")`)
   if (classified.colors.length > 0) lines.push('        if (variant != null) addClassNames(variant.className)')
   if (classified.sizes.length > 0) lines.push('        if (size != null) addClassNames(size.className)')
-  for (const cls of booleanParameterClasses(classified, componentConfig)) {
+  // The measured enums, in the order the signature declares them.
+  for (const group of groups.enums) {
+    const parameter = escapeKotlinKeyword(group.parameterName)
+    lines.push(`        if (${parameter} != null) addClassNames(${parameter}.className)`)
+  }
+  for (const cls of booleanParameterClasses(classified, componentConfig, groups)) {
     lines.push(`        if (${escapeKotlinKeyword(toCamelCase(cls))}) addClassNames("${prefix}-${cls}")`)
   }
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
@@ -161,9 +169,10 @@ function renderBody(
   shape: FunctionShape,
   classified: ClassifiedComponent,
   componentConfig: ComponentConfig,
+  groups: GroupClassification,
 ): string {
   return shape.kind === 'main'
-    ? mainFunctionBody(classified, shape, componentConfig)
+    ? mainFunctionBody(classified, shape, componentConfig, groups)
     : secondaryFunctionBody(shape)
 }
 
@@ -207,8 +216,9 @@ export function generateKotlinFile(
   classified: ClassifiedComponent,
   source: ComponentSource,
   config,
+  groups: GroupClassification = allBooleans(classified),
 ) {
-  const shape = buildComponentShape(classified, source, config)
+  const shape = buildComponentShape(classified, source, config, groups)
   const componentConfig = readComponentConfig(config, classified.componentName)
 
   const header = [
@@ -222,7 +232,7 @@ export function generateKotlinFile(
   ].join('\n')
 
   const enums = shape.enums.map(renderEnum).join('\n')
-  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig)))
+  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig, groups)))
   const body = [enums, ...functions].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`

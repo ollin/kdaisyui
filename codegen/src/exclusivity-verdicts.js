@@ -162,20 +162,32 @@
     return { pairs: lines.length, digest: digest(lines.join('\n')) }
   }
 
+  /**
+   * The complete `codegen/exclusivity.json`, ready to be written verbatim.
+   *
+   * The provenance is carried into the page by the generator rather than written here,
+   * because it names the DaisyUI version, which only the Node side can read. Emitting the
+   * WHOLE file is what lets the runner overwrite it wholesale — the property every other
+   * generated artefact in this repository has.
+   */
+  function document_() {
+    const provenance = JSON.parse(document.getElementById('kdaisyui-provenance').textContent)
+    return { measurement: provenance, groups: measure() }
+  }
+
   /** Called by the Playwright runner; also called once on load to fill the page. */
   window.kdaisyuiExclusivity = function () {
-    const groups = measure()
-    return { groups: groups, check: verdictDigest(groups) }
+    const complete = document_()
+    return {
+      document: JSON.stringify(complete, null, 2) + '\n',
+      check: verdictDigest(complete.groups),
+    }
   }
 
   window.addEventListener('load', function () {
     const result = window.kdaisyuiExclusivity()
     document.getElementById('kdaisyui-summary').textContent =
       result.check.pairs + ' pairs, digest ' + result.check.digest
-    document.getElementById('kdaisyui-verdicts').textContent = JSON.stringify(
-      result.groups,
-      null,
-      2,
-    )
+    document.getElementById('kdaisyui-verdicts').textContent = result.document
   })
 })()

@@ -33,6 +33,7 @@ import path from 'node:path'
 import { getAllComponentDirs, readComponentFrontmatter } from './parser/frontmatter.ts'
 import { classifyFromFrontmatter } from './classifier.ts'
 import { ClassPair } from './measurement.ts'
+import { daisyuiVersion, provenance } from './exclusivity-document.ts'
 
 const DOCS = path.resolve(
   import.meta.dirname,
@@ -211,6 +212,10 @@ function pageFor(cases: readonly ProbeCase[]): string {
     // --color-neutral undefined, so colour-dependent classes computed to the same transparent
     // black — and omitted utilities/join.css, where join-vertical and join-horizontal live.
     '<link rel="stylesheet" href="daisyui.css">',
+    // The provenance travels INTO the page, so the browser can emit a COMPLETE
+    // `exclusivity.json` and the file stays generated wholesale. Hand-writing it into the
+    // JSON would mean the next measurement silently deletes it.
+    `<script type="application/json" id="kdaisyui-provenance">${JSON.stringify(provenance(daisyuiVersion()))}</script>`,
     '<script src="exclusivity-verdicts.js"></script>',
     '</head><body>',
     '<pre id="kdaisyui-summary"></pre>',

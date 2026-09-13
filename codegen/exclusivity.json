@@ -2,12 +2,12 @@
   "measurement": {
     "what": "For every pair of classes in a multi-member DaisyUI class group, whether the two can be worn at once.",
     "daisyui": "5.7.17",
-    "measuredOn": "2026-09-13",
     "procedure": [
       "Render DaisyUI's own documented example for the component three times: with class a, with class b, and with both.",
       "Every member of the group under test is stripped from the example first, so the case measures the injected classes and not what the example happened to carry.",
+      "One colour class is held constant across all three cases, so classes that mix a colour variable are not compared unlit.",
       "The stylesheet is the complete webjar bundle daisyui.css under data-theme=light, so theme variables resolve.",
-      "A signature is the full computed style of every element in the subtree, plus ::before and ::after, plus each box relative to the case root.",
+      "A signature is the full computed style of every element in the subtree, plus ::before and ::after, plus each element's box relative to the case root.",
       "sig(ab) == sig(a) or sig(ab) == sig(b)  ->  one class is inert against the other  ->  exclusive",
       "sig(ab) differs from both                ->  the combination is a third result      ->  compose",
       "sig(a) == sig(b) and neither of the above ->  this example cannot tell them apart   ->  same"
@@ -17,29 +17,43 @@
       "compose": "Positively refuted: the combination reaches CSS neither class reaches alone. Must stay boolean, or the combination becomes inexpressible.",
       "same": "Not established either way. Treated as compose, because inventing exclusivity is the error whose cost is asymmetric."
     },
-    "whyPairsAndNotAxes": "Axes are an inference over these pairs and the inference has been wrong twice — exclusivity is not transitive, so an axis is a clique rather than a connected component, and Tooltip's two cliques overlap in `top`. The pairs are what was observed; they are recorded here and the inference is made in class-groups.ts against an explicitly configured split.",
+    "whyPairsAndNotAxes": "Axes are an inference over these pairs and the inference has been wrong twice — exclusivity is not transitive, so an axis is a clique rather than a connected component, and tooltip's two cliques overlap in `top`. The pairs are what was observed; the inference is made in class-groups.ts against an explicitly configured split.",
     "limitation": "A verdict is only as good as the example. Two classes that each set a DIFFERENT subset of properties toward the same intent — `chat-start` and `chat-end` — compose by this procedure even though no author would combine them. That direction is safe: it leaves a useless combination expressible rather than making a useful one impossible.",
-    "reproduce": "The `procedure` above is the specification, not a pointer: the script that produced this run is scratch and is not committed. Rebuilding it means emitting one case per pair against the unzipped webjar, serving that over http because a browser will not load a local stylesheet from file://, and computing the verdicts INSIDE the page — the signatures are far too large to carry out of it.",
+    "reproduce": "`just measure-exclusivity`. Never edit this file by hand — it is overwritten wholesale, and `codegen/src/verify-exclusivity.ts` fails the build when it stops describing the DaisyUI in the submodule.",
     "defectsFoundInTheProbeItself": [
       "DaisyUI's docs mark the component class with a `$$` sentinel — class=\"$$btn\". Left in, the element matches no rule and every pair looks identical.",
       "The example already carried a member of the group under test: `class=\"mask mask-squircle\"` made every single-member mask case render as a squircle, so the run measured stylesheet order and reported one of the 105 pairs as indistinguishable.",
       "No theme was loaded, so --color-neutral and its siblings were undefined and every colour-dependent class computed to the same transparent black. `badge-soft|ghost` and `alert-outline|soft` were called indistinguishable for that reason alone, and `utilities/join.css` was missing entirely so `join-vertical|horizontal` was measured against no rules.",
-      "All three were found by reading what the browser computed for a suspicious verdict, never by re-reading the probe."
+      "All three were found by reading what the browser computed for a suspicious verdict, never by re-reading the probe. Each now has a test in exclusivity-probe.test.ts named after it."
     ]
   },
   "groups": {
     "accordion": {
       "modifiers": {
-        "compose": ["arrow|plus", "arrow|open", "arrow|close", "plus|open", "plus|close", "open|close"]
+        "compose": [
+          "arrow|plus",
+          "arrow|open",
+          "arrow|close",
+          "plus|open",
+          "plus|close",
+          "open|close"
+        ]
       }
     },
     "alert": {
       "directions": {
-        "exclusive": ["vertical|horizontal"]
+        "exclusive": [
+          "vertical|horizontal"
+        ]
       },
       "styles": {
-        "exclusive": ["outline|dash"],
-        "compose": ["outline|soft", "dash|soft"]
+        "exclusive": [
+          "outline|dash"
+        ],
+        "compose": [
+          "outline|soft",
+          "dash|soft"
+        ]
       }
     },
     "aura": {
@@ -58,75 +72,147 @@
           "gold|glow",
           "silver|glow"
         ],
-        "compose": ["dual|holo", "holo|gold", "holo|silver"]
+        "compose": [
+          "dual|holo",
+          "holo|gold",
+          "holo|silver"
+        ]
       }
     },
     "avatar": {
       "modifiers": {
-        "exclusive": ["online|offline"],
-        "compose": ["online|placeholder", "offline|placeholder"]
+        "exclusive": [
+          "online|offline"
+        ],
+        "compose": [
+          "online|placeholder",
+          "offline|placeholder"
+        ]
       }
     },
     "badge": {
       "styles": {
-        "exclusive": ["outline|dash", "soft|ghost"],
-        "compose": ["outline|soft", "outline|ghost", "dash|soft", "dash|ghost"]
+        "exclusive": [
+          "outline|dash",
+          "soft|ghost"
+        ],
+        "compose": [
+          "outline|soft",
+          "outline|ghost",
+          "dash|soft",
+          "dash|ghost"
+        ]
       }
     },
     "button": {
       "behaviors": {
-        "compose": ["active|disabled"]
+        "compose": [
+          "active|disabled"
+        ]
       },
       "modifiers": {
-        "exclusive": ["wide|block", "block|square", "block|circle", "square|circle"],
-        "compose": ["wide|square", "wide|circle"]
+        "exclusive": [
+          "wide|block",
+          "block|square",
+          "block|circle",
+          "square|circle"
+        ],
+        "compose": [
+          "wide|square",
+          "wide|circle"
+        ]
       },
       "styles": {
-        "exclusive": ["outline|dash", "outline|soft", "dash|soft", "soft|ghost", "ghost|link"],
-        "compose": ["outline|ghost", "outline|link", "dash|ghost", "dash|link", "soft|link"]
+        "exclusive": [
+          "outline|dash",
+          "outline|soft",
+          "dash|soft",
+          "soft|ghost",
+          "ghost|link"
+        ],
+        "compose": [
+          "outline|ghost",
+          "outline|link",
+          "dash|ghost",
+          "dash|link",
+          "soft|link"
+        ]
       }
     },
     "card": {
       "modifiers": {
-        "exclusive": ["side|image-full"]
+        "exclusive": [
+          "side|image-full"
+        ]
       },
       "styles": {
-        "exclusive": ["border|dash"]
+        "exclusive": [
+          "border|dash"
+        ]
       }
     },
     "carousel": {
       "directions": {
-        "compose": ["horizontal|vertical"]
+        "compose": [
+          "horizontal|vertical"
+        ]
       },
       "modifiers": {
-        "exclusive": ["start|center", "start|end", "center|end"]
+        "exclusive": [
+          "start|center",
+          "start|end",
+          "center|end"
+        ]
       }
     },
     "chat": {
       "placements": {
-        "compose": ["start|end"]
+        "compose": [
+          "start|end"
+        ]
       }
     },
     "collapse": {
       "modifiers": {
-        "compose": ["arrow|plus", "arrow|open", "arrow|close", "plus|open", "plus|close", "open|close"]
+        "compose": [
+          "arrow|plus",
+          "arrow|open",
+          "arrow|close",
+          "plus|open",
+          "plus|close",
+          "open|close"
+        ]
       }
     },
     "divider": {
       "directions": {
-        "exclusive": ["vertical|horizontal"]
+        "exclusive": [
+          "vertical|horizontal"
+        ]
       },
       "placements": {
-        "compose": ["start|end"]
+        "compose": [
+          "start|end"
+        ]
       }
     },
     "dropdown": {
       "modifiers": {
-        "exclusive": ["hover|open"],
-        "compose": ["hover|close", "open|close"]
+        "exclusive": [
+          "hover|open"
+        ],
+        "compose": [
+          "hover|close",
+          "open|close"
+        ]
       },
       "placements": {
-        "exclusive": ["start|center", "start|end", "center|end", "top|bottom"],
+        "exclusive": [
+          "start|center",
+          "start|end",
+          "center|end",
+          "top|bottom"
+        ],
         "compose": [
           "start|top",
           "start|bottom",
@@ -150,7 +236,9 @@
     },
     "footer": {
       "directions": {
-        "same": ["horizontal|vertical"]
+        "same": [
+          "horizontal|vertical"
+        ]
       }
     },
     "indicator": {
@@ -178,12 +266,16 @@
     },
     "join": {
       "directions": {
-        "exclusive": ["vertical|horizontal"]
+        "exclusive": [
+          "vertical|horizontal"
+        ]
       }
     },
     "list": {
       "modifiers": {
-        "exclusive": ["col-wrap|col-grow"]
+        "exclusive": [
+          "col-wrap|col-grow"
+        ]
       }
     },
     "loading": {
@@ -209,7 +301,9 @@
     },
     "mask": {
       "modifiers": {
-        "exclusive": ["half-1|half-2"]
+        "exclusive": [
+          "half-1|half-2"
+        ]
       },
       "styles": {
         "exclusive": [
@@ -323,15 +417,24 @@
     },
     "megamenu": {
       "modifiers": {
-        "compose": ["wide|full"]
+        "compose": [
+          "wide|full"
+        ]
       }
     },
     "menu": {
       "directions": {
-        "exclusive": ["vertical|horizontal"]
+        "exclusive": [
+          "vertical|horizontal"
+        ]
       },
       "modifiers": {
-        "exclusive": ["disabled|paged", "active|paged", "focus|paged", "dropdown-show|paged"],
+        "exclusive": [
+          "disabled|paged",
+          "active|paged",
+          "focus|paged",
+          "dropdown-show|paged"
+        ],
         "same": [
           "disabled|active",
           "disabled|focus",
@@ -360,56 +463,91 @@
     },
     "pagination": {
       "directions": {
-        "exclusive": ["vertical|horizontal"]
+        "exclusive": [
+          "vertical|horizontal"
+        ]
       }
     },
     "rating": {
       "modifiers": {
-        "compose": ["half|hidden"]
+        "compose": [
+          "half|hidden"
+        ]
       }
     },
     "stack": {
       "modifiers": {
-        "same": ["top|bottom", "top|start", "top|end", "bottom|start", "bottom|end", "start|end"]
+        "same": [
+          "top|bottom",
+          "top|start",
+          "top|end",
+          "bottom|start",
+          "bottom|end",
+          "start|end"
+        ]
       }
     },
     "stat": {
       "directions": {
-        "exclusive": ["horizontal|vertical"]
+        "exclusive": [
+          "horizontal|vertical"
+        ]
       }
     },
     "steps": {
       "directions": {
-        "exclusive": ["vertical|horizontal"]
+        "exclusive": [
+          "vertical|horizontal"
+        ]
       }
     },
     "swap": {
       "styles": {
-        "compose": ["rotate|flip"]
+        "compose": [
+          "rotate|flip"
+        ]
       }
     },
     "tab": {
       "modifiers": {
-        "same": ["tab-active|tab-disabled"]
+        "same": [
+          "tab-active|tab-disabled"
+        ]
       },
       "placements": {
-        "exclusive": ["top|bottom"]
+        "exclusive": [
+          "top|bottom"
+        ]
       },
       "styles": {
-        "compose": ["box|border", "box|lift", "border|lift"]
+        "compose": [
+          "box|border",
+          "box|lift",
+          "border|lift"
+        ]
       }
     },
     "table": {
       "modifiers": {
-        "compose": ["zebra|pin-rows", "zebra|pin-cols", "pin-rows|pin-cols"]
+        "compose": [
+          "zebra|pin-rows",
+          "zebra|pin-cols",
+          "pin-rows|pin-cols"
+        ]
       }
     },
     "timeline": {
       "directions": {
-        "compose": ["horizontal|vertical"]
+        "compose": [
+          "horizontal|vertical"
+        ]
       },
       "modifiers": {
-        "compose": ["snap-icon|box", "snap-icon|compact", "box|compact"]
+        "compose": [
+          "snap-icon|box",
+          "snap-icon|compact",
+          "box|compact"
+        ]
       }
     },
     "toast": {

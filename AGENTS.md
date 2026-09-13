@@ -25,6 +25,12 @@ taking a `SPAN` and shipped that way in v0.4.0, four pages were missing five fun
 them, and no signature on any page mentioned the `id` parameter every function takes. Nothing
 failed, because nothing checked them.
 
+**`codegen/exclusivity.json` joined that rule on 2026-09-13.** It records, for every pair of
+classes in every multi-member DaisyUI class group, whether a browser says the two can be worn at
+once — and that decides which groups become a Kotlin enum. It is written wholesale by
+`just measure-exclusivity`, which needs a system Chromium, and `:lib:verifyExclusivity` fails the
+build when it stops describing the submodule. → skill **`kdaisyui-daisyui-upgrade`**.
+
 Note the singular: **`docs/reference.md`** is the hand-written entry point and is NOT generated.
 Nothing else under `docs/` is either. One editorial fact per page is hand-written too — its
 one-line description, in `codegen-config.json` → `docSummaries`.
@@ -111,6 +117,7 @@ answer is to delete the code.
 | Task | Skill |
 |---|---|
 | Codegen, component shape, config knobs, adding a component, version ceiling | `kdaisyui-codegen` |
+| Bumping DaisyUI, or a failure from `generated-sources-drift` / `verifyExclusivity` / `checkComponentApi` | `kdaisyui-daisyui-upgrade` (`/daisyui-upgrade`) |
 | Any test work, run configurations, `just` recipes, E2E wiring, Cucumber | `kdaisyui-testing` |
 | Versioning, publishing, what CI does | `kdaisyui-release` |
 | The Gradle build itself — buildSrc, settings, toolchains, compiler flags, adding a plugin, any build warning | `kdaisyui-build` |
@@ -173,7 +180,9 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 ## Anti-patterns
 
-- Editing `lib/generated/**` or `docs/reference/**`
+- Editing `lib/generated/**`, `docs/reference/**` or `codegen/exclusivity.json`
+- Reasoning about whether two DaisyUI classes conflict instead of measuring it — six attempts
+  derived it from the CSS or from the shape of class names, and all six were wrong
 - Hardcoding CSS class strings instead of using the generated enums
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
 - Assuming there is no release automation — there is, see `kdaisyui-release`

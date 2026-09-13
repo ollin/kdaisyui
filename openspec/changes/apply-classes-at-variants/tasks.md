@@ -55,13 +55,18 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
   `halfStars`, `menu-focus` → `focused`, `timeline-box` → `boxed`. Each was read from the CSS; see
   `design.md`.
 
-- [ ] 2.1 `. d` **Decide how a two-axis placement is declared.** DaisyUI files `indicator-top` and
-  `indicator-start` under one category; they are a vertical and a horizontal axis and each is
-  exclusive within itself. Config, or derived from the class names, or per-component override.
+- [x] 2.1 `. d` **Decided: config declares the axes, the measurement checks them.** A split cannot
+  be derived — exclusivity is not transitive, so an axis is a clique and `tooltip`'s two cliques
+  overlap in `top`. So `enumNames` names the axes and `classifyGroups` rejects any axis that is
+  not a clique, and any split whose axes are exclusive across as well as within.
 - [x] 2.2 `^ F (internal)` Classify each group as exclusive or independent, and fail the run on a
   group the classifier cannot decide — silence here would reintroduce boolean flags by accident.
-- [ ] 2.3 `. r (internal)` Pin the classification in a test against the measured numbers: 53 of 59
-  exclusive, `avatar` and `table` modifiers independent.
+  **Re-done against the measurement**: the category no longer decides anything.
+  `codegen/exclusivity.json` holds 310 pairwise verdicts and the classifier reads them.
+- [x] 2.3 `. r (internal)` Pin the classification in a test against the measured numbers.
+  **The numbers in this task were superseded before it was written** — they came from the
+  co-occurrence probe. Pinned instead: the fifteen single-choice groups by name, the four that
+  need an axis split, and the 44/310 totals.
 
 ## 3. Exclusive groups become enums — 1.5 h
 

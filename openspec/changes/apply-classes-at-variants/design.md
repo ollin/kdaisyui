@@ -675,6 +675,72 @@ The measurement is committed as **pairwise verdicts**, not as axes. The verdicts
 observed; the axes are an inference over them, and an inference that has now been wrong twice
 does not belong in a data file pretending to be a measurement.
 
+## Probe 4c: measuring the measurement — three defects, 2026-09-13
+
+Before turning 4b's verdicts into a committed data file, three of them were checked against the
+computed values rather than accepted. All three were defects in the probe, and each had been
+producing the *same* verdict — "these two are indistinguishable here" — which 4b had written up
+as a limitation of the example markup.
+
+| defect | what it did | evidence |
+|---|---|---|
+| the example already carried a group member | DaisyUI's mask example is `class="mask mask-squircle"`, so every single-member case rendered as a squircle and the run compared stylesheet order | `mask-square` computed squircle's `mask-image` |
+| **no theme was loaded** | `--color-neutral` and its siblings were undefined, so every colour-dependent class computed to the same transparent black | `badge-neutral badge-soft` and `badge-neutral badge-ghost` both computed `background-color: rgba(0,0,0,0)` |
+| the stylesheet was assembled by hand | `utilities/join.css` was never linked, so `join-vertical` and `join-horizontal` were measured against no rules at all | the group reported `same` and the file was absent from the link list |
+
+The fix for the second and third is the same and is subtractive: link `daisyui.css`, the complete
+webjar bundle with every theme in it, instead of a hand-picked subset. Assembling a cascade by
+hand is a way to be wrong that buys nothing.
+
+**14 of the 21 `same` verdicts were these defects.** `card-border|dash`, `join-vertical|horizontal`
+and `pagination-vertical|horizontal` moved to exclusive; `mask.styles` became a clean 105-for-105
+clique; `alert-outline|soft` and `badge-outline|soft` moved to *compose*, which is the opposite
+conclusion from the one 4b recorded.
+
+Every defect was found by reading what the browser computed for a verdict that looked wrong.
+None was found by re-reading the probe. That is the same pattern as the five earlier refutations,
+one level up: **the instrument needs measuring too.**
+
+### What the corrected run establishes
+
+310 pairs, 44 groups: 193 exclusive, 103 compose, 14 indistinguishable. Committed as
+`codegen/exclusivity.json` and verified against the browser by digest, not by transcription.
+
+**Fifteen groups are a single choice** — every pair exclusive:
+
+```
+alert.directions   card.modifiers   card.styles      carousel.modifiers  divider.directions
+join.directions    list.modifiers   loading.styles   mask.modifiers      mask.styles
+menu.directions    pagination.directions  stat.directions  steps.directions  tab.placements
+```
+
+**Four need an axis split** — `indicator`, `toast`, `dropdown`, `tooltip`, exactly the four the
+co-occurrence graph covers.
+
+**The remaining 25 stay boolean**, and that is a much larger cut than the naming section
+anticipated. Falling: `AlertEmphasis`, `BadgeEmphasis`, `ButtonEmphasis`, `ButtonLayout`,
+`AuraEffect`, `CarouselOrientation`, `FooterOrientation`, `TimelineOrientation`, `ChatSide`,
+`DividerAlignment`, `MegamenuWidth`, `ModalPosition`, `CollapseIndicator`, `CollapseState`,
+`DropdownState`. Returning, having been withdrawn on weaker evidence: **`CardLayout` and
+`ListColumn`**, both of which the browser calls exclusive.
+
+`ButtonLayout` is worth naming separately because it was recorded above as the *documented
+exception* to the name-is-the-test rule, kept on the grounds that all four members set width.
+They do — and `btn-wide btn-square` still computes a width neither produces alone, because one
+sets `max-width` and the other `width`. The exception is withdrawn by measurement.
+
+### The known weak spot, stated rather than hidden
+
+`chat-start|chat-end` composes, and no author would ever combine them. Two classes that each set
+a *different* subset of properties toward the same intent will always compose under this
+procedure: `chat-start` sets `place-items` and rounds one bubble corner, `chat-end` the other, so
+together they produce a third result. `modal.placements` fails for the same reason.
+
+This is the asymmetric-cost rule paying out exactly as designed. The consequence is that
+`daisyChat(start = true, end = true)` stays expressible and does something silly — a cost the
+escape hatch carries anyway. The alternative failure, an enum that makes a reachable combination
+impossible, is the one that cannot be worked around.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

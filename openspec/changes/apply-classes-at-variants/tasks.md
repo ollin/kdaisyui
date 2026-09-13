@@ -49,8 +49,20 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
 
 ## 3. Exclusive groups become enums — 1.5 h
 
-- [ ] 3.1 `. d` **Decide the naming.** `card-side` is one of two `modifiers`; the enum needs a name
-  DaisyUI does not supply. Per component, or a convention.
+- [x] 3.1 `. d` **Decide the naming.** Settled 2026-09-13 with Oliver: name by **intention, not
+  implementation**. Three rules and two hard cases, in `design.md`:
+  - `directions` → `Orientation`, one decision covering nine groups.
+  - **The name is the test**: where no intention name exists the group is wrong, which catches the
+    false positives the exclusivity measurement lets through (`Collapse` splits, `Menu` stays
+    boolean).
+  - Names go in `enumNames` in the config, like `docSummaries`, since DaisyUI supplies classes and
+    not group names.
+  - `ButtonEmphasis` for outline/dash/soft/ghost/link, and `ButtonLayout` for
+    wide/block/square/circle — the latter recorded as the documented exception to the name-is-the-
+    test rule.
+- [ ] 3.1a `. d` Apply the name-is-the-test rule to the remaining 34 groups. Report which ones
+  split or stay boolean, and name the rest. **A group nobody can name is a finding, not a naming
+  problem.**
 - [ ] 3.2 `^ F` Emit an enum per exclusive group instead of booleans. Test first, against
   `daisyTooltip(placement = TooltipPlacement.Top)` and against the illegal state no longer
   compiling.

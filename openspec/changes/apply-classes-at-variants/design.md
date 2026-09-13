@@ -195,6 +195,70 @@ The last two need a generated constant each, which is decision 1's rejected opti
 it is actually necessary rather than to all 555. `max-sm:megamenu-vertical` is in this
 repository's own example app, so it is a real need and not a completeness itch.
 
+## Naming: the name is the test — decided 2026-09-13
+
+Oliver's constraint: **name by intention, not implementation.** Three consequences, and the
+second one found a defect in this change's own measurement.
+
+### 1. Where a category is coherent, one rule covers many groups
+
+`directions` is nine groups saying the same thing — vertical or horizontal. The established name
+for that axis is **`Orientation`**: `MenuOrientation`, `StatOrientation`, `TimelineOrientation`.
+Alert, Carousel, Divider, Footer, Join, Menu, Stat, Steps and Timeline in one decision.
+
+### 2. Where no intention name exists, the group is wrong — and this catches what the
+### exclusivity measurement misses
+
+Co-occurrence in DaisyUI's examples is **weak evidence** of exclusivity: those examples are small,
+so absence proves little. Two groups pass the measurement and fail the name:
+
+```
+Collapse   modifiers   arrow, plus, open, close
+Menu       modifiers   disabled, active, focus, dropdown-show, paged
+```
+
+`arrow`/`plus` is the indicator icon; `open`/`close` is the state. Two concepts in one category.
+Menu is not a choice at all — three item states and a layout mode.
+
+**Failing to find a name is the signal.** `Collapse` splits into `CollapseIndicator` and
+`CollapseState`; `Menu` stays boolean. That is cheaper than a better exclusivity measurement and
+catches exactly what it lets through.
+
+### 3. Names are editorial, so they live in config
+
+DaisyUI supplies the classes, not a name for the group. Not derivable — so `enumNames` in
+`codegen-config.json`, exactly like `docSummaries`, policed by the consumption guard so a stale
+entry cannot rot.
+
+### The two hard cases, settled by reading the CSS
+
+Both were flagged as weak and both were checked against `button.css` rather than argued from
+their names.
+
+**`outline, dash, soft, ghost, link` → `ButtonEmphasis`.** All five set the *same six* variables —
+`--btn-bg`, `color`, `--btn-border`, `background-image`, `--btn-inset`, `--btn-shadow`. One
+dimension, confirmed.
+
+My suspicion that `link` was the outlier was intuition and the CSS refutes it. The real outlier is
+`dash`: it shares a rule block with `.btn-outline` and adds only `--btn-border-style: dashed`, so
+it is outline with a dashed border rather than a sibling. Kept as a fifth entry anyway, because
+`btn-dash` alone is DaisyUI's documented form and modelling it as `Outline` + `dashed: Boolean`
+would emit `btn-outline btn-dash` instead.
+
+The sequence filled → soft → outline → ghost → link is decreasing emphasis, the same axis Material
+Design names *emphasis*.
+
+**`wide, block, square, circle` → `ButtonLayout`.** All four set width — `w-full max-w-64`,
+`w-full`, and `width: var(--size)` for the two icon shapes — so they are genuinely exclusive.
+
+But the intention splits: `wide`/`block` is how much horizontal space, `square`/`circle` is an icon
+button. Rule 2 would say split them, and splitting would lose the exclusivity guarantee, since two
+separate parameters could both set width.
+
+**This is the exception to rule 2, and it is recorded rather than the rule being quietly bent:**
+the group is real — the CSS proves it — and only the name is uncomfortable. Rule 2 rejects a group
+whose members share no *effect*; here they share one and the name is merely imperfect.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

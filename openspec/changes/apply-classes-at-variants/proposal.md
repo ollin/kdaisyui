@@ -60,11 +60,18 @@ five variant prefixes. The CSS is compiled correctly now. The API still cannot s
   536 are already reachable through a typed parameter, so such an enum would restate the existing
   API 536 times and still not express a prefix. See `design.md` decision 1.
 
-## Assumptions, and what would refute them
+## Assumptions — both measured 2026-09-13, one refuted
 
-**Assumed:** that stacking is worth supporting. *Wrong if:* the measurement in task 1.1 finds no
-real call site combining two variants, in which case a single-variant API is simpler and enough.
+**Assumed:** that stacking is worth supporting. **REFUTED.** Zero stacked variants on a DaisyUI
+class, in our code and in DaisyUI's own examples. Four DaisyUI examples do stack, and every one
+applies the stack to a Tailwind utility. Dropped: one variant per application.
 
-**Assumed:** that the variant set can be closed. *Wrong if:* Tailwind's variant list turns out to
-be open-ended in practice — `group-hover`, `peer-checked`, arbitrary `data-*` — in which case the
-type has to admit an escape hatch of its own, and the design must say so rather than pretend.
+**Assumed:** that the variant set can be closed. **Verified**, for this surface. 63 prefixed
+DaisyUI tokens in DaisyUI's examples use exactly 8 distinct variants — seven breakpoints and
+`is-drawer-close`. Nothing open-ended reaches a DaisyUI class.
+
+**A third question the measurement answered without being asked:** DaisyUI applies **no** state
+variant to its own classes. States are in scope anyway, on Oliver's instruction and on one
+recorded case — `AGENTS.md` names `dark:alert-info` as a thing that silently did nothing before
+`css-delivery` fixed the stylesheet. One attested use, zero documented ones. Thin, but it is
+evidence, and dropping stacking makes a state cost the same as a breakpoint.

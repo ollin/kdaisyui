@@ -9,15 +9,15 @@ previous run's finding says is what actually costs time.
 
 ## 1. Measure before designing — 0.2 h
 
-- [ ] 1.1 `. d` Which variants appear in real use? Count, across `example-app`, `e2e-tests`,
+- [x] 1.1 `. d` Which variants appear in real use? Count, across `example-app`, `e2e-tests`,
   `docs` and DaisyUI's own documented examples: which prefixes occur, how often, and **how often
   two are stacked on one class**. A zero stacking count refutes the stacking assumption and
   simplifies section 2.
-- [ ] 1.2 `. d` Is the variant set closeable? List every distinct prefix DaisyUI's own examples
+- [x] 1.2 `. d` Is the variant set closeable? List every distinct prefix DaisyUI's own examples
   use. If they are all breakpoints, states and DaisyUI's two, the type can be closed; if
   `group-*`, `peer-*` or arbitrary values appear, it cannot, and the design must carry an escape
   hatch rather than pretend.
-- [ ] 1.3 `. d` Triage the 19 classes no typed parameter reaches. Separate the **defects**
+- [x] 1.3 `. d` Triage the 19 classes no typed parameter reaches. Separate the **defects**
   (`step-*` missing as a part, `tab-active`/`tab-disabled` belonging to #342) from the genuinely
   unparameterised (`join-item`, `indicator-item`, `avatar-group`, `floating-label`, `list-row`)
   from the non-classes (#345). Record which group each falls in; only the middle group is this
@@ -32,12 +32,13 @@ alternatives, because the next person will otherwise re-open it.
   a wrapper function, or something else. Constraint: it must read well at a call site that already
   names a parameter — `size = ButtonSize.Lg at Breakpoint.Lg` — and must not require every generated
   enum to gain a method.
-- [ ] 2.2 `. d` **Decide the variant set**, informed by 1.2. Closed enum, open value type, or a
-  closed enum plus a documented escape hatch.
-- [ ] 2.3 `. d` **Decide composition**, informed by 1.1. If stacking is supported: what forbids
-  `Breakpoint.Md at Breakpoint.Lg`, which is meaningless, while allowing `Dark at Breakpoint.Md`?
-  Type-level separation of breakpoints from states is the obvious answer and should be stated as a
-  decision rather than assumed.
+- [x] 2.2 `. d` **Decide the variant set**, informed by 1.2. **Settled by the measurement: a
+  closed set, no escape hatch.** Seven breakpoints plus DaisyUI's own drawer variants cover every
+  variant DaisyUI applies to a DaisyUI class; nothing open-ended reaches one. States are included
+  on Oliver's instruction plus the one recorded `dark:alert-info` case, not on frequency.
+- [x] 2.3 ~~**Decide composition**~~ — **removed, assumption refuted by 1.1.** Zero stacked
+  variants on a DaisyUI class in either source. One variant per application, so there is no
+  combination to forbid and no type-level separation to design.
 - [ ] 2.4 `^ r (internal)` Add the type with its tests, unreferenced by any generated code.
 
 ## 3. Carry it through the generator — 0.6 h

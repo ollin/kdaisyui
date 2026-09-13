@@ -72,6 +72,68 @@ So #345 deletes them from one place and this change may give them a home in anot
 deciding together in task 2.2 rather than separately: #345's fix is right either way, but if the
 variant type models them, the deletion is a move rather than a loss.
 
+## Block 1 measured, 2026-09-13 — two assumptions refuted
+
+Both *Wrong if* clauses in the proposal fired. That is the clause working, not the plan failing.
+
+**The first measurement asked the wrong question and is recorded as such.** It counted variants
+across every class in DaisyUI's examples, including Tailwind utilities this library will never
+type — 26 distinct variants, 16 uncategorised, 9 of them open-ended forms like `peer-checked` and
+`[--tglbg:…]`. That says the variant set is unbounded, which is true and irrelevant: the type only
+has to express variants applied to a **DaisyUI** class. Re-measured on that basis, with a
+tokeniser that respects brackets, because arbitrary values contain colons.
+
+### What is applied to a DaisyUI class
+
+63 prefixed tokens in DaisyUI's own examples, **8 distinct variants**:
+
+| | count |
+|---|---|
+| `sm` `lg` `md` `xl` `max-sm` `max-lg` `max-md` | 17, 17, 13, 6, 4, 1, 1 |
+| `is-drawer-close` | 4 |
+| **anything else** | **0** |
+
+### 1.1 — stacking is refuted, in both sources
+
+Our code: 12 prefixed tokens, **0 stacked**. DaisyUI's examples: **0 stacked on a DaisyUI class**.
+
+Four DaisyUI examples do stack — `max-lg:peer-checked:block`, `checked:[--tglbg:…]` — and every
+one applies its stack to a **Tailwind utility**, never to a DaisyUI class. So stacking is real in
+Tailwind and absent from the surface this change types.
+
+**Decided: drop stacking.** One variant per application. This removes the expensive decision from
+block 2 — the one that needed a type-level rule forbidding `Breakpoint.Md at Breakpoint.Lg` while
+allowing `Dark at Breakpoint.Md`. There is nothing to forbid, because there is nothing to combine.
+
+### 1.2 — the variant set IS closeable, for this surface
+
+Seven breakpoints and DaisyUI's own drawer variants. Nothing open-ended reaches a DaisyUI class.
+
+**Decided: a closed set, no escape hatch.** `extraClasses` remains for everything outside it,
+which is what it is for.
+
+### States: kept, on better evidence than the instruction
+
+DaisyUI applies **no** state variant to its own classes — `hover:`, `focus:`, `checked:` occur
+only on Tailwind utilities. So the measurement does not support including them, and Oliver's
+instruction to include them is unattested by DaisyUI's documentation.
+
+It is attested here. `AGENTS.md` records `dark:alert-info` as a case that *silently did nothing*
+before `css-delivery` compiled the stylesheet properly — a real person wanted a state on a DaisyUI
+class and got no CSS. That is one recorded use and zero documented ones, which is thin but is
+evidence, and it points the same way as the instruction.
+
+**Decided: keep states, and say why they are in on that basis rather than on frequency.** The cost
+is now small, since dropping stacking makes a state and a breakpoint the same shape.
+
+### What this does to the estimate
+
+Block 2's frozen 1.2 h priced **three** decisions. The measurement removed one and settled a
+second. **The estimate is NOT revised** — per the calibration protocol a frozen number stands, and
+revising it here would destroy the data point this change exists to produce. The actual will be
+measured against 1.2 h, and the gap recorded as "scope removed by measurement", the same way run 1
+kept its two-valued block 2 estimate rather than overwriting it.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

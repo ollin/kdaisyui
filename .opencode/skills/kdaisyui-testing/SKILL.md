@@ -20,6 +20,22 @@ submodules. These are the bulk of the suite (`:lib:test` runs ~566 tests).
 `generated-sources-drift` job fails any hand edit. Fix `test-generator.ts` instead; see the
 `kdaisyui-codegen` skill.
 
+**A compile failure here is a FINDING, not a chore.** Their input is DaisyUI's own documented
+markup, so they assert that the generated API can express what DaisyUI documents. When an API
+change stops them compiling, the question is whether the new API can still reach that markup —
+and making them compile again is the proof that it can. Changing the API to silence them, or
+excluding a case, throws away the only check of that claim.
+
+## Test files are reviewed as production code
+
+`code_health_review` applies to `*Test.kt` and `*.test.ts` exactly as to `src/`, and Object
+Calisthenics applies to both: one level of indentation per function, no abbreviated names,
+encoded strings wrapped in a type rather than `split()` at every call site.
+
+Nothing automates this. `koverVerify` and `:lib:pitest` both pass happily on an unreadable
+test — one asks whether the line ran, the other whether it was asserted, and neither can ask
+whether a human can follow it. Run the review by hand on any test file you touch.
+
 ## 2. Hand-written unit tests — `:lib:test`, `:ktor-integration:test`
 
 Framework is **kotlin-test** (`useKotlinTest(versions.kotlin)`), *not* Kotest and not JUnit

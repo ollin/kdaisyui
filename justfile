@@ -30,6 +30,20 @@ update-api:
     @echo
     @git --no-pager diff -- lib/api || true
 
+# Re-measure which DaisyUI classes can be worn at once, rewriting codegen/exclusivity.json,
+# and show what changed. That file decides which class groups become a Kotlin enum, so a
+# changed verdict is a changed public API — read the diff, never re-dump it blindly.
+# Needs Node, the submodules and a system Chromium; run it after a DaisyUI version bump.
+measure-exclusivity:
+    ./gradlew :e2e-tests:measureExclusivity
+    @echo
+    @git --no-pager diff --stat -- codegen/exclusivity.json || true
+
+# Fail when codegen/exclusivity.json no longer describes the DaisyUI in the submodule.
+# Cheap and browser-free; this is what CI runs. Use `measure-exclusivity` to fix a failure.
+verify-exclusivity:
+    ./gradlew :lib:verifyExclusivity
+
 # Sync DaisyUI submodule to the tag matching the daisyui version in gradle/libs.versions.toml
 sync-daisyui:
     ./gradlew :lib:checkoutDaisyuiTag

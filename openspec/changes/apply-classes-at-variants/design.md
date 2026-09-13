@@ -134,6 +134,67 @@ revising it here would destroy the data point this change exists to produce. The
 measured against 1.2 h, and the gap recorded as "scope removed by measurement", the same way run 1
 kept its two-valued block 2 estimate rather than overwriting it.
 
+## The shape changed twice more, and both times the measurement did it
+
+### A prefix mostly lands on a BOOLEAN, which has no value to pass
+
+The call shape decision (2.1) turned on something nobody had measured: what kind of typed class
+actually receives a prefix. Of the 63 prefixed daisyUI tokens in DaisyUI's examples:
+
+| backed by | count | example |
+|---|---|---|
+| an **enum** — a value exists today | 16 | `lg:btn-lg` |
+| a **boolean** — no value exists | 43 | `lg:card-side`, `xl:stats-horizontal` |
+| the component class or a part | 4 | `lg:tooltip` |
+
+**68% of the need is on booleans.** `lg:card-side` is `side: Boolean = false` — there is nothing
+to hand to a function.
+
+**This partly reverses the rejection in decision 1.** Oliver proposed values for the classes; the
+measurement said 536 are already typed and I concluded values were redundant. They are redundant
+for *naming* a class. They are the *prerequisite* for prefixing one, and that had not been checked.
+
+### Option C, and a measurement error worth keeping
+
+C — turn mutually-exclusive groups into enums, which gives them values — was chosen on
+2026-09-13. Measured before building, because three assumptions had already fallen in this change.
+
+**The first run of that measurement was wrong, and the error is the interesting part.** It counted
+two classes of one category on one element as proof the category is not exclusive. But
+`menu-vertical lg:menu-horizontal` is not two classes holding at once — it is *one* class at two
+breakpoints, which is precisely the pattern this change exists to type. Counting it as
+co-occurrence concludes a group is not exclusive **from evidence that it is**.
+
+Re-measured over unprefixed classes only:
+
+| | first run | corrected |
+|---|---|---|
+| groups that genuinely co-occur | 14 of 59 | **6 of 59** |
+| prefixed boolean classes C would cover | 3 of 19 | **11 of 19** |
+
+### What the remaining six co-occurrences actually are
+
+Four are not counter-examples either. `indicator-top indicator-start`, `toast-top toast-end`,
+`dropdown-top dropdown-center`, `tooltip-top tooltip-start` are **two axes** — a vertical and a
+horizontal placement — that DaisyUI files under one category. Split by axis, each is exclusive,
+and six more prefixed classes become covered.
+
+Two are genuinely independent flags and stay boolean: `avatar-online` + `avatar-placeholder`,
+`table-pin-rows` + `table-pin-cols`.
+
+### Coverage, finally
+
+| | count |
+|---|---|
+| covered by exclusive-group enums | 11 |
+| covered by splitting placements into two axes | +6 |
+| **lone members with no group to join** — `drawer-open`, `megamenu-vertical` | 2 |
+| **total prefixed boolean classes** | **19** |
+
+The last two need a generated constant each, which is decision 1's rejected option applied where
+it is actually necessary rather than to all 555. `max-sm:megamenu-vertical` is in this
+repository's own example app, so it is a real need and not a completeness itch.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

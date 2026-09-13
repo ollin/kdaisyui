@@ -1,66 +1,90 @@
 # Tasks
 
-Ordered by uncertainty before dependency. Section 1 is measurement, and its results can rewrite
-section 2 before a line of the API is designed.
+**Re-scoped 2026-09-13 to option C**, after block 1 measured that 68% of the prefixes land on
+boolean parameters, which have no value to pass. Prefixing them requires values; the cheapest
+honest way to get values for the groups that need them is the enum conversion already identified
+as worth doing on its own, because `daisyTooltip(top = true, bottom = true)` compiles today.
 
-Estimates frozen 2026-09-13 before starting, per `estimate-calibration`. Block 2 is priced high on
-purpose: it carries **three** open decisions and no precedent in this repository, which the
-previous run's finding says is what actually costs time.
+**The original 2.8 h estimate is void, not revised** — it priced a different change. It stands in
+the run file as the estimate for the change as first scoped, with the reason it was superseded.
+Block 1's 0.2 h stands and was measured against.
 
-## 1. Measure before designing — 0.2 h
+New estimate frozen 2026-09-13, priced by open decisions per the calibration finding:
 
-- [x] 1.1 `. d` Which variants appear in real use? Count, across `example-app`, `e2e-tests`,
-  `docs` and DaisyUI's own documented examples: which prefixes occur, how often, and **how often
-  two are stacked on one class**. A zero stacking count refutes the stacking assumption and
-  simplifies section 2.
-- [x] 1.2 `. d` Is the variant set closeable? List every distinct prefix DaisyUI's own examples
-  use. If they are all breakpoints, states and DaisyUI's two, the type can be closed; if
-  `group-*`, `peer-*` or arbitrary values appear, it cannot, and the design must carry an escape
-  hatch rather than pretend.
-- [x] 1.3 `. d` Triage the 19 classes no typed parameter reaches. Separate the **defects**
-  (`step-*` missing as a part, `tab-active`/`tab-disabled` belonging to #342) from the genuinely
-  unparameterised (`join-item`, `indicator-item`, `avatar-group`, `floating-label`, `list-row`)
-  from the non-classes (#345). Record which group each falls in; only the middle group is this
-  change's business.
+| Block | Open decisions | Estimate |
+|---|---|---|
+| 2 classify exclusivity | 1 — how axis-split placements are declared | 1.0 h |
+| 3 exclusive groups become enums | 1 — naming, e.g. `CardLayout.Side` vs `CardSide` | 1.5 h |
+| 4 constants for the two lone flags | 0 | 0.4 h |
+| 5 the variant function | 1 — the call shape, carried over as 2.1 | 0.6 h |
+| 6 the five genuine parameter gaps | 0 | 0.4 h |
+| 7 migration note and docs | 0 | 0.6 h |
+| 8 gate, evaluation | 0 | 0.5 h |
+| | **Total** | **5.0 h** |
 
-## 2. Design the variant type — 1.2 h
+## 1. Measure before designing — 0.2 h — DONE
 
-Three decisions, none with a precedent here. Each gets written down with its rejected
-alternatives, because the next person will otherwise re-open it.
+- [x] 1.1 `. d` Does real code stack two variants? **Refuted** — 0 in our code, 0 on a daisyUI
+  class in DaisyUI's examples. One variant per application; the composition decision is gone.
+- [x] 1.2 `. d` Is the variant set closeable? **Verified** — 63 prefixed daisyUI tokens use 8
+  variants: seven breakpoints and `is-drawer-close`. Nothing open-ended reaches a daisyUI class.
+- [x] 1.3 `. d` Triage the 19 unreached classes: 4 are not classes (#345), 2 belong to #342, 8
+  are a missing `step-*` part, 5 are this change's business.
+- [x] 1.4 `. d` **Added mid-block.** What kind of class receives a prefix? 16 enum-backed, **43
+  boolean-backed**, 4 component classes. This is what re-scoped the change.
+- [x] 1.5 `. d` **Added mid-block.** How much does option C cover? 11 of 19 directly, 17 with
+  placements split by axis, 2 needing a constant. First run of this measurement was wrong and the
+  error is recorded in `design.md` — it read `menu-vertical lg:menu-horizontal` as proof a group
+  is not exclusive, from evidence that it is.
 
-- [ ] 2.1 `. d` **Decide the call shape.** `ButtonSize.Lg at Breakpoint.Lg`, an infix on the enum,
-  a wrapper function, or something else. Constraint: it must read well at a call site that already
-  names a parameter — `size = ButtonSize.Lg at Breakpoint.Lg` — and must not require every generated
-  enum to gain a method.
-- [x] 2.2 `. d` **Decide the variant set**, informed by 1.2. **Settled by the measurement: a
-  closed set, no escape hatch.** Seven breakpoints plus DaisyUI's own drawer variants cover every
-  variant DaisyUI applies to a DaisyUI class; nothing open-ended reaches one. States are included
-  on Oliver's instruction plus the one recorded `dark:alert-info` case, not on frequency.
-- [x] 2.3 ~~**Decide composition**~~ — **removed, assumption refuted by 1.1.** Zero stacked
-  variants on a DaisyUI class in either source. One variant per application, so there is no
-  combination to forbid and no type-level separation to design.
-- [ ] 2.4 `^ r (internal)` Add the type with its tests, unreferenced by any generated code.
+## 2. Classify exclusivity — 1.0 h
 
-## 3. Carry it through the generator — 0.6 h
+- [ ] 2.1 `. d` **Decide how a two-axis placement is declared.** DaisyUI files `indicator-top` and
+  `indicator-start` under one category; they are a vertical and a horizontal axis and each is
+  exclusive within itself. Config, or derived from the class names, or per-component override.
+- [ ] 2.2 `^ F (internal)` Classify each group as exclusive or independent, and fail the run on a
+  group the classifier cannot decide — silence here would reintroduce boolean flags by accident.
+- [ ] 2.3 `. r (internal)` Pin the classification in a test against the measured numbers: 53 of 59
+  exclusive, `avatar` and `table` modifiers independent.
 
-- [ ] 3.1 `. d` **Decide how a variant reaches a parameter.** Whether the generated `variant`/
-  `size` parameters accept the new type, whether the booleans do, or whether a separate parameter
-  carries them. One decision, and it determines the whole of 3.2.
-- [ ] 3.2 `^ F` Emit it. Test first, against `daisyButton(size = ButtonSize.Lg at Breakpoint.Lg)`
-  producing `class="btn lg:btn-lg"`.
-- [ ] 3.3 `^ F` Regenerate; read the diff; update both API baselines with
-  `:lib:updateComponentApi` and `:lib:updateKotlinAbi`, reading each.
+## 3. Exclusive groups become enums — 1.5 h
 
-## 4. The genuine parameter gaps — 0.4 h
+- [ ] 3.1 `. d` **Decide the naming.** `card-side` is one of two `modifiers`; the enum needs a name
+  DaisyUI does not supply. Per component, or a convention.
+- [ ] 3.2 `^ F` Emit an enum per exclusive group instead of booleans. Test first, against
+  `daisyTooltip(placement = TooltipPlacement.Top)` and against the illegal state no longer
+  compiling.
+- [ ] 3.3 `^ F` Regenerate; read the diff; update both API baselines, reading each.
 
-- [ ] 4.1 `^ F` Add typed parameters for the classes 1.3 put in the middle group. Defects found
-  there go to their issues, not into this change.
+## 4. The two lone flags — 0.4 h
 
-## 5. Gate and adoption — 0.4 h
+- [ ] 4.1 `^ F` Generated constants for `drawer-open` and `megamenu-vertical`, which have no group
+  to join and are prefixed in real use — `max-sm:megamenu-vertical` is in this repository's own
+  example app.
 
-- [ ] 5.1 Full green per `openspec/config.yaml` — repo-wide compile, complete suite including e2e,
-  coverage, `analyze_change_set`, plus `:lib:checkComponentApi`.
-- [ ] 5.2 `openspec validate --all --strict`.
-- [ ] 5.3 `. d` **How to migrate** is not needed — this change is additive — but `README.md` gains
-  a usage example, because an API nobody can find is not an improvement over a string.
-- [ ] 5.4 Write the evaluation under `./tmp/` for Oliver to adopt.
+## 5. The variant function — 0.6 h
+
+- [ ] 5.1 `. d` **Decide the call shape.** Oliver chose a FUNCTION over a method, for IntelliJ
+  completion from the parameter position — and because a method would force every generated enum
+  to gain one. Open: argument order, name, and what it returns.
+- [ ] 5.2 `^ F` The seven breakpoints, the states, and DaisyUI's drawer variants as values, with
+  the function that applies one to a class value.
+- [ ] 5.3 `^ F` Regenerate and prove the measured cases: `lg:btn-lg`, `max-sm:megamenu-vertical`,
+  `xl:stats-horizontal`.
+
+## 6. The genuine parameter gaps — 0.4 h
+
+- [ ] 6.1 `^ F` `avatar-group`, `floating-label`, `image-full`, `join-item`, `list-row`. Defects
+  from 1.3 go to their issues, not here.
+
+## 7. Migration and documentation — 0.6 h
+
+- [ ] 7.1 `. d` **How to migrate.** This is the largest break the library has shipped — every
+  exclusive boolean group becomes an enum parameter. Name every affected function.
+- [ ] 7.2 `. d` `README.md` usage example, and the `kdaisyui-codegen` skill.
+
+## 8. Gate and adoption — 0.5 h
+
+- [ ] 8.1 Full green per `openspec/config.yaml`, plus `:lib:checkComponentApi`.
+- [ ] 8.2 `openspec validate --all --strict`.
+- [ ] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt.

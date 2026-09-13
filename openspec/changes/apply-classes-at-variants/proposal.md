@@ -33,6 +33,18 @@ This is also the gap `css-delivery` was written about from the other side: `max-
 `dark:alert-info` once silently did nothing, because DaisyUI's prebuilt stylesheet shipped only
 five variant prefixes. The CSS is compiled correctly now. The API still cannot say it.
 
+## Re-scoped 2026-09-13 — this change now also converts exclusive groups to enums
+
+Block 1 measured that **68% of prefixes land on a boolean parameter**, which has no value to pass
+to anything. So a variant API alone cannot serve the majority of its own use case.
+
+Getting values for those classes is the enum conversion this repository already had reason to
+want: `daisyTooltip(top = true, bottom = true)` compiles today and emits two contradictory
+classes. 53 of 59 class groups are mutually exclusive, measured. Making them enums fixes the
+illegal state **and** produces the values the variant function needs.
+
+Both halves are one change because neither is much use alone. See `design.md`.
+
 ## What Changes
 
 - **A variant type**, covering Tailwind breakpoints (`sm`…`2xl`, and the `max-*` forms), states

@@ -60,7 +60,7 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
   - `ButtonEmphasis` for outline/dash/soft/ghost/link, and `ButtonLayout` for
     wide/block/square/circle — the latter recorded as the documented exception to the name-is-the-
     test rule.
-- [ ] 3.1a `. d` Apply the name-is-the-test rule to the remaining 34 groups. Report which ones
+- [x] 3.1a `. d` Apply the name-is-the-test rule to the remaining 34 groups. Report which ones
   split or stay boolean, and name the rest. **A group nobody can name is a finding, not a naming
   problem.**
 - [ ] 3.2 `^ F` Emit an enum per exclusive group instead of booleans. Test first, against

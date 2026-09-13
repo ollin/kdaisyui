@@ -259,6 +259,65 @@ separate parameters could both set width.
 the group is real — the CSS proves it — and only the name is uncomfortable. Rule 2 rejects a group
 whose members share no *effect*; here they share one and the name is merely imperfect.
 
+## The rule applied to all 36 groups — 2026-09-13
+
+**Eight of 36 fail the name test.** That is 22%, and it is the rule earning its place: every one
+of those eight passed the co-occurrence measurement, so without it they would have shipped as
+enums whose members share no intention.
+
+### Named (28)
+
+| Rule | Name | Groups |
+|---|---|---|
+| `directions` → `Orientation` | `AlertOrientation`, `CarouselOrientation`, `DividerOrientation`, `FooterOrientation`, `JoinOrientation`, `MenuOrientation`, `StatOrientation`, `StepsOrientation`, `TimelineOrientation` | 9 |
+| surface treatment → `Emphasis` | `AlertEmphasis`, `BadgeEmphasis`, `ButtonEmphasis` | 3 |
+| the rest, named individually | see below | 16 |
+
+```
+Aura      styles      AuraEffect        dual, rainbow, holo, gold, silver, glow
+Button    modifiers   ButtonLayout      wide, block, square, circle      (documented exception)
+Card      styles      CardBorder        border, dash  → Solid, Dashed; absent = no border
+Card      modifiers   CardLayout        side, image-full
+Carousel  modifiers   CarouselSnap      start, center, end
+Chat      placements  ChatSide          start, end
+Divider   placements  DividerAlignment  start, end
+List      modifiers   ListColumn        col-wrap, col-grow
+Loading   styles      LoadingAnimation  spinner, dots, ring, ball, bars, infinity
+Mask      styles      MaskShape         15 shapes
+Mask      modifiers   MaskHalf          half-1, half-2
+Megamenu  modifiers   MegamenuWidth     wide, full
+Stack     modifiers   StackAlignment    top, bottom, start, end
+Swap      styles      SwapAnimation     rotate, flip
+Tab       styles      TabAppearance     box, border, lift
+Tab       placements  TabPosition       top, bottom
+```
+
+### Failed the name test (8)
+
+Each is a category DaisyUI's frontmatter groups by where the class lives, not by what it means.
+
+| Group | Members | Why no name fits | Outcome |
+|---|---|---|---|
+| `Button.behaviors` | active, disabled | Not a choice — a button can be neither, and `disabled` already exists as an `extras` parameter driving the HTML attribute | stay boolean |
+| `Collapse.modifiers` | arrow, plus, open, close | Indicator icon **and** state | split: `CollapseIndicator`, `CollapseState` |
+| `Dropdown.modifiers` | hover, open, close | `hover` is a trigger mode, `open`/`close` a forced state | split: `hover` boolean + `DropdownState` |
+| `Menu.modifiers` | disabled, active, focus, dropdown-show, paged | Three item states and a layout mode | stay boolean |
+| `Rating.modifiers` | half, hidden | `rating-half` is half-star granularity; `rating-hidden` is a hidden zero input. Unrelated | stay boolean |
+| `Tab.modifiers` | tab-active, tab-disabled | Already broken — the doubled prefix is #342's inverted classification | defer to #342 |
+| `Timeline.modifiers` | snap-icon, box, compact | Icon alignment, a look, and spacing | stay boolean |
+| `Modal.placements` | top, middle, bottom, start, end | Vertical **and** horizontal axis, like `indicator` and `toast` | split by axis |
+
+### What the failures have in common
+
+Seven of the eight are `modifiers` — DaisyUI's catch-all category. `styles`, `directions` and
+`placements` describe one dimension each and named cleanly; `modifiers` means "everything else"
+and grouping by it produces a group by accident.
+
+**So the generator should treat `modifiers` as boolean by default and require an explicit
+`enumNames` entry to promote one**, rather than the other way round. That inverts the default for
+the one category that cannot be trusted, and the consumption guard catches a promotion that stops
+being justified.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

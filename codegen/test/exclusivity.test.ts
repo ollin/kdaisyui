@@ -1,9 +1,15 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { GroupKey, loadMeasurement } from '../src/measurement.ts'
+import { GroupKey, Measurement, loadMeasurement } from '../src/measurement.ts'
+import { findMismatches } from '../src/verify-exclusivity.ts'
+import type { LiveGroup } from '../src/verify-exclusivity.ts'
 
 function named(keys: readonly GroupKey[]): string[] {
   return keys.map(String).sort()
+}
+
+function liveGroup(key: string, members: readonly string[]): LiveGroup {
+  return { key: GroupKey.parse(key), members }
 }
 
 /**
@@ -54,5 +60,58 @@ describe('the committed measurement', () => {
   it('covers 44 groups and 310 pairs', () => {
     assert.equal(measurement.groupCount(), 44)
     assert.equal(measurement.pairCount(), 310)
+  })
+})
+
+/**
+ * The guard that fires on a DaisyUI bump.
+ *
+ * `live` is injected here rather than read from the submodule, because this job deliberately
+ * has none. The real pairing of the two sides runs in `generated-sources-drift`.
+ */
+describe('findMismatches', () => {
+  const measured = Measurement.fromJson({
+    alert: { directions: { exclusive: ['vertical|horizontal'] } },
+  })
+
+  it('says nothing when the measurement matches what DaisyUI documents', () => {
+    const live = [liveGroup('alert.directions', ['vertical', 'horizontal'])]
+
+    assert.deepEqual(findMismatches(measured, live), [])
+  })
+
+  it('accepts a pair recorded the other way round', () => {
+    const live = [liveGroup('alert.directions', ['horizontal', 'vertical'])]
+
+    assert.deepEqual(findMismatches(measured, live), [])
+  })
+
+  it('reports a group DaisyUI documents and nobody measured', () => {
+    const live = [liveGroup('button.styles', ['outline', 'soft'])]
+    const [first] = findMismatches(measured, live)
+
+    assert.equal(String(first.group), 'button.styles')
+    assert.match(first.message, /is not measured/)
+  })
+
+  it('reports a class DaisyUI added to a measured group', () => {
+    const live = [liveGroup('alert.directions', ['vertical', 'horizontal', 'diagonal'])]
+    const [first] = findMismatches(measured, live)
+
+    assert.match(first.message, /no verdict for vertical\|diagonal, horizontal\|diagonal/)
+  })
+
+  it('reports a class DaisyUI removed from a measured group', () => {
+    const live = [liveGroup('alert.directions', ['vertical'])]
+    const messages = findMismatches(measured, live).map((mismatch) => mismatch.message)
+
+    assert.ok(messages.some((message) => /still records vertical\|horizontal/.test(message)))
+  })
+
+  it('reports a measured group DaisyUI no longer documents', () => {
+    const [first] = findMismatches(measured, [])
+
+    assert.equal(String(first.group), 'alert.directions')
+    assert.match(first.message, /no longer groups it/)
   })
 })

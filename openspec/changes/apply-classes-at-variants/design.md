@@ -491,6 +491,57 @@ So the answer to "can this be decided deterministically" is **no, not from eithe
 and not from both for 38 of 44 groups** — but the four splits that would otherwise have been
 hand-configured are now derived, and the two heuristics disagreeing is a signal worth failing on.
 
+## Reading `button.css` settles the muster case — and both probes were wrong
+
+All five members write the same two variables:
+
+```
+.btn-outline, .btn-dash   --btn-bg: #0000   --btn-border: var(--btn-color)   solid
+.btn-dash                                   --btn-border-style: dashed
+.btn-ghost                --btn-bg: #0000   --btn-border: #0000
+.btn-soft                 --btn-bg: 8% mix  --btn-border: 10% mix           solid
+.btn-link                 --btn-bg: #0000   --btn-border: #0000   + underline
+```
+
+Combining two does not compose, it overrides: `btn-outline btn-ghost` sets
+`--btn-border: var(--btn-color)` and then `#0000`, and ghost is later in the stylesheet, so the
+outline does nothing. **`ButtonEmphasis` stands, with all five members.**
+
+Both probes said otherwise and both were wrong, in instructive ways:
+
+- The CSS probe split `link` off the other four. They demonstrably share `--btn-bg`,
+  `--btn-border`, `background-image`, `--btn-inset` and `--btn-shadow`, so that is an
+  implementation defect in the probe, not a finding.
+- The template corpus showed `outline+ghost` used together. The CSS shows that combination is
+  inert. **Production markup contains mistakes; curated documentation mostly does not**, and a
+  single observation from the noisier source is not evidence.
+
+### `card`, `list` and `swap` stay boolean — because nothing established otherwise
+
+`list-col-wrap` sets `row-start-2` while `list-col-grow` sizes a column; `swap-rotate` applies
+rotations while `swap-flip` sets `transform-style` and `perspective`; `card-side` sets
+`flex-direction: row` while `card-image-full` repositions the figure. No shared declaration, no
+observed co-occurrence — **no source settles them either way.** They are three of the 36 groups
+that stay silent.
+
+So `CardLayout`, `ListColumn` and `SwapAnimation` are withdrawn.
+
+### The rule this produces: the cost of being wrong is asymmetric
+
+| wrong as | consequence |
+|---|---|
+| **enum** | a combination DaisyUI permits **cannot be expressed** |
+| **boolean** | a combination that does nothing **can be expressed** |
+
+The first defeats the library's purpose, which is to reach the CSS DaisyUI ships. The second
+merely fails to prevent a harmless mistake — and the untyped `extraClasses` escape hatch permits
+it anyway.
+
+**So: an enum requires exclusivity to be positively established — a shared declaration the
+members overwrite, with no example contradicting it. Everything else stays boolean.** That
+replaces the earlier category-based default, which had `styles`, `directions` and `placements`
+becoming enums merely by living in those categories.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

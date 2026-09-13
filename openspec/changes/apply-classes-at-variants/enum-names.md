@@ -10,12 +10,29 @@ set two contradictory answers at once.
 
 The proposals are proposals. Overwrite them freely.
 
-## The naming rule this repo already uses
+## The naming rule
 
-**Name by intention, never by implementation.** `LoadingAnimation` says what the caller is
-choosing; `LoadingStyle` just repeats DaisyUI's category name and answers nothing. If a name
-cannot be found, that is evidence the group is not really one question — say so and it stays
-boolean.
+**Stay close to DaisyUI, so a reader can find the documentation.** The enum type is named after
+the component and DaisyUI's own category for the group — `LoadingStyle` for the `style` entries
+of `loading`, `TabPlacement` for the `placement` entries of `tab`. A reader who meets
+`LoadingStyle.Spinner` can open DaisyUI's Loading page, find the Style table, and read the row
+for `loading-spinner`.
+
+This overrides the name-by-intention rule an earlier draft used. `LoadingAnimation` reads better
+in isolation and costs the reader the trail back to the source; DaisyUI is the authority here and
+the vocabulary should say so.
+
+**The members already trace directly**: each is the class suffix in PascalCase, so
+`MaskStyle.Squircle` is `mask-squircle`, `TabPlacement.Bottom` is `tab-bottom`. Nothing to
+decide there.
+
+Documentation for a component lives at `https://daisyui.com/components/<directory>/` and in the
+submodule at `daisyui/packages/docs/src/routes/(routes)/components/<directory>/+page.md`. The
+Group column below is `<directory>.<category>`, so both paths follow from it.
+
+Where the DaisyUI-close name is genuinely poor, the **Alternative** column holds the
+intention-named version. Pick either; the column exists so the trade is visible rather than
+argued.
 
 ---
 
@@ -23,29 +40,47 @@ boolean.
 
 Every pair in these was measured `exclusive`.
 
-| # | Group | DaisyUI classes | Proposed name | Question it answers |
-|---|---|---|---|---|
-| 1 | `alert.directions` | `vertical` `horizontal` | `AlertOrientation` | which way the alert lays out its content |
-| 2 | `card.styles` | `border` `dash` | `CardBorder` | which border the card draws |
-| 3 | `card.modifiers` | `side` `image-full` | `CardLayout` | how the card arranges its image against its body |
-| 4 | `carousel.modifiers` | `start` `center` `end` | `CarouselSnap` | where an item comes to rest when it snaps |
-| 5 | `divider.directions` | `vertical` `horizontal` | `DividerOrientation` | which way the divider runs |
-| 6 | `join.directions` | `vertical` `horizontal` | `JoinOrientation` | which way the joined items are stacked |
-| 7 | `list.modifiers` | `col-wrap` `col-grow` | `ListColumn` | which column absorbs the spare width |
-| 8 | `loading.styles` | `spinner` `dots` `ring` `ball` `bars` `infinity` | `LoadingAnimation` | which animation is shown |
-| 9 | `mask.styles` | `squircle` `heart` `hexagon` `hexagon-2` `decagon` `pentagon` `diamond` `square` `circle` `star` `star-2` `triangle` `triangle-2` `triangle-3` `triangle-4` | `MaskShape` | what shape the content is masked to |
-| 10 | `mask.modifiers` | `half-1` `half-2` | `MaskHalf` | which half of the shape is kept |
-| 11 | `menu.directions` | `vertical` `horizontal` | `MenuOrientation` | which way the menu runs |
-| 12 | `pagination.directions` | `vertical` `horizontal` | `PaginationOrientation` | which way the pages are laid out |
-| 13 | `stat.directions` | `horizontal` `vertical` | `StatOrientation` | which way the stats are laid out |
-| 14 | `steps.directions` | `vertical` `horizontal` | `StepsOrientation` | which way the steps progress |
-| 15 | `tab.placements` | `top` `bottom` | `TabPosition` | which edge the tabs sit on |
+The class column shows the SUFFIX; the real class is `<component>-<suffix>`, so row 1 is
+`alert-vertical` and `alert-horizontal`.
 
-**Two of these were withdrawn earlier and came back.** `CardLayout` (3) and `ListColumn` (7)
-were dropped when no source settled them; the browser calls both pairs exclusive.
+| # | Group | DaisyUI classes | Proposed name | Alternative | Question it answers |
+|---|---|---|---|---|---|
+| 1 | `alert.directions` | `vertical` `horizontal` | `AlertDirection` | `AlertOrientation` | which way the alert lays out its content |
+| 2 | `card.styles` | `border` `dash` | `CardStyle` | `CardBorder` | which border the card draws |
+| 3 | `card.modifiers` | `side` `image-full` | `CardModifier` | `CardLayout` | how the card arranges its image against its body |
+| 4 | `carousel.modifiers` | `start` `center` `end` | `CarouselModifier` | `CarouselSnap` | where an item comes to rest when it snaps |
+| 5 | `divider.directions` | `vertical` `horizontal` | `DividerDirection` | `DividerOrientation` | which way the divider runs |
+| 6 | `join.directions` | `vertical` `horizontal` | `JoinDirection` | `JoinOrientation` | which way the joined items are stacked |
+| 7 | `list.modifiers` | `col-wrap` `col-grow` | `ListModifier` | `ListColumn` | which column absorbs the spare width |
+| 8 | `loading.styles` | `spinner` `dots` `ring` `ball` `bars` `infinity` | `LoadingStyle` | `LoadingAnimation` | which animation is shown |
+| 9 | `mask.styles` | `squircle` `heart` `hexagon` `hexagon-2` `decagon` `pentagon` `diamond` `square` `circle` `star` `star-2` `triangle` `triangle-2` `triangle-3` `triangle-4` | `MaskStyle` | `MaskShape` | what shape the content is masked to |
+| 10 | `mask.modifiers` | `half-1` `half-2` | `MaskModifier` | `MaskHalf` | which half of the shape is kept |
+| 11 | `menu.directions` | `vertical` `horizontal` | `MenuDirection` | `MenuOrientation` | which way the menu runs |
+| 12 | `pagination.directions` | `vertical` `horizontal` | `PaginationDirection` | `PaginationOrientation` | which way the pages are laid out |
+| 13 | `stat.directions` | `horizontal` `vertical` | `StatDirection` | `StatOrientation` | which way the stats are laid out |
+| 14 | `steps.directions` | `vertical` `horizontal` | `StepsDirection` | `StepsOrientation` | which way the steps progress |
+| 15 | `tab.placements` | `top` `bottom` | `TabPlacement` | `TabPosition` | which edge the tabs sit on |
 
-**Six `Orientation`s is not a mistake** — they are six distinct types and each is only ever
-reachable through its own component. Say so if you would rather they were named apart.
+**Two of these were withdrawn earlier and came back.** Rows 3 and 7 were dropped when no source
+settled them; the browser calls both pairs exclusive.
+
+### One risk the `…Modifier` names carry — rows 3, 4, 7, 10
+
+`modifier` is DaisyUI's catch-all category, and these four groups happen to hold ALL of their
+component's modifiers today. `CardModifier` is therefore accurate right now and would start
+lying the moment DaisyUI adds a card modifier that composes: some modifiers would be enum
+constants and others booleans, under a name claiming to cover the category.
+
+`direction`, `style` and `placement` do not have this problem to the same degree — they are
+narrower categories, and `verifyExclusivity` fails the build when any of them gains a member,
+so the lie cannot land silently either way.
+
+If that risk bothers you, the Alternative column for those four rows is the answer: those names
+describe the group rather than the category, so a new member cannot make them false.
+
+Row 9 is the one I would take from the Alternative column regardless — `MaskShape` for fifteen
+shapes is both closer to what the caller is doing AND unambiguous in the docs, since DaisyUI's
+own Mask page is a grid of shapes.
 
 ---
 
@@ -59,13 +94,17 @@ Members: `start` `center` `end` `top` `middle` `bottom`.
 Measured: `{start,center,end}` is a clique, `{top,middle,bottom}` is a clique, every pair
 across them composes.
 
-| Axis | Members | Proposed name | Alternatives |
-|---|---|---|---|
-| vertical | `top` `middle` `bottom` | `IndicatorVertical` / `ToastVertical` | `…VerticalEdge`, `…Y`, `…Row` |
-| horizontal | `start` `center` `end` | `IndicatorHorizontal` / `ToastHorizontal` | `…HorizontalEdge`, `…X`, `…Column` |
+Both axes are `placement` in DaisyUI, so the category name alone cannot separate them and a
+qualifier is unavoidable. Keeping `Placement` in both keeps the trail to the docs.
 
-`IndicatorVertical.Top` reads a little oddly as a type name. Pick whichever of the
-alternatives reads best at the call site — that is the only criterion that matters here.
+| Axis | Members | Proposed name | Alternative |
+|---|---|---|---|
+| vertical | `top` `middle` `bottom` | `IndicatorVerticalPlacement` / `ToastVerticalPlacement` | `IndicatorVertical` / `ToastVertical` |
+| horizontal | `start` `center` `end` | `IndicatorHorizontalPlacement` / `ToastHorizontalPlacement` | `IndicatorHorizontal` / `ToastHorizontal` |
+
+The proposed names are long. The trade is real: `IndicatorVerticalPlacement.Top` says exactly
+which DaisyUI table to open, `IndicatorVertical.Top` reads better and says slightly less. Your
+call — the call site is `daisyIndicator(verticalPlacement = …)` either way.
 
 ### 2b. `tooltip.placements`
 
@@ -74,10 +113,14 @@ Measured: `{top,bottom,left,right}` is a clique, `{start,center,end}` is a cliqu
 exclusive against the alignment members too, which is why the split cannot be derived and has
 to be declared.
 
-| Axis | Members | Proposed name |
-|---|---|---|
-| side | `top` `bottom` `left` `right` | `TooltipSide` |
-| alignment | `start` `center` `end` | `TooltipAlign` |
+| Axis | Members | Proposed name | Alternative |
+|---|---|---|---|
+| side | `top` `bottom` `left` `right` | `TooltipSidePlacement` | `TooltipSide` |
+| alignment | `start` `center` `end` | `TooltipAlignPlacement` | `TooltipAlign` |
+
+Same trade as Indicator and Toast — and here the short forms are unusually good, because
+DaisyUI's own Tooltip page already calls these "placement" and the members read as sides and
+alignments without help.
 
 ### 2c. `dropdown.placements` — BLOCKED, needs your decision
 
@@ -100,7 +143,7 @@ Three ways out. Please pick one:
 | | Option | Cost |
 |---|---|---|
 | **A** | Leave the whole group boolean | Seven booleans; `start`/`center`/`end` lose an enum they earned |
-| **B** | One enum `DropdownAlign` = `{start,center,end}`, and `top` `bottom` `left` `right` stay boolean | Needs `checkSplitCoverage` relaxed to allow unassigned members — which currently exists to stop a new DaisyUI class silently becoming a boolean |
+| **B** | One enum `DropdownAlignPlacement` (or `DropdownAlign`) = `{start,center,end}`, and `top` `bottom` `left` `right` stay boolean | Needs `checkSplitCoverage` relaxed to allow unassigned members — which currently exists to stop a new DaisyUI class silently becoming a boolean |
 | **C** | Declare the side axis anyway, overriding the measurement for this group | Makes a reachable combination inexpressible. Contradicts the asymmetric-cost rule the whole change rests on |
 
 **A is the honest default and B is probably what you want**, but B changes a guard, so it is

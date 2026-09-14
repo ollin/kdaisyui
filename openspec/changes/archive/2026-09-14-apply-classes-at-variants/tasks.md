@@ -156,4 +156,5 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
   **A green `check` was not enough**: it excludes the generators by design, and a forced
   regeneration found `docs/reference/**` drifted on 37 pages. Fixed, then re-verified clean.
 - [x] 8.2 `openspec validate --all --strict`.
-- [ ] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt.
+- [x] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt —
+  `tmp/evaluation-apply-classes-at-variants.md`, gitignored by design.

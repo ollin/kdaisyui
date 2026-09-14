@@ -116,7 +116,10 @@ private fun FlowContent.shellSidebar() {
         id = Dashboard.Sidebar().id
         div("mx-4 flex items-center gap-2 font-black") { +"DevTrack" }
         daisyMenu(id = Dashboard.Sidebar.Menu(), extraClasses = "w-full") {
-            li { a("menu-active") { +"Overview" } }
+            // `classes` NAMED, because kotlinx.html's `a` is a(href, target, referrerPolicy,
+            // classes): the positional form set href="menu-active", so this item linked to a
+            // route that does not exist and never got the active styling either.
+            li { a(classes = "menu-active") { +"Overview" } }
             sidebarSubmenu("Repositories", listOf("All Repos", "New Repository", "Archived"))
             li { a { +"Issues" } }
             li { a { +"Pull Requests" } }

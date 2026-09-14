@@ -84,40 +84,76 @@ New estimate frozen 2026-09-13, priced by open decisions per the calibration fin
 - [x] 3.1a `. d` Apply the name-is-the-test rule to the remaining 34 groups. Report which ones
   split or stay boolean, and name the rest. **A group nobody can name is a finding, not a naming
   problem.**
-- [ ] 3.2 `^ F` Emit an enum per exclusive group instead of booleans. Test first, against
+- [x] 3.2 `^ F` Emit an enum per exclusive group instead of booleans. Test first, against
   `daisyTooltip(placement = TooltipPlacement.Top)` and against the illegal state no longer
-  compiling.
-- [ ] 3.3 `^ F` Regenerate; read the diff; update both API baselines, reading each.
+  compiling. **21 enum types over 37 components**; the placement case landed as two axes,
+  `sidePlacement` and `alignPlacement`, per the measurement.
+- [x] 3.3 `^ F` Regenerate; read the diff; update both API baselines, reading each.
+  **The generated component tests did not compile after 3.2**, and the cause was a model defect
+  older than this change: `extractDaisyClasses` unioned every `$$` token in a whole documentation
+  example regardless of which element carried it. Fixed per-element; see `design.md`.
+  Both baselines re-dumped and diffed — the diff carries one function nobody predicted, the new
+  `addClassNames(ClassValues?)` overload.
 
-## 4. The two lone flags — 0.4 h
+## 4. The two lone flags — 0.4 h — DEFERRED
 
-- [ ] 4.1 `^ F` Generated constants for `drawer-open` and `megamenu-vertical`, which have no group
-  to join and are prefixed in real use — `max-sm:megamenu-vertical` is in this repository's own
-  example app.
+- [ ] 4.1 `^ F` ~~Generated constants for `drawer-open` and `megamenu-vertical`~~ — **the premise
+  does not hold.** Both classes already have a typed home: `daisyDrawer(open = true)` and
+  `daisyMegamenu(vertical = true)`. What they lack is the PREFIXED form
+  (`max-sm:megamenu-vertical`, which this repository's example app writes as a raw string), and
+  that is exactly what `at()` provides — which is built and parked because a composed class
+  reaches no CSS.
 
-## 5. The variant function — 0.6 h
+  So a constant now would be a second way to name a class that is already named, superseded the
+  moment `at()` unparks. Deferred to whatever change unparks it:
+  `openspec/changes/extract-used-classes-from-bytecode`.
 
-- [ ] 5.1 `. d` **Decide the call shape.** Oliver chose a FUNCTION over a method, for IntelliJ
+## 5. The variant function — 0.6 h — BUILT AND PARKED
+
+- [x] 5.1 `. d` **Decide the call shape.** Oliver chose a FUNCTION over a method, for IntelliJ
   completion from the parameter position — and because a method would force every generated enum
-  to gain one. Open: argument order, name, and what it returns.
-- [ ] 5.2 `^ F` The seven breakpoints, the states, and DaisyUI's drawer variants as values, with
-  the function that applies one to a class value.
-- [ ] 5.3 `^ F` Regenerate and prove the measured cases: `lg:btn-lg`, `max-sm:megamenu-vertical`,
-  `xl:stats-horizontal`.
+  to gain one. Settled: `at(variant, value)`, variant first, returning a `ClassValues<T>`.
+- [x] 5.2 `^ F` The breakpoints, the states, and DaisyUI's drawer variants as values, with
+  the function that applies one to a class value. **Ten breakpoints, not seven** — the seven were
+  a frequency measurement over one corpus; the vocabulary is Tailwind's.
+- [x] 5.3 `^ F` Regenerate and prove the measured cases. **Proved, and the proof refuted the
+  block.** `at(Breakpoint.Xl, ButtonSize.Lg)` renders `xl:btn-lg` and leaves the compiled
+  stylesheet byte-identical — sha256 `3ac649e1`, 412052 bytes. Tailwind emits CSS per candidate
+  STRING found while scanning files as text, so a class composed at run time appears in no file.
+  Everything but `ClassValues` is therefore `internal`; unparking is a visibility flip once
+  `extract-used-classes-from-bytecode` lands.
 
-## 6. The genuine parameter gaps — 0.4 h
+## 6. The genuine parameter gaps — 0.4 h — DEFERRED, the title is wrong
 
-- [ ] 6.1 `^ F` `avatar-group`, `floating-label`, `image-full`, `join-item`, `list-row`. Defects
-  from 1.3 go to their issues, not here.
+- [ ] 6.1 `^ F` ~~`avatar-group`, `floating-label`, `image-full`, `join-item`, `list-row`~~ —
+  **four of the five are not parameter gaps.** `image-full` shipped, as `CardModifier.ImageFull`.
+  Measured against DaisyUI's own markup, not one of the other four sits on the container whose
+  function would carry the parameter:
 
-## 7. Migration and documentation — 0.6 h
+  | class | element DaisyUI puts it on | occurrences |
+  |---|---|---|
+  | `avatar-group` | a `<div>` wrapping the avatars | 2 |
+  | `floating-label` | its own `<label>` | 9 |
+  | `list-row` | `<li>`, a child of the list | 9 |
+  | `join-item` | `<button>`, `<input>`, `<select>` — arbitrary children | 17 |
 
-- [ ] 7.1 `. d` **How to migrate.** This is the largest break the library has shipped — every
-  exclusive boolean group becomes an enum parameter. Name every affected function.
-- [ ] 7.2 `. d` `README.md` usage example, and the `kdaisyui-codegen` skill.
+  All four want their own generated function, or — for `join-item` — a modifier on ANY component
+  that can be a join's child, which is a design question rather than a gap to fill. Same family as
+  **#347**, and deferred to whatever change answers it.
+
+## 7. Migration and documentation — 0.6 h — DONE
+
+- [x] 7.1 `. d` **How to migrate.** `README.md` now carries "How to migrate from 0.5.x": the full
+  table of 14 one-enum groups, the four axis splits, the five renames, `ClassValues`, and the
+  named-argument warning. `gradle.properties` moved to 0.6.0 with the same summary.
+- [x] 7.2 `. d` `README.md` usage example, and the `kdaisyui-codegen` skill.
 
 ## 8. Gate and adoption — 0.5 h
 
-- [ ] 8.1 Full green per `openspec/config.yaml`, plus `:lib:checkComponentApi`.
-- [ ] 8.2 `openspec validate --all --strict`.
+- [x] 8.1 Full green per `openspec/config.yaml`, plus `:lib:checkComponentApi`. `check` green,
+  `:lib:test` 1597, `koverVerify` 100% line and branch, `:e2e-tests:test` 49, `:lib:pitest` test
+  strength 100% (205/205), `checkComponentApi` / `verifyExclusivity` / `testCodegen` green.
+  **A green `check` was not enough**: it excludes the generators by design, and a forced
+  regeneration found `docs/reference/**` drifted on 37 pages. Fixed, then re-verified clean.
+- [x] 8.2 `openspec validate --all --strict`.
 - [ ] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt.

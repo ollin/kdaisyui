@@ -1,0 +1,10 @@
+schema: probe-driven
+created: 2026-09-14
+
+# A probe produces a LEARNING, not a behaviour delta — there is nothing to write into
+# openspec/specs/ until the learning says what should be built. Inventing a requirement
+# to satisfy `openspec validate` would put a statement into the specs that nothing has
+# checked, which is the failure AGENTS.md names explicitly.
+#
+# If the probe amplifies, the spec-driven change that follows carries the requirements.
+skip_specs: true

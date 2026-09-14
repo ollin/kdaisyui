@@ -25,6 +25,31 @@ interface ClassValues<T : Any> {
     val classNames: List<String>
 }
 
+/*
+ * EVERYTHING BELOW IS `internal` UNTIL A CONSUMER'S TAILWIND CAN SEE WHAT IT COMPOSES.
+ *
+ * Measured 2026-09-13: a call site of `at(Breakpoint.Xl, ButtonSize.Lg)` renders
+ * `class="btn xl:btn-lg"` and the compiled stylesheet is byte-identical — no rule is generated.
+ * Tailwind emits CSS per candidate STRING it finds while scanning; `xl:btn-lg` is composed at
+ * runtime from two halves and therefore appears in no file. The string form,
+ * `extraClasses = "lg:btn-lg"`, works precisely because the literal IS the candidate.
+ *
+ * So the composition half is built, tested and parked rather than published. Public here would
+ * put `at` in completion and in `lib/api/lib.api`, and a caller who found it would get a class
+ * attribute that styles nothing, with no compile error and no log — the exact failure this
+ * library exists to prevent.
+ *
+ * `ClassValues` itself stays public: it is the parameter type of every enum-backed parameter, and
+ * `size = ButtonSize.Lg` reads the same either way. Publishing it now means the widening costs no
+ * API churn later — turning these back to public is the whole of the remaining change.
+ *
+ * What has to land first is a build-time extractor that reads the CONSUMER's compiled classes and
+ * emits the pairs they actually use. Verified feasible the same day: a consumer's constant pool
+ * carries a Fieldref to `ButtonSize.Lg` AND to `Breakpoint.Xl`, so no dataflow analysis is needed.
+ * That is its own change, and it is worth having with or without this one — it also replaces
+ * today's all-560-classes delivery with what an application really names.
+ */
+
 /**
  * A Tailwind variant: the prefix that narrows when a class applies.
  *
@@ -33,7 +58,7 @@ interface ClassValues<T : Any> {
  * documentation. Splitting them keeps each list defensible on its own terms and lets completion
  * from `at(` offer the kind a caller is thinking about.
  */
-interface Variant {
+internal interface Variant {
     /** The prefix without its colon, e.g. `lg` or `max-sm`. */
     val prefix: String
 }
@@ -46,7 +71,7 @@ interface Variant {
  * breakpoints, each of which takes `max-`. Shipping only the observed seven would leave
  * `2xl:btn-lg` unreachable in an API that has no variant escape hatch by decision.
  */
-enum class Breakpoint(override val prefix: String) : Variant {
+internal enum class Breakpoint(override val prefix: String) : Variant {
     Sm("sm"),
     Md("md"),
     Lg("lg"),
@@ -69,7 +94,7 @@ enum class Breakpoint(override val prefix: String) : Variant {
  * compiled properly. One recorded use and one instruction, which is thin evidence but is
  * evidence, and it points the same way.
  */
-enum class State(override val prefix: String) : Variant {
+internal enum class State(override val prefix: String) : Variant {
     Dark("dark"),
     Hover("hover"),
     Focus("focus"),
@@ -83,7 +108,7 @@ enum class State(override val prefix: String) : Variant {
  * trailing colon and all — the defect filed as #345. Giving them a home here makes that
  * deletion a move rather than a loss.
  */
-enum class DrawerVariant(override val prefix: String) : Variant {
+internal enum class DrawerVariant(override val prefix: String) : Variant {
     Open("is-drawer-open"),
     Close("is-drawer-close"),
 }
@@ -122,7 +147,7 @@ private class PrefixedClassValues<T : Any>(
  * asymmetric-cost rule permitting a useless combination is the cheap direction; making a
  * reachable one inexpressible is the expensive one.
  */
-fun <T : Any> at(variant: Variant, value: ClassValues<T>): ClassValues<T> =
+internal fun <T : Any> at(variant: Variant, value: ClassValues<T>): ClassValues<T> =
     PrefixedClassValues(variant, value)
 
 /**
@@ -132,5 +157,5 @@ fun <T : Any> at(variant: Variant, value: ClassValues<T>): ClassValues<T> =
  * `btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl` — expressible while answering a button size
  * with a toast placement is not.
  */
-infix fun <T : Any> ClassValues<T>.and(other: ClassValues<T>): ClassValues<T> =
+internal infix fun <T : Any> ClassValues<T>.and(other: ClassValues<T>): ClassValues<T> =
     CombinedClassValues(this, other)

@@ -117,6 +117,31 @@ class FragmentSteps(private val world: PlaywrightWorld) {
         }
     }
 
+    /**
+     * The selector Tailwind writes for a class, e.g. `dark:alert-info` -> `.dark\:alert-info`.
+     *
+     * The escaping lives here and not in the feature file on purpose. A Gherkin string carrying a
+     * backslash is one transcription away from a selector that matches nothing — which would make
+     * the negative assertion below pass forever, the exact failure it exists to catch.
+     */
+    private fun selectorFor(cssClass: String): String = ".${cssClass.replace(":", "\\:")}"
+
+    @Then("the stylesheet defines a rule for the class {string}")
+    fun stylesheetDefinesRuleFor(cssClass: String) {
+        check(lastResponseBody.contains(selectorFor(cssClass))) {
+            "Expected a rule for '${selectorFor(cssClass)}'. Without it the absence check in the " +
+                "same scenario proves nothing, so this is the calibration and not a second test."
+        }
+    }
+
+    @Then("the stylesheet defines no rule for the class {string}")
+    fun stylesheetDefinesNoRuleFor(cssClass: String) {
+        check(!lastResponseBody.contains(selectorFor(cssClass))) {
+            "Found a rule for '${selectorFor(cssClass)}', which no code in the example app emits. " +
+                "Something named it as text where Tailwind scans — almost certainly a doc comment."
+        }
+    }
+
     @Then("the asset {string} returns status {int} with content type containing {string}")
     fun assetReturnsStatusWithContentType(path: String, expectedStatus: Int, contentTypeFragment: String) {
         val response = world.page.request().get("${SharedInfrastructure.BASE_URL}$path")

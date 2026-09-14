@@ -5,6 +5,9 @@ import com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.options.AriaRole
 
+/** Mirrors `OTP_DIGITS` in the example app: spans, maxlength and pattern must agree. */
+private const val OTP_DIGITS = 6
+
 /**
  * End-to-end coverage for the components DaisyUI 5.6/5.7 added: `aura`, `otp`, `megamenu`.
  *
@@ -39,7 +42,27 @@ class WhatsNewFragmentTest : PlaywrightSpec() {
             assertThat(otp).hasClass(Regex(".*\\botp\\b.*").toPattern())
             assertThat(otp).hasClass(Regex(".*\\botp-primary\\b.*").toPattern())
             assertThat(otp).hasClass(Regex(".*\\botp-joined\\b.*").toPattern())
-            assertThat(otp.locator("span")).hasCount(6)
+            assertThat(otp.locator("span")).hasCount(OTP_DIGITS)
+
+            // The input is the half this test could not see until 2026-09-14, and its absence is
+            // exactly what it should have caught: the card rendered six spans carrying digits and
+            // NO input, so the component was not being used at all while every assertion passed.
+            //
+            // otp.css paints the characters from the `> input` layer, so without it the boxes are
+            // empty frames and anything written into the spans misses their alignment.
+            val digitEntry = otp.locator("input")
+            assertThat(digitEntry).hasCount(1)
+            assertThat(digitEntry).hasAttribute("maxlength", OTP_DIGITS.toString())
+
+            // DaisyUI: "make sure the number of spans matches the maxlength and the pattern".
+            // Asserting all three together is what makes a mismatch a failure rather than a
+            // component that silently renders one box too few.
+            assertThat(digitEntry).hasAttribute("pattern", "[0-9]{$OTP_DIGITS}")
+
+            // Typed into, not pre-filled: no DaisyUI example pre-fills an OTP, and asserting the
+            // value renders proves the input layer is the one drawing the characters.
+            digitEntry.fill("481523")
+            assertThat(digitEntry).hasValue("481523")
         }
 
         test("megamenu opens its panel on the trigger") {

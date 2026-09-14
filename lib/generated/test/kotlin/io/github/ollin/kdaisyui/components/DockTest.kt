@@ -10,10 +10,10 @@ class DockTest {
     @Test
     fun dock() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(active = true) {
+            daisyDock() {
             }
         }
-        val expectedClasses = "dock dock-active"
+        val expectedClasses = "dock"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock")
     }
@@ -21,10 +21,10 @@ class DockTest {
     @Test
     fun dock_extra_small_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(active = true) {
+            daisyDock() {
             }
         }
-        val expectedClasses = "dock dock-active"
+        val expectedClasses = "dock"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Extra Small size")
     }
@@ -32,10 +32,10 @@ class DockTest {
     @Test
     fun dock_small_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(active = true) {
+            daisyDock() {
             }
         }
-        val expectedClasses = "dock dock-active"
+        val expectedClasses = "dock"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Small size")
     }
@@ -43,10 +43,10 @@ class DockTest {
     @Test
     fun dock_medium_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(active = true) {
+            daisyDock() {
             }
         }
-        val expectedClasses = "dock dock-active"
+        val expectedClasses = "dock"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Medium size")
     }
@@ -54,10 +54,10 @@ class DockTest {
     @Test
     fun dock_large_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(active = true) {
+            daisyDock() {
             }
         }
-        val expectedClasses = "dock dock-active"
+        val expectedClasses = "dock"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Large size")
     }
@@ -65,10 +65,10 @@ class DockTest {
     @Test
     fun dock_extra_large_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(active = true) {
+            daisyDock() {
             }
         }
-        val expectedClasses = "dock dock-active"
+        val expectedClasses = "dock"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Extra Large size")
     }
@@ -76,10 +76,10 @@ class DockTest {
     @Test
     fun dock_with_custom_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(active = true) {
+            daisyDock() {
             }
         }
-        val expectedClasses = "dock dock-active"
+        val expectedClasses = "dock"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock with custom colors")
     }

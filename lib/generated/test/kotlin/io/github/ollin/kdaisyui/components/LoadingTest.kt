@@ -10,7 +10,7 @@ class LoadingTest {
     @Test
     fun loading_spinner() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(spinner = true) {
+            daisyLoading(style = LoadingStyle.Spinner) {
             }
         }
         val expectedClasses = "loading loading-spinner"
@@ -21,7 +21,7 @@ class LoadingTest {
     @Test
     fun loading_dots() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(dots = true) {
+            daisyLoading(style = LoadingStyle.Dots) {
             }
         }
         val expectedClasses = "loading loading-dots"
@@ -32,7 +32,7 @@ class LoadingTest {
     @Test
     fun loading_ring() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(ring = true) {
+            daisyLoading(style = LoadingStyle.Ring) {
             }
         }
         val expectedClasses = "loading loading-ring"
@@ -43,7 +43,7 @@ class LoadingTest {
     @Test
     fun loading_ball() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(ball = true) {
+            daisyLoading(style = LoadingStyle.Ball) {
             }
         }
         val expectedClasses = "loading loading-ball"
@@ -54,7 +54,7 @@ class LoadingTest {
     @Test
     fun loading_bars() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(bars = true) {
+            daisyLoading(style = LoadingStyle.Bars) {
             }
         }
         val expectedClasses = "loading loading-bars"
@@ -65,7 +65,7 @@ class LoadingTest {
     @Test
     fun loading_infinity() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(infinity = true) {
+            daisyLoading(style = LoadingStyle.Infinity) {
             }
         }
         val expectedClasses = "loading loading-infinity"
@@ -76,7 +76,7 @@ class LoadingTest {
     @Test
     fun loading_with_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(spinner = true) {
+            daisyLoading(style = LoadingStyle.Spinner) {
             }
         }
         val expectedClasses = "loading loading-spinner"

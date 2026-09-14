@@ -7,7 +7,14 @@ import {
   toPascalCase,
   type ClassCategory,
 } from './parser/frontmatter.ts'
-import { toCamelCase } from './classifier.ts'
+import { classifyFromFrontmatter, toCamelCase, toPascalCase as toPascalClassName } from './classifier.ts'
+import { classifyGroups } from './class-groups.ts'
+import { loadMeasurement } from './measurement.ts'
+import { booleanParameterName, escapeKotlinKeyword, readComponentConfig } from './component-shape.ts'
+import {
+  documentedElementClasses,
+  type DocumentedClass,
+} from './parser/documented-classes.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
@@ -119,17 +126,6 @@ function parseTestCases(content) {
   return scan.cases
 }
 
-function extractDaisyClasses(html) {
-  const classes = []
-  const match = html.match(/\$\$([a-z-]+)/g)
-  if (match) {
-    for (const m of match) {
-      classes.push(m.slice(2))
-    }
-  }
-  return [...new Set(classes)]
-}
-
 function toClassName(componentName) {
   return toPascalCase(componentName)
 }
@@ -177,8 +173,60 @@ function buildClassMappings(frontmatter) {
   return { allowedClasses, classToParam, paramToGeneratedClass, componentClass }
 }
 
-function filterContainerClasses(classes, allowedClasses) {
-  return classes.filter(c => allowedClasses.has(c))
+/**
+ * How one documented class reaches the generated function.
+ *
+ * Both halves are needed and neither is derivable from the class alone. The PARAMETER is
+ * `direction` for `menu-horizontal` and `focused` for `menu-focus`, because the measurement made
+ * one an enum and the config renamed the other. The ARGUMENT is `MenuDirection.Horizontal` or
+ * `true` for the same reason.
+ */
+interface ClassBinding {
+  readonly parameter: string
+  /** Kotlin expression, e.g. `true` or `MenuDirection.Horizontal`. */
+  readonly argument: string
+}
+
+/**
+ * A documented class with the component prefix stripped, which is the key the classified model
+ * uses. `menu-horizontal` -> `horizontal`, and `glass` -> `glass` because DaisyUI files a few
+ * classes under a component without prefixing them.
+ */
+function strippedClass(prefix: string | null, cssClass: string): string {
+  return prefix && cssClass.startsWith(`${prefix}-`) ? cssClass.slice(prefix.length + 1) : cssClass
+}
+
+/**
+ * What each of a component's classes becomes at a call site — read from the SAME model the
+ * component generator emits from, rather than re-derived here.
+ *
+ * That sharing is the point. This file used to build its own `class -> camelCase parameter` map,
+ * which was right only while every parameter was a boolean called exactly `toCamelCase(class)`.
+ * It now has to agree with two decisions it cannot see: which groups the exclusivity measurement
+ * turned into enums, and which parameters `parameterNames` renamed. Deriving them twice is how
+ * the two copies drift.
+ */
+function classBindings(classified, componentConfig, groups): Record<string, ClassBinding> {
+  const bindings: Record<string, ClassBinding> = {}
+
+  for (const group of groups.enums) {
+    for (const member of group.members) {
+      bindings[member] = {
+        // Escaped exactly as `component-shape.ts` declares it: a group named `object` would
+        // otherwise be called with a Kotlin keyword and fail to compile.
+        parameter: escapeKotlinKeyword(group.parameterName),
+        argument: `${group.enumName}.${toPascalClassName(member)}`,
+      }
+    }
+  }
+
+  // Everything the measurement left as a flag. Enums are written first and not overwritten: a
+  // class cannot be both, and if it somehow were, the enum is the one that reaches the CSS.
+  for (const cls of groups.booleans) {
+    bindings[cls] ??= { parameter: booleanParameterName(cls, componentConfig), argument: 'true' }
+  }
+
+  return bindings
 }
 
 function toTestFunctionName(name) {
@@ -195,14 +243,92 @@ function toTestFunctionName(name) {
   return funcName
 }
 
-function mapClassesToParams(classes, classToParam) {
-  const params = {}
-  for (const cls of classes) {
-    if (classToParam[cls]) {
-      params[classToParam[cls]] = true
-    }
+/** Everything one component needs to turn a documented element into a call. */
+interface CallModel {
+  readonly componentClass: string
+  readonly prefix: string | null
+  readonly allowedClasses: Set<string>
+  readonly bindings: Record<string, ClassBinding>
+}
+
+/** One generated call: its argument list and the classes it is expected to render. */
+interface ComponentCall {
+  readonly args: string
+  readonly expectedClasses: string
+}
+
+/**
+ * The class the generator actually emits for a documented one.
+ *
+ * DaisyUI files a few classes under a component without the component's prefix — `glass` under
+ * `button` — and the generator prefixes them on the way out, so the documented name and the
+ * rendered name differ.
+ */
+function emittedClass(componentClass: string, className: string): string {
+  return className.startsWith(`${componentClass}-`) ? className : `${componentClass}-${className}`
+}
+
+/** A prefixed class as it reaches the page: `lg:menu-horizontal`. */
+function emittedVariantClass(model: CallModel, documented: DocumentedClass): string {
+  return `${documented.variant}:${emittedClass(model.componentClass, documented.className)}`
+}
+
+function argumentFor(model: CallModel, documented: DocumentedClass): string {
+  const binding = model.bindings[strippedClass(model.prefix, documented.className)]
+  if (!binding) {
+    throw new Error(
+      `${model.componentClass}: the documented class "${documented.className}" reaches no ` +
+        `generated parameter. Every class DaisyUI lists under a modifier category becomes ` +
+        `either an enum entry or a boolean, so this means the classified model and the ` +
+        `documented markup disagree.`,
+    )
   }
-  return params
+  return `${binding.parameter} = ${binding.argument}`
+}
+
+/**
+ * Two documented classes answering the SAME parameter cannot both be passed.
+ *
+ * It means the example wears two members of one exclusive group at once, which contradicts the
+ * measurement in `codegen/exclusivity.json`. Failing here says so; emitting the call would
+ * produce Kotlin that names an argument twice and a compiler error nobody can trace back.
+ */
+function rejectRepeatedParameters(model: CallModel, args: readonly string[]): void {
+  const parameters = args.map(arg => arg.slice(0, arg.indexOf(' =')))
+  const repeated = parameters.filter((name, index) => parameters.indexOf(name) !== index)
+  if (repeated.length === 0) return
+  throw new Error(
+    `${model.componentClass}: a documented example sets ${repeated.join(', ')} twice, so two ` +
+      `members of one exclusive group are worn at once. Either the example or ` +
+      `codegen/exclusivity.json is wrong — re-run \`just measure-exclusivity\`.`,
+  )
+}
+
+/**
+ * One documented element turned into the call that reproduces it.
+ *
+ * A class carrying a Tailwind variant goes to `extraClasses`, because `at()` is parked while the
+ * compiled stylesheet cannot see a composed class. The expected-class string is the same either
+ * way, so the day `at()` ships, only the argument changes.
+ */
+function componentCallFor(model: CallModel, classes: readonly DocumentedClass[]): ComponentCall {
+  const relevant = classes.filter(documented => model.allowedClasses.has(documented.className))
+  const variants = relevant.filter(documented => documented.isPrefixed)
+  const modifiers = relevant.filter(
+    documented => !documented.isPrefixed && documented.className !== model.componentClass,
+  )
+
+  const variantClasses = variants.map(documented => emittedVariantClass(model, documented))
+  const args = modifiers.map(documented => argumentFor(model, documented))
+  rejectRepeatedParameters(model, args)
+  if (variantClasses.length > 0) args.push(`extraClasses = "${variantClasses.join(' ')}"`)
+
+  const rendered = [
+    model.componentClass,
+    ...modifiers.map(documented => emittedClass(model.componentClass, documented.className)),
+    ...variantClasses,
+  ]
+  return { args: args.join(', '), expectedClasses: [...new Set(rendered)].sort().join(' ') }
 }
 
 /** One `assertTrue` per statically-emitted attribute, indented for a test body. */
@@ -305,23 +431,6 @@ function uniqueTestName(usedNames, funcName) {
   return name
 }
 
-/** The classes the generator will emit for the classes a doc example carries. */
-function expectedClassesFor(containerClasses, componentClass) {
-  const generated = [componentClass]
-  for (const c of containerClasses) {
-    if (c === componentClass) continue
-    generated.push(c.startsWith(`${componentClass}-`) ? c : `${componentClass}-${c}`)
-  }
-  return generated.sort().join(' ')
-}
-
-function paramsToArgs(params) {
-  return Object.entries(params)
-    .filter(([k, v]) => v === true)
-    .map(([k, v]) => `${k} = true`)
-    .join(', ')
-}
-
 /** Asserts the component emits exactly the classes the doc example shows. */
 function generateClassTest(className, { testName, args, expectedClasses, caseName }) {
   return `
@@ -338,9 +447,47 @@ function generateClassTest(className, { testName, args, expectedClasses, caseNam
 `
 }
 
-function generateKotlinTest(componentName, testCases, frontmatter, config) {
+/**
+ * Everything needed to turn this component's documented markup into calls.
+ *
+ * `classifyGroups` is the same call `index-new.ts` makes, with the same measurement, so the
+ * tests are generated against the signature the components were generated with rather than
+ * against a second guess at it.
+ */
+function buildCallModel(componentName, frontmatter, config, measurement): CallModel {
+  const { allowedClasses, componentClass } = buildClassMappings(frontmatter)
+  const classified = classifyFromFrontmatter(frontmatter, componentName)
+  const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, measurement)
+  return {
+    componentClass,
+    prefix: classified.prefix,
+    allowedClasses,
+    bindings: classBindings(classified, readComponentConfig(config, classified.componentName, componentName), groups),
+  }
+}
+
+/**
+ * One test per documented element, deduplicated.
+ *
+ * A page often shows the same component several times under one heading — a row of identical
+ * buttons differing only in their label. Those produce the same call and the same assertion, so
+ * emitting each would add test methods that cannot fail independently.
+ */
+function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
+  const calls = documentedElementClasses(html, model.componentClass)
+    .map(classes => componentCallFor(model, classes))
+  const seen = new Set<string>()
+  return calls.filter(call => {
+    const signature = `${call.args}|${call.expectedClasses}`
+    if (seen.has(signature)) return false
+    seen.add(signature)
+    return true
+  })
+}
+
+function generateKotlinTest(componentName, testCases, frontmatter, config, measurement) {
   const className = toClassName(componentName)
-  const { allowedClasses, classToParam, componentClass } = buildClassMappings(frontmatter)
+  const model = buildCallModel(componentName, frontmatter, config, measurement)
   const customParts = configSection(config, 'customParts', componentName, [])
   const attributeTest = generateComponentAttributeTest(className, configSection(config, 'componentAttributes', componentName, {}))
   
@@ -367,15 +514,20 @@ class ${className}Test {
 `
   
   const usedNames = new Set()
+  // The number of TESTS, which is no longer the number of test cases: one heading can document
+  // several elements, and one that documents none produces no test at all.
+  let testCount = 0
   
   for (const tc of testCases) {
-    const containerClasses = filterContainerClasses(extractDaisyClasses(tc.html), allowedClasses)
-    kotlin += generateClassTest(className, {
-      testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
-      args: paramsToArgs(mapClassesToParams(containerClasses, classToParam)),
-      expectedClasses: expectedClassesFor(containerClasses, componentClass),
-      caseName: tc.name,
-    })
+    for (const call of componentCallsIn(model, tc.html)) {
+      testCount++
+      kotlin += generateClassTest(className, {
+        testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
+        args: call.args,
+        expectedClasses: call.expectedClasses,
+        caseName: tc.name,
+      })
+    }
   }
   
   kotlin += attributeTest
@@ -384,10 +536,10 @@ class ${className}Test {
   kotlin += `}
 `
   
-  return kotlin
+  return { kotlin, testCount }
 }
 
-function generateForComponent(componentName, config) {
+function generateForComponent(componentName, config, measurement) {
   const pageFile = path.join(DOCS_DIR, componentName, '+page.md')
   
   if (!fs.existsSync(pageFile)) {
@@ -406,12 +558,12 @@ function generateForComponent(componentName, config) {
     return { success: false, error: 'No test cases' }
   }
   
-  const kotlin = generateKotlinTest(componentName, testCases, frontmatter, config)
+  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, config, measurement)
   const className = toClassName(componentName)
   const outFile = path.join(OUTPUT_DIR, `${className}Test.kt`)
   
   fs.writeFileSync(outFile, kotlin)
-  return { success: true, testCount: testCases.length }
+  return { success: true, testCount }
 }
 
 // Exhaustive branch-coverage tests: parse each generated component source and
@@ -923,12 +1075,12 @@ function generateAllCoverage() {
  * Generate one component and print its progress line.
  * @returns whether it produced tests — the caller only needs the tally.
  */
-function generateAndReport(componentName, config) {
+function generateAndReport(componentName, config, measurement) {
   if (config.skip?.includes(componentName)) {
     console.log(`  ⊘ ${componentName}: Skipped (alias)`)
     return false
   }
-  const result = generateForComponent(componentName, config)
+  const result = generateForComponent(componentName, config, measurement)
   console.log(
     result.success
       ? `  ✓ ${componentName}: ${result.testCount} tests`
@@ -937,13 +1089,13 @@ function generateAndReport(componentName, config) {
   return result.success
 }
 
-function generateAllComponents(config) {
+function generateAllComponents(config, measurement) {
   console.log('Generating tests for all components...\n')
 
   let generated = 0
   let skipped = 0
   for (const componentName of getAllComponentDirs()) {
-    if (generateAndReport(componentName, config)) generated++
+    if (generateAndReport(componentName, config, measurement)) generated++
     else skipped++
   }
 
@@ -952,12 +1104,12 @@ function generateAllComponents(config) {
 }
 
 /** Single-component mode. Unlike the bulk mode, a failure here is fatal: it was asked for. */
-function generateSingleComponent(componentName, config) {
+function generateSingleComponent(componentName, config, measurement) {
   if (config.skip?.includes(componentName)) {
     console.error(`Error: ${componentName} is skipped (alias)`)
     process.exit(1)
   }
-  const result = generateForComponent(componentName, config)
+  const result = generateForComponent(componentName, config, measurement)
   if (!result.success) {
     console.error(`Error: ${result.error}`)
     process.exit(1)
@@ -976,9 +1128,12 @@ function printUsageAndExit() {
 function main() {
   const [mode] = process.argv.slice(2)
   const config = loadConfig()
+  // One file describing every component, read once rather than 66 times — the same call
+  // `index-new.ts` makes, so both generators decide from the identical measurement.
+  const measurement = loadMeasurement()
 
-  if (mode === 'all') return generateAllComponents(config)
-  if (mode) return generateSingleComponent(mode, config)
+  if (mode === 'all') return generateAllComponents(config, measurement)
+  if (mode) return generateSingleComponent(mode, config, measurement)
   printUsageAndExit()
 }
 

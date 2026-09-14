@@ -21,7 +21,7 @@ class JoinTest {
     @Test
     fun group_items_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin(vertical = true) {
+            daisyJoin(direction = JoinDirection.Vertical) {
             }
         }
         val expectedClasses = "join join-vertical"
@@ -32,10 +32,10 @@ class JoinTest {
     @Test
     fun responsive_it_s_vertical_on_small_screen_and_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin(vertical = true, horizontal = true) {
+            daisyJoin(direction = JoinDirection.Vertical, extraClasses = "lg:join-horizontal") {
             }
         }
-        val expectedClasses = "join join-horizontal join-vertical"
+        val expectedClasses = "join join-vertical lg:join-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: it's vertical on small screen and horizontal on large screen")
     }

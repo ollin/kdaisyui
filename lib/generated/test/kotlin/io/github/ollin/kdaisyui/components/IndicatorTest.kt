@@ -76,10 +76,10 @@ class IndicatorTest {
     @Test
     fun a_button_as_an_indicator_for_a_card() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(bottom = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-bottom"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for A button as an indicator for a card")
     }
@@ -87,10 +87,10 @@ class IndicatorTest {
     @Test
     fun in_center_of_an_image() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(center = true, middle = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-center indicator-middle"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for in center of an image")
     }
@@ -98,10 +98,10 @@ class IndicatorTest {
     @Test
     fun indicator_top_default_indicator_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(start = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-start"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-top (default) indicator-start")
     }
@@ -109,10 +109,10 @@ class IndicatorTest {
     @Test
     fun indicator_top_default_indicator_center() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(center = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-center"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-top (default) indicator-center")
     }
@@ -131,10 +131,10 @@ class IndicatorTest {
     @Test
     fun indicator_middle_indicator_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(middle = true, start = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-middle indicator-start"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-middle indicator-start")
     }
@@ -142,10 +142,10 @@ class IndicatorTest {
     @Test
     fun indicator_middle_indicator_center() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(middle = true, center = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-center indicator-middle"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-middle indicator-center")
     }
@@ -153,10 +153,10 @@ class IndicatorTest {
     @Test
     fun indicator_middle_indicator_end_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(middle = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-middle"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-middle indicator-end (default)")
     }
@@ -164,10 +164,10 @@ class IndicatorTest {
     @Test
     fun indicator_bottom_indicator_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(bottom = true, start = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-bottom indicator-start"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-bottom indicator-start")
     }
@@ -175,10 +175,10 @@ class IndicatorTest {
     @Test
     fun indicator_bottom_indicator_center() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(bottom = true, center = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-bottom indicator-center"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-bottom indicator-center")
     }
@@ -186,10 +186,10 @@ class IndicatorTest {
     @Test
     fun indicator_bottom_indicator_end_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(bottom = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-bottom"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-bottom indicator-end (default)")
     }
@@ -197,10 +197,10 @@ class IndicatorTest {
     @Test
     fun multiple_indicators() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(top = true, start = true, center = true, end = true, middle = true, bottom = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-bottom indicator-center indicator-end indicator-middle indicator-start indicator-top"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
     }
@@ -208,10 +208,10 @@ class IndicatorTest {
     @Test
     fun responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(start = true, middle = true, bottom = true, center = true, end = true) {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator indicator-bottom indicator-center indicator-end indicator-middle indicator-start"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive")
     }

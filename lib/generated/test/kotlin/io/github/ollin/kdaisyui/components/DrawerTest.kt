@@ -32,10 +32,10 @@ class DrawerTest {
     @Test
     fun responsive_sidebar_is_always_visible_on_large_screen_can_be_toggled_on_small_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawer(open = true) {
+            daisyDrawer(extraClasses = "lg:drawer-open") {
             }
         }
-        val expectedClasses = "drawer drawer-open"
+        val expectedClasses = "drawer lg:drawer-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
     }
@@ -43,10 +43,10 @@ class DrawerTest {
     @Test
     fun responsive_collapsible_icon_only_drawer_sidebar_using_is_drawer_close_and_is_drawer_open() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawer(open = true) {
+            daisyDrawer(extraClasses = "lg:drawer-open") {
             }
         }
-        val expectedClasses = "drawer drawer-open"
+        val expectedClasses = "drawer lg:drawer-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive collapsible Icon-only drawer sidebar. Using is-drawer-close and is-drawer-open")
     }

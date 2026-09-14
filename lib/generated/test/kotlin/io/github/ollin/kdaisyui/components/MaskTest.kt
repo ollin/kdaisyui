@@ -10,7 +10,7 @@ class MaskTest {
     @Test
     fun squircle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(squircle = true) {
+            daisyMask(shape = MaskShape.Squircle) {
             }
         }
         val expectedClasses = "mask mask-squircle"
@@ -21,7 +21,7 @@ class MaskTest {
     @Test
     fun heart() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(heart = true) {
+            daisyMask(shape = MaskShape.Heart) {
             }
         }
         val expectedClasses = "mask mask-heart"
@@ -32,7 +32,7 @@ class MaskTest {
     @Test
     fun hexagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(hexagon = true) {
+            daisyMask(shape = MaskShape.Hexagon) {
             }
         }
         val expectedClasses = "mask mask-hexagon"
@@ -43,10 +43,10 @@ class MaskTest {
     @Test
     fun hexagon_2_horizontal_hexagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask() {
+            daisyMask(shape = MaskShape.Hexagon2) {
             }
         }
-        val expectedClasses = "mask"
+        val expectedClasses = "mask mask-hexagon-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hexagon-2 (horizontal hexagon)")
     }
@@ -54,7 +54,7 @@ class MaskTest {
     @Test
     fun decagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(decagon = true) {
+            daisyMask(shape = MaskShape.Decagon) {
             }
         }
         val expectedClasses = "mask mask-decagon"
@@ -65,7 +65,7 @@ class MaskTest {
     @Test
     fun pentagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(pentagon = true) {
+            daisyMask(shape = MaskShape.Pentagon) {
             }
         }
         val expectedClasses = "mask mask-pentagon"
@@ -76,7 +76,7 @@ class MaskTest {
     @Test
     fun diamond() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(diamond = true) {
+            daisyMask(shape = MaskShape.Diamond) {
             }
         }
         val expectedClasses = "mask mask-diamond"
@@ -87,7 +87,7 @@ class MaskTest {
     @Test
     fun square() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(square = true) {
+            daisyMask(shape = MaskShape.Square) {
             }
         }
         val expectedClasses = "mask mask-square"
@@ -98,7 +98,7 @@ class MaskTest {
     @Test
     fun circle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(circle = true) {
+            daisyMask(shape = MaskShape.Circle) {
             }
         }
         val expectedClasses = "mask mask-circle"
@@ -109,7 +109,7 @@ class MaskTest {
     @Test
     fun star() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(star = true) {
+            daisyMask(shape = MaskShape.Star) {
             }
         }
         val expectedClasses = "mask mask-star"
@@ -120,10 +120,10 @@ class MaskTest {
     @Test
     fun star_2_bold_star() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask() {
+            daisyMask(shape = MaskShape.Star2) {
             }
         }
-        val expectedClasses = "mask"
+        val expectedClasses = "mask mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Star-2 (bold star)")
     }
@@ -131,7 +131,7 @@ class MaskTest {
     @Test
     fun triangle_pointing_top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(triangle = true) {
+            daisyMask(shape = MaskShape.Triangle) {
             }
         }
         val expectedClasses = "mask mask-triangle"
@@ -142,10 +142,10 @@ class MaskTest {
     @Test
     fun triangle_2_pointing_down() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask() {
+            daisyMask(shape = MaskShape.Triangle2) {
             }
         }
-        val expectedClasses = "mask"
+        val expectedClasses = "mask mask-triangle-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-2 (pointing down)")
     }
@@ -153,10 +153,10 @@ class MaskTest {
     @Test
     fun triangle_3_pointing_left() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask() {
+            daisyMask(shape = MaskShape.Triangle3) {
             }
         }
-        val expectedClasses = "mask"
+        val expectedClasses = "mask mask-triangle-3"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-3 (pointing left)")
     }
@@ -164,10 +164,10 @@ class MaskTest {
     @Test
     fun triangle_4_pointing_right() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask() {
+            daisyMask(shape = MaskShape.Triangle4) {
             }
         }
-        val expectedClasses = "mask"
+        val expectedClasses = "mask mask-triangle-4"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-4 (pointing right)")
     }

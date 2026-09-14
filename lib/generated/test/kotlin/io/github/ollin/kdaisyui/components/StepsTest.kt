@@ -21,7 +21,7 @@ class StepsTest {
     @Test
     fun vertical() {
         val html = createHTML(prettyPrint = false).div {
-            daisySteps(vertical = true) {
+            daisySteps(direction = StepsDirection.Vertical) {
             }
         }
         val expectedClasses = "steps steps-vertical"
@@ -32,10 +32,10 @@ class StepsTest {
     @Test
     fun responsive_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisySteps(vertical = true, horizontal = true) {
+            daisySteps(direction = StepsDirection.Vertical, extraClasses = "lg:steps-horizontal") {
             }
         }
-        val expectedClasses = "steps steps-horizontal steps-vertical"
+        val expectedClasses = "lg:steps-horizontal steps steps-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for responsive (vertical on small screen, horizontal on large screen)")
     }

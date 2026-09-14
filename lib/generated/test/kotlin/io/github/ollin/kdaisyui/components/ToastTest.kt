@@ -21,7 +21,7 @@ class ToastTest {
     @Test
     fun toast_top_toast_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(top = true, start = true) {
+            daisyToast(verticalPlacement = ToastVerticalPlacement.Top, horizontalPlacement = ToastHorizontalPlacement.Start) {
             }
         }
         val expectedClasses = "toast toast-start toast-top"
@@ -32,7 +32,7 @@ class ToastTest {
     @Test
     fun toast_top_toast_center() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(top = true, center = true) {
+            daisyToast(verticalPlacement = ToastVerticalPlacement.Top, horizontalPlacement = ToastHorizontalPlacement.Center) {
             }
         }
         val expectedClasses = "toast toast-center toast-top"
@@ -43,7 +43,7 @@ class ToastTest {
     @Test
     fun toast_top_toast_end() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(top = true, end = true) {
+            daisyToast(verticalPlacement = ToastVerticalPlacement.Top, horizontalPlacement = ToastHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "toast toast-end toast-top"
@@ -54,7 +54,7 @@ class ToastTest {
     @Test
     fun toast_start_toast_middle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(start = true, middle = true) {
+            daisyToast(horizontalPlacement = ToastHorizontalPlacement.Start, verticalPlacement = ToastVerticalPlacement.Middle) {
             }
         }
         val expectedClasses = "toast toast-middle toast-start"
@@ -65,7 +65,7 @@ class ToastTest {
     @Test
     fun toast_center_toast_middle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(center = true, middle = true) {
+            daisyToast(horizontalPlacement = ToastHorizontalPlacement.Center, verticalPlacement = ToastVerticalPlacement.Middle) {
             }
         }
         val expectedClasses = "toast toast-center toast-middle"
@@ -76,7 +76,7 @@ class ToastTest {
     @Test
     fun toast_end_toast_middle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(end = true, middle = true) {
+            daisyToast(horizontalPlacement = ToastHorizontalPlacement.End, verticalPlacement = ToastVerticalPlacement.Middle) {
             }
         }
         val expectedClasses = "toast toast-end toast-middle"
@@ -87,7 +87,7 @@ class ToastTest {
     @Test
     fun toast_start_toast_bottom_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(start = true) {
+            daisyToast(horizontalPlacement = ToastHorizontalPlacement.Start) {
             }
         }
         val expectedClasses = "toast toast-start"
@@ -98,7 +98,7 @@ class ToastTest {
     @Test
     fun toast_center_toast_bottom_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(center = true) {
+            daisyToast(horizontalPlacement = ToastHorizontalPlacement.Center) {
             }
         }
         val expectedClasses = "toast toast-center"
@@ -109,7 +109,7 @@ class ToastTest {
     @Test
     fun toast_end_default_toast_bottom_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToast(end = true) {
+            daisyToast(horizontalPlacement = ToastHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "toast toast-end"

@@ -10,10 +10,10 @@ class TimelineTest {
     @Test
     fun timeline_with_text_on_both_sides_and_icon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(box = true) {
+            daisyTimeline() {
             }
         }
-        val expectedClasses = "timeline timeline-box"
+        val expectedClasses = "timeline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with text on both sides and icon")
     }
@@ -21,10 +21,10 @@ class TimelineTest {
     @Test
     fun timeline_with_bottom_side_only() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(box = true) {
+            daisyTimeline() {
             }
         }
-        val expectedClasses = "timeline timeline-box"
+        val expectedClasses = "timeline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with bottom side only")
     }
@@ -32,10 +32,10 @@ class TimelineTest {
     @Test
     fun timeline_with_top_side_only() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(box = true) {
+            daisyTimeline() {
             }
         }
-        val expectedClasses = "timeline timeline-box"
+        val expectedClasses = "timeline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with top side only")
     }
@@ -43,10 +43,10 @@ class TimelineTest {
     @Test
     fun timeline_with_different_sides() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(box = true) {
+            daisyTimeline() {
             }
         }
-        val expectedClasses = "timeline timeline-box"
+        val expectedClasses = "timeline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with different sides")
     }
@@ -54,10 +54,10 @@ class TimelineTest {
     @Test
     fun timeline_with_colorful_lines() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(box = true) {
+            daisyTimeline() {
             }
         }
-        val expectedClasses = "timeline timeline-box"
+        val expectedClasses = "timeline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with colorful lines")
     }
@@ -65,10 +65,10 @@ class TimelineTest {
     @Test
     fun timeline_without_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(box = true) {
+            daisyTimeline() {
             }
         }
-        val expectedClasses = "timeline timeline-box"
+        val expectedClasses = "timeline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline without icons")
     }
@@ -76,10 +76,10 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_text_on_both_sides_and_icon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, box = true) {
+            daisyTimeline(vertical = true) {
             }
         }
-        val expectedClasses = "timeline timeline-box timeline-vertical"
+        val expectedClasses = "timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical timeline with text on both sides and icon")
     }
@@ -87,10 +87,10 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_right_side_only() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, box = true) {
+            daisyTimeline(vertical = true) {
             }
         }
-        val expectedClasses = "timeline timeline-box timeline-vertical"
+        val expectedClasses = "timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical timeline with right side only")
     }
@@ -98,10 +98,10 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_left_side_only() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, box = true) {
+            daisyTimeline(vertical = true) {
             }
         }
-        val expectedClasses = "timeline timeline-box timeline-vertical"
+        val expectedClasses = "timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical timeline with left side only")
     }
@@ -109,10 +109,10 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_different_sides() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, box = true) {
+            daisyTimeline(vertical = true) {
             }
         }
-        val expectedClasses = "timeline timeline-box timeline-vertical"
+        val expectedClasses = "timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical timeline with different sides")
     }
@@ -120,10 +120,10 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_colorful_lines() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, box = true) {
+            daisyTimeline(vertical = true) {
             }
         }
-        val expectedClasses = "timeline timeline-box timeline-vertical"
+        val expectedClasses = "timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical timeline with colorful lines")
     }
@@ -131,10 +131,10 @@ class TimelineTest {
     @Test
     fun vertical_timeline_without_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, box = true) {
+            daisyTimeline(vertical = true) {
             }
         }
-        val expectedClasses = "timeline timeline-box timeline-vertical"
+        val expectedClasses = "timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical timeline without icons")
     }
@@ -142,10 +142,10 @@ class TimelineTest {
     @Test
     fun responsive_vertical_by_default_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, horizontal = true, box = true) {
+            daisyTimeline(vertical = true, extraClasses = "lg:timeline-horizontal") {
             }
         }
-        val expectedClasses = "timeline timeline-box timeline-horizontal timeline-vertical"
+        val expectedClasses = "lg:timeline-horizontal timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: vertical by default, horizontal on large screen")
     }
@@ -153,10 +153,10 @@ class TimelineTest {
     @Test
     fun timeline_with_icon_snapped_to_the_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(snapIcon = true, compact = true, vertical = true) {
+            daisyTimeline(snapIcon = true, vertical = true, extraClasses = "max-md:timeline-compact") {
             }
         }
-        val expectedClasses = "timeline timeline-compact timeline-snap-icon timeline-vertical"
+        val expectedClasses = "max-md:timeline-compact timeline timeline-snap-icon timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with icon snapped to the start")
     }

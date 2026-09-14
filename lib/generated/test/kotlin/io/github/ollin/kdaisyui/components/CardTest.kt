@@ -43,7 +43,7 @@ class CardTest {
     @Test
     fun card_with_a_card_border() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(border = true) {
+            daisyCard(style = CardStyle.Border) {
             }
         }
         val expectedClasses = "card card-border"
@@ -54,7 +54,7 @@ class CardTest {
     @Test
     fun card_with_a_dash_border() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(dash = true) {
+            daisyCard(style = CardStyle.Dash) {
             }
         }
         val expectedClasses = "card card-dash"
@@ -98,7 +98,7 @@ class CardTest {
     @Test
     fun card_with_image_overlay() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(imageFull = true) {
+            daisyCard(modifier = CardModifier.ImageFull) {
             }
         }
         val expectedClasses = "card card-image-full"
@@ -153,7 +153,7 @@ class CardTest {
     @Test
     fun card_with_image_on_side() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(side = true) {
+            daisyCard(modifier = CardModifier.Side) {
             }
         }
         val expectedClasses = "card card-side"
@@ -164,10 +164,10 @@ class CardTest {
     @Test
     fun responsive_card_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(side = true) {
+            daisyCard(extraClasses = "lg:card-side") {
             }
         }
-        val expectedClasses = "card card-side"
+        val expectedClasses = "card lg:card-side"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive card (vertical on small screen, horizontal on large screen)")
     }

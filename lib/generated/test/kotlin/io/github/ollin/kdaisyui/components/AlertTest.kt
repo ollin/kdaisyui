@@ -98,10 +98,10 @@ class AlertTest {
     @Test
     fun alert_with_buttons_responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(vertical = true, horizontal = true) {
+            daisyAlert(direction = AlertDirection.Vertical, extraClasses = "sm:alert-horizontal") {
             }
         }
-        val expectedClasses = "alert alert-horizontal alert-vertical"
+        val expectedClasses = "alert alert-vertical sm:alert-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with buttons + responsive")
     }
@@ -109,10 +109,10 @@ class AlertTest {
     @Test
     fun alert_with_title_and_description() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(vertical = true, horizontal = true) {
+            daisyAlert(direction = AlertDirection.Vertical, extraClasses = "sm:alert-horizontal") {
             }
         }
-        val expectedClasses = "alert alert-horizontal alert-vertical"
+        val expectedClasses = "alert alert-vertical sm:alert-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with title and description")
     }

@@ -741,6 +741,129 @@ This is the asymmetric-cost rule paying out exactly as designed. The consequence
 escape hatch carries anyway. The alternative failure, an enum that makes a reachable combination
 impossible, is the one that cannot be worked around.
 
+## Probe 5: the premise refuted by the thing it was built to enable — 2026-09-13
+
+`at()` was built first and measured afterwards, and the measurement removed its reason to
+exist. A call site of `at(Breakpoint.Xl, ButtonSize.Lg)` renders `class="btn xl:btn-lg"` and
+leaves the compiled stylesheet **byte-identical** — sha256 `3ac649e1`, 412052 bytes, before and
+after.
+
+The cause is not a bug to fix. Tailwind emits CSS per candidate **string** it finds while
+scanning files as text. `xl:btn-lg` is composed at run time from two halves and therefore appears
+in no file. `extraClasses = "lg:btn-lg"` works precisely *because* the literal IS the candidate —
+the string escape hatch has "only what is used" semantics that a typed composition cannot have.
+
+So the typed API would hand a caller a class attribute that styles nothing, with no compile error
+and no log. That is the failure this library exists to prevent.
+
+**Decided: park the composition.** `Variant`, `Breakpoint`, `State`, `DrawerVariant`, `at` and
+`and` are `internal`. `ClassValues` stays **public**, because it is the parameter type of every
+enum-backed parameter and `size = ButtonSize.Lg` reads the same either way — so unparking is a
+visibility flip rather than an API break.
+
+**The enum conversion ships on its own merit and needs no answer to this.** Fourteen groups
+becoming a choice is worth having whether or not a class can ever be applied at a breakpoint.
+
+### What the delivery would cost, if it were simply shipped
+
+Measured on `example-app`: baseline 412 KB, 49.2 KB gzip.
+
+| classes delivered | gzip |
+|---|---|
+| baseline | 49.2 KB |
+| + 1 variant over the 325 enum classes | 58.7 KB |
+| + 3 variants | 77.8 KB |
+
+Roughly **9.5 KB gzip per variant, linear** — and `at()` can only ever prefix the 325 enum member
+classes, never the 235 backed by a boolean, which have no value to apply. Shipping the closed set
+of ten breakpoints unconditionally is therefore not an option either.
+
+### What has to land first, and what is already known about it
+
+A build-time extractor over the **consumer's** compiled classes, emitting only the combinations
+that consumer actually names. Verified feasible at its crux the same day: a consumer's class file
+carries constant-pool `Fieldref`s to **both** `io/github/ollin/kdaisyui/components/ButtonSize.Lg`
+and `io/github/ollin/kdaisyui/core/Breakpoint.Xl`, so no dataflow analysis is needed, and the CSS
+string lives in the library's own `ButtonSize.class`.
+
+Scale, measured on `example-app`: 15 distinct enum entries named, 27 of 66 component functions
+called, against **560 classes delivered today**, and `values()` / `valueOf` / `entries` used zero
+times — so the reflective escape that would defeat the whole approach is not in use.
+
+**Open and NOT measured, stated rather than assumed:** the boolean fallback — a consumer naming
+no class at all for `daisyCard(border = true)`, where granularity drops from the class to the
+component — and what the resulting CSS actually weighs. It is its own change, and worth having
+without this one.
+
+## The generated tests had a model defect of their own — 2026-09-14
+
+The exclusive groups becoming enums turned `:lib:compileTestKotlin` red with ~130 errors, because
+the generated component tests still called the booleans the enums replaced. The obvious repair —
+teach the test generator to write `MenuDirection.Vertical` — would have compiled and kept three
+false assertions alive.
+
+`extractDaisyClasses` unioned **every** `$$` token in a whole example block, regardless of which
+element carried it. That is a model defect rather than a parsing bug: an example block is not one
+element. It predates this change and was invisible only because a union of booleans still
+compiled.
+
+| | what it produced | corrected |
+|---|---|---|
+| variant dropped | `$$menu $$menu-vertical lg:$$menu-horizontal` → `menu menu-horizontal menu-vertical` | `direction = MenuDirection.Vertical, extraClasses = "lg:menu-horizontal"` |
+| siblings unioned | tooltip's `### ~Top` holds three divs; one call carried top, start **and** end | three tests: top+start, top, top+end |
+| child hoisted | `indicator-start` sits on a child `<span class="$$indicator-item">` | `daisyIndicator()` — the parent carries only `indicator` |
+
+The first mode is the one that matters most here, because it destroyed the evidence for this very
+change: `menu-vertical lg:menu-horizontal` is **one class at two breakpoints**, and unioning it
+reads as an element wearing both directions at once. The same misreading was already recorded
+once in this document, in the first run of the exclusivity measurement.
+
+30 generated test calls across 13 components now pass a variant class, 15 distinct — every one of
+them an assertion that was previously wrong. DaisyUI's examples carry 64 prefixed daisyUI tokens
+across 17 of 68 component pages, using 8 distinct variants, which agrees with block 1's count of
+63 to within one token.
+
+The fix is per-element: find each element carrying the unprefixed `$$<componentClass>` and read
+**its** class list. `parser/documented-element.ts` already did that lookup for one element; the
+generalisation is `parser/documented-classes.ts`, with `DocumentedClass` wrapping the token
+instead of passing the encoded string around.
+
+A prefixed class goes to `extraClasses`, since `at()` is parked. The expected-class string is
+identical either way, so unparking `at()` later changes an argument and no assertion.
+
+### What the fix exposed: some parameters are on the wrong function
+
+Correcting the hoisting removed `daisyIndicator(start = ...)`, `daisyMenu(active = true)`,
+`disabled` and `dropdownShow` from the generated tests — and the reason is not that those classes
+are untested. It is that **DaisyUI puts them on a different element than the one the parameter
+sits on**:
+
+| class | element DaisyUI puts it on | occurrences | parameter today |
+|---|---|---|---|
+| `indicator-start` | `<span class="$$indicator-item …">` | 4 | `daisyIndicator(horizontalPlacement)` |
+| `indicator-top` | `<span class="$$indicator-item …">` | 3 | `daisyIndicator(verticalPlacement)` |
+| `menu-active` | `<a>` | 1 | `daisyMenu(active)` |
+| `menu-disabled` | `<li>` | 2 | `daisyMenu(disabled)` |
+| `menu-dropdown-show` | `$$menu-dropdown`, `$$menu-dropdown-toggle` | 2 | `daisyMenu(dropdownShow)` |
+
+Not one occurrence puts an `indicator-*` placement on the element carrying `indicator`.
+`daisyIndicatorItem` already exists and is where both belong.
+
+**`toast` is the contrast case, and it is correct**: `toast-top` and `toast-end` appear six times,
+every one of them on the `$$toast` element itself. So the two-axis placement enum is the right
+shape — `toast` proves it — and what is wrong is only *which function carries it*. That
+distinction is what keeps this out of the exclusivity measurement's account: the measurement
+answered which classes are a choice, not where the choice lives.
+
+Filed as **#347** rather than fixed here. Correcting it changes the public API of at least two
+components and needs the same per-element evidence applied to the generated **parts**, which is a
+larger question than this change. Related to #342, where `daisyTab` has container and item
+inverted — the same family.
+
+The root cause is worth naming because it is general: the generator decides which function a
+class goes on from DaisyUI's frontmatter **category**, which says what a class *means* and not
+which element it sits on. The element is stated in the markup and is now mechanically readable.
+
 ## Non-Goals
 
 **Typing Tailwind utilities.** 35 of 47 tokens, an unbounded set maintained by another project.

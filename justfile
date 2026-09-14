@@ -22,11 +22,18 @@ generate:
     @git status --short lib/generated docs/reference || true
     @git --no-pager diff --stat -- lib/generated docs/reference || true
 
-# Re-dump the committed public API baseline in lib/api and show what changed.
+# Re-dump BOTH committed public API baselines in lib/api and show what changed.
 # Only run this when an API change is intended: the diff is the change, and a
 # breaking one needs a "How to migrate" entry in README.md before its release.
+#
+# Both, because they see different things and CI checks both. lib.api is the JVM
+# ABI and erases a lambda receiver to Function1; components.api carries receiver
+# types, parameter names and defaults. This recipe ran only the first until
+# 2026-09-14 — it predates components.api, which arrived in 0.5.0 — so following
+# the documented workflow left checkComponentApi failing, and the obvious way out
+# of that is to re-dump the second by hand without reading its diff.
 update-api:
-    ./gradlew :lib:updateKotlinAbi
+    ./gradlew :lib:updateKotlinAbi :lib:updateComponentApi
     @echo
     @git --no-pager diff -- lib/api || true
 

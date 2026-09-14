@@ -7,17 +7,23 @@ import kotlinx.html.*
 /**
  * Whether a Tailwind variant of a DaisyUI class actually applies.
  *
- * `docs/explanation.md` promises consumers that `extraClasses` takes "responsive variants
- * (`lg:btn-lg`)". Whether that is true depends entirely on how the application compiles its CSS,
+ * `docs/explanation.md` promises consumers that `extraClasses` takes responsive variants of a
+ * DaisyUI class. Whether that is true depends entirely on how the application compiles its CSS,
  * and the page exists so the answer is measured rather than assumed.
  *
  * The two buttons are a matched pair, which is what makes the assertion self-calibrating:
  *
  * - **control** carries `btn-lg` outright and is therefore large at every width;
- * - **variant** carries `lg:btn-lg` and should match the control from the `lg` breakpoint up,
- *   and be smaller below it.
+ * - **variant** carries the same class behind an `lg` breakpoint and should match the control
+ *   from that breakpoint up, and be smaller below it.
  *
  * Comparing them needs no hard-coded pixel value and survives any DaisyUI restyle of `btn-lg`.
+ *
+ * **NOTHING IN THIS FILE MAY SPELL THE PREFIXED CLASS EXCEPT THE `extraClasses` ARGUMENT ITSELF.**
+ * Tailwind scans these sources as TEXT and does not know a comment from a call, so writing the
+ * composed class in this doc comment generated the CSS rule from the comment — and the end-to-end
+ * assertion below then passed whether or not `extraClasses` worked at all. It was unfalsifiable
+ * for that reason until 2026-09-14. Say the variant and the class separately, as above.
  */
 fun HTML.tailwindVariantPage() {
     lang = "en"

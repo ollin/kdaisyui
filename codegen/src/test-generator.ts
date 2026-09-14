@@ -7,7 +7,10 @@ import {
   toPascalCase,
   type ClassCategory,
 } from './parser/frontmatter.ts'
-import { classifyFromFrontmatter, toCamelCase, toPascalCase as toPascalClassName } from './classifier.ts'
+// `toPascalCase` is aliased because this file already imports the frontmatter one, which is
+// branded to a ComponentName. An enum member suffix is not a component name, and the classifier's
+// is the generic string form.
+import { classifyFromFrontmatter, toPascalCase as toPascalClassName } from './classifier.ts'
 import { classifyGroups } from './class-groups.ts'
 import { loadMeasurement } from './measurement.ts'
 import { booleanParameterName, escapeKotlinKeyword, readComponentConfig } from './component-shape.ts'
@@ -155,22 +158,23 @@ function modifierClasses(classnames) {
     .map((item) => item.class)
 }
 
+/**
+ * Which classes of a documented example belong to this component, and what it is called.
+ *
+ * This is a FILTER and nothing more. It used to also answer "and which parameter does each
+ * class become", by camel-casing the class name — an answer that was right only while every
+ * parameter was a boolean. `classBindings` below answers it now, from the measured model, so
+ * the two possible answers cannot disagree.
+ */
 function buildClassMappings(frontmatter) {
   const componentClass = frontmatter.classnames?.component?.[0]?.class
   const allowedClasses = new Set(componentClass ? [componentClass] : [])
-  const classToParam = {}
-  const paramToGeneratedClass = {}
 
   for (const cssClass of modifierClasses(frontmatter.classnames)) {
     allowedClasses.add(cssClass)
-    // `replace` with a STRING replaces the first occurrence only, so `btn-btn-x` yields
-    // `btnX` rather than `x`. Pinned by test; do not reach for a regex here.
-    const paramName = toCamelCase(cssClass.replace(`${componentClass}-`, ''))
-    classToParam[cssClass] = paramName
-    paramToGeneratedClass[paramName] = cssClass
   }
 
-  return { allowedClasses, classToParam, paramToGeneratedClass, componentClass }
+  return { allowedClasses, componentClass }
 }
 
 /**

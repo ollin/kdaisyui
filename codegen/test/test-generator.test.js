@@ -121,38 +121,12 @@ describe('buildClassMappings', () => {
     )
   })
 
-  test('maps each class to a camelCase param with the component prefix stripped', () => {
-    const { classToParam } = buildClassMappings(
-      frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-no-animation' }] }),
-    )
-
-    assert.deepEqual(classToParam, { 'btn-no-animation': 'noAnimation' })
-  })
-
-  test('builds the reverse map from param back to class', () => {
-    const { paramToGeneratedClass } = buildClassMappings(
-      frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-outline' }] }),
-    )
-
-    assert.deepEqual(paramToGeneratedClass, { outline: 'btn-outline' })
-  })
-
-  test('leaves a class alone when it does not carry the component prefix', () => {
-    const { classToParam } = buildClassMappings(
+  test('allows a class that does not carry the component prefix', () => {
+    const { allowedClasses } = buildClassMappings(
       frontmatter({ component: [{ class: 'btn' }], style: [{ class: 'glass' }] }),
     )
 
-    assert.deepEqual(classToParam, { glass: 'glass' })
-  })
-
-  test('strips only the FIRST occurrence of the prefix', () => {
-    // `String.replace` with a string argument replaces once. Pinned because a later
-    // switch to a regex would silently change this.
-    const { classToParam } = buildClassMappings(
-      frontmatter({ component: [{ class: 'btn' }], modifier: [{ class: 'btn-btn-x' }] }),
-    )
-
-    assert.deepEqual(classToParam, { 'btn-btn-x': 'btnX' })
+    assert.deepEqual([...allowedClasses].sort(), ['btn', 'glass'])
   })
 
   test('tolerates a document with no classnames at all', () => {
@@ -160,7 +134,6 @@ describe('buildClassMappings', () => {
 
     assert.equal(result.componentClass, undefined)
     assert.deepEqual([...result.allowedClasses], [])
-    assert.deepEqual(result.classToParam, {})
   })
 
   test('skips a category that is not an array, and an item with no class', () => {

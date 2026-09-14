@@ -10,10 +10,21 @@ class ChatTest {
     @Test
     fun chat_start_and_chat_end() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true, end = true) {
+            daisyChat(start = true) {
             }
         }
-        val expectedClasses = "chat chat-end chat-start"
+        val expectedClasses = "chat chat-start"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for chat-start and chat-end")
+    }
+
+    @Test
+    fun chat_start_and_chat_end_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChat(end = true) {
+            }
+        }
+        val expectedClasses = "chat chat-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for chat-start and chat-end")
     }
@@ -32,10 +43,21 @@ class ChatTest {
     @Test
     fun chat_with_image_header_and_footer() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true, end = true) {
+            daisyChat(start = true) {
             }
         }
-        val expectedClasses = "chat chat-end chat-start"
+        val expectedClasses = "chat chat-start"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image, header and footer")
+    }
+
+    @Test
+    fun chat_with_image_header_and_footer_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChat(end = true) {
+            }
+        }
+        val expectedClasses = "chat chat-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image, header and footer")
     }
@@ -54,10 +76,21 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true, end = true) {
+            daisyChat(start = true) {
             }
         }
-        val expectedClasses = "chat chat-end chat-start"
+        val expectedClasses = "chat chat-start"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+    }
+
+    @Test
+    fun chat_bubble_with_colors_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChat(end = true) {
+            }
+        }
+        val expectedClasses = "chat chat-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
     }

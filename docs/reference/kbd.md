@@ -15,7 +15,7 @@ Keyboard key display. Renders `<kbd class="kbd ...">`.
 fun FlowContent.daisyKbd(
     text: String? = null,
     id: HtmlId? = null,
-    size: KbdSize? = null,
+    size: ClassValues<KbdSize>? = null,
     extraClasses: String? = null,
     attrs: (KBD.() -> Unit)? = null,
     content: (KBD.() -> Unit)? = null,

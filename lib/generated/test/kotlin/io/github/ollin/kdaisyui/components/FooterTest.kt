@@ -10,10 +10,10 @@ class FooterTest {
     @Test
     fun footer_vertical_by_default_horizontal_for_sm_and_up() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer (vertical by default, horizontal for sm and up)")
     }
@@ -21,10 +21,10 @@ class FooterTest {
     @Test
     fun footer_with_a_logo_section() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a logo section")
     }
@@ -32,10 +32,10 @@ class FooterTest {
     @Test
     fun footer_with_a_form() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a form")
     }
@@ -43,10 +43,10 @@ class FooterTest {
     @Test
     fun footer_with_logo_and_social_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with logo and social icons")
     }
@@ -54,10 +54,10 @@ class FooterTest {
     @Test
     fun footer_with_copyright_text() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true, center = true) {
+            daisyFooter(center = true, extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-center footer-horizontal"
+        val expectedClasses = "footer footer-center sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with copyright text")
     }
@@ -65,10 +65,10 @@ class FooterTest {
     @Test
     fun footer_with_copyright_text_and_social_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with copyright text and social icons")
     }
@@ -76,10 +76,10 @@ class FooterTest {
     @Test
     fun footer_with_links_and_social_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with links and social icons")
     }
@@ -87,10 +87,10 @@ class FooterTest {
     @Test
     fun footer_with_2_rows() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with 2 rows")
     }
@@ -120,10 +120,21 @@ class FooterTest {
     @Test
     fun two_footer() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true) {
+            daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-horizontal"
+        val expectedClasses = "footer sm:footer-horizontal"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Two footer")
+    }
+
+    @Test
+    fun two_footer_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooter() {
+            }
+        }
+        val expectedClasses = "footer"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Two footer")
     }

@@ -76,10 +76,21 @@ class BadgeTest {
     @Test
     fun neutral_badge_with_outline_or_dash_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(outline = true, dash = true) {
+            daisyBadge(outline = true) {
             }
         }
-        val expectedClasses = "badge badge-dash badge-outline"
+        val expectedClasses = "badge badge-outline"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral badge with outline or dash style")
+    }
+
+    @Test
+    fun neutral_badge_with_outline_or_dash_style_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(dash = true) {
+            }
+        }
+        val expectedClasses = "badge badge-dash"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral badge with outline or dash style")
     }

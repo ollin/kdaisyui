@@ -21,10 +21,10 @@ class MenuTest {
     @Test
     fun responsive_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(vertical = true, horizontal = true) {
+            daisyMenu(direction = MenuDirection.Vertical, extraClasses = "lg:menu-horizontal") {
             }
         }
-        val expectedClasses = "menu menu-horizontal menu-vertical"
+        val expectedClasses = "lg:menu-horizontal menu menu-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: vertical on small screen, horizontal on large screen")
     }
@@ -32,7 +32,7 @@ class MenuTest {
     @Test
     fun paged_menu_with_nested_submenus() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(paged = true, vertical = true) {
+            daisyMenu(paged = true, direction = MenuDirection.Vertical) {
             }
         }
         val expectedClasses = "menu menu-paged menu-vertical"
@@ -54,7 +54,7 @@ class MenuTest {
     @Test
     fun menu_with_icon_only_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(horizontal = true) {
+            daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
         val expectedClasses = "menu menu-horizontal"
@@ -76,7 +76,7 @@ class MenuTest {
     @Test
     fun menu_with_icon_only_horizontal_with_tooltip() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(horizontal = true) {
+            daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
         val expectedClasses = "menu menu-horizontal"
@@ -98,10 +98,10 @@ class MenuTest {
     @Test
     fun menu_with_disabled_items() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(disabled = true) {
+            daisyMenu() {
             }
         }
-        val expectedClasses = "menu menu-disabled"
+        val expectedClasses = "menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with disabled items")
     }
@@ -120,10 +120,10 @@ class MenuTest {
     @Test
     fun menu_with_icons_and_badge_responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(horizontal = true) {
+            daisyMenu(extraClasses = "lg:menu-horizontal") {
             }
         }
-        val expectedClasses = "menu menu-horizontal"
+        val expectedClasses = "lg:menu-horizontal menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icons and badge (responsive)")
     }
@@ -186,10 +186,10 @@ class MenuTest {
     @Test
     fun collapsible_submenu_that_works_with_class_names() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(dropdownShow = true) {
+            daisyMenu() {
             }
         }
-        val expectedClasses = "menu menu-dropdown-show"
+        val expectedClasses = "menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
     }
@@ -208,10 +208,10 @@ class MenuTest {
     @Test
     fun menu_with_active_item() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(active = true) {
+            daisyMenu() {
             }
         }
-        val expectedClasses = "menu menu-active"
+        val expectedClasses = "menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with active item")
     }
@@ -219,7 +219,7 @@ class MenuTest {
     @Test
     fun horizontal_menu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(horizontal = true) {
+            daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
         val expectedClasses = "menu menu-horizontal"
@@ -230,7 +230,7 @@ class MenuTest {
     @Test
     fun horizontal_submenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(horizontal = true) {
+            daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
         val expectedClasses = "menu menu-horizontal"
@@ -241,10 +241,10 @@ class MenuTest {
     @Test
     fun mega_menu_with_submenu_responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(horizontal = true) {
+            daisyMenu(extraClasses = "xl:menu-horizontal") {
             }
         }
-        val expectedClasses = "menu menu-horizontal"
+        val expectedClasses = "menu xl:menu-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Mega menu with submenu (responsive)")
     }
@@ -252,10 +252,10 @@ class MenuTest {
     @Test
     fun collapsible_with_submenu_responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(horizontal = true) {
+            daisyMenu(extraClasses = "lg:menu-horizontal") {
             }
         }
-        val expectedClasses = "menu menu-horizontal"
+        val expectedClasses = "lg:menu-horizontal menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible with submenu (responsive)")
     }

@@ -198,8 +198,50 @@
       }
     ]
   },
-  "additionalBooleans": {
-    "join": ["vertical"]
+  "additionalBooleans": {},
+  "enumNames": {
+    "alert": { "directions": "Direction" },
+    "card": { "styles": "Style", "modifiers": "Modifier" },
+    "carousel": { "modifiers": "Modifier" },
+    "divider": { "directions": "Direction" },
+    "join": { "directions": "Direction" },
+    "list": { "modifiers": "Modifier" },
+    "loading": { "styles": "Style" },
+    "mask": { "styles": "Shape", "modifiers": "Modifier" },
+    "menu": { "directions": "Direction" },
+    "stat": { "directions": "Direction" },
+    "steps": { "directions": "Direction" },
+    "tab": { "placements": "Placement" },
+    "indicator": {
+      "placements": [
+        { "name": "VerticalPlacement", "members": ["top", "middle", "bottom"] },
+        { "name": "HorizontalPlacement", "members": ["start", "center", "end"] }
+      ]
+    },
+    "toast": {
+      "placements": [
+        { "name": "VerticalPlacement", "members": ["top", "middle", "bottom"] },
+        { "name": "HorizontalPlacement", "members": ["start", "center", "end"] }
+      ]
+    },
+    "tooltip": {
+      "placements": [
+        { "name": "SidePlacement", "members": ["top", "bottom", "left", "right"] },
+        { "name": "AlignPlacement", "members": ["start", "center", "end"] }
+      ]
+    },
+    "dropdown": {
+      "placements": {
+        "axes": [{ "name": "AlignPlacement", "members": ["start", "center", "end"] }],
+        "booleans": ["top", "bottom", "left", "right"]
+      }
+    }
+  },
+  "parameterNames": {
+    "dropdown": { "hover": "openOnHover" },
+    "menu": { "focus": "focused" },
+    "rating": { "hidden": "clearOption", "half": "halfStars" },
+    "timeline": { "box": "boxed" }
   },
   "componentElements": {
     "dropdown": "details",

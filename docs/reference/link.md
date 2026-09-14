@@ -15,7 +15,7 @@ Styled anchor elements. Renders `<a class="link ...">`.
 fun FlowContent.daisyLink(
     text: String? = null,
     id: HtmlId? = null,
-    variant: LinkVariant? = null,
+    variant: ClassValues<LinkVariant>? = null,
     hover: Boolean = false,  // Only shows underline on hover
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,

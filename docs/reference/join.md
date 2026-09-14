@@ -11,10 +11,10 @@ Regenerate: just generate
 Groups buttons and inputs together. Renders `<div class="join ...">`.
 
 ```kotlin
+// JoinDirection: Vertical | Horizontal
 fun FlowContent.daisyJoin(
     id: HtmlId? = null,
-    horizontal: Boolean = false,  // Show items horizontally
-    vertical: Boolean = false,  // Show items vertically
+    direction: ClassValues<JoinDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

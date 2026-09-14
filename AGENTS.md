@@ -25,6 +25,12 @@ taking a `SPAN` and shipped that way in v0.4.0, four pages were missing five fun
 them, and no signature on any page mentioned the `id` parameter every function takes. Nothing
 failed, because nothing checked them.
 
+**`codegen/exclusivity.json` joined that rule on 2026-09-13.** It records, for every pair of
+classes in every multi-member DaisyUI class group, whether a browser says the two can be worn at
+once — and that decides which groups become a Kotlin enum. It is written wholesale by
+`just measure-exclusivity`, which needs a system Chromium, and `:lib:verifyExclusivity` fails the
+build when it stops describing the submodule. → skill **`kdaisyui-daisyui-upgrade`**.
+
 Note the singular: **`docs/reference.md`** is the hand-written entry point and is NOT generated.
 Nothing else under `docs/` is either. One editorial fact per page is hand-written too — its
 one-line description, in `codegen-config.json` → `docSummaries`.
@@ -35,8 +41,15 @@ git submodules. Regeneration is explicit, and only `just generate` needs that to
 `codegen/` is **TypeScript executed directly by Node** — no build step, no emitted JavaScript.
 Nothing type-checks it, by decision; the gates are its unit tests (`./gradlew :lib:testCodegen`)
 and `generated-sources-drift`. Code there must stay inside *erasable* syntax — no `enum`, no
-`namespace` with runtime code, `import type` mandatory for types, `.ts` mandatory in import
-specifiers. → skill **`kdaisyui-codegen`**.
+`namespace` with runtime code, **no constructor parameter properties** (`constructor(readonly x:
+string)`), `import type` mandatory for types, `.ts` mandatory in import specifiers. → skill
+**`kdaisyui-codegen`**.
+
+The parameter-property ban is the one that gets written anyway, because it is the idiomatic way
+to declare a small value type and TypeScript accepts it everywhere else. Node does not: it
+strips types, and a parameter property is a type annotation that has to *emit an assignment*.
+Declare the field and assign it in the constructor body. `codegen/src/measurement.ts` shows the
+shape.
 
 It had **zero dependencies until 2026-09-12** and now has exactly one: an HTML parser, because
 the generator reads the markup DaisyUI documents and a regex over markup is unreadable and — on
@@ -83,12 +96,23 @@ coverage gate; per-module configuration lives in the subprojects and `buildSrc`.
 the codegen input and the webjar CSS. It must stay at a version that also has a published
 webjar, so generated components never reference CSS the webjar lacks.
 
-## Test quality: two gates, and they measure different things
+## Test quality: three questions, and no gate answers another's
 
-| Gate | Question | Where |
+| Question | What answers it | Where |
 |---|---|---|
-| `koverVerify` — 100% line **and** branch, aggregated | was the line **executed**? | `./gradlew check`, `unit-tests` job |
-| `:lib:pitest` — 100% **test strength** | was the executed line **asserted**? | `mutation-tests` job, NOT in `check` |
+| was the line **executed**? | `koverVerify` — 100% line **and** branch, aggregated | `./gradlew check`, `unit-tests` job |
+| was the executed line **asserted**? | `:lib:pitest` — 100% **test strength** | `mutation-tests` job, NOT in `check` |
+| is the test itself **readable**? | CodeScene, run by hand on the test file | no job — you have to ask |
+
+**A test file is production code and is reviewed as one.** `code_health_review` applies to
+`*.test.ts` and `*Test.kt` exactly as it does to `src/`, and Object Calisthenics applies to
+both: one level of indentation per function, no abbreviated names, and encoded strings wrapped
+in a type rather than `split()` at five call sites. That last one is not style — reading
+`"start|top"` and `"indicator.placements"` back as strings is what produced the nested loops
+that made `codegen/src/measurement.ts` necessary.
+
+Nothing enforces the third row, which is why it is written here. The first two are automated
+and will not notice an unreadable test.
 
 Neither implies the other, which is why both exist. A test asserting `x == x` executes every
 line and branch it used to, so Kover cannot tell it apart from a real one. Verified here: a
@@ -111,6 +135,7 @@ answer is to delete the code.
 | Task | Skill |
 |---|---|
 | Codegen, component shape, config knobs, adding a component, version ceiling | `kdaisyui-codegen` |
+| Bumping DaisyUI, or a failure from `generated-sources-drift` / `verifyExclusivity` / `checkComponentApi` | `kdaisyui-daisyui-upgrade` (`/daisyui-upgrade`) |
 | Any test work, run configurations, `just` recipes, E2E wiring, Cucumber | `kdaisyui-testing` |
 | Versioning, publishing, what CI does | `kdaisyui-release` |
 | The Gradle build itself — buildSrc, settings, toolchains, compiler flags, adding a plugin, any build warning | `kdaisyui-build` |
@@ -173,7 +198,9 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 ## Anti-patterns
 
-- Editing `lib/generated/**` or `docs/reference/**`
+- Editing `lib/generated/**`, `docs/reference/**` or `codegen/exclusivity.json`
+- Reasoning about whether two DaisyUI classes conflict instead of measuring it — six attempts
+  derived it from the CSS or from the shape of class names, and all six were wrong
 - Hardcoding CSS class strings instead of using the generated enums
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
 - Assuming there is no release automation — there is, see `kdaisyui-release`
@@ -185,3 +212,7 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
   and shipping a breaking change in it with no **How to migrate** entry in `README.md`
 - Package `com.github.ollin`
 - Shipping a UI change without E2E
+- Writing a constructor parameter property in `codegen/` — Node rejects it outright
+- Merging `main` INTO a topic branch instead of rebasing: the merge commit is release-note noise
+- Editing a published release note by hand instead of fixing the changelog configuration
+- Judging how long something took instead of reading `date` at the block boundary

@@ -12,16 +12,16 @@ Navigation lists with submenus. Renders `<ul class="menu ...">`.
 
 ```kotlin
 // MenuSize: Xs | Sm | Md | Lg | Xl
+// MenuDirection: Vertical | Horizontal
 fun FlowContent.daisyMenu(
     id: HtmlId? = null,
-    size: MenuSize? = null,
+    size: ClassValues<MenuSize>? = null,
+    direction: ClassValues<MenuDirection>? = null,
     active: Boolean = false,  // For the element inside <li> to look active
     disabled: Boolean = false,  // For the element inside <li> to look disabled
     dropdownShow: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
-    focus: Boolean = false,  // For the element inside <li> to look focused
-    horizontal: Boolean = false,  // Horizontal menu
+    focused: Boolean = false,  // For the element inside <li> to look focused
     paged: Boolean = false,  // Shows one level at a time and turns the open summary into a back button
-    vertical: Boolean = false,  // Vertical menu (default)
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),

@@ -10,10 +10,10 @@ class TabTest {
     @Test
     fun tabs() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(tabActive = true) {
+            daisyTab() {
             }
         }
-        val expectedClasses = "tabs tabs-tab-active"
+        val expectedClasses = "tabs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs")
     }
@@ -21,10 +21,10 @@ class TabTest {
     @Test
     fun tabs_border() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(border = true, tabActive = true) {
+            daisyTab(border = true) {
             }
         }
-        val expectedClasses = "tabs tabs-border tabs-tab-active"
+        val expectedClasses = "tabs tabs-border"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-border")
     }
@@ -32,10 +32,10 @@ class TabTest {
     @Test
     fun tabs_lift() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true, tabActive = true) {
+            daisyTab(lift = true) {
             }
         }
-        val expectedClasses = "tabs tabs-lift tabs-tab-active"
+        val expectedClasses = "tabs tabs-lift"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-lift")
     }
@@ -43,10 +43,10 @@ class TabTest {
     @Test
     fun tabs_box() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(box = true, tabActive = true) {
+            daisyTab(box = true) {
             }
         }
-        val expectedClasses = "tabs tabs-box tabs-tab-active"
+        val expectedClasses = "tabs tabs-box"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-box")
     }
@@ -65,10 +65,10 @@ class TabTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true, tabActive = true) {
+            daisyTab(lift = true) {
             }
         }
-        val expectedClasses = "tabs tabs-lift tabs-tab-active"
+        val expectedClasses = "tabs tabs-lift"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
     }
@@ -109,7 +109,7 @@ class TabTest {
     @Test
     fun radio_tabs_lift_tab_content_on_bottom() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true, bottom = true) {
+            daisyTab(lift = true, placement = TabPlacement.Bottom) {
             }
         }
         val expectedClasses = "tabs tabs-bottom tabs-lift"
@@ -142,10 +142,10 @@ class TabTest {
     @Test
     fun tabs_with_custom_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true, tabActive = true) {
+            daisyTab(lift = true) {
             }
         }
-        val expectedClasses = "tabs tabs-lift tabs-tab-active"
+        val expectedClasses = "tabs tabs-lift"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Tabs with custom color")
     }

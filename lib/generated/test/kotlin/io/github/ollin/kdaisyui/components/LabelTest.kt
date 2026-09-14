@@ -50,37 +50,4 @@ class LabelTest {
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Label for date input")
     }
-
-    @Test
-    fun floating_label() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
-        }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Floating Label")
-    }
-
-    @Test
-    fun floating_label_with_different_sizes() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
-        }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Floating Label with Different Sizes")
-    }
-
-    @Test
-    fun responsive_size_floating_label() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
-        }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive Size Floating Label")
-    }
 }

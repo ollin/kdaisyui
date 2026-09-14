@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -13,7 +14,7 @@ import kotlinx.html.h2
 import kotlinx.html.H2
 
 /** Size variants for this component (CSS prefix: `card-`) */
-enum class CardSize(internal val className: String) {
+enum class CardSize(internal val className: String) : ClassValues<CardSize> {
     /** CSS: `card-xs` — Extra small size */
     Xs("card-xs"),
     /** CSS: `card-sm` — Small size */
@@ -24,6 +25,31 @@ enum class CardSize(internal val className: String) {
     Lg("card-lg"),
     /** CSS: `card-xl` — Extra large size */
     Xl("card-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+/** Style variants for this component (CSS prefix: `card-`) */
+enum class CardStyle(internal val className: String) : ClassValues<CardStyle> {
+    /** CSS: `card-border` — Adds border to <card> */
+    Border("card-border"),
+    /** CSS: `card-dash` — dash style */
+    Dash("card-dash"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+/** Modifier variants for this component (CSS prefix: `card-`) */
+enum class CardModifier(internal val className: String) : ClassValues<CardModifier> {
+    /** CSS: `card-side` — The image in <figure> will be on to the side */
+    Side("card-side"),
+    /** CSS: `card-image-full` — The image in <figure> element will be the background */
+    ImageFull("card-image-full"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -31,21 +57,17 @@ enum class CardSize(internal val className: String) {
  * Cards are used to group and display content in a way that is easily readable. Renders `<div class="card ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param border — Adds border to <card>
- * @param dash — dash style
- * @param imageFull — The image in <figure> element will be the background
- * @param side — The image in <figure> will be on to the side
+ * @param style — Style variant
+ * @param modifier — Modifier variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyCard(
     id: HtmlId? = null,
-    size: CardSize? = null,
-    border: Boolean = false,
-    dash: Boolean = false,
-    imageFull: Boolean = false,
-    side: Boolean = false,
+    size: ClassValues<CardSize>? = null,
+    style: ClassValues<CardStyle>? = null,
+    modifier: ClassValues<CardModifier>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -53,11 +75,9 @@ fun FlowContent.daisyCard(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("card")
-        if (size != null) addClassNames(size.className)
-        if (border) addClassNames("card-border")
-        if (dash) addClassNames("card-dash")
-        if (imageFull) addClassNames("card-image-full")
-        if (side) addClassNames("card-side")
+        addClassNames(size)
+        addClassNames(style)
+        addClassNames(modifier)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

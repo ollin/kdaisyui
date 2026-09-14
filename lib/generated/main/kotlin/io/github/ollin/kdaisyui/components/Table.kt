@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.table
 import kotlinx.html.TABLE
 
 /** Size variants for this component (CSS prefix: `table-`) */
-enum class TableSize(internal val className: String) {
+enum class TableSize(internal val className: String) : ClassValues<TableSize> {
     /** CSS: `table-xs` — Extra small size */
     Xs("table-xs"),
     /** CSS: `table-sm` — Small size */
@@ -22,6 +23,9 @@ enum class TableSize(internal val className: String) {
     Lg("table-lg"),
     /** CSS: `table-xl` — Extra large size */
     Xl("table-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -38,7 +42,7 @@ enum class TableSize(internal val className: String) {
  */
 fun FlowContent.daisyTable(
     id: HtmlId? = null,
-    size: TableSize? = null,
+    size: ClassValues<TableSize>? = null,
     pinCols: Boolean = false,
     pinRows: Boolean = false,
     zebra: Boolean = false,
@@ -49,7 +53,7 @@ fun FlowContent.daisyTable(
     table {
         if (id != null) attributes["id"] = id.id
         addClassNames("table")
-        if (size != null) addClassNames(size.className)
+        addClassNames(size)
         if (pinCols) addClassNames("table-pin-cols")
         if (pinRows) addClassNames("table-pin-rows")
         if (zebra) addClassNames("table-zebra")

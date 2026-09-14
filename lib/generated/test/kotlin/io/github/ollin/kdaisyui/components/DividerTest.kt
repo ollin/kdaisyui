@@ -21,7 +21,7 @@ class DividerTest {
     @Test
     fun divider_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(horizontal = true) {
+            daisyDivider(direction = DividerDirection.Horizontal) {
             }
         }
         val expectedClasses = "divider divider-horizontal"
@@ -43,10 +43,10 @@ class DividerTest {
     @Test
     fun responsive_lg_divider_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(horizontal = true) {
+            daisyDivider(extraClasses = "lg:divider-horizontal") {
             }
         }
-        val expectedClasses = "divider divider-horizontal"
+        val expectedClasses = "divider lg:divider-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for responsive (lg:divider-horizontal)")
     }
@@ -65,10 +65,32 @@ class DividerTest {
     @Test
     fun divider_in_different_positions() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(start = true, end = true) {
+            daisyDivider(start = true) {
             }
         }
-        val expectedClasses = "divider divider-end divider-start"
+        val expectedClasses = "divider divider-start"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions")
+    }
+
+    @Test
+    fun divider_in_different_positions_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider() {
+            }
+        }
+        val expectedClasses = "divider"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions")
+    }
+
+    @Test
+    fun divider_in_different_positions_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider(end = true) {
+            }
+        }
+        val expectedClasses = "divider divider-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions")
     }
@@ -76,10 +98,32 @@ class DividerTest {
     @Test
     fun divider_in_different_positions_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(horizontal = true, start = true, end = true) {
+            daisyDivider(direction = DividerDirection.Horizontal, start = true) {
             }
         }
-        val expectedClasses = "divider divider-end divider-horizontal divider-start"
+        val expectedClasses = "divider divider-horizontal divider-start"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions (horizontal)")
+    }
+
+    @Test
+    fun divider_in_different_positions_horizontal_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider(direction = DividerDirection.Horizontal) {
+            }
+        }
+        val expectedClasses = "divider divider-horizontal"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions (horizontal)")
+    }
+
+    @Test
+    fun divider_in_different_positions_horizontal_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider(direction = DividerDirection.Horizontal, end = true) {
+            }
+        }
+        val expectedClasses = "divider divider-end divider-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions (horizontal)")
     }

@@ -39,15 +39,35 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStat(
                 id = htmlId("x-cov-id"),
-                horizontal = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "stats stats-horizontal stats-vertical zz-extra", "Stat all flags", closes = "</div></div>")
+        assertRendered(html, "stats zz-extra", "Stat all flags", closes = "</div></div>")
         assertCommonFlags(html, "Stat")
+    }
+
+    @Test
+    fun stat_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStat(
+                direction = StatDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "stats stats-horizontal", "Stat direction Horizontal")
+    }
+
+    @Test
+    fun stat_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStat(
+                direction = StatDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "stats stats-vertical", "Stat direction Vertical")
     }
 
     @Test

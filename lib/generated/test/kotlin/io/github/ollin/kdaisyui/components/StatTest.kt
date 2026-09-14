@@ -54,7 +54,7 @@ class StatTest {
     @Test
     fun vertical() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat(vertical = true) {
+            daisyStat(direction = StatDirection.Vertical) {
             }
         }
         val expectedClasses = "stats stats-vertical"
@@ -65,10 +65,10 @@ class StatTest {
     @Test
     fun responsive_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat(vertical = true, horizontal = true) {
+            daisyStat(direction = StatDirection.Vertical, extraClasses = "lg:stats-horizontal") {
             }
         }
-        val expectedClasses = "stats stats-horizontal stats-vertical"
+        val expectedClasses = "lg:stats-horizontal stats stats-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (vertical on small screen, horizontal on large screen)")
     }

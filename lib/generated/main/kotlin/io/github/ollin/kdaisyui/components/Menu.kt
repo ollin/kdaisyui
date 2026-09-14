@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -15,7 +16,7 @@ import kotlinx.html.ul
 import kotlinx.html.UL
 
 /** Size variants for this component (CSS prefix: `menu-`) */
-enum class MenuSize(internal val className: String) {
+enum class MenuSize(internal val className: String) : ClassValues<MenuSize> {
     /** CSS: `menu-xs` — Extra small size */
     Xs("menu-xs"),
     /** CSS: `menu-sm` — Small size */
@@ -26,6 +27,20 @@ enum class MenuSize(internal val className: String) {
     Lg("menu-lg"),
     /** CSS: `menu-xl` — Extra large size */
     Xl("menu-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+/** Direction variants for this component (CSS prefix: `menu-`) */
+enum class MenuDirection(internal val className: String) : ClassValues<MenuDirection> {
+    /** CSS: `menu-vertical` — Vertical menu (default) */
+    Vertical("menu-vertical"),
+    /** CSS: `menu-horizontal` — Horizontal menu */
+    Horizontal("menu-horizontal"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -33,27 +48,25 @@ enum class MenuSize(internal val className: String) {
  * Menu is used to display a list of links vertically or horizontally. Renders `<ul class="menu ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
+ * @param direction — Direction variant
  * @param active — For the element inside <li> to look active
  * @param disabled — For the element inside <li> to look disabled
  * @param dropdownShow — Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
- * @param focus — For the element inside <li> to look focused
- * @param horizontal — Horizontal menu
+ * @param focused — For the element inside <li> to look focused
  * @param paged — Shows one level at a time and turns the open summary into a back button
- * @param vertical — Vertical menu (default)
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyMenu(
     id: HtmlId? = null,
-    size: MenuSize? = null,
+    size: ClassValues<MenuSize>? = null,
+    direction: ClassValues<MenuDirection>? = null,
     active: Boolean = false,
     disabled: Boolean = false,
     dropdownShow: Boolean = false,
-    focus: Boolean = false,
-    horizontal: Boolean = false,
+    focused: Boolean = false,
     paged: Boolean = false,
-    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -61,14 +74,13 @@ fun FlowContent.daisyMenu(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu")
-        if (size != null) addClassNames(size.className)
+        addClassNames(size)
+        addClassNames(direction)
         if (active) addClassNames("menu-active")
         if (disabled) addClassNames("menu-disabled")
         if (dropdownShow) addClassNames("menu-dropdown-show")
-        if (focus) addClassNames("menu-focus")
-        if (horizontal) addClassNames("menu-horizontal")
+        if (focused) addClassNames("menu-focus")
         if (paged) addClassNames("menu-paged")
-        if (vertical) addClassNames("menu-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

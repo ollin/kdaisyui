@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Size variants for this component (CSS prefix: `dock-`) */
-enum class DockSize(internal val className: String) {
+enum class DockSize(internal val className: String) : ClassValues<DockSize> {
     /** CSS: `dock-xs` — Extra Small Dock */
     Xs("dock-xs"),
     /** CSS: `dock-sm` — Small Dock */
@@ -22,6 +23,9 @@ enum class DockSize(internal val className: String) {
     Lg("dock-lg"),
     /** CSS: `dock-xl` — Extra Large Dock */
     Xl("dock-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -36,7 +40,7 @@ enum class DockSize(internal val className: String) {
  */
 fun FlowContent.daisyDock(
     id: HtmlId? = null,
-    size: DockSize? = null,
+    size: ClassValues<DockSize>? = null,
     active: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -45,7 +49,7 @@ fun FlowContent.daisyDock(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("dock")
-        if (size != null) addClassNames(size.className)
+        addClassNames(size)
         if (active) addClassNames("dock-active")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

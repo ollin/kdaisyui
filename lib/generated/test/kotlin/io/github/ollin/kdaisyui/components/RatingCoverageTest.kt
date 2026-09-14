@@ -39,8 +39,8 @@ class RatingCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRating(
                 id = htmlId("x-cov-id"),
-                half = true,
-                hidden = true,
+                halfStars = true,
+                clearOption = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },

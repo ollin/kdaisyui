@@ -26,6 +26,21 @@ fun Tag.addClassNames(vararg classNames: String) {
     attributes["class"] = tokens.joinToString(" ")
 }
 
+/**
+ * Add every class of a typed group application, e.g. `btn-sm` and `lg:btn-lg`.
+ *
+ * Nullable, so a generated component can call this unconditionally for a parameter that defaults
+ * to `null`. That is why this overload exists rather than the generator emitting
+ * `if (size != null) addClassNames(size.classNames…)`: the guard then lives here once instead of
+ * once per enum parameter on all 66 components, which is 90-odd generated branches that every
+ * coverage and mutation gate has to drive separately to say the same thing.
+ */
+fun Tag.addClassNames(values: ClassValues<*>?) {
+    if (values == null) return
+
+    addClassNames(*values.classNames.toTypedArray())
+}
+
 fun Tag.addClassNames(classNames: String?) {
     if (classNames == null) return
 

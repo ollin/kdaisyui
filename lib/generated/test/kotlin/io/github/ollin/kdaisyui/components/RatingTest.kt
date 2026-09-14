@@ -76,10 +76,10 @@ class RatingTest {
     @Test
     fun with_rating_hidden() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(hidden = true) {
+            daisyRating() {
             }
         }
-        val expectedClasses = "rating rating-hidden"
+        val expectedClasses = "rating"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for with `rating-hidden`")
     }
@@ -87,10 +87,10 @@ class RatingTest {
     @Test
     fun half_stars() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(half = true, hidden = true) {
+            daisyRating(halfStars = true) {
             }
         }
-        val expectedClasses = "rating rating-half rating-hidden"
+        val expectedClasses = "rating rating-half"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for half stars")
     }

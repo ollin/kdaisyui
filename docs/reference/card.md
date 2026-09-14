@@ -12,13 +12,13 @@ Content containers with body and title. Renders `<div class="card ...">`.
 
 ```kotlin
 // CardSize: Xs | Sm | Md | Lg | Xl
+// CardStyle: Border | Dash
+// CardModifier: Side | ImageFull
 fun FlowContent.daisyCard(
     id: HtmlId? = null,
-    size: CardSize? = null,
-    border: Boolean = false,  // Adds border to <card>
-    dash: Boolean = false,  // dash style
-    imageFull: Boolean = false,  // The image in <figure> element will be the background
-    side: Boolean = false,  // The image in <figure> will be on to the side
+    size: ClassValues<CardSize>? = null,
+    style: ClassValues<CardStyle>? = null,
+    modifier: ClassValues<CardModifier>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

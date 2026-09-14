@@ -55,10 +55,10 @@ class ModalTest {
     @Test
     fun responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModal(bottom = true, middle = true) {
+            daisyModal(bottom = true, extraClasses = "sm:modal-middle") {
             }
         }
-        val expectedClasses = "modal modal-bottom modal-middle"
+        val expectedClasses = "modal modal-bottom sm:modal-middle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive")
     }

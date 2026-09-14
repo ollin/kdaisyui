@@ -15,8 +15,8 @@ File upload input field. Renders `<input class="file-input ...">`.
 // FileInputSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyFileInput(
     id: HtmlId? = null,
-    variant: FileInputVariant? = null,
-    size: FileInputSize? = null,
+    variant: ClassValues<FileInputVariant>? = null,
+    size: ClassValues<FileInputSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,

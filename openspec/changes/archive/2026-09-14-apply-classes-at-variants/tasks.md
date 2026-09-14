@@ -1,0 +1,160 @@
+# Tasks
+
+**Re-scoped 2026-09-13 to option C**, after block 1 measured that 68% of the prefixes land on
+boolean parameters, which have no value to pass. Prefixing them requires values; the cheapest
+honest way to get values for the groups that need them is the enum conversion already identified
+as worth doing on its own, because `daisyTooltip(top = true, bottom = true)` compiles today.
+
+**The original 2.8 h estimate is void, not revised** — it priced a different change. It stands in
+the run file as the estimate for the change as first scoped, with the reason it was superseded.
+Block 1's 0.2 h stands and was measured against.
+
+New estimate frozen 2026-09-13, priced by open decisions per the calibration finding:
+
+| Block | Open decisions | Estimate |
+|---|---|---|
+| 2 classify exclusivity | 1 — how axis-split placements are declared | 1.0 h |
+| 3 exclusive groups become enums | 1 — naming, e.g. `CardLayout.Side` vs `CardSide` | 1.5 h |
+| 4 constants for the two lone flags | 0 | 0.4 h |
+| 5 the variant function | 1 — the call shape, carried over as 2.1 | 0.6 h |
+| 6 the five genuine parameter gaps | 0 | 0.4 h |
+| 7 migration note and docs | 0 | 0.6 h |
+| 8 gate, evaluation | 0 | 0.5 h |
+| | **Total** | **5.0 h** |
+
+## 1. Measure before designing — 0.2 h — DONE
+
+- [x] 1.1 `. d` Does real code stack two variants? **Refuted** — 0 in our code, 0 on a daisyUI
+  class in DaisyUI's examples. One variant per application; the composition decision is gone.
+- [x] 1.2 `. d` Is the variant set closeable? **Verified** — 63 prefixed daisyUI tokens use 8
+  variants: seven breakpoints and `is-drawer-close`. Nothing open-ended reaches a daisyUI class.
+- [x] 1.3 `. d` Triage the 19 unreached classes: 4 are not classes (#345), 2 belong to #342, 8
+  are a missing `step-*` part, 5 are this change's business.
+- [x] 1.4 `. d` **Added mid-block.** What kind of class receives a prefix? 16 enum-backed, **43
+  boolean-backed**, 4 component classes. This is what re-scoped the change.
+- [x] 1.5 `. d` **Added mid-block.** How much does option C cover? 11 of 19 directly, 17 with
+  placements split by axis, 2 needing a constant. First run of this measurement was wrong and the
+  error is recorded in `design.md` — it read `menu-vertical lg:menu-horizontal` as proof a group
+  is not exclusive, from evidence that it is.
+
+## 2. Classify exclusivity — 1.0 h
+
+> **Ordering correction, 2026-09-13.** Registering `enumNames` / `parameterNames` in
+> `CONFIG_SECTIONS` failed `covers every section the generators read` — the guard's own test
+> pins that list, and a section no generator reads yet is a false entry in it. So config
+> population (2.0, 2.0a) and the classification pin (2.3) move into block 3, where the
+> generator starts reading them. The classifier itself (2.2) is done and enforced by its unit
+> tests. This is the config-consumption guard working on the change that adds to it.
+
+- [ ] 2.0 `^ F (internal)` `modifiers` is boolean **by default**; an enum requires an explicit
+  `enumNames` entry. Inverted from the other categories because seven of the eight groups that
+  failed the name test are `modifiers` — DaisyUI's catch-all, which groups by where a class lives
+  rather than what it means.
+- [ ] 2.0a `. d` Add `parameterNames` and rename the five booleans whose name does not make `true`
+  unambiguous: `rating-hidden` → `clearOption`, `dropdown-hover` → `openOnHover`, `rating-half` →
+  `halfStars`, `menu-focus` → `focused`, `timeline-box` → `boxed`. Each was read from the CSS; see
+  `design.md`.
+
+- [x] 2.1 `. d` **Decided: config declares the axes, the measurement checks them.** A split cannot
+  be derived — exclusivity is not transitive, so an axis is a clique and `tooltip`'s two cliques
+  overlap in `top`. So `enumNames` names the axes and `classifyGroups` rejects any axis that is
+  not a clique, and any split whose axes are exclusive across as well as within.
+- [x] 2.2 `^ F (internal)` Classify each group as exclusive or independent, and fail the run on a
+  group the classifier cannot decide — silence here would reintroduce boolean flags by accident.
+  **Re-done against the measurement**: the category no longer decides anything.
+  `codegen/exclusivity.json` holds 310 pairwise verdicts and the classifier reads them.
+- [x] 2.3 `. r (internal)` Pin the classification in a test against the measured numbers.
+  **The numbers in this task were superseded before it was written** — they came from the
+  co-occurrence probe. Pinned instead: the fifteen single-choice groups by name, the four that
+  need an axis split, and the 44/310 totals.
+
+## 3. Exclusive groups become enums — 1.5 h
+
+- [x] 3.1 `. d` **Decide the naming.** Settled 2026-09-13 with Oliver: name by **intention, not
+  implementation**. Three rules and two hard cases, in `design.md`:
+  - `directions` → `Orientation`, one decision covering nine groups.
+  - **The name is the test**: where no intention name exists the group is wrong, which catches the
+    false positives the exclusivity measurement lets through (`Collapse` splits, `Menu` stays
+    boolean).
+  - Names go in `enumNames` in the config, like `docSummaries`, since DaisyUI supplies classes and
+    not group names.
+  - `ButtonEmphasis` for outline/dash/soft/ghost/link, and `ButtonLayout` for
+    wide/block/square/circle — the latter recorded as the documented exception to the name-is-the-
+    test rule.
+- [x] 3.1a `. d` Apply the name-is-the-test rule to the remaining 34 groups. Report which ones
+  split or stay boolean, and name the rest. **A group nobody can name is a finding, not a naming
+  problem.**
+- [x] 3.2 `^ F` Emit an enum per exclusive group instead of booleans. Test first, against
+  `daisyTooltip(placement = TooltipPlacement.Top)` and against the illegal state no longer
+  compiling. **21 enum types over 37 components**; the placement case landed as two axes,
+  `sidePlacement` and `alignPlacement`, per the measurement.
+- [x] 3.3 `^ F` Regenerate; read the diff; update both API baselines, reading each.
+  **The generated component tests did not compile after 3.2**, and the cause was a model defect
+  older than this change: `extractDaisyClasses` unioned every `$$` token in a whole documentation
+  example regardless of which element carried it. Fixed per-element; see `design.md`.
+  Both baselines re-dumped and diffed — the diff carries one function nobody predicted, the new
+  `addClassNames(ClassValues?)` overload.
+
+## 4. The two lone flags — 0.4 h — DEFERRED
+
+- [ ] 4.1 `^ F` ~~Generated constants for `drawer-open` and `megamenu-vertical`~~ — **the premise
+  does not hold.** Both classes already have a typed home: `daisyDrawer(open = true)` and
+  `daisyMegamenu(vertical = true)`. What they lack is the PREFIXED form
+  (`max-sm:megamenu-vertical`, which this repository's example app writes as a raw string), and
+  that is exactly what `at()` provides — which is built and parked because a composed class
+  reaches no CSS.
+
+  So a constant now would be a second way to name a class that is already named, superseded the
+  moment `at()` unparks. Deferred to whatever change unparks it:
+  `openspec/changes/extract-used-classes-from-bytecode`.
+
+## 5. The variant function — 0.6 h — BUILT AND PARKED
+
+- [x] 5.1 `. d` **Decide the call shape.** Oliver chose a FUNCTION over a method, for IntelliJ
+  completion from the parameter position — and because a method would force every generated enum
+  to gain one. Settled: `at(variant, value)`, variant first, returning a `ClassValues<T>`.
+- [x] 5.2 `^ F` The breakpoints, the states, and DaisyUI's drawer variants as values, with
+  the function that applies one to a class value. **Ten breakpoints, not seven** — the seven were
+  a frequency measurement over one corpus; the vocabulary is Tailwind's.
+- [x] 5.3 `^ F` Regenerate and prove the measured cases. **Proved, and the proof refuted the
+  block.** `at(Breakpoint.Xl, ButtonSize.Lg)` renders `xl:btn-lg` and leaves the compiled
+  stylesheet byte-identical — sha256 `3ac649e1`, 412052 bytes. Tailwind emits CSS per candidate
+  STRING found while scanning files as text, so a class composed at run time appears in no file.
+  Everything but `ClassValues` is therefore `internal`; unparking is a visibility flip once
+  `extract-used-classes-from-bytecode` lands.
+
+## 6. The genuine parameter gaps — 0.4 h — DEFERRED, the title is wrong
+
+- [ ] 6.1 `^ F` ~~`avatar-group`, `floating-label`, `image-full`, `join-item`, `list-row`~~ —
+  **four of the five are not parameter gaps.** `image-full` shipped, as `CardModifier.ImageFull`.
+  Measured against DaisyUI's own markup, not one of the other four sits on the container whose
+  function would carry the parameter:
+
+  | class | element DaisyUI puts it on | occurrences |
+  |---|---|---|
+  | `avatar-group` | a `<div>` wrapping the avatars | 2 |
+  | `floating-label` | its own `<label>` | 9 |
+  | `list-row` | `<li>`, a child of the list | 9 |
+  | `join-item` | `<button>`, `<input>`, `<select>` — arbitrary children | 17 |
+
+  All four want their own generated function, or — for `join-item` — a modifier on ANY component
+  that can be a join's child, which is a design question rather than a gap to fill. Same family as
+  **#347**, and deferred to whatever change answers it.
+
+## 7. Migration and documentation — 0.6 h — DONE
+
+- [x] 7.1 `. d` **How to migrate.** `README.md` now carries "How to migrate from 0.5.x": the full
+  table of 14 one-enum groups, the four axis splits, the five renames, `ClassValues`, and the
+  named-argument warning. `gradle.properties` moved to 0.6.0 with the same summary.
+- [x] 7.2 `. d` `README.md` usage example, and the `kdaisyui-codegen` skill.
+
+## 8. Gate and adoption — 0.5 h
+
+- [x] 8.1 Full green per `openspec/config.yaml`, plus `:lib:checkComponentApi`. `check` green,
+  `:lib:test` 1597, `koverVerify` 100% line and branch, `:e2e-tests:test` 49, `:lib:pitest` test
+  strength 100% (205/205), `checkComponentApi` / `verifyExclusivity` / `testCodegen` green.
+  **A green `check` was not enough**: it excludes the generators by design, and a forced
+  regeneration found `docs/reference/**` drifted on 37 pages. Fixed, then re-verified clean.
+- [x] 8.2 `openspec validate --all --strict`.
+- [x] 8.3 Write the evaluation under `./tmp/` for Oliver to adopt —
+  `tmp/evaluation-apply-classes-at-variants.md`, gitignored by design.

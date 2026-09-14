@@ -12,13 +12,13 @@ Visual separator between sections. Renders `<div class="divider ...">`.
 
 ```kotlin
 // DividerVariant: Neutral | Primary | Secondary | Accent | Success | Warning | Info | Error
+// DividerDirection: Vertical | Horizontal
 fun FlowContent.daisyDivider(
     id: HtmlId? = null,
-    variant: DividerVariant? = null,
+    variant: ClassValues<DividerVariant>? = null,
+    direction: ClassValues<DividerDirection>? = null,
     end: Boolean = false,  // Pushes the divider text to the end
-    horizontal: Boolean = false,  // Divide horizontal elements (next to each other)
     start: Boolean = false,  // Pushes the divider text to the start
-    vertical: Boolean = false,  // Divide vertical elements (on top of each other)
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

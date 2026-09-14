@@ -65,6 +65,17 @@ class AvatarTest {
     @Test
     fun avatar_group_with_counter() {
         val html = createHTML(prettyPrint = false).div {
+            daisyAvatar() {
+            }
+        }
+        val expectedClasses = "avatar"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar group with counter")
+    }
+
+    @Test
+    fun avatar_group_with_counter_2() {
+        val html = createHTML(prettyPrint = false).div {
             daisyAvatar(placeholder = true) {
             }
         }
@@ -87,10 +98,21 @@ class AvatarTest {
     @Test
     fun avatar_with_presence_indicator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(online = true, offline = true) {
+            daisyAvatar(online = true) {
             }
         }
-        val expectedClasses = "avatar avatar-offline avatar-online"
+        val expectedClasses = "avatar avatar-online"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar with presence indicator")
+    }
+
+    @Test
+    fun avatar_with_presence_indicator_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatar(offline = true) {
+            }
+        }
+        val expectedClasses = "avatar avatar-offline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar with presence indicator")
     }
@@ -98,7 +120,18 @@ class AvatarTest {
     @Test
     fun avatar_placeholder() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(placeholder = true, online = true) {
+            daisyAvatar(placeholder = true) {
+            }
+        }
+        val expectedClasses = "avatar avatar-placeholder"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar placeholder")
+    }
+
+    @Test
+    fun avatar_placeholder_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatar(online = true, placeholder = true) {
             }
         }
         val expectedClasses = "avatar avatar-online avatar-placeholder"

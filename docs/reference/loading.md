@@ -12,15 +12,11 @@ Loading spinners and indicators. Renders `<span class="loading ...">`.
 
 ```kotlin
 // LoadingSize: Xs | Sm | Md | Lg | Xl
+// LoadingStyle: Spinner | Dots | Ring | Ball | Bars | Infinity
 fun FlowContent.daisyLoading(
     id: HtmlId? = null,
-    size: LoadingSize? = null,
-    ball: Boolean = false,  // ball animation
-    bars: Boolean = false,  // bars animation
-    dots: Boolean = false,  // dots animation
-    infinity: Boolean = false,  // infinity animation
-    ring: Boolean = false,  // ring animation
-    spinner: Boolean = false,  // spinner animation
+    size: ClassValues<LoadingSize>? = null,
+    style: ClassValues<LoadingStyle>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),

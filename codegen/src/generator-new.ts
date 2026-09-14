@@ -12,6 +12,8 @@
 import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
 import {
   booleanParameterClasses,
+  allBooleans,
+  booleanParameterName,
   buildComponentShape,
   escapeKotlinKeyword,
   readComponentConfig,
@@ -25,6 +27,7 @@ import {
   type ParameterShape,
   type StaticAttribute,
 } from './component-shape.ts'
+import type { GroupClassification } from './class-groups.ts'
 
 function renderEnum(shape: EnumShape): string {
   const kdoc = shape.documented
@@ -37,7 +40,17 @@ function renderEnum(shape: EnumShape): string {
       return `    /** ${kdocParts.join(' — ')} */\n    ${entry.name}("${entry.cssClass}"),`
     })
     .join('\n')
-  return `${kdoc}enum class ${shape.name}(internal val className: String) {\n${entries}\n}\n`
+  // `: ClassValues<Self>` is what lets `size = ButtonSize.Lg` and
+  // `size = ButtonSize.Xs and at(Breakpoint.Lg, ButtonSize.Lg)` share one parameter. The type
+  // argument is the enum itself, and `ClassValues` is invariant in it, so a toast placement is
+  // not assignable to a button size.
+  //
+  // `className` stays internal; `classNames` is the single public accessor the variant API needs.
+  const members = `    override val classNames: List<String> get() = listOf(className)`
+  return (
+    `${kdoc}enum class ${shape.name}(internal val className: String) : ClassValues<${shape.name}> {\n` +
+    `${entries}\n    ;\n\n${members}\n}\n`
+  )
 }
 
 function renderParameter(parameter: ParameterShape): string {
@@ -115,6 +128,7 @@ function mainFunctionBody(
   classified: ClassifiedComponent,
   shape: FunctionShape,
   componentConfig: ComponentConfig,
+  groups: GroupClassification,
 ): string {
   const { prefix } = classified
   const { extras, hasTextParam, role, inputType } = componentConfig
@@ -129,10 +143,17 @@ function mainFunctionBody(
   lines.push(...applyLines(extras.filter(extra => extra.position === 'before_classes')))
 
   lines.push(`        addClassNames("${prefix}")`)
-  if (classified.colors.length > 0) lines.push('        if (variant != null) addClassNames(variant.className)')
-  if (classified.sizes.length > 0) lines.push('        if (size != null) addClassNames(size.className)')
-  for (const cls of booleanParameterClasses(classified, componentConfig)) {
-    lines.push(`        if (${escapeKotlinKeyword(toCamelCase(cls))}) addClassNames("${prefix}-${cls}")`)
+  // Unguarded: the `ClassValues?` overload of `addClassNames` returns on null. The guard used to
+  // be emitted here, once per enum parameter, and every copy of it was a branch the coverage and
+  // mutation gates had to drive separately to establish the same fact.
+  if (classified.colors.length > 0) lines.push('        addClassNames(variant)')
+  if (classified.sizes.length > 0) lines.push('        addClassNames(size)')
+  // The measured enums, in the order the signature declares them.
+  for (const group of groups.enums) {
+    lines.push(`        addClassNames(${escapeKotlinKeyword(group.parameterName)})`)
+  }
+  for (const cls of booleanParameterClasses(classified, componentConfig, groups)) {
+    lines.push(`        if (${booleanParameterName(cls, componentConfig)}) addClassNames("${prefix}-${cls}")`)
   }
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
 
@@ -161,9 +182,10 @@ function renderBody(
   shape: FunctionShape,
   classified: ClassifiedComponent,
   componentConfig: ComponentConfig,
+  groups: GroupClassification,
 ): string {
   return shape.kind === 'main'
-    ? mainFunctionBody(classified, shape, componentConfig)
+    ? mainFunctionBody(classified, shape, componentConfig, groups)
     : secondaryFunctionBody(shape)
 }
 
@@ -173,6 +195,9 @@ function collectImports(shape: ComponentShape, componentConfig: ComponentConfig)
     'io.github.ollin.kdaisyui.core.addClassNames',
     'kotlinx.html.FlowContent',
   ])
+
+  // Every generated enum implements it, and every enum parameter is typed by it.
+  if (shape.enums.length > 0) imports.add('io.github.ollin.kdaisyui.core.ClassValues')
 
   for (const fn of shape.functions) {
     imports.add(`kotlinx.html.${fn.element}`)
@@ -207,9 +232,10 @@ export function generateKotlinFile(
   classified: ClassifiedComponent,
   source: ComponentSource,
   config,
+  groups: GroupClassification = allBooleans(classified),
 ) {
-  const shape = buildComponentShape(classified, source, config)
-  const componentConfig = readComponentConfig(config, classified.componentName)
+  const shape = buildComponentShape(classified, source, config, groups)
+  const componentConfig = readComponentConfig(config, classified.componentName, source.componentDir)
 
   const header = [
     `// GENERATED — DO NOT EDIT`,
@@ -222,7 +248,7 @@ export function generateKotlinFile(
   ].join('\n')
 
   const enums = shape.enums.map(renderEnum).join('\n')
-  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig)))
+  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig, groups)))
   const body = [enums, ...functions].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`

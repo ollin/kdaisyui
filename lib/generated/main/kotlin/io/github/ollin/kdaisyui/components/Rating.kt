@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Size variants for this component (CSS prefix: `rating-`) */
-enum class RatingSize(internal val className: String) {
+enum class RatingSize(internal val className: String) : ClassValues<RatingSize> {
     /** CSS: `rating-xs` — Extra small size */
     Xs("rating-xs"),
     /** CSS: `rating-sm` — Small size */
@@ -22,6 +23,9 @@ enum class RatingSize(internal val className: String) {
     Lg("rating-lg"),
     /** CSS: `rating-xl` — Extra large size */
     Xl("rating-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -29,17 +33,17 @@ enum class RatingSize(internal val className: String) {
  * Rating is a set of radio buttons that allow the user to rate something. Renders `<div class="rating ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param half — To shows half of the shapes. Useful for half star ratings
- * @param hidden — For the first radio to make it hidden so user can clear the rating
+ * @param halfStars — To shows half of the shapes. Useful for half star ratings
+ * @param clearOption — For the first radio to make it hidden so user can clear the rating
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyRating(
     id: HtmlId? = null,
-    size: RatingSize? = null,
-    half: Boolean = false,
-    hidden: Boolean = false,
+    size: ClassValues<RatingSize>? = null,
+    halfStars: Boolean = false,
+    clearOption: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -47,9 +51,9 @@ fun FlowContent.daisyRating(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("rating")
-        if (size != null) addClassNames(size.className)
-        if (half) addClassNames("rating-half")
-        if (hidden) addClassNames("rating-hidden")
+        addClassNames(size)
+        if (halfStars) addClassNames("rating-half")
+        if (clearOption) addClassNames("rating-hidden")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

@@ -15,8 +15,8 @@ Boolean toggles for forms. Renders `<input class="checkbox ...">`.
 // CheckboxSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyCheckbox(
     id: HtmlId? = null,
-    variant: CheckboxVariant? = null,
-    size: CheckboxSize? = null,
+    variant: ClassValues<CheckboxVariant>? = null,
+    size: ClassValues<CheckboxSize>? = null,
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,

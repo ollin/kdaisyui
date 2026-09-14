@@ -15,8 +15,8 @@ Dropdown option pickers. Renders `<select class="select ...">`.
 // SelectSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisySelect(
     id: HtmlId? = null,
-    variant: SelectVariant? = null,
-    size: SelectSize? = null,
+    variant: ClassValues<SelectVariant>? = null,
+    size: ClassValues<SelectSize>? = null,
     ghost: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,

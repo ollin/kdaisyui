@@ -39,20 +39,13 @@ class TooltipCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
                 id = htmlId("x-cov-id"),
-                bottom = true,
-                center = true,
-                end = true,
-                left = true,
                 open = true,
-                right = true,
-                start = true,
-                top = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tooltip tooltip-bottom tooltip-center tooltip-end tooltip-left tooltip-open tooltip-right tooltip-start tooltip-top zz-extra", "Tooltip all flags", closes = "</div></div>")
+        assertRendered(html, "tooltip tooltip-open zz-extra", "Tooltip all flags", closes = "</div></div>")
         assertCommonFlags(html, "Tooltip")
     }
 
@@ -131,6 +124,83 @@ class TooltipCoverageTest {
             )
         }
         assertRendered(html, "tooltip tooltip-error", "Tooltip variant Error")
+    }
+
+    @Test
+    fun tooltip_sidePlacement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(
+                sidePlacement = TooltipSidePlacement.Top,
+                content = { },
+            )
+        }
+        assertRendered(html, "tooltip tooltip-top", "Tooltip sidePlacement Top")
+    }
+
+    @Test
+    fun tooltip_sidePlacement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(
+                sidePlacement = TooltipSidePlacement.Bottom,
+                content = { },
+            )
+        }
+        assertRendered(html, "tooltip tooltip-bottom", "Tooltip sidePlacement Bottom")
+    }
+
+    @Test
+    fun tooltip_sidePlacement_left() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(
+                sidePlacement = TooltipSidePlacement.Left,
+                content = { },
+            )
+        }
+        assertRendered(html, "tooltip tooltip-left", "Tooltip sidePlacement Left")
+    }
+
+    @Test
+    fun tooltip_sidePlacement_right() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(
+                sidePlacement = TooltipSidePlacement.Right,
+                content = { },
+            )
+        }
+        assertRendered(html, "tooltip tooltip-right", "Tooltip sidePlacement Right")
+    }
+
+    @Test
+    fun tooltip_alignPlacement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(
+                alignPlacement = TooltipAlignPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "tooltip tooltip-start", "Tooltip alignPlacement Start")
+    }
+
+    @Test
+    fun tooltip_alignPlacement_center() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(
+                alignPlacement = TooltipAlignPlacement.Center,
+                content = { },
+            )
+        }
+        assertRendered(html, "tooltip tooltip-center", "Tooltip alignPlacement Center")
+    }
+
+    @Test
+    fun tooltip_alignPlacement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTooltip(
+                alignPlacement = TooltipAlignPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "tooltip tooltip-end", "Tooltip alignPlacement End")
     }
 
     @Test

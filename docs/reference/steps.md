@@ -12,11 +12,11 @@ Step-by-step progress indicator. Renders `<ul class="steps ...">`.
 
 ```kotlin
 // StepsVariant: StepNeutral | StepPrimary | StepSecondary | StepAccent | StepInfo | StepSuccess | StepWarning | StepError
+// StepsDirection: Vertical | Horizontal
 fun FlowContent.daisySteps(
     id: HtmlId? = null,
-    variant: StepsVariant? = null,
-    horizontal: Boolean = false,  // Makes steps horizontal
-    vertical: Boolean = false,  // Vertical layout
+    variant: ClassValues<StepsVariant>? = null,
+    direction: ClassValues<StepsDirection>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),

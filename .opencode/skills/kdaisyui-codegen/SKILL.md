@@ -298,10 +298,32 @@ defect that prompted the port. What pays:
 `html-names.ts` holds the shared vocabulary because brands are **nominal**: two declarations of
 `TagName` would be two incompatible types, which is worse than having none.
 
+## Three traps when adding a config section or a generator input
+
+All three cost real time on 2026-09-13 and none of them fails loudly on its own.
+
+**1. There are TWO component loops, not one.** `component-set.ts` feeds the reference docs and
+the API dump; `index-new.ts` has its own loop and feeds the Kotlin components. A new input
+threaded into one and not the other produces HALF-updated output, and the half that is stale
+looks perfectly valid. `component-set.ts`'s own header comment says the set must be the same
+everywhere — it is not yet, so wire both and check the output of both.
+
+**2. A default that reproduces the old behaviour hides a missed call site.** That is the right
+design — `allBooleans` makes a forgotten classification emit the OLD output, which
+`generated-sources-drift` then rejects — but only if you actually regenerate and read the diff.
+"Regenerated, no diff" after wiring a new input means the wiring did not arrive.
+
+**3. Registering a section in `CONFIG_SECTIONS` touches two files.** `config-consumption.ts`
+holds the list, and `codegen/test/config-consumption.test.ts` pins it again by hand. And the
+section must be READ by a generator in the same commit: the guard only checks that a key
+matches a run identifier, so a section nobody reads passes the key check and does nothing.
+
 ## Where to change what
 
 | Symptom | Edit |
 |---|---|
+| A class group should be one enum instead of booleans | `enumNames` — but only if `codegen/exclusivity.json` says every pair is exclusive; the run fails otherwise. → skill `kdaisyui-daisyui-upgrade` |
+| A boolean's name does not say what `true` means | → `parameterNames`, keyed by DaisyUI **directory** |
 | Component needs an extra parameter | `codegen/codegen-config.json` → `extras` |
 | Component should take inline text | → `textParams` |
 | Component must not accept children | **derived, not configured** — see below |

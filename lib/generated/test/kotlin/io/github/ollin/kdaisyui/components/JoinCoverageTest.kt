@@ -39,14 +39,34 @@ class JoinCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyJoin(
                 id = htmlId("x-cov-id"),
-                horizontal = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "join join-horizontal join-vertical zz-extra", "Join all flags", closes = "</div></div>")
+        assertRendered(html, "join zz-extra", "Join all flags", closes = "</div></div>")
         assertCommonFlags(html, "Join")
+    }
+
+    @Test
+    fun join_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin(
+                direction = JoinDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "join join-vertical", "Join direction Vertical")
+    }
+
+    @Test
+    fun join_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin(
+                direction = JoinDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "join join-horizontal", "Join direction Horizontal")
     }
 }

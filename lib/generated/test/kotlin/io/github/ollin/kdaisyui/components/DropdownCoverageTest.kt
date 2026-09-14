@@ -40,7 +40,7 @@ class DropdownCoverageTest {
             daisyDropdown(
                 id = htmlId("x-cov-id"),
                 close = true,
-                hover = true,
+                openOnHover = true,
                 open = true,
                 end = true,
                 start = true,
@@ -56,6 +56,39 @@ class DropdownCoverageTest {
         }
         assertRendered(html, "dropdown dropdown-bottom dropdown-center dropdown-close dropdown-end dropdown-hover dropdown-left dropdown-open dropdown-right dropdown-start dropdown-top zz-extra", "Dropdown all flags", closes = "</details></div>")
         assertCommonFlags(html, "Dropdown")
+    }
+
+    @Test
+    fun dropdown_alignPlacement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdown(
+                alignPlacement = DropdownAlignPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "dropdown dropdown-start", "Dropdown alignPlacement Start")
+    }
+
+    @Test
+    fun dropdown_alignPlacement_center() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdown(
+                alignPlacement = DropdownAlignPlacement.Center,
+                content = { },
+            )
+        }
+        assertRendered(html, "dropdown dropdown-center", "Dropdown alignPlacement Center")
+    }
+
+    @Test
+    fun dropdown_alignPlacement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdown(
+                alignPlacement = DropdownAlignPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "dropdown dropdown-end", "Dropdown alignPlacement End")
     }
 
     @Test

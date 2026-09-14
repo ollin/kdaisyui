@@ -65,6 +65,17 @@ class SwapTest {
     @Test
     fun activate_using_class_name_instead_of_checkbox() {
         val html = createHTML(prettyPrint = false).div {
+            daisySwap() {
+            }
+        }
+        val expectedClasses = "swap"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Activate using class name instead of checkbox")
+    }
+
+    @Test
+    fun activate_using_class_name_instead_of_checkbox_2() {
+        val html = createHTML(prettyPrint = false).div {
             daisySwap(active = true) {
             }
         }

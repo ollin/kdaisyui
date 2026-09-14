@@ -5,18 +5,31 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** Modifier variants for this component (CSS prefix: `carousel-`) */
+enum class CarouselModifier(internal val className: String) : ClassValues<CarouselModifier> {
+    /** CSS: `carousel-start` — Snap elements to start */
+    Start("carousel-start"),
+    /** CSS: `carousel-center` — Snap elements to center */
+    Center("carousel-center"),
+    /** CSS: `carousel-end` — Snap elements to end */
+    End("carousel-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Carousel show images or content in a scrollable area. Renders `<div class="carousel ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param center — Snap elements to center
- * @param end — Snap elements to end
+ * @param modifier — Modifier variant
  * @param horizontal — Horizontal layout (default)
- * @param start — Snap elements to start
  * @param vertical — Vertical layout
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -24,10 +37,8 @@ import kotlinx.html.FlowContent
  */
 fun FlowContent.daisyCarousel(
     id: HtmlId? = null,
-    center: Boolean = false,
-    end: Boolean = false,
+    modifier: ClassValues<CarouselModifier>? = null,
     horizontal: Boolean = false,
-    start: Boolean = false,
     vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -36,10 +47,8 @@ fun FlowContent.daisyCarousel(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("carousel")
-        if (center) addClassNames("carousel-center")
-        if (end) addClassNames("carousel-end")
+        addClassNames(modifier)
         if (horizontal) addClassNames("carousel-horizontal")
-        if (start) addClassNames("carousel-start")
         if (vertical) addClassNames("carousel-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

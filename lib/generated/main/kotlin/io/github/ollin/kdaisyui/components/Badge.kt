@@ -5,13 +5,14 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
 
 /** Color variants for this component (CSS prefix: `badge-`) */
-enum class BadgeVariant(internal val className: String) {
+enum class BadgeVariant(internal val className: String) : ClassValues<BadgeVariant> {
     /** CSS: `badge-neutral` — neutral color */
     Neutral("badge-neutral"),
     /** CSS: `badge-primary` — primary color */
@@ -28,10 +29,13 @@ enum class BadgeVariant(internal val className: String) {
     Warning("badge-warning"),
     /** CSS: `badge-error` — error color */
     Error("badge-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Size variants for this component (CSS prefix: `badge-`) */
-enum class BadgeSize(internal val className: String) {
+enum class BadgeSize(internal val className: String) : ClassValues<BadgeSize> {
     /** CSS: `badge-xs` — extra small size */
     Xs("badge-xs"),
     /** CSS: `badge-sm` — small size */
@@ -42,6 +46,9 @@ enum class BadgeSize(internal val className: String) {
     Lg("badge-lg"),
     /** CSS: `badge-xl` — extra large size */
     Xl("badge-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -62,8 +69,8 @@ enum class BadgeSize(internal val className: String) {
 fun FlowContent.daisyBadge(
     text: String? = null,
     id: HtmlId? = null,
-    variant: BadgeVariant? = null,
-    size: BadgeSize? = null,
+    variant: ClassValues<BadgeVariant>? = null,
+    size: ClassValues<BadgeSize>? = null,
     dash: Boolean = false,
     ghost: Boolean = false,
     outline: Boolean = false,
@@ -75,8 +82,8 @@ fun FlowContent.daisyBadge(
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("badge")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (dash) addClassNames("badge-dash")
         if (ghost) addClassNames("badge-ghost")
         if (outline) addClassNames("badge-outline")

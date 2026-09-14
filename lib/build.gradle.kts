@@ -284,6 +284,29 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     outputs.dir(outputDir)
 }
 
+// The guard on the exclusivity measurement.
+//
+// `codegen/exclusivity.json` decides which DaisyUI class groups become a Kotlin enum, and it
+// is a snapshot of one DaisyUI version. A bump that adds a component, adds a class to a group
+// or removes one leaves it quietly wrong, and every failure mode is silent: an unmeasured
+// group falls to boolean by the not-established rule, so an enum simply disappears.
+//
+// Cheap and browser-free — it only compares the committed file against the submodule. Taking
+// the measurement again is `:e2e-tests:measureExclusivity`, which needs a browser.
+//
+// It reads the submodule, so it belongs beside `checkComponentApi` in `generated-sources-drift`
+// and NOT in the codegen unit tests, which are deliberately free of submodules and a JDK.
+tasks.register<Exec>("verifyExclusivity") {
+    group = "codegen"
+    description = "Fail when codegen/exclusivity.json no longer describes the DaisyUI submodule"
+    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
+    workingDir = rootProject.file("codegen")
+    commandLine("sh", "-c", "node src/index-verify-exclusivity.ts")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.file(rootProject.file("codegen/exclusivity.json"))
+    inputs.dir(rootProject.file("daisyui/packages/docs"))
+}
+
 // Deliberately NOT wired into `check`, and deliberately in the `codegen` group rather than
 // `verification`: `AGENTS.md` promises a clone builds and tests with no Node, no npm and no
 // submodules. Only regeneration may need them, and this task is part of that world. CI runs

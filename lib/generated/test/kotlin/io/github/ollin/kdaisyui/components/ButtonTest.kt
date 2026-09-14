@@ -87,10 +87,21 @@ class ButtonTest {
     @Test
     fun neutral_button_with_outline_or_dash_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(outline = true, dash = true) {
+            daisyButton(outline = true) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-outline"
+        val expectedClasses = "btn btn-outline"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral button with outline or dash style")
+    }
+
+    @Test
+    fun neutral_button_with_outline_or_dash_style_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(dash = true) {
+            }
+        }
+        val expectedClasses = "btn btn-dash"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral button with outline or dash style")
     }
@@ -109,10 +120,21 @@ class ButtonTest {
     @Test
     fun buttons_ghost_and_button_link() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(ghost = true, link = true) {
+            daisyButton(ghost = true) {
             }
         }
-        val expectedClasses = "btn btn-ghost btn-link"
+        val expectedClasses = "btn btn-ghost"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons ghost and button link")
+    }
+
+    @Test
+    fun buttons_ghost_and_button_link_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(link = true) {
+            }
+        }
+        val expectedClasses = "btn btn-link"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons ghost and button link")
     }
@@ -142,6 +164,17 @@ class ButtonTest {
     @Test
     fun disabled_buttons() {
         val html = createHTML(prettyPrint = false).div {
+            daisyButton() {
+            }
+        }
+        val expectedClasses = "btn"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Disabled buttons")
+    }
+
+    @Test
+    fun disabled_buttons_2() {
+        val html = createHTML(prettyPrint = false).div {
             daisyButton(disabled = true) {
             }
         }
@@ -153,10 +186,21 @@ class ButtonTest {
     @Test
     fun square_button_and_circle_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(square = true, circle = true) {
+            daisyButton(square = true) {
             }
         }
-        val expectedClasses = "btn btn-circle btn-square"
+        val expectedClasses = "btn btn-square"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Square button and circle button")
+    }
+
+    @Test
+    fun square_button_and_circle_button_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(circle = true) {
+            }
+        }
+        val expectedClasses = "btn btn-circle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Square button and circle button")
     }
@@ -190,6 +234,17 @@ class ButtonTest {
             }
         }
         val expectedClasses = "btn btn-square"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button with loading spinner")
+    }
+
+    @Test
+    fun button_with_loading_spinner_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton() {
+            }
+        }
+        val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button with loading spinner")
     }

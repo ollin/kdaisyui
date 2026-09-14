@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.details
 import kotlinx.html.DETAILS
@@ -12,11 +13,26 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** AlignPlacement variants for this component (CSS prefix: `dropdown-`) */
+enum class DropdownAlignPlacement(internal val className: String) : ClassValues<DropdownAlignPlacement> {
+    /** CSS: `dropdown-start` — Align horizontally to start of button */
+    Start("dropdown-start"),
+    /** CSS: `dropdown-center` — Align horizontally to center of button */
+    Center("dropdown-center"),
+    /** CSS: `dropdown-end` — Align horizontally to end of button */
+    End("dropdown-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Dropdown can open a menu or any other element when the button is clicked. Renders `<details class="dropdown ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
+ * @param alignPlacement — AlignPlacement variant
  * @param close — Force close
- * @param hover — Opens on hover too
+ * @param openOnHover — Opens on hover too
  * @param open — Force open
  * @param end
  * @param start
@@ -31,8 +47,9 @@ import kotlinx.html.FlowContent
  */
 fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
+    alignPlacement: ClassValues<DropdownAlignPlacement>? = null,
     close: Boolean = false,
-    hover: Boolean = false,
+    openOnHover: Boolean = false,
     open: Boolean = false,
     end: Boolean = false,
     start: Boolean = false,
@@ -48,8 +65,9 @@ fun FlowContent.daisyDropdown(
     details {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown")
+        addClassNames(alignPlacement)
         if (close) addClassNames("dropdown-close")
-        if (hover) addClassNames("dropdown-hover")
+        if (openOnHover) addClassNames("dropdown-hover")
         if (open) addClassNames("dropdown-open")
         if (end) addClassNames("dropdown-end")
         if (start) addClassNames("dropdown-start")

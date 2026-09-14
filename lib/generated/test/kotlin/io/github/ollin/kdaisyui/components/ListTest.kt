@@ -21,10 +21,10 @@ class ListTest {
     @Test
     fun list_third_column_grows() {
         val html = createHTML(prettyPrint = false).div {
-            daisyList(colGrow = true) {
+            daisyList() {
             }
         }
-        val expectedClasses = "list list-col-grow"
+        val expectedClasses = "list"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column grows)")
     }
@@ -32,10 +32,10 @@ class ListTest {
     @Test
     fun list_third_column_wraps_to_next_row() {
         val html = createHTML(prettyPrint = false).div {
-            daisyList(colWrap = true) {
+            daisyList() {
             }
         }
-        val expectedClasses = "list list-col-wrap"
+        val expectedClasses = "list"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column wraps to next row)")
     }

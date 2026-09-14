@@ -39,18 +39,48 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
                 id = htmlId("x-cov-id"),
-                center = true,
-                end = true,
                 horizontal = true,
-                start = true,
                 vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "carousel carousel-center carousel-end carousel-horizontal carousel-start carousel-vertical zz-extra", "Carousel all flags", closes = "</div></div>")
+        assertRendered(html, "carousel carousel-horizontal carousel-vertical zz-extra", "Carousel all flags", closes = "</div></div>")
         assertCommonFlags(html, "Carousel")
+    }
+
+    @Test
+    fun carousel_modifier_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarousel(
+                modifier = CarouselModifier.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "carousel carousel-start", "Carousel modifier Start")
+    }
+
+    @Test
+    fun carousel_modifier_center() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarousel(
+                modifier = CarouselModifier.Center,
+                content = { },
+            )
+        }
+        assertRendered(html, "carousel carousel-center", "Carousel modifier Center")
+    }
+
+    @Test
+    fun carousel_modifier_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarousel(
+                modifier = CarouselModifier.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "carousel carousel-end", "Carousel modifier End")
     }
 
     @Test

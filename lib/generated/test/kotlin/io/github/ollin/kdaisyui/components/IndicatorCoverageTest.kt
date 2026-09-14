@@ -39,19 +39,79 @@ class IndicatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicator(
                 id = htmlId("x-cov-id"),
-                bottom = true,
-                center = true,
-                end = true,
-                middle = true,
-                start = true,
-                top = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "indicator indicator-bottom indicator-center indicator-end indicator-middle indicator-start indicator-top zz-extra", "Indicator all flags", closes = "</div></div>")
+        assertRendered(html, "indicator zz-extra", "Indicator all flags", closes = "</div></div>")
         assertCommonFlags(html, "Indicator")
+    }
+
+    @Test
+    fun indicator_verticalPlacement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyIndicator(
+                verticalPlacement = IndicatorVerticalPlacement.Top,
+                content = { },
+            )
+        }
+        assertRendered(html, "indicator indicator-top", "Indicator verticalPlacement Top")
+    }
+
+    @Test
+    fun indicator_verticalPlacement_middle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyIndicator(
+                verticalPlacement = IndicatorVerticalPlacement.Middle,
+                content = { },
+            )
+        }
+        assertRendered(html, "indicator indicator-middle", "Indicator verticalPlacement Middle")
+    }
+
+    @Test
+    fun indicator_verticalPlacement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyIndicator(
+                verticalPlacement = IndicatorVerticalPlacement.Bottom,
+                content = { },
+            )
+        }
+        assertRendered(html, "indicator indicator-bottom", "Indicator verticalPlacement Bottom")
+    }
+
+    @Test
+    fun indicator_horizontalPlacement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyIndicator(
+                horizontalPlacement = IndicatorHorizontalPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "indicator indicator-start", "Indicator horizontalPlacement Start")
+    }
+
+    @Test
+    fun indicator_horizontalPlacement_center() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyIndicator(
+                horizontalPlacement = IndicatorHorizontalPlacement.Center,
+                content = { },
+            )
+        }
+        assertRendered(html, "indicator indicator-center", "Indicator horizontalPlacement Center")
+    }
+
+    @Test
+    fun indicator_horizontalPlacement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyIndicator(
+                horizontalPlacement = IndicatorHorizontalPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "indicator indicator-end", "Indicator horizontalPlacement End")
     }
 
     @Test

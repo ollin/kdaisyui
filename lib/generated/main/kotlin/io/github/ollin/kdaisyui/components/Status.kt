@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.role
@@ -12,7 +13,7 @@ import kotlinx.html.span
 import kotlinx.html.SPAN
 
 /** Color variants for this component (CSS prefix: `status-`) */
-enum class StatusVariant(internal val className: String) {
+enum class StatusVariant(internal val className: String) : ClassValues<StatusVariant> {
     /** CSS: `status-neutral` — neutral color */
     Neutral("status-neutral"),
     /** CSS: `status-primary` — primary color */
@@ -29,10 +30,13 @@ enum class StatusVariant(internal val className: String) {
     Warning("status-warning"),
     /** CSS: `status-error` — error color */
     Error("status-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 /** Size variants for this component (CSS prefix: `status-`) */
-enum class StatusSize(internal val className: String) {
+enum class StatusSize(internal val className: String) : ClassValues<StatusSize> {
     /** CSS: `status-xs` — extra small size */
     Xs("status-xs"),
     /** CSS: `status-sm` — small size */
@@ -43,6 +47,9 @@ enum class StatusSize(internal val className: String) {
     Lg("status-lg"),
     /** CSS: `status-xl` — extra large size */
     Xl("status-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -57,8 +64,8 @@ enum class StatusSize(internal val className: String) {
  */
 fun FlowContent.daisyStatus(
     id: HtmlId? = null,
-    variant: StatusVariant? = null,
-    size: StatusSize? = null,
+    variant: ClassValues<StatusVariant>? = null,
+    size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
@@ -67,8 +74,8 @@ fun FlowContent.daisyStatus(
         if (id != null) attributes["id"] = id.id
         role = "status"
         addClassNames("status")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

@@ -5,24 +5,34 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+enum class StatDirection(internal val className: String) : ClassValues<StatDirection> {
+    /** CSS: `stats-horizontal` */
+    Horizontal("stats-horizontal"),
+    /** CSS: `stats-vertical` */
+    Vertical("stats-vertical"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Stat is used to show numbers and data in a block. Renders `<div class="stats ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param horizontal
- * @param vertical
+ * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
+    direction: ClassValues<StatDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -30,8 +40,7 @@ fun FlowContent.daisyStat(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stats")
-        if (horizontal) addClassNames("stats-horizontal")
-        if (vertical) addClassNames("stats-vertical")
+        addClassNames(direction)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

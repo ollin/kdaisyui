@@ -5,12 +5,13 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.select
 import kotlinx.html.SELECT
 
-enum class SelectVariant(internal val className: String) {
+enum class SelectVariant(internal val className: String) : ClassValues<SelectVariant> {
     /** CSS: `select-neutral` */
     Neutral("select-neutral"),
     /** CSS: `select-primary` */
@@ -27,9 +28,12 @@ enum class SelectVariant(internal val className: String) {
     Warning("select-warning"),
     /** CSS: `select-error` */
     Error("select-error"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
-enum class SelectSize(internal val className: String) {
+enum class SelectSize(internal val className: String) : ClassValues<SelectSize> {
     /** CSS: `select-xs` */
     Xs("select-xs"),
     /** CSS: `select-sm` */
@@ -40,6 +44,9 @@ enum class SelectSize(internal val className: String) {
     Lg("select-lg"),
     /** CSS: `select-xl` */
     Xl("select-xl"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
 }
 
 
@@ -56,8 +63,8 @@ enum class SelectSize(internal val className: String) {
  */
 fun FlowContent.daisySelect(
     id: HtmlId? = null,
-    variant: SelectVariant? = null,
-    size: SelectSize? = null,
+    variant: ClassValues<SelectVariant>? = null,
+    size: ClassValues<SelectSize>? = null,
     ghost: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
@@ -67,8 +74,8 @@ fun FlowContent.daisySelect(
     select {
         if (id != null) attributes["id"] = id.id
         addClassNames("select")
-        if (variant != null) addClassNames(variant.className)
-        if (size != null) addClassNames(size.className)
+        addClassNames(variant)
+        addClassNames(size)
         if (ghost) addClassNames("select-ghost")
         if (disabled) this.disabled = true
         addClassNames(extraClasses)

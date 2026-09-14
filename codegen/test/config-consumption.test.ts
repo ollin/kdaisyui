@@ -97,8 +97,8 @@ describe('CONFIG_SECTIONS', () => {
       CONFIG_SECTIONS.map(s => s.name).sort(),
       [
         'additionalBooleans', 'componentAttributes', 'componentElements', 'customParts',
-        'docSummaries', 'elementCrossCheckExceptions', 'extras', 'inputTypes', 'roles',
-        'skip', 'subComponentElements', 'textParams',
+        'docSummaries', 'elementCrossCheckExceptions', 'enumNames', 'extras', 'inputTypes',
+        'parameterNames', 'roles', 'skip', 'subComponentElements', 'textParams',
       ],
     )
   })

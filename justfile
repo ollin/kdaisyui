@@ -22,13 +22,34 @@ generate:
     @git status --short lib/generated docs/reference || true
     @git --no-pager diff --stat -- lib/generated docs/reference || true
 
-# Re-dump the committed public API baseline in lib/api and show what changed.
+# Re-dump BOTH committed public API baselines in lib/api and show what changed.
 # Only run this when an API change is intended: the diff is the change, and a
 # breaking one needs a "How to migrate" entry in README.md before its release.
+#
+# Both, because they see different things and CI checks both. lib.api is the JVM
+# ABI and erases a lambda receiver to Function1; components.api carries receiver
+# types, parameter names and defaults. This recipe ran only the first until
+# 2026-09-14 — it predates components.api, which arrived in 0.5.0 — so following
+# the documented workflow left checkComponentApi failing, and the obvious way out
+# of that is to re-dump the second by hand without reading its diff.
 update-api:
-    ./gradlew :lib:updateKotlinAbi
+    ./gradlew :lib:updateKotlinAbi :lib:updateComponentApi
     @echo
     @git --no-pager diff -- lib/api || true
+
+# Re-measure which DaisyUI classes can be worn at once, rewriting codegen/exclusivity.json,
+# and show what changed. That file decides which class groups become a Kotlin enum, so a
+# changed verdict is a changed public API — read the diff, never re-dump it blindly.
+# Needs Node, the submodules and a system Chromium; run it after a DaisyUI version bump.
+measure-exclusivity:
+    ./gradlew :e2e-tests:measureExclusivity
+    @echo
+    @git --no-pager diff --stat -- codegen/exclusivity.json || true
+
+# Fail when codegen/exclusivity.json no longer describes the DaisyUI in the submodule.
+# Cheap and browser-free; this is what CI runs. Use `measure-exclusivity` to fix a failure.
+verify-exclusivity:
+    ./gradlew :lib:verifyExclusivity
 
 # Sync DaisyUI submodule to the tag matching the daisyui version in gradle/libs.versions.toml
 sync-daisyui:

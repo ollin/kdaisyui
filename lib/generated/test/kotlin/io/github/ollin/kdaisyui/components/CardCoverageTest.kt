@@ -39,16 +39,12 @@ class CardCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCard(
                 id = htmlId("x-cov-id"),
-                border = true,
-                dash = true,
-                imageFull = true,
-                side = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "card card-border card-dash card-image-full card-side zz-extra", "Card all flags", closes = "</div></div>")
+        assertRendered(html, "card zz-extra", "Card all flags", closes = "</div></div>")
         assertCommonFlags(html, "Card")
     }
 
@@ -105,6 +101,50 @@ class CardCoverageTest {
             )
         }
         assertRendered(html, "card card-xl", "Card size Xl")
+    }
+
+    @Test
+    fun card_style_border() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(
+                style = CardStyle.Border,
+                content = { },
+            )
+        }
+        assertRendered(html, "card card-border", "Card style Border")
+    }
+
+    @Test
+    fun card_style_dash() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(
+                style = CardStyle.Dash,
+                content = { },
+            )
+        }
+        assertRendered(html, "card card-dash", "Card style Dash")
+    }
+
+    @Test
+    fun card_modifier_side() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(
+                modifier = CardModifier.Side,
+                content = { },
+            )
+        }
+        assertRendered(html, "card card-side", "Card modifier Side")
+    }
+
+    @Test
+    fun card_modifier_imagefull() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(
+                modifier = CardModifier.ImageFull,
+                content = { },
+            )
+        }
+        assertRendered(html, "card card-image-full", "Card modifier ImageFull")
     }
 
     @Test

@@ -188,6 +188,106 @@ CSS that selected on the tag.
 `lib/api/lib.api` does not show this change either, for the reason given above. `lib/api/components.api`
 does, and shipped in this release for that reason.
 
+### How to migrate from 0.5.x
+
+The largest API change so far, and — unlike 0.4.x — **every part of it breaks at compile time**.
+A boolean that became an enum entry is gone as a parameter, so the compiler names each call site.
+
+**1. Mutually exclusive booleans became one enum parameter.** Where a browser confirmed that two
+of a component's classes cannot both take effect, the booleans were replaced by a single
+parameter:
+
+```kotlin
+// before — nothing stopped you asking for both
+daisyMenu(vertical = true, horizontal = true) { … }
+
+// after — the question has one answer
+daisyMenu(direction = MenuDirection.Vertical) { … }
+```
+
+The enum entry is the old parameter name in PascalCase, so the replacement is mechanical:
+
+| Component | New parameter | Enum | Replaces the booleans |
+|---|---|---|---|
+| Alert | `direction` | `AlertDirection` | `vertical`, `horizontal` |
+| Card | `style` | `CardStyle` | `border`, `dash` |
+| Card | `modifier` | `CardModifier` | `side`, `imageFull` |
+| Carousel | `modifier` | `CarouselModifier` | `start`, `center`, `end` |
+| Divider | `direction` | `DividerDirection` | `vertical`, `horizontal` |
+| Join | `direction` | `JoinDirection` | `vertical`, `horizontal` |
+| List | `modifier` | `ListModifier` | `colWrap`, `colGrow` |
+| Loading | `style` | `LoadingStyle` | `spinner`, `dots`, `ring`, `ball`, `bars`, `infinity` |
+| Mask | `shape` | `MaskShape` | `squircle`, `heart`, `hexagon`, … 15 in total |
+| Mask | `modifier` | `MaskModifier` | `half1`, `half2` |
+| Menu | `direction` | `MenuDirection` | `vertical`, `horizontal` |
+| Stat | `direction` | `StatDirection` | `horizontal`, `vertical` |
+| Steps | `direction` | `StepsDirection` | `vertical`, `horizontal` |
+| Tab | `placement` | `TabPlacement` | `top`, `bottom` |
+
+**2. Four placement groups split into two independent axes**, because their classes compose
+*across* the split even though each axis is a single choice:
+
+```kotlin
+// before
+daisyTooltip("Copy", top = true, start = true) { … }
+
+// after — two questions, two answers
+daisyTooltip("Copy", sidePlacement = TooltipSidePlacement.Top,
+                     alignPlacement = TooltipAlignPlacement.Start) { … }
+```
+
+| Component | Axes | Replaces |
+|---|---|---|
+| Indicator | `verticalPlacement` (`Top`/`Middle`/`Bottom`), `horizontalPlacement` (`Start`/`Center`/`End`) | six booleans |
+| Toast | `verticalPlacement`, `horizontalPlacement` — same entries | six booleans |
+| Tooltip | `sidePlacement` (`Top`/`Bottom`/`Left`/`Right`), `alignPlacement` (`Start`/`Center`/`End`) | seven booleans |
+| Dropdown | `alignPlacement` (`Start`/`Center`/`End`) only | `start`, `center`, `end` |
+
+`daisyDropdown` is the one that looks inconsistent and is not: `top`, `bottom`, `left` and
+`right` **stay booleans** there, because the browser says `dropdown-left dropdown-top` reaches CSS
+that neither class reaches alone. Making them an axis would have made a working combination
+inexpressible.
+
+That asymmetry is the whole rule. A group became an enum only where *every* pair in it was
+measured mutually exclusive; where the measurement was unsure, the classes stayed booleans. A
+wrong enum takes away something DaisyUI permits; a wrong boolean only permits something useless.
+
+**3. Five booleans were renamed**, because the class name did not say what `true` means:
+
+| Component | Before | After |
+|---|---|---|
+| Dropdown | `hover` | `openOnHover` |
+| Menu | `focus` | `focused` |
+| Rating | `hidden` | `clearOption` |
+| Rating | `half` | `halfStars` |
+| Timeline | `box` | `boxed` |
+
+`daisyRating(hidden = true)` read as "hide the rating" and in fact adds the option to clear it.
+The class name is DaisyUI's and cannot change; the parameter is ours.
+
+**4. Enum parameters are typed `ClassValues<T>`, not `T`.** No call site changes:
+`size = ButtonSize.Lg` compiles exactly as before, because the enum *is* a `ClassValues<ButtonSize>`.
+The wider type exists so one parameter can later also accept a class applied at a Tailwind
+breakpoint. That composition is built but **not yet public** — see `docs/explanation.md`; until it
+is, apply a variant as a literal through `extraClasses`, which is the form Tailwind can see.
+
+Only code that names the type explicitly is affected:
+
+```kotlin
+// before
+val size: ButtonSize? = if (compact) ButtonSize.Sm else null
+
+// after — or just drop the annotation and let it infer
+val size: ClassValues<ButtonSize>? = if (compact) ButtonSize.Sm else null
+```
+
+**5. Use named arguments.** The advice from the 0.1.x entry now matters more: removing booleans
+and inserting enum parameters shifts every positional argument on 37 of the 66 components. Named
+arguments are immune.
+
+Both baselines show this change in full — the parameters are removed and added, not merely
+retyped, so neither blind spot from 0.4.x applies.
+
 ## Quick start
 
 ### 1. Add the dependency

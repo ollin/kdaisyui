@@ -15,8 +15,8 @@ Visual separator between sections. Renders `<div class="divider ...">`.
 // DividerDirection: Vertical | Horizontal
 fun FlowContent.daisyDivider(
     id: HtmlId? = null,
-    variant: DividerVariant? = null,
-    direction: DividerDirection? = null,
+    variant: ClassValues<DividerVariant>? = null,
+    direction: ClassValues<DividerDirection>? = null,
     end: Boolean = false,  // Pushes the divider text to the end
     start: Boolean = false,  // Pushes the divider text to the start
     extraClasses: String? = null,

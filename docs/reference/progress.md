@@ -14,7 +14,7 @@ Progress bar indicator. Renders `<progress class="progress ...">`.
 // ProgressVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 fun FlowContent.daisyProgress(
     id: HtmlId? = null,
-    variant: ProgressVariant? = null,
+    variant: ClassValues<ProgressVariant>? = null,
     extraClasses: String? = null,
     attrs: (PROGRESS.() -> Unit)? = null,
     content: (PROGRESS.() -> Unit),

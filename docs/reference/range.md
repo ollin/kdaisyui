@@ -15,8 +15,8 @@ Slider for numeric ranges. Renders `<input class="range ...">`.
 // RangeSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyRange(
     id: HtmlId? = null,
-    variant: RangeVariant? = null,
-    size: RangeSize? = null,
+    variant: ClassValues<RangeVariant>? = null,
+    size: ClassValues<RangeSize>? = null,
     vertical: Boolean = false,  // Vertical slider
     min: String? = null,
     max: String? = null,

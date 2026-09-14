@@ -14,7 +14,7 @@ Chat bubble layout for conversations. Renders `<div class="chat ...">`.
 // ChatVariant: BubbleNeutral | BubblePrimary | BubbleSecondary | BubbleAccent | BubbleInfo | BubbleSuccess | BubbleWarning | BubbleError
 fun FlowContent.daisyChat(
     id: HtmlId? = null,
-    variant: ChatVariant? = null,
+    variant: ClassValues<ChatVariant>? = null,
     end: Boolean = false,
     start: Boolean = false,
     extraClasses: String? = null,

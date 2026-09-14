@@ -15,8 +15,8 @@ Step-by-step progress indicator. Renders `<ul class="steps ...">`.
 // StepsDirection: Vertical | Horizontal
 fun FlowContent.daisySteps(
     id: HtmlId? = null,
-    variant: StepsVariant? = null,
-    direction: StepsDirection? = null,
+    variant: ClassValues<StepsVariant>? = null,
+    direction: ClassValues<StepsDirection>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),

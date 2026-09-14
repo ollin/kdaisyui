@@ -15,8 +15,8 @@ Multi-line text input. Renders `<textarea class="textarea ...">`.
 // TextareaSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyTextarea(
     id: HtmlId? = null,
-    variant: TextareaVariant? = null,
-    size: TextareaSize? = null,
+    variant: ClassValues<TextareaVariant>? = null,
+    size: ClassValues<TextareaSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
     attrs: (TEXTAREA.() -> Unit)? = null,

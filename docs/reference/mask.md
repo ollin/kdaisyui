@@ -15,8 +15,8 @@ CSS masks for cropping images to shapes. Renders `<img class="mask ...">`.
 // MaskModifier: Half1 | Half2
 fun FlowContent.daisyMask(
     id: HtmlId? = null,
-    shape: MaskShape? = null,
-    modifier: MaskModifier? = null,
+    shape: ClassValues<MaskShape>? = null,
+    modifier: ClassValues<MaskModifier>? = null,
     extraClasses: String? = null,
     attrs: (IMG.() -> Unit)? = null,
 )

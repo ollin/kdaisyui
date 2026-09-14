@@ -15,8 +15,8 @@ Switch-style boolean input. Renders `<input class="toggle ...">`.
 // ToggleSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyToggle(
     id: HtmlId? = null,
-    variant: ToggleVariant? = null,
-    size: ToggleSize? = null,
+    variant: ClassValues<ToggleVariant>? = null,
+    size: ClassValues<ToggleSize>? = null,
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,

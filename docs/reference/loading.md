@@ -15,8 +15,8 @@ Loading spinners and indicators. Renders `<span class="loading ...">`.
 // LoadingStyle: Spinner | Dots | Ring | Ball | Bars | Infinity
 fun FlowContent.daisyLoading(
     id: HtmlId? = null,
-    size: LoadingSize? = null,
-    style: LoadingStyle? = null,
+    size: ClassValues<LoadingSize>? = null,
+    style: ClassValues<LoadingStyle>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),

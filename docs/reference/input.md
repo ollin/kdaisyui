@@ -15,8 +15,8 @@ Text entry fields. Renders `<input class="input ...">`.
 // InputSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyInput(
     id: HtmlId? = null,
-    variant: InputVariant? = null,
-    size: InputSize? = null,
+    variant: ClassValues<InputVariant>? = null,
+    size: ClassValues<InputSize>? = null,
     ghost: Boolean = false,
     type: InputType = InputType.text,
     placeholder: String? = null,

@@ -15,8 +15,8 @@ Single-choice option groups. Renders `<input class="radio ...">`.
 // RadioSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyRadio(
     id: HtmlId? = null,
-    variant: RadioVariant? = null,
-    size: RadioSize? = null,
+    variant: ClassValues<RadioVariant>? = null,
+    size: ClassValues<RadioSize>? = null,
     name: String? = null,
     checked: Boolean = false,
     disabled: Boolean = false,

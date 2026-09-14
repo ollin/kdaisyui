@@ -15,8 +15,8 @@ Overlays badges on elements. Renders `<div class="indicator ...">`.
 // IndicatorHorizontalPlacement: Start | Center | End
 fun FlowContent.daisyIndicator(
     id: HtmlId? = null,
-    verticalPlacement: IndicatorVerticalPlacement? = null,
-    horizontalPlacement: IndicatorHorizontalPlacement? = null,
+    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
+    horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

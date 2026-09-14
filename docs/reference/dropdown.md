@@ -14,7 +14,7 @@ Context menus and action lists. Renders `<details class="dropdown ...">`.
 // DropdownAlignPlacement: Start | Center | End
 fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
-    alignPlacement: DropdownAlignPlacement? = null,
+    alignPlacement: ClassValues<DropdownAlignPlacement>? = null,
     close: Boolean = false,  // Force close
     openOnHover: Boolean = false,  // Opens on hover too
     open: Boolean = false,  // Force open

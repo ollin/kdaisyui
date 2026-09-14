@@ -15,8 +15,8 @@ One-time password input for verification codes, typically four to six digits, us
 // OtpSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyOtp(
     id: HtmlId? = null,
-    variant: OtpVariant? = null,
-    size: OtpSize? = null,
+    variant: ClassValues<OtpVariant>? = null,
+    size: ClassValues<OtpSize>? = null,
     joined: Boolean = false,  // Connects the character boxes together
     extraClasses: String? = null,
     attrs: (LABEL.() -> Unit)? = null,

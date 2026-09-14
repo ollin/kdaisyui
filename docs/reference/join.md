@@ -14,7 +14,7 @@ Groups buttons and inputs together. Renders `<div class="join ...">`.
 // JoinDirection: Vertical | Horizontal
 fun FlowContent.daisyJoin(
     id: HtmlId? = null,
-    direction: JoinDirection? = null,
+    direction: ClassValues<JoinDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

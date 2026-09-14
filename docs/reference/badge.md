@@ -16,8 +16,8 @@ Labels, counts, and status tags. Renders `<span class="badge ...">`.
 fun FlowContent.daisyBadge(
     text: String? = null,
     id: HtmlId? = null,
-    variant: BadgeVariant? = null,
-    size: BadgeSize? = null,
+    variant: ClassValues<BadgeVariant>? = null,
+    size: ClassValues<BadgeSize>? = null,
     dash: Boolean = false,  // dash outline style
     ghost: Boolean = false,  // ghost style
     outline: Boolean = false,  // outline style

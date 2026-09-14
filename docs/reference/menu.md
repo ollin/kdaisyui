@@ -15,8 +15,8 @@ Navigation lists with submenus. Renders `<ul class="menu ...">`.
 // MenuDirection: Vertical | Horizontal
 fun FlowContent.daisyMenu(
     id: HtmlId? = null,
-    size: MenuSize? = null,
-    direction: MenuDirection? = null,
+    size: ClassValues<MenuSize>? = null,
+    direction: ClassValues<MenuDirection>? = null,
     active: Boolean = false,  // For the element inside <li> to look active
     disabled: Boolean = false,  // For the element inside <li> to look disabled
     dropdownShow: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS

@@ -14,7 +14,7 @@ Key metrics and numbers. Renders `<div class="stats ...">`.
 // StatDirection: Horizontal | Vertical
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
-    direction: StatDirection? = null,
+    direction: ClassValues<StatDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

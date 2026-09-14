@@ -15,8 +15,8 @@ Small status indicator dot. Renders `<span class="status ...">`.
 // StatusSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyStatus(
     id: HtmlId? = null,
-    variant: StatusVariant? = null,
-    size: StatusSize? = null,
+    variant: ClassValues<StatusVariant>? = null,
+    size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),

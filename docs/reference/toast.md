@@ -15,8 +15,8 @@ Toast notification container. Renders `<div class="toast ...">`.
 // ToastHorizontalPlacement: Start | Center | End
 fun FlowContent.daisyToast(
     id: HtmlId? = null,
-    verticalPlacement: ToastVerticalPlacement? = null,
-    horizontalPlacement: ToastHorizontalPlacement? = null,
+    verticalPlacement: ClassValues<ToastVerticalPlacement>? = null,
+    horizontalPlacement: ClassValues<ToastHorizontalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

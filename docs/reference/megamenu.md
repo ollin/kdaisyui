@@ -14,7 +14,7 @@ Large horizontal menu where each item opens a popover holding a block of navigat
 // MegamenuSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyMegamenu(
     id: HtmlId? = null,
-    size: MegamenuSize? = null,
+    size: ClassValues<MegamenuSize>? = null,
     full: Boolean = false,  // megamenu dropdown will fill the entire width of the page
     vertical: Boolean = false,  // Hides horizontal megamenu so we can open a vertical megamenu in small screens
     wide: Boolean = false,  // megamenu dropdown will be as wide as the megamenu container

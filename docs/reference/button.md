@@ -16,8 +16,8 @@ Actions and triggers. Renders `<button class="btn ...">`.
 fun FlowContent.daisyButton(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ButtonVariant? = null,
-    size: ButtonSize? = null,
+    variant: ClassValues<ButtonVariant>? = null,
+    size: ClassValues<ButtonSize>? = null,
     active: Boolean = false,  // looks active
     block: Boolean = false,  // Full width
     circle: Boolean = false,  // 1:1 ratio with rounded corners

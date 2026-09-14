@@ -14,7 +14,7 @@ Slideshow of images or content. Renders `<div class="carousel ...">`.
 // CarouselModifier: Start | Center | End
 fun FlowContent.daisyCarousel(
     id: HtmlId? = null,
-    modifier: CarouselModifier? = null,
+    modifier: ClassValues<CarouselModifier>? = null,
     horizontal: Boolean = false,  // Horizontal layout (default)
     vertical: Boolean = false,  // Vertical layout
     extraClasses: String? = null,

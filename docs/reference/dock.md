@@ -14,7 +14,7 @@ macOS-style dock navigation. Renders `<div class="dock ...">`.
 // DockSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyDock(
     id: HtmlId? = null,
-    size: DockSize? = null,
+    size: ClassValues<DockSize>? = null,
     active: Boolean = false,  // Makes the Dock Item look active
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

@@ -15,8 +15,8 @@ Tabbed navigation. Renders `<button class="tabs ...">`.
 // TabPlacement: Top | Bottom
 fun FlowContent.daisyTab(
     id: HtmlId? = null,
-    size: TabSize? = null,
-    placement: TabPlacement? = null,
+    size: ClassValues<TabSize>? = null,
+    placement: ClassValues<TabPlacement>? = null,
     border: Boolean = false,  // bottom border style
     box: Boolean = false,  // box style
     lift: Boolean = false,  // lift style

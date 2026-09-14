@@ -14,7 +14,7 @@ Styled list layout. Renders `<ul class="list ...">`.
 // ListModifier: ColWrap | ColGrow
 fun FlowContent.daisyList(
     id: HtmlId? = null,
-    modifier: ListModifier? = null,
+    modifier: ClassValues<ListModifier>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),

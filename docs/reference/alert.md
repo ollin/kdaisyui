@@ -15,8 +15,8 @@ Status messages and notifications. Renders `<div class="alert ...">`.
 // AlertDirection: Vertical | Horizontal
 fun FlowContent.daisyAlert(
     id: HtmlId? = null,
-    variant: AlertVariant? = null,
-    direction: AlertDirection? = null,
+    variant: ClassValues<AlertVariant>? = null,
+    direction: ClassValues<AlertDirection>? = null,
     dash: Boolean = false,  // dash outline style
     outline: Boolean = false,  // outline style
     soft: Boolean = false,  // soft style

@@ -16,9 +16,9 @@ Hover tooltip on elements. Renders `<div class="tooltip ...">`.
 // TooltipAlignPlacement: Start | Center | End
 fun FlowContent.daisyTooltip(
     id: HtmlId? = null,
-    variant: TooltipVariant? = null,
-    sidePlacement: TooltipSidePlacement? = null,
-    alignPlacement: TooltipAlignPlacement? = null,
+    variant: ClassValues<TooltipVariant>? = null,
+    sidePlacement: ClassValues<TooltipSidePlacement>? = null,
+    alignPlacement: ClassValues<TooltipAlignPlacement>? = null,
     open: Boolean = false,  // Force open tooltip
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

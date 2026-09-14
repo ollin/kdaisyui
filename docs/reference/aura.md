@@ -14,7 +14,7 @@ Border light effect that wraps around any component, for highlighting a single i
 // AuraSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyAura(
     id: HtmlId? = null,
-    size: AuraSize? = null,
+    size: ClassValues<AuraSize>? = null,
     dual: Boolean = false,  // Uses two light effects
     glow: Boolean = false,  // Uses a glowing effect for the light instead of a rotating border
     gold: Boolean = false,  // Uses gold colors for the light effect

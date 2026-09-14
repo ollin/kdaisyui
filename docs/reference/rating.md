@@ -14,7 +14,7 @@ Star rating input. Renders `<div class="rating ...">`.
 // RatingSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyRating(
     id: HtmlId? = null,
-    size: RatingSize? = null,
+    size: ClassValues<RatingSize>? = null,
     halfStars: Boolean = false,  // To shows half of the shapes. Useful for half star ratings
     clearOption: Boolean = false,  // For the first radio to make it hidden so user can clear the rating
     extraClasses: String? = null,

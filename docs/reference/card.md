@@ -16,9 +16,9 @@ Content containers with body and title. Renders `<div class="card ...">`.
 // CardModifier: Side | ImageFull
 fun FlowContent.daisyCard(
     id: HtmlId? = null,
-    size: CardSize? = null,
-    style: CardStyle? = null,
-    modifier: CardModifier? = null,
+    size: ClassValues<CardSize>? = null,
+    style: ClassValues<CardStyle>? = null,
+    modifier: ClassValues<CardModifier>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

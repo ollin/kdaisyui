@@ -121,7 +121,7 @@ Ordered by blast radius, largest first, so the shape is settled before the small
 Runs before block 5, because 5.1 and 5.2 read the result. Decided by Oliver: no renames — a
 boolean is named after DaisyUI's class, and the class is what a user searches for.
 
-- [ ] 6.1 `^ r (internal)` Delete the `parameterNames` section from `codegen-config.json`, its
+- [x] 6.1 `^ r (internal)` Delete the `parameterNames` section from `codegen-config.json`, its
   read in `component-shape.ts` (`readComponentConfig` and the `parameterNames[cls] ??
   toCamelCase(cls)` fallback, which becomes `toCamelCase(cls)` alone), its `config-consumption.ts`
   entry, and the `test-generator.ts` comment that names it. The consumption guard's test list

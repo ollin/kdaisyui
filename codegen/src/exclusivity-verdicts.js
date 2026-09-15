@@ -130,27 +130,40 @@
     })
   }
 
-  /** Whether a selector, or one of the nested rule's ancestors, names the class as a whole token. */
+  /**
+   * Whether a selector, or one of the nested rule's ancestors, names the class as a whole token.
+   *
+   * The dot is the boundary on the left: the CSSOM flattens `&.dropdown-left` under
+   * `.dropdown-start` to `.dropdown-start.dropdown-left`, where the second class follows a
+   * letter, not a space.
+   */
   function selectorNames(selectors, className) {
-    const token = new RegExp('(^|[^\\w-])\\.' + className + '(?![\\w-])')
+    const token = new RegExp('\\.' + className + '(?![\\w-])')
     return selectors.some(function (selector) {
       return token.test(selector)
     })
   }
 
   /**
-   * Every property name a stylesheet declares under the class, in any rule whose selector
-   * chain names it — nested rules included, since DaisyUI's CSS is nested throughout.
+   * Every property name a stylesheet declares under the class ON ITS OWN: in any rule whose
+   * selector chain names it and names no other member of its group — nested rules included,
+   * since DaisyUI's CSS is nested throughout. `.dropdown-start.dropdown-left { --anchor-v }`
+   * is what the combination declares, not what `dropdown-start` does.
    *
    * Read from the CSSOM rather than the source text, because what the browser parsed is what
    * applies. Custom properties come back as `--tt-trans`, ordinary ones as `transform`.
    */
-  function declaredProperties(className) {
+  function declaredProperties(className, siblings) {
     const names = new Set()
+    const namesASibling = function (selectors) {
+      return siblings.some(function (sibling) {
+        return selectorNames(selectors, sibling)
+      })
+    }
     const walk = function (rules, ancestors) {
       for (const rule of rules) {
         const own = rule.selectorText ? ancestors.concat([rule.selectorText]) : ancestors
-        if (rule.style && selectorNames(own, className)) {
+        if (rule.style && selectorNames(own, className) && !namesASibling(own)) {
           for (let index = 0; index < rule.style.length; index++) names.add(rule.style[index])
         }
         if (rule.cssRules) walk(rule.cssRules, own)
@@ -163,7 +176,15 @@
   /** `member -> [property, …]` for every member of the group. */
   function declaresOf(prefix, cases) {
     const declares = {}
-    for (const member of membersOf(cases)) declares[member] = declaredProperties(prefix + '-' + member)
+    const classes = membersOf(cases).map(function (member) {
+      return prefix + '-' + member
+    })
+    for (const className of classes) {
+      const siblings = classes.filter(function (other) {
+        return other !== className
+      })
+      declares[className.slice(prefix.length + 1)] = declaredProperties(className, siblings)
+    }
     return declares
   }
 

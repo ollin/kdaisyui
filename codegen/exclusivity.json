@@ -74,21 +74,16 @@
           ],
           "open": [
             "--overflow-delay",
-            "--tw-content",
-            "content",
             "content-visibility",
             "grid-template-rows",
             "min-height",
             "overflow-x",
             "overflow-y",
             "padding-bottom",
-            "transform",
             "visibility"
           ],
           "close": [
             "--overflow-delay",
-            "--tw-content",
-            "content",
             "content-visibility",
             "cursor",
             "grid-template-rows",
@@ -96,7 +91,6 @@
             "overflow-x",
             "overflow-y",
             "padding-bottom",
-            "transform",
             "visibility"
           ]
         }
@@ -441,23 +435,9 @@
           "soft|link"
         ],
         "declares": {
-          "outline": [
-            "--btn-bg",
-            "--btn-border",
-            "--btn-border-style",
-            "--btn-inset",
-            "--btn-shadow",
-            "background-image",
-            "color"
-          ],
+          "outline": [],
           "dash": [
-            "--btn-bg",
-            "--btn-border",
-            "--btn-border-style",
-            "--btn-inset",
-            "--btn-shadow",
-            "background-image",
-            "color"
+            "--btn-border-style"
           ],
           "soft": [
             "--btn-bg",
@@ -473,7 +453,6 @@
             "--btn-border",
             "--btn-inset",
             "--btn-shadow",
-            "background-color",
             "background-image",
             "color"
           ],
@@ -482,7 +461,6 @@
             "--btn-border",
             "--btn-inset",
             "--btn-shadow",
-            "background-color",
             "background-image",
             "color",
             "text-decoration-line"
@@ -675,21 +653,16 @@
           ],
           "open": [
             "--overflow-delay",
-            "--tw-content",
-            "content",
             "content-visibility",
             "grid-template-rows",
             "min-height",
             "overflow-x",
             "overflow-y",
             "padding-bottom",
-            "transform",
             "visibility"
           ],
           "close": [
             "--overflow-delay",
-            "--tw-content",
-            "content",
             "content-visibility",
             "cursor",
             "grid-template-rows",
@@ -697,7 +670,6 @@
             "overflow-x",
             "overflow-y",
             "padding-bottom",
-            "transform",
             "visibility"
           ]
         }
@@ -728,12 +700,8 @@
           "start|end"
         ],
         "declares": {
-          "start": [
-            "display"
-          ],
-          "end": [
-            "display"
-          ]
+          "start": [],
+          "end": []
         }
       }
     },
@@ -750,27 +718,9 @@
           "hover"
         ],
         "declares": {
-          "hover": [
-            "display",
-            "opacity",
-            "pointer-events",
-            "scale",
-            "transform-origin"
-          ],
-          "open": [
-            "display",
-            "opacity",
-            "pointer-events",
-            "scale",
-            "transform-origin"
-          ],
-          "close": [
-            "display",
-            "opacity",
-            "pointer-events",
-            "scale",
-            "transform-origin"
-          ]
+          "hover": [],
+          "open": [],
+          "close": []
         }
       },
       "placements": {
@@ -802,26 +752,17 @@
         "declares": {
           "start": [
             "--anchor-h",
-            "--anchor-v",
-            "bottom",
             "inset-inline-end",
-            "top",
             "translate"
           ],
           "center": [
             "--anchor-h",
-            "--anchor-v",
-            "bottom",
             "inset-inline-end",
-            "top",
             "translate"
           ],
           "end": [
             "--anchor-h",
-            "--anchor-v",
-            "bottom",
             "inset-inline-end",
-            "top",
             "translate"
           ],
           "top": [
@@ -842,7 +783,8 @@
             "bottom",
             "inset-inline-end",
             "top",
-            "transform-origin"
+            "transform-origin",
+            "translate"
           ],
           "right": [
             "--anchor-h",
@@ -850,7 +792,8 @@
             "bottom",
             "inset-inline-start",
             "top",
-            "transform-origin"
+            "transform-origin",
+            "translate"
           ]
         }
       }
@@ -1337,18 +1280,11 @@
             "outline-style",
             "outline-width"
           ],
-          "focus": [
-            "--tw-outline-style",
-            "background-color",
-            "color",
-            "cursor",
-            "outline-color",
-            "outline-offset",
-            "outline-style",
-            "outline-width"
-          ],
+          "focus": [],
           "dropdown-show": [
-            "display"
+            "display",
+            "rotate",
+            "translate"
           ],
           "paged": [
             "--menu-paged-arrow",
@@ -1516,10 +1452,30 @@
           "end"
         ],
         "declares": {
-          "top": [],
-          "bottom": [],
-          "start": [],
-          "end": []
+          "top": [
+            "grid-column-end",
+            "grid-column-start",
+            "grid-row-end",
+            "grid-row-start"
+          ],
+          "bottom": [
+            "grid-column-end",
+            "grid-column-start",
+            "grid-row-end",
+            "grid-row-start"
+          ],
+          "start": [
+            "grid-column-end",
+            "grid-column-start",
+            "grid-row-end",
+            "grid-row-start"
+          ],
+          "end": [
+            "grid-column-end",
+            "grid-column-start",
+            "grid-row-end",
+            "grid-row-start"
+          ]
         }
       }
     },

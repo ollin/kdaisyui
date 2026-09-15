@@ -100,6 +100,43 @@ describe('buildComponentShape', () => {
     assert.deepEqual(names(shape.functions[0].parameters).slice(1, 5), ['active', 'dash', 'soft', 'top'])
   })
 
+  test('declares a boolean on the part whose element DaisyUI documents the class on', () => {
+    // `dock-active` is shown on the <button> that `daisyDockItem` renders, never on the
+    // container's <div>. The parameter belongs to the item.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Dock', prefix: 'dock', modifiers: ['active'], parts: ['dock-item'] }),
+      {
+        componentDir: 'dock',
+        element: 'DIV',
+        documentedElements: new Map([['dock', 'DIV'], ['dock-active', 'BUTTON'], ['dock-item', 'BUTTON']]),
+      },
+      { subComponentElements: { 'dock-item': 'button' } },
+    )
+    const [main, item] = shape.functions
+
+    assert.ok(!names(main.parameters).includes('active'))
+    assert.ok(names(item.parameters).includes('active'))
+    assert.equal(item.parameters.find((p) => p.name === 'active')?.cssClass, 'dock-active')
+  })
+
+  test('keeps a boolean on the main function when no part renders the documented element', () => {
+    // Moving it to a part on a DIFFERENT wrong element would fix nothing; the cross-check
+    // keeps reporting it until the part's element is right.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Dock', prefix: 'dock', modifiers: ['active'], parts: ['dock-item'] }),
+      {
+        componentDir: 'dock',
+        element: 'DIV',
+        documentedElements: new Map([['dock-active', 'BUTTON']]),
+      },
+      {},
+    )
+    const [main, item] = shape.functions
+
+    assert.ok(names(main.parameters).includes('active'))
+    assert.ok(!names(item.parameters).includes('active'))
+  })
+
   test('a boolean carries the class it emits; nothing else does', () => {
     // What the element cross-check will read: which class a parameter puts on the element.
     const shape = buildComponentShape(classified({ modifiers: ['side'] }), { componentDir: 'card', element: 'DIV' }, {})

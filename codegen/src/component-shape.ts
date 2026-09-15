@@ -17,6 +17,7 @@
  */
 
 import { toPascalCase, toCamelCase, type ClassifiedComponent } from './classifier.ts'
+import { GROUP_CATEGORIES } from './class-groups.ts'
 import type { GroupClassification } from './class-groups.ts'
 
 /**
@@ -364,6 +365,13 @@ export interface ComponentSource {
    * override or the `llms.txt` heuristic. Upper-cased here, so either case works in config.
    */
   readonly element: string | undefined
+  /**
+   * Where DaisyUI documents each of the component's classes, by class name, from
+   * `documentedElementsFor`. Decides which FUNCTION a class's parameter is declared on: a
+   * class DaisyUI shows on a part's element belongs to that part, not to the container.
+   * Absent means "everything on the main function", which is what a hand-built fixture wants.
+   */
+  readonly documentedElements?: ReadonlyMap<string, string>
 }
 
 /** A component's whole generated API. */
@@ -507,18 +515,30 @@ function enumParameters(
   return parameters
 }
 
-function booleanParameters(
-  classified: ClassifiedComponent,
-  componentConfig: ComponentConfig,
-  groups: GroupClassification,
-): ParameterShape[] {
-  return booleanParameterClasses(classified, componentConfig, groups).map(cls => ({
+function booleanParameter(classified: ClassifiedComponent, cls: string): ParameterShape {
+  return {
     name: booleanParameterName(cls),
     type: 'Boolean',
     default: 'false',
     doc: classified.descs?.[cls] ?? null,
     cssClass: asCssClass(`${classified.prefix}-${cls}`),
-  }))
+  }
+}
+
+/** Which classes are enums and which booleans, and which booleans a part owns instead of main. */
+interface ClassPlan {
+  readonly groups: GroupClassification
+  readonly placement: ClassPlacement
+}
+
+function booleanParameters(
+  classified: ClassifiedComponent,
+  componentConfig: ComponentConfig,
+  plan: ClassPlan,
+): ParameterShape[] {
+  return booleanParameterClasses(classified, componentConfig, plan.groups)
+    .filter(cls => plan.placement.belongsToMain(cls))
+    .map(cls => booleanParameter(classified, cls))
 }
 
 /**
@@ -534,11 +554,64 @@ function extraParameters(extras: readonly ExtraParameter[]): ParameterShape[] {
   }))
 }
 
+/**
+ * Which part function, if any, a boolean class belongs to.
+ *
+ * A class belongs to the function whose element DaisyUI documents it on. When that element is
+ * a part's and not the main function's, the parameter is declared on the part — `dock-active`
+ * on `daisyDockItem`'s `<button>`, not on `daisyDock`'s `<div>`. When no part renders the
+ * documented element, the class stays on the main function and the element cross-check goes on
+ * reporting it: moving it to a part on a DIFFERENT wrong element would fix nothing.
+ */
+class ClassPlacement {
+  private readonly owner: ReadonlyMap<string, CssClass>
+
+  private constructor(owner: ReadonlyMap<string, CssClass>) {
+    this.owner = owner
+  }
+
+  static none(): ClassPlacement {
+    return new ClassPlacement(new Map())
+  }
+
+  static from(
+    classified: ClassifiedComponent,
+    documented: ReadonlyMap<string, string>,
+    rootElement: TagClass,
+    config,
+  ): ClassPlacement {
+    const owner = new Map<string, CssClass>()
+    const partsByElement = new Map<string, CssClass>()
+    for (const part of classified.parts) {
+      const element = partElementFor(asCssClass(part), config)
+      if (element !== rootElement && !partsByElement.has(element)) partsByElement.set(element, asCssClass(part))
+    }
+    for (const cls of allGroupClasses(classified)) {
+      const element = documented.get(`${classified.prefix}-${cls}`)
+      const part = element === undefined ? undefined : partsByElement.get(element)
+      if (part !== undefined) owner.set(cls, part)
+    }
+    return new ClassPlacement(owner)
+  }
+
+  belongsToMain(cls: string): boolean {
+    return !this.owner.has(cls)
+  }
+
+  classesOf(partClass: CssClass): string[] {
+    return [...this.owner].filter(([, part]) => part === partClass).map(([cls]) => cls)
+  }
+}
+
+function allGroupClasses(classified: ClassifiedComponent): string[] {
+  return GROUP_CATEGORIES.flatMap(category => classified[category])
+}
+
 function mainFunctionShape(
   classified: ClassifiedComponent,
   element: TagClass,
   componentConfig: ComponentConfig,
-  groups: GroupClassification,
+  plan: ClassPlan,
 ): FunctionShape {
   const { hasTextParam } = componentConfig
 
@@ -546,8 +619,8 @@ function mainFunctionShape(
   const parameters: ParameterShape[] = [
     ...(hasTextParam ? [TEXT_PARAMETER] : []),
     ID_PARAMETER,
-    ...enumParameters(classified, groups),
-    ...booleanParameters(classified, componentConfig, groups),
+    ...enumParameters(classified, plan.groups),
+    ...booleanParameters(classified, componentConfig, plan),
     ...extraParameters(componentConfig.extras),
     EXTRA_CLASSES_PARAMETER,
     attrsParameter(element),
@@ -574,10 +647,12 @@ function partFunctionShape(
   classified: ClassifiedComponent,
   partClass: CssClass,
   config,
+  placement: ClassPlacement,
 ): FunctionShape {
   const element = partElementFor(partClass, config)
   const hasTextParam = config?.textParams?.includes(partClass) || partClass.includes('title')
   const suffix = toPascalCase(stripPrefix(classified.prefix, partClass))
+  const own = placement.classesOf(partClass).sort().map(cls => booleanParameter(classified, cls))
 
   return {
     kind: 'part',
@@ -593,8 +668,14 @@ function partFunctionShape(
     // (`card-title`), so this lookup has never resolved. Correcting it would add a sentence to
     // every part's doc comment — a change in output, which belongs in its own commit.
     desc: classified.descs?.[partClass] ?? '',
-    parameters: escapeHatchParameters(element, hasTextParam),
+    parameters: withOwnClasses(escapeHatchParameters(element, hasTextParam), own),
   }
+}
+
+/** A part's own booleans go after `id`, where the main function puts its booleans too. */
+function withOwnClasses(escapeHatches: readonly ParameterShape[], own: readonly ParameterShape[]): ParameterShape[] {
+  const afterId = escapeHatches.findIndex(parameter => parameter === ID_PARAMETER) + 1
+  return [...escapeHatches.slice(0, afterId), ...own, ...escapeHatches.slice(afterId)]
 }
 
 function stripPrefix(prefix: string | null, className: CssClass): string {
@@ -633,6 +714,10 @@ export function buildComponentShape(
 ): ComponentShape {
   const componentConfig = readComponentConfig(config, classified.componentName)
   const rootElement = asTagClass(source.element || 'DIV')
+  const placement = source.documentedElements === undefined
+    ? ClassPlacement.none()
+    : ClassPlacement.from(classified, source.documentedElements, rootElement, config)
+  const plan: ClassPlan = { groups, placement }
 
   return {
     componentName: classified.componentName,
@@ -640,8 +725,8 @@ export function buildComponentShape(
     prefix: classified.prefix === null ? null : asCssClass(classified.prefix),
     enums: enumShapes(classified, groups),
     functions: [
-      mainFunctionShape(classified, rootElement, componentConfig, groups),
-      ...classified.parts.map(partClass => partFunctionShape(classified, asCssClass(partClass), config)),
+      mainFunctionShape(classified, rootElement, componentConfig, plan),
+      ...classified.parts.map(partClass => partFunctionShape(classified, asCssClass(partClass), config, placement)),
       ...componentConfig.customParts.map(part => customPartFunctionShape(classified, part)),
     ],
   }

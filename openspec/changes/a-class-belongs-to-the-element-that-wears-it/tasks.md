@@ -43,11 +43,16 @@ before the census check is built on it.
 
 ## 1. The census becomes a check — 1.2 h
 
-- [ ] 1.1 `^ F (internal)` Generalise `element-cross-check.ts` from the component class to every
+- [x] 1.1 `^ F (internal)` Generalise `element-cross-check.ts` from the component class to every
   class, reusing `parser/documented-classes.ts`. Same three failure modes it already has: a
   disagreement with no exception, a class DaisyUI documents no element for, and an exception no
-  longer needed.
-- [ ] 1.2 `. d` Record the 13 + 18 as exceptions naming this change, so the check lands green and
+  longer needed. *Done in five commits (`6801a73`..`e2b1860`). The "undocumented" mode applies
+  to the component class only; a modifier shown nowhere or on several elements is unchecked. The
+  check reports **60** disagreements, not 31: the census counted container parameters, the
+  check also sees parts on the wrong element (`fieldset-legend` as `<div>`) and two components
+  whose first example differs from every variant example (`badge`, `status` as `<span>` vs
+  `<div>`; `dropdown` as `<details>`). 1.2 files all 60.*
+- [ ] 1.2 `. d` Record the 60 disagreements 1.1 reports as exceptions naming this change, so the check lands green and
   then fails as each is fixed. **An exception must expire on its own** — that is what stops the
   list becoming the hand-maintained list this project has deleted twice.
 - [ ] 1.3 `^ F (internal)` Wire it beside `checkComponentApi` in CI, NOT into `check`: it reads

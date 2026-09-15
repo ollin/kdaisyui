@@ -77,8 +77,10 @@ function loadConfig() {
 function reportCrossCheck(
   observations: readonly ElementObservation[],
   exceptions: CrossCheckExceptions,
+  consumed: ConsumedKeyCollector,
 ): void {
   const crossCheck = crossCheckElements(observations, exceptions)
+  consumed.exceptionKeys(crossCheck.consulted)
   for (const key of crossCheck.excused) {
     console.log(`  ⚠ ${key}: element disagrees with DaisyUI, excused — see #${exceptions[key].issue}`)
   }
@@ -183,7 +185,7 @@ function main() {
   console.log(`Output: ${OUTPUT_DIR}`)
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
 
-  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {})
+  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {}, consumed)
   reportUnreadConfig(config, consumed.keys())
 }
 

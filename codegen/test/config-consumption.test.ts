@@ -20,10 +20,21 @@ const consumed = (overrides: Partial<ConsumedKeys> = {}): ConsumedKeys => ({
   componentKeys: new Set(['fileinput', 'card', 'button']),
   directoryKeys: new Set(['file-input', 'card', 'button']),
   partKeys: new Set(['card-title', 'megamenu-active']),
+  exceptionKeys: new Set(['tab', 'menu/menu-active']),
   ...overrides,
 })
 
 describe('findUnreadEntries', () => {
+  test('accepts an exception key the cross-check consulted, in either form', () => {
+    // The check, not this guard, knows which `directory/class` keys exist; it reports what it
+    // looked up, and a key it never looked up is a typo like any other.
+    const config = { elementCrossCheckExceptions: { tab: {}, 'menu/menu-active': {}, 'menu/menu-actve': {} } }
+
+    const unread = findUnreadEntries(config, consumed())
+
+    assert.deepEqual(unread.map((entry) => entry.key), ['menu/menu-actve'])
+  })
+
   test('catches the directory-spelled key in a component-keyed section', () => {
     // Exactly the shipped defect: a real DaisyUI directory name in a section read by
     // lower-cased PascalCase name. A key-existence check would have passed this.

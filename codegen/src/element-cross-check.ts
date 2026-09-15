@@ -60,6 +60,8 @@ export interface CrossCheckResult {
   readonly findings: readonly CrossCheckFinding[]
   /** Disagreements covered by an exception — reported, not failed. Keys as in the config. */
   readonly excused: readonly string[]
+  /** Every exception key looked up, so the config-consumption guard can tell a typo from a key. */
+  readonly consulted: readonly string[]
 }
 
 /** The config key for one observation. */
@@ -115,10 +117,12 @@ export function crossCheckElements(
 ): CrossCheckResult {
   const findings: CrossCheckFinding[] = []
   const excused: string[] = []
+  const consulted: string[] = []
 
   for (const observation of observations) {
     const key = exceptionKeyOf(observation)
     const exception = exceptions[key]
+    consulted.push(key)
 
     if (observation.documented === null) {
       // Only the component's own class must be documented: without it nothing about the
@@ -135,7 +139,7 @@ export function crossCheckElements(
     else findings.push(disagreementFinding(observation))
   }
 
-  return { findings, excused }
+  return { findings, excused, consulted }
 }
 
 /** The message the generator dies with. One line per finding, so none of them is buried. */

@@ -206,9 +206,8 @@ function strippedClass(prefix: string | null, cssClass: string): string {
  *
  * That sharing is the point. This file used to build its own `class -> camelCase parameter` map,
  * which was right only while every parameter was a boolean called exactly `toCamelCase(class)`.
- * It now has to agree with two decisions it cannot see: which groups the exclusivity measurement
- * turned into enums, and which parameters `parameterNames` renamed. Deriving them twice is how
- * the two copies drift.
+ * It now has to agree with a decision it cannot see: which groups the exclusivity measurement
+ * turned into enums. Deriving that twice is how the two copies drift.
  */
 function classBindings(classified, componentConfig, groups): Record<string, ClassBinding> {
   const bindings: Record<string, ClassBinding> = {}
@@ -227,7 +226,7 @@ function classBindings(classified, componentConfig, groups): Record<string, Clas
   // Everything the measurement left as a flag. Enums are written first and not overwritten: a
   // class cannot be both, and if it somehow were, the enum is the one that reaches the CSS.
   for (const cls of groups.booleans) {
-    bindings[cls] ??= { parameter: booleanParameterName(cls, componentConfig), argument: 'true' }
+    bindings[cls] ??= { parameter: booleanParameterName(cls), argument: 'true' }
   }
 
   return bindings
@@ -466,7 +465,7 @@ function buildCallModel(componentName, frontmatter, config, measurement): CallMo
     componentClass,
     prefix: classified.prefix,
     allowedClasses,
-    bindings: classBindings(classified, readComponentConfig(config, classified.componentName, componentName), groups),
+    bindings: classBindings(classified, readComponentConfig(config, classified.componentName), groups),
   }
 }
 

@@ -46,7 +46,6 @@ export const CONFIG_SECTIONS: readonly ConfigSection[] = [
   { name: 'docSummaries', keying: 'directory' },
   { name: 'elementCrossCheckExceptions', keying: 'directory' },
   { name: 'enumNames', keying: 'directory' },
-  { name: 'parameterNames', keying: 'directory' },
   { name: 'subComponentElements', keying: 'part' },
 ]
 

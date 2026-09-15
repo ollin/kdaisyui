@@ -237,12 +237,6 @@
       }
     }
   },
-  "parameterNames": {
-    "dropdown": { "hover": "openOnHover" },
-    "menu": { "focus": "focused" },
-    "rating": { "hidden": "clearOption", "half": "halfStars" },
-    "timeline": { "box": "boxed" }
-  },
   "componentElements": {
     "dropdown": "details",
     "otp": "label"

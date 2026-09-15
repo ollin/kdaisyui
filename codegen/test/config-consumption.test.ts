@@ -98,7 +98,7 @@ describe('CONFIG_SECTIONS', () => {
       [
         'additionalBooleans', 'componentAttributes', 'componentElements', 'customParts',
         'docSummaries', 'elementCrossCheckExceptions', 'enumNames', 'extras', 'inputTypes',
-        'parameterNames', 'roles', 'skip', 'subComponentElements', 'textParams',
+        'roles', 'skip', 'subComponentElements', 'textParams',
       ],
     )
   })

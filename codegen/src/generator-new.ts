@@ -153,7 +153,7 @@ function mainFunctionBody(
     lines.push(`        addClassNames(${escapeKotlinKeyword(group.parameterName)})`)
   }
   for (const cls of booleanParameterClasses(classified, componentConfig, groups)) {
-    lines.push(`        if (${booleanParameterName(cls, componentConfig)}) addClassNames("${prefix}-${cls}")`)
+    lines.push(`        if (${booleanParameterName(cls)}) addClassNames("${prefix}-${cls}")`)
   }
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
 
@@ -235,7 +235,7 @@ export function generateKotlinFile(
   groups: GroupClassification = allBooleans(classified),
 ) {
   const shape = buildComponentShape(classified, source, config, groups)
-  const componentConfig = readComponentConfig(config, classified.componentName, source.componentDir)
+  const componentConfig = readComponentConfig(config, classified.componentName)
 
   const header = [
     `// GENERATED — DO NOT EDIT`,

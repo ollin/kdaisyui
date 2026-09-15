@@ -325,6 +325,33 @@ describe('buildComponentShape', () => {
     assert.equal(overridden.functions[1].element, 'SPAN')
   })
 
+  test('a part renders the element DaisyUI shows it on, over the name heuristic', () => {
+    // `fieldset-legend` contains no known fragment and fell to <div>; DaisyUI shows it on a
+    // <legend>, and that is what the function renders. `footer-title` matched `title` → H2;
+    // DaisyUI shows an <h6>.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend', 'fieldset-title'] }),
+      {
+        componentDir: 'fieldset',
+        element: 'FIELDSET',
+        documentedElements: sets({ 'fieldset-legend': ['LEGEND'], 'fieldset-title': ['H6'] }),
+      },
+      {},
+    )
+
+    assert.deepEqual(shape.functions.slice(1).map(f => f.element), ['LEGEND', 'H6'])
+  })
+
+  test('a part shown on several elements falls back to the heuristic', () => {
+    const shape = buildComponentShape(
+      classified({ parts: ['card-title'] }),
+      { componentDir: 'card', element: 'DIV', documentedElements: sets({ 'card-title': ['H2', 'DIV'] }) },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'H2')
+  })
+
   test('a part whose name contains "title" takes a text shortcut', () => {
     const shape = buildComponentShape(
       classified({ parts: ['card-title', 'card-body'] }),

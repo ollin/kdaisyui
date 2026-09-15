@@ -185,6 +185,26 @@ export function partElementFor(partClass: CssClass, config): TagClass {
   return asTagClass(config?.subComponentElements?.[partClass] ?? inferPartElement(partClass))
 }
 
+/**
+ * The element a part renders: what DaisyUI shows it on when that is one element, otherwise
+ * `partElementFor`'s configured-or-guessed answer.
+ *
+ * The documented element wins over the name heuristic because the heuristic is what put
+ * `fieldset-legend` on a <div> and `footer-title` on an <h2>. It does not win over
+ * `subComponentElements`, whose entries exist because a documented example was NOT enough —
+ * `megamenu-active` must be a <span> for `:nth-of-type` reasons the markup does not state.
+ */
+function partElementByDocs(
+  partClass: CssClass,
+  documented: ReadonlyMap<string, ReadonlySet<string>> | undefined,
+  config,
+): TagClass {
+  const configured = config?.subComponentElements?.[partClass]
+  if (configured !== undefined) return asTagClass(configured)
+  const shown = onlyElementOf(documented?.get(partClass))
+  return shown === undefined ? partElementFor(partClass, config) : asTagClass(shown)
+}
+
 /** Parts whose element cannot be guessed from a fragment of their name. */
 const PART_ELEMENT_BY_NAME: Record<string, string> = {
   'stat-title': 'DIV',
@@ -524,10 +544,15 @@ function booleanParameter(classified: ClassifiedComponent, cls: string): Paramet
   }
 }
 
-/** Which classes are enums and which booleans, and which booleans a part owns instead of main. */
+/**
+ * Where every class goes: which are enums, which booleans, which booleans a part owns instead
+ * of main — and the documented elements all of that was decided from, which the parts read
+ * again to choose their own element.
+ */
 interface ClassPlan {
   readonly groups: GroupClassification
   readonly placement: ClassPlacement
+  readonly documentedElements: ReadonlyMap<string, ReadonlySet<string>> | undefined
 }
 
 function booleanParameters(
@@ -588,7 +613,7 @@ class ClassPlacement {
     // part rendering that element declares it.
     const partsByElement = new Map<string, CssClass[]>()
     for (const part of classified.parts) {
-      const element = partElementFor(asCssClass(part), config)
+      const element = partElementByDocs(asCssClass(part), documented, config)
       partsByElement.set(element, [...(partsByElement.get(element) ?? []), asCssClass(part)])
     }
     // Every element DaisyUI shows the COMPONENT on — `dropdown` is a <div> in one example and
@@ -661,12 +686,12 @@ function partFunctionShape(
   classified: ClassifiedComponent,
   partClass: CssClass,
   config,
-  placement: ClassPlacement,
+  plan: ClassPlan,
 ): FunctionShape {
-  const element = partElementFor(partClass, config)
+  const element = partElementByDocs(partClass, plan.documentedElements, config)
   const hasTextParam = config?.textParams?.includes(partClass) || partClass.includes('title')
   const suffix = toPascalCase(stripPrefix(classified.prefix, partClass))
-  const own = placement.classesOf(partClass).sort().map(cls => booleanParameter(classified, cls))
+  const own = plan.placement.classesOf(partClass).sort().map(cls => booleanParameter(classified, cls))
 
   return {
     kind: 'part',
@@ -731,7 +756,7 @@ export function buildComponentShape(
   const placement = source.documentedElements === undefined
     ? ClassPlacement.none()
     : ClassPlacement.from(classified, groups.booleans, source.documentedElements, config)
-  const plan: ClassPlan = { groups, placement }
+  const plan: ClassPlan = { groups, placement, documentedElements: source.documentedElements }
 
   return {
     componentName: classified.componentName,
@@ -740,7 +765,7 @@ export function buildComponentShape(
     enums: enumShapes(classified, groups),
     functions: [
       mainFunctionShape(classified, rootElement, componentConfig, plan),
-      ...classified.parts.map(partClass => partFunctionShape(classified, asCssClass(partClass), config, placement)),
+      ...classified.parts.map(partClass => partFunctionShape(classified, asCssClass(partClass), config, plan)),
       ...componentConfig.customParts.map(part => customPartFunctionShape(classified, part)),
     ],
   }

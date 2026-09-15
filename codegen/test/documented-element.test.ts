@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { documentedElementIn, documentedElementsIn, fencedHtmlBlocks } from '../src/parser/documented-element.ts'
+import { documentedElementIn, documentedElementsIn, documentedParentsIn, fencedHtmlBlocks } from '../src/parser/documented-element.ts'
 
 /**
  * Reading the element DaisyUI documents.
@@ -125,5 +125,23 @@ describe('documentedElementsIn', () => {
 
   test('ignores classes without the marker', () => {
     assert.equal(documentedElementsIn(`<div class="flex $$card"></div>`).has('flex'), false)
+  })
+})
+
+describe('documentedParentsIn', () => {
+  test('names the parent element of each marked class', () => {
+    const html = `<fieldset class="$$fieldset"><legend class="$$fieldset-legend">T</legend></fieldset>`
+
+    assert.equal(documentedParentsIn(html).get('fieldset-legend'), 'FIELDSET')
+  })
+
+  test('has no parent for a class at the top of an example', () => {
+    assert.equal(documentedParentsIn(`<fieldset class="$$fieldset"></fieldset>`).has('fieldset'), false)
+  })
+
+  test('leaves out a class whose parent differs between examples', () => {
+    const html = `<ul><li class="$$step">a</li></ul><ol><li class="$$step">b</li></ol>`
+
+    assert.equal(documentedParentsIn(html).has('step'), false)
   })
 })

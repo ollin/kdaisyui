@@ -101,6 +101,44 @@ export function documentedElementSetsIn(html: string): ReadonlyMap<string, Reado
   return seen
 }
 
+/**
+ * The element each marked class's PARENT is shown as, where that is one element.
+ *
+ * What a part needs as its extension receiver when kotlinx.html opens its element only inside
+ * a specific parent: `<legend>` inside `<fieldset>`, `<li>` inside `<ul>`. Read the same way
+ * as the element itself, and absent for the same reasons — shown nowhere, on several, or at
+ * the top of an example with no parent at all.
+ */
+export function documentedParentsIn(html: string): ReadonlyMap<string, string> {
+  const seen = new Map<string, Set<string>>()
+  DomUtils.findAll(
+    node => (node.attribs?.class ?? '').includes(MARKER),
+    parseDocument(html).children,
+  ).forEach(element => {
+    const parent = element.parent
+    if (parent === null || parent.type !== 'tag') return
+    for (const token of (element.attribs.class ?? '').split(/\s+/)) {
+      const parsed = DocumentedClass.parse(token)
+      if (parsed === null || parsed.isPrefixed) continue
+      const parents = seen.get(parsed.className) ?? new Set()
+      parents.add(parent.name.toUpperCase())
+      seen.set(parsed.className, parents)
+    }
+  })
+  const unambiguous = new Map<string, string>()
+  for (const [className, parents] of seen) {
+    if (parents.size === 1) unambiguous.set(className, [...parents][0])
+  }
+  return unambiguous
+}
+
+/** `documentedParentsIn` for one component's page; empty when the page does not exist. */
+export function documentedParentsFor(componentName: ComponentName): ReadonlyMap<string, string> {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return new Map()
+  return documentedParentsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
+}
+
 /** `documentedElementSetsIn` for one component's page; empty when the page does not exist. */
 export function documentedElementSetsFor(componentName: ComponentName): ReadonlyMap<string, ReadonlySet<string>> {
   const file = path.join(COMPONENTS_PATH, componentName, '+page.md')

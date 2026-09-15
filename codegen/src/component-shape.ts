@@ -96,6 +96,27 @@ export function isVoidElement(element: TagClass): boolean {
   return VOID_ELEMENTS.has(element)
 }
 
+/**
+ * Elements kotlinx.html lets a `FlowContent` receiver open. The rest — `legend` only inside
+ * `FIELDSET`, `li` only inside `UL`/`OL`, `option`, `tr`, `td`, … — need their parent as the
+ * extension receiver, which a part does not know yet. Until the parent is read from DaisyUI's
+ * markup too, a part documented on one of those keeps its heuristic element and its exception,
+ * rather than generating a function that does not compile.
+ */
+const FLOW_CONTENT_CHILDREN: ReadonlySet<string> = new Set([
+  'A', 'ABBR', 'ADDRESS', 'ARTICLE', 'ASIDE', 'AUDIO', 'B', 'BDI', 'BDO', 'BLOCKQUOTE', 'BR',
+  'BUTTON', 'CANVAS', 'CITE', 'CODE', 'DATA', 'DATALIST', 'DEL', 'DETAILS', 'DFN', 'DIALOG',
+  'DIV', 'DL', 'EM', 'EMBED', 'FIELDSET', 'FIGURE', 'FOOTER', 'FORM', 'H1', 'H2', 'H3', 'H4',
+  'H5', 'H6', 'HEADER', 'HR', 'I', 'IFRAME', 'IMG', 'INPUT', 'INS', 'KBD', 'LABEL', 'MAIN',
+  'MAP', 'MARK', 'METER', 'NAV', 'OBJECT', 'OL', 'OUTPUT', 'P', 'PRE', 'PROGRESS', 'Q', 'RUBY',
+  'S', 'SAMP', 'SECTION', 'SELECT', 'SMALL', 'SPAN', 'STRONG', 'SUB', 'SUP', 'TABLE',
+  'TEXTAREA', 'TIME', 'U', 'UL', 'VAR', 'VIDEO', 'WBR',
+])
+
+export function isFlowContentChild(element: string): boolean {
+  return FLOW_CONTENT_CHILDREN.has(element)
+}
+
 /** Renders static attributes as they read inside a `Renders <tag ...>` clause. */
 export function staticAttributeDoc(entries: readonly StaticAttribute[]): string {
   return entries
@@ -190,7 +211,7 @@ export function partElementFor(partClass: CssClass, config): TagClass {
  * `partElementFor`'s configured-or-guessed answer.
  *
  * The documented element wins over the name heuristic because the heuristic is what put
- * `fieldset-legend` on a <div> and `footer-title` on an <h2>. It does not win over
+ * `hero-overlay` on a <label> and `footer-title` on an <h2>. It does not win over
  * `subComponentElements`, whose entries exist because a documented example was NOT enough —
  * `megamenu-active` must be a <span> for `:nth-of-type` reasons the markup does not state.
  */
@@ -202,7 +223,8 @@ function partElementByDocs(
   const configured = config?.subComponentElements?.[partClass]
   if (configured !== undefined) return asTagClass(configured)
   const shown = onlyElementOf(documented?.get(partClass))
-  return shown === undefined ? partElementFor(partClass, config) : asTagClass(shown)
+  if (shown === undefined || !isFlowContentChild(shown)) return partElementFor(partClass, config)
+  return asTagClass(shown)
 }
 
 /** Parts whose element cannot be guessed from a fragment of their name. */

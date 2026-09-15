@@ -326,20 +326,32 @@ describe('buildComponentShape', () => {
   })
 
   test('a part renders the element DaisyUI shows it on, over the name heuristic', () => {
-    // `fieldset-legend` contains no known fragment and fell to <div>; DaisyUI shows it on a
-    // <legend>, and that is what the function renders. `footer-title` matched `title` → H2;
-    // DaisyUI shows an <h6>.
+    // `hero-overlay` matched `overlay` → LABEL; DaisyUI shows a <div>. `footer-title` matched
+    // `title` → H2; DaisyUI shows an <h6>.
     const shape = buildComponentShape(
-      classified({ componentName: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend', 'fieldset-title'] }),
+      classified({ componentName: 'Footer', prefix: 'footer', parts: ['footer-overlay', 'footer-title'] }),
       {
-        componentDir: 'fieldset',
-        element: 'FIELDSET',
-        documentedElements: sets({ 'fieldset-legend': ['LEGEND'], 'fieldset-title': ['H6'] }),
+        componentDir: 'footer',
+        element: 'FOOTER',
+        documentedElements: sets({ 'footer-overlay': ['DIV'], 'footer-title': ['H6'] }),
       },
       {},
     )
 
-    assert.deepEqual(shape.functions.slice(1).map(f => f.element), ['LEGEND', 'H6'])
+    assert.deepEqual(shape.functions.slice(1).map(f => f.element), ['DIV', 'H6'])
+  })
+
+  test('a part documented on an element FlowContent cannot open keeps the heuristic', () => {
+    // kotlinx.html opens <legend> only inside FIELDSET and <li> only inside UL/OL. A part does
+    // not know its parent yet, so the documented element would not compile; the heuristic
+    // stays and so does the cross-check's exception, until the parent is read from the docs.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend'] }),
+      { componentDir: 'fieldset', element: 'FIELDSET', documentedElements: sets({ 'fieldset-legend': ['LEGEND'] }) },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'DIV')
   })
 
   test('a part shown on several elements falls back to the heuristic', () => {

@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 21.0.12+101.0.LTS
           cache: gradle
 
       # This job ran the generators on whatever Node the runner happened to ship, which was
@@ -140,7 +140,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 21.0.12+101.0.LTS
           cache: gradle
 
       - name: Fail if the public API no longer matches its baseline
@@ -162,7 +162,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 21.0.12+101.0.LTS
           cache: gradle
 
       - name: Run unit tests and enforce coverage gate
@@ -206,7 +206,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 21.0.12+101.0.LTS
           cache: gradle
 
       - name: Run mutation tests and enforce the test-strength gate
@@ -233,7 +233,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 21.0.12+101.0.LTS
           cache: gradle
 
       - name: Install Playwright browsers

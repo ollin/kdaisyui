@@ -103,8 +103,33 @@ every member DaisyUI shows on a part's element belongs to that part whole.
   rule), auto-marking every DOM child (wrong in 3 of 74 measured cases). Known limit, accepted:
   an element outside the five stays on `extraClasses`. Full comparison in
   `tmp/non-deterministic-v2.md` §3.
-- [ ] 3.2 `^ F` Generate the parts that are plainly parts: `avatar-group`, `list-row`,
-  `carousel-item`, `megamenu-active`, `filter-reset` and the rest of the 18.
+- [x] 3.2a `^ F` A part renders the element DaisyUI shows it on, with the documented parent
+  as receiver where FlowContent cannot open it (`0fea0e5`, `373cc35`, `ce97341`, `dc718a2`,
+  `2a3021f`). Regenerated: 12 parts changed element, 12 exceptions expired (`86c040e`,
+  `38b5172`). Two more rules learnt and pinned: a part shown on several elements keeps the
+  heuristic; a part on `<legend>`/`<li>` needs its parent and gets it from the docs.
+- [ ] 3.2b `. d` **What is left is a decision, not a rule** — read 22:09 from the generator's
+  47 excused. Four kinds:
+  1. `badge` ×12, `status` ×13, `skeleton-text`: the component renders the `<span>` of
+     DaisyUI's first example, every modifier example is a `<div>`. Element choice for the
+     component itself. Options: keep `<span>` and re-reason the exceptions as permanent; or
+     switch to `<div>` (breaking; both are inline-usable).
+  2. `dropdown` ×8: `<details>` is the no-JS shape; every placement is shown only on the
+     `<div>` shape. The classes work on `<details>` too (same CSS). Re-reason as permanent, or
+     read `documentedElementSetsIn` for the component class — `dropdown` IS shown on `<div>` —
+     and let the cross-check accept any element the component is shown on.
+  3. `dock-active` (on `<button>`), `menu-active` (`<a>`), `menu-disabled` (`<li>`),
+     `rating-hidden` (`<input>`), `list-col-grow` (`<div>`), `list-col-wrap` (`<p>`): a class
+     on a child the library generates no function for. Same shape as `join-item` → the 3.1
+     answer applies: member overloads in the container's scope. Which children? Measured:
+     `dock-active` on `btn` only; `menu-active` on `a`/`btn`; `rating-hidden` on `input`;
+     `list-col-*` on `div`/`p` — raw tags, no component. Needs a per-case look.
+  4. `indicator` ×5: `indicator-item` is shown on `<span>` and `<div>`, so the part keeps the
+     heuristic `<div>` and the placements (shown on `<span>`) cannot move. Fix: let a part
+     shown on several elements take the element its *classes* are shown on, when that is one.
+  Kind 2 and kind 4 are rules (~20 min each). Kinds 1 and 3 are decisions.
+- [ ] 3.2c `^ F` Generate the parts that are plainly parts and still missing: `avatar-group`,
+  `carousel-item`, `megamenu-active`, and the rest of the 18 not covered above.
 - [ ] 3.3 `^ F (internal)` The generator derives the join-child list: every component class that
   co-occurs with `join-item` on one element in DaisyUI's markup. Pin the five with a test; a
   sixth component appearing in DaisyUI's docs must extend the list without a config edit.

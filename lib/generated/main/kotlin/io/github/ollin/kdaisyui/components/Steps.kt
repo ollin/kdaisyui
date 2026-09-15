@@ -7,9 +7,9 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
-import kotlinx.html.div
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.li
+import kotlinx.html.LI
 import kotlinx.html.span
 import kotlinx.html.SPAN
 import kotlinx.html.ul
@@ -78,14 +78,14 @@ fun FlowContent.daisySteps(
     }
 }
 
-/** A single step node Renders `<div class="step ...">`. */
-fun FlowContent.daisyStepsStep(
+/** A single step node Renders `<li class="step ...">`. */
+fun UL.daisyStepsStep(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (LI.() -> Unit)? = null,
+    content: (LI.() -> Unit),
 ) {
-    div {
+    li {
         if (id != null) attributes["id"] = id.id
         addClassNames("step")
         addClassNames(extraClasses)

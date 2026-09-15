@@ -6,6 +6,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
+import kotlinx.html.ul
 
 class StepsCoverageTest {
 
@@ -160,17 +161,17 @@ class StepsCoverageTest {
 
     @Test
     fun stepsStep_defaults() {
-        val html = createHTML(prettyPrint = false).div {
+        val html = createHTML(prettyPrint = false).ul {
             daisyStepsStep(
                 content = { },
             )
         }
-        assertRendered(html, "step", "StepsStep defaults", closes = "</div></div>")
+        assertRendered(html, "step", "StepsStep defaults", closes = "</li></ul>")
     }
 
     @Test
     fun stepsStep_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
+        val html = createHTML(prettyPrint = false).ul {
             daisyStepsStep(
                 id = htmlId("x-cov-id"),
                 extraClasses = "zz-extra",
@@ -178,7 +179,7 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "step zz-extra", "StepsStep all flags", closes = "</div></div>")
+        assertRendered(html, "step zz-extra", "StepsStep all flags", closes = "</li></ul>")
         assertCommonFlags(html, "StepsStep")
     }
 

@@ -24,11 +24,11 @@ fun FlowContent.daisySteps(
 ```
 
 ```kotlin
-fun FlowContent.daisyStepsStep(
+fun UL.daisyStepsStep(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (LI.() -> Unit)? = null,
+    content: (LI.() -> Unit),
 )
 ```
 

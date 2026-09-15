@@ -5,6 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.html.div
+import kotlinx.html.fieldSet
 import kotlinx.html.stream.createHTML
 
 class FieldsetCoverageTest {
@@ -50,17 +51,17 @@ class FieldsetCoverageTest {
 
     @Test
     fun fieldsetLegend_defaults() {
-        val html = createHTML(prettyPrint = false).div {
+        val html = createHTML(prettyPrint = false).fieldSet {
             daisyFieldsetLegend(
                 content = { },
             )
         }
-        assertRendered(html, "fieldset-legend", "FieldsetLegend defaults", closes = "</div></div>")
+        assertRendered(html, "fieldset-legend", "FieldsetLegend defaults", closes = "</legend></fieldset>")
     }
 
     @Test
     fun fieldsetLegend_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
+        val html = createHTML(prettyPrint = false).fieldSet {
             daisyFieldsetLegend(
                 id = htmlId("x-cov-id"),
                 extraClasses = "zz-extra",
@@ -68,7 +69,7 @@ class FieldsetCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "fieldset-legend zz-extra", "FieldsetLegend all flags", closes = "</div></div>")
+        assertRendered(html, "fieldset-legend zz-extra", "FieldsetLegend all flags", closes = "</legend></fieldset>")
         assertCommonFlags(html, "FieldsetLegend")
     }
 }

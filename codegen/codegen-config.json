@@ -92,10 +92,6 @@
       "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
       "issue": 347
     },
-    "fieldset/fieldset-legend": {
-      "reason": "Part shown on an element kotlinx.html opens only inside its parent (<legend> in FIELDSET, <li> in UL); the part's function has a FlowContent receiver and does not know its parent yet. Stays on the heuristic element until the parent is read from DaisyUI's markup. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
     "indicator/indicator-start": {
       "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
@@ -190,10 +186,6 @@
     },
     "status/status-xl": {
       "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "steps/step": {
-      "reason": "Part shown on an element kotlinx.html opens only inside its parent (<legend> in FIELDSET, <li> in UL); the part's function has a FlowContent receiver and does not know its parent yet. Stays on the heuristic element until the parent is read from DaisyUI's markup. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
     }
   },

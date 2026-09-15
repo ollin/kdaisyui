@@ -20,10 +20,10 @@ fun FlowContent.daisyFieldset(
 ```
 
 ```kotlin
-fun FlowContent.daisyFieldsetLegend(
+fun FIELDSET.daisyFieldsetLegend(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (LEGEND.() -> Unit)? = null,
+    content: (LEGEND.() -> Unit),
 )
 ```

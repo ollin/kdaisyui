@@ -113,7 +113,7 @@ fun FlowContent.daisyFabMainAction(id: HtmlId? = null, extraClasses: String? = n
 
 # Fieldset <fieldset>
 fun FlowContent.daisyFieldset(id: HtmlId? = null, extraClasses: String? = null, attrs: (FIELDSET.() -> Unit)? = null, content: (FIELDSET.() -> Unit))
-fun FlowContent.daisyFieldsetLegend(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FIELDSET.daisyFieldsetLegend(id: HtmlId? = null, extraClasses: String? = null, attrs: (LEGEND.() -> Unit)? = null, content: (LEGEND.() -> Unit))
 
 # FileInput <input>
 enum FileInputVariant: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error
@@ -278,7 +278,7 @@ fun FlowContent.daisyStatus(id: HtmlId? = null, variant: ClassValues<StatusVaria
 enum StepsVariant: StepNeutral, StepPrimary, StepSecondary, StepAccent, StepInfo, StepSuccess, StepWarning, StepError
 enum StepsDirection: Vertical, Horizontal
 fun FlowContent.daisySteps(id: HtmlId? = null, variant: ClassValues<StepsVariant>? = null, direction: ClassValues<StepsDirection>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
-fun FlowContent.daisyStepsStep(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun UL.daisyStepsStep(id: HtmlId? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
 fun FlowContent.daisyStepsStepIcon(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # Swap <label>

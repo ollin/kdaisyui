@@ -27,17 +27,20 @@
  * distrusted — are exclusive.
  *
  * Which classes form an axis is DERIVED (`axis-derivation.ts`): the cliques of the exclusive
- * graph, inert members placed by what they declare. Nothing here declares a partition. What
- * cannot be derived is a NAME for each axis of a group that has more than one — DaisyUI's word
- * for both of `tooltip`'s is `placements` — and that, and only that, is what `enumNames`
- * holds. A single axis is named after its category (`categoryWord`) with no configuration.
+ * graph, inert members placed by what they declare. Nothing here declares a partition. A
+ * single axis is named after its category (`categoryWord`); the axes of a group that has more
+ * than one are named from DaisyUI's property table where it gives them a direction
+ * (`axis-names.ts`). What remains — `tooltip`'s two, `badge`'s two — is what `enumNames`
+ * holds, and a configured name for a group the table can name is refused.
  */
 import { toCamelCase } from './classifier.ts'
 import type { ClassifiedComponent } from './classifier.ts'
 import { deriveAxes } from './axis-derivation.ts'
 import type { Axis } from './axis-derivation.ts'
+import { deriveAxisNames } from './axis-names.ts'
 import { GroupKey } from './measurement.ts'
-import type { Measurement, MeasuredPairs } from './measurement.ts'
+import type { Evidence, MeasuredPairs } from './measurement.ts'
+import type { PropertyTable } from './parser/property-table.ts'
 
 /** The five categories DaisyUI's frontmatter uses, minus `colors` and `sizes`. */
 export type GroupCategory = 'styles' | 'modifiers' | 'behaviors' | 'directions' | 'placements'
@@ -108,13 +111,20 @@ function enumFor(group: Group, suffix: string, members: Axis): EnumGroup {
   }
 }
 
-function rejectRestatedName(group: Group, entry: readonly string[] | undefined): void {
+/** The configured entry and what the measurement says, for one group. */
+interface Naming {
+  readonly entry: readonly string[] | undefined
+  readonly measured: MeasuredPairs
+  readonly table: PropertyTable
+}
+
+function rejectRestatedName(group: Group, entry: readonly string[] | undefined, derived: readonly string[]): void {
   if (entry === undefined) return
   throw new GroupNamingError(
-    `enumNames.${group.key} names a single-axis group ${JSON.stringify(entry)}, but a single ` +
-      `choice is named after its category — ` +
-      `${group.componentName}${categoryWord(group.key.category as GroupCategory)} — without ` +
-      `configuration. Remove the entry.`,
+    `enumNames.${group.key} names ${JSON.stringify(entry)}, but DaisyUI already names ` +
+      `${derived.length === 1 ? 'this single choice' : 'these axes'} — ` +
+      `${derived.map((name) => group.componentName + name).join(', ')} — so the entry restates ` +
+      `a rule and will drift from it. Remove the entry.`,
   )
 }
 
@@ -122,26 +132,32 @@ function requireAxisNames(group: Group, axes: readonly Axis[], entry: readonly s
   if (entry !== undefined && entry.length === axes.length) return entry
   const shape = axes.map((axis) => `{${axis.join(', ')}}`).join(' and ')
   throw new GroupNamingError(
-    `${group.key} derives ${axes.length} axes — ${shape} — and only a human can say what ` +
-      `each is called. Add enumNames.${group.key} with ${axes.length} names in that order` +
+    `${group.key} derives ${axes.length} axes — ${shape} — and DaisyUI's property table gives ` +
+      `them no direction, so only a human can say what each is called. Add ` +
+      `enumNames.${group.key} with ${axes.length} names in that order` +
       (entry === undefined ? '.' : `; it has ${entry.length}.`),
   )
 }
 
-/** One enum per derived axis: named after the category alone, or by configured axis names. */
-function nameAxes(group: Group, axes: readonly Axis[], entry: readonly string[] | undefined): EnumGroup[] {
-  if (axes.length === 1) {
-    rejectRestatedName(group, entry)
-    return [enumFor(group, categoryWord(group.key.category as GroupCategory), axes[0])]
-  }
-  const names = requireAxisNames(group, axes, entry)
+/** What DaisyUI names without configuration: a single choice, or axes its table gives a direction. */
+function derivedNames(group: Group, axes: readonly Axis[], naming: Naming): readonly string[] | undefined {
+  const category = group.key.category as GroupCategory
+  if (axes.length === 1) return [categoryWord(category)]
+  return deriveAxisNames(axes, category, naming.measured, naming.table)
+}
+
+/** One enum per derived axis, named by DaisyUI where it can be, by `enumNames` otherwise. */
+function nameAxes(group: Group, axes: readonly Axis[], naming: Naming): EnumGroup[] {
+  const derived = derivedNames(group, axes, naming)
+  if (derived !== undefined) rejectRestatedName(group, naming.entry, derived)
+  const names = derived ?? requireAxisNames(group, axes, naming.entry)
   return axes.map((axis, index) => enumFor(group, names[index], axis))
 }
 
-function classifyGroup(group: Group, measured: MeasuredPairs, entry: readonly string[] | undefined): GroupClassification {
-  const derived = deriveAxes(group.members, measured, String(group.key))
+function classifyGroup(group: Group, naming: Naming): GroupClassification {
+  const derived = deriveAxes(group.members, naming.measured, String(group.key))
   if (derived.axes.length === 0) return { enums: [], booleans: derived.booleans }
-  return { enums: nameAxes(group, derived.axes, entry), booleans: derived.booleans }
+  return { enums: nameAxes(group, derived.axes, naming), booleans: derived.booleans }
 }
 
 /**
@@ -149,12 +165,13 @@ function classifyGroup(group: Group, measured: MeasuredPairs, entry: readonly st
  *
  * @param component the component's directory name, e.g. `button` — the key both `enumNames`
  *   and `exclusivity.json` use
+ * @param evidence the measurement and DaisyUI's property table, read once per run
  */
 export function classifyGroups(
   classified: ClassifiedComponent,
   component: string,
   enumNames: EnumNames,
-  measurement: Measurement,
+  evidence: Evidence,
 ): GroupClassification {
   const configured = enumNames[component] ?? {}
   const enums: EnumGroup[] = []
@@ -166,7 +183,12 @@ export function classifyGroups(
 
     const key = new GroupKey(component, category)
     const group: Group = { componentName: classified.componentName, key, members }
-    const decided = classifyGroup(group, measurement.forGroup(key), configured[category])
+    const naming: Naming = {
+      entry: configured[category],
+      measured: evidence.measurement.forGroup(key),
+      table: evidence.table,
+    }
+    const decided = classifyGroup(group, naming)
 
     enums.push(...decided.enums)
     booleans.push(...decided.booleans)

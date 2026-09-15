@@ -17,6 +17,7 @@
 
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
+import { PropertyTable } from './parser/property-table.ts'
 
 const EXCLUSIVITY_PATH = path.resolve(import.meta.dirname, '../exclusivity.json')
 
@@ -200,6 +201,20 @@ export class MeasuredPairs {
   count(): number {
     return this.verdicts.size
   }
+}
+
+/**
+ * What the browser measured and what DaisyUI documents, read once per run and carried
+ * together: classifying a group needs both, and both describe the same DaisyUI version.
+ */
+export interface Evidence {
+  readonly measurement: Measurement
+  readonly table: PropertyTable
+}
+
+/** Both inputs from the working tree — the committed measurement and the submodule's docs. */
+export function loadEvidence(): Evidence {
+  return { measurement: loadMeasurement(), table: PropertyTable.fromSubmodule() }
 }
 
 /** The whole committed measurement, keyed by group. */

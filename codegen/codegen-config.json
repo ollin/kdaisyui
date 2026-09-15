@@ -200,10 +200,7 @@
   },
   "additionalBooleans": {},
   "enumNames": {
-    "indicator": { "placements": ["HorizontalPlacement", "VerticalPlacement"] },
-    "toast": { "placements": ["HorizontalPlacement", "VerticalPlacement"] },
     "tooltip": { "placements": ["SidePlacement", "AlignPlacement"] },
-    "dropdown": { "placements": ["AlignPlacement", "VerticalPlacement"] },
     "badge": { "styles": ["OutlineStyle", "FillStyle"] }
   },
 

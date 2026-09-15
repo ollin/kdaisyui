@@ -12,7 +12,8 @@ import {
 // is the generic string form.
 import { classifyFromFrontmatter, toPascalCase as toPascalClassName } from './classifier.ts'
 import { classifyGroups } from './class-groups.ts'
-import { loadMeasurement } from './measurement.ts'
+import { loadEvidence } from './measurement.ts'
+import type { Evidence } from './measurement.ts'
 import { booleanParameterName, escapeKotlinKeyword, readComponentConfig } from './component-shape.ts'
 import {
   documentedElementClasses,
@@ -457,10 +458,10 @@ function generateClassTest(className, { testName, args, expectedClasses, caseNam
  * tests are generated against the signature the components were generated with rather than
  * against a second guess at it.
  */
-function buildCallModel(componentName, frontmatter, config, measurement): CallModel {
+function buildCallModel(componentName, frontmatter, config, evidence: Evidence): CallModel {
   const { allowedClasses, componentClass } = buildClassMappings(frontmatter)
   const classified = classifyFromFrontmatter(frontmatter, componentName)
-  const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, measurement)
+  const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, evidence)
   return {
     componentClass,
     prefix: classified.prefix,
@@ -488,9 +489,9 @@ function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
   })
 }
 
-function generateKotlinTest(componentName, testCases, frontmatter, config, measurement) {
+function generateKotlinTest(componentName, testCases, frontmatter, config, evidence: Evidence) {
   const className = toClassName(componentName)
-  const model = buildCallModel(componentName, frontmatter, config, measurement)
+  const model = buildCallModel(componentName, frontmatter, config, evidence)
   const customParts = configSection(config, 'customParts', componentName, [])
   const attributeTest = generateComponentAttributeTest(className, configSection(config, 'componentAttributes', componentName, {}))
   
@@ -542,7 +543,7 @@ class ${className}Test {
   return { kotlin, testCount }
 }
 
-function generateForComponent(componentName, config, measurement) {
+function generateForComponent(componentName, config, evidence: Evidence) {
   const pageFile = path.join(DOCS_DIR, componentName, '+page.md')
   
   if (!fs.existsSync(pageFile)) {
@@ -561,7 +562,7 @@ function generateForComponent(componentName, config, measurement) {
     return { success: false, error: 'No test cases' }
   }
   
-  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, config, measurement)
+  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, config, evidence)
   const className = toClassName(componentName)
   const outFile = path.join(OUTPUT_DIR, `${className}Test.kt`)
   
@@ -1078,12 +1079,12 @@ function generateAllCoverage() {
  * Generate one component and print its progress line.
  * @returns whether it produced tests — the caller only needs the tally.
  */
-function generateAndReport(componentName, config, measurement) {
+function generateAndReport(componentName, config, evidence: Evidence) {
   if (config.skip?.includes(componentName)) {
     console.log(`  ⊘ ${componentName}: Skipped (alias)`)
     return false
   }
-  const result = generateForComponent(componentName, config, measurement)
+  const result = generateForComponent(componentName, config, evidence)
   console.log(
     result.success
       ? `  ✓ ${componentName}: ${result.testCount} tests`
@@ -1092,13 +1093,13 @@ function generateAndReport(componentName, config, measurement) {
   return result.success
 }
 
-function generateAllComponents(config, measurement) {
+function generateAllComponents(config, evidence: Evidence) {
   console.log('Generating tests for all components...\n')
 
   let generated = 0
   let skipped = 0
   for (const componentName of getAllComponentDirs()) {
-    if (generateAndReport(componentName, config, measurement)) generated++
+    if (generateAndReport(componentName, config, evidence)) generated++
     else skipped++
   }
 
@@ -1107,12 +1108,12 @@ function generateAllComponents(config, measurement) {
 }
 
 /** Single-component mode. Unlike the bulk mode, a failure here is fatal: it was asked for. */
-function generateSingleComponent(componentName, config, measurement) {
+function generateSingleComponent(componentName, config, evidence: Evidence) {
   if (config.skip?.includes(componentName)) {
     console.error(`Error: ${componentName} is skipped (alias)`)
     process.exit(1)
   }
-  const result = generateForComponent(componentName, config, measurement)
+  const result = generateForComponent(componentName, config, evidence)
   if (!result.success) {
     console.error(`Error: ${result.error}`)
     process.exit(1)
@@ -1133,10 +1134,10 @@ function main() {
   const config = loadConfig()
   // One file describing every component, read once rather than 66 times — the same call
   // `index-new.ts` makes, so both generators decide from the identical measurement.
-  const measurement = loadMeasurement()
+  const evidence = loadEvidence()
 
-  if (mode === 'all') return generateAllComponents(config, measurement)
-  if (mode) return generateSingleComponent(mode, config, measurement)
+  if (mode === 'all') return generateAllComponents(config, evidence)
+  if (mode) return generateSingleComponent(mode, config, evidence)
   printUsageAndExit()
 }
 

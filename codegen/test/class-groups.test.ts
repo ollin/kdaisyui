@@ -3,8 +3,12 @@ import assert from 'node:assert/strict'
 import { categoryWord, classifyGroups, GroupNamingError } from '../src/class-groups.ts'
 import type { EnumNames } from '../src/class-groups.ts'
 import { ClassPair, Measurement } from '../src/measurement.ts'
-import type { ExclusivityJson } from '../src/measurement.ts'
+import type { Evidence, ExclusivityJson } from '../src/measurement.ts'
 import type { ClassifiedComponent } from '../src/classifier.ts'
+import { PropertyTable } from '../src/parser/property-table.ts'
+
+/** A table that names nothing, so every multi-axis group needs `enumNames`. */
+const NO_TABLE = PropertyTable.parse('')
 
 function component(overrides: Partial<ClassifiedComponent>): ClassifiedComponent {
   return {
@@ -39,12 +43,21 @@ function twoAxes(first: readonly string[], second: readonly string[]) {
   }
 }
 
-function measured(json: ExclusivityJson): Measurement {
-  return Measurement.fromJson(json)
+/** The measurement alone, with a table that names nothing. */
+function measured(json: ExclusivityJson, table: PropertyTable = NO_TABLE): Evidence {
+  return { measurement: Measurement.fromJson(json), table }
 }
 
 const NO_NAMES: EnumNames = {}
-const NOT_MEASURED = Measurement.fromJson({})
+const NOT_MEASURED: Evidence = measured({})
+
+/** DaisyUI's rows for the indicator, verbatim. */
+const INDICATOR_TABLE = PropertyTable.parse(
+  [
+    '| Indicator | `--indicator-y` | vertical position of the indicator   |',
+    '|           | `--indicator-x` | horizontal position of the indicator |',
+  ].join('\n'),
+)
 
 describe('classifyGroups', () => {
   it('turns a measured single choice into one enum named after its category', () => {
@@ -87,8 +100,7 @@ describe('classifyGroups', () => {
         ),
       (error: unknown) => {
         assert.ok(error instanceof GroupNamingError)
-        assert.match(error.message, /names a single-axis group \["Shape"\]/)
-        assert.match(error.message, /MaskStyle/)
+        assert.match(error.message, /DaisyUI already names this single choice — MaskStyle/)
         assert.match(error.message, /Remove the entry/)
         return true
       },
@@ -131,17 +143,24 @@ describe('classifyGroups', () => {
     assert.deepEqual(result.booleans, ['alpha', 'beta'])
   })
 
-  it('names two derived axes from the configured list, in the order they are derived', () => {
-    // DaisyUI lists `indicator`'s horizontal classes first, so the horizontal axis comes out
-    // first and the first configured name is its.
-    const horizontal = ['start', 'center', 'end']
-    const vertical = ['top', 'middle', 'bottom']
+  const horizontal = ['start', 'center', 'end']
+  const vertical = ['top', 'middle', 'bottom']
+  const indicatorMeasured = {
+    ...twoAxes(horizontal, vertical),
+    declares: {
+      start: ['--indicator-x'], center: ['--indicator-x'], end: ['--indicator-x'],
+      top: ['--indicator-y'], middle: ['--indicator-y'], bottom: ['--indicator-y'],
+    },
+  }
 
+  it('names two derived axes from DaisyUI\'s property table, with no configuration', () => {
+    // Each axis's members set one custom property, and DaisyUI's table describes it with a
+    // direction word. DaisyUI lists the horizontal classes first, so that axis comes first.
     const result = classifyGroups(
       component({ componentName: 'Indicator', placements: [...horizontal, ...vertical] }),
       'indicator',
-      { indicator: { placements: ['HorizontalPlacement', 'VerticalPlacement'] } },
-      measured({ indicator: { placements: twoAxes(horizontal, vertical) } }),
+      NO_NAMES,
+      measured({ indicator: { placements: indicatorMeasured } }, INDICATOR_TABLE),
     )
 
     assert.deepEqual(result.enums, [
@@ -149,6 +168,38 @@ describe('classifyGroups', () => {
       { enumName: 'IndicatorVerticalPlacement', parameterName: 'verticalPlacement', category: 'placements', members: vertical },
     ])
     assert.deepEqual(result.booleans, [])
+  })
+
+  it('refuses a configured name for axes the table already names', () => {
+    assert.throws(
+      () =>
+        classifyGroups(
+          component({ componentName: 'Indicator', placements: [...horizontal, ...vertical] }),
+          'indicator',
+          { indicator: { placements: ['HorizontalPlacement', 'VerticalPlacement'] } },
+          measured({ indicator: { placements: indicatorMeasured } }, INDICATOR_TABLE),
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof GroupNamingError)
+        assert.match(error.message, /DaisyUI already names these axes/)
+        assert.match(error.message, /IndicatorHorizontalPlacement, IndicatorVerticalPlacement/)
+        return true
+      },
+    )
+  })
+
+  it('names two derived axes from the configured list when the table cannot', () => {
+    // tooltip: its custom properties are "transform offset" and "inset position" — no
+    // direction, because the alignment is relative to the side. Then, and only then, the
+    // configured names apply, in derivation order.
+    const result = classifyGroups(
+      component({ componentName: 'Tooltip', placements: [...horizontal, ...vertical] }),
+      'tooltip',
+      { tooltip: { placements: ['AlignPlacement', 'SidePlacement'] } },
+      measured({ tooltip: { placements: twoAxes(horizontal, vertical) } }),
+    )
+
+    assert.deepEqual(result.enums.map((group) => group.enumName), ['TooltipAlignPlacement', 'TooltipSidePlacement'])
   })
 
   it('gives a clique beside composing flags its enum, and keeps the flags', () => {

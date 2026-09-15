@@ -130,17 +130,33 @@
     })
   }
 
+  const NAME_CHARACTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-'
+
+  /** A character that can continue a CSS class name; anything else, or the end, ends it. */
+  function continuesName(character) {
+    return character !== undefined && NAME_CHARACTERS.indexOf(character) >= 0
+  }
+
   /**
-   * Whether a selector, or one of the nested rule's ancestors, names the class as a whole token.
-   *
-   * The dot is the boundary on the left: the CSSOM flattens `&.dropdown-left` under
-   * `.dropdown-start` to `.dropdown-start.dropdown-left`, where the second class follows a
-   * letter, not a space.
+   * Whether one selector names the class as a whole token: `.` + name, followed by something
+   * that cannot continue a name. Searched by index, not by pattern: `.dropdown-start` must
+   * not match `.dropdown-start-x`, and it must match in `.dropdown-start.dropdown-left`,
+   * which is how the CSSOM flattens `&.dropdown-left` nested under `.dropdown-start`.
    */
+  function selectorNamesClass(selector, className) {
+    const token = '.' + className
+    let from = selector.indexOf(token)
+    while (from >= 0) {
+      if (!continuesName(selector[from + token.length])) return true
+      from = selector.indexOf(token, from + 1)
+    }
+    return false
+  }
+
+  /** Whether a selector, or one of the nested rule's ancestors, names the class as a whole token. */
   function selectorNames(selectors, className) {
-    const token = new RegExp('\\.' + className + '(?![\\w-])')
     return selectors.some(function (selector) {
-      return token.test(selector)
+      return selectorNamesClass(selector, className)
     })
   }
 

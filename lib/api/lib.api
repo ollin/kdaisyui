@@ -600,26 +600,26 @@ public final class io/github/ollin/kdaisyui/components/MaskModifier : java/lang/
 	public static fun values ()[Lio/github/ollin/kdaisyui/components/MaskModifier;
 }
 
-public final class io/github/ollin/kdaisyui/components/MaskShape : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
-	public static final field Circle Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Decagon Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Diamond Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Heart Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Hexagon Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Hexagon2 Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Pentagon Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Square Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Squircle Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Star Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Star2 Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Triangle Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Triangle2 Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Triangle3 Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static final field Triangle4 Lio/github/ollin/kdaisyui/components/MaskShape;
+public final class io/github/ollin/kdaisyui/components/MaskStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Circle Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Decagon Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Diamond Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Heart Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Hexagon Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Hexagon2 Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Pentagon Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Square Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Squircle Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Star Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Star2 Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Triangle Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Triangle2 Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Triangle3 Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static final field Triangle4 Lio/github/ollin/kdaisyui/components/MaskStyle;
 	public fun getClassNames ()Ljava/util/List;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/MaskShape;
-	public static fun values ()[Lio/github/ollin/kdaisyui/components/MaskShape;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/MaskStyle;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/MaskStyle;
 }
 
 public final class io/github/ollin/kdaisyui/components/MegamenuKt {

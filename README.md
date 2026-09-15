@@ -217,7 +217,7 @@ The enum entry is the old parameter name in PascalCase, so the replacement is me
 | Join | `direction` | `JoinDirection` | `vertical`, `horizontal` |
 | List | `modifier` | `ListModifier` | `colWrap`, `colGrow` |
 | Loading | `style` | `LoadingStyle` | `spinner`, `dots`, `ring`, `ball`, `bars`, `infinity` |
-| Mask | `shape` | `MaskShape` | `squircle`, `heart`, `hexagon`, … 15 in total |
+| Mask | `style` | `MaskStyle` | `squircle`, `heart`, `hexagon`, … 15 in total |
 | Mask | `modifier` | `MaskModifier` | `half1`, `half2` |
 | Menu | `direction` | `MenuDirection` | `vertical`, `horizontal` |
 | Stat | `direction` | `StatDirection` | `horizontal`, `vertical` |

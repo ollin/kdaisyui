@@ -180,7 +180,7 @@ its measurement, and the derivation only reads a file that already carries the n
   component stays boolean (carousel-horizontal composes with vertical); and placement is
   decided against the live components all at once, or menu's four invisible classes made a
   spurious enum depending on iteration order.*
-- [ ] 8.5 `^ F (internal)` A reader for the custom-property table in
+- [x] 8.5 `^ F (internal)` A reader for the custom-property table in
   `docs/utilities/+page.md` (variable → description). An axis whose members' declared
   properties are all described with one of {vertical, horizontal}, and whose sibling axis with
   the other, is named `<Component><Word>Placement`; `enumNames` is consulted only when that

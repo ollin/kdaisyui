@@ -63,16 +63,26 @@ before the census check is built on it.
 
 ## 2. The 13 misplaced parameters — 1.5 h
 
-Ordered by blast radius, largest first, so the shape is settled before the small ones follow.
+**Revised 2026-09-15 after 2.0 landed.** The move is not per component; it is one rule in
+the shape (`ClassPlacement`, `f7ff2d8`): a boolean is declared on every part whose element is
+the one DaisyUI shows the class on, and on main otherwise. Regenerating applies it everywhere at
+once — and moved exactly one class, `timeline-box`, because for every other one the part
+renders the **wrong element** (`daisyIndicatorItem` is a `<div>`, DaisyUI shows a `<span>`).
+So the parts' elements come first (block 3), and each fix there moves its classes for free.
+Enum moves (indicator's two, list's one) are a separate rule not yet written: an enum whose
+every member DaisyUI shows on a part's element belongs to that part whole.
 
-- [ ] 2.1 `^ F` `indicator`: both placement enums move from `daisyIndicator` to
-  `daisyIndicatorItem`. Six enum members, shipped in 0.6.0.
-- [ ] 2.2 `^ F` `menu`: `active`, `disabled` and `dropdownShow` leave `daisyMenu`.
-  `menu-dropdown-show` belongs on `daisyMenuDropdown` and `daisyMenuDropdownToggle`, which exist;
-  `menu-active` and `menu-disabled` sit on an `<a>`/`<li>` the library does not generate — block 3
-  decides whether it should.
-- [ ] 2.3 `^ F` `list`: `ListModifier` moves from `daisyList` to the row. Shipped in 0.6.0.
-- [ ] 2.4 `^ F` `dock-active` and `tab-content`.
+- [x] 2.0 `^ F (internal)` The placement rule, derived from the documented elements the
+  cross-check already reads; the Kotlin body follows the signature. (`88675be`, `f7ff2d8`)
+- [x] 2.4 `^ F` `timeline-box` → `daisyTimelineStart`/`Middle`/`End`; its exception expired
+  (`89b0519`). *`dock-active` and `tab-content` wait for their parts' elements.*
+- [ ] 2.1 `^ F (internal)` An enum moves whole to the part whose element DaisyUI shows every
+  member on. Test with indicator's fixture; regenerates nothing until 3.x gives
+  `daisyIndicatorItem` its `<span>`.
+- [ ] 2.2 `. d` After block 3: read the regeneration diff against the exception list — every
+  class that moved has expired its exception, every one that did not is still excused with a
+  reason that still holds. `menu-active` and `menu-disabled` sit on an `<a>`/`<li>` the library
+  does not generate — 3.1's decision.
 
 ## 3. The 18 unreachable classes — 1.5 h
 

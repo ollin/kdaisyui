@@ -13,7 +13,6 @@ Vertical or horizontal timeline. Renders `<ul class="timeline ...">`.
 ```kotlin
 fun FlowContent.daisyTimeline(
     id: HtmlId? = null,
-    box: Boolean = false,
     compact: Boolean = false,
     horizontal: Boolean = false,
     snapIcon: Boolean = false,
@@ -27,6 +26,7 @@ fun FlowContent.daisyTimeline(
 ```kotlin
 fun FlowContent.daisyTimelineStart(
     id: HtmlId? = null,
+    box: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -36,6 +36,7 @@ fun FlowContent.daisyTimelineStart(
 ```kotlin
 fun FlowContent.daisyTimelineMiddle(
     id: HtmlId? = null,
+    box: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -45,6 +46,7 @@ fun FlowContent.daisyTimelineMiddle(
 ```kotlin
 fun FlowContent.daisyTimelineEnd(
     id: HtmlId? = null,
+    box: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

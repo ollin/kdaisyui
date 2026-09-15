@@ -1153,14 +1153,14 @@ public final class io/github/ollin/kdaisyui/components/ThemeControllerKt {
 }
 
 public final class io/github/ollin/kdaisyui/components/TimelineKt {
-	public static final fun daisyTimeline (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyTimeline$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyTimelineEnd (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyTimelineEnd$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyTimelineMiddle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyTimelineMiddle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyTimelineStart (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyTimelineStart$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimeline (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyTimeline$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimelineEnd (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyTimelineEnd$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimelineMiddle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyTimelineMiddle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimelineStart (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyTimelineStart$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ToastHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {

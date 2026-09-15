@@ -235,10 +235,6 @@
     "steps/step-icon": {
       "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
-    },
-    "timeline/timeline-box": {
-      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <div>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
     }
   },
   "skip": ["accordion", "pagination"],

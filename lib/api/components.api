@@ -310,10 +310,10 @@ fun FlowContent.daisyTextRotate(id: HtmlId? = null, extraClasses: String? = null
 fun FlowContent.daisyThemeController(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 
 # Timeline <ul>
-fun FlowContent.daisyTimeline(id: HtmlId? = null, box: Boolean = false, compact: Boolean = false, horizontal: Boolean = false, snapIcon: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
-fun FlowContent.daisyTimelineStart(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyTimelineMiddle(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyTimelineEnd(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTimeline(id: HtmlId? = null, compact: Boolean = false, horizontal: Boolean = false, snapIcon: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun FlowContent.daisyTimelineStart(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTimelineMiddle(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTimelineEnd(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Toast <div>
 enum ToastHorizontalPlacement: Start, Center, End

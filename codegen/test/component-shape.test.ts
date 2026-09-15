@@ -100,6 +100,16 @@ describe('buildComponentShape', () => {
     assert.deepEqual(names(shape.functions[0].parameters).slice(1, 5), ['active', 'dash', 'soft', 'top'])
   })
 
+  test('a boolean carries the class it emits; nothing else does', () => {
+    // What the element cross-check will read: which class a parameter puts on the element.
+    const shape = buildComponentShape(classified({ modifiers: ['side'] }), { componentDir: 'card', element: 'DIV' }, {})
+    const [id, side, extraClasses] = shape.functions[0].parameters
+
+    assert.equal(side.cssClass, 'card-side')
+    assert.equal(id.cssClass, undefined)
+    assert.equal(extraClasses.cssClass, undefined)
+  })
+
   test('drops a boolean an extras entry already covers', () => {
     const shape = buildComponentShape(
       classified({ styles: ['outline'] }),

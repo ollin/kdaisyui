@@ -289,6 +289,12 @@ export interface ParameterShape {
    * case for every `extras` entry and for a boolean whose class carries no description.
    */
   readonly doc: string | null
+  /**
+   * The DaisyUI class a boolean puts on the element, e.g. `menu-active`; absent for every other
+   * parameter. What the element cross-check reads to ask whether this function's element is the
+   * one DaisyUI documents the class on.
+   */
+  readonly cssClass?: CssClass
 }
 
 /**
@@ -511,6 +517,7 @@ function booleanParameters(
     type: 'Boolean',
     default: 'false',
     doc: classified.descs?.[cls] ?? null,
+    cssClass: asCssClass(`${classified.prefix}-${cls}`),
   }))
 }
 

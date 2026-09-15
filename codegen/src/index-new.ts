@@ -162,8 +162,8 @@ function main() {
     // whole set is reportable at once — dying on the first would hide the rest.
     observations.push(observeElement(componentName, element, frontmatter))
 
-    // Which class groups are one choice, measured rather than assumed. Throws when the
-    // measurement calls a group a choice that `enumNames` has not named.
+    // Which class groups are one choice, measured rather than assumed; a single choice is
+    // named after its category, and `enumNames` names only the axes of a group that splits.
     const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, measurement)
 
     const kotlin = generateKotlinFile(classified, { componentDir: componentName, element }, config, groups)

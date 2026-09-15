@@ -54,7 +54,7 @@ export const GROUP_CATEGORIES: readonly GroupCategory[] = [
  * `members` are the stripped class suffixes, e.g. `wide` for `btn-wide`.
  */
 export interface EnumGroup {
-  /** Full Kotlin name, e.g. `MaskShape` — the component name plus the configured suffix. */
+  /** Full Kotlin name, e.g. `MaskStyle` — the component name plus the category word or a declared axis. */
   enumName: string
   /** The parameter that carries it, e.g. `shape` — the suffix in camelCase. */
   parameterName: string
@@ -101,10 +101,11 @@ export interface EnumGroupSpec {
 }
 
 /**
- * A configured name: one suffix for the whole group, several axes that split it, or — where the
- * group is part choice and part flags — both halves named explicitly.
+ * A configured split: several axes that divide the group, or — where the group is part choice
+ * and part flags — both halves named explicitly. A single-axis group is never configured; its
+ * name is derived (see `categoryWord`), and a string entry is refused as a restatement.
  */
-export type EnumNameEntry = string | readonly EnumSplit[] | EnumGroupSpec
+export type EnumNameEntry = readonly EnumSplit[] | EnumGroupSpec
 
 /** `enumNames` from the config: component directory name → category → name or split. */
 export type EnumNames = Readonly<Record<string, Readonly<Record<string, EnumNameEntry>>>>
@@ -121,15 +122,14 @@ interface Group {
   readonly members: readonly string[]
 }
 
-function splitsFor(entry: EnumNameEntry, members: readonly string[]): readonly EnumSplit[] {
-  if (typeof entry === 'string') return [{ name: entry, members }]
+function splitsFor(entry: EnumNameEntry): readonly EnumSplit[] {
   if (Array.isArray(entry)) return entry
   return (entry as EnumGroupSpec).axes
 }
 
 /** Members the config declares as flags. Empty for every form but the object one. */
 function declaredBooleansFor(entry: EnumNameEntry): readonly string[] {
-  if (typeof entry === 'string' || Array.isArray(entry)) return []
+  if (Array.isArray(entry)) return []
   return (entry as EnumGroupSpec).booleans ?? []
 }
 
@@ -225,25 +225,48 @@ function checkSplitIsEarned(group: Group, measured: MeasuredPairs, splits: reado
   )
 }
 
-function requireName(group: Group): never {
-  throw new GroupNamingError(
-    `${group.key} has ${group.members.length} members (${group.members.join(', ')}) and the ` +
-      `measurement says every pair of them is mutually exclusive, so they are one choice and ` +
-      `must become an enum — and only a human can say what the question is. Add ` +
-      `enumNames.${group.key}.`,
-  )
+/**
+ * The enum suffix a single-axis group carries: DaisyUI's category word, singular.
+ *
+ * `loading.styles` is `LoadingStyle`, `alert.directions` is `AlertDirection`. The word is
+ * DaisyUI's, so a reader holding its documentation can find the group; nothing here is invented.
+ */
+export function categoryWord(category: GroupCategory): string {
+  const singular = category.replace(/s$/, '')
+  return singular.charAt(0).toUpperCase() + singular.slice(1)
 }
 
 /**
- * A group nobody named stays boolean — unless the measurement says it is a choice.
+ * A group nobody named stays boolean — unless the measurement says it is a choice, in which
+ * case it is one enum named after its category.
  *
  * A single member answers no question on its own, and an unmeasured or composing group is not
- * a choice either. Only the third case is a build failure.
+ * a choice either.
  */
 function unnamedGroup(group: Group, measured: MeasuredPairs): GroupClassification {
   const isChoice = group.members.length > 1 && measured.describeNonExclusive(group.members).length === 0
-  if (isChoice) requireName(group)
-  return { enums: [], booleans: [...group.members] }
+  if (!isChoice) return { enums: [], booleans: [...group.members] }
+
+  const suffix = categoryWord(group.key.category as GroupCategory)
+  return {
+    enums: [{
+      enumName: `${group.componentName}${suffix}`,
+      parameterName: toCamelCase(suffix),
+      category: group.key.category as GroupCategory,
+      members: group.members,
+    }],
+    booleans: [],
+  }
+}
+
+/** A string entry restates the derived name and is refused, so the config carries no rule twice. */
+function rejectRestatedName(group: Group, entry: EnumNameEntry): void {
+  if (typeof entry !== 'string') return
+  throw new GroupNamingError(
+    `enumNames.${group.key} names a single-axis group "${entry}", but a single choice is named ` +
+      `after its category — ${group.componentName}${categoryWord(group.key.category as GroupCategory)} — ` +
+      `without configuration. Remove the entry.`,
+  )
 }
 
 /** A named group becomes one enum per declared axis, each checked against the measurement. */
@@ -252,7 +275,8 @@ function namedGroup(
   entry: EnumNameEntry,
   measured: MeasuredPairs,
 ): GroupClassification {
-  const splits = splitsFor(entry, group.members)
+  rejectRestatedName(group, entry)
+  const splits = splitsFor(entry)
   const declaredBooleans = declaredBooleansFor(entry)
 
   checkSplitCoverage(group, splits, declaredBooleans)

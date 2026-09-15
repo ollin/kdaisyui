@@ -70,8 +70,8 @@ function classify(
   const classified = classifyFromFrontmatter(frontmatter, componentDir)
   const element = elementFor(componentDir, config, elementRules)
   // Which class groups are one choice, decided by the browser rather than by their category.
-  // Throws when the measurement says a group is a choice and `enumNames` has not named it —
-  // silence there would reintroduce contradictory booleans by accident.
+  // A single choice is named after its category; `enumNames` only names the axes of a group
+  // that splits, and throws where a declared axis contradicts the measurement.
   const groups: GroupClassification = classifyGroups(
     classified,
     componentDir,

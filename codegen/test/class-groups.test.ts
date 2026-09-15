@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { classifyGroups, ExclusivityError, GroupNamingError } from '../src/class-groups.ts'
+import { categoryWord, classifyGroups, ExclusivityError, GroupNamingError } from '../src/class-groups.ts'
 import type { EnumNames } from '../src/class-groups.ts'
 import { ClassPair, Measurement } from '../src/measurement.ts'
 import type { ExclusivityJson } from '../src/measurement.ts'
@@ -39,22 +39,52 @@ const NO_NAMES: EnumNames = {}
 const NOT_MEASURED = Measurement.fromJson({})
 
 describe('classifyGroups', () => {
-  it('turns a measured single choice into one enum once it is named', () => {
+  it('turns a measured single choice into one enum named after its category', () => {
+    // Nobody names it: the word is DaisyUI's, so `loading.styles` is `LoadingStyle` and a reader
+    // holding DaisyUI's docs can find the group. `parameterName` is the same word in camelCase.
     const members = ['spinner', 'dots', 'bars']
 
     const result = classifyGroups(
       component({ componentName: 'Loading', styles: members }),
       'loading',
-      { loading: { styles: 'Animation' } },
+      NO_NAMES,
       measured({ loading: { styles: oneChoice(members) } }),
     )
 
     assert.deepEqual(result.enums, [
-      // `parameterName` is the suffix in camelCase, so the enum and the parameter that carries
-      // it are named together: `LoadingAnimation` arrives as `animation = …`.
-      { enumName: 'LoadingAnimation', parameterName: 'animation', category: 'styles', members },
+      { enumName: 'LoadingStyle', parameterName: 'style', category: 'styles', members },
     ])
     assert.deepEqual(result.booleans, [])
+  })
+
+  it('singularises every category word', () => {
+    assert.deepEqual(
+      ['styles', 'modifiers', 'behaviors', 'directions', 'placements'].map(categoryWord),
+      ['Style', 'Modifier', 'Behavior', 'Direction', 'Placement'],
+    )
+  })
+
+  it('refuses a configured name for a single-axis group, because the name is derived', () => {
+    // `MaskShape` was the one invented name; a config that may restate a rule will drift from
+    // it. The message says what the derived name is, so the fix is a deletion.
+    const members = ['circle', 'square', 'heart']
+
+    assert.throws(
+      () =>
+        classifyGroups(
+          component({ componentName: 'Mask', styles: members }),
+          'mask',
+          { mask: { styles: 'Shape' } } as unknown as EnumNames,
+          measured({ mask: { styles: oneChoice(members) } }),
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof GroupNamingError)
+        assert.match(error.message, /names a single-axis group "Shape"/)
+        assert.match(error.message, /MaskStyle/)
+        assert.match(error.message, /Remove the entry/)
+        return true
+      },
+    )
   })
 
   it('leaves a group boolean when one pair composes, whatever its category', () => {
@@ -78,11 +108,11 @@ describe('classifyGroups', () => {
     const result = classifyGroups(
       component({ componentName: 'Card', modifiers: ['side', 'image-full'] }),
       'card',
-      { card: { modifiers: 'Layout' } },
+      NO_NAMES,
       measured({ card: { modifiers: { exclusive: ['side|image-full'] } } }),
     )
 
-    assert.deepEqual(result.enums.map((group) => group.enumName), ['CardLayout'])
+    assert.deepEqual(result.enums.map((group) => group.enumName), ['CardModifier'])
     assert.deepEqual(result.booleans, [])
   })
 
@@ -123,39 +153,16 @@ describe('classifyGroups', () => {
     assert.deepEqual(result.booleans, ['start'])
   })
 
-  it('fails the run on an unnamed group whose every pair is exclusive', () => {
-    // The point of the whole module: a measured choice nobody named would otherwise let a
-    // caller set two contradictory answers at once.
-    const members = ['circle', 'square', 'heart']
-
-    assert.throws(
-      () =>
-        classifyGroups(
-          component({ componentName: 'Mask', styles: members }),
-          'mask',
-          NO_NAMES,
-          measured({ mask: { styles: oneChoice(members) } }),
-        ),
-      (error: unknown) => {
-        assert.ok(error instanceof GroupNamingError)
-        assert.match(error.message, /mask\.styles/)
-        assert.match(error.message, /circle, square, heart/)
-        assert.match(error.message, /enumNames\.mask\.styles/)
-        return true
-      },
-    )
-  })
-
-  it('rejects a configured enum the measurement refutes', () => {
+  it('rejects a configured axis the measurement refutes', () => {
     // Config asserting a choice the browser denies is the asymmetric error, so it stops the
     // run rather than shipping an enum that hides a reachable combination.
     assert.throws(
       () =>
         classifyGroups(
-          component({ styles: ['outline', 'ghost'] }),
+          component({ styles: ['outline', 'ghost', 'link'] }),
           'button',
-          { button: { styles: 'Emphasis' } },
-          measured({ button: { styles: { compose: ['outline|ghost'] } } }),
+          { button: { styles: [{ name: 'Emphasis', members: ['outline', 'ghost'] }, { name: 'Kind', members: ['link'] }] } },
+          measured({ button: { styles: { compose: ['outline|ghost', 'outline|link', 'ghost|link'] } } }),
         ),
       (error: unknown) => {
         assert.ok(error instanceof ExclusivityError)
@@ -166,35 +173,28 @@ describe('classifyGroups', () => {
     )
   })
 
-  it('withdraws an enum when DaisyUI adds a member that composes', () => {
-    // Naming an enum after DaisyUI's category — `CardModifier` for the whole `modifier`
-    // category — is only honest while every member of that category belongs to the enum. A new
-    // composing member would leave some modifiers as constants and others as booleans, under a
-    // name claiming to cover both.
-    //
-    // It cannot land silently: a named group is checked across ALL its members, so the run
-    // stops and a human decides whether to drop the enum or split it.
-    assert.throws(
-      () =>
-        classifyGroups(
-          component({ componentName: 'Card', modifiers: ['side', 'image-full', 'newcomer'] }),
-          'card',
-          { card: { modifiers: 'Modifier' } },
-          measured({
-            card: {
-              modifiers: {
-                exclusive: ['side|image-full'],
-                compose: ['side|newcomer', 'image-full|newcomer'],
-              },
-            },
-          }),
-        ),
-      (error: unknown) => {
-        assert.ok(error instanceof ExclusivityError)
-        assert.match(error.message, /side\|newcomer is compose/)
-        return true
-      },
+  it('withdraws a derived enum when DaisyUI adds a member that composes', () => {
+    // `CardModifier` is honest only while every modifier belongs to it. A newcomer that composes
+    // makes the group no longer a choice, so the whole group falls back to booleans — the
+    // measurement's answer, not an enum claiming to cover a class it cannot. That a newcomer
+    // exists at all is caught earlier by `:lib:verifyExclusivity`, which fails until the
+    // measurement is re-run; this is what the re-run then produces.
+    const result = classifyGroups(
+      component({ componentName: 'Card', modifiers: ['side', 'image-full', 'newcomer'] }),
+      'card',
+      NO_NAMES,
+      measured({
+        card: {
+          modifiers: {
+            exclusive: ['side|image-full'],
+            compose: ['side|newcomer', 'image-full|newcomer'],
+          },
+        },
+      }),
     )
+
+    assert.deepEqual(result.enums, [])
+    assert.deepEqual(result.booleans, ['side', 'image-full', 'newcomer'])
   })
 
   it('rejects a split whose axes are exclusive across as well as within', () => {
@@ -377,7 +377,7 @@ describe('classifyGroups', () => {
         behaviors: ['active', 'disabled'],
       }),
       'button',
-      { button: { styles: 'Emphasis', modifiers: 'Layout' } },
+      NO_NAMES,
       measured({
         button: {
           styles: { exclusive: ['outline|dash'] },
@@ -387,7 +387,7 @@ describe('classifyGroups', () => {
       }),
     )
 
-    assert.deepEqual(result.enums.map((group) => group.enumName), ['ButtonEmphasis', 'ButtonLayout'])
+    assert.deepEqual(result.enums.map((group) => group.enumName), ['ButtonStyle', 'ButtonModifier'])
     assert.deepEqual(result.booleans, ['active', 'disabled'])
   })
 })

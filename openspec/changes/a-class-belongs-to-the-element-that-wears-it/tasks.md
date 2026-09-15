@@ -136,7 +136,7 @@ boolean is named after DaisyUI's class, and the class is what a user searches fo
 
 Runs after 6 and before 8: block 8 reshapes the same `enumNames` section.
 
-- [ ] 7.1 `^ r (internal)` A single-axis exclusive group is named `<Component><CategoryWord>`
+- [x] 7.1 `^ r (internal)` A single-axis exclusive group is named `<Component><CategoryWord>`
   by the generator; the 13 single-axis entries leave `enumNames`, `requireName` and its test go.
   Pin with a test that an unnamed all-exclusive group produces the derived name instead of
   failing.

@@ -126,9 +126,11 @@ boolean is named after DaisyUI's class, and the class is what a user searches fo
   toCamelCase(cls)` fallback, which becomes `toCamelCase(cls)` alone), its `config-consumption.ts`
   entry, and the `test-generator.ts` comment that names it. The consumption guard's test list
   shrinks by one; let that test fail first, then pass.
-- [ ] 6.2 `. d` `just generate` — `Rating`, `Dropdown`, `Menu`, `Timeline` and their tests and
+- [x] 6.2 `! F` `just generate` — `Rating`, `Dropdown`, `Menu`, `Timeline` and their tests and
   reference pages change; `git status` shows nothing else. Remove the `parameterNames` row from
-  `.opencode/skills/kdaisyui-codegen/SKILL.md`.
+  `.opencode/skills/kdaisyui-codegen/SKILL.md`. *Done as `! F`, not `. d`: the regenerated
+  Kotlin changes four public signatures, so it is one behaviour over 30 lines. The README's
+  five-renames entry and `components.api` went with it, so 5.1/5.2 find them already done.*
 
 ## 7. Derive single-axis enum names — 0.5 h, added 2026-09-15
 

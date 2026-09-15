@@ -206,6 +206,12 @@ export function partElementFor(partClass: CssClass, config): TagClass {
   return asTagClass(config?.subComponentElements?.[partClass] ?? inferPartElement(partClass))
 }
 
+/** The element a part renders and the receiver its function extends. */
+interface PartPlacement {
+  readonly element: TagClass
+  readonly receiver: string
+}
+
 /**
  * The element a part renders: what DaisyUI shows it on when that is one element, otherwise
  * `partElementFor`'s configured-or-guessed answer.
@@ -214,17 +220,24 @@ export function partElementFor(partClass: CssClass, config): TagClass {
  * `hero-overlay` on a <label> and `footer-title` on an <h2>. It does not win over
  * `subComponentElements`, whose entries exist because a documented example was NOT enough —
  * `megamenu-active` must be a <span> for `:nth-of-type` reasons the markup does not state.
+ *
+ * An element kotlinx.html opens only inside its parent — `<legend>`, `<li>` — is taken with
+ * the documented parent as receiver, so `daisyFieldsetLegend` extends `FIELDSET`. Where no
+ * parent is documented, the heuristic stays: a function that does not compile helps nobody.
  */
-function partElementByDocs(
-  partClass: CssClass,
-  documented: ReadonlyMap<string, ReadonlySet<string>> | undefined,
-  config,
-): TagClass {
+function partPlacementByDocs(partClass: CssClass, plan: ClassPlan, config): PartPlacement {
   const configured = config?.subComponentElements?.[partClass]
-  if (configured !== undefined) return asTagClass(configured)
-  const shown = onlyElementOf(documented?.get(partClass))
-  if (shown === undefined || !isFlowContentChild(shown)) return partElementFor(partClass, config)
-  return asTagClass(shown)
+  if (configured !== undefined) return { element: asTagClass(configured), receiver: 'FlowContent' }
+  const shown = onlyElementOf(plan.documentedElements?.get(partClass))
+  const placed = shown === undefined ? undefined : placeDocumentedElement(shown, plan.documentedParents?.get(partClass))
+  return placed ?? { element: partElementFor(partClass, config), receiver: 'FlowContent' }
+}
+
+/** Where a documented element can be opened from — or nowhere, when only an unknown parent can. */
+function placeDocumentedElement(shown: string, parent: string | undefined): PartPlacement | undefined {
+  if (isFlowContentChild(shown)) return { element: asTagClass(shown), receiver: 'FlowContent' }
+  if (parent === undefined) return undefined
+  return { element: asTagClass(shown), receiver: asTagClass(parent) }
 }
 
 /** Parts whose element cannot be guessed from a fragment of their name. */
@@ -413,6 +426,12 @@ export interface ComponentSource {
    * Absent means "everything on the main function", which is what a hand-built fixture wants.
    */
   readonly documentedElements?: ReadonlyMap<string, ReadonlySet<string>>
+  /**
+   * The parent DaisyUI shows each class under, by class name, from `documentedParentsFor`.
+   * A part whose element kotlinx.html opens only inside its parent takes that parent as its
+   * extension receiver.
+   */
+  readonly documentedParents?: ReadonlyMap<string, string>
 }
 
 /** A component's whole generated API. */
@@ -575,6 +594,7 @@ interface ClassPlan {
   readonly groups: GroupClassification
   readonly placement: ClassPlacement
   readonly documentedElements: ReadonlyMap<string, ReadonlySet<string>> | undefined
+  readonly documentedParents: ReadonlyMap<string, string> | undefined
 }
 
 function booleanParameters(
@@ -628,14 +648,15 @@ class ClassPlacement {
   static from(
     classified: ClassifiedComponent,
     booleans: readonly string[],
-    documented: ReadonlyMap<string, ReadonlySet<string>>,
+    plan: Omit<ClassPlan, 'placement'>,
     config,
   ): ClassPlacement {
+    const documented = plan.documentedElements ?? new Map()
     // `timeline-box` is shown on `timeline-start` and `timeline-end` alike, both <div>s; every
     // part rendering that element declares it.
     const partsByElement = new Map<string, CssClass[]>()
     for (const part of classified.parts) {
-      const element = partElementByDocs(asCssClass(part), documented, config)
+      const element = partPlacementByDocs(asCssClass(part), plan, config).element
       partsByElement.set(element, [...(partsByElement.get(element) ?? []), asCssClass(part)])
     }
     // Every element DaisyUI shows the COMPONENT on — `dropdown` is a <div> in one example and
@@ -710,7 +731,7 @@ function partFunctionShape(
   config,
   plan: ClassPlan,
 ): FunctionShape {
-  const element = partElementByDocs(partClass, plan.documentedElements, config)
+  const { element, receiver } = partPlacementByDocs(partClass, plan, config)
   const hasTextParam = config?.textParams?.includes(partClass) || partClass.includes('title')
   const suffix = toPascalCase(stripPrefix(classified.prefix, partClass))
   const own = plan.placement.classesOf(partClass).sort().map(cls => booleanParameter(classified, cls))
@@ -718,7 +739,7 @@ function partFunctionShape(
   return {
     kind: 'part',
     name: `daisy${classified.componentName}${suffix}`,
-    receiver: 'FlowContent',
+    receiver,
     element,
     tagBuilder: tagBuilderFor(element),
     htmlTag: htmlTagNameFor(element),
@@ -775,10 +796,11 @@ export function buildComponentShape(
 ): ComponentShape {
   const componentConfig = readComponentConfig(config, classified.componentName)
   const rootElement = asTagClass(source.element || 'DIV')
+  const evidence = { groups, documentedElements: source.documentedElements, documentedParents: source.documentedParents }
   const placement = source.documentedElements === undefined
     ? ClassPlacement.none()
-    : ClassPlacement.from(classified, groups.booleans, source.documentedElements, config)
-  const plan: ClassPlan = { groups, placement, documentedElements: source.documentedElements }
+    : ClassPlacement.from(classified, groups.booleans, evidence, config)
+  const plan: ClassPlan = { ...evidence, placement }
 
   return {
     componentName: classified.componentName,

@@ -341,10 +341,29 @@ describe('buildComponentShape', () => {
     assert.deepEqual(shape.functions.slice(1).map(f => f.element), ['DIV', 'H6'])
   })
 
-  test('a part documented on an element FlowContent cannot open keeps the heuristic', () => {
-    // kotlinx.html opens <legend> only inside FIELDSET and <li> only inside UL/OL. A part does
-    // not know its parent yet, so the documented element would not compile; the heuristic
-    // stays and so does the cross-check's exception, until the parent is read from the docs.
+  test('a part on an element only its parent can open takes that parent as receiver', () => {
+    // kotlinx.html opens <legend> only inside FIELDSET. DaisyUI shows the parent, so the
+    // function is `FIELDSET.daisyFieldsetLegend`, and `daisyFieldset { daisyFieldsetLegend {} }`
+    // is the only way to write it — which is also the only way DaisyUI documents it.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend'] }),
+      {
+        componentDir: 'fieldset',
+        element: 'FIELDSET',
+        documentedElements: sets({ 'fieldset-legend': ['LEGEND'] }),
+        documentedParents: new Map([['fieldset-legend', 'FIELDSET']]),
+      },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'LEGEND')
+    assert.equal(shape.functions[1].receiver, 'FIELDSET')
+  })
+
+  test('a part on such an element keeps the heuristic when its parent is not documented', () => {
+    // Shown under two different parents, or at the top of an example: no receiver can be
+    // derived, so the documented element would not compile. The heuristic stays and so does
+    // the cross-check's exception.
     const shape = buildComponentShape(
       classified({ componentName: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend'] }),
       { componentDir: 'fieldset', element: 'FIELDSET', documentedElements: sets({ 'fieldset-legend': ['LEGEND'] }) },
@@ -352,6 +371,7 @@ describe('buildComponentShape', () => {
     )
 
     assert.equal(shape.functions[1].element, 'DIV')
+    assert.equal(shape.functions[1].receiver, 'FlowContent')
   })
 
   test('a part shown on several elements falls back to the heuristic', () => {

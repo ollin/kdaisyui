@@ -140,7 +140,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown-content", "DropdownContent defaults", closes = "</div></div>")
+        assertRendered(html, "dropdown-content", "DropdownContent defaults", closes = "</ul></div>")
     }
 
     @Test
@@ -153,7 +153,7 @@ class DropdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dropdown-content zz-extra", "DropdownContent all flags", closes = "</div></div>")
+        assertRendered(html, "dropdown-content zz-extra", "DropdownContent all flags", closes = "</ul></div>")
         assertCommonFlags(html, "DropdownContent")
     }
 }

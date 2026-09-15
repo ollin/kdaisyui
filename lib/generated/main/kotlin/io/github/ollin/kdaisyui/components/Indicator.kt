@@ -10,6 +10,8 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.span
+import kotlinx.html.SPAN
 
 enum class IndicatorHorizontalPlacement(internal val className: String) : ClassValues<IndicatorHorizontalPlacement> {
     /** CSS: `indicator-start` */
@@ -64,14 +66,14 @@ fun FlowContent.daisyIndicator(
     }
 }
 
-/** Renders `<div class="indicator-item ...">`. */
+/** Renders `<span class="indicator-item ...">`. */
 fun FlowContent.daisyIndicatorItem(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 ) {
-    div {
+    span {
         if (id != null) attributes["id"] = id.id
         addClassNames("indicator-item")
         addClassNames(extraClasses)

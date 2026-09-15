@@ -52,7 +52,7 @@ class ValidatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "validator-hint", "ValidatorHint defaults", closes = "</div></div>")
+        assertRendered(html, "validator-hint", "ValidatorHint defaults", closes = "</p></div>")
     }
 
     @Test
@@ -65,7 +65,7 @@ class ValidatorCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "validator-hint zz-extra", "ValidatorHint all flags", closes = "</div></div>")
+        assertRendered(html, "validator-hint zz-extra", "ValidatorHint all flags", closes = "</p></div>")
         assertCommonFlags(html, "ValidatorHint")
     }
 }

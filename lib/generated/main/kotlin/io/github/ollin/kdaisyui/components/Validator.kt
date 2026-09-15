@@ -6,11 +6,11 @@ package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
-import kotlinx.html.div
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
+import kotlinx.html.p
+import kotlinx.html.P
 
 /**
  * Validator class changes the color of form elements to error or success based on input's validation rules. Renders `<input class="validator ...">`.
@@ -31,14 +31,14 @@ fun FlowContent.daisyValidator(
     }
 }
 
-/** Renders `<div class="validator-hint ...">`. */
+/** Renders `<p class="validator-hint ...">`. */
 fun FlowContent.daisyValidatorHint(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (P.() -> Unit)? = null,
+    content: (P.() -> Unit),
 ) {
-    div {
+    p {
         if (id != null) attributes["id"] = id.id
         addClassNames("validator-hint")
         addClassNames(extraClasses)

@@ -69,7 +69,7 @@ fun FlowContent.daisyCheckbox(id: HtmlId? = null, variant: ClassValues<CheckboxV
 
 # Collapse <div>
 fun FlowContent.daisyCollapse(id: HtmlId? = null, arrow: Boolean = false, close: Boolean = false, open: Boolean = false, plus: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyCollapseTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
+fun FlowContent.daisyCollapseTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
 fun FlowContent.daisyCollapseContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Countdown <span>
@@ -104,12 +104,12 @@ enum DropdownModifier: Hover, Open
 enum DropdownHorizontalPlacement: Start, Center, End
 enum DropdownVerticalPlacement: Top, Bottom
 fun FlowContent.daisyDropdown(id: HtmlId? = null, modifier: ClassValues<DropdownModifier>? = null, horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null, verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null, close: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, bottom: Boolean = false, left: Boolean = false, right: Boolean = false, center: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
-fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 
 # Fab <div>
 fun FlowContent.daisyFab(id: HtmlId? = null, flower: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyFabClose(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyFabMainAction(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyFabMainAction(id: HtmlId? = null, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
 
 # Fieldset <fieldset>
 fun FlowContent.daisyFieldset(id: HtmlId? = null, extraClasses: String? = null, attrs: (FIELDSET.() -> Unit)? = null, content: (FIELDSET.() -> Unit))
@@ -143,7 +143,7 @@ fun FlowContent.daisyHoverGallery(id: HtmlId? = null, extraClasses: String? = nu
 enum IndicatorHorizontalPlacement: Start, Center, End
 enum IndicatorVerticalPlacement: Top, Middle, Bottom
 fun FlowContent.daisyIndicator(id: HtmlId? = null, horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null, verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyIndicatorItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyIndicatorItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # Input <input>
 enum InputVariant: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error
@@ -291,7 +291,7 @@ fun FlowContent.daisySwapIndeterminate(id: HtmlId? = null, extraClasses: String?
 enum TabSize: Xs, Sm, Md, Lg, Xl
 enum TabPlacement: Top, Bottom
 fun FlowContent.daisyTab(id: HtmlId? = null, size: ClassValues<TabSize>? = null, placement: ClassValues<TabPlacement>? = null, border: Boolean = false, box: Boolean = false, lift: Boolean = false, tabActive: Boolean = false, tabDisabled: Boolean = false, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
-fun FlowContent.daisyTabTab(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTabTab(id: HtmlId? = null, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit))
 fun FlowContent.daisyTabTabContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Table <table>
@@ -334,4 +334,4 @@ fun FlowContent.daisyTooltipContent(id: HtmlId? = null, extraClasses: String? = 
 
 # Validator <input>
 fun FlowContent.daisyValidator(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
-fun FlowContent.daisyValidatorHint(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyValidatorHint(id: HtmlId? = null, extraClasses: String? = null, attrs: (P.() -> Unit)? = null, content: (P.() -> Unit))

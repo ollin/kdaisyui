@@ -9,9 +9,9 @@ import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.details
 import kotlinx.html.DETAILS
-import kotlinx.html.div
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.ul
+import kotlinx.html.UL
 
 /** Modifier variants for this component (CSS prefix: `dropdown-`) */
 enum class DropdownModifier(internal val className: String) : ClassValues<DropdownModifier> {
@@ -104,14 +104,14 @@ fun FlowContent.daisyDropdown(
     }
 }
 
-/** Renders `<div class="dropdown-content ...">`. */
+/** Renders `<ul class="dropdown-content ...">`. */
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
 ) {
-    div {
+    ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown-content")
         addClassNames(extraClasses)

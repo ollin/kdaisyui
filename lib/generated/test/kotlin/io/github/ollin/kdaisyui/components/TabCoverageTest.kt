@@ -137,7 +137,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tab", "TabTab defaults", closes = "</div></div>")
+        assertRendered(html, "tab", "TabTab defaults", closes = "</a></div>")
     }
 
     @Test
@@ -150,7 +150,7 @@ class TabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tab zz-extra", "TabTab all flags", closes = "</div></div>")
+        assertRendered(html, "tab zz-extra", "TabTab all flags", closes = "</a></div>")
         assertCommonFlags(html, "TabTab")
     }
 

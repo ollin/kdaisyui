@@ -12,6 +12,18 @@
       "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
     },
+    "badge/badge-lg": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it",
+      "issue": 347
+    },
+    "badge/badge-md": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it",
+      "issue": 347
+    },
+    "badge/badge-sm": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it",
+      "issue": 347
+    },
     "badge/badge-primary": {
       "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
@@ -110,6 +122,10 @@
     },
     "indicator/indicator-middle": {
       "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "indicator/indicator-bottom": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it",
       "issue": 347
     },
     "list/list-col-wrap": {

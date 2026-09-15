@@ -80,7 +80,7 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fab-main-action", "FabMainAction defaults", closes = "</div></div>")
+        assertRendered(html, "fab-main-action", "FabMainAction defaults", closes = "</button></div>")
     }
 
     @Test
@@ -93,7 +93,7 @@ class FabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "fab-main-action zz-extra", "FabMainAction all flags", closes = "</div></div>")
+        assertRendered(html, "fab-main-action zz-extra", "FabMainAction all flags", closes = "</button></div>")
         assertCommonFlags(html, "FabMainAction")
     }
 }

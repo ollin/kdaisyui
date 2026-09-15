@@ -9,8 +9,6 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.h2
-import kotlinx.html.H2
 
 /**
  * Collapse is used for showing and hiding content. Renders `<div class="collapse ...">`.
@@ -46,15 +44,15 @@ fun FlowContent.daisyCollapse(
     }
 }
 
-/** Renders `<h2 class="collapse-title ...">`. */
+/** Renders `<div class="collapse-title ...">`. */
 fun FlowContent.daisyCollapseTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit)? = null,
 ) {
-    h2 {
+    div {
         if (id != null) attributes["id"] = id.id
         addClassNames("collapse-title")
         addClassNames(extraClasses)

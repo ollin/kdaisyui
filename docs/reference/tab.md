@@ -32,8 +32,8 @@ fun FlowContent.daisyTab(
 fun FlowContent.daisyTabTab(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (A.() -> Unit)? = null,
+    content: (A.() -> Unit),
 )
 ```
 

@@ -121,7 +121,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-item", "IndicatorItem defaults", closes = "</div></div>")
+        assertRendered(html, "indicator-item", "IndicatorItem defaults", closes = "</span></div>")
     }
 
     @Test
@@ -134,7 +134,7 @@ class IndicatorCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "indicator-item zz-extra", "IndicatorItem all flags", closes = "</div></div>")
+        assertRendered(html, "indicator-item zz-extra", "IndicatorItem all flags", closes = "</span></div>")
         assertCommonFlags(html, "IndicatorItem")
     }
 }

@@ -7,6 +7,238 @@
     "calendar": {
       "reason": "DaisyUI documents Cally's custom element <calendar-date>, and kotlinx.html has no tag class for a custom element. Needs a decision — a generic custom-tag escape hatch, or skipping the component — rather than an element swap.",
       "issue": 343
+    },
+    "badge/badge-neutral": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-primary": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-secondary": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-accent": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-info": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-success": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-warning": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-error": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-outline": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-dash": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-soft": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "badge/badge-ghost": {
+      "reason": "daisyBadge renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "dock/dock-active": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <button>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "dock/dock-label": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "drawer/drawer-toggle": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <input>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "drawer/drawer-button": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <label>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "dropdown/dropdown-close": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "dropdown/dropdown-hover": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "dropdown/dropdown-open": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "dropdown/dropdown-start": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "dropdown/dropdown-center": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "dropdown/dropdown-end": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "dropdown/dropdown-top": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "dropdown/dropdown-bottom": {
+      "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
+      "issue": 347
+    },
+    "fieldset/fieldset-legend": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <legend>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "filter/filter-reset": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <input>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "footer/footer-title": {
+      "reason": "Part rendered as <h2> by the name heuristic; DaisyUI shows it on <h6>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "hero/hero-overlay": {
+      "reason": "Part rendered as <label> by the name heuristic; DaisyUI shows it on <div>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "indicator/indicator-start": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "indicator/indicator-center": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "indicator/indicator-end": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "indicator/indicator-top": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "indicator/indicator-middle": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "list/list-col-wrap": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <p>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "list/list-col-grow": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <div>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "menu/menu-active": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <a>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "menu/menu-disabled": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <li>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "menu/menu-dropdown": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <ul>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "menu/menu-dropdown-toggle": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "modal/modal-toggle": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <input>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "rating/rating-hidden": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <input>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "skeleton/skeleton-text": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-neutral": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-primary": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-secondary": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-accent": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-info": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-success": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-warning": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-error": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-xs": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-sm": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-md": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-lg": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "status/status-xl": {
+      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "steps/step": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <li>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "steps/step-icon": {
+      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "timeline/timeline-box": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <div>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
     }
   },
   "skip": ["accordion", "pagination"],

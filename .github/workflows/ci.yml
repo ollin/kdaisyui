@@ -49,6 +49,12 @@ jobs:
           cache: npm
           cache-dependency-path: codegen/package-lock.json
 
+      # `:lib:generateComponents` also runs the element cross-check: every class a generated
+      # function emits, against the element DaisyUI documents it on, with a recorded exception
+      # list that expires on its own. A disagreement fails this step, so there is no separate
+      # step for it — and none should be added, because the check needs the generator's own
+      # shape model to know which function emits which class. Beside the drift check rather
+      # than in `check`, for the same reason the generators are: it reads the submodule.
       - name: Regenerate
         run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs --no-daemon
 

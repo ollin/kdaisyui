@@ -58,7 +58,7 @@ before the census check is built on it.
   58, not 60 — the tick commit miscounted. Needed one enabling step first (`7db7916`): the
   config-consumption guard did not know the `directory/class` key form. Exceptions point at
   #347 until this change has its own issue; no GitHub access from this session.*
-- [ ] 1.3 `^ F (internal)` Wire it beside `checkComponentApi` in CI, NOT into `check`: it reads
+- [x] 1.3 `. d` Wire it beside `checkComponentApi` in CI, NOT into `check`: it reads
   the submodule, and a clone must compile and test without one.
 
 ## 2. The 13 misplaced parameters — 1.5 h

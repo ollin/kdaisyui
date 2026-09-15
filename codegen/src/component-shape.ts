@@ -18,6 +18,7 @@
 
 import { toPascalCase, toCamelCase, type ClassifiedComponent } from './classifier.ts'
 import type { GroupClassification } from './class-groups.ts'
+import { usualElementOf } from './parser/documented-element.ts'
 
 /**
  * A kotlinx.html tag CLASS, e.g. `DIV`. Also the lambda receiver type in `attrs` and `content`.
@@ -228,7 +229,7 @@ interface PartPlacement {
 function partPlacementByDocs(partClass: CssClass, plan: ClassPlan, config): PartPlacement {
   const configured = config?.subComponentElements?.[partClass]
   if (configured !== undefined) return { element: asTagClass(configured), receiver: 'FlowContent' }
-  const shown = onlyElementOf(plan.documentedElements?.get(partClass))
+  const shown = usualElementOf(plan.documentedElements?.get(partClass))
   const placed = shown === undefined ? undefined : placeDocumentedElement(shown, plan.documentedParents?.get(partClass))
   return placed ?? { element: partElementFor(partClass, config), receiver: 'FlowContent' }
 }
@@ -420,12 +421,13 @@ export interface ComponentSource {
    */
   readonly element: string | undefined
   /**
-   * Every element DaisyUI shows each of the component's classes on, by class name, from
-   * `documentedElementSetsFor`. Decides which FUNCTION a class's parameter is declared on: a
-   * class shown only on a part's element belongs to that part, not to the container.
-   * Absent means "everything on the main function", which is what a hand-built fixture wants.
+   * How often DaisyUI shows each of the component's classes on each element, by class name,
+   * from `documentedElementTalliesFor`. Decides which FUNCTION a class's parameter is declared
+   * on — a class usually shown on a part's element belongs to that part — and which element a
+   * part renders. Absent means "everything on the main function, elements by heuristic", which
+   * is what a hand-built fixture wants.
    */
-  readonly documentedElements?: ReadonlyMap<string, ReadonlySet<string>>
+  readonly documentedElements?: ReadonlyMap<string, ReadonlyMap<string, number>>
   /**
    * The parent DaisyUI shows each class under, by class name, from `documentedParentsFor`.
    * A part whose element kotlinx.html opens only inside its parent takes that parent as its
@@ -593,7 +595,7 @@ function booleanParameter(classified: ClassifiedComponent, cls: string): Paramet
 interface ClassPlan {
   readonly groups: GroupClassification
   readonly placement: ClassPlacement
-  readonly documentedElements: ReadonlyMap<string, ReadonlySet<string>> | undefined
+  readonly documentedElements: ReadonlyMap<string, ReadonlyMap<string, number>> | undefined
   readonly documentedParents: ReadonlyMap<string, string> | undefined
 }
 
@@ -663,11 +665,11 @@ class ClassPlacement {
     // a <details> in another. A class shown on any of those is on the component, whatever the
     // generator renders it as: `dropdown-close` on the <div>-shaped dropdown is on the
     // dropdown, not on a <div> part that happens to exist.
-    const componentElements = (classified.prefix === null ? undefined : documented.get(classified.prefix)) ?? new Set()
+    const componentElements = new Set((classified.prefix === null ? undefined : documented.get(classified.prefix))?.keys() ?? [])
 
     const owners = new Map<string, readonly CssClass[]>()
     for (const cls of booleans) {
-      const element = onlyElementOf(documented.get(`${classified.prefix}-${cls}`))
+      const element = usualElementOf(documented.get(`${classified.prefix}-${cls}`))
       if (element === undefined || componentElements.has(element)) continue
       const parts = partsByElement.get(element)
       if (parts !== undefined) owners.set(cls, parts)
@@ -682,11 +684,6 @@ class ClassPlacement {
   classesOf(partClass: CssClass): string[] {
     return [...this.owners].filter(([, parts]) => parts.includes(partClass)).map(([cls]) => cls)
   }
-}
-
-/** The one element a class is shown on, or nothing when it is shown on none or on several. */
-function onlyElementOf(elements: ReadonlySet<string> | undefined): string | undefined {
-  return elements !== undefined && elements.size === 1 ? [...elements][0] : undefined
 }
 
 function mainFunctionShape(

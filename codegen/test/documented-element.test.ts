@@ -113,14 +113,14 @@ describe('documentedElementsIn', () => {
     assert.equal(documentedElementsIn(menu).get('menu-disabled'), undefined)
   })
 
-  test('leaves out a class shown on several elements, because the docs do not say', () => {
-    // `badge` is on a <span> once and a <div> seventeen times. Neither is "the" element.
-    const html = `<span class="$$badge"></span><div class="$$badge $$badge-xs"></div>`
+  test('names the usual element for a class shown on several, and none on a tie', () => {
+    const html = `<span class="$$badge"></span><div class="$$badge $$badge-xs"></div><div class="$$badge"></div>`
 
     const elements = documentedElementsIn(html)
 
-    assert.equal(elements.has('badge'), false)
+    assert.equal(elements.get('badge'), 'DIV')
     assert.equal(elements.get('badge-xs'), 'DIV')
+    assert.equal(documentedElementsIn(`<a class="$$x"></a><b class="$$x"></b>`).has('x'), false)
   })
 
   test('ignores classes without the marker', () => {

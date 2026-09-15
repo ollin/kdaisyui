@@ -38,9 +38,9 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
 
 const names = (parameters: readonly { name: string }[]) => parameters.map(p => p.name)
 
-/** `documentedElements` as the parser hands it over: every element each class is shown on. */
+/** `documentedElements` as the parser hands it over: each element a class is shown on, once. */
 const sets = (byClass: Record<string, string[]>) =>
-  new Map(Object.entries(byClass).map(([cls, elements]) => [cls, new Set(elements)]))
+  new Map(Object.entries(byClass).map(([cls, elements]) => [cls, new Map(elements.map(element => [element, 1]))]))
 
 describe('buildComponentShape', () => {
   test('names the main function and its receiver', () => {
@@ -374,7 +374,19 @@ describe('buildComponentShape', () => {
     assert.equal(shape.functions[1].receiver, 'FlowContent')
   })
 
-  test('a part shown on several elements falls back to the heuristic', () => {
+  test('a part shown on several elements renders the usual one', () => {
+    // `indicator-item` is a <span> 26 times and a <div> once; one stray example does not
+    // outvote the rest.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Indicator', prefix: 'indicator', parts: ['indicator-item'] }),
+      { componentDir: 'indicator', element: 'DIV', documentedElements: new Map([['indicator-item', new Map([['SPAN', 26], ['DIV', 1]])]]) },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'SPAN')
+  })
+
+  test('a part shown equally often on two elements falls back to the heuristic', () => {
     const shape = buildComponentShape(
       classified({ parts: ['card-title'] }),
       { componentDir: 'card', element: 'DIV', documentedElements: sets({ 'card-title': ['H2', 'DIV'] }) },

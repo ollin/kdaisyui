@@ -6,7 +6,7 @@ import { classifyFromFrontmatter } from './classifier.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { classifyGroups } from './class-groups.ts'
 import { loadEvidence } from './measurement.ts'
-import { documentedElementFor, documentedElementsFor, documentedElementSetsFor, documentedParentsFor } from './parser/documented-element.ts'
+import { documentedElementFor, documentedElementsFor, documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
 import { buildComponentShape } from './component-shape.ts'
 import { observeElements } from './element-observation.ts'
 import {
@@ -161,7 +161,7 @@ function main() {
     // Every class each function emits, beside the element DaisyUI documents it on. Judged
     // after the loop so the whole set is reportable at once — dying on the first would hide
     // the rest.
-    const documentedElements = documentedElementSetsFor(componentName)
+    const documentedElements = documentedElementTalliesFor(componentName)
     const documentedParents = documentedParentsFor(componentName)
     const source = { componentDir: componentName, element, documentedElements, documentedParents }
     const shape = buildComponentShape(classified, source, config, groups)

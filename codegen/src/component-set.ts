@@ -20,7 +20,7 @@ import { classifyFromFrontmatter, type ClassifiedComponent } from './classifier.
 import { buildComponentShape, type ComponentShape } from './component-shape.ts'
 import { classifyGroups, type GroupClassification } from './class-groups.ts'
 import { loadEvidence, type Evidence } from './measurement.ts'
-import { documentedElementSetsFor, documentedParentsFor } from './parser/documented-element.ts'
+import { documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
 
 /** Why a component produces no output. Reported rather than swallowed, so a caller can log it. */
 export type SkipReason = 'configured-skip' | 'no-frontmatter' | 'no-component-class'
@@ -88,7 +88,7 @@ function classify(
       {
         componentDir,
         element,
-        documentedElements: documentedElementSetsFor(componentDir),
+        documentedElements: documentedElementTalliesFor(componentDir),
         documentedParents: documentedParentsFor(componentDir),
       },
       config,

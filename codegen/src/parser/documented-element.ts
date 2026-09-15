@@ -67,16 +67,18 @@ export function documentedElementIn(html: string, componentClass: string): strin
  * modifier such as `menu-active` sits on a child `<li>`, and a generator that declares it on the
  * container's function emits it where it does nothing. This is what the class cross-check reads.
  *
- * A class shown on several elements is left out: `badge` appears on a `<span>` once and on a
- * `<div>` seventeen times, and "the first one" is a coin toss, not a statement. Absent means
- * unchecked, which is the honest answer to a source that does not say.
+ * A class shown on several elements gets the USUAL one — `badge` on a `<div>` 47 times and a
+ * `<span>` 7 times is a `<div>` — and is left out on a tie. "The first one" would be a coin
+ * toss, not a statement; absent means unchecked, the honest answer to a source that does not
+ * say.
  */
 export function documentedElementsIn(html: string): ReadonlyMap<string, string> {
-  const unambiguous = new Map<string, string>()
-  for (const [className, elements] of documentedElementSetsIn(html)) {
-    if (elements.size === 1) unambiguous.set(className, [...elements][0])
+  const usual = new Map<string, string>()
+  for (const [className, tally] of documentedElementTalliesIn(html)) {
+    const element = usualElementOf(tally)
+    if (element !== undefined) usual.set(className, element)
   }
-  return unambiguous
+  return usual
 }
 
 /**

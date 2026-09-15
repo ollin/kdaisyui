@@ -187,7 +187,7 @@ its measurement, and the derivation only reads a file that already carries the n
   yields nothing, and an entry for a derivable group fails generation. Tests: `indicator`,
   `toast`, `dropdown` derive; `tooltip` does not and reads its entry; a `tooltip` entry removed
   fails naming both axes; an `indicator` entry added fails as redundant.
-- [ ] 8.6 `! F` `enumNames` shrinks to `tooltip` and `badge` — the two groups whose axis words
+- [x] 8.6 `! F` `enumNames` shrinks to `tooltip` and `badge` — the two groups whose axis words
   no DaisyUI document carries. Badge: `OutlineStyle` `{outline, dash}` and `FillStyle`
   `{soft, ghost}`, named after what the classes do (border treatment vs. fill treatment) —
   Confirmed by Oliver 2026-09-15. `just generate`; expected diff: `indicator`, `toast`,

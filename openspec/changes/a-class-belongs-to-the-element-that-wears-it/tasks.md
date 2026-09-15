@@ -52,9 +52,12 @@ before the census check is built on it.
   check also sees parts on the wrong element (`fieldset-legend` as `<div>`) and two components
   whose first example differs from every variant example (`badge`, `status` as `<span>` vs
   `<div>`; `dropdown` as `<details>`). 1.2 files all 60.*
-- [ ] 1.2 `. d` Record the 60 disagreements 1.1 reports as exceptions naming this change, so the check lands green and
+- [x] 1.2 `. d` Record the 58 disagreements 1.1 reports as exceptions naming this change, so the check lands green and
   then fails as each is fixed. **An exception must expire on its own** — that is what stops the
-  list becoming the hand-maintained list this project has deleted twice.
+  list becoming the hand-maintained list this project has deleted twice. *Done (`8ce04d6`):
+  58, not 60 — the tick commit miscounted. Needed one enabling step first (`7db7916`): the
+  config-consumption guard did not know the `directory/class` key form. Exceptions point at
+  #347 until this change has its own issue; no GitHub access from this session.*
 - [ ] 1.3 `^ F (internal)` Wire it beside `checkComponentApi` in CI, NOT into `check`: it reads
   the submodule, and a clone must compile and test without one.
 
@@ -113,6 +116,8 @@ Ordered by blast radius, largest first, so the shape is settled before the small
 
 ## 5. Migration, baselines, gate — 0.8 h
 
+- [ ] 5.0 `. d` Create the change's issue (§5 of the house rules; this session had no GitHub
+  access) and re-point the 58 exceptions from #347 to it.
 - [ ] 5.1 `. d` **How to migrate**, naming every moved parameter. This withdraws public API that
   0.6.0 introduced — say so plainly rather than describing it as a refinement. Delete the "Five
   booleans were renamed" entry outright: after block 6 those parameters are identical to 0.5.x,

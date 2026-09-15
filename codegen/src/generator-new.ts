@@ -11,9 +11,7 @@
 
 import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
 import {
-  booleanParameterClasses,
   allBooleans,
-  booleanParameterName,
   buildComponentShape,
   escapeKotlinKeyword,
   readComponentConfig,
@@ -152,9 +150,7 @@ function mainFunctionBody(
   for (const group of groups.enums) {
     lines.push(`        addClassNames(${escapeKotlinKeyword(group.parameterName)})`)
   }
-  for (const cls of booleanParameterClasses(classified, componentConfig, groups)) {
-    lines.push(`        if (${booleanParameterName(cls)}) addClassNames("${prefix}-${cls}")`)
-  }
+  lines.push(...booleanLines(shape))
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
 
   lines.push('        addClassNames(extraClasses)')
@@ -164,6 +160,17 @@ function mainFunctionBody(
   return lines.join('\n')
 }
 
+/**
+ * One guarded `addClassNames` per boolean the SIGNATURE declares. The body follows the shape
+ * rather than re-deriving which booleans exist: a boolean the shape moved to a part is emitted
+ * by that part and by nothing else, and the two can never disagree.
+ */
+function booleanLines(shape: FunctionShape): string[] {
+  return shape.parameters
+    .filter(parameter => parameter.cssClass !== undefined)
+    .map(parameter => `        if (${parameter.name}) addClassNames("${parameter.cssClass}")`)
+}
+
 /** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
 function secondaryFunctionBody(shape: FunctionShape): string {
   const hasTextParam = shape.parameters.some(parameter => parameter.name === 'text')
@@ -171,6 +178,7 @@ function secondaryFunctionBody(shape: FunctionShape): string {
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
   if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
+  lines.push(...booleanLines(shape))
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')
   lines.push(...contentLines(hasTextParam))

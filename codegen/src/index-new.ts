@@ -6,7 +6,7 @@ import { classifyFromFrontmatter } from './classifier.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { classifyGroups } from './class-groups.ts'
 import { loadEvidence } from './measurement.ts'
-import { documentedElementFor, documentedElementsFor } from './parser/documented-element.ts'
+import { documentedElementFor, documentedElementsFor, documentedElementSetsFor } from './parser/documented-element.ts'
 import { buildComponentShape } from './component-shape.ts'
 import { observeElements } from './element-observation.ts'
 import {
@@ -161,13 +161,15 @@ function main() {
     // Every class each function emits, beside the element DaisyUI documents it on. Judged
     // after the loop so the whole set is reportable at once — dying on the first would hide
     // the rest.
-    const shape = buildComponentShape(classified, { componentDir: componentName, element }, config, groups)
+    const documentedElements = documentedElementSetsFor(componentName)
+    const source = { componentDir: componentName, element, documentedElements }
+    const shape = buildComponentShape(classified, source, config, groups)
     observations.push(...observeElements(shape, {
       componentClass: documentedElementFor(componentName, frontmatter.classnames.component[0].class),
       byClass: documentedElementsFor(componentName),
     }))
 
-    const kotlin = generateKotlinFile(classified, { componentDir: componentName, element }, config, groups)
+    const kotlin = generateKotlinFile(classified, source, config, groups)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
     
     fs.mkdirSync(OUTPUT_DIR, { recursive: true })

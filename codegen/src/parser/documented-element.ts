@@ -72,6 +72,19 @@ export function documentedElementIn(html: string, componentClass: string): strin
  * unchecked, which is the honest answer to a source that does not say.
  */
 export function documentedElementsIn(html: string): ReadonlyMap<string, string> {
+  const unambiguous = new Map<string, string>()
+  for (const [className, elements] of documentedElementSetsIn(html)) {
+    if (elements.size === 1) unambiguous.set(className, [...elements][0])
+  }
+  return unambiguous
+}
+
+/**
+ * EVERY element each marked class is shown on. What `documentedElementsIn` decides from, and
+ * what a caller needs when "shown on several" is itself the answer: `dropdown` is shown on a
+ * `<div>` and a `<details>`, and a class shown on either of those is on the dropdown.
+ */
+export function documentedElementSetsIn(html: string): ReadonlyMap<string, ReadonlySet<string>> {
   const seen = new Map<string, Set<string>>()
   DomUtils.findAll(
     node => (node.attribs?.class ?? '').includes(MARKER),
@@ -85,11 +98,14 @@ export function documentedElementsIn(html: string): ReadonlyMap<string, string> 
       seen.set(parsed.className, elements)
     }
   })
-  const unambiguous = new Map<string, string>()
-  for (const [className, elements] of seen) {
-    if (elements.size === 1) unambiguous.set(className, [...elements][0])
-  }
-  return unambiguous
+  return seen
+}
+
+/** `documentedElementSetsIn` for one component's page; empty when the page does not exist. */
+export function documentedElementSetsFor(componentName: ComponentName): ReadonlyMap<string, ReadonlySet<string>> {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return new Map()
+  return documentedElementSetsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
 }
 
 /** `documentedElementsIn` for one component's page; empty when the page does not exist. */

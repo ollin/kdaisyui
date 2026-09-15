@@ -38,6 +38,10 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
 
 const names = (parameters: readonly { name: string }[]) => parameters.map(p => p.name)
 
+/** `documentedElements` as the parser hands it over: every element each class is shown on. */
+const sets = (byClass: Record<string, string[]>) =>
+  new Map(Object.entries(byClass).map(([cls, elements]) => [cls, new Set(elements)]))
+
 describe('buildComponentShape', () => {
   test('names the main function and its receiver', () => {
     const shape = buildComponentShape(classified(), { componentDir: 'card', element: 'DIV' }, {})
@@ -108,7 +112,7 @@ describe('buildComponentShape', () => {
       {
         componentDir: 'dock',
         element: 'DIV',
-        documentedElements: new Map([['dock', 'DIV'], ['dock-active', 'BUTTON'], ['dock-item', 'BUTTON']]),
+        documentedElements: sets({ dock: ['DIV'], 'dock-active': ['BUTTON'], 'dock-item': ['BUTTON'] }),
       },
       { subComponentElements: { 'dock-item': 'button' } },
     )
@@ -119,6 +123,60 @@ describe('buildComponentShape', () => {
     assert.equal(item.parameters.find((p) => p.name === 'active')?.cssClass, 'dock-active')
   })
 
+  test('keeps a boolean shown on the element DaisyUI shows the component on', () => {
+    // `dropdown-close` is shown on the <div>-shaped dropdown. `daisyDropdown` renders <details>
+    // and `daisyDropdownContent` renders a <div> — the same tag name, a different element.
+    // The class is on the dropdown, so it stays on the dropdown's function.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Dropdown', prefix: 'dropdown', modifiers: ['close'], parts: ['dropdown-content'] }),
+      {
+        componentDir: 'dropdown',
+        element: 'DETAILS',
+        documentedElements: sets({ dropdown: ['DIV', 'DETAILS'], 'dropdown-close': ['DIV'], 'dropdown-content': ['UL'] }),
+      },
+      {},
+    )
+    const [main, content] = shape.functions
+
+    assert.ok(names(main.parameters).includes('close'))
+    assert.ok(!names(content.parameters).includes('close'))
+  })
+
+  test('never moves an enum member; the enum stays whole on the main function', () => {
+    const shape = buildComponentShape(
+      classified({ componentName: 'Tab', prefix: 'tabs', placements: ['top', 'bottom'], parts: ['tab'] }),
+      {
+        componentDir: 'tab',
+        element: 'DIV',
+        documentedElements: sets({ tabs: ['DIV'], 'tabs-bottom': ['A'], tab: ['A'] }),
+      },
+      { subComponentElements: { tab: 'a' } },
+      { enums: [{ enumName: 'TabPlacement', parameterName: 'placement', category: 'placements', members: ['top', 'bottom'] }], booleans: [] },
+    )
+    const [main, tab] = shape.functions
+
+    assert.ok(names(main.parameters).includes('placement'))
+    assert.ok(!names(tab.parameters).includes('bottom'))
+  })
+
+  test('declares a boolean on every part that renders its documented element', () => {
+    // `timeline-box` is shown on `timeline-start` and `timeline-end`, both <div>s.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Timeline', prefix: 'timeline', modifiers: ['box'], parts: ['timeline-start', 'timeline-end'] }),
+      {
+        componentDir: 'timeline',
+        element: 'UL',
+        documentedElements: sets({ timeline: ['UL'], 'timeline-box': ['DIV'] }),
+      },
+      {},
+    )
+    const [main, start, end] = shape.functions
+
+    assert.ok(!names(main.parameters).includes('box'))
+    assert.ok(names(start.parameters).includes('box'))
+    assert.ok(names(end.parameters).includes('box'))
+  })
+
   test('keeps a boolean on the main function when no part renders the documented element', () => {
     // Moving it to a part on a DIFFERENT wrong element would fix nothing; the cross-check
     // keeps reporting it until the part's element is right.
@@ -127,7 +185,7 @@ describe('buildComponentShape', () => {
       {
         componentDir: 'dock',
         element: 'DIV',
-        documentedElements: new Map([['dock-active', 'BUTTON']]),
+        documentedElements: sets({ 'dock-active': ['BUTTON'] }),
       },
       {},
     )

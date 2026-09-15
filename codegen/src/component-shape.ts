@@ -17,7 +17,6 @@
  */
 
 import { toPascalCase, toCamelCase, type ClassifiedComponent } from './classifier.ts'
-import { GROUP_CATEGORIES } from './class-groups.ts'
 import type { GroupClassification } from './class-groups.ts'
 
 /**
@@ -366,12 +365,12 @@ export interface ComponentSource {
    */
   readonly element: string | undefined
   /**
-   * Where DaisyUI documents each of the component's classes, by class name, from
-   * `documentedElementsFor`. Decides which FUNCTION a class's parameter is declared on: a
-   * class DaisyUI shows on a part's element belongs to that part, not to the container.
+   * Every element DaisyUI shows each of the component's classes on, by class name, from
+   * `documentedElementSetsFor`. Decides which FUNCTION a class's parameter is declared on: a
+   * class shown only on a part's element belongs to that part, not to the container.
    * Absent means "everything on the main function", which is what a hand-built fixture wants.
    */
-  readonly documentedElements?: ReadonlyMap<string, string>
+  readonly documentedElements?: ReadonlyMap<string, ReadonlySet<string>>
 }
 
 /** A component's whole generated API. */
@@ -564,47 +563,62 @@ function extraParameters(extras: readonly ExtraParameter[]): ParameterShape[] {
  * reporting it: moving it to a part on a DIFFERENT wrong element would fix nothing.
  */
 class ClassPlacement {
-  private readonly owner: ReadonlyMap<string, CssClass>
+  /** Class → every part that renders the element DaisyUI shows it on. */
+  private readonly owners: ReadonlyMap<string, readonly CssClass[]>
 
-  private constructor(owner: ReadonlyMap<string, CssClass>) {
-    this.owner = owner
+  private constructor(owners: ReadonlyMap<string, readonly CssClass[]>) {
+    this.owners = owners
   }
 
   static none(): ClassPlacement {
     return new ClassPlacement(new Map())
   }
 
+  /**
+   * @param booleans the classes the measurement left as flags — an enum member is never moved,
+   *   the enum stays on the main function whole
+   */
   static from(
     classified: ClassifiedComponent,
-    documented: ReadonlyMap<string, string>,
-    rootElement: TagClass,
+    booleans: readonly string[],
+    documented: ReadonlyMap<string, ReadonlySet<string>>,
     config,
   ): ClassPlacement {
-    const owner = new Map<string, CssClass>()
-    const partsByElement = new Map<string, CssClass>()
+    // `timeline-box` is shown on `timeline-start` and `timeline-end` alike, both <div>s; every
+    // part rendering that element declares it.
+    const partsByElement = new Map<string, CssClass[]>()
     for (const part of classified.parts) {
       const element = partElementFor(asCssClass(part), config)
-      if (element !== rootElement && !partsByElement.has(element)) partsByElement.set(element, asCssClass(part))
+      partsByElement.set(element, [...(partsByElement.get(element) ?? []), asCssClass(part)])
     }
-    for (const cls of allGroupClasses(classified)) {
-      const element = documented.get(`${classified.prefix}-${cls}`)
-      const part = element === undefined ? undefined : partsByElement.get(element)
-      if (part !== undefined) owner.set(cls, part)
+    // Every element DaisyUI shows the COMPONENT on — `dropdown` is a <div> in one example and
+    // a <details> in another. A class shown on any of those is on the component, whatever the
+    // generator renders it as: `dropdown-close` on the <div>-shaped dropdown is on the
+    // dropdown, not on a <div> part that happens to exist.
+    const componentElements = (classified.prefix === null ? undefined : documented.get(classified.prefix)) ?? new Set()
+
+    const owners = new Map<string, readonly CssClass[]>()
+    for (const cls of booleans) {
+      const element = onlyElementOf(documented.get(`${classified.prefix}-${cls}`))
+      if (element === undefined || componentElements.has(element)) continue
+      const parts = partsByElement.get(element)
+      if (parts !== undefined) owners.set(cls, parts)
     }
-    return new ClassPlacement(owner)
+    return new ClassPlacement(owners)
   }
 
   belongsToMain(cls: string): boolean {
-    return !this.owner.has(cls)
+    return !this.owners.has(cls)
   }
 
   classesOf(partClass: CssClass): string[] {
-    return [...this.owner].filter(([, part]) => part === partClass).map(([cls]) => cls)
+    return [...this.owners].filter(([, parts]) => parts.includes(partClass)).map(([cls]) => cls)
   }
 }
 
-function allGroupClasses(classified: ClassifiedComponent): string[] {
-  return GROUP_CATEGORIES.flatMap(category => classified[category])
+/** The one element a class is shown on, or nothing when it is shown on none or on several. */
+function onlyElementOf(elements: ReadonlySet<string> | undefined): string | undefined {
+  return elements !== undefined && elements.size === 1 ? [...elements][0] : undefined
 }
 
 function mainFunctionShape(
@@ -716,7 +730,7 @@ export function buildComponentShape(
   const rootElement = asTagClass(source.element || 'DIV')
   const placement = source.documentedElements === undefined
     ? ClassPlacement.none()
-    : ClassPlacement.from(classified, source.documentedElements, rootElement, config)
+    : ClassPlacement.from(classified, groups.booleans, source.documentedElements, config)
   const plan: ClassPlan = { groups, placement }
 
   return {

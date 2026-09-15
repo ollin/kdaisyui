@@ -149,13 +149,15 @@ Runs after 6 and before 8: block 8 reshapes the same `enumNames` section.
 Needs the system Chromium (`just measure-exclusivity`). Ordered so the schema change lands with
 its measurement, and the derivation only reads a file that already carries the new verdict.
 
-- [ ] 8.1 `^ F (internal)` The probe renders one baseline case per group (example stripped of
+- [x] 8.1 `^ F (internal)` The probe renders one baseline case per group (example stripped of
   every member, nothing injected); `exclusivity-verdicts.js` emits a fourth verdict, `inert`,
   when a member's single case has the baseline's signature, and records for **every** member the
   CSS custom-property names its rules declare, read from the CSSOM. `Measurement` and
   `MeasuredPairs` read both. Test named after the tooltip case.
-- [ ] 8.2 `. d` Re-measure and commit `codegen/exclusivity.json`. Expected: `tooltip-top` inert,
-  its six `exclusive` pairs gone, nothing else in the file changes — read the diff to confirm.
+- [ ] 8.2 `. d` Re-measure and commit `codegen/exclusivity.json`. Expected: `tooltip-top` the
+  only `inert` member, every group gains `declares`, **no pair verdict changes** — read the diff
+  to confirm. *Corrected while implementing 8.1: the pairs stay recorded as observed and the
+  derivation ignores inert members; the spec's Assumed mark is revised to match.*
 - [ ] 8.3 `^ F (internal)` Axes of a group are the connected components of the exclusive graph
   over non-inert members: a component of one member stays boolean, a larger one is an enum.
   `indicator`, `toast`, `tooltip` come out as two components of three; `dropdown` as

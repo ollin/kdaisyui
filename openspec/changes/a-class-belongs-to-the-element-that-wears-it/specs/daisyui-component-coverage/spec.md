@@ -229,10 +229,12 @@ alignment axis is relative to the side. The tooltip's two names are the only one
 multi-axis group whose properties the table describes with a word other than vertical or
 horizontal. Both fail generation until a name is configured or the derivation is extended.
 
-**Assumed** that re-measuring with the `inert` outcome changes exactly one thing in the recorded
-file: `tooltip-top` becomes inert and its six pairs disappear. *Wrong if:* any other member of any
-group measures inert, or any verdict outside `tooltip.placements` changes — either is a finding
-about the probe and revises this requirement before the derivation is built on it.
+**Assumed** that re-measuring with the baseline changes exactly one verdict-bearing thing in the
+recorded file: `tooltip-top` is marked inert. Its six `exclusive` pairs stay recorded — they are
+what was observed, and "together equals the other alone" is true of a no-op class — and the axis
+derivation, not the file, leaves inert members out. *Wrong if:* any other member of any group
+measures inert, or any pair verdict changes — either is a finding about the probe and revises
+this requirement before the derivation is built on it.
 
 *Wrong if:* a group every pair of which measures exclusive nevertheless has a documented call site
 wearing two of its members at once. The measurement would then be describing the probe's markup

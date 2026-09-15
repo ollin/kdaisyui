@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { documentedElementIn, fencedHtmlBlocks } from '../src/parser/documented-element.ts'
+import { documentedElementIn, documentedElementsIn, fencedHtmlBlocks } from '../src/parser/documented-element.ts'
 
 /**
  * Reading the element DaisyUI documents.
@@ -89,5 +89,37 @@ describe('documentedElementIn', () => {
     test('script content containing markup', () => {
       assert.equal(documentedElementIn(`<script>var s = '<i class="$$x">'</script><em class="$$x"></em>`, 'x'), 'EM')
     })
+  })
+})
+
+describe('documentedElementsIn', () => {
+  const menu = `
+    <ul class="$$menu $$menu-horizontal">
+      <li><a class="$$menu-active">Item</a></li>
+      <li class="lg:$$menu-disabled"><a>Other</a></li>
+    </ul>`
+
+  test('names the element carrying every marked class, one entry per class', () => {
+    const elements = documentedElementsIn(menu)
+
+    assert.equal(elements.get('menu'), 'UL')
+    assert.equal(elements.get('menu-horizontal'), 'UL')
+    assert.equal(elements.get('menu-active'), 'A')
+  })
+
+  test('skips a class that appears only behind a Tailwind variant', () => {
+    // `lg:$$menu-disabled` wears the class at one breakpoint; a function always emits it, so
+    // that element is not evidence of where the class belongs.
+    assert.equal(documentedElementsIn(menu).get('menu-disabled'), undefined)
+  })
+
+  test('takes the first element for a class shown on several', () => {
+    const html = `<div class="$$card"></div><section class="$$card"></section>`
+
+    assert.equal(documentedElementsIn(html).get('card'), 'DIV')
+  })
+
+  test('ignores classes without the marker', () => {
+    assert.equal(documentedElementsIn(`<div class="flex $$card"></div>`).has('flex'), false)
   })
 })

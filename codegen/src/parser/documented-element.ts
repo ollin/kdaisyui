@@ -27,6 +27,10 @@ import fs from 'fs'
 import path from 'path'
 import { parseDocument, DomUtils } from 'htmlparser2'
 import type { ComponentName } from './frontmatter.ts'
+import { DocumentedClass } from './documented-classes.ts'
+
+/** The sentinel DaisyUI's documentation puts in front of its OWN class names. */
+const MARKER = '$$'
 
 const COMPONENTS_PATH = path.resolve(
   import.meta.dirname,
@@ -53,6 +57,37 @@ export function documentedElementIn(html: string, componentClass: string): strin
     true,
   )
   return element?.name.toUpperCase() ?? null
+}
+
+/**
+ * The element DaisyUI documents for EVERY `$$`-marked class on a page: the tag of the first
+ * element carrying each one.
+ *
+ * The same reading as `documentedElementIn`, once per class instead of once per component — a
+ * modifier such as `menu-active` sits on a child `<li>`, and a generator that declares it on the
+ * container's function emits it where it does nothing. This is what the class cross-check reads.
+ */
+export function documentedElementsIn(html: string): ReadonlyMap<string, string> {
+  const elements = new Map<string, string>()
+  DomUtils.findAll(
+    node => (node.attribs?.class ?? '').includes(MARKER),
+    parseDocument(html).children,
+  ).forEach(element => {
+    for (const token of (element.attribs.class ?? '').split(/\s+/)) {
+      const parsed = DocumentedClass.parse(token)
+      if (parsed !== null && !parsed.isPrefixed && !elements.has(parsed.className)) {
+        elements.set(parsed.className, element.name.toUpperCase())
+      }
+    }
+  })
+  return elements
+}
+
+/** `documentedElementsIn` for one component's page; empty when the page does not exist. */
+export function documentedElementsFor(componentName: ComponentName): ReadonlyMap<string, string> {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return new Map()
+  return documentedElementsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
 }
 
 /** The documented element for one component, read from its `+page.md`. */

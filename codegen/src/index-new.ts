@@ -10,6 +10,7 @@ import { documentedElementFor } from './parser/documented-element.ts'
 import {
   crossCheckElements,
   describeCrossCheckFailure,
+  type CrossCheckExceptions,
   type ElementObservation,
 } from './element-cross-check.ts'
 import {
@@ -68,10 +69,13 @@ function loadConfig() {
 
 /** What the element heuristic chose for one component, beside what DaisyUI documents. */
 function observeElement(componentName, element, frontmatter): ElementObservation {
+  const componentClass = frontmatter.classnames.component[0].class
   return {
     componentDir: componentName,
+    cssClass: componentClass,
+    isComponentClass: true,
     chosen: (element ?? 'DIV').toUpperCase(),
-    documented: documentedElementFor(componentName, frontmatter.classnames.component[0].class),
+    documented: documentedElementFor(componentName, componentClass),
   }
 }
 
@@ -82,11 +86,11 @@ function observeElement(componentName, element, frontmatter): ElementObservation
  */
 function reportCrossCheck(
   observations: readonly ElementObservation[],
-  exceptions: Readonly<Record<string, { reason: string; issue: number }>>,
+  exceptions: CrossCheckExceptions,
 ): void {
   const crossCheck = crossCheckElements(observations, exceptions)
-  for (const componentDir of crossCheck.excused) {
-    console.log(`  ⚠ ${componentDir}: element disagrees with DaisyUI, excused — see #${exceptions[componentDir].issue}`)
+  for (const key of crossCheck.excused) {
+    console.log(`  ⚠ ${key}: element disagrees with DaisyUI, excused — see #${exceptions[key].issue}`)
   }
   if (crossCheck.findings.length === 0) return
   console.error(`\n${describeCrossCheckFailure(crossCheck)}`)

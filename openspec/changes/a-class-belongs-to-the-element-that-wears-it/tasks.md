@@ -160,7 +160,7 @@ its measurement, and the derivation only reads a file that already carries the n
   one. The assumption was refuted; 8.3/8.4 and the spec were revised before either was built.
   Also found: a linked stylesheet hides its `cssRules` from a file:// page; fixed with a test
   (`46ee859`).*
-- [ ] 8.3 `^ F (internal)` Axes of a group are the connected components of the exclusive graph
+- [x] 8.3 `^ F (internal)` Axes of a group are the connected components of the exclusive graph
   over non-inert members: one member → boolean; a clique of two or more → enum; a component
   that is **not** a clique → boolean (not-established rule — `button.styles`, `aura.styles`).
   Applied to every group. Expected against the re-measured file: `indicator`, `toast`,
@@ -170,12 +170,16 @@ its measurement, and the derivation only reads a file that already carries the n
   and `{soft, ghost}` — the same shape as dropdown, same rule (Oliver, 2026-09-15).
   `enumNames` keeps only axis names; `checkAxisIsExclusive` / `checkSplitIsEarned` become the
   derivation's own assertions. *Revised after 8.2 refuted "fail on a non-clique".*
-- [ ] 8.4 `^ F (internal)` An inert member joins the clique it is exclusive with every member
+- [x] 8.4 `^ F (internal)` An inert member joins the clique it is exclusive with every member
   of; when two qualify (`tooltip-top`), the one whose members declare the same CSS properties;
   when none or still two, fail generation naming the member. Pin all four outcomes:
   `loading-spinner` → the one clique; `tooltip-top` → `{bottom, left, right}` by `declares`;
   a default of a boolean-only group (`rating-hidden`) stays boolean; an unplaceable member
-  fails.
+  fails. *Done in one commit with 8.3 (`e0434a5`): the placement is the derivation's step 3,
+  not a layer on top. Two corrections while building: an inert member exclusive with no
+  component stays boolean (carousel-horizontal composes with vertical); and placement is
+  decided against the live components all at once, or menu's four invisible classes made a
+  spurious enum depending on iteration order.*
 - [ ] 8.5 `^ F (internal)` A reader for the custom-property table in
   `docs/utilities/+page.md` (variable → description). An axis whose members' declared
   properties are all described with one of {vertical, horizontal}, and whose sibling axis with
@@ -186,14 +190,17 @@ its measurement, and the derivation only reads a file that already carries the n
 - [ ] 8.6 `! F` `enumNames` shrinks to `tooltip` and `badge` — the two groups whose axis words
   no DaisyUI document carries. Badge: `OutlineStyle` `{outline, dash}` and `FillStyle`
   `{soft, ghost}`, named after what the classes do (border treatment vs. fill treatment) —
-  **Oliver to confirm before 8.6 runs.** `just generate`; expected diff: `indicator`, `toast`,
+  Confirmed by Oliver 2026-09-15. `just generate`; expected diff: `indicator`, `toast`,
   `tooltip` and every single-axis enum unchanged; `daisyDropdown` gains
   `vertical: ClassValues<DropdownVerticalPlacement>?` for `top`/`bottom` and
   `DropdownAlignPlacement` becomes `DropdownHorizontalPlacement`; `daisyAlert` gains
   `style: ClassValues<AlertStyle>?` for `outline`/`dash` (`soft` stays); `daisyAvatar` gains
   `modifier: ClassValues<AvatarModifier>?` for `online`/`offline` (`placeholder` stays);
-  `daisyBadge` gains the two badge enums. Both API baselines re-dumped and read; README enum
-  table extended. Nothing else.
+  `daisyBadge` gains the two badge enums; `daisyDropdown` also gains
+  `modifier: ClassValues<DropdownModifier>?` for `hover`/`open` (`close` stays) — found by 8.3,
+  not predicted, same shape; `indicator` and `toast` list `horizontalPlacement` before
+  `verticalPlacement`, as DaisyUI orders the classes. Both API baselines re-dumped and read;
+  README enum table extended. Nothing else.
 
 **Why `dropdown` changes shape in 8.5:** today's config declares `top, bottom, left, right` as
 booleans, and `b8acf18` says "the browser says they compose". That is true of `left|right` and of

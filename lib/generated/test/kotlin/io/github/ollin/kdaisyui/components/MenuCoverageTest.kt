@@ -42,7 +42,7 @@ class MenuCoverageTest {
                 active = true,
                 disabled = true,
                 dropdownShow = true,
-                focused = true,
+                focus = true,
                 paged = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },

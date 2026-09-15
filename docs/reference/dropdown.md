@@ -16,7 +16,7 @@ fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
     alignPlacement: ClassValues<DropdownAlignPlacement>? = null,
     close: Boolean = false,  // Force close
-    openOnHover: Boolean = false,  // Opens on hover too
+    hover: Boolean = false,  // Opens on hover too
     open: Boolean = false,  // Force open
     end: Boolean = false,
     start: Boolean = false,

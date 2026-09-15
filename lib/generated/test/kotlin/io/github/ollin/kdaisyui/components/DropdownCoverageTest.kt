@@ -40,7 +40,7 @@ class DropdownCoverageTest {
             daisyDropdown(
                 id = htmlId("x-cov-id"),
                 close = true,
-                openOnHover = true,
+                hover = true,
                 open = true,
                 end = true,
                 start = true,

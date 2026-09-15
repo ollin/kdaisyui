@@ -97,7 +97,7 @@ fun FlowContent.daisyDrawerButton(id: HtmlId? = null, extraClasses: String? = nu
 
 # Dropdown <details>
 enum DropdownAlignPlacement: Start, Center, End
-fun FlowContent.daisyDropdown(id: HtmlId? = null, alignPlacement: ClassValues<DropdownAlignPlacement>? = null, close: Boolean = false, openOnHover: Boolean = false, open: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, bottom: Boolean = false, left: Boolean = false, right: Boolean = false, center: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
+fun FlowContent.daisyDropdown(id: HtmlId? = null, alignPlacement: ClassValues<DropdownAlignPlacement>? = null, close: Boolean = false, hover: Boolean = false, open: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, bottom: Boolean = false, left: Boolean = false, right: Boolean = false, center: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
 fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Fab <div>
@@ -182,7 +182,7 @@ fun FlowContent.daisyMegamenuPanel(id: HtmlId? = null, extraClasses: String? = n
 # Menu <ul>
 enum MenuSize: Xs, Sm, Md, Lg, Xl
 enum MenuDirection: Vertical, Horizontal
-fun FlowContent.daisyMenu(id: HtmlId? = null, size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focused: Boolean = false, paged: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun FlowContent.daisyMenu(id: HtmlId? = null, size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focus: Boolean = false, paged: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 fun FlowContent.daisyMenuTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
 fun FlowContent.daisyMenuDropdown(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyMenuDropdownToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
@@ -240,7 +240,7 @@ fun FlowContent.daisyRange(id: HtmlId? = null, variant: ClassValues<RangeVariant
 
 # Rating <div>
 enum RatingSize: Xs, Sm, Md, Lg, Xl
-fun FlowContent.daisyRating(id: HtmlId? = null, size: ClassValues<RatingSize>? = null, halfStars: Boolean = false, clearOption: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyRating(id: HtmlId? = null, size: ClassValues<RatingSize>? = null, half: Boolean = false, hidden: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Select <select>
 enum SelectVariant: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error
@@ -304,7 +304,7 @@ fun FlowContent.daisyTextRotate(id: HtmlId? = null, extraClasses: String? = null
 fun FlowContent.daisyThemeController(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 
 # Timeline <ul>
-fun FlowContent.daisyTimeline(id: HtmlId? = null, boxed: Boolean = false, compact: Boolean = false, horizontal: Boolean = false, snapIcon: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun FlowContent.daisyTimeline(id: HtmlId? = null, box: Boolean = false, compact: Boolean = false, horizontal: Boolean = false, snapIcon: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 fun FlowContent.daisyTimelineStart(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyTimelineMiddle(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyTimelineEnd(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))

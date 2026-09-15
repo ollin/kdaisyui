@@ -323,7 +323,7 @@ matches a run identifier, so a section nobody reads passes the key check and doe
 | Symptom | Edit |
 |---|---|
 | A class group should be one enum instead of booleans | `enumNames` — but only if `codegen/exclusivity.json` says every pair is exclusive; the run fails otherwise. → skill `kdaisyui-daisyui-upgrade` |
-| A boolean's name does not say what `true` means | → `parameterNames`, keyed by DaisyUI **directory** |
+| A boolean's name does not say what `true` means | nothing — a boolean is named after its DaisyUI class, so a reader coming from DaisyUI's docs finds it; DaisyUI's `desc` is the KDoc |
 | Component needs an extra parameter | `codegen/codegen-config.json` → `extras` |
 | Component should take inline text | → `textParams` |
 | Component must not accept children | **derived, not configured** — see below |

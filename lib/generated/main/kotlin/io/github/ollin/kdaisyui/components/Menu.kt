@@ -52,7 +52,7 @@ enum class MenuDirection(internal val className: String) : ClassValues<MenuDirec
  * @param active — For the element inside <li> to look active
  * @param disabled — For the element inside <li> to look disabled
  * @param dropdownShow — Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
- * @param focused — For the element inside <li> to look focused
+ * @param focus — For the element inside <li> to look focused
  * @param paged — Shows one level at a time and turns the open summary into a back button
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -65,7 +65,7 @@ fun FlowContent.daisyMenu(
     active: Boolean = false,
     disabled: Boolean = false,
     dropdownShow: Boolean = false,
-    focused: Boolean = false,
+    focus: Boolean = false,
     paged: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
@@ -79,7 +79,7 @@ fun FlowContent.daisyMenu(
         if (active) addClassNames("menu-active")
         if (disabled) addClassNames("menu-disabled")
         if (dropdownShow) addClassNames("menu-dropdown-show")
-        if (focused) addClassNames("menu-focus")
+        if (focus) addClassNames("menu-focus")
         if (paged) addClassNames("menu-paged")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

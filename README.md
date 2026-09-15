@@ -252,20 +252,7 @@ That asymmetry is the whole rule. A group became an enum only where *every* pair
 measured mutually exclusive; where the measurement was unsure, the classes stayed booleans. A
 wrong enum takes away something DaisyUI permits; a wrong boolean only permits something useless.
 
-**3. Five booleans were renamed**, because the class name did not say what `true` means:
-
-| Component | Before | After |
-|---|---|---|
-| Dropdown | `hover` | `openOnHover` |
-| Menu | `focus` | `focused` |
-| Rating | `hidden` | `clearOption` |
-| Rating | `half` | `halfStars` |
-| Timeline | `box` | `boxed` |
-
-`daisyRating(hidden = true)` read as "hide the rating" and in fact adds the option to clear it.
-The class name is DaisyUI's and cannot change; the parameter is ours.
-
-**4. Enum parameters are typed `ClassValues<T>`, not `T`.** No call site changes:
+**3. Enum parameters are typed `ClassValues<T>`, not `T`.** No call site changes:
 `size = ButtonSize.Lg` compiles exactly as before, because the enum *is* a `ClassValues<ButtonSize>`.
 The wider type exists so one parameter can later also accept a class applied at a Tailwind
 breakpoint. That composition is built but **not yet public** — see `docs/explanation.md`; until it
@@ -281,7 +268,7 @@ val size: ButtonSize? = if (compact) ButtonSize.Sm else null
 val size: ClassValues<ButtonSize>? = if (compact) ButtonSize.Sm else null
 ```
 
-**5. Use named arguments.** The advice from the 0.1.x entry now matters more: removing booleans
+**4. Use named arguments.** The advice from the 0.1.x entry now matters more: removing booleans
 and inserting enum parameters shifts every positional argument on 37 of the 66 components. Named
 arguments are immune.
 

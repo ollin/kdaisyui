@@ -32,7 +32,7 @@ enum class DropdownAlignPlacement(internal val className: String) : ClassValues<
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param alignPlacement — AlignPlacement variant
  * @param close — Force close
- * @param openOnHover — Opens on hover too
+ * @param hover — Opens on hover too
  * @param open — Force open
  * @param end
  * @param start
@@ -49,7 +49,7 @@ fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
     alignPlacement: ClassValues<DropdownAlignPlacement>? = null,
     close: Boolean = false,
-    openOnHover: Boolean = false,
+    hover: Boolean = false,
     open: Boolean = false,
     end: Boolean = false,
     start: Boolean = false,
@@ -67,7 +67,7 @@ fun FlowContent.daisyDropdown(
         addClassNames("dropdown")
         addClassNames(alignPlacement)
         if (close) addClassNames("dropdown-close")
-        if (openOnHover) addClassNames("dropdown-hover")
+        if (hover) addClassNames("dropdown-hover")
         if (open) addClassNames("dropdown-open")
         if (end) addClassNames("dropdown-end")
         if (start) addClassNames("dropdown-start")

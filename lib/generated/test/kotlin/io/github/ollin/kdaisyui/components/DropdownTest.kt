@@ -208,7 +208,7 @@ class DropdownTest {
     @Test
     fun dropdown_on_hover() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(openOnHover = true) {
+            daisyDropdown(hover = true) {
             }
         }
         val expectedClasses = "dropdown dropdown-hover"

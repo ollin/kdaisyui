@@ -166,20 +166,42 @@ re-measurement (8.1, 8.2) before anything reads the new outcome.
 
 ### D6. Axes are the connected components of the exclusive graph
 
-**Decision:** over non-inert members, a component of one member stays boolean, a component of
-two or more becomes an enum, and `checkAxisIsExclusive` runs on each derived component — a
-component that is not a clique fails the build as an inconsistent measurement.
-`checkSplitIsEarned` becomes a tautology (components compose across by construction) and is
-kept as an assertion.
+**Decision (revised 2026-09-15 after 8.2):** over non-inert members, take the connected
+components of the exclusive graph. A component of one member stays boolean. A component of two
+or more that is a **clique** becomes an enum; one that is **not** a clique stays boolean — the
+not-established rule, not a build failure. An inert member joins the clique it is exclusive
+with every member of; when that is ambiguous (`tooltip-top`, exclusive with both), the clique
+whose members declare the same CSS properties; when still ambiguous or none, the build fails.
+`checkSplitIsEarned` holds by construction and is kept as an assertion.
 
-**Alternative:** keep declaring the partition and only check it. Rejected: the declaration was
-the thing that contradicted the measurement for `dropdown` (`{top, bottom}` exclusive since
-`b8acf18`, declared boolean), and once inert members are visible there is no partition left to
-declare.
+**The rule is applied to every group, not only the four in `enumNames`.** Computed over all 44
+groups against the re-measured file, it reproduces every existing enum, gives `dropdown` its
+`{top, bottom}` axis, and finds three groups of the same shape that had stayed boolean only
+because the old rule demanded the *whole* group be one clique: `alert.styles` → `{outline,
+dash}` + `soft`; `avatar.modifiers` → `{online, offline}` + `placeholder`; `badge.styles` →
+`{outline, dash}` and `{soft, ghost}`. No measurement separates them from `dropdown.placements`,
+so a rule that gives dropdown its enum gives them theirs (Oliver, option 1).
 
-Desired change: `daisyDropdown` gains `DropdownVerticalPlacement` in place of `top`/`bottom`.
-`indicator`, `toast`, `tooltip` must come out unchanged — that empty diff is the evidence 8.3
-derived what 0.6.0 declared.
+**Alternatives:**
+- Keep declaring the partition and only check it. Rejected: the declaration was the thing that
+  contradicted the measurement for `dropdown`, and once inert members are visible there is no
+  partition left to declare.
+- Fail the build on a non-clique component (the first draft of this decision). Rejected by the
+  re-measurement: `button.styles`, `button.modifiers` and `aura.styles` are connected and not
+  cliques, and that is a measurement, not an inconsistency.
+- Derive only for the four `enumNames` groups and keep the whole-clique rule elsewhere (option
+  2). Rejected: dropdown's enum would then exist because the group is *listed*, which is the
+  config-decides-shape pattern this change removes.
+
+Desired changes: `daisyDropdown` gains `DropdownVerticalPlacement`; `daisyAlert`, `daisyAvatar`
+and `daisyBadge` gain enums in place of the booleans named above. `indicator`, `toast`,
+`tooltip` and every single-axis enum must come out unchanged.
+
+**What 8.2 established about inert members, so nobody reads them as rare:** 25 in 17 groups.
+Defaults (`loading-spinner`, `mask-square`, `alert-horizontal`, …) restate what the component
+already is and attach to the group's clique; the rest are classes the probe cannot see on the
+container (`menu-active`, `tab-active`, `rating-hidden`, …) — the wrong-element defect blocks
+2–3 fix, after which they re-measure.
 
 ### D7. Order of blocks
 

@@ -154,22 +154,28 @@ its measurement, and the derivation only reads a file that already carries the n
   when a member's single case has the baseline's signature, and records for **every** member the
   CSS custom-property names its rules declare, read from the CSSOM. `Measurement` and
   `MeasuredPairs` read both. Test named after the tooltip case.
-- [ ] 8.2 `. d` Re-measure and commit `codegen/exclusivity.json`. Expected: `tooltip-top` the
+- [x] 8.2 `. d` Re-measure and commit `codegen/exclusivity.json`. Expected: `tooltip-top` the
   only `inert` member, every group gains `declares`, **no pair verdict changes** — read the diff
-  to confirm. *Corrected while implementing 8.1: the pairs stay recorded as observed and the
-  derivation ignores inert members; the spec's Assumed mark is revised to match.*
+  to confirm. *Outcome: no pair changed, `declares` everywhere — and **25** inert members, not
+  one. The assumption was refuted; 8.3/8.4 and the spec were revised before either was built.
+  Also found: a linked stylesheet hides its `cssRules` from a file:// page; fixed with a test
+  (`46ee859`).*
 - [ ] 8.3 `^ F (internal)` Axes of a group are the connected components of the exclusive graph
-  over non-inert members: a component of one member stays boolean, a larger one is an enum.
-  `indicator`, `toast`, `tooltip` come out as two components of three; `dropdown` as
-  `{start, center, end}`, `{top, bottom}`, and `left`, `right` alone — so `dropdown-top` and
-  `dropdown-bottom` become an enum, which the measurement has said since `b8acf18` and the
-  config contradicted. `enumNames` keeps only the axis names of multi-axis groups, in component
-  order; a component that is not a clique fails loudly. `checkAxisIsExclusive` /
-  `checkSplitIsEarned` become the derivation's own assertions.
-- [ ] 8.4 `^ F (internal)` An inert member joins the axis whose members declare the same CSS
-  properties it declares, read from the CSSOM in the same browser run and stored beside the
-  verdict. `tooltip-top` → `SidePlacement`. Fail generation on an inert member matching neither
-  axis or both.
+  over non-inert members: one member → boolean; a clique of two or more → enum; a component
+  that is **not** a clique → boolean (not-established rule — `button.styles`, `aura.styles`).
+  Applied to every group. Expected against the re-measured file: `indicator`, `toast`,
+  `tooltip` two cliques of three; `dropdown` `{start, center, end}`, `{top, bottom}`, `left`,
+  `right`; every single-axis enum unchanged; **and three new enums** — `alert.styles`
+  `{outline, dash}`, `avatar.modifiers` `{online, offline}`, `badge.styles` `{outline, dash}`
+  and `{soft, ghost}` — the same shape as dropdown, same rule (Oliver, 2026-09-15).
+  `enumNames` keeps only axis names; `checkAxisIsExclusive` / `checkSplitIsEarned` become the
+  derivation's own assertions. *Revised after 8.2 refuted "fail on a non-clique".*
+- [ ] 8.4 `^ F (internal)` An inert member joins the clique it is exclusive with every member
+  of; when two qualify (`tooltip-top`), the one whose members declare the same CSS properties;
+  when none or still two, fail generation naming the member. Pin all four outcomes:
+  `loading-spinner` → the one clique; `tooltip-top` → `{bottom, left, right}` by `declares`;
+  a default of a boolean-only group (`rating-hidden`) stays boolean; an unplaceable member
+  fails.
 - [ ] 8.5 `^ F (internal)` A reader for the custom-property table in
   `docs/utilities/+page.md` (variable → description). An axis whose members' declared
   properties are all described with one of {vertical, horizontal}, and whose sibling axis with
@@ -177,10 +183,17 @@ its measurement, and the derivation only reads a file that already carries the n
   yields nothing, and an entry for a derivable group fails generation. Tests: `indicator`,
   `toast`, `dropdown` derive; `tooltip` does not and reads its entry; a `tooltip` entry removed
   fails naming both axes; an `indicator` entry added fails as redundant.
-- [ ] 8.6 `. d` `enumNames` shrinks to `tooltip` alone. `just generate`; expected diff:
-  `indicator` and `toast` unchanged, `tooltip` unchanged, `daisyDropdown` gains
-  `vertical: ClassValues<DropdownVerticalPlacement>?` in place of `top`/`bottom` and
-  `DropdownAlignPlacement` is renamed `DropdownHorizontalPlacement`. Nothing else.
+- [ ] 8.6 `! F` `enumNames` shrinks to `tooltip` and `badge` — the two groups whose axis words
+  no DaisyUI document carries. Badge: `OutlineStyle` `{outline, dash}` and `FillStyle`
+  `{soft, ghost}`, named after what the classes do (border treatment vs. fill treatment) —
+  **Oliver to confirm before 8.6 runs.** `just generate`; expected diff: `indicator`, `toast`,
+  `tooltip` and every single-axis enum unchanged; `daisyDropdown` gains
+  `vertical: ClassValues<DropdownVerticalPlacement>?` for `top`/`bottom` and
+  `DropdownAlignPlacement` becomes `DropdownHorizontalPlacement`; `daisyAlert` gains
+  `style: ClassValues<AlertStyle>?` for `outline`/`dash` (`soft` stays); `daisyAvatar` gains
+  `modifier: ClassValues<AvatarModifier>?` for `online`/`offline` (`placeholder` stays);
+  `daisyBadge` gains the two badge enums. Both API baselines re-dumped and read; README enum
+  table extended. Nothing else.
 
 **Why `dropdown` changes shape in 8.5:** today's config declares `top, bottom, left, right` as
 booleans, and `b8acf18` says "the browser says they compose". That is true of `left|right` and of

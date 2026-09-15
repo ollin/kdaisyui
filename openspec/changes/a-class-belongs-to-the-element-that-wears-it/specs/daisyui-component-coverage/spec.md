@@ -229,12 +229,22 @@ alignment axis is relative to the side. The tooltip's two names are the only one
 multi-axis group whose properties the table describes with a word other than vertical or
 horizontal. Both fail generation until a name is configured or the derivation is extended.
 
-**Assumed** that re-measuring with the baseline changes exactly one verdict-bearing thing in the
-recorded file: `tooltip-top` is marked inert. Its six `exclusive` pairs stay recorded — they are
-what was observed, and "together equals the other alone" is true of a no-op class — and the axis
-derivation, not the file, leaves inert members out. *Wrong if:* any other member of any group
-measures inert, or any pair verdict changes — either is a finding about the probe and revises
-this requirement before the derivation is built on it.
+**Verified** by re-measuring on 2026-09-15 (task 8.2), which **refuted** the earlier assumption
+that only `tooltip-top` would read inert: 25 members in 17 groups did, and not one of the 310
+pair verdicts changed. An inert member is a default (`loading-spinner`, `mask-square`,
+`alert-horizontal`) or a class the probe cannot see on the container (`menu-active`,
+`tab-active`, `rating-hidden`). Both are honest, so the derivation places every inert member
+rather than treating it as rare: with the clique it is exclusive with every member of, then by
+declared properties, then it fails.
+
+**Verified** that the derivation, computed over all 44 groups, reproduces every enum 0.6.0
+declared and adds four: `dropdown.placements` gains `{top, bottom}`, and `alert.styles`,
+`avatar.modifiers` and `badge.styles` — the same shape, a clique beside members that compose
+with everything — gain theirs. Decided (Oliver, 2026-09-15): one rule for every group; no
+measurement separates those three from dropdown.
+
+*Wrong if:* a member reads inert in one DaisyUI release and not the next without its CSS
+changing — the baseline would then be measuring the example rather than the class.
 
 *Wrong if:* a group every pair of which measures exclusive nevertheless has a documented call site
 wearing two of its members at once. The measurement would then be describing the probe's markup
@@ -286,11 +296,19 @@ rather than the CSS, and the failing case is the correction.
   `tooltip-top` joins the side axis
 - **AND** an inert member matching neither axis, or both, fails the build
 
-#### Scenario: A derived axis is checked
+#### Scenario: A connected component that is not a clique stays boolean
 
-- **WHEN** a connected component of the exclusive graph is not a clique
-- **THEN** generation fails naming the pair that composes, because the measurement is then
-  inconsistent and an enum would hide it
+- **WHEN** a connected component of the exclusive graph holds a pair that does not measure
+  `exclusive`, as `button.styles` does
+- **THEN** every member of that component stays a boolean, because the group is not
+  established as a choice — the same rule as for a composing group
+
+#### Scenario: A clique beside composing members is an enum
+
+- **WHEN** a group holds a clique of two or more beside members that compose with everything,
+  as `dropdown.placements`, `alert.styles`, `avatar.modifiers` and `badge.styles` do
+- **THEN** the clique becomes one enum and the other members stay boolean
+- **AND** the rule is the same for every group; no group is exempt by being unlisted
 
 #### Scenario: A new DaisyUI class does not become a boolean by omission
 

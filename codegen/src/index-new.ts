@@ -6,7 +6,9 @@ import { classifyFromFrontmatter } from './classifier.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { classifyGroups } from './class-groups.ts'
 import { loadEvidence } from './measurement.ts'
-import { documentedElementFor } from './parser/documented-element.ts'
+import { documentedElementFor, documentedElementsFor } from './parser/documented-element.ts'
+import { buildComponentShape } from './component-shape.ts'
+import { observeElements } from './element-observation.ts'
 import {
   crossCheckElements,
   describeCrossCheckFailure,
@@ -65,18 +67,6 @@ function loadConfig() {
     return { extras: {}, textParams: [], roles: {}, inputTypes: {} }
   }
   return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
-}
-
-/** What the element heuristic chose for one component, beside what DaisyUI documents. */
-function observeElement(componentName, element, frontmatter): ElementObservation {
-  const componentClass = frontmatter.classnames.component[0].class
-  return {
-    componentDir: componentName,
-    cssClass: componentClass,
-    isComponentClass: true,
-    chosen: (element ?? 'DIV').toUpperCase(),
-    documented: documentedElementFor(componentName, componentClass),
-  }
 }
 
 /**
@@ -162,13 +152,18 @@ function main() {
     const element = config.componentElements?.[componentName]
       ?? getElementForComponent(elementRules, componentName)
 
-    // What the heuristic chose, beside what DaisyUI documents. Judged after the loop so the
-    // whole set is reportable at once — dying on the first would hide the rest.
-    observations.push(observeElement(componentName, element, frontmatter))
-
     // Which class groups are one choice, measured rather than assumed; named by DaisyUI where
     // it can be (category word, property table), by `enumNames` only where it cannot.
     const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, evidence)
+
+    // Every class each function emits, beside the element DaisyUI documents it on. Judged
+    // after the loop so the whole set is reportable at once — dying on the first would hide
+    // the rest.
+    const shape = buildComponentShape(classified, { componentDir: componentName, element }, config, groups)
+    observations.push(...observeElements(shape, {
+      componentClass: documentedElementFor(componentName, frontmatter.classnames.component[0].class),
+      byClass: documentedElementsFor(componentName),
+    }))
 
     const kotlin = generateKotlinFile(classified, { componentDir: componentName, element }, config, groups)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)

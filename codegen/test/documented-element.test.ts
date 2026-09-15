@@ -113,10 +113,14 @@ describe('documentedElementsIn', () => {
     assert.equal(documentedElementsIn(menu).get('menu-disabled'), undefined)
   })
 
-  test('takes the first element for a class shown on several', () => {
-    const html = `<div class="$$card"></div><section class="$$card"></section>`
+  test('leaves out a class shown on several elements, because the docs do not say', () => {
+    // `badge` is on a <span> once and a <div> seventeen times. Neither is "the" element.
+    const html = `<span class="$$badge"></span><div class="$$badge $$badge-xs"></div>`
 
-    assert.equal(documentedElementsIn(html).get('card'), 'DIV')
+    const elements = documentedElementsIn(html)
+
+    assert.equal(elements.has('badge'), false)
+    assert.equal(elements.get('badge-xs'), 'DIV')
   })
 
   test('ignores classes without the marker', () => {

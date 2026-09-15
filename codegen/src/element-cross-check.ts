@@ -15,7 +15,7 @@
  * answer:
  *
  *   1. a disagreement with no recorded exception
- *   2. a class DaisyUI documents no element for, so nothing can be checked
+ *   2. a component whose own class DaisyUI documents no element for, so nothing can be checked
  *   3. an exception that is no longer needed
  *
  * The third is what stops the exception list becoming the hand-maintained list this project has
@@ -121,7 +121,10 @@ export function crossCheckElements(
     const exception = exceptions[key]
 
     if (observation.documented === null) {
-      findings.push(undocumentedFinding(observation))
+      // Only the component's own class must be documented: without it nothing about the
+      // component can be checked. A modifier DaisyUI lists but never shows (`btn-md`,
+      // `modal-top`) is unchecked, not wrong.
+      if (observation.isComponentClass) findings.push(undocumentedFinding(observation))
       continue
     }
     if (!disagrees(observation)) {

@@ -60,27 +60,36 @@ export function documentedElementIn(html: string, componentClass: string): strin
 }
 
 /**
- * The element DaisyUI documents for EVERY `$$`-marked class on a page: the tag of the first
- * element carrying each one.
+ * The element DaisyUI documents for EVERY `$$`-marked class on a page — where it documents
+ * exactly one.
  *
  * The same reading as `documentedElementIn`, once per class instead of once per component — a
  * modifier such as `menu-active` sits on a child `<li>`, and a generator that declares it on the
  * container's function emits it where it does nothing. This is what the class cross-check reads.
+ *
+ * A class shown on several elements is left out: `badge` appears on a `<span>` once and on a
+ * `<div>` seventeen times, and "the first one" is a coin toss, not a statement. Absent means
+ * unchecked, which is the honest answer to a source that does not say.
  */
 export function documentedElementsIn(html: string): ReadonlyMap<string, string> {
-  const elements = new Map<string, string>()
+  const seen = new Map<string, Set<string>>()
   DomUtils.findAll(
     node => (node.attribs?.class ?? '').includes(MARKER),
     parseDocument(html).children,
   ).forEach(element => {
     for (const token of (element.attribs.class ?? '').split(/\s+/)) {
       const parsed = DocumentedClass.parse(token)
-      if (parsed !== null && !parsed.isPrefixed && !elements.has(parsed.className)) {
-        elements.set(parsed.className, element.name.toUpperCase())
-      }
+      if (parsed === null || parsed.isPrefixed) continue
+      const elements = seen.get(parsed.className) ?? new Set()
+      elements.add(element.name.toUpperCase())
+      seen.set(parsed.className, elements)
     }
   })
-  return elements
+  const unambiguous = new Map<string, string>()
+  for (const [className, elements] of seen) {
+    if (elements.size === 1) unambiguous.set(className, [...elements][0])
+  }
+  return unambiguous
 }
 
 /** `documentedElementsIn` for one component's page; empty when the page does not exist. */

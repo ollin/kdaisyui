@@ -79,6 +79,14 @@ describe('crossCheckElements', () => {
     assert.match(result.findings[0].message, /documents no element for "ghost"/)
   })
 
+  test('leaves a modifier DaisyUI lists but never shows unchecked', () => {
+    // `btn-md` is in the frontmatter and in no example. Its function's element is checked
+    // through the component class; the modifier itself has nothing to be wrong against.
+    const btnMd: ElementObservation = { componentDir: 'button', cssClass: 'btn-md', isComponentClass: false, chosen: 'BUTTON', documented: null }
+
+    assert.deepEqual(crossCheckElements([btnMd], {}).findings, [])
+  })
+
   test('an exception does not excuse a component that cannot be checked', () => {
     const result = crossCheckElements([undocumented], { ghost: exception(999) })
 

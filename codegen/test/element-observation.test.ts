@@ -25,11 +25,13 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
   } as ClassifiedComponent
 }
 
-const documented = new Map([
-  ['menu', 'UL'],
-  ['menu-active', 'LI'],
-  ['menu-title', 'LI'],
-])
+const documented = {
+  componentClass: 'UL',
+  byClass: new Map([
+    ['menu-active', 'LI'],
+    ['menu-title', 'LI'],
+  ]),
+}
 
 describe('observeElements', () => {
   test('observes the component class on the main function', () => {
@@ -67,6 +69,47 @@ describe('observeElements', () => {
     assert.notEqual(title?.chosen, main.element)
     assert.equal(title?.chosen, shape.functions[1].element)
     assert.equal(title?.isComponentClass, false)
+  })
+
+  test('drops a class documented on the same element as the function\'s own class', () => {
+    // `badge-primary` sits where `badge` sits; whatever `badge` says about the element, the
+    // variant repeats. One finding per function, not one per variant.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Badge', prefix: 'badge', colors: ['primary'] }),
+      { componentDir: 'badge', element: 'SPAN' },
+      {},
+    )
+    const onDiv = { componentClass: 'DIV', byClass: new Map([['badge-primary', 'DIV']]) }
+
+    const classes = observeElements(shape, onDiv).map((o) => o.cssClass)
+
+    assert.deepEqual(classes, ['badge'])
+  })
+
+  test('keeps a class documented on a different element from the function\'s own', () => {
+    const shape = buildComponentShape(
+      classified({ modifiers: ['active'] }),
+      { componentDir: 'menu', element: 'UL' },
+      {},
+    )
+
+    const classes = observeElements(shape, { componentClass: 'UL', byClass: new Map([['menu-active', 'A']]) }).map((o) => o.cssClass)
+
+    assert.deepEqual(classes, ['menu', 'menu-active'])
+  })
+
+  test('drops a variant documented where the function renders, when the own class is unchecked', () => {
+    // `badge` is shown on a <span> and on <div>s, so its own element is unchecked; a variant
+    // shown on the <span> the function renders adds nothing.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Badge', prefix: 'badge', colors: ['primary'] }),
+      { componentDir: 'badge', element: 'SPAN' },
+      {},
+    )
+
+    const classes = observeElements(shape, { componentClass: null, byClass: new Map([['badge-primary', 'SPAN']]) }).map((o) => o.cssClass)
+
+    assert.deepEqual(classes, ['badge'])
   })
 
   test('records null for a class DaisyUI documents nowhere', () => {

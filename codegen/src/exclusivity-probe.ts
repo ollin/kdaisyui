@@ -201,21 +201,27 @@ function componentCases(directory: string): ComponentCases {
   return { cases: groups.flatMap((group) => casesFor(probe, group)), unmeasurable: [] }
 }
 
-/** Every case for every multi-member group, plus the page that holds them. */
-export function buildProbePage(): ProbePage {
+/**
+ * Every case for every multi-member group, plus the page that holds them.
+ *
+ * @param stylesheet the complete webjar `daisyui.css`, inlined rather than linked: the page is
+ *   opened from `file://`, where Chromium treats a linked sheet as cross-origin and refuses
+ *   `cssRules` — which `declares` reads. Inline, the sheet is the page's own.
+ */
+export function buildProbePage(stylesheet: string): ProbePage {
   const perComponent = getAllComponentDirs().map(componentCases)
   const cases = perComponent.flatMap((component) => component.cases)
   const unmeasurable = perComponent.flatMap((component) => component.unmeasurable)
 
   return {
-    html: pageFor(cases),
+    html: pageFor(cases, stylesheet),
     cases,
     groups: new Set(cases.map((probeCase) => probeCase.group)).size,
     unmeasurable,
   }
 }
 
-function pageFor(cases: readonly ProbeCase[]): string {
+export function pageFor(cases: readonly ProbeCase[], stylesheet: string): string {
   const body = cases
     .map(
       (c) =>
@@ -231,7 +237,7 @@ function pageFor(cases: readonly ProbeCase[]): string {
     // The whole bundle. A hand-picked subset of the webjar omitted every theme — leaving
     // --color-neutral undefined, so colour-dependent classes computed to the same transparent
     // black — and omitted utilities/join.css, where join-vertical and join-horizontal live.
-    '<link rel="stylesheet" href="daisyui.css">',
+    `<style>${stylesheet}</style>`,
     // The provenance travels INTO the page, so the browser can emit a COMPLETE
     // `exclusivity.json` and the file stays generated wholesale. Hand-writing it into the
     // JSON would mean the next measurement silently deletes it.

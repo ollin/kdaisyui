@@ -200,31 +200,13 @@
   },
   "additionalBooleans": {},
   "enumNames": {
-    "indicator": {
-      "placements": [
-        { "name": "VerticalPlacement", "members": ["top", "middle", "bottom"] },
-        { "name": "HorizontalPlacement", "members": ["start", "center", "end"] }
-      ]
-    },
-    "toast": {
-      "placements": [
-        { "name": "VerticalPlacement", "members": ["top", "middle", "bottom"] },
-        { "name": "HorizontalPlacement", "members": ["start", "center", "end"] }
-      ]
-    },
-    "tooltip": {
-      "placements": [
-        { "name": "SidePlacement", "members": ["top", "bottom", "left", "right"] },
-        { "name": "AlignPlacement", "members": ["start", "center", "end"] }
-      ]
-    },
-    "dropdown": {
-      "placements": {
-        "axes": [{ "name": "AlignPlacement", "members": ["start", "center", "end"] }],
-        "booleans": ["top", "bottom", "left", "right"]
-      }
-    }
+    "indicator": { "placements": ["HorizontalPlacement", "VerticalPlacement"] },
+    "toast": { "placements": ["HorizontalPlacement", "VerticalPlacement"] },
+    "tooltip": { "placements": ["SidePlacement", "AlignPlacement"] },
+    "dropdown": { "placements": ["AlignPlacement", "VerticalPlacement"] },
+    "badge": { "styles": ["OutlineStyle", "FillStyle"] }
   },
+
   "componentElements": {
     "dropdown": "details",
     "otp": "label"

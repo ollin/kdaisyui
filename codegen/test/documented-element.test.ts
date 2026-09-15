@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { documentedElementIn, documentedElementsIn, documentedParentsIn, fencedHtmlBlocks } from '../src/parser/documented-element.ts'
+import { documentedElementIn, documentedElementsIn, documentedElementTalliesIn, documentedParentsIn, fencedHtmlBlocks, usualElementOf } from '../src/parser/documented-element.ts'
 
 /**
  * Reading the element DaisyUI documents.
@@ -143,5 +143,22 @@ describe('documentedParentsIn', () => {
     const html = `<ul><li class="$$step">a</li></ul><ol><li class="$$step">b</li></ol>`
 
     assert.equal(documentedParentsIn(html).has('step'), false)
+  })
+})
+
+describe('usualElementOf', () => {
+  const html = `<span class="$$item"></span><span class="$$item"></span><div class="$$item"></div><p class="$$tie"></p><b class="$$tie"></b>`
+  const tallies = documentedElementTalliesIn(html)
+
+  test('names the element a class is shown on more often than any other', () => {
+    assert.equal(usualElementOf(tallies.get('item')), 'SPAN')
+  })
+
+  test('names nothing on a tie, so a coin toss cannot become an element', () => {
+    assert.equal(usualElementOf(tallies.get('tie')), undefined)
+  })
+
+  test('names nothing for a class shown nowhere', () => {
+    assert.equal(usualElementOf(tallies.get('absent')), undefined)
   })
 })

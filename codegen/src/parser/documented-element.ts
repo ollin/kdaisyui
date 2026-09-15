@@ -85,7 +85,18 @@ export function documentedElementsIn(html: string): ReadonlyMap<string, string> 
  * `<div>` and a `<details>`, and a class shown on either of those is on the dropdown.
  */
 export function documentedElementSetsIn(html: string): ReadonlyMap<string, ReadonlySet<string>> {
-  const seen = new Map<string, Set<string>>()
+  const sets = new Map<string, ReadonlySet<string>>()
+  for (const [className, tally] of documentedElementTalliesIn(html)) sets.set(className, new Set(tally.keys()))
+  return sets
+}
+
+/**
+ * How many times each marked class is shown on each element — the reading the other two are
+ * views of, and the one that answers "which element is USUAL" for a class shown on several:
+ * `indicator-item` is a `<span>` 26 times and a `<div>` once.
+ */
+export function documentedElementTalliesIn(html: string): ReadonlyMap<string, ReadonlyMap<string, number>> {
+  const tallies = new Map<string, Map<string, number>>()
   DomUtils.findAll(
     node => (node.attribs?.class ?? '').includes(MARKER),
     parseDocument(html).children,
@@ -93,12 +104,33 @@ export function documentedElementSetsIn(html: string): ReadonlyMap<string, Reado
     for (const token of (element.attribs.class ?? '').split(/\s+/)) {
       const parsed = DocumentedClass.parse(token)
       if (parsed === null || parsed.isPrefixed) continue
-      const elements = seen.get(parsed.className) ?? new Set()
-      elements.add(element.name.toUpperCase())
-      seen.set(parsed.className, elements)
+      const tally = tallies.get(parsed.className) ?? new Map()
+      const tag = element.name.toUpperCase()
+      tally.set(tag, (tally.get(tag) ?? 0) + 1)
+      tallies.set(parsed.className, tally)
     }
   })
-  return seen
+  return tallies
+}
+
+/**
+ * The element a class is shown on more often than on any other — or nothing, when the count
+ * is tied or the class is shown nowhere. A count rule, so that a single stray example does
+ * not decide and a tie does not pick by accident.
+ */
+export function usualElementOf(tally: ReadonlyMap<string, number> | undefined): string | undefined {
+  if (tally === undefined) return undefined
+  const ranked = [...tally].sort(([, left], [, right]) => right - left)
+  if (ranked.length === 0) return undefined
+  if (ranked.length > 1 && ranked[0][1] === ranked[1][1]) return undefined
+  return ranked[0][0]
+}
+
+/** `documentedElementTalliesIn` for one component's page; empty when the page does not exist. */
+export function documentedElementTalliesFor(componentName: ComponentName): ReadonlyMap<string, ReadonlyMap<string, number>> {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return new Map()
+  return documentedElementTalliesIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
 }
 
 /**

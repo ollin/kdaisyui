@@ -140,7 +140,7 @@ Runs after 6 and before 8: block 8 reshapes the same `enumNames` section.
   by the generator; the 13 single-axis entries leave `enumNames`, `requireName` and its test go.
   Pin with a test that an unnamed all-exclusive group produces the derived name instead of
   failing.
-- [ ] 7.2 `. d` `just generate`: only `MaskShape` → `MaskStyle` and its call sites change
+- [x] 7.2 `! F` `just generate`: only `MaskShape` → `MaskStyle` and its call sites change
   (`lib/generated/**`, `docs/reference/mask.md`, the README enum table, `lib/api/*`). Update the
   `enumNames` row in `.opencode/skills/kdaisyui-codegen/SKILL.md`.
 

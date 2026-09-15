@@ -40,7 +40,7 @@ export function provenance(version: string): Provenance {
     what: 'For every pair of classes in a multi-member DaisyUI class group, whether the two can be worn at once.',
     daisyui: version,
     procedure: [
-      "Render DaisyUI's own documented example for the component three times: with class a, with class b, and with both.",
+      "Render DaisyUI's own documented example for the component three times: with class a, with class b, and with both — and once per group with nothing injected, the baseline.",
       'Every member of the group under test is stripped from the example first, so the case measures the injected classes and not what the example happened to carry.',
       'One colour class is held constant across all three cases, so classes that mix a colour variable are not compared unlit.',
       'The stylesheet is the complete webjar bundle daisyui.css under data-theme=light, so theme variables resolve.',
@@ -48,6 +48,8 @@ export function provenance(version: string): Provenance {
       'sig(ab) == sig(a) or sig(ab) == sig(b)  ->  one class is inert against the other  ->  exclusive',
       'sig(ab) differs from both                ->  the combination is a third result      ->  compose',
       'sig(a) == sig(b) and neither of the above ->  this example cannot tell them apart   ->  same',
+      'sig(a) == sig(baseline)                  ->  the class alone changed nothing        ->  a is inert',
+      "For every member, `declares` lists the property names the stylesheet declares under its class, read from the CSSOM: what places an inert member on an axis, and what names an axis from DaisyUI's custom-property table.",
     ],
     howToRead: {
       exclusive:
@@ -55,9 +57,11 @@ export function provenance(version: string): Provenance {
       compose:
         'Positively refuted: the combination reaches CSS neither class reaches alone. Must stay boolean, or the combination becomes inexpressible.',
       same: 'Not established either way. Treated as compose, because inventing exclusivity is the error whose cost is asymmetric.',
+      inert:
+        'The class alone equals the baseline. Its pairs still read exclusive — together equals the other alone — and that is honest as an observation, but it is not membership of a clique: the axis derivation leaves an inert member out and places it by what it declares.',
     },
     whyPairsAndNotAxes:
-      'Axes are an inference over these pairs and the inference has been wrong twice — exclusivity is not transitive, so an axis is a clique rather than a connected component, and tooltip\'s two cliques overlap in `top`. The pairs are what was observed; the inference is made in class-groups.ts against an explicitly configured split.',
+      'Axes are an inference over these pairs. The pairs are what was observed; the inference — connected components of the exclusive graph over non-inert members — is made in class-groups.ts. Before the baseline existed, tooltip-top read exclusive with all six other members and the group looked like two overlapping cliques; it was an inert class, not a second axis.',
     limitation:
       'A verdict is only as good as the example. Two classes that each set a DIFFERENT subset of properties toward the same intent — `chat-start` and `chat-end` — compose by this procedure even though no author would combine them. That direction is safe: it leaves a useless combination expressible rather than making a useful one impossible.',
     reproduce:

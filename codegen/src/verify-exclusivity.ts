@@ -74,7 +74,9 @@ function missingPairs(group: LiveGroup, measured: MeasuredPairs): Mismatch[] {
 
 function stalePairs(group: LiveGroup, measured: MeasuredPairs): Mismatch[] {
   const known = new Set(group.members)
-  const stale = measured.pairs().filter((pair) => pair.mentionsAnythingOutside(known))
+  const stalePairs = measured.pairs().filter((pair) => pair.mentionsAnythingOutside(known))
+  const staleInert = measured.inertMembers().filter((member) => !known.has(member))
+  const stale = [...stalePairs.map(String), ...staleInert]
   if (stale.length === 0) return []
 
   return [

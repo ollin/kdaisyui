@@ -52,6 +52,15 @@ describe('the probe defects', () => {
     assert.equal(result, '<div class="alert alert-info alert-soft">x</div>')
   })
 
+  it('renders a baseline with the group stripped and nothing injected', () => {
+    // `tooltip-top` restates `.tooltip`'s own declarations, so alone it equals every other
+    // member alone and the pair rule called it exclusive with all six. Only a case with
+    // nothing injected can tell "changed nothing" from "exclusive with everything".
+    const result = inject('<div class="tooltip tooltip-top">x</div>', 'tooltip', ['top', 'bottom'], [], [])
+
+    assert.equal(result, '<div class="tooltip">x</div>')
+  })
+
   it('injects both members of a pair onto the same element', () => {
     const result = inject('<div class="alert">x</div>', 'alert', ['outline', 'soft'], ['outline', 'soft'], [])
 

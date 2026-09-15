@@ -98,19 +98,78 @@
     return 'exclusive'
   }
 
-  /** One signature per case, grouped by the group the case belongs to. */
+  /** One signature per case, grouped by the group the case belongs to, plus the group's prefix. */
   function signaturesByGroup() {
     const signatures = {}
     for (const node of document.querySelectorAll('.probe-case')) {
       const group = node.dataset.group
-      signatures[group] = signatures[group] || {}
-      signatures[group][node.dataset.pair] = signature(node)
+      signatures[group] = signatures[group] || { prefix: node.dataset.prefix, cases: {} }
+      signatures[group].cases[node.dataset.pair] = signature(node)
     }
     return signatures
   }
 
+  /** The members of a group: every case key that is a single class. */
+  function membersOf(cases) {
+    return Object.keys(cases).filter(function (key) {
+      return key !== '' && key.indexOf('|') < 0
+    })
+  }
+
+  /**
+   * Members whose single case equals the baseline — the class changed nothing in this example.
+   *
+   * Recorded beside the pair verdicts, not instead of them: the pairs are what was observed,
+   * and an inert member's pairs read `exclusive` honestly. It is the AXIS derivation that must
+   * leave an inert member out, because "exclusive with everything" is not membership of a clique.
+   */
+  function inertOf(cases) {
+    const baseline = cases['']
+    return membersOf(cases).filter(function (member) {
+      return cases[member] === baseline
+    })
+  }
+
+  /** Whether a selector, or one of the nested rule's ancestors, names the class as a whole token. */
+  function selectorNames(selectors, className) {
+    const token = new RegExp('(^|[^\\w-])\\.' + className + '(?![\\w-])')
+    return selectors.some(function (selector) {
+      return token.test(selector)
+    })
+  }
+
+  /**
+   * Every property name a stylesheet declares under the class, in any rule whose selector
+   * chain names it — nested rules included, since DaisyUI's CSS is nested throughout.
+   *
+   * Read from the CSSOM rather than the source text, because what the browser parsed is what
+   * applies. Custom properties come back as `--tt-trans`, ordinary ones as `transform`.
+   */
+  function declaredProperties(className) {
+    const names = new Set()
+    const walk = function (rules, ancestors) {
+      for (const rule of rules) {
+        const own = rule.selectorText ? ancestors.concat([rule.selectorText]) : ancestors
+        if (rule.style && selectorNames(own, className)) {
+          for (let index = 0; index < rule.style.length; index++) names.add(rule.style[index])
+        }
+        if (rule.cssRules) walk(rule.cssRules, own)
+      }
+    }
+    for (const sheet of document.styleSheets) walk(sheet.cssRules, [])
+    return Array.from(names).sort()
+  }
+
+  /** `member -> [property, …]` for every member of the group. */
+  function declaresOf(prefix, cases) {
+    const declares = {}
+    for (const member of membersOf(cases)) declares[member] = declaredProperties(prefix + '-' + member)
+    return declares
+  }
+
   /** One group's verdicts, in the shape `exclusivity.json` stores them. */
-  function verdictsOf(cases) {
+  function verdictsOf(group) {
+    const cases = group.cases
     const byVerdict = { exclusive: [], compose: [], same: [] }
     for (const key of Object.keys(cases)) {
       const members = key.split('|')
@@ -121,6 +180,9 @@
     for (const verdict of VERDICTS) {
       if (byVerdict[verdict].length > 0) entry[verdict] = byVerdict[verdict]
     }
+    const inert = inertOf(cases)
+    if (inert.length > 0) entry.inert = inert
+    entry.declares = declaresOf(group.prefix, cases)
     return entry
   }
 
@@ -137,7 +199,10 @@
     return groups
   }
 
-  /** One `component.category pair=verdict` line per measured pair, for a whole component. */
+  /**
+   * One `component.category pair=verdict` line per measured pair and one `member=inert` line
+   * per inert member, for a whole component. `declares` is supporting data and stays out.
+   */
   function linesOfComponent(component, categories) {
     const lines = []
     for (const category of Object.keys(categories)) {
@@ -145,6 +210,9 @@
         for (const pair of categories[category][verdict] || []) {
           lines.push(component + '.' + category + ' ' + pair + '=' + verdict)
         }
+      }
+      for (const member of categories[category].inert || []) {
+        lines.push(component + '.' + category + ' ' + member + '=inert')
       }
     }
     return lines

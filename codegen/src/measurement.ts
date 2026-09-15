@@ -98,6 +98,10 @@ export interface MeasuredGroupJson {
   readonly exclusive?: readonly string[]
   readonly compose?: readonly string[]
   readonly same?: readonly string[]
+  /** Members whose class alone changed nothing against the group's baseline. */
+  readonly inert?: readonly string[]
+  /** Every property name the stylesheet declares under each member's class, custom ones included. */
+  readonly declares?: Readonly<Record<string, readonly string[]>>
 }
 
 /** `groups` from `exclusivity.json`: directory name → category → verdicts. */
@@ -114,13 +118,21 @@ export type ExclusivityJson = Readonly<
  */
 export class MeasuredPairs {
   private readonly verdicts: ReadonlyMap<string, Verdict>
+  private readonly inert: ReadonlySet<string>
+  private readonly declares: ReadonlyMap<string, readonly string[]>
 
-  private constructor(verdicts: ReadonlyMap<string, Verdict>) {
+  private constructor(
+    verdicts: ReadonlyMap<string, Verdict>,
+    inert: ReadonlySet<string>,
+    declares: ReadonlyMap<string, readonly string[]>,
+  ) {
     this.verdicts = verdicts
+    this.inert = inert
+    this.declares = declares
   }
 
   static none(): MeasuredPairs {
-    return new MeasuredPairs(new Map())
+    return new MeasuredPairs(new Map(), new Set(), new Map())
   }
 
   static fromJson(json: MeasuredGroupJson): MeasuredPairs {
@@ -128,7 +140,31 @@ export class MeasuredPairs {
     for (const verdict of VERDICTS) {
       for (const key of json[verdict] ?? []) verdicts.set(key, verdict)
     }
-    return new MeasuredPairs(verdicts)
+    return new MeasuredPairs(
+      verdicts,
+      new Set(json.inert ?? []),
+      new Map(Object.entries(json.declares ?? {})),
+    )
+  }
+
+  /**
+   * Whether the class alone changed nothing in the example.
+   *
+   * An inert member's pairs still read `exclusive` — together equals the other alone — and
+   * that is honest as an observation. It is not membership of a clique, so the axis derivation
+   * leaves inert members out and places them by what they declare (`declaredProperties`).
+   */
+  isInert(member: string): boolean {
+    return this.inert.has(member)
+  }
+
+  inertMembers(): string[] {
+    return [...this.inert]
+  }
+
+  /** Property names the stylesheet declares under the member's class; empty when unmeasured. */
+  declaredProperties(member: string): readonly string[] {
+    return this.declares.get(member) ?? []
   }
 
   verdictFor(pair: ClassPair): Verdict | undefined {

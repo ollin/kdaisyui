@@ -108,6 +108,16 @@ describe('findMismatches', () => {
     assert.ok(messages.some((message) => /still records vertical\|horizontal/.test(message)))
   })
 
+  it('reports an inert member DaisyUI no longer ships', () => {
+    const withInert = Measurement.fromJson({
+      tooltip: { placements: { exclusive: ['top|bottom'], inert: ['top'] } },
+    })
+    const live = [liveGroup('tooltip.placements', ['bottom', 'left'])]
+    const messages = findMismatches(withInert, live).map((mismatch) => mismatch.message)
+
+    assert.ok(messages.some((message) => /still records top\|bottom, top/.test(message)))
+  })
+
   it('reports a measured group DaisyUI no longer documents', () => {
     const [first] = findMismatches(measured, [])
 

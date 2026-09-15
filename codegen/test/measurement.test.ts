@@ -95,6 +95,34 @@ describe('MeasuredPairs', () => {
     assert.ok(pairs.coversEveryPairOf(['top', 'bottom']))
     assert.ok(!pairs.coversEveryPairOf(['top', 'bottom', 'nowhere']))
   })
+
+  describe('an inert member, as tooltip-top is', () => {
+    const tooltip = MeasuredPairs.fromJson({
+      exclusive: ['top|bottom', 'top|start'],
+      inert: ['top'],
+      declares: { top: ['inset', 'transform'], start: ['--tt-inset', '--tt-trans', 'inset-inline'] },
+    })
+
+    it('keeps the pair verdicts that were observed', () => {
+      assert.equal(tooltip.verdictFor(new ClassPair('top', 'bottom')), 'exclusive')
+    })
+
+    it('marks the member inert beside them', () => {
+      assert.ok(tooltip.isInert('top'))
+      assert.ok(!tooltip.isInert('bottom'))
+      assert.deepEqual(tooltip.inertMembers(), ['top'])
+    })
+
+    it('answers what each member declares, custom properties included', () => {
+      assert.deepEqual(tooltip.declaredProperties('start'), ['--tt-inset', '--tt-trans', 'inset-inline'])
+      assert.deepEqual(tooltip.declaredProperties('nowhere'), [])
+    })
+
+    it('has nothing inert and declares nothing when unmeasured', () => {
+      assert.deepEqual(MeasuredPairs.none().inertMembers(), [])
+      assert.deepEqual(MeasuredPairs.none().declaredProperties('top'), [])
+    })
+  })
 })
 
 describe('Measurement', () => {

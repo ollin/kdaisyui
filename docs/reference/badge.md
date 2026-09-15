@@ -13,15 +13,15 @@ Labels, counts, and status tags. Renders `<span class="badge ...">`.
 ```kotlin
 // BadgeVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // BadgeSize: Xs | Sm | Md | Lg | Xl
+// BadgeOutlineStyle: Outline | Dash
+// BadgeFillStyle: Soft | Ghost
 fun FlowContent.daisyBadge(
     text: String? = null,
     id: HtmlId? = null,
     variant: ClassValues<BadgeVariant>? = null,
     size: ClassValues<BadgeSize>? = null,
-    dash: Boolean = false,  // dash outline style
-    ghost: Boolean = false,  // ghost style
-    outline: Boolean = false,  // outline style
-    soft: Boolean = false,  // soft style
+    outlineStyle: ClassValues<BadgeOutlineStyle>? = null,
+    fillStyle: ClassValues<BadgeFillStyle>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit)? = null,

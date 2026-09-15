@@ -223,6 +223,16 @@ The enum entry is the old parameter name in PascalCase, so the replacement is me
 | Stat | `direction` | `StatDirection` | `horizontal`, `vertical` |
 | Steps | `direction` | `StepsDirection` | `vertical`, `horizontal` |
 | Tab | `placement` | `TabPlacement` | `top`, `bottom` |
+| Alert | `style` | `AlertStyle` | `outline`, `dash` — `soft` stays a boolean |
+| Avatar | `modifier` | `AvatarModifier` | `online`, `offline` — `placeholder` stays |
+| Badge | `outlineStyle` | `BadgeOutlineStyle` | `outline`, `dash` |
+| Badge | `fillStyle` | `BadgeFillStyle` | `soft`, `ghost` |
+| Dropdown | `modifier` | `DropdownModifier` | `hover`, `open` — `close` stays |
+| Dropdown | `verticalPlacement` | `DropdownVerticalPlacement` | `top`, `bottom` — `left`, `right` stay |
+
+The last five rows are cliques *beside* booleans: `alert-outline` and `alert-dash` exclude each
+other, `alert-soft` composes with both. A clique of two or more is an enum wherever it sits;
+the booleans around it stay booleans.
 
 **2. Four placement groups split into two independent axes**, because their classes compose
 *across* the split even though each axis is a single choice:
@@ -238,15 +248,19 @@ daisyTooltip("Copy", sidePlacement = TooltipSidePlacement.Top,
 
 | Component | Axes | Replaces |
 |---|---|---|
-| Indicator | `verticalPlacement` (`Top`/`Middle`/`Bottom`), `horizontalPlacement` (`Start`/`Center`/`End`) | six booleans |
-| Toast | `verticalPlacement`, `horizontalPlacement` — same entries | six booleans |
+| Indicator | `horizontalPlacement` (`Start`/`Center`/`End`), `verticalPlacement` (`Top`/`Middle`/`Bottom`) | six booleans |
+| Toast | `horizontalPlacement`, `verticalPlacement` — same entries | six booleans |
 | Tooltip | `sidePlacement` (`Top`/`Bottom`/`Left`/`Right`), `alignPlacement` (`Start`/`Center`/`End`) | seven booleans |
-| Dropdown | `alignPlacement` (`Start`/`Center`/`End`) only | `start`, `center`, `end` |
+| Dropdown | `horizontalPlacement` (`Start`/`Center`/`End`), `verticalPlacement` (`Top`/`Bottom`) | five booleans — `left`, `right` stay |
 
-`daisyDropdown` is the one that looks inconsistent and is not: `top`, `bottom`, `left` and
-`right` **stay booleans** there, because the browser says `dropdown-left dropdown-top` reaches CSS
-that neither class reaches alone. Making them an axis would have made a working combination
-inexpressible.
+The axis names are DaisyUI's where it has them: its reference table describes `--indicator-y`
+as "vertical position of the indicator" and `--anchor-h` as "horizontal position of the
+anchor", so those axes are `Vertical`/`Horizontal`. The tooltip's variables carry no direction
+— its alignment is relative to the side — so `Side`/`Align` are ours.
+
+`daisyDropdown` keeps `left` and `right` as booleans because the browser says `dropdown-left
+dropdown-top` reaches CSS that neither class reaches alone; `top`/`bottom` exclude each other
+and are an axis.
 
 That asymmetry is the whole rule. A group became an enum only where *every* pair in it was
 measured mutually exclusive; where the measurement was unsure, the classes stayed booleans. A

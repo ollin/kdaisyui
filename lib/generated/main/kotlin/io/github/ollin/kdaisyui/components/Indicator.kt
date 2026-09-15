@@ -11,18 +11,6 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-enum class IndicatorVerticalPlacement(internal val className: String) : ClassValues<IndicatorVerticalPlacement> {
-    /** CSS: `indicator-top` */
-    Top("indicator-top"),
-    /** CSS: `indicator-middle` */
-    Middle("indicator-middle"),
-    /** CSS: `indicator-bottom` */
-    Bottom("indicator-bottom"),
-    ;
-
-    override val classNames: List<String> get() = listOf(className)
-}
-
 enum class IndicatorHorizontalPlacement(internal val className: String) : ClassValues<IndicatorHorizontalPlacement> {
     /** CSS: `indicator-start` */
     Start("indicator-start"),
@@ -35,20 +23,32 @@ enum class IndicatorHorizontalPlacement(internal val className: String) : ClassV
     override val classNames: List<String> get() = listOf(className)
 }
 
+enum class IndicatorVerticalPlacement(internal val className: String) : ClassValues<IndicatorVerticalPlacement> {
+    /** CSS: `indicator-top` */
+    Top("indicator-top"),
+    /** CSS: `indicator-middle` */
+    Middle("indicator-middle"),
+    /** CSS: `indicator-bottom` */
+    Bottom("indicator-bottom"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Indicators are used to place an element on the corner of another element. Renders `<div class="indicator ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param verticalPlacement — VerticalPlacement variant
  * @param horizontalPlacement — HorizontalPlacement variant
+ * @param verticalPlacement — VerticalPlacement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyIndicator(
     id: HtmlId? = null,
-    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -56,8 +56,8 @@ fun FlowContent.daisyIndicator(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("indicator")
-        addClassNames(verticalPlacement)
         addClassNames(horizontalPlacement)
+        addClassNames(verticalPlacement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

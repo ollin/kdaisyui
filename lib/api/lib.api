@@ -8,8 +8,17 @@ public final class io/github/ollin/kdaisyui/components/AlertDirection : java/lan
 }
 
 public final class io/github/ollin/kdaisyui/components/AlertKt {
-	public static final fun daisyAlert (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyAlert$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyAlert (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyAlert$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class io/github/ollin/kdaisyui/components/AlertStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Dash Lio/github/ollin/kdaisyui/components/AlertStyle;
+	public static final field Outline Lio/github/ollin/kdaisyui/components/AlertStyle;
+	public fun getClassNames ()Ljava/util/List;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/AlertStyle;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/AlertStyle;
 }
 
 public final class io/github/ollin/kdaisyui/components/AlertVariant : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -41,13 +50,40 @@ public final class io/github/ollin/kdaisyui/components/AuraSize : java/lang/Enum
 }
 
 public final class io/github/ollin/kdaisyui/components/AvatarKt {
-	public static final fun daisyAvatar (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyAvatar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyAvatar (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyAvatar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class io/github/ollin/kdaisyui/components/AvatarModifier : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Offline Lio/github/ollin/kdaisyui/components/AvatarModifier;
+	public static final field Online Lio/github/ollin/kdaisyui/components/AvatarModifier;
+	public fun getClassNames ()Ljava/util/List;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/AvatarModifier;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/AvatarModifier;
+}
+
+public final class io/github/ollin/kdaisyui/components/BadgeFillStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Ghost Lio/github/ollin/kdaisyui/components/BadgeFillStyle;
+	public static final field Soft Lio/github/ollin/kdaisyui/components/BadgeFillStyle;
+	public fun getClassNames ()Ljava/util/List;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/BadgeFillStyle;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/BadgeFillStyle;
 }
 
 public final class io/github/ollin/kdaisyui/components/BadgeKt {
-	public static final fun daisyBadge (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyBadge$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyBadge (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyBadge$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class io/github/ollin/kdaisyui/components/BadgeOutlineStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Dash Lio/github/ollin/kdaisyui/components/BadgeOutlineStyle;
+	public static final field Outline Lio/github/ollin/kdaisyui/components/BadgeOutlineStyle;
+	public fun getClassNames ()Ljava/util/List;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/BadgeOutlineStyle;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/BadgeOutlineStyle;
 }
 
 public final class io/github/ollin/kdaisyui/components/BadgeSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -329,21 +365,39 @@ public final class io/github/ollin/kdaisyui/components/DrawerKt {
 	public static synthetic fun daisyDrawerToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
-public final class io/github/ollin/kdaisyui/components/DropdownAlignPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
-	public static final field Center Lio/github/ollin/kdaisyui/components/DropdownAlignPlacement;
-	public static final field End Lio/github/ollin/kdaisyui/components/DropdownAlignPlacement;
-	public static final field Start Lio/github/ollin/kdaisyui/components/DropdownAlignPlacement;
+public final class io/github/ollin/kdaisyui/components/DropdownHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Center Lio/github/ollin/kdaisyui/components/DropdownHorizontalPlacement;
+	public static final field End Lio/github/ollin/kdaisyui/components/DropdownHorizontalPlacement;
+	public static final field Start Lio/github/ollin/kdaisyui/components/DropdownHorizontalPlacement;
 	public fun getClassNames ()Ljava/util/List;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/DropdownAlignPlacement;
-	public static fun values ()[Lio/github/ollin/kdaisyui/components/DropdownAlignPlacement;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/DropdownHorizontalPlacement;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/DropdownHorizontalPlacement;
 }
 
 public final class io/github/ollin/kdaisyui/components/DropdownKt {
-	public static final fun daisyDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyDropdownContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDropdownContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class io/github/ollin/kdaisyui/components/DropdownModifier : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Hover Lio/github/ollin/kdaisyui/components/DropdownModifier;
+	public static final field Open Lio/github/ollin/kdaisyui/components/DropdownModifier;
+	public fun getClassNames ()Ljava/util/List;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/DropdownModifier;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/DropdownModifier;
+}
+
+public final class io/github/ollin/kdaisyui/components/DropdownVerticalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Bottom Lio/github/ollin/kdaisyui/components/DropdownVerticalPlacement;
+	public static final field Top Lio/github/ollin/kdaisyui/components/DropdownVerticalPlacement;
+	public fun getClassNames ()Ljava/util/List;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/DropdownVerticalPlacement;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/DropdownVerticalPlacement;
 }
 
 public final class io/github/ollin/kdaisyui/components/FabKt {

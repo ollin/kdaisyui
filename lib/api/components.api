@@ -8,20 +8,24 @@
 
 # Alert <div>
 enum AlertVariant: Info, Success, Warning, Error
+enum AlertStyle: Outline, Dash
 enum AlertDirection: Vertical, Horizontal
-fun FlowContent.daisyAlert(id: HtmlId? = null, variant: ClassValues<AlertVariant>? = null, direction: ClassValues<AlertDirection>? = null, dash: Boolean = false, outline: Boolean = false, soft: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyAlert(id: HtmlId? = null, variant: ClassValues<AlertVariant>? = null, style: ClassValues<AlertStyle>? = null, direction: ClassValues<AlertDirection>? = null, soft: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Aura <div>
 enum AuraSize: Xs, Sm, Md, Lg, Xl
 fun FlowContent.daisyAura(id: HtmlId? = null, size: ClassValues<AuraSize>? = null, dual: Boolean = false, glow: Boolean = false, gold: Boolean = false, holo: Boolean = false, rainbow: Boolean = false, silver: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Avatar <div>
-fun FlowContent.daisyAvatar(id: HtmlId? = null, offline: Boolean = false, online: Boolean = false, placeholder: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum AvatarModifier: Online, Offline
+fun FlowContent.daisyAvatar(id: HtmlId? = null, modifier: ClassValues<AvatarModifier>? = null, placeholder: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Badge <span>
 enum BadgeVariant: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error
 enum BadgeSize: Xs, Sm, Md, Lg, Xl
-fun FlowContent.daisyBadge(text: String? = null, id: HtmlId? = null, variant: ClassValues<BadgeVariant>? = null, size: ClassValues<BadgeSize>? = null, dash: Boolean = false, ghost: Boolean = false, outline: Boolean = false, soft: Boolean = false, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
+enum BadgeOutlineStyle: Outline, Dash
+enum BadgeFillStyle: Soft, Ghost
+fun FlowContent.daisyBadge(text: String? = null, id: HtmlId? = null, variant: ClassValues<BadgeVariant>? = null, size: ClassValues<BadgeSize>? = null, outlineStyle: ClassValues<BadgeOutlineStyle>? = null, fillStyle: ClassValues<BadgeFillStyle>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
 
 # Breadcrumbs <div>
 fun FlowContent.daisyBreadcrumbs(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
@@ -96,8 +100,10 @@ fun FlowContent.daisyDrawerOverlay(id: HtmlId? = null, extraClasses: String? = n
 fun FlowContent.daisyDrawerButton(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Dropdown <details>
-enum DropdownAlignPlacement: Start, Center, End
-fun FlowContent.daisyDropdown(id: HtmlId? = null, alignPlacement: ClassValues<DropdownAlignPlacement>? = null, close: Boolean = false, hover: Boolean = false, open: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, bottom: Boolean = false, left: Boolean = false, right: Boolean = false, center: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
+enum DropdownModifier: Hover, Open
+enum DropdownHorizontalPlacement: Start, Center, End
+enum DropdownVerticalPlacement: Top, Bottom
+fun FlowContent.daisyDropdown(id: HtmlId? = null, modifier: ClassValues<DropdownModifier>? = null, horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null, verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null, close: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, bottom: Boolean = false, left: Boolean = false, right: Boolean = false, center: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
 fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Fab <div>
@@ -134,9 +140,9 @@ fun FlowContent.daisyHover3d(id: HtmlId? = null, extraClasses: String? = null, a
 fun FlowContent.daisyHoverGallery(id: HtmlId? = null, extraClasses: String? = null, attrs: (FIGURE.() -> Unit)? = null, content: (FIGURE.() -> Unit))
 
 # Indicator <div>
-enum IndicatorVerticalPlacement: Top, Middle, Bottom
 enum IndicatorHorizontalPlacement: Start, Center, End
-fun FlowContent.daisyIndicator(id: HtmlId? = null, verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null, horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum IndicatorVerticalPlacement: Top, Middle, Bottom
+fun FlowContent.daisyIndicator(id: HtmlId? = null, horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null, verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyIndicatorItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Input <input>
@@ -310,9 +316,9 @@ fun FlowContent.daisyTimelineMiddle(id: HtmlId? = null, extraClasses: String? = 
 fun FlowContent.daisyTimelineEnd(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Toast <div>
-enum ToastVerticalPlacement: Top, Middle, Bottom
 enum ToastHorizontalPlacement: Start, Center, End
-fun FlowContent.daisyToast(id: HtmlId? = null, verticalPlacement: ClassValues<ToastVerticalPlacement>? = null, horizontalPlacement: ClassValues<ToastHorizontalPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum ToastVerticalPlacement: Top, Middle, Bottom
+fun FlowContent.daisyToast(id: HtmlId? = null, horizontalPlacement: ClassValues<ToastHorizontalPlacement>? = null, verticalPlacement: ClassValues<ToastVerticalPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Toggle <input>
 enum ToggleVariant: Primary, Secondary, Accent, Neutral, Success, Warning, Info, Error

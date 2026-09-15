@@ -11,10 +11,10 @@ Regenerate: just generate
 User and entity representations. Renders `<div class="avatar ...">`.
 
 ```kotlin
+// AvatarModifier: Online | Offline
 fun FlowContent.daisyAvatar(
     id: HtmlId? = null,
-    offline: Boolean = false,
-    online: Boolean = false,
+    modifier: ClassValues<AvatarModifier>? = null,
     placeholder: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

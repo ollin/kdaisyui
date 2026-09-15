@@ -11,19 +11,6 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-/** VerticalPlacement variants for this component (CSS prefix: `toast-`) */
-enum class ToastVerticalPlacement(internal val className: String) : ClassValues<ToastVerticalPlacement> {
-    /** CSS: `toast-top` — align vertically to top */
-    Top("toast-top"),
-    /** CSS: `toast-middle` — align vertically to middle */
-    Middle("toast-middle"),
-    /** CSS: `toast-bottom` — align vertically to bottom */
-    Bottom("toast-bottom"),
-    ;
-
-    override val classNames: List<String> get() = listOf(className)
-}
-
 /** HorizontalPlacement variants for this component (CSS prefix: `toast-`) */
 enum class ToastHorizontalPlacement(internal val className: String) : ClassValues<ToastHorizontalPlacement> {
     /** CSS: `toast-start` — align horizontally to the left */
@@ -37,20 +24,33 @@ enum class ToastHorizontalPlacement(internal val className: String) : ClassValue
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** VerticalPlacement variants for this component (CSS prefix: `toast-`) */
+enum class ToastVerticalPlacement(internal val className: String) : ClassValues<ToastVerticalPlacement> {
+    /** CSS: `toast-top` — align vertically to top */
+    Top("toast-top"),
+    /** CSS: `toast-middle` — align vertically to middle */
+    Middle("toast-middle"),
+    /** CSS: `toast-bottom` — align vertically to bottom */
+    Bottom("toast-bottom"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Toast is a wrapper to stack elements, positioned on the corner of page. Renders `<div class="toast ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param verticalPlacement — VerticalPlacement variant
  * @param horizontalPlacement — HorizontalPlacement variant
+ * @param verticalPlacement — VerticalPlacement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyToast(
     id: HtmlId? = null,
-    verticalPlacement: ClassValues<ToastVerticalPlacement>? = null,
     horizontalPlacement: ClassValues<ToastHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<ToastVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -58,8 +58,8 @@ fun FlowContent.daisyToast(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("toast")
-        addClassNames(verticalPlacement)
         addClassNames(horizontalPlacement)
+        addClassNames(verticalPlacement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

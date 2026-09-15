@@ -43,7 +43,7 @@ class BadgeTest {
     @Test
     fun badge_with_soft_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(soft = true) {
+            daisyBadge(fillStyle = BadgeFillStyle.Soft) {
             }
         }
         val expectedClasses = "badge badge-soft"
@@ -54,7 +54,7 @@ class BadgeTest {
     @Test
     fun badge_with_outline_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(outline = true) {
+            daisyBadge(outlineStyle = BadgeOutlineStyle.Outline) {
             }
         }
         val expectedClasses = "badge badge-outline"
@@ -65,7 +65,7 @@ class BadgeTest {
     @Test
     fun badge_with_dash_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(dash = true) {
+            daisyBadge(outlineStyle = BadgeOutlineStyle.Dash) {
             }
         }
         val expectedClasses = "badge badge-dash"
@@ -76,7 +76,7 @@ class BadgeTest {
     @Test
     fun neutral_badge_with_outline_or_dash_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(outline = true) {
+            daisyBadge(outlineStyle = BadgeOutlineStyle.Outline) {
             }
         }
         val expectedClasses = "badge badge-outline"
@@ -87,7 +87,7 @@ class BadgeTest {
     @Test
     fun neutral_badge_with_outline_or_dash_style_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(dash = true) {
+            daisyBadge(outlineStyle = BadgeOutlineStyle.Dash) {
             }
         }
         val expectedClasses = "badge badge-dash"
@@ -98,7 +98,7 @@ class BadgeTest {
     @Test
     fun badge_ghost() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(ghost = true) {
+            daisyBadge(fillStyle = BadgeFillStyle.Ghost) {
             }
         }
         val expectedClasses = "badge badge-ghost"

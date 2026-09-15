@@ -11,12 +11,12 @@ Regenerate: just generate
 Overlays badges on elements. Renders `<div class="indicator ...">`.
 
 ```kotlin
-// IndicatorVerticalPlacement: Top | Middle | Bottom
 // IndicatorHorizontalPlacement: Start | Center | End
+// IndicatorVerticalPlacement: Top | Middle | Bottom
 fun FlowContent.daisyIndicator(
     id: HtmlId? = null,
-    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

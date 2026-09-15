@@ -322,7 +322,7 @@ matches a run identifier, so a section nobody reads passes the key check and doe
 
 | Symptom | Edit |
 |---|---|
-| A class group should be one enum instead of booleans | nothing — it is one the moment `codegen/exclusivity.json` says every pair is exclusive, named `<Component><CategoryWord>` (`LoadingStyle`). `enumNames` names only the axes of a group that splits, and a string entry for a single choice is refused. → skill `kdaisyui-daisyui-upgrade` |
+| A class group should be one enum instead of booleans | nothing — every clique of two or more in `codegen/exclusivity.json`'s exclusive graph is one, wherever it sits in the group (`AlertStyle` beside the boolean `soft`). A single axis is `<Component><CategoryWord>`; the axes of a group that splits are named from DaisyUI's property table where it says "vertical"/"horizontal". `enumNames` holds only what neither yields — tooltip, badge — and an entry for anything else is refused. → skill `kdaisyui-daisyui-upgrade` |
 | A boolean's name does not say what `true` means | nothing — a boolean is named after its DaisyUI class, so a reader coming from DaisyUI's docs finds it; DaisyUI's `desc` is the KDoc |
 | Component needs an extra parameter | `codegen/codegen-config.json` → `extras` |
 | Component should take inline text | → `textParams` |

@@ -39,15 +39,35 @@ class AvatarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatar(
                 id = htmlId("x-cov-id"),
-                offline = true,
-                online = true,
                 placeholder = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "avatar avatar-offline avatar-online avatar-placeholder zz-extra", "Avatar all flags", closes = "</div></div>")
+        assertRendered(html, "avatar avatar-placeholder zz-extra", "Avatar all flags", closes = "</div></div>")
         assertCommonFlags(html, "Avatar")
+    }
+
+    @Test
+    fun avatar_modifier_online() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatar(
+                modifier = AvatarModifier.Online,
+                content = { },
+            )
+        }
+        assertRendered(html, "avatar avatar-online", "Avatar modifier Online")
+    }
+
+    @Test
+    fun avatar_modifier_offline() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatar(
+                modifier = AvatarModifier.Offline,
+                content = { },
+            )
+        }
+        assertRendered(html, "avatar avatar-offline", "Avatar modifier Offline")
     }
 }

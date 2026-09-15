@@ -9,8 +9,8 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.footer
 import kotlinx.html.FOOTER
-import kotlinx.html.h2
-import kotlinx.html.H2
+import kotlinx.html.h6
+import kotlinx.html.H6
 
 /**
  * Footer can contain logo, copyright notice, and links to other pages. Renders `<footer class="footer ...">`.
@@ -43,15 +43,15 @@ fun FlowContent.daisyFooter(
     }
 }
 
-/** Renders `<h2 class="footer-title ...">`. */
+/** Renders `<h6 class="footer-title ...">`. */
 fun FlowContent.daisyFooterTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    attrs: (H6.() -> Unit)? = null,
+    content: (H6.() -> Unit)? = null,
 ) {
-    h2 {
+    h6 {
         if (id != null) attributes["id"] = id.id
         addClassNames("footer-title")
         addClassNames(extraClasses)

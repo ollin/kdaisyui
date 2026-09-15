@@ -42,8 +42,8 @@ fun FlowContent.daisyMenuTitle(
 fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
 )
 ```
 
@@ -51,7 +51,7 @@ fun FlowContent.daisyMenuDropdown(
 fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 )
 ```

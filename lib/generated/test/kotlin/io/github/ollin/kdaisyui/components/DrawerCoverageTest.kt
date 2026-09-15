@@ -57,7 +57,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "drawer-toggle", "DrawerToggle defaults", closes = "</div></div>")
+        assertRendered(html, "drawer-toggle", "DrawerToggle defaults")
     }
 
     @Test
@@ -70,7 +70,7 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "drawer-toggle zz-extra", "DrawerToggle all flags", closes = "</div></div>")
+        assertRendered(html, "drawer-toggle zz-extra", "DrawerToggle all flags")
         assertCommonFlags(html, "DrawerToggle")
     }
 
@@ -153,7 +153,7 @@ class DrawerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "drawer-button", "DrawerButton defaults", closes = "</div></div>")
+        assertRendered(html, "drawer-button", "DrawerButton defaults", closes = "</label></div>")
     }
 
     @Test
@@ -166,7 +166,7 @@ class DrawerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "drawer-button zz-extra", "DrawerButton all flags", closes = "</div></div>")
+        assertRendered(html, "drawer-button zz-extra", "DrawerButton all flags", closes = "</label></div>")
         assertCommonFlags(html, "DrawerButton")
     }
 }

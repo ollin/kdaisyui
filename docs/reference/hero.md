@@ -32,7 +32,7 @@ fun FlowContent.daisyHeroContent(
 fun FlowContent.daisyHeroOverlay(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 )
 ```

@@ -27,7 +27,7 @@ fun FlowContent.daisyFooterTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    attrs: (H6.() -> Unit)? = null,
+    content: (H6.() -> Unit)? = null,
 )
 ```

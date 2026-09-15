@@ -11,6 +11,8 @@ import kotlinx.html.DIALOG
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.input
+import kotlinx.html.INPUT
 
 /**
  * Modal is used to show a dialog or a box when you click a button. Renders `<dialog class="modal ...">`.
@@ -100,14 +102,14 @@ fun FlowContent.daisyModalBackdrop(
     }
 }
 
-/** Renders `<div class="modal-toggle ...">`. */
+/** Renders `<input class="modal-toggle ...">`. */
 fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (INPUT.() -> Unit)? = null,
+    content: (INPUT.() -> Unit),
 ) {
-    div {
+    input {
         if (id != null) attributes["id"] = id.id
         addClassNames("modal-toggle")
         addClassNames(extraClasses)

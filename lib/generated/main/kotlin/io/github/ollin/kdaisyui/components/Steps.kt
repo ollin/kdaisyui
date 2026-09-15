@@ -10,6 +10,8 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.span
+import kotlinx.html.SPAN
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -92,14 +94,14 @@ fun FlowContent.daisyStepsStep(
     }
 }
 
-/** For custom icon inside step Renders `<div class="step-icon ...">`. */
+/** For custom icon inside step Renders `<span class="step-icon ...">`. */
 fun FlowContent.daisyStepsStepIcon(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 ) {
-    div {
+    span {
         if (id != null) attributes["id"] = id.id
         addClassNames("step-icon")
         addClassNames(extraClasses)

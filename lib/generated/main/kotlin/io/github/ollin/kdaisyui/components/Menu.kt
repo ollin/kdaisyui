@@ -7,11 +7,11 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
-import kotlinx.html.div
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.h2
 import kotlinx.html.H2
+import kotlinx.html.span
+import kotlinx.html.SPAN
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -107,14 +107,14 @@ fun FlowContent.daisyMenuTitle(
     }
 }
 
-/** Renders `<div class="menu-dropdown ...">`. */
+/** Renders `<ul class="menu-dropdown ...">`. */
 fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
 ) {
-    div {
+    ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu-dropdown")
         addClassNames(extraClasses)
@@ -123,14 +123,14 @@ fun FlowContent.daisyMenuDropdown(
     }
 }
 
-/** Renders `<div class="menu-dropdown-toggle ...">`. */
+/** Renders `<span class="menu-dropdown-toggle ...">`. */
 fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 ) {
-    div {
+    span {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu-dropdown-toggle")
         addClassNames(extraClasses)

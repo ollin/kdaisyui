@@ -26,7 +26,7 @@ fun FlowContent.daisyDock(
 fun FlowContent.daisyDockLabel(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 )
 ```

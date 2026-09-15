@@ -55,7 +55,7 @@ class FilterCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "filter-reset", "FilterReset defaults", closes = "</div></div>")
+        assertRendered(html, "filter-reset", "FilterReset defaults")
     }
 
     @Test
@@ -68,7 +68,7 @@ class FilterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "filter-reset zz-extra", "FilterReset all flags", closes = "</div></div>")
+        assertRendered(html, "filter-reset zz-extra", "FilterReset all flags")
         assertCommonFlags(html, "FilterReset")
     }
 }

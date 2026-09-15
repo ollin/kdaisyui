@@ -133,7 +133,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal-toggle", "ModalToggle defaults", closes = "</div></div>")
+        assertRendered(html, "modal-toggle", "ModalToggle defaults")
     }
 
     @Test
@@ -146,7 +146,7 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags", closes = "</div></div>")
+        assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags")
         assertCommonFlags(html, "ModalToggle")
     }
 

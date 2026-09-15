@@ -89,15 +89,15 @@ fun FlowContent.daisyDivider(id: HtmlId? = null, variant: ClassValues<DividerVar
 # Dock <div>
 enum DockSize: Xs, Sm, Md, Lg, Xl
 fun FlowContent.daisyDock(id: HtmlId? = null, size: ClassValues<DockSize>? = null, active: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyDockLabel(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDockLabel(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # Drawer <div>
 fun FlowContent.daisyDrawer(id: HtmlId? = null, end: Boolean = false, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyDrawerToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDrawerToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null, content: (INPUT.() -> Unit))
 fun FlowContent.daisyDrawerContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyDrawerSide(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyDrawerOverlay(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
-fun FlowContent.daisyDrawerButton(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDrawerButton(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
 
 # Dropdown <details>
 enum DropdownModifier: Hover, Open
@@ -122,16 +122,16 @@ fun FlowContent.daisyFileInput(id: HtmlId? = null, variant: ClassValues<FileInpu
 
 # Filter <form>
 fun FlowContent.daisyFilter(id: HtmlId? = null, extraClasses: String? = null, attrs: (FORM.() -> Unit)? = null, content: (FORM.() -> Unit))
-fun FlowContent.daisyFilterReset(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyFilterReset(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null, content: (INPUT.() -> Unit))
 
 # Footer <footer>
 fun FlowContent.daisyFooter(id: HtmlId? = null, center: Boolean = false, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (FOOTER.() -> Unit)? = null, content: (FOOTER.() -> Unit))
-fun FlowContent.daisyFooterTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
+fun FlowContent.daisyFooterTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H6.() -> Unit)? = null, content: (H6.() -> Unit)? = null)
 
 # Hero <div>
 fun FlowContent.daisyHero(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyHeroContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyHeroOverlay(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+fun FlowContent.daisyHeroOverlay(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Hover3d <div>
 fun FlowContent.daisyHover3d(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
@@ -190,8 +190,8 @@ enum MenuSize: Xs, Sm, Md, Lg, Xl
 enum MenuDirection: Vertical, Horizontal
 fun FlowContent.daisyMenu(id: HtmlId? = null, size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focus: Boolean = false, paged: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 fun FlowContent.daisyMenuTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
-fun FlowContent.daisyMenuDropdown(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyMenuDropdownToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyMenuDropdown(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun FlowContent.daisyMenuDropdownToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # MockupBrowser <div>
 fun FlowContent.daisyMockupBrowser(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
@@ -213,7 +213,7 @@ fun FlowContent.daisyModal(id: HtmlId? = null, bottom: Boolean = false, end: Boo
 fun FlowContent.daisyModalBox(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalAction(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalBackdrop(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyModalToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyModalToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null, content: (INPUT.() -> Unit))
 fun FlowContent.daisyModalPopover(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Navbar <div>
@@ -279,7 +279,7 @@ enum StepsVariant: StepNeutral, StepPrimary, StepSecondary, StepAccent, StepInfo
 enum StepsDirection: Vertical, Horizontal
 fun FlowContent.daisySteps(id: HtmlId? = null, variant: ClassValues<StepsVariant>? = null, direction: ClassValues<StepsDirection>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 fun FlowContent.daisyStepsStep(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyStepsStepIcon(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStepsStepIcon(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # Swap <label>
 fun FlowContent.daisySwap(id: HtmlId? = null, active: Boolean = false, flip: Boolean = false, rotate: Boolean = false, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))

@@ -189,7 +189,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step-icon", "StepsStepIcon defaults", closes = "</div></div>")
+        assertRendered(html, "step-icon", "StepsStepIcon defaults", closes = "</span></div>")
     }
 
     @Test
@@ -202,7 +202,7 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "step-icon zz-extra", "StepsStepIcon all flags", closes = "</div></div>")
+        assertRendered(html, "step-icon zz-extra", "StepsStepIcon all flags", closes = "</span></div>")
         assertCommonFlags(html, "StepsStepIcon")
     }
 }

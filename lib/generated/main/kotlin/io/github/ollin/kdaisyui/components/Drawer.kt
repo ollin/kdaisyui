@@ -9,6 +9,8 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.input
+import kotlinx.html.INPUT
 import kotlinx.html.label
 import kotlinx.html.LABEL
 
@@ -40,14 +42,14 @@ fun FlowContent.daisyDrawer(
     }
 }
 
-/** Renders `<div class="drawer-toggle ...">`. */
+/** Renders `<input class="drawer-toggle ...">`. */
 fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (INPUT.() -> Unit)? = null,
+    content: (INPUT.() -> Unit),
 ) {
-    div {
+    input {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-toggle")
         addClassNames(extraClasses)
@@ -104,14 +106,14 @@ fun FlowContent.daisyDrawerOverlay(
     }
 }
 
-/** Renders `<div class="drawer-button ...">`. */
+/** Renders `<label class="drawer-button ...">`. */
 fun FlowContent.daisyDrawerButton(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (LABEL.() -> Unit)? = null,
+    content: (LABEL.() -> Unit),
 ) {
-    div {
+    label {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-button")
         addClassNames(extraClasses)

@@ -60,18 +60,6 @@
       "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <button>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
     },
-    "dock/dock-label": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "drawer/drawer-toggle": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <input>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "drawer/drawer-button": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <label>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
     "dropdown/dropdown-close": {
       "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
       "issue": 347
@@ -105,19 +93,7 @@
       "issue": 347
     },
     "fieldset/fieldset-legend": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <legend>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "filter/filter-reset": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <input>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "footer/footer-title": {
-      "reason": "Part rendered as <h2> by the name heuristic; DaisyUI shows it on <h6>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "hero/hero-overlay": {
-      "reason": "Part rendered as <label> by the name heuristic; DaisyUI shows it on <div>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Part shown on an element kotlinx.html opens only inside its parent (<legend> in FIELDSET, <li> in UL); the part's function has a FlowContent receiver and does not know its parent yet. Stays on the heuristic element until the parent is read from DaisyUI's markup. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
     },
     "indicator/indicator-start": {
@@ -154,18 +130,6 @@
     },
     "menu/menu-disabled": {
       "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <li>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "menu/menu-dropdown": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <ul>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "menu/menu-dropdown-toggle": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "modal/modal-toggle": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <input>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
     },
     "rating/rating-hidden": {
@@ -229,11 +193,7 @@
       "issue": 347
     },
     "steps/step": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <li>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "steps/step-icon": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Part shown on an element kotlinx.html opens only inside its parent (<legend> in FIELDSET, <li> in UL); the part's function has a FlowContent receiver and does not know its parent yet. Stays on the heuristic element until the parent is read from DaisyUI's markup. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
     }
   },

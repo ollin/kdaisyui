@@ -110,6 +110,15 @@ every member DaisyUI shows on a part's element belongs to that part whole.
   rule), auto-marking every DOM child (wrong in 3 of 74 measured cases). Known limit, accepted:
   an element outside the five stays on `extraClasses`. Full comparison in
   `tmp/non-deterministic-v2.md` §3.
+  **Verified 2026-09-19** in the Kotlin REPL against the real `:lib` classpath, before writing
+  any of 3.3–3.5. Every load-bearing claim was a Kotlin language claim and none had been run:
+  a member does beat an extension (`daisyJoin { daisyButton() }` reaches the member); a scope
+  annotated `@HtmlTagMarker` — which IS a `@DslMarker` — is hidden inside a nested `div { }`,
+  so the nested button reaches the extension and is not marked; and `this@daisyJoin.` still
+  reaches the member. A fourth fact the plan assumed without saying so also holds: the element
+  lands INSIDE the wrapper rather than at join level, because kotlinx.html writes positionally
+  into one shared consumer — which is exactly the `div > div > input.join-item` DaisyUI
+  documents.
 - [x] 3.2a `^ F` A part renders the element DaisyUI shows it on, with the documented parent
   as receiver where FlowContent cannot open it (`0fea0e5`, `373cc35`, `ce97341`, `dc718a2`,
   `2a3021f`). Regenerated: 12 parts changed element, 12 exceptions expired (`86c040e`,

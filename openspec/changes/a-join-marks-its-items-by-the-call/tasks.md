@@ -26,7 +26,7 @@ member list was re-measured and was wrong (seven components, not five).
   `daisyJoin { div { daisyInput() } }` renders no `join-item`; `daisyJoin { div {
   this@daisyJoin.daisyInput() } }` does; a `daisyButton("A", extraClasses = "join-item")` outside
   a join is unchanged (still reachable, still a string).
-- [ ] 1.3 `. d` Reference page for `join` shows the three shapes: plain child, wrapper with
+- [x] 1.3 `. d` Reference page for `join` shows the three shapes: plain child, wrapper with
   `this@daisyJoin.`, and why a nested button is not marked.
 
 ## 2. The classes that reach no function — inherited

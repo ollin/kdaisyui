@@ -76,9 +76,16 @@ every member DaisyUI shows on a part's element belongs to that part whole.
   cross-check already reads; the Kotlin body follows the signature. (`88675be`, `f7ff2d8`)
 - [x] 2.4 `^ F` `timeline-box` → `daisyTimelineStart`/`Middle`/`End`; its exception expired
   (`89b0519`). *`dock-active` and `tab-content` wait for their parts' elements.*
-- [ ] 2.1 `^ F (internal)` An enum moves whole to the part whose element DaisyUI shows every
-  member on. Test with indicator's fixture; regenerates nothing until 3.x gives
-  `daisyIndicatorItem` its `<span>`.
+- [x] 2.1 `! F (internal)` An enum moves whole to the part whose element DaisyUI shows every
+  member on (`fef29d6`, `5d2b357`, `4ae9d1b`, `0d4c3d5`, `26a3a06`). **The "regenerates
+  nothing" above was written before 3.2a landed and is wrong**: 3.2a gave `daisyIndicatorItem`
+  its `<span>`, which was the only thing the rule was waiting for, so both placements moved at
+  once. Second finding: the body derived its enum lines from the measured groups while the
+  signature derived them from the placement, so the container kept applying a parameter it no
+  longer had and the generated Kotlin did not compile — the body now reads the signature, as
+  the booleans already did.
+  *`:lib:pitest` fails at test strength 99 on a surviving mutant in `daisyModalToggle`,
+  verified identical on `d690848`: pre-existing on this branch, not this task's. See 5.3.*
 - [ ] 2.2 `. d` After block 3: read the regeneration diff against the exception list — every
   class that moved has expired its exception, every one that did not is still excused with a
   reason that still holds. `menu-active` and `menu-disabled` sit on an `<a>`/`<li>` the library

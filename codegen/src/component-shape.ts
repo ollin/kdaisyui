@@ -670,12 +670,12 @@ class ClassPlacement {
     // generator renders it as: `dropdown-close` on the <div>-shaped dropdown is on the
     // dropdown, not on a <div> part that happens to exist.
     const componentElements = new Set((classified.prefix === null ? undefined : documented.get(classified.prefix))?.keys() ?? [])
+    const partsShowing = (classes: readonly string[]) =>
+      partsOwning(classes.map(cls => usualElementOf(documented.get(`${classified.prefix}-${cls}`))), componentElements, partsByElement)
 
     const owners = new Map<string, readonly CssClass[]>()
     for (const cls of booleans) {
-      const element = usualElementOf(documented.get(`${classified.prefix}-${cls}`))
-      if (element === undefined || componentElements.has(element)) continue
-      const parts = partsByElement.get(element)
+      const parts = partsShowing([cls])
       if (parts !== undefined) owners.set(cls, parts)
     }
     return new ClassPlacement(owners)
@@ -688,6 +688,26 @@ class ClassPlacement {
   classesOf(partClass: CssClass): string[] {
     return [...this.owners].filter(([, parts]) => parts.includes(partClass)).map(([cls]) => cls)
   }
+}
+
+/**
+ * The parts that own a set of classes: those rendering the one element DaisyUI shows all of
+ * them on.
+ *
+ * Disagreement is the answer "nobody". Classes documented on two different elements describe
+ * no single function's element, and a class shown on no element at all disagrees with every
+ * other in exactly the same way.
+ */
+function partsOwning(
+  elements: readonly (string | undefined)[],
+  componentElements: ReadonlySet<string>,
+  partsByElement: ReadonlyMap<string, readonly CssClass[]>,
+): readonly CssClass[] | undefined {
+  const shown = new Set(elements)
+  if (shown.size !== 1) return undefined
+  const [element] = shown
+  if (element === undefined || componentElements.has(element)) return undefined
+  return partsByElement.get(element)
 }
 
 function mainFunctionShape(

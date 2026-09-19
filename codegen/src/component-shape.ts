@@ -351,6 +351,12 @@ export interface ParameterShape {
    * one DaisyUI documents the class on.
    */
   readonly cssClass?: CssClass
+  /**
+   * Whether the parameter holds a `ClassValues`, whose chosen member names the class. Set on
+   * `variant`, on `size` and on every measured enum — the three the Kotlin body passes to
+   * `addClassNames` unguarded, and which of them exist is now a question about the signature.
+   */
+  readonly classValues?: boolean
 }
 
 /**
@@ -561,6 +567,7 @@ function enumParameter(group: EnumGroup): ParameterShape {
     type: groupParameterType(group.enumName),
     default: 'null',
     doc: `${capitalised(group.parameterName)} variant`,
+    classValues: true,
   }
 }
 
@@ -570,10 +577,10 @@ function enumParameters(
 ): ParameterShape[] {
   const parameters: ParameterShape[] = []
   if (classified.colors.length > 0) {
-    parameters.push({ name: 'variant', type: groupParameterType(`${classified.componentName}Variant`), default: 'null', doc: 'Color variant' })
+    parameters.push({ name: 'variant', type: groupParameterType(`${classified.componentName}Variant`), default: 'null', doc: 'Color variant', classValues: true })
   }
   if (classified.sizes.length > 0) {
-    parameters.push({ name: 'size', type: groupParameterType(`${classified.componentName}Size`), default: 'null', doc: 'Size variant' })
+    parameters.push({ name: 'size', type: groupParameterType(`${classified.componentName}Size`), default: 'null', doc: 'Size variant', classValues: true })
   }
   for (const group of plan.groups.enums) {
     if (plan.placement.enumBelongsToMain(group)) parameters.push(enumParameter(group))

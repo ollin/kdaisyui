@@ -141,15 +141,7 @@ function mainFunctionBody(
   lines.push(...applyLines(extras.filter(extra => extra.position === 'before_classes')))
 
   lines.push(`        addClassNames("${prefix}")`)
-  // Unguarded: the `ClassValues?` overload of `addClassNames` returns on null. The guard used to
-  // be emitted here, once per enum parameter, and every copy of it was a branch the coverage and
-  // mutation gates had to drive separately to establish the same fact.
-  if (classified.colors.length > 0) lines.push('        addClassNames(variant)')
-  if (classified.sizes.length > 0) lines.push('        addClassNames(size)')
-  // The measured enums, in the order the signature declares them.
-  for (const group of groups.enums) {
-    lines.push(`        addClassNames(${escapeKotlinKeyword(group.parameterName)})`)
-  }
+  lines.push(...classValuesLines(shape))
   lines.push(...booleanLines(shape))
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
 
@@ -158,6 +150,21 @@ function mainFunctionBody(
   if (takesContent) lines.push(...contentLines(hasTextParam))
 
   return lines.join('\n')
+}
+
+/**
+ * One `addClassNames` per `ClassValues` parameter the SIGNATURE declares — `variant`, `size`
+ * and the measured enums, in declaration order. Read off the shape for the same reason the
+ * booleans are: an enum the shape moved to a part is emitted by that part and by nothing else.
+ *
+ * Unguarded, because the `ClassValues?` overload of `addClassNames` returns on null. The guard
+ * used to be emitted here, once per parameter, and every copy of it was a branch the coverage
+ * and mutation gates had to drive separately to establish the same fact.
+ */
+function classValuesLines(shape: FunctionShape): string[] {
+  return shape.parameters
+    .filter(parameter => parameter.classValues)
+    .map(parameter => `        addClassNames(${parameter.name})`)
 }
 
 /**
@@ -178,6 +185,7 @@ function secondaryFunctionBody(shape: FunctionShape): string {
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
   if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
+  lines.push(...classValuesLines(shape))
   lines.push(...booleanLines(shape))
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')

@@ -17,7 +17,7 @@ import {
 } from './parser/frontmatter.ts'
 import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter, type ClassifiedComponent } from './classifier.ts'
-import { buildComponentShape, type ComponentShape } from './component-shape.ts'
+import { buildComponentShape, type ComponentShape, type ComponentSource } from './component-shape.ts'
 import { classifyGroups, type GroupClassification } from './class-groups.ts'
 import { loadEvidence, type Evidence } from './measurement.ts'
 import { documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
@@ -31,6 +31,17 @@ export interface GeneratedComponent {
   readonly shape: ComponentShape
   /** The raw frontmatter, for the callers that need its class names. */
   readonly frontmatter
+  /**
+   * What the shape was built FROM, carried so a caller can render without rebuilding it.
+   *
+   * The Kotlin emitter takes these rather than the finished shape, and an emitter handed the
+   * inputs re-derives the shape from them. Returning what this module already computed is what
+   * lets the Kotlin run drop its own copy of this loop — the copy `component-set.ts` was
+   * created to delete and then did not, because `index-new.ts` still needed values this
+   * interface did not expose.
+   */
+  readonly source: ComponentSource
+  readonly groups: GroupClassification
 }
 
 export interface SkippedComponent {
@@ -79,21 +90,19 @@ function classify(
     config.enumNames ?? {},
     evidence,
   )
+  const source: ComponentSource = {
+    componentDir,
+    element,
+    documentedElements: documentedElementTalliesFor(componentDir),
+    documentedParents: documentedParentsFor(componentDir),
+  }
   return {
     componentDir,
     classified,
     frontmatter,
-    shape: buildComponentShape(
-      classified,
-      {
-        componentDir,
-        element,
-        documentedElements: documentedElementTalliesFor(componentDir),
-        documentedParents: documentedParentsFor(componentDir),
-      },
-      config,
-      groups,
-    ),
+    source,
+    groups,
+    shape: buildComponentShape(classified, source, config, groups),
   }
 }
 

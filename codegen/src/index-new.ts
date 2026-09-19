@@ -1,13 +1,9 @@
 import fs from 'fs'
 import path from 'path'
-import { getAllComponentDirs, readComponentFrontmatter, getClassesByCategory } from './parser/frontmatter.ts'
-import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
-import { classifyFromFrontmatter } from './classifier.ts'
+import { getAllComponentDirs, getClassesByCategory } from './parser/frontmatter.ts'
 import { generateKotlinFile } from './generator-new.ts'
-import { classifyGroups } from './class-groups.ts'
-import { loadEvidence } from './measurement.ts'
-import { documentedElementSetsFor, documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
-import { buildComponentShape } from './component-shape.ts'
+import { documentedElementSetsFor } from './parser/documented-element.ts'
+import { readComponentSet, type SkipReason } from './component-set.ts'
 import { observeElements } from './element-observation.ts'
 import {
   crossCheckElements,
@@ -103,61 +99,54 @@ function reportUnreadConfig(config, consumed: ConsumedKeys): void {
   process.exitCode = 1
 }
 
+/** What each skip reason reads as on the console, so the run says why a component is absent. */
+const SKIP_MESSAGES: Readonly<Record<SkipReason, string>> = {
+  'configured-skip': 'Skipped (alias)',
+  'no-frontmatter': 'No frontmatter found',
+  'no-component-class': 'No component class defined',
+}
+
 function main() {
   console.log('Generating kdaisyui components from DaisyUI source...\n')
-  
+
   const config = loadConfig()
-  const elementRules = parseLlmsTxt()
   const componentDirs = getAllComponentDirs()
-  
+
   console.log(`Found ${componentDirs.length} components in DaisyUI docs\n`)
-  
-  let generated = 0
-  let skipped = 0
+
+  // Which components exist and what each one's API is — read ONCE, here, by the module that
+  // owns that question. This run used to decide it a second time with its own copy of the
+  // classification loop, and a second copy is how the reference pages and the Kotlin come to
+  // describe different sets. It is also what the join scope needs: its members are other
+  // components' functions, so a loop that knows one component at a time cannot build it.
+  const componentSet = readComponentSet(config)
+  const byDirectory = new Map(componentSet.generated.map(component => [component.componentDir, component]))
+  const skipReasons = new Map(componentSet.skipped.map(component => [component.componentDir, component.reason]))
+
   const allClasses = []
   const observations: ElementObservation[] = []
   // Every identifier a config lookup could legitimately have matched this run. A section key
   // that matches none of these was never read, and an unread key is indistinguishable from an
   // absent one at run time — which is how two dead `noContent` entries survived.
   const consumed = new ConsumedKeyCollector()
-  // One file describing every component, so it is read once rather than 66 times.
-  const evidence = loadEvidence()
 
+  // DaisyUI's own directory order, so the log reads down the same list a reader sees on disk
+  // and a skipped component keeps its place among the generated ones.
   for (const componentName of componentDirs) {
-    // Recorded before the skip checks: `skip` itself is a config section, and an entry naming
+    // Recorded before the skip check: `skip` itself is a config section, and an entry naming
     // a component that no longer exists must still be caught.
     consumed.directory(componentName)
 
-    if (config.skip?.includes(componentName)) {
-      console.log(`  ⊘ ${componentName}: Skipped (alias)`)
-      skipped++
+    const skipReason = skipReasons.get(componentName)
+    if (skipReason !== undefined) {
+      console.log(`  ${skipReason === 'configured-skip' ? '⊘' : '⚠'} ${componentName}: ${SKIP_MESSAGES[skipReason]}`)
       continue
     }
-    
-    const frontmatter = readComponentFrontmatter(componentName)
-    if (!frontmatter) {
-      console.log(`  ⚠ ${componentName}: No frontmatter found`)
-      skipped++
-      continue
-    }
-    
-    if (!frontmatter.classnames?.component?.length) {
-      console.log(`  ⚠ ${componentName}: No component class defined`)
-      skipped++
-      continue
-    }
-    
-    const classified = classifyFromFrontmatter(frontmatter, componentName)
-    consumed.component(classified.componentName, classified.parts)
-    // The element heuristic takes the first variant in DaisyUI's Syntax block. When that
-    // variant only works with attributes this generator cannot emit, the result compiles
-    // but does not function — see componentElements in codegen-config.json.
-    const element = config.componentElements?.[componentName]
-      ?? getElementForComponent(elementRules, componentName)
 
-    // Which class groups are one choice, measured rather than assumed; named by DaisyUI where
-    // it can be (category word, property table), by `enumNames` only where it cannot.
-    const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, evidence)
+    const component = byDirectory.get(componentName)
+    if (component === undefined) continue
+    const { classified, shape, source, groups, frontmatter } = component
+    consumed.component(classified.componentName, classified.parts)
 
     // Every class each function emits, beside EVERY element DaisyUI documents it on. Judged
     // after the loop so the whole set is reportable at once — dying on the first would hide
@@ -166,10 +155,6 @@ function main() {
     // The sets, not the tallies' usual element: which of several DaisyUI picks is the
     // surrounding context, and the generator renders one function for all of them. Holding it
     // to the commonest would call six of `badge`'s seven documented `<span>`s a defect.
-    const documentedElements = documentedElementTalliesFor(componentName)
-    const documentedParents = documentedParentsFor(componentName)
-    const source = { componentDir: componentName, element, documentedElements, documentedParents }
-    const shape = buildComponentShape(classified, source, config, groups)
     const documentedSets = documentedElementSetsFor(componentName)
     observations.push(...observeElements(
       shape,
@@ -178,19 +163,18 @@ function main() {
 
     const kotlin = generateKotlinFile(classified, source, config, groups)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
-    
+
     fs.mkdirSync(OUTPUT_DIR, { recursive: true })
     fs.writeFileSync(outFile, kotlin)
     // Only generated components contribute: a skipped one emits nothing, so listing its
     // classes would put CSS in a consumer's bundle that this library can never produce.
     allClasses.push(...collectClasses(frontmatter.classnames))
-    console.log(`  ✓ ${classified.componentName}.kt (${element})`)
-    generated++
+    console.log(`  ✓ ${classified.componentName}.kt (${shape.functions[0].element})`)
   }
-  
+
   const classCount = writeClassList(allClasses)
-  
-  console.log(`\nGenerated ${generated} components, skipped ${skipped}`)
+
+  console.log(`\nGenerated ${componentSet.generated.length} components, skipped ${componentSet.skipped.length}`)
   console.log(`Output: ${OUTPUT_DIR}`)
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
 

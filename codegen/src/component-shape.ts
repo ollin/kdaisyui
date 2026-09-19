@@ -566,7 +566,7 @@ function enumParameter(group: EnumGroup): ParameterShape {
 
 function enumParameters(
   classified: ClassifiedComponent,
-  groups: GroupClassification,
+  plan: ClassPlan,
 ): ParameterShape[] {
   const parameters: ParameterShape[] = []
   if (classified.colors.length > 0) {
@@ -575,8 +575,8 @@ function enumParameters(
   if (classified.sizes.length > 0) {
     parameters.push({ name: 'size', type: groupParameterType(`${classified.componentName}Size`), default: 'null', doc: 'Size variant' })
   }
-  for (const group of groups.enums) {
-    parameters.push(enumParameter(group))
+  for (const group of plan.groups.enums) {
+    if (plan.placement.enumBelongsToMain(group)) parameters.push(enumParameter(group))
   }
   return parameters
 }
@@ -592,7 +592,7 @@ function booleanParameter(classified: ClassifiedComponent, cls: string): Paramet
 }
 
 /**
- * Where every class goes: which are enums, which booleans, which booleans a part owns instead
+ * Where every class goes: which are enums, which booleans, which of either a part owns instead
  * of main — and the documented elements all of that was decided from, which the parts read
  * again to choose their own element.
  */
@@ -638,19 +638,21 @@ function extraParameters(extras: readonly ExtraParameter[]): ParameterShape[] {
 class ClassPlacement {
   /** Class → every part that renders the element DaisyUI shows it on. */
   private readonly owners: ReadonlyMap<string, readonly CssClass[]>
+  /** The same, for a whole enum: an enum moves as one parameter or not at all. */
+  private readonly enumOwners: ReadonlyMap<EnumGroup, readonly CssClass[]>
 
-  private constructor(owners: ReadonlyMap<string, readonly CssClass[]>) {
+  private constructor(
+    owners: ReadonlyMap<string, readonly CssClass[]>,
+    enumOwners: ReadonlyMap<EnumGroup, readonly CssClass[]>,
+  ) {
     this.owners = owners
+    this.enumOwners = enumOwners
   }
 
   static none(): ClassPlacement {
-    return new ClassPlacement(new Map())
+    return new ClassPlacement(new Map(), new Map())
   }
 
-  /**
-   * @param booleans the classes the measurement left as flags — an enum member is never moved,
-   *   the enum stays on the main function whole
-   */
   static from(
     classified: ClassifiedComponent,
     booleans: readonly string[],
@@ -678,15 +680,28 @@ class ClassPlacement {
       const parts = partsShowing([cls])
       if (parts !== undefined) owners.set(cls, parts)
     }
-    return new ClassPlacement(owners)
+    const enumOwners = new Map<EnumGroup, readonly CssClass[]>()
+    for (const group of plan.groups.enums) {
+      const parts = partsShowing(group.members)
+      if (parts !== undefined) enumOwners.set(group, parts)
+    }
+    return new ClassPlacement(owners, enumOwners)
   }
 
   belongsToMain(cls: string): boolean {
     return !this.owners.has(cls)
   }
 
+  enumBelongsToMain(group: EnumGroup): boolean {
+    return !this.enumOwners.has(group)
+  }
+
   classesOf(partClass: CssClass): string[] {
     return [...this.owners].filter(([, parts]) => parts.includes(partClass)).map(([cls]) => cls)
+  }
+
+  enumsOf(partClass: CssClass): EnumGroup[] {
+    return [...this.enumOwners].filter(([, parts]) => parts.includes(partClass)).map(([group]) => group)
   }
 }
 
@@ -694,9 +709,10 @@ class ClassPlacement {
  * The parts that own a set of classes: those rendering the one element DaisyUI shows all of
  * them on.
  *
- * Disagreement is the answer "nobody". Classes documented on two different elements describe
- * no single function's element, and a class shown on no element at all disagrees with every
- * other in exactly the same way.
+ * Disagreement is the answer "nobody". An enum whose members are documented on two different
+ * elements describes no single function's element, and half a choice on each of two functions
+ * is not a choice — so it stays on main, where the element cross-check goes on reporting it.
+ * A class shown on no element at all disagrees with every other in exactly the same way.
  */
 function partsOwning(
   elements: readonly (string | undefined)[],
@@ -722,7 +738,7 @@ function mainFunctionShape(
   const parameters: ParameterShape[] = [
     ...(hasTextParam ? [TEXT_PARAMETER] : []),
     ID_PARAMETER,
-    ...enumParameters(classified, plan.groups),
+    ...enumParameters(classified, plan),
     ...booleanParameters(classified, componentConfig, plan),
     ...extraParameters(componentConfig.extras),
     EXTRA_CLASSES_PARAMETER,
@@ -755,7 +771,10 @@ function partFunctionShape(
   const { element, receiver } = partPlacementByDocs(partClass, plan, config)
   const hasTextParam = config?.textParams?.includes(partClass) || partClass.includes('title')
   const suffix = toPascalCase(stripPrefix(classified.prefix, partClass))
-  const own = plan.placement.classesOf(partClass).sort().map(cls => booleanParameter(classified, cls))
+  const own = [
+    ...plan.placement.enumsOf(partClass).map(enumParameter),
+    ...plan.placement.classesOf(partClass).sort().map(cls => booleanParameter(classified, cls)),
+  ]
 
   return {
     kind: 'part',
@@ -775,7 +794,7 @@ function partFunctionShape(
   }
 }
 
-/** A part's own booleans go after `id`, where the main function puts its booleans too. */
+/** A part's own parameters go after `id`, where the main function puts the same two kinds. */
 function withOwnClasses(escapeHatches: readonly ParameterShape[], own: readonly ParameterShape[]): ParameterShape[] {
   const afterId = escapeHatches.findIndex(parameter => parameter === ID_PARAMETER) + 1
   return [...escapeHatches.slice(0, afterId), ...own, ...escapeHatches.slice(afterId)]

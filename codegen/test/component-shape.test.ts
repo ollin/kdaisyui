@@ -142,6 +142,31 @@ describe('buildComponentShape', () => {
     assert.ok(!names(content.parameters).includes('close'))
   })
 
+  test('moves an enum whole to the part whose element DaisyUI shows every member on', () => {
+    // `indicator-top` and `indicator-bottom` are shown on the <span> that `daisyIndicatorItem`
+    // renders, never on the container's <div>. A choice is one parameter, so it travels whole
+    // or not at all — a member alone would be half a choice on each function.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Indicator', prefix: 'indicator', placements: ['top', 'bottom'], parts: ['indicator-item'] }),
+      {
+        componentDir: 'indicator',
+        element: 'DIV',
+        documentedElements: sets({
+          indicator: ['DIV'],
+          'indicator-item': ['SPAN'],
+          'indicator-top': ['SPAN'],
+          'indicator-bottom': ['SPAN'],
+        }),
+      },
+      { subComponentElements: { 'indicator-item': 'span' } },
+      { enums: [{ enumName: 'IndicatorPlacement', parameterName: 'placement', category: 'placements', members: ['top', 'bottom'] }], booleans: [] },
+    )
+    const [main, item] = shape.functions
+
+    assert.ok(!names(main.parameters).includes('placement'))
+    assert.ok(names(item.parameters).includes('placement'))
+  })
+
   test('never moves an enum member; the enum stays whole on the main function', () => {
     const shape = buildComponentShape(
       classified({ componentName: 'Tab', prefix: 'tabs', placements: ['top', 'bottom'], parts: ['tab'] }),

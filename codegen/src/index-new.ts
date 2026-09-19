@@ -145,7 +145,7 @@ function main() {
 
     const component = byDirectory.get(componentName)
     if (component === undefined) continue
-    const { classified, shape, source, groups, frontmatter } = component
+    const { classified, shape, frontmatter } = component
     consumed.component(classified.componentName, classified.parts)
 
     // Every class each function emits, beside EVERY element DaisyUI documents it on. Judged
@@ -161,7 +161,7 @@ function main() {
       new Map([...documentedSets].map(([cls, elements]) => [cls, DocumentedElements.of(elements)])),
     ))
 
-    const kotlin = generateKotlinFile(classified, source, config, groups)
+    const kotlin = generateKotlinFile(shape, config)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
 
     fs.mkdirSync(OUTPUT_DIR, { recursive: true })

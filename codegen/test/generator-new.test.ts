@@ -2,6 +2,9 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { generateKotlinFile } from '../src/generator-new.ts'
+import { allBooleans, buildComponentShape } from '../src/component-shape.ts'
+import type { ComponentSource } from '../src/component-shape.ts'
+import type { GroupClassification } from '../src/class-groups.ts'
 import type { ClassifiedComponent } from '../src/classifier.ts'
 
 /**
@@ -32,18 +35,33 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
   } as ClassifiedComponent
 }
 
+/**
+ * The emitter takes a finished shape; these cases describe a component, so they build one.
+ *
+ * The shape is built OUTSIDE the emitter because the join scope is attached to it after the
+ * per-component build — a shape rebuilt inside the emitter could not carry it.
+ */
+function kotlinFor(
+  component: ClassifiedComponent,
+  source: ComponentSource,
+  config = {},
+  groups: GroupClassification = allBooleans(component),
+): string {
+  return generateKotlinFile(buildComponentShape(component, source, config, groups), config)
+}
+
 describe('the // Source: attribution', () => {
   test('cites the DaisyUI directory it was read from', () => {
     // Lower-casing the PascalCase name gave `components/fileinput/`, which does not exist.
     // Ten of 66 components are multi-word and every one of them cited nothing.
-    const kotlin = generateKotlinFile(classified(), { componentDir: 'file-input', element: 'INPUT' }, {})
+    const kotlin = kotlinFor(classified(), { componentDir: 'file-input', element: 'INPUT' }, {})
 
     assert.match(kotlin, /^\/\/ Source: daisyui\/packages\/docs\/src\/routes\/\(routes\)\/components\/file-input\/\+page\.md$/m)
     assert.ok(!kotlin.includes('components/fileinput/'))
   })
 
   test('leaves a single-word citation alone', () => {
-    const kotlin = generateKotlinFile(
+    const kotlin = kotlinFor(
       classified({ componentName: 'Card', componentClass: 'Card', prefix: 'card' }),
       { componentDir: 'card', element: 'DIV' },
       {},
@@ -56,7 +74,7 @@ describe('the // Source: attribution', () => {
 describe('the class values a body applies', () => {
   /** Indicator's placements: documented on the <span> its item renders, not on the container. */
   const indicator = () =>
-    generateKotlinFile(
+    kotlinFor(
       classified({ componentName: 'Indicator', componentClass: 'Indicator', prefix: 'indicator', placements: ['top', 'bottom'], parts: ['indicator-item'] }),
       {
         componentDir: 'indicator',
@@ -86,7 +104,7 @@ describe('the doc comment', () => {
   test('names the HTML element, not the kotlinx.html builder', () => {
     // `<fieldSet>` and `<textArea>` are not HTML elements. The reference pages already got
     // this right; only the Kotlin emitter conflated the builder with the element.
-    const kotlin = generateKotlinFile(
+    const kotlin = kotlinFor(
       classified({ componentName: 'Fieldset', componentClass: 'Fieldset', prefix: 'fieldset' }),
       { componentDir: 'fieldset', element: 'FIELDSET' },
       {},
@@ -97,7 +115,7 @@ describe('the doc comment', () => {
   })
 
   test('still CALLS the builder, which is a different name', () => {
-    const kotlin = generateKotlinFile(
+    const kotlin = kotlinFor(
       classified({ componentName: 'Textarea', componentClass: 'Textarea', prefix: 'textarea' }),
       { componentDir: 'textarea', element: 'TEXTAREA' },
       {},
@@ -109,7 +127,7 @@ describe('the doc comment', () => {
   })
 
   test('leaves a part comment on the element too', () => {
-    const kotlin = generateKotlinFile(
+    const kotlin = kotlinFor(
       classified({ componentName: 'Fieldset', componentClass: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend'] }),
       { componentDir: 'fieldset', element: 'FIELDSET' },
       {},

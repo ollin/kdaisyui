@@ -9,22 +9,17 @@
  * shape with exactly one consumer.
  */
 
-import type { ClassifiedComponent } from './classifier.ts'
 import {
-  allBooleans,
-  buildComponentShape,
   readComponentConfig,
   staticAttributeDoc,
   type ComponentConfig,
   type ComponentShape,
-  type ComponentSource,
   type EnumShape,
   type ExtraParameter,
   type FunctionShape,
   type ParameterShape,
   type StaticAttribute,
 } from './component-shape.ts'
-import type { GroupClassification } from './class-groups.ts'
 
 function renderEnum(shape: EnumShape): string {
   const kdoc = shape.documented
@@ -131,11 +126,10 @@ function contentLines(shape: FunctionShape, hasTextParam: boolean): string[] {
 }
 
 function mainFunctionBody(
-  classified: ClassifiedComponent,
+  prefix: string,
   shape: FunctionShape,
   componentConfig: ComponentConfig,
 ): string {
-  const { prefix } = classified
   const { extras, hasTextParam, role, inputType } = componentConfig
   // The body follows the SIGNATURE rather than re-deriving the rule: if the shape declares no
   // `content` parameter, there is nothing to call, and the two can never disagree.
@@ -202,13 +196,13 @@ function secondaryFunctionBody(shape: FunctionShape): string {
 }
 
 function renderBody(
-  shape: FunctionShape,
-  classified: ClassifiedComponent,
+  fn: FunctionShape,
+  prefix: string,
   componentConfig: ComponentConfig,
 ): string {
-  return shape.kind === 'main'
-    ? mainFunctionBody(classified, shape, componentConfig)
-    : secondaryFunctionBody(shape)
+  return fn.kind === 'main'
+    ? mainFunctionBody(prefix, fn, componentConfig)
+    : secondaryFunctionBody(fn)
 }
 
 function collectImports(shape: ComponentShape, componentConfig: ComponentConfig): string[] {
@@ -239,25 +233,19 @@ function collectImports(shape: ComponentShape, componentConfig: ComponentConfig)
 }
 
 /**
- * Emit one component's Kotlin file.
+ * Emit one component's Kotlin file from the shape that describes it.
  *
- * The second parameter is the `ComponentSource` the shape already models: where the component
- * was read from, and which element it renders. It used to be an ad-hoc
- * `Pick<ElementRule, 'primaryElement'>` carrying only the element, which is why the
- * attribution had to invent a directory name and invented a wrong one.
+ * It used to take the shape's INPUTS and rebuild the shape itself, which made it impossible to
+ * hand it a shape anything had added to — the join scope is attached after the per-component
+ * build, because its members are other components' functions, and a rebuild inside here would
+ * have discarded it.
  *
  * `config` is deliberately left to inference: it is the whole of `codegen-config.json`,
  * a large object with per-component sections, and modelling it properly is its own piece
  * of work rather than a side effect of a rename.
  */
-export function generateKotlinFile(
-  classified: ClassifiedComponent,
-  source: ComponentSource,
-  config,
-  groups: GroupClassification = allBooleans(classified),
-) {
-  const shape = buildComponentShape(classified, source, config, groups)
-  const componentConfig = readComponentConfig(config, classified.componentName)
+export function generateKotlinFile(shape: ComponentShape, config) {
+  const componentConfig = readComponentConfig(config, shape.componentName)
 
   const header = [
     `// GENERATED — DO NOT EDIT`,
@@ -270,7 +258,9 @@ export function generateKotlinFile(
   ].join('\n')
 
   const enums = shape.enums.map(renderEnum).join('\n')
-  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig)))
+  const functions = shape.functions.map(fn =>
+    renderFunction(fn, renderBody(fn, shape.prefix ?? '', componentConfig)),
+  )
   const body = [enums, ...functions].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`

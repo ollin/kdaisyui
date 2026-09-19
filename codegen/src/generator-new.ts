@@ -68,9 +68,10 @@ function renderParameter(parameter: ParameterShape): string {
  */
 function rendersClause(shape: FunctionShape): string {
   const attrs = staticAttributeDoc(shape.staticAttributes)
+  const classes = [shape.cssClass, ...shape.modifierClasses].join(' ')
   return shape.cssClass === null
     ? `Structural wrapper. Renders \`<${shape.htmlTag}${attrs}>\`.`
-    : `Renders \`<${shape.htmlTag} class="${shape.cssClass} ..."${attrs}>\`.`
+    : `Renders \`<${shape.htmlTag} class="${classes} ..."${attrs}>\`.`
 }
 
 function summaryLine(shape: FunctionShape): string {
@@ -183,6 +184,7 @@ function secondaryFunctionBody(shape: FunctionShape): string {
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
   if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
+  lines.push(...shape.modifierClasses.map(cssClass => `        addClassNames("${cssClass}")`))
   lines.push(...classValuesLines(shape))
   lines.push(...booleanLines(shape))
   lines.push('        addClassNames(extraClasses)')

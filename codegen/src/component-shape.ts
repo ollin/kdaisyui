@@ -147,6 +147,8 @@ export interface CustomPart {
   readonly name: string
   readonly element: string
   readonly cssClass?: string
+  /** Classes written beside `cssClass` on every call — see `FunctionShape.modifierClasses`. */
+  readonly modifierClasses?: readonly string[]
   readonly receiver?: string
   readonly staticAttributes?: Record<string, string>
 }
@@ -383,6 +385,15 @@ export interface FunctionShape {
   readonly htmlTag: HtmlTagName
   /** The CSS class this function puts on the element; null for a structural wrapper. */
   readonly cssClass: CssClass | null
+  /**
+   * Modifier classes this construction ALWAYS writes beside `cssClass`, never optionally.
+   *
+   * Empty for every function whose modifiers are parameters. A `customParts` entry needs it
+   * where DaisyUI documents one markup and that markup carries two classes: `skeleton-text`
+   * appears only as `<span class="skeleton skeleton-text">`, so neither class alone describes
+   * the function, and a boolean would offer a combination DaisyUI never shows.
+   */
+  readonly modifierClasses: readonly CssClass[]
   readonly staticAttributes: readonly StaticAttribute[]
   /** Prose sentence preceding the `Renders ...` clause. Empty when there is none. */
   readonly desc: string
@@ -763,6 +774,7 @@ function mainFunctionShape(
     tagBuilder: tagBuilderFor(element),
     htmlTag: htmlTagNameFor(element),
     cssClass: classified.prefix === null ? null : asCssClass(classified.prefix),
+    modifierClasses: [],
     staticAttributes: componentConfig.componentAttributes,
     desc: classified.desc ?? '',
     parameters,
@@ -791,6 +803,7 @@ function partFunctionShape(
     tagBuilder: tagBuilderFor(element),
     htmlTag: htmlTagNameFor(element),
     cssClass: partClass,
+    modifierClasses: [],
     staticAttributes: [],
     // Always empty in practice, and deliberately left so. `descs` is keyed by the class name
     // with the component prefix STRIPPED (`title`), while `parts` holds it unstripped
@@ -822,6 +835,7 @@ function customPartFunctionShape(classified: ClassifiedComponent, part: CustomPa
     tagBuilder: tagBuilderFor(element),
     htmlTag: htmlTagNameFor(element),
     cssClass: part.cssClass === undefined ? null : asCssClass(part.cssClass),
+    modifierClasses: (part.modifierClasses ?? []).map(asCssClass),
     staticAttributes: Object.entries(part.staticAttributes ?? {}),
     desc: '',
     parameters: escapeHatchParameters(element, false),

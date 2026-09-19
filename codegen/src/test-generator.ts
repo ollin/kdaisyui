@@ -347,6 +347,9 @@ function customPartAssertions(part, tag) {
   if (part.cssClass) {
     assertions.push(`        assertTrue(html.contains("class=\\"${part.cssClass}"))`)
   }
+  for (const cssClass of part.modifierClasses || []) {
+    assertions.push(`        assertTrue(html.contains("${cssClass}"))`)
+  }
   assertions.push(...staticAttributeAssertions(part.staticAttributes))
   return assertions.join('\n')
 }

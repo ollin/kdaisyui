@@ -462,6 +462,26 @@ describe('buildComponentShape', () => {
     assert.equal(custom.receiver, 'FlowContent')
     assert.equal(custom.element, 'DIV')
     assert.deepEqual(custom.staticAttributes, [['popover', '']])
+    assert.deepEqual(custom.modifierClasses, [])
+  })
+
+  test('a custom part carries the modifier classes its construction always writes', () => {
+    // DaisyUI shows `skeleton-text` on exactly one markup: `<span class="skeleton
+    // skeleton-text">`. Two classes, so the function's own class cannot say it alone.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Skeleton', prefix: 'skeleton' }),
+      { componentDir: 'skeleton', element: 'DIV' },
+      {
+        customParts: {
+          skeleton: [{ name: 'Text', element: 'SPAN', cssClass: 'skeleton', modifierClasses: ['skeleton-text'] }],
+        },
+      },
+    )
+
+    const custom = shape.functions[1]
+    assert.equal(custom.name, 'daisySkeletonText')
+    assert.equal(custom.cssClass, 'skeleton')
+    assert.deepEqual(custom.modifierClasses, ['skeleton-text'])
   })
 
   test('a custom part with no cssClass is a structural wrapper', () => {

@@ -93,9 +93,10 @@ function firstSentence(text: string): string {
  */
 function rendersClause(shape: FunctionShape): string {
   const attrs = staticAttributeDoc(shape.staticAttributes)
+  const classes = [shape.cssClass, ...shape.modifierClasses].join(' ')
   return shape.cssClass === null
     ? `Structural wrapper. Renders \`<${shape.htmlTag}${attrs}>\`.`
-    : `Renders \`<${shape.htmlTag} class="${shape.cssClass} ..."${attrs}>\`.`
+    : `Renders \`<${shape.htmlTag} class="${classes} ..."${attrs}>\`.`
 }
 
 /**

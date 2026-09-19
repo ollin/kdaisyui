@@ -74,6 +74,11 @@ function loadConfig() {
  * wrong, and seeing the output it produced is what makes that diagnosable. The exit code still
  * fails the Gradle task, so nothing ships on it.
  */
+/** A single documented element as the one-entry list an observation now carries. */
+function asList(element: string | null): readonly string[] {
+  return element === null ? [] : [element]
+}
+
 function reportCrossCheck(
   observations: readonly ElementObservation[],
   exceptions: CrossCheckExceptions,
@@ -166,8 +171,8 @@ function main() {
     const source = { componentDir: componentName, element, documentedElements, documentedParents }
     const shape = buildComponentShape(classified, source, config, groups)
     observations.push(...observeElements(shape, {
-      componentClass: documentedElementFor(componentName, frontmatter.classnames.component[0].class),
-      byClass: documentedElementsFor(componentName),
+      componentClass: asList(documentedElementFor(componentName, frontmatter.classnames.component[0].class)),
+      byClass: new Map([...documentedElementsFor(componentName)].map(([cls, element]) => [cls, [element]])),
     }))
 
     const kotlin = generateKotlinFile(classified, source, config, groups)

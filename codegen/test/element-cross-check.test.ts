@@ -7,11 +7,11 @@ import {
   type ElementObservation,
 } from '../src/element-cross-check.ts'
 
-const agreeing: ElementObservation = { componentDir: 'card', cssClass: 'card', isComponentClass: true, chosen: 'DIV', documented: 'DIV' }
-const otp: ElementObservation = { componentDir: 'otp', cssClass: 'otp', isComponentClass: true, chosen: 'DIV', documented: 'LABEL' }
-const undocumented: ElementObservation = { componentDir: 'ghost', cssClass: 'ghost', isComponentClass: true, chosen: 'DIV', documented: null }
+const agreeing: ElementObservation = { componentDir: 'card', cssClass: 'card', isComponentClass: true, chosen: 'DIV', documented: ['DIV'] }
+const otp: ElementObservation = { componentDir: 'otp', cssClass: 'otp', isComponentClass: true, chosen: 'DIV', documented: ['LABEL'] }
+const undocumented: ElementObservation = { componentDir: 'ghost', cssClass: 'ghost', isComponentClass: true, chosen: 'DIV', documented: [] }
 /** A modifier on the container's function while DaisyUI puts it on a child. */
-const menuActive: ElementObservation = { componentDir: 'menu', cssClass: 'menu-active', isComponentClass: false, chosen: 'UL', documented: 'LI' }
+const menuActive: ElementObservation = { componentDir: 'menu', cssClass: 'menu-active', isComponentClass: false, chosen: 'UL', documented: ['LI'] }
 
 const exception = (issue: number) => ({ reason: 'classification needs sorting out first', issue })
 
@@ -50,7 +50,7 @@ describe('crossCheckElements', () => {
   test('keys the component class by directory, even when the class is named differently', () => {
     // `calendar`'s class is `cally`, `tab`'s container class is `tabs`: the existing
     // exceptions are keyed by directory and must go on matching.
-    const cally: ElementObservation = { componentDir: 'calendar', cssClass: 'cally', isComponentClass: true, chosen: 'DIV', documented: 'CALENDAR-DATE' }
+    const cally: ElementObservation = { componentDir: 'calendar', cssClass: 'cally', isComponentClass: true, chosen: 'DIV', documented: ['CALENDAR-DATE'] }
 
     const result = crossCheckElements([cally], { calendar: exception(343) })
 
@@ -82,7 +82,7 @@ describe('crossCheckElements', () => {
   test('leaves a modifier DaisyUI lists but never shows unchecked', () => {
     // `btn-md` is in the frontmatter and in no example. Its function's element is checked
     // through the component class; the modifier itself has nothing to be wrong against.
-    const btnMd: ElementObservation = { componentDir: 'button', cssClass: 'btn-md', isComponentClass: false, chosen: 'BUTTON', documented: null }
+    const btnMd: ElementObservation = { componentDir: 'button', cssClass: 'btn-md', isComponentClass: false, chosen: 'BUTTON', documented: [] }
 
     assert.deepEqual(crossCheckElements([btnMd], {}).findings, [])
   })

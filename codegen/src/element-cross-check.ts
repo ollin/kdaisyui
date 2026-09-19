@@ -34,8 +34,16 @@ export interface ElementObservation {
   readonly isComponentClass: boolean
   /** The element the generator renders the class on, e.g. `DIV`. */
   readonly chosen: string
-  /** What DaisyUI's documentation shows, or null when it shows nothing to check against. */
-  readonly documented: string | null
+  /**
+   * Every element DaisyUI's documentation shows the class on. Empty when it shows none, which
+   * is not a disagreement but an absence of anything to disagree with.
+   *
+   * A list rather than one element because DaisyUI genuinely uses several: `badge` is a `<div>`
+   * 47 times and a `<span>` 7 times, and which one it picks is the surrounding context — a
+   * `<span>` inside an `<h2>`, where a `<div>` would be invalid HTML. Naming one of those the
+   * element would make the other six wrong.
+   */
+  readonly documented: readonly string[]
 }
 
 /** A disagreement someone has looked at, decided to keep, and filed. */
@@ -71,7 +79,13 @@ export function exceptionKeyOf(observation: ElementObservation): string {
 }
 
 function disagrees(observation: ElementObservation): boolean {
-  return observation.documented !== null && observation.documented !== observation.chosen
+  return observation.documented.length > 0 && !observation.documented.includes(observation.chosen)
+}
+
+/** `<div>`, or `<div> or <span>` — how the failure message names what DaisyUI shows. */
+function asTagList(elements: readonly string[]): string {
+  const tags = elements.map(element => `<${element.toLowerCase()}>`)
+  return tags.length < 2 ? tags.join('') : `${tags.slice(0, -1).join(', ')} or ${tags.at(-1)}`
 }
 
 function undocumentedFinding(observation: ElementObservation): CrossCheckFinding {
@@ -89,7 +103,7 @@ function disagreementFinding(observation: ElementObservation): CrossCheckFinding
     componentDir: observation.componentDir,
     message:
       `"${observation.cssClass}" is emitted on <${observation.chosen.toLowerCase()}> but ` +
-      `DaisyUI documents it on <${observation.documented!.toLowerCase()}>. Declare it on the ` +
+      `DaisyUI documents it on ${asTagList(observation.documented)}. Declare it on the ` +
       `function that renders that element, or record an exception under ` +
       `elementCrossCheckExceptions["${exceptionKeyOf(observation)}"] with a reason and an issue.`,
   }
@@ -124,7 +138,7 @@ export function crossCheckElements(
     const exception = exceptions[key]
     consulted.push(key)
 
-    if (observation.documented === null) {
+    if (observation.documented.length === 0) {
       // Only the component's own class must be documented: without it nothing about the
       // component can be checked. A modifier DaisyUI lists but never shows (`btn-md`,
       // `modal-top`) is unchecked, not wrong.

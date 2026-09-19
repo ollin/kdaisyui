@@ -26,10 +26,10 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
 }
 
 const documented = {
-  componentClass: 'UL',
+  componentClass: ['UL'],
   byClass: new Map([
-    ['menu-active', 'LI'],
-    ['menu-title', 'LI'],
+    ['menu-active', ['LI']],
+    ['menu-title', ['LI']],
   ]),
 }
 
@@ -39,7 +39,7 @@ describe('observeElements', () => {
 
     const [own] = observeElements(shape, documented)
 
-    assert.deepEqual(own, { componentDir: 'menu', cssClass: 'menu', isComponentClass: true, chosen: 'UL', documented: 'UL' })
+    assert.deepEqual(own, { componentDir: 'menu', cssClass: 'menu', isComponentClass: true, chosen: 'UL', documented: ['UL'] })
   })
 
   test('observes every boolean on the function that declares it', () => {
@@ -53,7 +53,7 @@ describe('observeElements', () => {
 
     const active = observeElements(shape, documented).find((o) => o.cssClass === 'menu-active')
 
-    assert.deepEqual(active, { componentDir: 'menu', cssClass: 'menu-active', isComponentClass: false, chosen: 'UL', documented: 'LI' })
+    assert.deepEqual(active, { componentDir: 'menu', cssClass: 'menu-active', isComponentClass: false, chosen: 'UL', documented: ['LI'] })
   })
 
   test('observes a part on its own function, not the main one', () => {
@@ -79,7 +79,7 @@ describe('observeElements', () => {
       { componentDir: 'badge', element: 'SPAN' },
       {},
     )
-    const onDiv = { componentClass: 'DIV', byClass: new Map([['badge-primary', 'DIV']]) }
+    const onDiv = { componentClass: ['DIV'], byClass: new Map([['badge-primary', ['DIV']]]) }
 
     const classes = observeElements(shape, onDiv).map((o) => o.cssClass)
 
@@ -93,7 +93,7 @@ describe('observeElements', () => {
       {},
     )
 
-    const classes = observeElements(shape, { componentClass: 'UL', byClass: new Map([['menu-active', 'A']]) }).map((o) => o.cssClass)
+    const classes = observeElements(shape, { componentClass: ['UL'], byClass: new Map([['menu-active', ['A']]]) }).map((o) => o.cssClass)
 
     assert.deepEqual(classes, ['menu', 'menu-active'])
   })
@@ -107,7 +107,7 @@ describe('observeElements', () => {
       {},
     )
 
-    const classes = observeElements(shape, { componentClass: null, byClass: new Map([['badge-primary', 'SPAN']]) }).map((o) => o.cssClass)
+    const classes = observeElements(shape, { componentClass: [], byClass: new Map([['badge-primary', ['SPAN']]]) }).map((o) => o.cssClass)
 
     assert.deepEqual(classes, ['badge'])
   })
@@ -121,6 +121,6 @@ describe('observeElements', () => {
 
     const ghostly = observeElements(shape, documented).find((o) => o.cssClass === 'menu-ghostly')
 
-    assert.equal(ghostly?.documented, null)
+    assert.deepEqual(ghostly?.documented, [])
   })
 })

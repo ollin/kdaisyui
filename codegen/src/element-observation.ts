@@ -25,13 +25,9 @@ export interface DocumentedElements {
    * read it since 0.4.0. `btn` is shown on a `<button>` first and on an `<a>` later; the first
    * is the one the generator is held to.
    */
-  readonly componentClass: string | null
-  /**
-   * Every other class, where DaisyUI shows it on exactly one element. A modifier shown on two
-   * is absent — unchecked — because "the first" would be a coin toss for a class whose whole
-   * point is which element wears it.
-   */
-  readonly byClass: ReadonlyMap<string, string>
+  readonly componentClass: readonly string[]
+  /** Every other class, beside every element DaisyUI shows it on. */
+  readonly byClass: ReadonlyMap<string, readonly string[]>
 }
 
 export function observeElements(shape: ComponentShape, documented: DocumentedElements): ElementObservation[] {
@@ -46,7 +42,7 @@ function observeFunction(fn: FunctionShape, shape: ComponentShape, documented: D
       cssClass,
       isComponentClass,
       chosen: fn.element,
-      documented: isComponentClass ? documented.componentClass : documented.byClass.get(cssClass) ?? null,
+      documented: isComponentClass ? documented.componentClass : documented.byClass.get(cssClass) ?? [],
     }
   })
   const own = observations.find((observation) => observation.cssClass === fn.cssClass)
@@ -62,6 +58,10 @@ function observeFunction(fn: FunctionShape, shape: ComponentShape, documented: D
  */
 function repeatsTheFunctionsOwnVerdict(observation: ElementObservation, own: ElementObservation | undefined): boolean {
   if (own === undefined || observation === own) return false
-  const ownVerdict = own.documented ?? own.chosen
-  return observation.documented === ownVerdict
+  const ownVerdict = own.documented.length > 0 ? own.documented : [own.chosen]
+  return sameElements(observation.documented, ownVerdict)
+}
+
+function sameElements(one: readonly string[], other: readonly string[]): boolean {
+  return one.length === other.length && one.every(element => other.includes(element))
 }

@@ -65,6 +65,21 @@ class JoinScopeTest {
     }
 
     @Test
+    fun `a caller who already wrote the class by hand does not get it twice`() {
+        // The migration case. Before the scope, `extraClasses = "join-item"` was the only way
+        // to write it, so existing code has it — and that code now also gets the marker from
+        // the member. `addClassNames` collects tokens in a LinkedHashSet, so the two collapse.
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin { daisyButton("A", extraClasses = "join-item") }
+        }
+
+        assertEquals(
+            "<div><div class=\"join\"><button class=\"btn join-item\">A</button></div></div>",
+            html,
+        )
+    }
+
+    @Test
     fun `the same call outside a join is untouched`() {
         val html = createHTML(prettyPrint = false).div { daisyButton("A") }
 

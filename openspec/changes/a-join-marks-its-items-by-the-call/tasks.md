@@ -31,11 +31,41 @@ member list was re-measured and was wrong (seven components, not five).
 
 ## 2. The classes that reach no function — inherited
 
-- [ ] 2.1 `. d` The six exceptions inherited from the parent change — `dock-active` (on a
-  `<button>`), `menu-active` (`<a>`), `menu-disabled` (`<li>`), `rating-hidden` (`<input>`),
-  `list-col-grow` (`<div>`), `list-col-wrap` (`<p>`) — are the same shape as `join-item`: a
-  class on a child the library generates no function for. Decide per case whether the scope
-  answer applies, and re-point each exception's reason and condition at this change.
+**The claim this block was written on is refuted. Measured 2026-09-19 at v5.7.17, before any
+code, and it is false for all six.** The block as written said the six are "the same shape as
+`join-item`" and asked only *whether* the scope answer applies. It does not, and the reason is
+one number:
+
+| | sightings across all 66 component pages | of those, wearing a sibling daisyUI class |
+|---|---|---|
+| `join-item` | 72 | **72** |
+| the six together | 18 | **0** |
+
+The scope answer needs a member to overload, and `join-item` has one every time — it is always
+beside `btn`, `input`, `select`, `collapse`, `card` or `theme-controller`, so a generated
+function already renders that element. The six sit on bare tags carrying only Tailwind
+utilities: `<button>`, `<a>`, `<li>`, `<input>`, `<div>`, `<p>`. Confirmed against the
+generated Kotlin — `List.kt` and `Rating.kt` generate one function each, and neither `Menu.kt`
+nor `Dock.kt` generates the element in question. There is no member, so there is nothing to
+overload and no scope to put it on.
+
+The repository already knew this: **issue #347, point 3** says `menu-active` / `menu-disabled`
+"belong on a menu *item*, which the library does not generate at all", and calls it closer to
+#342 than to the parameter moves. The plan contradicted an open issue in its own tracker.
+
+One further finding, which makes `menu-active` worse than the others rather than the same:
+**it has no element by design.** DaisyUI's `desc` reads "For the element inside `<li>` to look
+active", and the page shows it on a `<button>` in the rendered preview and on an `<a>` in the
+`$$`-marked example below. The generator reads only the marked block, so it sees one `<a>`.
+
+What remains is therefore real but different: the six exceptions point at "Block 2 of
+`a-class-belongs-to-the-element-that-wears-it`", a change that is now **archived**, so every
+one of those reasons names a block no reader can act on.
+
+- [ ] 2.1 `. d` Re-point the six exceptions at issue #347, which is the problem they actually
+  belong to, and state the measured reason — a class DaisyUI documents on a bare child tag the
+  library generates no function for, which is why no caller can reach it and why the join scope
+  cannot help. Do **not** claim this change addresses them.
 
 ## 3. Wrap-up
 

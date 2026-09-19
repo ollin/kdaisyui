@@ -37,7 +37,7 @@ class MegamenuIndicatorTest : PlaywrightSpec() {
             page.evaluate("() => CSS.supports('anchor-name: --x')") shouldBe true
 
             val indicator = page.locator(".megamenu-active").settledBoundingBox()
-            val target = trigger.boundingBox()
+            val target = trigger.visibleBoundingBox()
 
             val indicatorCentre = indicator.x + indicator.width / 2
             indicatorCentre shouldBeGreaterThan target.x
@@ -54,12 +54,20 @@ class MegamenuIndicatorTest : PlaywrightSpec() {
  * diagnostic calls preceded the measurement.
  */
 private fun Locator.settledBoundingBox(): BoundingBox {
-    var previous = boundingBox()
+    var previous = visibleBoundingBox()
     repeat(20) {
         page().waitForTimeout(50.0)
-        val current = boundingBox()
+        val current = visibleBoundingBox()
         if (current.x == previous.x && current.width == previous.width) return current
         previous = current
     }
     return previous
 }
+
+/**
+ * Playwright reports no bounding box for an element that is not rendered. Geometry is the only
+ * thing this suite can measure, so an absent box is never a measurement — it is the element
+ * missing, and it fails here with that said rather than as a null dereference further down.
+ */
+private fun Locator.visibleBoundingBox(): BoundingBox =
+    checkNotNull(boundingBox()) { "$this has no bounding box; it is not rendered" }

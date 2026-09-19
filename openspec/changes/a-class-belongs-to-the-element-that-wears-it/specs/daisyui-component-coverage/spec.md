@@ -128,6 +128,11 @@ documentation.
 another parameter of the same function. Keywords are already escaped; a collision would fail
 compilation of the generated sources, which is the correction.
 
+*Checked 2026-09-19 and this requirement holds in the shipped output:* `codegen-config.json`
+carries no `parameterNames` section and no code reads one, and `Rating.kt` declares `hidden` with
+DaisyUI's own sentence as its documentation. This is the one requirement of the four that the
+day's measurements confirmed rather than corrected.
+
 #### Scenario: A boolean carries its class's name
 
 - **WHEN** a component declares a boolean for a DaisyUI class
@@ -154,18 +159,34 @@ collapses shared borders. Without an enclosing `.join` the variables are unset a
 strips the element's own corners — so `join-item` outside a join is harmful, not inert, and a
 parameter writable anywhere would let a caller do that silently.
 
-**Verified** the derived set and its completeness, measured 2026-09-15 over all 68 pages: the
-classes co-occurring with `join-item` are `btn` (52), `input` (5), `card` (3), `collapse` (3),
-`select` (1); and of 74 direct children of a `.join`, 71 carry `join-item` while the 3 that do not
-are wrapper `<div>`s whose grandchild carries it (`join/+page.md:94-98`). A rule marking every DOM
-child would therefore be wrong in 3 of 74 cases; a rule marking every component call in the
-join's own scope, and nothing nested, is wrong in none.
+**Verified** the derived set and its completeness, **re-measured 2026-09-19 at v5.7.17, and the
+first reading was wrong**. The component classes co-occurring with `join-item` are `btn` (60),
+`input` (5), `theme-controller` (5), `collapse` (3), `card` (3), `select` (1), `validator` (1) —
+**seven**, not the five read on 2026-09-15, which missed `theme-controller` and `validator` and
+counted `btn` at 52. Both are components this library generates, so the earlier list would have
+shipped a scope short of two of its members, with a test pinning the same wrong number.
 
-**Assumed** that a member function on the join's scope type takes precedence over the top-level
-extension of the same name, and that kotlinx.html's `@HtmlTagMarker` on that scope type hides it
-inside nested lambdas — both are Kotlin's documented resolution rules ("Type-safe builders",
-*Scope control*). *Wrong if:* a nested `daisyButton` inside a join's content emits `join-item`,
-or `daisyButton` inside a join resolves ambiguously; the test pinning both is the correction.
+This is the argument for deriving the set rather than configuring it, arriving before the code:
+a hand-read list cannot reach the output, and the test pins what DaisyUI says today.
+
+Of 72 direct children of a `.join`, 69 carry `join-item`; the 3 that do not are wrappers whose
+grandchild carries it — two bare `<div>`s and one `<div class="indicator">`. (The 2026-09-15
+reading said 74 and 71; the count moved, the shape did not.) A rule marking every DOM child would
+therefore be wrong in 3 of 72 cases; a rule marking every component call in the join's own scope,
+and nothing nested, is wrong in none.
+
+**Verified 2026-09-19 in the Kotlin REPL against the real `:lib` classpath** — previously Assumed
+from Kotlin's documented resolution rules, and the assumption was load-bearing enough that none
+of 3.3–3.5 should have been written on it unrun. A member function on the scope type does take
+precedence over the top-level extension; `@HtmlTagMarker`, which is a `@DslMarker`, does hide the
+scope inside a nested lambda, so the nested call reaches the extension and is not marked; and
+`this@daisyJoin.` still reaches the member. A fourth fact this requirement leaned on without
+stating it also holds: the element lands inside the wrapper rather than at join level, because
+kotlinx.html writes positionally into one shared consumer — which is the `div > div >
+input.join-item` DaisyUI documents.
+
+*Wrong if:* a nested `daisyButton` inside a join's content emits `join-item`, or `daisyButton`
+inside a join resolves ambiguously; the test pinning both is the correction.
 
 *Wrong if:* DaisyUI documents `join-item` on an element inside a join whose component is not in
 the derived set and that a caller cannot reach with `extraClasses`. The known limit — an element
@@ -243,6 +264,11 @@ applies to whatever `same` remains.
 
 *Wrong if:* a `same` pair appears in DaisyUI's documentation with both classes on one element —
 it then composes measurably and the verdict, not the rule, was wrong.
+
+*Tested 2026-09-19 and it did not fire.* All 14 `same` pairs — still exactly `footer.directions`
+1, `menu.modifiers` 6, `stack.modifiers` 6, `tab.modifiers` 1 — were checked against every
+`$$`-marked element on all 68 pages, and no element wears both members of any of them. The
+browser measurement and the documentation agree, from two independent directions.
 
 **Verified** that the apparent non-transitivity under `tooltip.placements` was an instrument
 artefact, not a property of the classes. `tooltip-top` declares exactly what `.tooltip` already

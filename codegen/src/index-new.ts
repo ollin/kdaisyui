@@ -6,7 +6,7 @@ import { classifyFromFrontmatter } from './classifier.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { classifyGroups } from './class-groups.ts'
 import { loadEvidence } from './measurement.ts'
-import { documentedElementFor, documentedElementsFor, documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
+import { documentedElementSetsFor, documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
 import { buildComponentShape } from './component-shape.ts'
 import { observeElements } from './element-observation.ts'
 import {
@@ -74,11 +74,6 @@ function loadConfig() {
  * wrong, and seeing the output it produced is what makes that diagnosable. The exit code still
  * fails the Gradle task, so nothing ships on it.
  */
-/** A single documented element as the one-entry list an observation now carries. */
-function asList(element: string | null): readonly string[] {
-  return element === null ? [] : [element]
-}
-
 function reportCrossCheck(
   observations: readonly ElementObservation[],
   exceptions: CrossCheckExceptions,
@@ -163,16 +158,21 @@ function main() {
     // it can be (category word, property table), by `enumNames` only where it cannot.
     const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, evidence)
 
-    // Every class each function emits, beside the element DaisyUI documents it on. Judged
+    // Every class each function emits, beside EVERY element DaisyUI documents it on. Judged
     // after the loop so the whole set is reportable at once — dying on the first would hide
     // the rest.
+    //
+    // The sets, not the tallies' usual element: which of several DaisyUI picks is the
+    // surrounding context, and the generator renders one function for all of them. Holding it
+    // to the commonest would call six of `badge`'s seven documented `<span>`s a defect.
     const documentedElements = documentedElementTalliesFor(componentName)
     const documentedParents = documentedParentsFor(componentName)
     const source = { componentDir: componentName, element, documentedElements, documentedParents }
     const shape = buildComponentShape(classified, source, config, groups)
+    const documentedSets = documentedElementSetsFor(componentName)
     observations.push(...observeElements(shape, {
-      componentClass: asList(documentedElementFor(componentName, frontmatter.classnames.component[0].class)),
-      byClass: new Map([...documentedElementsFor(componentName)].map(([cls, element]) => [cls, [element]])),
+      componentClass: [...documentedSets.get(frontmatter.classnames.component[0].class) ?? []],
+      byClass: new Map([...documentedSets].map(([cls, elements]) => [cls, [...elements]])),
     }))
 
     const kotlin = generateKotlinFile(classified, source, config, groups)

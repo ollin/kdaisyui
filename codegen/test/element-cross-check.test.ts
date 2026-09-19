@@ -23,6 +23,28 @@ describe('crossCheckElements', () => {
     assert.deepEqual(result.excused, [])
   })
 
+  test('accepts any element DaisyUI shows the class on, not only the commonest', () => {
+    // `badge` is a <div> 47 times and a <span> 7 times, and the <span>s are every one of the
+    // examples inside an <h2> or a <p> — where a <div> is invalid HTML. Calling one of those
+    // THE element makes the other seven wrong, so the check reads the set.
+    const badge: ElementObservation =
+      { componentDir: 'badge', cssClass: 'badge', isComponentClass: true, chosen: 'SPAN', documented: ['DIV', 'SPAN'] }
+
+    const result = crossCheckElements([badge], {})
+
+    assert.deepEqual(result.findings, [])
+  })
+
+  test('still fails on an element DaisyUI never shows, however many it does show', () => {
+    const badge: ElementObservation =
+      { componentDir: 'badge', cssClass: 'badge', isComponentClass: true, chosen: 'SECTION', documented: ['DIV', 'SPAN'] }
+
+    const result = crossCheckElements([badge], {})
+
+    assert.equal(result.findings.length, 1)
+    assert.match(result.findings[0].message, /emitted on <section> but DaisyUI documents it on <div> or <span>/)
+  })
+
   test('fails on a disagreement with no exception, naming both elements', () => {
     const result = crossCheckElements([otp], {})
 

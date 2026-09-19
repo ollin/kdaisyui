@@ -96,6 +96,36 @@ coverage gate; per-module configuration lives in the subprojects and `buildSrc`.
 the codegen input and the webjar CSS. It must stay at a version that also has a published
 webjar, so generated components never reference CSS the webjar lacks.
 
+## RED is two steps, and the second is not optional
+
+**A compile error is the FIRST step of RED. A failing assertion MUST follow it.**
+
+Writing a test against something that does not exist yet and watching it fail to compile is
+correct — it is how you learn the test really calls what you mean. It is step one, and it is
+not RED on its own.
+
+```
+step 1   run -> does not compile / import not found
+step 2   make it EXECUTABLE (stub), run -> ASSERTION FAILS     <- this is RED
+step 3   only now write the implementation                     -> GREEN
+```
+
+Step 2 is what gets skipped. A missing module, an import error, a compile error, a fixture that
+blew up, an unexpected exception before the assertion, "0 tests ran" — every one of those is a
+step-one outcome and none of them completes RED. Get to step 2 by writing the stub, the empty
+class, the signature that makes the test *executable*; that stub is not the production code, it
+is what lets the test reach its assertion.
+
+This bites hardest in `codegen/`, where a new module starts as an import that does not resolve
+and `node --test` reports it as a failing file — indistinguishable at a glance from a failing
+assertion. Going from there straight to the real implementation means no run ever observed the
+assertion fail, and a test never observed failing is indistinguishable from a test that cannot
+fail. That is the same defect as a green check nobody has shown can go red, which this
+repository has already paid for five times (see the `generated-sources-drift` and
+positive-control notes below).
+
+Say which step you are on, and name the assertion that failed.
+
 ## Test quality: three questions, and no gate answers another's
 
 | Question | What answers it | Where |

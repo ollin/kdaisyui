@@ -11,7 +11,7 @@ member list was re-measured and was wrong (seven components, not five).
 
 ## 1. The join scope — 1.5 h
 
-- [ ] 1.1 `^ F (internal)` The generator derives the join-child list: every component class that
+- [x] 1.1 `^ F (internal)` The generator derives the join-child list: every component class that
   co-occurs with `join-item` on one element in DaisyUI's markup. Pin the measured set with a
   test; a further component appearing in DaisyUI's docs must extend it without a config edit.
   **Measured 2026-09-19 at v5.7.17 and it is SEVEN, not the five named in 3.1**: `btn` 60,

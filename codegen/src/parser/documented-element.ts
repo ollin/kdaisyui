@@ -42,44 +42,7 @@ export function fencedHtmlBlocks(markdown: string): string {
   return [...markdown.matchAll(/```html\n([\s\S]*?)```/g)].map(match => match[1]).join('\n')
 }
 
-/**
- * The tag name of the first element whose class list carries `$$<componentClass>`, or null when
- * the documentation shows no such element.
- *
- * Null is a real answer and not an error: it means DaisyUI documents nothing this check can be
- * made against, which is exactly the case the caller must refuse to pass over in silence.
- */
-export function documentedElementIn(html: string, componentClass: string): string | null {
-  const marker = `$$${componentClass}`
-  const element = DomUtils.findOne(
-    node => (node.attribs.class ?? '').split(/\s+/).includes(marker),
-    parseDocument(html).children,
-    true,
-  )
-  return element?.name.toUpperCase() ?? null
-}
 
-/**
- * The element DaisyUI documents for EVERY `$$`-marked class on a page — where it documents
- * exactly one.
- *
- * The same reading as `documentedElementIn`, once per class instead of once per component — a
- * modifier such as `menu-active` sits on a child `<li>`, and a generator that declares it on the
- * container's function emits it where it does nothing. This is what the class cross-check reads.
- *
- * A class shown on several elements gets the USUAL one — `badge` on a `<div>` 47 times and a
- * `<span>` 7 times is a `<div>` — and is left out on a tie. "The first one" would be a coin
- * toss, not a statement; absent means unchecked, the honest answer to a source that does not
- * say.
- */
-export function documentedElementsIn(html: string): ReadonlyMap<string, string> {
-  const usual = new Map<string, string>()
-  for (const [className, tally] of documentedElementTalliesIn(html)) {
-    const element = usualElementOf(tally)
-    if (element !== undefined) usual.set(className, element)
-  }
-  return usual
-}
 
 /**
  * EVERY element each marked class is shown on. What `documentedElementsIn` decides from, and
@@ -180,19 +143,4 @@ export function documentedElementSetsFor(componentName: ComponentName): Readonly
   return documentedElementSetsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
 }
 
-/** `documentedElementsIn` for one component's page; empty when the page does not exist. */
-export function documentedElementsFor(componentName: ComponentName): ReadonlyMap<string, string> {
-  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(file)) return new Map()
-  return documentedElementsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
-}
 
-/** The documented element for one component, read from its `+page.md`. */
-export function documentedElementFor(
-  componentName: ComponentName,
-  componentClass: string,
-): string | null {
-  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(file)) return null
-  return documentedElementIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')), componentClass)
-}

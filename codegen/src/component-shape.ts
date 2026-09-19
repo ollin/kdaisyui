@@ -354,11 +354,15 @@ export interface ParameterShape {
    */
   readonly cssClass?: CssClass
   /**
-   * Whether the parameter holds a `ClassValues`, whose chosen member names the class. Set on
-   * `variant`, on `size` and on every measured enum — the three the Kotlin body passes to
-   * `addClassNames` unguarded, and which of them exist is now a question about the signature.
+   * The enum this parameter chooses from, where it holds a `ClassValues` — `variant`, `size`
+   * and every measured enum, the three the Kotlin body passes to `addClassNames` unguarded.
+   * Absent for every other parameter.
+   *
+   * The NAME rather than a flag, because two readers need to reach the enum's entries from the
+   * parameter: the body, to know it emits one, and the element cross-check, to know which
+   * function declares those classes. A flag would leave the second parsing `type`.
    */
-  readonly classValues?: boolean
+  readonly enumName?: string
 }
 
 /**
@@ -578,7 +582,7 @@ function enumParameter(group: EnumGroup): ParameterShape {
     type: groupParameterType(group.enumName),
     default: 'null',
     doc: `${capitalised(group.parameterName)} variant`,
-    classValues: true,
+    enumName: group.enumName,
   }
 }
 
@@ -588,10 +592,10 @@ function enumParameters(
 ): ParameterShape[] {
   const parameters: ParameterShape[] = []
   if (classified.colors.length > 0) {
-    parameters.push({ name: 'variant', type: groupParameterType(`${classified.componentName}Variant`), default: 'null', doc: 'Color variant', classValues: true })
+    parameters.push({ name: 'variant', type: groupParameterType(`${classified.componentName}Variant`), default: 'null', doc: 'Color variant', enumName: `${classified.componentName}Variant` })
   }
   if (classified.sizes.length > 0) {
-    parameters.push({ name: 'size', type: groupParameterType(`${classified.componentName}Size`), default: 'null', doc: 'Size variant', classValues: true })
+    parameters.push({ name: 'size', type: groupParameterType(`${classified.componentName}Size`), default: 'null', doc: 'Size variant', enumName: `${classified.componentName}Size` })
   }
   for (const group of plan.groups.enums) {
     if (plan.placement.enumBelongsToMain(group)) parameters.push(enumParameter(group))

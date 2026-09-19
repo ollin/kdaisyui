@@ -92,26 +92,6 @@
       "reason": "daisyDropdown renders <details>, the documented shape that opens without JS; DaisyUI shows this class only on the <div> shape. Block 2 of a-class-belongs-to-the-element-that-wears-it decides whether the class moves or this exception stays with its reason.",
       "issue": 347
     },
-    "indicator/indicator-start": {
-      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "indicator/indicator-center": {
-      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "indicator/indicator-end": {
-      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "indicator/indicator-top": {
-      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "indicator/indicator-middle": {
-      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <span>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
     "list/list-col-wrap": {
       "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <p>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347

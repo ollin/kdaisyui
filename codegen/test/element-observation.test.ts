@@ -34,6 +34,37 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
 const documented = documentedClasses({ menu: ['UL'], 'menu-active': ['LI'], 'menu-title': ['LI'] })
 
 describe('observeElements', () => {
+  test('stops reporting an enum against the container once a part declares it', () => {
+    // Since enums move to the part whose element wears them, "enums are on the main function"
+    // is no longer true. It reported indicator's placements against the container's <div>
+    // while `daisyIndicatorItem` declares them, so five exceptions went on being excused for
+    // a disagreement that had already been fixed.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Indicator', prefix: 'indicator', placements: ['top'], parts: ['indicator-item'] }),
+      {
+        componentDir: 'indicator',
+        element: 'DIV',
+        documentedElements: new Map([
+          ['indicator', new Map([['DIV', 1]])],
+          ['indicator-item', new Map([['SPAN', 1]])],
+          ['indicator-top', new Map([['SPAN', 1]])],
+        ]),
+      },
+      { subComponentElements: { 'indicator-item': 'span' } },
+      { enums: [{ enumName: 'IndicatorPlacement', parameterName: 'placement', category: 'placements', members: ['top'] }], booleans: [] },
+    )
+
+    const observations = observeElements(
+      shape,
+      documentedClasses({ indicator: ['DIV'], 'indicator-item': ['SPAN'], 'indicator-top': ['SPAN'] }),
+    )
+
+    // Nothing left to report: the <span> that declares it is the <span> DaisyUI shows it on,
+    // which is what its own class already said. Before, this was a disagreement with the
+    // container's <div> — a defect that had been fixed and went on being excused.
+    assert.ok(!observations.some((observation) => observation.cssClass === 'indicator-top'))
+  })
+
   test('observes the component class on the main function', () => {
     const shape = buildComponentShape(classified(), { componentDir: 'menu', element: 'UL' }, {})
 

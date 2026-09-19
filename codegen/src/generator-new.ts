@@ -162,7 +162,7 @@ function mainFunctionBody(
  */
 function classValuesLines(shape: FunctionShape): string[] {
   return shape.parameters
-    .filter(parameter => parameter.classValues)
+    .filter(parameter => parameter.enumName !== undefined)
     .map(parameter => `        addClassNames(${parameter.name})`)
 }
 

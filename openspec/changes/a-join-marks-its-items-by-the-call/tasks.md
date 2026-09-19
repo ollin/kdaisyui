@@ -62,7 +62,7 @@ What remains is therefore real but different: the six exceptions point at "Block
 `a-class-belongs-to-the-element-that-wears-it`", a change that is now **archived**, so every
 one of those reasons names a block no reader can act on.
 
-- [ ] 2.1 `. d` Re-point the six exceptions at issue #347, which is the problem they actually
+- [x] 2.1 `. d` Re-point the six exceptions at issue #347, which is the problem they actually
   belong to, and state the measured reason — a class DaisyUI documents on a bare child tag the
   library generates no function for, which is why no caller can reach it and why the join scope
   cannot help. Do **not** claim this change addresses them.

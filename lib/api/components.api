@@ -269,10 +269,10 @@ fun FlowContent.daisyStatStatDesc(text: String? = null, id: HtmlId? = null, extr
 fun FlowContent.daisyStatStatFigure(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyStatStatActions(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
-# Status <span>
+# Status <div>
 enum StatusVariant: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error
 enum StatusSize: Xs, Sm, Md, Lg, Xl
-fun FlowContent.daisyStatus(id: HtmlId? = null, variant: ClassValues<StatusVariant>? = null, size: ClassValues<StatusSize>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+fun FlowContent.daisyStatus(id: HtmlId? = null, variant: ClassValues<StatusVariant>? = null, size: ClassValues<StatusSize>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Steps <ul>
 enum StepsVariant: StepNeutral, StepPrimary, StepSecondary, StepAccent, StepInfo, StepSuccess, StepWarning, StepError

@@ -115,58 +115,6 @@
     "skeleton/skeleton-text": {
       "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
-    },
-    "status/status-neutral": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-primary": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-secondary": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-accent": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-info": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-success": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-warning": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-error": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-xs": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-sm": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-md": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-lg": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
-    },
-    "status/status-xl": {
-      "reason": "daisyStatus renders the <span> of DaisyUI's first example; every variant example is a <div>. Whether the component element changes is decided in block 2 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
     }
   },
   "skip": ["accordion", "pagination"],
@@ -366,7 +314,8 @@
 
   "componentElements": {
     "dropdown": "details",
-    "otp": "label"
+    "otp": "label",
+    "status": "div"
   },
   "subComponentElements": {
     "card-title": "H2",

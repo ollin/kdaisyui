@@ -15,8 +15,6 @@ Overlays badges on elements. Renders `<div class="indicator ...">`.
 // IndicatorVerticalPlacement: Top | Middle | Bottom
 fun FlowContent.daisyIndicator(
     id: HtmlId? = null,
-    horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
-    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -26,6 +24,8 @@ fun FlowContent.daisyIndicator(
 ```kotlin
 fun FlowContent.daisyIndicatorItem(
     id: HtmlId? = null,
+    horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),

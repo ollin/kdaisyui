@@ -142,8 +142,8 @@ fun FlowContent.daisyHoverGallery(id: HtmlId? = null, extraClasses: String? = nu
 # Indicator <div>
 enum IndicatorHorizontalPlacement: Start, Center, End
 enum IndicatorVerticalPlacement: Top, Middle, Bottom
-fun FlowContent.daisyIndicator(id: HtmlId? = null, horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null, verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyIndicatorItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+fun FlowContent.daisyIndicator(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyIndicatorItem(id: HtmlId? = null, horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null, verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # Input <input>
 enum InputVariant: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error

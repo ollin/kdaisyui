@@ -41,16 +41,12 @@ enum class IndicatorVerticalPlacement(internal val className: String) : ClassVal
 /**
  * Indicators are used to place an element on the corner of another element. Renders `<div class="indicator ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param horizontalPlacement — HorizontalPlacement variant
- * @param verticalPlacement — VerticalPlacement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyIndicator(
     id: HtmlId? = null,
-    horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
-    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -58,8 +54,6 @@ fun FlowContent.daisyIndicator(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("indicator")
-        addClassNames(horizontalPlacement)
-        addClassNames(verticalPlacement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -69,6 +63,8 @@ fun FlowContent.daisyIndicator(
 /** Renders `<span class="indicator-item ...">`. */
 fun FlowContent.daisyIndicatorItem(
     id: HtmlId? = null,
+    horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
@@ -76,6 +72,8 @@ fun FlowContent.daisyIndicatorItem(
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("indicator-item")
+        addClassNames(horizontalPlacement)
+        addClassNames(verticalPlacement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

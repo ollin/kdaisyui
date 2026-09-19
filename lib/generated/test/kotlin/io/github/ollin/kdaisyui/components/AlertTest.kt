@@ -76,7 +76,7 @@ class AlertTest {
     @Test
     fun alert_outline_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(outline = true) {
+            daisyAlert(style = AlertStyle.Outline) {
             }
         }
         val expectedClasses = "alert alert-outline"
@@ -87,7 +87,7 @@ class AlertTest {
     @Test
     fun alert_dash_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(dash = true) {
+            daisyAlert(style = AlertStyle.Dash) {
             }
         }
         val expectedClasses = "alert alert-dash"

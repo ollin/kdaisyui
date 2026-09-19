@@ -7,6 +7,110 @@
     "calendar": {
       "reason": "DaisyUI documents Cally's custom element <calendar-date>, and kotlinx.html has no tag class for a custom element. Needs a decision — a generic custom-tag escape hatch, or skipping the component — rather than an element swap.",
       "issue": 343
+    },
+    "badge/badge-neutral": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-primary": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-secondary": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-accent": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-info": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-success": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-warning": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-error": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-outline": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-dash": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-soft": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "badge/badge-ghost": {
+      "reason": "daisyBadge renders <span> deliberately: every one of DaisyUI's seven <span> examples sits inside a heading or a paragraph, where a <div> is invalid HTML, so <span> is the only element valid in all 54 documented positions. This class is documented on <div> alone, and one generated function renders one element \u2014 kotlinx.html cannot pick by context, since H1 and P are themselves FlowContent. Permanent; see the issue.",
+      "issue": 356
+    },
+    "dock/dock-active": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <button>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "dropdown/dropdown-close": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-hover": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-open": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-start": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-center": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-end": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-top": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-bottom": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "list/list-col-wrap": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <p>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "list/list-col-grow": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <div>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "menu/menu-active": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <a>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "menu/menu-disabled": {
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <li>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
+    },
+    "rating/rating-hidden": {
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <input>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "issue": 347
     }
   },
   "skip": ["accordion", "pagination"],
@@ -200,52 +304,14 @@
   },
   "additionalBooleans": {},
   "enumNames": {
-    "alert": { "directions": "Direction" },
-    "card": { "styles": "Style", "modifiers": "Modifier" },
-    "carousel": { "modifiers": "Modifier" },
-    "divider": { "directions": "Direction" },
-    "join": { "directions": "Direction" },
-    "list": { "modifiers": "Modifier" },
-    "loading": { "styles": "Style" },
-    "mask": { "styles": "Shape", "modifiers": "Modifier" },
-    "menu": { "directions": "Direction" },
-    "stat": { "directions": "Direction" },
-    "steps": { "directions": "Direction" },
-    "tab": { "placements": "Placement" },
-    "indicator": {
-      "placements": [
-        { "name": "VerticalPlacement", "members": ["top", "middle", "bottom"] },
-        { "name": "HorizontalPlacement", "members": ["start", "center", "end"] }
-      ]
-    },
-    "toast": {
-      "placements": [
-        { "name": "VerticalPlacement", "members": ["top", "middle", "bottom"] },
-        { "name": "HorizontalPlacement", "members": ["start", "center", "end"] }
-      ]
-    },
-    "tooltip": {
-      "placements": [
-        { "name": "SidePlacement", "members": ["top", "bottom", "left", "right"] },
-        { "name": "AlignPlacement", "members": ["start", "center", "end"] }
-      ]
-    },
-    "dropdown": {
-      "placements": {
-        "axes": [{ "name": "AlignPlacement", "members": ["start", "center", "end"] }],
-        "booleans": ["top", "bottom", "left", "right"]
-      }
-    }
+    "tooltip": { "placements": ["SidePlacement", "AlignPlacement"] },
+    "badge": { "styles": ["OutlineStyle", "FillStyle"] }
   },
-  "parameterNames": {
-    "dropdown": { "hover": "openOnHover" },
-    "menu": { "focus": "focused" },
-    "rating": { "hidden": "clearOption", "half": "halfStars" },
-    "timeline": { "box": "boxed" }
-  },
+
   "componentElements": {
     "dropdown": "details",
-    "otp": "label"
+    "otp": "label",
+    "status": "div"
   },
   "subComponentElements": {
     "card-title": "H2",
@@ -274,6 +340,14 @@
         "element": "DIV",
         "cssClass": null,
         "staticAttributes": { "popover": "" }
+      }
+    ],
+    "skeleton": [
+      {
+        "name": "Text",
+        "element": "SPAN",
+        "cssClass": "skeleton",
+        "modifierClasses": ["skeleton-text"]
       }
     ]
   },

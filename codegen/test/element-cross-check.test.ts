@@ -4,12 +4,15 @@ import assert from 'node:assert/strict'
 import {
   crossCheckElements,
   describeCrossCheckFailure,
+  DocumentedElements,
   type ElementObservation,
 } from '../src/element-cross-check.ts'
 
-const agreeing: ElementObservation = { componentDir: 'card', chosen: 'DIV', documented: 'DIV' }
-const otp: ElementObservation = { componentDir: 'otp', chosen: 'DIV', documented: 'LABEL' }
-const undocumented: ElementObservation = { componentDir: 'ghost', chosen: 'DIV', documented: null }
+const agreeing: ElementObservation = { componentDir: 'card', cssClass: 'card', isComponentClass: true, chosen: 'DIV', documented: DocumentedElements.of(['DIV']) }
+const otp: ElementObservation = { componentDir: 'otp', cssClass: 'otp', isComponentClass: true, chosen: 'DIV', documented: DocumentedElements.of(['LABEL']) }
+const undocumented: ElementObservation = { componentDir: 'ghost', cssClass: 'ghost', isComponentClass: true, chosen: 'DIV', documented: DocumentedElements.none() }
+/** A modifier on the container's function while DaisyUI puts it on a child. */
+const menuActive: ElementObservation = { componentDir: 'menu', cssClass: 'menu-active', isComponentClass: false, chosen: 'UL', documented: DocumentedElements.of(['LI']) }
 
 const exception = (issue: number) => ({ reason: 'classification needs sorting out first', issue })
 
@@ -21,11 +24,66 @@ describe('crossCheckElements', () => {
     assert.deepEqual(result.excused, [])
   })
 
+  test('accepts any element DaisyUI shows the class on, not only the commonest', () => {
+    // `badge` is a <div> 47 times and a <span> 7 times, and the <span>s are every one of the
+    // examples inside an <h2> or a <p> — where a <div> is invalid HTML. Calling one of those
+    // THE element makes the other seven wrong, so the check reads the set.
+    const badge: ElementObservation =
+      { componentDir: 'badge', cssClass: 'badge', isComponentClass: true, chosen: 'SPAN', documented: DocumentedElements.of(['DIV', 'SPAN']) }
+
+    const result = crossCheckElements([badge], {})
+
+    assert.deepEqual(result.findings, [])
+  })
+
+  test('still fails on an element DaisyUI never shows, however many it does show', () => {
+    const badge: ElementObservation =
+      { componentDir: 'badge', cssClass: 'badge', isComponentClass: true, chosen: 'SECTION', documented: DocumentedElements.of(['DIV', 'SPAN']) }
+
+    const result = crossCheckElements([badge], {})
+
+    assert.equal(result.findings.length, 1)
+    assert.match(result.findings[0].message, /emitted on <section> but DaisyUI documents it on <div> or <span>/)
+  })
+
   test('fails on a disagreement with no exception, naming both elements', () => {
     const result = crossCheckElements([otp], {})
 
     assert.equal(result.findings.length, 1)
-    assert.match(result.findings[0].message, /"otp" is generated as <div> but DaisyUI documents <label>/)
+    assert.match(result.findings[0].message, /"otp" is emitted on <div> but DaisyUI documents it on <label>/)
+  })
+
+  test('fails on a class emitted by the wrong function, naming the config key to excuse it', () => {
+    // The defect this change exists for: `menu-active` declared on `daisyMenu`, whose <ul>
+    // never wears it — the class does nothing there and nothing noticed.
+    const result = crossCheckElements([menuActive], {})
+
+    assert.equal(result.findings.length, 1)
+    assert.match(result.findings[0].message, /"menu-active" is emitted on <ul> but DaisyUI documents it on <li>/)
+    assert.match(result.findings[0].message, /elementCrossCheckExceptions\["menu\/menu-active"\]/)
+  })
+
+  test('excuses a class disagreement keyed component/class, and reports it under that key', () => {
+    const result = crossCheckElements([menuActive], { 'menu/menu-active': exception(350) })
+
+    assert.deepEqual(result.findings, [])
+    assert.deepEqual(result.excused, ['menu/menu-active'])
+  })
+
+  test('keys the component class by directory, even when the class is named differently', () => {
+    // `calendar`'s class is `cally`, `tab`'s container class is `tabs`: the existing
+    // exceptions are keyed by directory and must go on matching.
+    const cally: ElementObservation = { componentDir: 'calendar', cssClass: 'cally', isComponentClass: true, chosen: 'DIV', documented: DocumentedElements.of(['CALENDAR-DATE']) }
+
+    const result = crossCheckElements([cally], { calendar: exception(343) })
+
+    assert.deepEqual(result.excused, ['calendar'])
+  })
+
+  test('a component-level exception does not cover a class of that component', () => {
+    const result = crossCheckElements([menuActive], { menu: exception(350) })
+
+    assert.equal(result.findings.length, 1)
   })
 
   test('excuses a disagreement that has an exception', () => {
@@ -42,6 +100,14 @@ describe('crossCheckElements', () => {
 
     assert.equal(result.findings.length, 1)
     assert.match(result.findings[0].message, /documents no element for "ghost"/)
+  })
+
+  test('leaves a modifier DaisyUI lists but never shows unchecked', () => {
+    // `btn-md` is in the frontmatter and in no example. Its function's element is checked
+    // through the component class; the modifier itself has nothing to be wrong against.
+    const btnMd: ElementObservation = { componentDir: 'button', cssClass: 'btn-md', isComponentClass: false, chosen: 'BUTTON', documented: DocumentedElements.none() }
+
+    assert.deepEqual(crossCheckElements([btnMd], {}).findings, [])
   })
 
   test('an exception does not excuse a component that cannot be checked', () => {
@@ -64,6 +130,14 @@ describe('crossCheckElements', () => {
     const result = crossCheckElements([otp, undocumented, agreeing], { card: exception(1) })
 
     assert.deepEqual(result.findings.map(f => f.componentDir), ['otp', 'ghost', 'card'])
+  })
+
+  test('names the component of a stale class-level exception', () => {
+    const agreeingClass: ElementObservation = { ...menuActive, chosen: 'LI' }
+    const result = crossCheckElements([agreeingClass], { 'menu/menu-active': exception(350) })
+
+    assert.equal(result.findings[0].componentDir, 'menu')
+    assert.match(result.findings[0].message, /"menu\/menu-active" is no longer needed/)
   })
 })
 

@@ -22,7 +22,7 @@ fun FlowContent.daisyValidator(
 fun FlowContent.daisyValidatorHint(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (P.() -> Unit)? = null,
+    content: (P.() -> Unit),
 )
 ```

@@ -5,10 +5,10 @@
  * every pair of classes in every multi-member group, what a browser did when both were worn at
  * once against DaisyUI's own example markup: one class inert against the other (`exclusive`),
  * a third result neither produces alone (`compose`), or indistinguishable in that example
- * (`same`).
+ * (`same`) — and, per member, whether the class alone changed nothing (`inert`).
  *
- * **A group becomes an enum only when EVERY pair in it is `exclusive`.** The cost of being
- * wrong is asymmetric and that is the whole argument:
+ * **A set of classes becomes an enum only when EVERY pair in it is `exclusive`.** The cost of
+ * being wrong is asymmetric and that is the whole argument:
  *
  * | wrong as | consequence |
  * |---|---|
@@ -26,16 +26,21 @@
  * `card.modifiers` and `list.modifiers` — `modifiers` being the category the old rule
  * distrusted — are exclusive.
  *
- * Exclusivity is NOT transitive, so an axis is a clique and not a connected component: under
- * `tooltip.placements` both `{top, bottom, left, right}` and `{start, center, end}` are
- * cliques and `top` belongs to both. A partition therefore cannot be derived from the pairs,
- * and the axes of a group that carries two are declared in `enumNames` and CHECKED here
- * against the measurement.
+ * Which classes form an axis is DERIVED (`axis-derivation.ts`): the cliques of the exclusive
+ * graph, inert members placed by what they declare. Nothing here declares a partition. A
+ * single axis is named after its category (`categoryWord`); the axes of a group that has more
+ * than one are named from DaisyUI's property table where it gives them a direction
+ * (`axis-names.ts`). What remains — `tooltip`'s two, `badge`'s two — is what `enumNames`
+ * holds, and a configured name for a group the table can name is refused.
  */
 import { toCamelCase } from './classifier.ts'
 import type { ClassifiedComponent } from './classifier.ts'
-import { ClassPair, GroupKey } from './measurement.ts'
-import type { Measurement, MeasuredPairs } from './measurement.ts'
+import { deriveAxes } from './axis-derivation.ts'
+import type { Axis } from './axis-derivation.ts'
+import { deriveAxisNames } from './axis-names.ts'
+import { GroupKey } from './measurement.ts'
+import type { Evidence, MeasuredPairs } from './measurement.ts'
+import type { PropertyTable } from './parser/property-table.ts'
 
 /** The five categories DaisyUI's frontmatter uses, minus `colors` and `sizes`. */
 export type GroupCategory = 'styles' | 'modifiers' | 'behaviors' | 'directions' | 'placements'
@@ -54,9 +59,9 @@ export const GROUP_CATEGORIES: readonly GroupCategory[] = [
  * `members` are the stripped class suffixes, e.g. `wide` for `btn-wide`.
  */
 export interface EnumGroup {
-  /** Full Kotlin name, e.g. `MaskShape` — the component name plus the configured suffix. */
+  /** Full Kotlin name, e.g. `MaskStyle` — the component name plus the category word or a named axis. */
   enumName: string
-  /** The parameter that carries it, e.g. `shape` — the suffix in camelCase. */
+  /** Parameter carrying it, e.g. `style` — the suffix in camelCase. */
   parameterName: string
   category: GroupCategory
   members: readonly string[]
@@ -69,50 +74,15 @@ export interface GroupClassification {
 }
 
 /**
- * One axis of a group that splits, e.g. `{ name: 'Vertical', members: ['top','middle','bottom'] }`.
+ * `enumNames` from the config: component directory name → category → one name per derived
+ * axis, in the order the axes come out (by each axis's first member in DaisyUI's list).
  *
- * Four placement groups carry two independent axes — `indicator` and `toast` are X and Y,
- * `dropdown` and `tooltip` are side and alignment. One enum would force a caller to choose
- * between them.
+ * Only groups that derive MORE than one axis appear here; an entry for a single-axis group is
+ * refused, because that name is derived and a config restating a rule drifts from it.
  */
-export interface EnumSplit {
-  name: string
-  members: readonly string[]
-}
-
-/**
- * A group that is part choice and part flags.
- *
- * Needed by exactly one group so far, and the reason is worth keeping: `dropdown.placements`
- * holds a clean alignment axis — `start`, `center`, `end`, every pair exclusive — beside four
- * classes the browser says compose with everything, including each other. Declaring the sides
- * as an axis would make `dropdown-left dropdown-top` inexpressible against a measurement that
- * says the combination reaches CSS neither class reaches alone.
- *
- * The `booleans` list is what keeps the coverage guard usable. Without it, "unassigned" would
- * mean both *deliberately a flag* and *nobody has looked at this yet*, and a class DaisyUI
- * added later would slip through as a boolean by omission — which is the exact failure the
- * guard exists to prevent.
- */
-export interface EnumGroupSpec {
-  readonly axes: readonly EnumSplit[]
-  /** Members that stay individual boolean parameters, named rather than left out. */
-  readonly booleans?: readonly string[]
-}
-
-/**
- * A configured name: one suffix for the whole group, several axes that split it, or — where the
- * group is part choice and part flags — both halves named explicitly.
- */
-export type EnumNameEntry = string | readonly EnumSplit[] | EnumGroupSpec
-
-/** `enumNames` from the config: component directory name → category → name or split. */
-export type EnumNames = Readonly<Record<string, Readonly<Record<string, EnumNameEntry>>>>
+export type EnumNames = Readonly<Record<string, Readonly<Record<string, readonly string[]>>>>
 
 export class GroupNamingError extends Error {}
-
-/** The measurement and the configuration disagree — one of them has to be corrected. */
-export class ExclusivityError extends Error {}
 
 /** One group under consideration: who it belongs to and which classes it holds. */
 interface Group {
@@ -121,156 +91,73 @@ interface Group {
   readonly members: readonly string[]
 }
 
-function splitsFor(entry: EnumNameEntry, members: readonly string[]): readonly EnumSplit[] {
-  if (typeof entry === 'string') return [{ name: entry, members }]
-  if (Array.isArray(entry)) return entry
-  return (entry as EnumGroupSpec).axes
-}
-
-/** Members the config declares as flags. Empty for every form but the object one. */
-function declaredBooleansFor(entry: EnumNameEntry): readonly string[] {
-  if (typeof entry === 'string' || Array.isArray(entry)) return []
-  return (entry as EnumGroupSpec).booleans ?? []
-}
-
-/** Every pair drawn from two different axes of the same group. */
-function crossAxisPairs(splits: readonly EnumSplit[]): ClassPair[] {
-  return splits.flatMap((split, index) =>
-    splits
-      .slice(index + 1)
-      .flatMap((other) =>
-        split.members.flatMap((left) => other.members.map((right) => new ClassPair(left, right))),
-      ),
-  )
-}
-
-function quoted(members: readonly string[]): string {
-  return members.map((member) => `"${member}"`).join(', ')
-}
-
-function checkSplitCoverage(
-  group: Group,
-  splits: readonly EnumSplit[],
-  declaredBooleans: readonly string[],
-): void {
-  const claimed = [...splits.flatMap((split) => split.members), ...declaredBooleans]
-  const unknown = claimed.filter((member) => !group.members.includes(member))
-  if (unknown.length > 0) {
-    throw new GroupNamingError(
-      `enumNames.${group.key} names ${quoted(unknown)}, which DaisyUI does not list. ` +
-        `Members are: ${group.members.join(', ')}.`,
-    )
-  }
-
-  const unclaimed = group.members.filter((member) => !claimed.includes(member))
-  if (unclaimed.length > 0) {
-    throw new GroupNamingError(
-      `enumNames.${group.key} leaves ${quoted(unclaimed)} unassigned. Every member of a named ` +
-        `group must belong to an axis or be listed under "booleans", otherwise a new DaisyUI ` +
-        `class silently becomes a boolean by omission.`,
-    )
-  }
-}
-
 /**
- * Flags the config declares must not be a choice it failed to notice.
+ * The enum suffix a single-axis group carries: DaisyUI's category word, singular.
  *
- * Only a WHOLE missed enum is reported. Some exclusive pairs among the flags are expected and
- * harmless — `dropdown-top` and `dropdown-bottom` are exclusive while both compose with
- * `dropdown-left`, so the four together are not a choice and leaving them as flags costs
- * nothing but a useless combination.
+ * `loading.styles` is `LoadingStyle`, `alert.directions` is `AlertDirection`. The word is
+ * DaisyUI's, so a reader holding its documentation can find the group; nothing here is invented.
  */
-function checkBooleansAreNotAChoice(
-  group: Group,
-  measured: MeasuredPairs,
-  declaredBooleans: readonly string[],
-): void {
-  if (declaredBooleans.length < 2) return
-  if (measured.describeNonExclusive(declaredBooleans).length > 0) return
-
-  throw new ExclusivityError(
-    `enumNames.${group.key} lists ${declaredBooleans.join(', ')} as booleans, but the ` +
-      `measurement says every pair of them is exclusive — that is a choice, and leaving it as ` +
-      `flags lets a caller set two contradictory answers at once. Give it an axis.`,
-  )
+export function categoryWord(category: GroupCategory): string {
+  const singular = category.replace(/s$/, '')
+  return singular.charAt(0).toUpperCase() + singular.slice(1)
 }
 
-/** Each declared axis must be a clique of `exclusive` verdicts, or the enum is a lie. */
-function checkAxisIsExclusive(group: Group, measured: MeasuredPairs, split: EnumSplit): void {
-  const offenders = measured.describeNonExclusive(split.members)
-  if (offenders.length === 0) return
-
-  throw new ExclusivityError(
-    `enumNames.${group.key} makes ${split.members.join(', ')} one choice, but the measurement ` +
-      `says ${offenders.join('; ')}. An enum would make that combination impossible to ` +
-      `express. Either drop the entry and let these stay boolean, or split the axis so every ` +
-      `pair within it is exclusive.`,
-  )
-}
-
-/**
- * A split has to be earned: some pair from different axes must NOT be exclusive.
- *
- * If every cross pair is exclusive too, the group is one clique and one enum says so more
- * simply — two enums would then let a caller set two answers to the same question.
- */
-function checkSplitIsEarned(group: Group, measured: MeasuredPairs, splits: readonly EnumSplit[]): void {
-  const composing = crossAxisPairs(splits).some((pair) => !measured.isExclusive(pair))
-  if (composing) return
-
-  throw new ExclusivityError(
-    `enumNames.${group.key} splits into ${splits.map((split) => split.name).join(' and ')}, but ` +
-      `every pair across those axes is exclusive, so the group is a single choice. Use one ` +
-      `enum — two would let a caller answer the same question twice.`,
-  )
-}
-
-function requireName(group: Group): never {
-  throw new GroupNamingError(
-    `${group.key} has ${group.members.length} members (${group.members.join(', ')}) and the ` +
-      `measurement says every pair of them is mutually exclusive, so they are one choice and ` +
-      `must become an enum — and only a human can say what the question is. Add ` +
-      `enumNames.${group.key}.`,
-  )
-}
-
-/**
- * A group nobody named stays boolean — unless the measurement says it is a choice.
- *
- * A single member answers no question on its own, and an unmeasured or composing group is not
- * a choice either. Only the third case is a build failure.
- */
-function unnamedGroup(group: Group, measured: MeasuredPairs): GroupClassification {
-  const isChoice = group.members.length > 1 && measured.describeNonExclusive(group.members).length === 0
-  if (isChoice) requireName(group)
-  return { enums: [], booleans: [...group.members] }
-}
-
-/** A named group becomes one enum per declared axis, each checked against the measurement. */
-function namedGroup(
-  group: Group,
-  entry: EnumNameEntry,
-  measured: MeasuredPairs,
-): GroupClassification {
-  const splits = splitsFor(entry, group.members)
-  const declaredBooleans = declaredBooleansFor(entry)
-
-  checkSplitCoverage(group, splits, declaredBooleans)
-  for (const split of splits) checkAxisIsExclusive(group, measured, split)
-  if (splits.length > 1) checkSplitIsEarned(group, measured, splits)
-  checkBooleansAreNotAChoice(group, measured, declaredBooleans)
-
+function enumFor(group: Group, suffix: string, members: Axis): EnumGroup {
   return {
-    enums: splits.map((split) => ({
-      enumName: `${group.componentName}${split.name}`,
-      parameterName: toCamelCase(split.name),
-      category: group.key.category as GroupCategory,
-      members: split.members,
-    })),
-    // In DaisyUI's order, not the config's: the generated parameter list should not change
-    // because someone reordered a list in the config.
-    booleans: group.members.filter((member) => declaredBooleans.includes(member)),
+    enumName: `${group.componentName}${suffix}`,
+    parameterName: toCamelCase(suffix),
+    category: group.key.category as GroupCategory,
+    members,
   }
+}
+
+/** The configured entry and what the measurement says, for one group. */
+interface Naming {
+  readonly entry: readonly string[] | undefined
+  readonly measured: MeasuredPairs
+  readonly table: PropertyTable
+}
+
+function rejectRestatedName(group: Group, entry: readonly string[] | undefined, derived: readonly string[]): void {
+  if (entry === undefined) return
+  throw new GroupNamingError(
+    `enumNames.${group.key} names ${JSON.stringify(entry)}, but DaisyUI already names ` +
+      `${derived.length === 1 ? 'this single choice' : 'these axes'} — ` +
+      `${derived.map((name) => group.componentName + name).join(', ')} — so the entry restates ` +
+      `a rule and will drift from it. Remove the entry.`,
+  )
+}
+
+function requireAxisNames(group: Group, axes: readonly Axis[], entry: readonly string[] | undefined): readonly string[] {
+  if (entry !== undefined && entry.length === axes.length) return entry
+  const shape = axes.map((axis) => `{${axis.join(', ')}}`).join(' and ')
+  throw new GroupNamingError(
+    `${group.key} derives ${axes.length} axes — ${shape} — and DaisyUI's property table gives ` +
+      `them no direction, so only a human can say what each is called. Add ` +
+      `enumNames.${group.key} with ${axes.length} names in that order` +
+      (entry === undefined ? '.' : `; it has ${entry.length}.`),
+  )
+}
+
+/** What DaisyUI names without configuration: a single choice, or axes its table gives a direction. */
+function derivedNames(group: Group, axes: readonly Axis[], naming: Naming): readonly string[] | undefined {
+  const category = group.key.category as GroupCategory
+  if (axes.length === 1) return [categoryWord(category)]
+  return deriveAxisNames(axes, category, naming.measured, naming.table)
+}
+
+/** One enum per derived axis, named by DaisyUI where it can be, by `enumNames` otherwise. */
+function nameAxes(group: Group, axes: readonly Axis[], naming: Naming): EnumGroup[] {
+  const derived = derivedNames(group, axes, naming)
+  if (derived !== undefined) rejectRestatedName(group, naming.entry, derived)
+  const names = derived ?? requireAxisNames(group, axes, naming.entry)
+  return axes.map((axis, index) => enumFor(group, names[index], axis))
+}
+
+function classifyGroup(group: Group, naming: Naming): GroupClassification {
+  const derived = deriveAxes(group.members, naming.measured, String(group.key))
+  if (derived.axes.length === 0) return { enums: [], booleans: derived.booleans }
+  return { enums: nameAxes(group, derived.axes, naming), booleans: derived.booleans }
 }
 
 /**
@@ -278,12 +165,13 @@ function namedGroup(
  *
  * @param component the component's directory name, e.g. `button` — the key both `enumNames`
  *   and `exclusivity.json` use
+ * @param evidence the measurement and DaisyUI's property table, read once per run
  */
 export function classifyGroups(
   classified: ClassifiedComponent,
   component: string,
   enumNames: EnumNames,
-  measurement: Measurement,
+  evidence: Evidence,
 ): GroupClassification {
   const configured = enumNames[component] ?? {}
   const enums: EnumGroup[] = []
@@ -295,10 +183,12 @@ export function classifyGroups(
 
     const key = new GroupKey(component, category)
     const group: Group = { componentName: classified.componentName, key, members }
-    const measured = measurement.forGroup(key)
-    const entry = configured[category]
-    const decided =
-      entry === undefined ? unnamedGroup(group, measured) : namedGroup(group, entry, measured)
+    const naming: Naming = {
+      entry: configured[category],
+      measured: evidence.measurement.forGroup(key),
+      table: evidence.table,
+    }
+    const decided = classifyGroup(group, naming)
 
     enums.push(...decided.enums)
     booleans.push(...decided.booleans)

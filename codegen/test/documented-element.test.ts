@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { documentedElementIn, fencedHtmlBlocks } from '../src/parser/documented-element.ts'
+import { documentedElementSetsIn, documentedElementTalliesIn, documentedParentsIn, fencedHtmlBlocks, usualElementOf } from '../src/parser/documented-element.ts'
 
 /**
  * Reading the element DaisyUI documents.
@@ -46,48 +46,75 @@ describe('fencedHtmlBlocks', () => {
   })
 })
 
-describe('documentedElementIn', () => {
-  test('names the element carrying the marked component class', () => {
-    // The nine components whose skill file has no Syntax block; these three stand for them.
-    assert.equal(documentedElementIn('<label class="$$swap"><div class="$$swap-on"></div></label>', 'swap'), 'LABEL')
-    assert.equal(documentedElementIn('<ul class="$$menu"><li></li></ul>', 'menu'), 'UL')
-    assert.equal(documentedElementIn('<dialog class="$$modal"></dialog>', 'modal'), 'DIALOG')
+
+
+describe('documentedElementSetsIn', () => {
+  const menu = `
+    <ul class="$$menu $$menu-horizontal">
+      <li><a class="$$menu-active">Item</a></li>
+      <li class="lg:$$menu-disabled"><a>Other</a></li>
+    </ul>`
+
+  test('names every element carrying each marked class', () => {
+    const elements = documentedElementSetsIn(menu)
+
+    assert.deepEqual([...elements.get('menu') ?? []], ['UL'])
+    assert.deepEqual([...elements.get('menu-active') ?? []], ['A'])
   })
 
-  test('matches the class as a whole token, not a substring', () => {
-    // `$$swap-on` must not answer for `swap`, or every part would shadow its component.
-    assert.equal(documentedElementIn('<div class="$$swap-on"></div><label class="$$swap"></label>', 'swap'), 'LABEL')
+  test('keeps ALL of them where DaisyUI shows a class on several', () => {
+    // What separates this from the reading it replaced: that one named the commonest and said
+    // nothing on a tie, so `badge` was a <div> and its seven documented <span>s were a defect.
+    const html = `<span class="$$badge"></span><div class="$$badge $$badge-xs"></div><div class="$$badge"></div>`
+
+    const elements = documentedElementSetsIn(html)
+
+    assert.deepEqual([...elements.get('badge') ?? []].sort(), ['DIV', 'SPAN'])
+    assert.deepEqual([...elements.get('badge-xs') ?? []], ['DIV'])
   })
 
-  test('requires the marker, so a live preview cannot answer', () => {
-    assert.equal(documentedElementIn('<label class="swap"></label>', 'swap'), null)
+  test('skips a class that appears only behind a Tailwind variant', () => {
+    // `lg:$$menu-disabled` wears the class at one breakpoint; a function always emits it, so
+    // that element is not evidence of where the class belongs.
+    assert.equal(documentedElementSetsIn(menu).has('menu-disabled'), false)
   })
 
-  test('takes the first documented example when several are shown', () => {
-    assert.equal(documentedElementIn('<details class="$$dropdown"></details>\n<div class="$$dropdown"></div>', 'dropdown'), 'DETAILS')
+  test('ignores classes without the marker', () => {
+    assert.equal(documentedElementSetsIn(`<div class="flex $$card"></div>`).has('flex'), false)
+  })
+})
+
+describe('documentedParentsIn', () => {
+  test('names the parent element of each marked class', () => {
+    const html = `<fieldset class="$$fieldset"><legend class="$$fieldset-legend">T</legend></fieldset>`
+
+    assert.equal(documentedParentsIn(html).get('fieldset-legend'), 'FIELDSET')
   })
 
-  test('returns null when the class is documented nowhere', () => {
-    assert.equal(documentedElementIn('<div class="$$card"></div>', 'swap'), null)
+  test('has no parent for a class at the top of an example', () => {
+    assert.equal(documentedParentsIn(`<fieldset class="$$fieldset"></fieldset>`).has('fieldset'), false)
   })
 
-  test('reads a custom element, which kotlinx.html has no tag class for', () => {
-    // `calendar` is documented as Cally's custom element. Reported faithfully so the caller can
-    // refuse it, rather than truncated at the hyphen as an earlier regex did.
-    assert.equal(documentedElementIn('<calendar-date class="$$cally"></calendar-date>', 'cally'), 'CALENDAR-DATE')
+  test('leaves out a class whose parent differs between examples', () => {
+    const html = `<ul><li class="$$step">a</li></ul><ol><li class="$$step">b</li></ol>`
+
+    assert.equal(documentedParentsIn(html).has('step'), false)
+  })
+})
+
+describe('usualElementOf', () => {
+  const html = `<span class="$$item"></span><span class="$$item"></span><div class="$$item"></div><p class="$$tie"></p><b class="$$tie"></b>`
+  const tallies = documentedElementTalliesIn(html)
+
+  test('names the element a class is shown on more often than any other', () => {
+    assert.equal(usualElementOf(tallies.get('item')), 'SPAN')
   })
 
-  describe('the constructs a regex gets wrong', () => {
-    test('a > inside a quoted attribute value', () => {
-      assert.equal(documentedElementIn('<div alt="a > b" class="$$x"></div>', 'x'), 'DIV')
-    })
+  test('names nothing on a tie, so a coin toss cannot become an element', () => {
+    assert.equal(usualElementOf(tallies.get('tie')), undefined)
+  })
 
-    test('a comment containing a tag', () => {
-      assert.equal(documentedElementIn('<!-- <span class="$$x"> --><b class="$$x"></b>', 'x'), 'B')
-    })
-
-    test('script content containing markup', () => {
-      assert.equal(documentedElementIn(`<script>var s = '<i class="$$x">'</script><em class="$$x"></em>`, 'x'), 'EM')
-    })
+  test('names nothing for a class shown nowhere', () => {
+    assert.equal(usualElementOf(tallies.get('absent')), undefined)
   })
 })

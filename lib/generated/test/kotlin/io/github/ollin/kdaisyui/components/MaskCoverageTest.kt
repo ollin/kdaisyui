@@ -46,153 +46,153 @@ class MaskCoverageTest {
     }
 
     @Test
-    fun mask_shape_squircle() {
+    fun mask_style_squircle() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Squircle,
+                style = MaskStyle.Squircle,
             )
         }
-        assertRendered(html, "mask mask-squircle", "Mask shape Squircle")
+        assertRendered(html, "mask mask-squircle", "Mask style Squircle")
     }
 
     @Test
-    fun mask_shape_heart() {
+    fun mask_style_heart() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Heart,
+                style = MaskStyle.Heart,
             )
         }
-        assertRendered(html, "mask mask-heart", "Mask shape Heart")
+        assertRendered(html, "mask mask-heart", "Mask style Heart")
     }
 
     @Test
-    fun mask_shape_hexagon() {
+    fun mask_style_hexagon() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Hexagon,
+                style = MaskStyle.Hexagon,
             )
         }
-        assertRendered(html, "mask mask-hexagon", "Mask shape Hexagon")
+        assertRendered(html, "mask mask-hexagon", "Mask style Hexagon")
     }
 
     @Test
-    fun mask_shape_hexagon2() {
+    fun mask_style_hexagon2() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Hexagon2,
+                style = MaskStyle.Hexagon2,
             )
         }
-        assertRendered(html, "mask mask-hexagon-2", "Mask shape Hexagon2")
+        assertRendered(html, "mask mask-hexagon-2", "Mask style Hexagon2")
     }
 
     @Test
-    fun mask_shape_decagon() {
+    fun mask_style_decagon() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Decagon,
+                style = MaskStyle.Decagon,
             )
         }
-        assertRendered(html, "mask mask-decagon", "Mask shape Decagon")
+        assertRendered(html, "mask mask-decagon", "Mask style Decagon")
     }
 
     @Test
-    fun mask_shape_pentagon() {
+    fun mask_style_pentagon() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Pentagon,
+                style = MaskStyle.Pentagon,
             )
         }
-        assertRendered(html, "mask mask-pentagon", "Mask shape Pentagon")
+        assertRendered(html, "mask mask-pentagon", "Mask style Pentagon")
     }
 
     @Test
-    fun mask_shape_diamond() {
+    fun mask_style_diamond() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Diamond,
+                style = MaskStyle.Diamond,
             )
         }
-        assertRendered(html, "mask mask-diamond", "Mask shape Diamond")
+        assertRendered(html, "mask mask-diamond", "Mask style Diamond")
     }
 
     @Test
-    fun mask_shape_square() {
+    fun mask_style_square() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Square,
+                style = MaskStyle.Square,
             )
         }
-        assertRendered(html, "mask mask-square", "Mask shape Square")
+        assertRendered(html, "mask mask-square", "Mask style Square")
     }
 
     @Test
-    fun mask_shape_circle() {
+    fun mask_style_circle() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Circle,
+                style = MaskStyle.Circle,
             )
         }
-        assertRendered(html, "mask mask-circle", "Mask shape Circle")
+        assertRendered(html, "mask mask-circle", "Mask style Circle")
     }
 
     @Test
-    fun mask_shape_star() {
+    fun mask_style_star() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Star,
+                style = MaskStyle.Star,
             )
         }
-        assertRendered(html, "mask mask-star", "Mask shape Star")
+        assertRendered(html, "mask mask-star", "Mask style Star")
     }
 
     @Test
-    fun mask_shape_star2() {
+    fun mask_style_star2() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Star2,
+                style = MaskStyle.Star2,
             )
         }
-        assertRendered(html, "mask mask-star-2", "Mask shape Star2")
+        assertRendered(html, "mask mask-star-2", "Mask style Star2")
     }
 
     @Test
-    fun mask_shape_triangle() {
+    fun mask_style_triangle() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Triangle,
+                style = MaskStyle.Triangle,
             )
         }
-        assertRendered(html, "mask mask-triangle", "Mask shape Triangle")
+        assertRendered(html, "mask mask-triangle", "Mask style Triangle")
     }
 
     @Test
-    fun mask_shape_triangle2() {
+    fun mask_style_triangle2() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Triangle2,
+                style = MaskStyle.Triangle2,
             )
         }
-        assertRendered(html, "mask mask-triangle-2", "Mask shape Triangle2")
+        assertRendered(html, "mask mask-triangle-2", "Mask style Triangle2")
     }
 
     @Test
-    fun mask_shape_triangle3() {
+    fun mask_style_triangle3() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Triangle3,
+                style = MaskStyle.Triangle3,
             )
         }
-        assertRendered(html, "mask mask-triangle-3", "Mask shape Triangle3")
+        assertRendered(html, "mask mask-triangle-3", "Mask style Triangle3")
     }
 
     @Test
-    fun mask_shape_triangle4() {
+    fun mask_style_triangle4() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                shape = MaskShape.Triangle4,
+                style = MaskStyle.Triangle4,
             )
         }
-        assertRendered(html, "mask mask-triangle-4", "Mask shape Triangle4")
+        assertRendered(html, "mask mask-triangle-4", "Mask style Triangle4")
     }
 
     @Test

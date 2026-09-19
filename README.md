@@ -217,12 +217,22 @@ The enum entry is the old parameter name in PascalCase, so the replacement is me
 | Join | `direction` | `JoinDirection` | `vertical`, `horizontal` |
 | List | `modifier` | `ListModifier` | `colWrap`, `colGrow` |
 | Loading | `style` | `LoadingStyle` | `spinner`, `dots`, `ring`, `ball`, `bars`, `infinity` |
-| Mask | `shape` | `MaskShape` | `squircle`, `heart`, `hexagon`, … 15 in total |
+| Mask | `style` | `MaskStyle` | `squircle`, `heart`, `hexagon`, … 15 in total |
 | Mask | `modifier` | `MaskModifier` | `half1`, `half2` |
 | Menu | `direction` | `MenuDirection` | `vertical`, `horizontal` |
 | Stat | `direction` | `StatDirection` | `horizontal`, `vertical` |
 | Steps | `direction` | `StepsDirection` | `vertical`, `horizontal` |
 | Tab | `placement` | `TabPlacement` | `top`, `bottom` |
+| Alert | `style` | `AlertStyle` | `outline`, `dash` — `soft` stays a boolean |
+| Avatar | `modifier` | `AvatarModifier` | `online`, `offline` — `placeholder` stays |
+| Badge | `outlineStyle` | `BadgeOutlineStyle` | `outline`, `dash` |
+| Badge | `fillStyle` | `BadgeFillStyle` | `soft`, `ghost` |
+| Dropdown | `modifier` | `DropdownModifier` | `hover`, `open` — `close` stays |
+| Dropdown | `verticalPlacement` | `DropdownVerticalPlacement` | `top`, `bottom` — `left`, `right` stay |
+
+The last five rows are cliques *beside* booleans: `alert-outline` and `alert-dash` exclude each
+other, `alert-soft` composes with both. A clique of two or more is an enum wherever it sits;
+the booleans around it stay booleans.
 
 **2. Four placement groups split into two independent axes**, because their classes compose
 *across* the split even though each axis is a single choice:
@@ -238,34 +248,25 @@ daisyTooltip("Copy", sidePlacement = TooltipSidePlacement.Top,
 
 | Component | Axes | Replaces |
 |---|---|---|
-| Indicator | `verticalPlacement` (`Top`/`Middle`/`Bottom`), `horizontalPlacement` (`Start`/`Center`/`End`) | six booleans |
-| Toast | `verticalPlacement`, `horizontalPlacement` — same entries | six booleans |
+| Indicator | `horizontalPlacement` (`Start`/`Center`/`End`), `verticalPlacement` (`Top`/`Middle`/`Bottom`) | six booleans |
+| Toast | `horizontalPlacement`, `verticalPlacement` — same entries | six booleans |
 | Tooltip | `sidePlacement` (`Top`/`Bottom`/`Left`/`Right`), `alignPlacement` (`Start`/`Center`/`End`) | seven booleans |
-| Dropdown | `alignPlacement` (`Start`/`Center`/`End`) only | `start`, `center`, `end` |
+| Dropdown | `horizontalPlacement` (`Start`/`Center`/`End`), `verticalPlacement` (`Top`/`Bottom`) | five booleans — `left`, `right` stay |
 
-`daisyDropdown` is the one that looks inconsistent and is not: `top`, `bottom`, `left` and
-`right` **stay booleans** there, because the browser says `dropdown-left dropdown-top` reaches CSS
-that neither class reaches alone. Making them an axis would have made a working combination
-inexpressible.
+The axis names are DaisyUI's where it has them: its reference table describes `--indicator-y`
+as "vertical position of the indicator" and `--anchor-h` as "horizontal position of the
+anchor", so those axes are `Vertical`/`Horizontal`. The tooltip's variables carry no direction
+— its alignment is relative to the side — so `Side`/`Align` are ours.
+
+`daisyDropdown` keeps `left` and `right` as booleans because the browser says `dropdown-left
+dropdown-top` reaches CSS that neither class reaches alone; `top`/`bottom` exclude each other
+and are an axis.
 
 That asymmetry is the whole rule. A group became an enum only where *every* pair in it was
 measured mutually exclusive; where the measurement was unsure, the classes stayed booleans. A
 wrong enum takes away something DaisyUI permits; a wrong boolean only permits something useless.
 
-**3. Five booleans were renamed**, because the class name did not say what `true` means:
-
-| Component | Before | After |
-|---|---|---|
-| Dropdown | `hover` | `openOnHover` |
-| Menu | `focus` | `focused` |
-| Rating | `hidden` | `clearOption` |
-| Rating | `half` | `halfStars` |
-| Timeline | `box` | `boxed` |
-
-`daisyRating(hidden = true)` read as "hide the rating" and in fact adds the option to clear it.
-The class name is DaisyUI's and cannot change; the parameter is ours.
-
-**4. Enum parameters are typed `ClassValues<T>`, not `T`.** No call site changes:
+**3. Enum parameters are typed `ClassValues<T>`, not `T`.** No call site changes:
 `size = ButtonSize.Lg` compiles exactly as before, because the enum *is* a `ClassValues<ButtonSize>`.
 The wider type exists so one parameter can later also accept a class applied at a Tailwind
 breakpoint. That composition is built but **not yet public** — see `docs/explanation.md`; until it
@@ -281,12 +282,83 @@ val size: ButtonSize? = if (compact) ButtonSize.Sm else null
 val size: ClassValues<ButtonSize>? = if (compact) ButtonSize.Sm else null
 ```
 
-**5. Use named arguments.** The advice from the 0.1.x entry now matters more: removing booleans
+**4. Use named arguments.** The advice from the 0.1.x entry now matters more: removing booleans
 and inserting enum parameters shifts every positional argument on 37 of the 66 components. Named
 arguments are immune.
 
 Both baselines show this change in full — the parameters are removed and added, not merely
 retyped, so neither blind spot from 0.4.x applies.
+
+**5. A class is now declared on the function whose element wears it.** DaisyUI's own markup says
+which element carries each class, and where the generator had put a parameter on the container
+while DaisyUI puts the class on a child, the parameter moved. The class had been reaching the
+page and styling nothing.
+
+```kotlin
+// before — the placement classes sat on the container, where they do nothing
+daisyIndicator(verticalPlacement = IndicatorVerticalPlacement.Top) { daisyIndicatorItem { … } }
+
+// after — they are declared on the item, which is what DaisyUI shows them on
+daisyIndicator { daisyIndicatorItem(verticalPlacement = IndicatorVerticalPlacement.Top) { … } }
+```
+
+`timeline-box` moved the same way, from `daisyTimeline` to the parts that wear it.
+
+**6. Several functions render a different element, so their lambdas receive a different type.**
+Sixteen parts now render the element DaisyUI documents rather than one guessed from their name,
+and `daisyStatus` renders `<div>` — measured, because DaisyUI shows `status` on a `<div>` 16
+times and a `<span>` once, and all thirteen of its variant classes on `<div>` alone.
+
+```kotlin
+// before
+daisyStatus(attrs = { /* this: SPAN */ }) { /* this: SPAN */ }
+// after
+daisyStatus(attrs = { /* this: DIV */ })  { /* this: DIV */ }
+```
+
+Most call sites need no edit: an empty body, `+"text"`, or anything reached through
+`attributes[…]` compiles unchanged. Only code naming the tag type explicitly breaks, and it
+breaks at compile time. `lib/api/components.api` shows every one of these; `lib/api/lib.api`
+cannot, for the reason given under 0.3.x.
+
+**7. Two parts are now extensions of their parent, not of `FlowContent`.** kotlinx.html opens
+`<legend>` only inside `<fieldset>` and `<li>` only inside `<ul>`, so `daisyFieldsetLegend` and
+`daisyStepsStep` extend `FIELDSET` and `UL`. Calling them anywhere else no longer compiles —
+which is the point: it never rendered valid HTML.
+
+**8. `daisySkeleton(text = true)` is now `daisySkeletonText { }`.** DaisyUI documents
+`skeleton-text` in exactly one markup, `<span class="skeleton skeleton-text">`, and the boolean
+offered it on a `<div>` instead — for a modifier whose purpose is animating *text* colour.
+
+```kotlin
+// before
+daisySkeleton(text = true) { +"AI is thinking harder..." }
+// after
+daisySkeletonText { +"AI is thinking harder..." }
+```
+
+**9. `MaskShape` is `MaskStyle`.** The enum is named after DaisyUI's own category word rather
+than a hand-written entry. A rename, nothing else.
+
+**10. Three toggles no longer take a `content` lambda.** `daisyDrawerToggle`,
+`daisyFilterReset` and `daisyModalToggle` render `<input>`, which the HTML specification says
+cannot hold children — so the lambda described children that were never rendered.
+
+```kotlin
+// before — the lambda ran, and nothing it wrote appeared
+daisyModalToggle { }
+// after
+daisyModalToggle()
+```
+
+### What deliberately did NOT change
+
+`daisyBadge` still renders `<span>`, although every one of its variant classes is documented on a
+`<div>`. DaisyUI picks the tag by context: all seven of its `<span>` examples sit inside an
+`<h1>`–`<h5>` or a `<p>`, where a `<div>` is invalid HTML. `<span>` is valid in all 54 documented
+positions and `<div>` in 47, so the element that keeps `daisyBadge` usable everywhere wins over
+the commoner one. Tracked as #356. `daisyDropdown` keeps `<details>` for the same kind of reason
+— the `<div>` shape needs attributes the generator cannot emit — tracked as #357.
 
 ## Quick start
 

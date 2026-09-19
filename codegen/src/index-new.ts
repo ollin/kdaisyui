@@ -5,11 +5,15 @@ import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter } from './classifier.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { classifyGroups } from './class-groups.ts'
-import { loadMeasurement } from './measurement.ts'
-import { documentedElementFor } from './parser/documented-element.ts'
+import { loadEvidence } from './measurement.ts'
+import { documentedElementSetsFor, documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
+import { buildComponentShape } from './component-shape.ts'
+import { observeElements } from './element-observation.ts'
 import {
   crossCheckElements,
   describeCrossCheckFailure,
+  DocumentedElements,
+  type CrossCheckExceptions,
   type ElementObservation,
 } from './element-cross-check.ts'
 import {
@@ -66,15 +70,6 @@ function loadConfig() {
   return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
 }
 
-/** What the element heuristic chose for one component, beside what DaisyUI documents. */
-function observeElement(componentName, element, frontmatter): ElementObservation {
-  return {
-    componentDir: componentName,
-    chosen: (element ?? 'DIV').toUpperCase(),
-    documented: documentedElementFor(componentName, frontmatter.classnames.component[0].class),
-  }
-}
-
 /**
  * Runs after the files are written, deliberately: a failure here means the chosen element is
  * wrong, and seeing the output it produced is what makes that diagnosable. The exit code still
@@ -82,11 +77,13 @@ function observeElement(componentName, element, frontmatter): ElementObservation
  */
 function reportCrossCheck(
   observations: readonly ElementObservation[],
-  exceptions: Readonly<Record<string, { reason: string; issue: number }>>,
+  exceptions: CrossCheckExceptions,
+  consumed: ConsumedKeyCollector,
 ): void {
   const crossCheck = crossCheckElements(observations, exceptions)
-  for (const componentDir of crossCheck.excused) {
-    console.log(`  ⚠ ${componentDir}: element disagrees with DaisyUI, excused — see #${exceptions[componentDir].issue}`)
+  consumed.exceptionKeys(crossCheck.consulted)
+  for (const key of crossCheck.excused) {
+    console.log(`  ⚠ ${key}: element disagrees with DaisyUI, excused — see #${exceptions[key].issue}`)
   }
   if (crossCheck.findings.length === 0) return
   console.error(`\n${describeCrossCheckFailure(crossCheck)}`)
@@ -124,7 +121,7 @@ function main() {
   // absent one at run time — which is how two dead `noContent` entries survived.
   const consumed = new ConsumedKeyCollector()
   // One file describing every component, so it is read once rather than 66 times.
-  const measurement = loadMeasurement()
+  const evidence = loadEvidence()
 
   for (const componentName of componentDirs) {
     // Recorded before the skip checks: `skip` itself is a config section, and an entry naming
@@ -158,15 +155,28 @@ function main() {
     const element = config.componentElements?.[componentName]
       ?? getElementForComponent(elementRules, componentName)
 
-    // What the heuristic chose, beside what DaisyUI documents. Judged after the loop so the
-    // whole set is reportable at once — dying on the first would hide the rest.
-    observations.push(observeElement(componentName, element, frontmatter))
+    // Which class groups are one choice, measured rather than assumed; named by DaisyUI where
+    // it can be (category word, property table), by `enumNames` only where it cannot.
+    const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, evidence)
 
-    // Which class groups are one choice, measured rather than assumed. Throws when the
-    // measurement calls a group a choice that `enumNames` has not named.
-    const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, measurement)
+    // Every class each function emits, beside EVERY element DaisyUI documents it on. Judged
+    // after the loop so the whole set is reportable at once — dying on the first would hide
+    // the rest.
+    //
+    // The sets, not the tallies' usual element: which of several DaisyUI picks is the
+    // surrounding context, and the generator renders one function for all of them. Holding it
+    // to the commonest would call six of `badge`'s seven documented `<span>`s a defect.
+    const documentedElements = documentedElementTalliesFor(componentName)
+    const documentedParents = documentedParentsFor(componentName)
+    const source = { componentDir: componentName, element, documentedElements, documentedParents }
+    const shape = buildComponentShape(classified, source, config, groups)
+    const documentedSets = documentedElementSetsFor(componentName)
+    observations.push(...observeElements(
+      shape,
+      new Map([...documentedSets].map(([cls, elements]) => [cls, DocumentedElements.of(elements)])),
+    ))
 
-    const kotlin = generateKotlinFile(classified, { componentDir: componentName, element }, config, groups)
+    const kotlin = generateKotlinFile(classified, source, config, groups)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
     
     fs.mkdirSync(OUTPUT_DIR, { recursive: true })
@@ -184,7 +194,7 @@ function main() {
   console.log(`Output: ${OUTPUT_DIR}`)
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
 
-  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {})
+  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {}, consumed)
   reportUnreadConfig(config, consumed.keys())
 }
 

@@ -15,7 +15,6 @@ import kotlinx.html.UL
 /**
  * Timeline component shows a list of events in chronological order. Renders `<ul class="timeline ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param boxed
  * @param compact
  * @param horizontal
  * @param snapIcon
@@ -26,7 +25,6 @@ import kotlinx.html.UL
  */
 fun FlowContent.daisyTimeline(
     id: HtmlId? = null,
-    boxed: Boolean = false,
     compact: Boolean = false,
     horizontal: Boolean = false,
     snapIcon: Boolean = false,
@@ -38,7 +36,6 @@ fun FlowContent.daisyTimeline(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline")
-        if (boxed) addClassNames("timeline-box")
         if (compact) addClassNames("timeline-compact")
         if (horizontal) addClassNames("timeline-horizontal")
         if (snapIcon) addClassNames("timeline-snap-icon")
@@ -52,6 +49,7 @@ fun FlowContent.daisyTimeline(
 /** Renders `<div class="timeline-start ...">`. */
 fun FlowContent.daisyTimelineStart(
     id: HtmlId? = null,
+    box: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -59,6 +57,7 @@ fun FlowContent.daisyTimelineStart(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline-start")
+        if (box) addClassNames("timeline-box")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -68,6 +67,7 @@ fun FlowContent.daisyTimelineStart(
 /** Renders `<div class="timeline-middle ...">`. */
 fun FlowContent.daisyTimelineMiddle(
     id: HtmlId? = null,
+    box: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -75,6 +75,7 @@ fun FlowContent.daisyTimelineMiddle(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline-middle")
+        if (box) addClassNames("timeline-box")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -84,6 +85,7 @@ fun FlowContent.daisyTimelineMiddle(
 /** Renders `<div class="timeline-end ...">`. */
 fun FlowContent.daisyTimelineEnd(
     id: HtmlId? = null,
+    box: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -91,6 +93,7 @@ fun FlowContent.daisyTimelineEnd(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline-end")
+        if (box) addClassNames("timeline-box")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

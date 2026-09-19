@@ -42,7 +42,7 @@ class MenuCoverageTest {
                 active = true,
                 disabled = true,
                 dropdownShow = true,
-                focused = true,
+                focus = true,
                 paged = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
@@ -170,7 +170,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu-dropdown", "MenuDropdown defaults", closes = "</div></div>")
+        assertRendered(html, "menu-dropdown", "MenuDropdown defaults", closes = "</ul></div>")
     }
 
     @Test
@@ -183,7 +183,7 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu-dropdown zz-extra", "MenuDropdown all flags", closes = "</div></div>")
+        assertRendered(html, "menu-dropdown zz-extra", "MenuDropdown all flags", closes = "</ul></div>")
         assertCommonFlags(html, "MenuDropdown")
     }
 
@@ -194,7 +194,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggle defaults", closes = "</div></div>")
+        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggle defaults", closes = "</span></div>")
     }
 
     @Test
@@ -207,7 +207,7 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</div></div>")
+        assertRendered(html, "menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</span></div>")
         assertCommonFlags(html, "MenuDropdownToggle")
     }
 }

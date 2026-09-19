@@ -7,6 +7,8 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
+import kotlinx.html.a
+import kotlinx.html.A
 import kotlinx.html.button
 import kotlinx.html.BUTTON
 import kotlinx.html.div
@@ -85,14 +87,14 @@ fun FlowContent.daisyTab(
     }
 }
 
-/** A single tab button (can be button, link, div, radio input, etc) Renders `<div class="tab ...">`. */
+/** A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ...">`. */
 fun FlowContent.daisyTabTab(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (A.() -> Unit)? = null,
+    content: (A.() -> Unit),
 ) {
-    div {
+    a {
         if (id != null) attributes["id"] = id.id
         addClassNames("tab")
         addClassNames(extraClasses)

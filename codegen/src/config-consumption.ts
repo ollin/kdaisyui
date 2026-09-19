@@ -16,7 +16,7 @@
  */
 
 /** The config sections whose keys are component identifiers, and how each is addressed. */
-export type SectionKeying = 'component' | 'part' | 'directory'
+export type SectionKeying = 'component' | 'part' | 'directory' | 'exception'
 
 export interface ConfigSection {
   readonly name: string
@@ -44,9 +44,8 @@ export const CONFIG_SECTIONS: readonly ConfigSection[] = [
   { name: 'skip', keying: 'directory', isList: true },
   { name: 'componentElements', keying: 'directory' },
   { name: 'docSummaries', keying: 'directory' },
-  { name: 'elementCrossCheckExceptions', keying: 'directory' },
+  { name: 'elementCrossCheckExceptions', keying: 'exception' },
   { name: 'enumNames', keying: 'directory' },
-  { name: 'parameterNames', keying: 'directory' },
   { name: 'subComponentElements', keying: 'part' },
 ]
 
@@ -56,6 +55,11 @@ export interface ConsumedKeys {
   readonly componentKeys: ReadonlySet<string>
   /** DaisyUI directory names, e.g. `file-input`. */
   readonly directoryKeys: ReadonlySet<string>
+  /**
+   * Every key the element cross-check looked up: a directory for the component's own class,
+   * `directory/class` for any other — the check, not this module, knows which classes exist.
+   */
+  readonly exceptionKeys: ReadonlySet<string>
   /** Part class names, e.g. `card-title`. */
   readonly partKeys: ReadonlySet<string>
 }
@@ -76,6 +80,7 @@ export class ConsumedKeyCollector {
   private readonly components = new Set<string>()
   private readonly directories = new Set<string>()
   private readonly parts = new Set<string>()
+  private readonly exceptions = new Set<string>()
 
   /** A DaisyUI directory name, recorded for EVERY component, including skipped ones. */
   directory(name: string): void {
@@ -88,14 +93,25 @@ export class ConsumedKeyCollector {
     for (const part of partClasses) this.parts.add(part)
   }
 
+  /** The exception keys the cross-check consulted, whether or not an entry existed. */
+  exceptionKeys(keys: readonly string[]): void {
+    for (const key of keys) this.exceptions.add(key)
+  }
+
   keys(): ConsumedKeys {
-    return { componentKeys: this.components, directoryKeys: this.directories, partKeys: this.parts }
+    return {
+      componentKeys: this.components,
+      directoryKeys: this.directories,
+      partKeys: this.parts,
+      exceptionKeys: this.exceptions,
+    }
   }
 }
 
 function keysFor(keying: SectionKeying, consumed: ConsumedKeys): ReadonlySet<string> {
   if (keying === 'directory') return consumed.directoryKeys
   if (keying === 'part') return consumed.partKeys
+  if (keying === 'exception') return consumed.exceptionKeys
   return consumed.componentKeys
 }
 

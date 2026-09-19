@@ -11,11 +11,11 @@ Regenerate: just generate
 CSS masks for cropping images to shapes. Renders `<img class="mask ...">`.
 
 ```kotlin
-// MaskShape: Squircle | Heart | Hexagon | Hexagon2 | Decagon | Pentagon | Diamond | Square | Circle | Star | Star2 | Triangle | Triangle2 | Triangle3 | Triangle4
+// MaskStyle: Squircle | Heart | Hexagon | Hexagon2 | Decagon | Pentagon | Diamond | Square | Circle | Star | Star2 | Triangle | Triangle2 | Triangle3 | Triangle4
 // MaskModifier: Half1 | Half2
 fun FlowContent.daisyMask(
     id: HtmlId? = null,
-    shape: ClassValues<MaskShape>? = null,
+    style: ClassValues<MaskStyle>? = null,
     modifier: ClassValues<MaskModifier>? = null,
     extraClasses: String? = null,
     attrs: (IMG.() -> Unit)? = null,

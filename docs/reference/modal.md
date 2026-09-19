@@ -56,8 +56,7 @@ fun FlowContent.daisyModalBackdrop(
 fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (INPUT.() -> Unit)? = null,
 )
 ```
 

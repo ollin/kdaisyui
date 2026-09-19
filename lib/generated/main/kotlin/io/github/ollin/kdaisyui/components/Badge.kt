@@ -51,6 +51,28 @@ enum class BadgeSize(internal val className: String) : ClassValues<BadgeSize> {
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** OutlineStyle variants for this component (CSS prefix: `badge-`) */
+enum class BadgeOutlineStyle(internal val className: String) : ClassValues<BadgeOutlineStyle> {
+    /** CSS: `badge-outline` — outline style */
+    Outline("badge-outline"),
+    /** CSS: `badge-dash` — dash outline style */
+    Dash("badge-dash"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+/** FillStyle variants for this component (CSS prefix: `badge-`) */
+enum class BadgeFillStyle(internal val className: String) : ClassValues<BadgeFillStyle> {
+    /** CSS: `badge-soft` — soft style */
+    Soft("badge-soft"),
+    /** CSS: `badge-ghost` — ghost style */
+    Ghost("badge-ghost"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Badges are used to inform the user of the status of specific data. Renders `<span class="badge ...">`.
@@ -58,10 +80,8 @@ enum class BadgeSize(internal val className: String) : ClassValues<BadgeSize> {
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
  * @param size — Size variant
- * @param dash — dash outline style
- * @param ghost — ghost style
- * @param outline — outline style
- * @param soft — soft style
+ * @param outlineStyle — OutlineStyle variant
+ * @param fillStyle — FillStyle variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content (takes precedence over [text] if both are set)
@@ -71,10 +91,8 @@ fun FlowContent.daisyBadge(
     id: HtmlId? = null,
     variant: ClassValues<BadgeVariant>? = null,
     size: ClassValues<BadgeSize>? = null,
-    dash: Boolean = false,
-    ghost: Boolean = false,
-    outline: Boolean = false,
-    soft: Boolean = false,
+    outlineStyle: ClassValues<BadgeOutlineStyle>? = null,
+    fillStyle: ClassValues<BadgeFillStyle>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit)? = null,
@@ -84,10 +102,8 @@ fun FlowContent.daisyBadge(
         addClassNames("badge")
         addClassNames(variant)
         addClassNames(size)
-        if (dash) addClassNames("badge-dash")
-        if (ghost) addClassNames("badge-ghost")
-        if (outline) addClassNames("badge-outline")
-        if (soft) addClassNames("badge-soft")
+        addClassNames(outlineStyle)
+        addClassNames(fillStyle)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         when {

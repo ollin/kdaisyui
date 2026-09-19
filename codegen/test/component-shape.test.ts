@@ -38,6 +38,10 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
 
 const names = (parameters: readonly { name: string }[]) => parameters.map(p => p.name)
 
+/** `documentedElements` as the parser hands it over: each element a class is shown on, once. */
+const sets = (byClass: Record<string, string[]>) =>
+  new Map(Object.entries(byClass).map(([cls, elements]) => [cls, new Map(elements.map(element => [element, 1]))]))
+
 describe('buildComponentShape', () => {
   test('names the main function and its receiver', () => {
     const shape = buildComponentShape(classified(), { componentDir: 'card', element: 'DIV' }, {})
@@ -98,6 +102,132 @@ describe('buildComponentShape', () => {
     )
 
     assert.deepEqual(names(shape.functions[0].parameters).slice(1, 5), ['active', 'dash', 'soft', 'top'])
+  })
+
+  test('declares a boolean on the part whose element DaisyUI documents the class on', () => {
+    // `dock-active` is shown on the <button> that `daisyDockItem` renders, never on the
+    // container's <div>. The parameter belongs to the item.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Dock', prefix: 'dock', modifiers: ['active'], parts: ['dock-item'] }),
+      {
+        componentDir: 'dock',
+        element: 'DIV',
+        documentedElements: sets({ dock: ['DIV'], 'dock-active': ['BUTTON'], 'dock-item': ['BUTTON'] }),
+      },
+      { subComponentElements: { 'dock-item': 'button' } },
+    )
+    const [main, item] = shape.functions
+
+    assert.ok(!names(main.parameters).includes('active'))
+    assert.ok(names(item.parameters).includes('active'))
+    assert.equal(item.parameters.find((p) => p.name === 'active')?.cssClass, 'dock-active')
+  })
+
+  test('keeps a boolean shown on the element DaisyUI shows the component on', () => {
+    // `dropdown-close` is shown on the <div>-shaped dropdown. `daisyDropdown` renders <details>
+    // and `daisyDropdownContent` renders a <div> — the same tag name, a different element.
+    // The class is on the dropdown, so it stays on the dropdown's function.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Dropdown', prefix: 'dropdown', modifiers: ['close'], parts: ['dropdown-content'] }),
+      {
+        componentDir: 'dropdown',
+        element: 'DETAILS',
+        documentedElements: sets({ dropdown: ['DIV', 'DETAILS'], 'dropdown-close': ['DIV'], 'dropdown-content': ['UL'] }),
+      },
+      {},
+    )
+    const [main, content] = shape.functions
+
+    assert.ok(names(main.parameters).includes('close'))
+    assert.ok(!names(content.parameters).includes('close'))
+  })
+
+  test('moves an enum whole to the part whose element DaisyUI shows every member on', () => {
+    // `indicator-top` and `indicator-bottom` are shown on the <span> that `daisyIndicatorItem`
+    // renders, never on the container's <div>. A choice is one parameter, so it travels whole
+    // or not at all — a member alone would be half a choice on each function.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Indicator', prefix: 'indicator', placements: ['top', 'bottom'], parts: ['indicator-item'] }),
+      {
+        componentDir: 'indicator',
+        element: 'DIV',
+        documentedElements: sets({
+          indicator: ['DIV'],
+          'indicator-item': ['SPAN'],
+          'indicator-top': ['SPAN'],
+          'indicator-bottom': ['SPAN'],
+        }),
+      },
+      { subComponentElements: { 'indicator-item': 'span' } },
+      { enums: [{ enumName: 'IndicatorPlacement', parameterName: 'placement', category: 'placements', members: ['top', 'bottom'] }], booleans: [] },
+    )
+    const [main, item] = shape.functions
+
+    assert.ok(!names(main.parameters).includes('placement'))
+    assert.ok(names(item.parameters).includes('placement'))
+  })
+
+  test('never moves an enum member; the enum stays whole on the main function', () => {
+    const shape = buildComponentShape(
+      classified({ componentName: 'Tab', prefix: 'tabs', placements: ['top', 'bottom'], parts: ['tab'] }),
+      {
+        componentDir: 'tab',
+        element: 'DIV',
+        documentedElements: sets({ tabs: ['DIV'], 'tabs-bottom': ['A'], tab: ['A'] }),
+      },
+      { subComponentElements: { tab: 'a' } },
+      { enums: [{ enumName: 'TabPlacement', parameterName: 'placement', category: 'placements', members: ['top', 'bottom'] }], booleans: [] },
+    )
+    const [main, tab] = shape.functions
+
+    assert.ok(names(main.parameters).includes('placement'))
+    assert.ok(!names(tab.parameters).includes('bottom'))
+  })
+
+  test('declares a boolean on every part that renders its documented element', () => {
+    // `timeline-box` is shown on `timeline-start` and `timeline-end`, both <div>s.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Timeline', prefix: 'timeline', modifiers: ['box'], parts: ['timeline-start', 'timeline-end'] }),
+      {
+        componentDir: 'timeline',
+        element: 'UL',
+        documentedElements: sets({ timeline: ['UL'], 'timeline-box': ['DIV'] }),
+      },
+      {},
+    )
+    const [main, start, end] = shape.functions
+
+    assert.ok(!names(main.parameters).includes('box'))
+    assert.ok(names(start.parameters).includes('box'))
+    assert.ok(names(end.parameters).includes('box'))
+  })
+
+  test('keeps a boolean on the main function when no part renders the documented element', () => {
+    // Moving it to a part on a DIFFERENT wrong element would fix nothing; the cross-check
+    // keeps reporting it until the part's element is right.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Dock', prefix: 'dock', modifiers: ['active'], parts: ['dock-item'] }),
+      {
+        componentDir: 'dock',
+        element: 'DIV',
+        documentedElements: sets({ 'dock-active': ['BUTTON'] }),
+      },
+      {},
+    )
+    const [main, item] = shape.functions
+
+    assert.ok(names(main.parameters).includes('active'))
+    assert.ok(!names(item.parameters).includes('active'))
+  })
+
+  test('a boolean carries the class it emits; nothing else does', () => {
+    // What the element cross-check will read: which class a parameter puts on the element.
+    const shape = buildComponentShape(classified({ modifiers: ['side'] }), { componentDir: 'card', element: 'DIV' }, {})
+    const [id, side, extraClasses] = shape.functions[0].parameters
+
+    assert.equal(side.cssClass, 'card-side')
+    assert.equal(id.cssClass, undefined)
+    assert.equal(extraClasses.cssClass, undefined)
   })
 
   test('drops a boolean an extras entry already covers', () => {
@@ -220,6 +350,77 @@ describe('buildComponentShape', () => {
     assert.equal(overridden.functions[1].element, 'SPAN')
   })
 
+  test('a part renders the element DaisyUI shows it on, over the name heuristic', () => {
+    // `hero-overlay` matched `overlay` → LABEL; DaisyUI shows a <div>. `footer-title` matched
+    // `title` → H2; DaisyUI shows an <h6>.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Footer', prefix: 'footer', parts: ['footer-overlay', 'footer-title'] }),
+      {
+        componentDir: 'footer',
+        element: 'FOOTER',
+        documentedElements: sets({ 'footer-overlay': ['DIV'], 'footer-title': ['H6'] }),
+      },
+      {},
+    )
+
+    assert.deepEqual(shape.functions.slice(1).map(f => f.element), ['DIV', 'H6'])
+  })
+
+  test('a part on an element only its parent can open takes that parent as receiver', () => {
+    // kotlinx.html opens <legend> only inside FIELDSET. DaisyUI shows the parent, so the
+    // function is `FIELDSET.daisyFieldsetLegend`, and `daisyFieldset { daisyFieldsetLegend {} }`
+    // is the only way to write it — which is also the only way DaisyUI documents it.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend'] }),
+      {
+        componentDir: 'fieldset',
+        element: 'FIELDSET',
+        documentedElements: sets({ 'fieldset-legend': ['LEGEND'] }),
+        documentedParents: new Map([['fieldset-legend', 'FIELDSET']]),
+      },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'LEGEND')
+    assert.equal(shape.functions[1].receiver, 'FIELDSET')
+  })
+
+  test('a part on such an element keeps the heuristic when its parent is not documented', () => {
+    // Shown under two different parents, or at the top of an example: no receiver can be
+    // derived, so the documented element would not compile. The heuristic stays and so does
+    // the cross-check's exception.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Fieldset', prefix: 'fieldset', parts: ['fieldset-legend'] }),
+      { componentDir: 'fieldset', element: 'FIELDSET', documentedElements: sets({ 'fieldset-legend': ['LEGEND'] }) },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'DIV')
+    assert.equal(shape.functions[1].receiver, 'FlowContent')
+  })
+
+  test('a part shown on several elements renders the usual one', () => {
+    // `indicator-item` is a <span> 26 times and a <div> once; one stray example does not
+    // outvote the rest.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Indicator', prefix: 'indicator', parts: ['indicator-item'] }),
+      { componentDir: 'indicator', element: 'DIV', documentedElements: new Map([['indicator-item', new Map([['SPAN', 26], ['DIV', 1]])]]) },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'SPAN')
+  })
+
+  test('a part shown equally often on two elements falls back to the heuristic', () => {
+    const shape = buildComponentShape(
+      classified({ parts: ['card-title'] }),
+      { componentDir: 'card', element: 'DIV', documentedElements: sets({ 'card-title': ['H2', 'DIV'] }) },
+      {},
+    )
+
+    assert.equal(shape.functions[1].element, 'H2')
+  })
+
   test('a part whose name contains "title" takes a text shortcut', () => {
     const shape = buildComponentShape(
       classified({ parts: ['card-title', 'card-body'] }),
@@ -261,6 +462,57 @@ describe('buildComponentShape', () => {
     assert.equal(custom.receiver, 'FlowContent')
     assert.equal(custom.element, 'DIV')
     assert.deepEqual(custom.staticAttributes, [['popover', '']])
+    assert.deepEqual(custom.modifierClasses, [])
+  })
+
+  test('a class a custom part always writes is not also a boolean on the main function', () => {
+    // Otherwise `skeleton-text` is askable twice: once as `daisySkeletonText`, which is
+    // DaisyUI's markup, and once as `daisySkeleton(text = true)`, which is a <div> wearing a
+    // class DaisyUI only ever shows on a <span>. Derived from the part's own declaration —
+    // nothing to configure, and nothing that can disagree with it.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Skeleton', prefix: 'skeleton', modifiers: ['text'] }),
+      { componentDir: 'skeleton', element: 'DIV' },
+      {
+        customParts: {
+          skeleton: [{ name: 'Text', element: 'SPAN', cssClass: 'skeleton', modifierClasses: ['skeleton-text'] }],
+        },
+      },
+    )
+
+    assert.ok(!names(shape.functions[0].parameters).includes('text'))
+  })
+
+  test('a custom part on a void element takes no content, like every other function', () => {
+    // `daisyModalToggle` renders an <input> and required a content lambda for it. The rule is
+    // derived from the element for main functions and was not reaching the other two shapes,
+    // so the same <input> had no content on `daisyInput` and a required one here.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Modal', prefix: 'modal' }),
+      { componentDir: 'modal', element: 'DIALOG' },
+      { customParts: { modal: [{ name: 'Toggle', element: 'INPUT', cssClass: 'modal-toggle' }] } },
+    )
+
+    assert.ok(!names(shape.functions[1].parameters).includes('content'))
+  })
+
+  test('a custom part carries the modifier classes its construction always writes', () => {
+    // DaisyUI shows `skeleton-text` on exactly one markup: `<span class="skeleton
+    // skeleton-text">`. Two classes, so the function's own class cannot say it alone.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Skeleton', prefix: 'skeleton' }),
+      { componentDir: 'skeleton', element: 'DIV' },
+      {
+        customParts: {
+          skeleton: [{ name: 'Text', element: 'SPAN', cssClass: 'skeleton', modifierClasses: ['skeleton-text'] }],
+        },
+      },
+    )
+
+    const custom = shape.functions[1]
+    assert.equal(custom.name, 'daisySkeletonText')
+    assert.equal(custom.cssClass, 'skeleton')
+    assert.deepEqual(custom.modifierClasses, ['skeleton-text'])
   })
 
   test('a custom part with no cssClass is a structural wrapper', () => {

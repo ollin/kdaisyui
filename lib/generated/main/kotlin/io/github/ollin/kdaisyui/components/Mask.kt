@@ -11,8 +11,8 @@ import kotlinx.html.FlowContent
 import kotlinx.html.img
 import kotlinx.html.IMG
 
-/** Shape variants for this component (CSS prefix: `mask-`) */
-enum class MaskShape(internal val className: String) : ClassValues<MaskShape> {
+/** Style variants for this component (CSS prefix: `mask-`) */
+enum class MaskStyle(internal val className: String) : ClassValues<MaskStyle> {
     /** CSS: `mask-squircle` — squircle */
     Squircle("mask-squircle"),
     /** CSS: `mask-heart` — heart */
@@ -63,14 +63,14 @@ enum class MaskModifier(internal val className: String) : ClassValues<MaskModifi
 /**
  * Mask crops the content of the element to common shapes. Renders `<img class="mask ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param shape — Shape variant
+ * @param style — Style variant
  * @param modifier — Modifier variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  */
 fun FlowContent.daisyMask(
     id: HtmlId? = null,
-    shape: ClassValues<MaskShape>? = null,
+    style: ClassValues<MaskStyle>? = null,
     modifier: ClassValues<MaskModifier>? = null,
     extraClasses: String? = null,
     attrs: (IMG.() -> Unit)? = null,
@@ -78,7 +78,7 @@ fun FlowContent.daisyMask(
     img {
         if (id != null) attributes["id"] = id.id
         addClassNames("mask")
-        addClassNames(shape)
+        addClassNames(style)
         addClassNames(modifier)
         addClassNames(extraClasses)
         if (attrs != null) attrs()

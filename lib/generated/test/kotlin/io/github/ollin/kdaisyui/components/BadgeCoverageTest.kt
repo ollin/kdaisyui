@@ -37,16 +37,12 @@ class BadgeCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
                 id = htmlId("x-cov-id"),
-                dash = true,
-                ghost = true,
-                outline = true,
-                soft = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "badge badge-dash badge-ghost badge-outline badge-soft zz-extra", "Badge all flags", closes = "</span></div>")
+        assertRendered(html, "badge zz-extra", "Badge all flags", closes = "</span></div>")
         assertCommonFlags(html, "Badge")
     }
 
@@ -178,6 +174,46 @@ class BadgeCoverageTest {
             )
         }
         assertRendered(html, "badge badge-xl", "Badge size Xl")
+    }
+
+    @Test
+    fun badge_outlineStyle_outline() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(
+                outlineStyle = BadgeOutlineStyle.Outline,
+            )
+        }
+        assertRendered(html, "badge badge-outline", "Badge outlineStyle Outline")
+    }
+
+    @Test
+    fun badge_outlineStyle_dash() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(
+                outlineStyle = BadgeOutlineStyle.Dash,
+            )
+        }
+        assertRendered(html, "badge badge-dash", "Badge outlineStyle Dash")
+    }
+
+    @Test
+    fun badge_fillStyle_soft() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(
+                fillStyle = BadgeFillStyle.Soft,
+            )
+        }
+        assertRendered(html, "badge badge-soft", "Badge fillStyle Soft")
+    }
+
+    @Test
+    fun badge_fillStyle_ghost() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(
+                fillStyle = BadgeFillStyle.Ghost,
+            )
+        }
+        assertRendered(html, "badge badge-ghost", "Badge fillStyle Ghost")
     }
 
     @Test

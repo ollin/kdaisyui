@@ -31,7 +31,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status", "Status defaults", closes = "</span></div>")
+        assertRendered(html, "status", "Status defaults", closes = "</div></div>")
         assertTrue(html.contains("role=\""), "Status sets role")
     }
 
@@ -45,7 +45,7 @@ class StatusCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "status zz-extra", "Status all flags", closes = "</span></div>")
+        assertRendered(html, "status zz-extra", "Status all flags", closes = "</div></div>")
         assertCommonFlags(html, "Status")
         assertTrue(html.contains("role=\""), "Status sets role")
     }

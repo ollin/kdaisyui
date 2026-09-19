@@ -51,11 +51,9 @@ class FilterCoverageTest {
     @Test
     fun filterReset_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFilterReset(
-                content = { },
-            )
+            daisyFilterReset()
         }
-        assertRendered(html, "filter-reset", "FilterReset defaults", closes = "</div></div>")
+        assertRendered(html, "filter-reset", "FilterReset defaults")
     }
 
     @Test
@@ -65,10 +63,9 @@ class FilterCoverageTest {
                 id = htmlId("x-cov-id"),
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "filter-reset zz-extra", "FilterReset all flags", closes = "</div></div>")
-        assertCommonFlags(html, "FilterReset")
+        assertRendered(html, "filter-reset zz-extra", "FilterReset all flags")
+        assertCommonFlags(html, "FilterReset", content = false)
     }
 }

@@ -9,12 +9,23 @@ import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.details
 import kotlinx.html.DETAILS
-import kotlinx.html.div
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.ul
+import kotlinx.html.UL
 
-/** AlignPlacement variants for this component (CSS prefix: `dropdown-`) */
-enum class DropdownAlignPlacement(internal val className: String) : ClassValues<DropdownAlignPlacement> {
+/** Modifier variants for this component (CSS prefix: `dropdown-`) */
+enum class DropdownModifier(internal val className: String) : ClassValues<DropdownModifier> {
+    /** CSS: `dropdown-hover` — Opens on hover too */
+    Hover("dropdown-hover"),
+    /** CSS: `dropdown-open` — Force open */
+    Open("dropdown-open"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+/** HorizontalPlacement variants for this component (CSS prefix: `dropdown-`) */
+enum class DropdownHorizontalPlacement(internal val className: String) : ClassValues<DropdownHorizontalPlacement> {
     /** CSS: `dropdown-start` — Align horizontally to start of button */
     Start("dropdown-start"),
     /** CSS: `dropdown-center` — Align horizontally to center of button */
@@ -26,14 +37,25 @@ enum class DropdownAlignPlacement(internal val className: String) : ClassValues<
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** VerticalPlacement variants for this component (CSS prefix: `dropdown-`) */
+enum class DropdownVerticalPlacement(internal val className: String) : ClassValues<DropdownVerticalPlacement> {
+    /** CSS: `dropdown-top` — Open from top */
+    Top("dropdown-top"),
+    /** CSS: `dropdown-bottom` — Open from bottom */
+    Bottom("dropdown-bottom"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Dropdown can open a menu or any other element when the button is clicked. Renders `<details class="dropdown ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param alignPlacement — AlignPlacement variant
+ * @param modifier — Modifier variant
+ * @param horizontalPlacement — HorizontalPlacement variant
+ * @param verticalPlacement — VerticalPlacement variant
  * @param close — Force close
- * @param openOnHover — Opens on hover too
- * @param open — Force open
  * @param end
  * @param start
  * @param top
@@ -47,10 +69,10 @@ enum class DropdownAlignPlacement(internal val className: String) : ClassValues<
  */
 fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
-    alignPlacement: ClassValues<DropdownAlignPlacement>? = null,
+    modifier: ClassValues<DropdownModifier>? = null,
+    horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null,
     close: Boolean = false,
-    openOnHover: Boolean = false,
-    open: Boolean = false,
     end: Boolean = false,
     start: Boolean = false,
     top: Boolean = false,
@@ -65,10 +87,10 @@ fun FlowContent.daisyDropdown(
     details {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown")
-        addClassNames(alignPlacement)
+        addClassNames(modifier)
+        addClassNames(horizontalPlacement)
+        addClassNames(verticalPlacement)
         if (close) addClassNames("dropdown-close")
-        if (openOnHover) addClassNames("dropdown-hover")
-        if (open) addClassNames("dropdown-open")
         if (end) addClassNames("dropdown-end")
         if (start) addClassNames("dropdown-start")
         if (top) addClassNames("dropdown-top")
@@ -82,14 +104,14 @@ fun FlowContent.daisyDropdown(
     }
 }
 
-/** Renders `<div class="dropdown-content ...">`. */
+/** Renders `<ul class="dropdown-content ...">`. */
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
 ) {
-    div {
+    ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown-content")
         addClassNames(extraClasses)

@@ -13,9 +13,17 @@ Content placeholder loading indicator. Renders `<div class="skeleton ...">`.
 ```kotlin
 fun FlowContent.daisySkeleton(
     id: HtmlId? = null,
-    text: Boolean = false,  // Animates the text color instead of background color
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
+)
+```
+
+```kotlin
+fun FlowContent.daisySkeletonText(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 )
 ```

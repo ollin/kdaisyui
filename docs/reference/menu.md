@@ -20,7 +20,7 @@ fun FlowContent.daisyMenu(
     active: Boolean = false,  // For the element inside <li> to look active
     disabled: Boolean = false,  // For the element inside <li> to look disabled
     dropdownShow: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
-    focused: Boolean = false,  // For the element inside <li> to look focused
+    focus: Boolean = false,  // For the element inside <li> to look focused
     paged: Boolean = false,  // Shows one level at a time and turns the open summary into a back button
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
@@ -42,8 +42,8 @@ fun FlowContent.daisyMenuTitle(
 fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
 )
 ```
 
@@ -51,7 +51,7 @@ fun FlowContent.daisyMenuDropdown(
 fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 )
 ```

@@ -6,11 +6,11 @@ package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
-import kotlinx.html.div
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.form
 import kotlinx.html.FORM
+import kotlinx.html.input
+import kotlinx.html.INPUT
 
 /**
  * Filter is a group of radio buttons. Choosing one of the options will hide the others and shows a reset button next to the chosen option. Renders `<form class="filter ...">`.
@@ -34,18 +34,16 @@ fun FlowContent.daisyFilter(
     }
 }
 
-/** Renders `<div class="filter-reset ...">`. */
+/** Renders `<input class="filter-reset ...">`. */
 fun FlowContent.daisyFilterReset(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (INPUT.() -> Unit)? = null,
 ) {
-    div {
+    input {
         if (id != null) attributes["id"] = id.id
         addClassNames("filter-reset")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        content()
     }
 }

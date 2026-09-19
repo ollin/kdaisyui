@@ -56,7 +56,7 @@ class FooterCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFooterTitle()
         }
-        assertRendered(html, "footer-title", "FooterTitle defaults", closes = "</h2></div>")
+        assertRendered(html, "footer-title", "FooterTitle defaults", closes = "</h6></div>")
     }
 
     @Test
@@ -69,7 +69,7 @@ class FooterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "footer-title zz-extra", "FooterTitle all flags", closes = "</h2></div>")
+        assertRendered(html, "footer-title zz-extra", "FooterTitle all flags", closes = "</h6></div>")
         assertCommonFlags(html, "FooterTitle")
     }
 

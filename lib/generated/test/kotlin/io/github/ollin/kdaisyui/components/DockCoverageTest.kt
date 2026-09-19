@@ -111,7 +111,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock-label", "DockLabel defaults", closes = "</div></div>")
+        assertRendered(html, "dock-label", "DockLabel defaults", closes = "</span></div>")
     }
 
     @Test
@@ -124,7 +124,7 @@ class DockCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dock-label zz-extra", "DockLabel all flags", closes = "</div></div>")
+        assertRendered(html, "dock-label zz-extra", "DockLabel all flags", closes = "</span></div>")
         assertCommonFlags(html, "DockLabel")
     }
 }

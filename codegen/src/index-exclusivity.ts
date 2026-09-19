@@ -7,7 +7,7 @@
  * The logic lives in `exclusivity-probe.ts` so it can be unit-tested without this file's
  * side effects.
  */
-import { copyFileSync, writeFileSync } from 'node:fs'
+import { copyFileSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { buildProbePage } from './exclusivity-probe.ts'
 
@@ -20,7 +20,7 @@ function argument(name: string): string {
 }
 
 const outputDir = argument('output-dir')
-const page = buildProbePage()
+const page = buildProbePage(readFileSync(path.join(outputDir, 'daisyui.css'), 'utf8'))
 
 writeFileSync(path.join(outputDir, 'probe.html'), page.html)
 copyFileSync(IN_PAGE_SCRIPT, path.join(outputDir, 'exclusivity-verdicts.js'))

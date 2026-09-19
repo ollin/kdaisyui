@@ -6,6 +6,8 @@ package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
+import kotlinx.html.button
+import kotlinx.html.BUTTON
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -51,14 +53,14 @@ fun FlowContent.daisyFabClose(
     }
 }
 
-/** Renders `<div class="fab-main-action ...">`. */
+/** Renders `<button class="fab-main-action ...">`. */
 fun FlowContent.daisyFabMainAction(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (BUTTON.() -> Unit)? = null,
+    content: (BUTTON.() -> Unit),
 ) {
-    div {
+    button {
         if (id != null) attributes["id"] = id.id
         addClassNames("fab-main-action")
         addClassNames(extraClasses)

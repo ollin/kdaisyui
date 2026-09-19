@@ -8,7 +8,7 @@ Regenerate: just generate
 
 [DaisyUI documentation →](https://daisyui.com/components/status/)
 
-Small status indicator dot. Renders `<span class="status ...">`.
+Small status indicator dot. Renders `<div class="status ...">`.
 
 ```kotlin
 // StatusVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
@@ -18,7 +18,7 @@ fun FlowContent.daisyStatus(
     variant: ClassValues<StatusVariant>? = null,
     size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 )
 ```

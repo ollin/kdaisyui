@@ -7,10 +7,10 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
+import kotlinx.html.div
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.role
-import kotlinx.html.span
-import kotlinx.html.SPAN
 
 /** Color variants for this component (CSS prefix: `status-`) */
 enum class StatusVariant(internal val className: String) : ClassValues<StatusVariant> {
@@ -54,7 +54,7 @@ enum class StatusSize(internal val className: String) : ClassValues<StatusSize> 
 
 
 /**
- * Status is a really small icon to visually show the current status of an element, like online, offline, error, etc. Renders `<span class="status ...">`.
+ * Status is a really small icon to visually show the current status of an element, like online, offline, error, etc. Renders `<div class="status ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
  * @param size — Size variant
@@ -67,10 +67,10 @@ fun FlowContent.daisyStatus(
     variant: ClassValues<StatusVariant>? = null,
     size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 ) {
-    span {
+    div {
         if (id != null) attributes["id"] = id.id
         role = "status"
         addClassNames("status")

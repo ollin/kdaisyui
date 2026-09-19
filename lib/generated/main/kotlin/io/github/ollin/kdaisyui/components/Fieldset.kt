@@ -6,11 +6,11 @@ package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
-import kotlinx.html.div
-import kotlinx.html.DIV
 import kotlinx.html.fieldSet
 import kotlinx.html.FIELDSET
 import kotlinx.html.FlowContent
+import kotlinx.html.legend
+import kotlinx.html.LEGEND
 
 /**
  * Fieldset is a container for grouping related form elements. It includes fieldset-legend as a title and label as a description. Renders `<fieldset class="fieldset ...">`.
@@ -34,14 +34,14 @@ fun FlowContent.daisyFieldset(
     }
 }
 
-/** Renders `<div class="fieldset-legend ...">`. */
-fun FlowContent.daisyFieldsetLegend(
+/** Renders `<legend class="fieldset-legend ...">`. */
+fun FIELDSET.daisyFieldsetLegend(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (LEGEND.() -> Unit)? = null,
+    content: (LEGEND.() -> Unit),
 ) {
-    div {
+    legend {
         if (id != null) attributes["id"] = id.id
         addClassNames("fieldset-legend")
         addClassNames(extraClasses)

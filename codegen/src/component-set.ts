@@ -19,7 +19,8 @@ import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter, type ClassifiedComponent } from './classifier.ts'
 import { buildComponentShape, type ComponentShape } from './component-shape.ts'
 import { classifyGroups, type GroupClassification } from './class-groups.ts'
-import { loadMeasurement, type Measurement } from './measurement.ts'
+import { loadEvidence, type Evidence } from './measurement.ts'
+import { documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
 
 /** Why a component produces no output. Reported rather than swallowed, so a caller can log it. */
 export type SkipReason = 'configured-skip' | 'no-frontmatter' | 'no-component-class'
@@ -59,7 +60,7 @@ function classify(
   componentDir: ComponentName,
   config,
   elementRules,
-  measurement: Measurement,
+  evidence: Evidence,
 ): GeneratedComponent | SkipReason {
   if (config.skip?.includes(componentDir)) return 'configured-skip'
 
@@ -70,19 +71,29 @@ function classify(
   const classified = classifyFromFrontmatter(frontmatter, componentDir)
   const element = elementFor(componentDir, config, elementRules)
   // Which class groups are one choice, decided by the browser rather than by their category.
-  // Throws when the measurement says a group is a choice and `enumNames` has not named it —
-  // silence there would reintroduce contradictory booleans by accident.
+  // A single choice is named after its category, axes after DaisyUI's property table where it
+  // gives them a direction; `enumNames` names only what neither can.
   const groups: GroupClassification = classifyGroups(
     classified,
     componentDir,
     config.enumNames ?? {},
-    measurement,
+    evidence,
   )
   return {
     componentDir,
     classified,
     frontmatter,
-    shape: buildComponentShape(classified, { componentDir, element }, config, groups),
+    shape: buildComponentShape(
+      classified,
+      {
+        componentDir,
+        element,
+        documentedElements: documentedElementTalliesFor(componentDir),
+        documentedParents: documentedParentsFor(componentDir),
+      },
+      config,
+      groups,
+    ),
   }
 }
 
@@ -91,12 +102,12 @@ export function readComponentSet(config): ComponentSet {
   const elementRules = parseLlmsTxt()
   // Read once for the whole run: it is one file describing every component, and re-reading it
   // per component would make a 66-way loop do 66 times the I/O for the same answer.
-  const measurement = loadMeasurement()
+  const evidence = loadEvidence()
   const generated: GeneratedComponent[] = []
   const skipped: SkippedComponent[] = []
 
   for (const componentDir of getAllComponentDirs() as ComponentName[]) {
-    const result = classify(componentDir, config, elementRules, measurement)
+    const result = classify(componentDir, config, elementRules, evidence)
     if (typeof result === 'string') skipped.push({ componentDir, reason: result })
     else generated.push(result)
   }

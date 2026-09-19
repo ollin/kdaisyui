@@ -87,7 +87,7 @@ class RatingTest {
     @Test
     fun half_stars() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(halfStars = true) {
+            daisyRating(half = true) {
             }
         }
         val expectedClasses = "rating rating-half"

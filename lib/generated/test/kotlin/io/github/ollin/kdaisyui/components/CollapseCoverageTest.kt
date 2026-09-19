@@ -57,7 +57,7 @@ class CollapseCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCollapseTitle()
         }
-        assertRendered(html, "collapse-title", "CollapseTitle defaults", closes = "</h2></div>")
+        assertRendered(html, "collapse-title", "CollapseTitle defaults", closes = "</div></div>")
     }
 
     @Test
@@ -70,7 +70,7 @@ class CollapseCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "collapse-title zz-extra", "CollapseTitle all flags", closes = "</h2></div>")
+        assertRendered(html, "collapse-title zz-extra", "CollapseTitle all flags", closes = "</div></div>")
         assertCommonFlags(html, "CollapseTitle")
     }
 

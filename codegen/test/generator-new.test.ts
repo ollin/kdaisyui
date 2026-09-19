@@ -53,6 +53,35 @@ describe('the // Source: attribution', () => {
   })
 })
 
+describe('the class values a body applies', () => {
+  /** Indicator's placements: documented on the <span> its item renders, not on the container. */
+  const indicator = () =>
+    generateKotlinFile(
+      classified({ componentName: 'Indicator', componentClass: 'Indicator', prefix: 'indicator', placements: ['top', 'bottom'], parts: ['indicator-item'] }),
+      {
+        componentDir: 'indicator',
+        element: 'DIV',
+        documentedElements: new Map([
+          ['indicator', new Map([['DIV', 1]])],
+          ['indicator-item', new Map([['SPAN', 1]])],
+          ['indicator-top', new Map([['SPAN', 1]])],
+          ['indicator-bottom', new Map([['SPAN', 1]])],
+        ]),
+      },
+      { subComponentElements: { 'indicator-item': 'span' } },
+      { enums: [{ enumName: 'IndicatorPlacement', parameterName: 'placement', category: 'placements', members: ['top', 'bottom'] }], booleans: [] },
+    )
+
+  test('applies the enum in the function whose signature declares it', () => {
+    // The signature moved and the body did not, so `daisyIndicator` read a parameter it no
+    // longer had. Nothing in the codegen saw it; the generated Kotlin failed to compile.
+    const [container, item] = indicator().split('fun FlowContent.daisyIndicatorItem')
+
+    assert.ok(!container.includes('addClassNames(placement)'))
+    assert.ok(item.includes('addClassNames(placement)'))
+  })
+})
+
 describe('the doc comment', () => {
   test('names the HTML element, not the kotlinx.html builder', () => {
     // `<fieldSet>` and `<textArea>` are not HTML elements. The reference pages already got

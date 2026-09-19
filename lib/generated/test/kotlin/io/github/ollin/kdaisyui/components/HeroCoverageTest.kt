@@ -79,7 +79,7 @@ class HeroCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "hero-overlay", "HeroOverlay defaults", closes = "</label></div>")
+        assertRendered(html, "hero-overlay", "HeroOverlay defaults", closes = "</div></div>")
     }
 
     @Test
@@ -92,7 +92,7 @@ class HeroCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "hero-overlay zz-extra", "HeroOverlay all flags", closes = "</label></div>")
+        assertRendered(html, "hero-overlay zz-extra", "HeroOverlay all flags", closes = "</div></div>")
         assertCommonFlags(html, "HeroOverlay")
     }
 }

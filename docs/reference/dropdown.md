@@ -11,13 +11,15 @@ Regenerate: just generate
 Context menus and action lists. Renders `<details class="dropdown ...">`.
 
 ```kotlin
-// DropdownAlignPlacement: Start | Center | End
+// DropdownModifier: Hover | Open
+// DropdownHorizontalPlacement: Start | Center | End
+// DropdownVerticalPlacement: Top | Bottom
 fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
-    alignPlacement: ClassValues<DropdownAlignPlacement>? = null,
+    modifier: ClassValues<DropdownModifier>? = null,
+    horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null,
     close: Boolean = false,  // Force close
-    openOnHover: Boolean = false,  // Opens on hover too
-    open: Boolean = false,  // Force open
     end: Boolean = false,
     start: Boolean = false,
     top: Boolean = false,
@@ -35,7 +37,7 @@ fun FlowContent.daisyDropdown(
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
 )
 ```

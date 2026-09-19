@@ -27,6 +27,17 @@ enum class AlertVariant(internal val className: String) : ClassValues<AlertVaria
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Style variants for this component (CSS prefix: `alert-`) */
+enum class AlertStyle(internal val className: String) : ClassValues<AlertStyle> {
+    /** CSS: `alert-outline` — outline style */
+    Outline("alert-outline"),
+    /** CSS: `alert-dash` — dash outline style */
+    Dash("alert-dash"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 /** Direction variants for this component (CSS prefix: `alert-`) */
 enum class AlertDirection(internal val className: String) : ClassValues<AlertDirection> {
     /** CSS: `alert-vertical` — Vertical layout, good for mobile */
@@ -43,9 +54,8 @@ enum class AlertDirection(internal val className: String) : ClassValues<AlertDir
  * Alert informs users about important events. Renders `<div class="alert ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param variant — Color variant
+ * @param style — Style variant
  * @param direction — Direction variant
- * @param dash — dash outline style
- * @param outline — outline style
  * @param soft — soft style
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -54,9 +64,8 @@ enum class AlertDirection(internal val className: String) : ClassValues<AlertDir
 fun FlowContent.daisyAlert(
     id: HtmlId? = null,
     variant: ClassValues<AlertVariant>? = null,
+    style: ClassValues<AlertStyle>? = null,
     direction: ClassValues<AlertDirection>? = null,
-    dash: Boolean = false,
-    outline: Boolean = false,
     soft: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -67,9 +76,8 @@ fun FlowContent.daisyAlert(
         role = "alert"
         addClassNames("alert")
         addClassNames(variant)
+        addClassNames(style)
         addClassNames(direction)
-        if (dash) addClassNames("alert-dash")
-        if (outline) addClassNames("alert-outline")
         if (soft) addClassNames("alert-soft")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

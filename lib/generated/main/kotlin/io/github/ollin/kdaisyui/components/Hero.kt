@@ -9,8 +9,6 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.label
-import kotlinx.html.LABEL
 
 /**
  * Hero is a component for displaying a large box or image with a title and description. Renders `<div class="hero ...">`.
@@ -50,14 +48,14 @@ fun FlowContent.daisyHeroContent(
     }
 }
 
-/** Renders `<label class="hero-overlay ...">`. */
+/** Renders `<div class="hero-overlay ...">`. */
 fun FlowContent.daisyHeroOverlay(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 ) {
-    label {
+    div {
         if (id != null) attributes["id"] = id.id
         addClassNames("hero-overlay")
         addClassNames(extraClasses)

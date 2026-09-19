@@ -1,30 +1,91 @@
 /**
- * Comparing the element the generator chose against the one DaisyUI documents.
+ * Comparing the element a generated function renders against the one DaisyUI documents for
+ * each class the function emits.
  *
- * The generator picks an element with a heuristic, and a heuristic can be wrong in a way nothing
- * else here notices: the element a component renders changes no CSS class, so neither the
- * generated tests nor the drift job can see a wrong one. `dropdown` once rendered a variant that
- * could not open; `otp` renders a `<div>` where DaisyUI shows a `<label>`, so a click does not
- * focus the input it wraps.
+ * The generator picks a component's element with a heuristic, and every class in the component's
+ * groups lands on the main function. Both can be wrong in a way nothing else here notices: the
+ * element a function renders changes no CSS class, so neither the generated tests nor the drift
+ * job can see it. `dropdown` once rendered a variant that could not open; `otp` rendered a
+ * `<div>` where DaisyUI shows a `<label>`; `menu-active` was a parameter of `daisyMenu` while
+ * DaisyUI puts it on an `<li>` two levels down, where the container's function cannot reach.
  *
- * Three things fail generation, and each exists because the alternative is a silent wrong answer:
+ * So the check is per CLASS, and the component class is one class among them: for every class
+ * a function emits, the element that function renders must be the element DaisyUI documents
+ * the class on. Three things fail generation, each because the alternative is a silent wrong
+ * answer:
  *
  *   1. a disagreement with no recorded exception
- *   2. a component DaisyUI documents no element for, so nothing can be checked
+ *   2. a component whose own class DaisyUI documents no element for, so nothing can be checked
  *   3. an exception that is no longer needed
  *
- * The third is what stops the exception list becoming the hand-maintained list this change
- * deleted elsewhere. An exception must name a reason and a tracking issue, and it must expire on
- * its own the moment the defect it covers is fixed.
+ * The third is what stops the exception list becoming the hand-maintained list this project has
+ * deleted twice. An exception must name a reason and a tracking issue, and it expires on its own
+ * the moment the defect it covers is fixed.
  */
 
-/** What the generator chose for one component, beside what DaisyUI documents. */
+/**
+ * Every element DaisyUI's documentation shows one class on.
+ *
+ * A collection that answers questions rather than an array callers compute over. Three of them
+ * did: one asked `includes`, one a length, one compared two arrays position by position — three
+ * spellings of "what does DaisyUI say here", each able to drift from the others.
+ *
+ * Several elements rather than one because DaisyUI genuinely uses several: `badge` is a `<div>`
+ * 47 times and a `<span>` 7, and which it picks is the surrounding context — a `<span>` inside
+ * an `<h2>`, where a `<div>` is invalid HTML. Naming one of those THE element makes six wrong.
+ */
+export class DocumentedElements {
+  private readonly elements: readonly string[]
+
+  private constructor(elements: readonly string[]) {
+    this.elements = elements
+  }
+
+  static of(elements: Iterable<string>): DocumentedElements {
+    return new DocumentedElements([...elements])
+  }
+
+  /** DaisyUI shows the class in no fenced example, so there is nothing to disagree with. */
+  static none(): DocumentedElements {
+    return new DocumentedElements([])
+  }
+
+  showsNothing(): boolean {
+    return this.elements.length === 0
+  }
+
+  shows(element: string): boolean {
+    return this.elements.includes(element)
+  }
+
+  sameAs(other: DocumentedElements): boolean {
+    return this.elements.length === other.elements.length && this.elements.every(element => other.shows(element))
+  }
+
+  /** These elements, or the one given when DaisyUI shows none. */
+  orElse(element: string): DocumentedElements {
+    return this.showsNothing() ? DocumentedElements.of([element]) : this
+  }
+
+  /** `<div>`, or `<div> or <span>` — how a failure message names what DaisyUI shows. */
+  asTagList(): string {
+    const tags = this.elements.map(element => `<${element.toLowerCase()}>`)
+    return tags.length < 2 ? tags.join('') : `${tags.slice(0, -1).join(', ')} or ${tags.at(-1)}`
+  }
+}
+
+/** One class a generated function emits, beside where DaisyUI documents it. */
 export interface ElementObservation {
   readonly componentDir: string
-  /** The element the generator will emit, e.g. `DIV`. */
+  /**
+   * The class in question, e.g. `menu-active` — or the component's own class, which is not
+   * always the directory name (`cally` under `calendar`), so that case is said, not inferred.
+   */
+  readonly cssClass: string
+  readonly isComponentClass: boolean
+  /** The element the generator renders the class on, e.g. `DIV`. */
   readonly chosen: string
-  /** What DaisyUI's documentation shows, or null when it shows nothing to check against. */
-  readonly documented: string | null
+  readonly documented: DocumentedElements
 }
 
 /** A disagreement someone has looked at, decided to keep, and filed. */
@@ -34,6 +95,12 @@ export interface CrossCheckException {
   readonly issue: number
 }
 
+/**
+ * Exceptions keyed by `<componentDir>/<cssClass>`; the component's own class is keyed by the
+ * directory alone, as it always was.
+ */
+export type CrossCheckExceptions = Readonly<Record<string, CrossCheckException>>
+
 export interface CrossCheckFinding {
   readonly componentDir: string
   readonly message: string
@@ -41,21 +108,29 @@ export interface CrossCheckFinding {
 
 export interface CrossCheckResult {
   readonly findings: readonly CrossCheckFinding[]
-  /** Disagreements covered by an exception — reported, not failed. */
+  /** Disagreements covered by an exception — reported, not failed. Keys as in the config. */
   readonly excused: readonly string[]
+  /** Every exception key looked up, so the config-consumption guard can tell a typo from a key. */
+  readonly consulted: readonly string[]
+}
+
+/** The config key for one observation. */
+export function exceptionKeyOf(observation: ElementObservation): string {
+  if (observation.isComponentClass) return observation.componentDir
+  return `${observation.componentDir}/${observation.cssClass}`
 }
 
 function disagrees(observation: ElementObservation): boolean {
-  return observation.documented !== null && observation.documented !== observation.chosen
+  return !observation.documented.showsNothing() && !observation.documented.shows(observation.chosen)
 }
 
 function undocumentedFinding(observation: ElementObservation): CrossCheckFinding {
   return {
     componentDir: observation.componentDir,
     message:
-      `DaisyUI documents no element for "${observation.componentDir}": no fenced html example ` +
-      `carries its $$-marked component class, so the chosen <${observation.chosen.toLowerCase()}> ` +
-      `cannot be checked against anything.`,
+      `DaisyUI documents no element for "${observation.cssClass}": no fenced html example ` +
+      `carries it unprefixed, so the chosen <${observation.chosen.toLowerCase()}> cannot be ` +
+      `checked against anything.`,
   }
 }
 
@@ -63,18 +138,19 @@ function disagreementFinding(observation: ElementObservation): CrossCheckFinding
   return {
     componentDir: observation.componentDir,
     message:
-      `"${observation.componentDir}" is generated as <${observation.chosen.toLowerCase()}> but ` +
-      `DaisyUI documents <${observation.documented!.toLowerCase()}>. Fix it with a ` +
-      `componentElements entry, or record an exception with a reason and an issue.`,
+      `"${observation.cssClass}" is emitted on <${observation.chosen.toLowerCase()}> but ` +
+      `DaisyUI documents it on ${observation.documented.asTagList()}. Declare it on the ` +
+      `function that renders that element, or record an exception under ` +
+      `elementCrossCheckExceptions["${exceptionKeyOf(observation)}"] with a reason and an issue.`,
   }
 }
 
-function staleExceptionFinding(componentDir: string, exception: CrossCheckException): CrossCheckFinding {
+function staleExceptionFinding(key: string, exception: CrossCheckException): CrossCheckFinding {
   return {
-    componentDir,
+    componentDir: key.split('/')[0],
     message:
-      `The element exception for "${componentDir}" is no longer needed — it now agrees with ` +
-      `DaisyUI. Delete it and close issue #${exception.issue} if it is done. (Reason given: ` +
+      `The element exception "${key}" is no longer needed — it now agrees with DaisyUI. ` +
+      `Delete it and close issue #${exception.issue} if it is done. (Reason given: ` +
       `${exception.reason})`,
   }
 }
@@ -87,27 +163,33 @@ function staleExceptionFinding(componentDir: string, exception: CrossCheckExcept
  */
 export function crossCheckElements(
   observations: readonly ElementObservation[],
-  exceptions: Readonly<Record<string, CrossCheckException>>,
+  exceptions: CrossCheckExceptions,
 ): CrossCheckResult {
   const findings: CrossCheckFinding[] = []
   const excused: string[] = []
+  const consulted: string[] = []
 
   for (const observation of observations) {
-    const exception = exceptions[observation.componentDir]
+    const key = exceptionKeyOf(observation)
+    const exception = exceptions[key]
+    consulted.push(key)
 
-    if (observation.documented === null) {
-      findings.push(undocumentedFinding(observation))
+    if (observation.documented.showsNothing()) {
+      // Only the component's own class must be documented: without it nothing about the
+      // component can be checked. A modifier DaisyUI lists but never shows (`btn-md`,
+      // `modal-top`) is unchecked, not wrong.
+      if (observation.isComponentClass) findings.push(undocumentedFinding(observation))
       continue
     }
     if (!disagrees(observation)) {
-      if (exception) findings.push(staleExceptionFinding(observation.componentDir, exception))
+      if (exception) findings.push(staleExceptionFinding(key, exception))
       continue
     }
-    if (exception) excused.push(observation.componentDir)
+    if (exception) excused.push(key)
     else findings.push(disagreementFinding(observation))
   }
 
-  return { findings, excused }
+  return { findings, excused, consulted }
 }
 
 /** The message the generator dies with. One line per finding, so none of them is buried. */

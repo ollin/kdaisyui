@@ -25,8 +25,7 @@ fun FlowContent.daisyDrawer(
 fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (INPUT.() -> Unit)? = null,
 )
 ```
 
@@ -61,7 +60,7 @@ fun FlowContent.daisyDrawerOverlay(
 fun FlowContent.daisyDrawerButton(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (LABEL.() -> Unit)? = null,
+    content: (LABEL.() -> Unit),
 )
 ```

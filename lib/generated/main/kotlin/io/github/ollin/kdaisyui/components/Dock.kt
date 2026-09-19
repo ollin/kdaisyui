@@ -10,6 +10,8 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.span
+import kotlinx.html.SPAN
 
 /** Size variants for this component (CSS prefix: `dock-`) */
 enum class DockSize(internal val className: String) : ClassValues<DockSize> {
@@ -57,14 +59,14 @@ fun FlowContent.daisyDock(
     }
 }
 
-/** Renders `<div class="dock-label ...">`. */
+/** Renders `<span class="dock-label ...">`. */
 fun FlowContent.daisyDockLabel(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (SPAN.() -> Unit)? = null,
+    content: (SPAN.() -> Unit),
 ) {
-    div {
+    span {
         if (id != null) attributes["id"] = id.id
         addClassNames("dock-label")
         addClassNames(extraClasses)

@@ -33,7 +33,7 @@ fun FlowContent.daisyFabClose(
 fun FlowContent.daisyFabMainAction(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (BUTTON.() -> Unit)? = null,
+    content: (BUTTON.() -> Unit),
 )
 ```

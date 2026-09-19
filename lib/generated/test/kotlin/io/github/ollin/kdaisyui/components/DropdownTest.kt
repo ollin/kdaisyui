@@ -43,7 +43,7 @@ class DropdownTest {
     @Test
     fun dropdown_aligns_to_start_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(alignPlacement = DropdownAlignPlacement.Start) {
+            daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.Start) {
             }
         }
         val expectedClasses = "dropdown dropdown-start"
@@ -54,7 +54,7 @@ class DropdownTest {
     @Test
     fun dropdown_aligns_to_end_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(alignPlacement = DropdownAlignPlacement.End) {
+            daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "dropdown dropdown-end"
@@ -65,7 +65,7 @@ class DropdownTest {
     @Test
     fun dropdown_aligns_to_center_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(alignPlacement = DropdownAlignPlacement.Center) {
+            daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.Center) {
             }
         }
         val expectedClasses = "dropdown dropdown-center"
@@ -76,7 +76,7 @@ class DropdownTest {
     @Test
     fun dropdown_top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(top = true) {
+            daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Top) {
             }
         }
         val expectedClasses = "dropdown dropdown-top"
@@ -87,7 +87,7 @@ class DropdownTest {
     @Test
     fun dropdown_top_aligns_to_center_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(top = true, alignPlacement = DropdownAlignPlacement.Center) {
+            daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Top, horizontalPlacement = DropdownHorizontalPlacement.Center) {
             }
         }
         val expectedClasses = "dropdown dropdown-center dropdown-top"
@@ -98,7 +98,7 @@ class DropdownTest {
     @Test
     fun dropdown_top_aligns_to_end_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(top = true, alignPlacement = DropdownAlignPlacement.End) {
+            daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Top, horizontalPlacement = DropdownHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "dropdown dropdown-end dropdown-top"
@@ -109,7 +109,7 @@ class DropdownTest {
     @Test
     fun dropdown_bottom_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(bottom = true) {
+            daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Bottom) {
             }
         }
         val expectedClasses = "dropdown dropdown-bottom"
@@ -120,7 +120,7 @@ class DropdownTest {
     @Test
     fun dropdown_bottom_default_aligns_to_center_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(bottom = true, alignPlacement = DropdownAlignPlacement.Center) {
+            daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Bottom, horizontalPlacement = DropdownHorizontalPlacement.Center) {
             }
         }
         val expectedClasses = "dropdown dropdown-bottom dropdown-center"
@@ -131,7 +131,7 @@ class DropdownTest {
     @Test
     fun dropdown_bottom_default_aligns_to_end_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(bottom = true, alignPlacement = DropdownAlignPlacement.End) {
+            daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Bottom, horizontalPlacement = DropdownHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "dropdown dropdown-bottom dropdown-end"
@@ -153,7 +153,7 @@ class DropdownTest {
     @Test
     fun dropdown_left_aligns_to_center_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(left = true, alignPlacement = DropdownAlignPlacement.Center) {
+            daisyDropdown(left = true, horizontalPlacement = DropdownHorizontalPlacement.Center) {
             }
         }
         val expectedClasses = "dropdown dropdown-center dropdown-left"
@@ -164,7 +164,7 @@ class DropdownTest {
     @Test
     fun dropdown_left_aligns_to_end_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(left = true, alignPlacement = DropdownAlignPlacement.End) {
+            daisyDropdown(left = true, horizontalPlacement = DropdownHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "dropdown dropdown-end dropdown-left"
@@ -186,7 +186,7 @@ class DropdownTest {
     @Test
     fun dropdown_right_aligns_to_end_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(right = true, alignPlacement = DropdownAlignPlacement.End) {
+            daisyDropdown(right = true, horizontalPlacement = DropdownHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "dropdown dropdown-end dropdown-right"
@@ -197,7 +197,7 @@ class DropdownTest {
     @Test
     fun dropdown_right_aligns_to_center_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(right = true, alignPlacement = DropdownAlignPlacement.Center) {
+            daisyDropdown(right = true, horizontalPlacement = DropdownHorizontalPlacement.Center) {
             }
         }
         val expectedClasses = "dropdown dropdown-center dropdown-right"
@@ -208,7 +208,7 @@ class DropdownTest {
     @Test
     fun dropdown_on_hover() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(openOnHover = true) {
+            daisyDropdown(modifier = DropdownModifier.Hover) {
             }
         }
         val expectedClasses = "dropdown dropdown-hover"
@@ -219,7 +219,7 @@ class DropdownTest {
     @Test
     fun force_open() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(open = true) {
+            daisyDropdown(modifier = DropdownModifier.Open) {
             }
         }
         val expectedClasses = "dropdown dropdown-open"
@@ -252,7 +252,7 @@ class DropdownTest {
     @Test
     fun dropdown_in_navbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(alignPlacement = DropdownAlignPlacement.End) {
+            daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "dropdown dropdown-end"
@@ -263,7 +263,7 @@ class DropdownTest {
     @Test
     fun helper_dropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(alignPlacement = DropdownAlignPlacement.End) {
+            daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.End) {
             }
         }
         val expectedClasses = "dropdown dropdown-end"

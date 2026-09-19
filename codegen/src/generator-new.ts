@@ -9,13 +9,10 @@
  * shape with exactly one consumer.
  */
 
-import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
+import type { ClassifiedComponent } from './classifier.ts'
 import {
-  booleanParameterClasses,
   allBooleans,
-  booleanParameterName,
   buildComponentShape,
-  escapeKotlinKeyword,
   readComponentConfig,
   staticAttributeDoc,
   type ComponentConfig,
@@ -71,9 +68,10 @@ function renderParameter(parameter: ParameterShape): string {
  */
 function rendersClause(shape: FunctionShape): string {
   const attrs = staticAttributeDoc(shape.staticAttributes)
+  const classes = [shape.cssClass, ...shape.modifierClasses].join(' ')
   return shape.cssClass === null
     ? `Structural wrapper. Renders \`<${shape.htmlTag}${attrs}>\`.`
-    : `Renders \`<${shape.htmlTag} class="${shape.cssClass} ..."${attrs}>\`.`
+    : `Renders \`<${shape.htmlTag} class="${classes} ..."${attrs}>\`.`
 }
 
 function summaryLine(shape: FunctionShape): string {
@@ -114,7 +112,15 @@ function applyLines(extras: readonly ExtraParameter[]): string[] {
 }
 
 /** The `content` / `text` tail shared by every function that can take children. */
-function contentLines(hasTextParam: boolean): string[] {
+/**
+ * How the body writes the children — read off the SIGNATURE, like the classes above it.
+ *
+ * A function with no `content` parameter writes none: its element is void and cannot hold any.
+ * The body used to call `content()` unconditionally, so the day the void rule reached parts and
+ * custom parts, three generated files stopped compiling.
+ */
+function contentLines(shape: FunctionShape, hasTextParam: boolean): string[] {
+  if (!shape.parameters.some(parameter => parameter.name === 'content')) return []
   if (!hasTextParam) return ['        content()']
   return [
     '        when {',
@@ -128,13 +134,11 @@ function mainFunctionBody(
   classified: ClassifiedComponent,
   shape: FunctionShape,
   componentConfig: ComponentConfig,
-  groups: GroupClassification,
 ): string {
   const { prefix } = classified
   const { extras, hasTextParam, role, inputType } = componentConfig
   // The body follows the SIGNATURE rather than re-deriving the rule: if the shape declares no
   // `content` parameter, there is nothing to call, and the two can never disagree.
-  const takesContent = shape.parameters.some(parameter => parameter.name === 'content')
 
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
@@ -143,25 +147,41 @@ function mainFunctionBody(
   lines.push(...applyLines(extras.filter(extra => extra.position === 'before_classes')))
 
   lines.push(`        addClassNames("${prefix}")`)
-  // Unguarded: the `ClassValues?` overload of `addClassNames` returns on null. The guard used to
-  // be emitted here, once per enum parameter, and every copy of it was a branch the coverage and
-  // mutation gates had to drive separately to establish the same fact.
-  if (classified.colors.length > 0) lines.push('        addClassNames(variant)')
-  if (classified.sizes.length > 0) lines.push('        addClassNames(size)')
-  // The measured enums, in the order the signature declares them.
-  for (const group of groups.enums) {
-    lines.push(`        addClassNames(${escapeKotlinKeyword(group.parameterName)})`)
-  }
-  for (const cls of booleanParameterClasses(classified, componentConfig, groups)) {
-    lines.push(`        if (${booleanParameterName(cls, componentConfig)}) addClassNames("${prefix}-${cls}")`)
-  }
+  lines.push(...classValuesLines(shape))
+  lines.push(...booleanLines(shape))
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
 
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')
-  if (takesContent) lines.push(...contentLines(hasTextParam))
+  lines.push(...contentLines(shape, hasTextParam))
 
   return lines.join('\n')
+}
+
+/**
+ * One `addClassNames` per `ClassValues` parameter the SIGNATURE declares — `variant`, `size`
+ * and the measured enums, in declaration order. Read off the shape for the same reason the
+ * booleans are: an enum the shape moved to a part is emitted by that part and by nothing else.
+ *
+ * Unguarded, because the `ClassValues?` overload of `addClassNames` returns on null. The guard
+ * used to be emitted here, once per parameter, and every copy of it was a branch the coverage
+ * and mutation gates had to drive separately to establish the same fact.
+ */
+function classValuesLines(shape: FunctionShape): string[] {
+  return shape.parameters
+    .filter(parameter => parameter.enumName !== undefined)
+    .map(parameter => `        addClassNames(${parameter.name})`)
+}
+
+/**
+ * One guarded `addClassNames` per boolean the SIGNATURE declares. The body follows the shape
+ * rather than re-deriving which booleans exist: a boolean the shape moved to a part is emitted
+ * by that part and by nothing else, and the two can never disagree.
+ */
+function booleanLines(shape: FunctionShape): string[] {
+  return shape.parameters
+    .filter(parameter => parameter.cssClass !== undefined)
+    .map(parameter => `        if (${parameter.name}) addClassNames("${parameter.cssClass}")`)
 }
 
 /** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
@@ -171,9 +191,12 @@ function secondaryFunctionBody(shape: FunctionShape): string {
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
   if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
+  lines.push(...shape.modifierClasses.map(cssClass => `        addClassNames("${cssClass}")`))
+  lines.push(...classValuesLines(shape))
+  lines.push(...booleanLines(shape))
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')
-  lines.push(...contentLines(hasTextParam))
+  lines.push(...contentLines(shape, hasTextParam))
 
   return lines.join('\n')
 }
@@ -182,10 +205,9 @@ function renderBody(
   shape: FunctionShape,
   classified: ClassifiedComponent,
   componentConfig: ComponentConfig,
-  groups: GroupClassification,
 ): string {
   return shape.kind === 'main'
-    ? mainFunctionBody(classified, shape, componentConfig, groups)
+    ? mainFunctionBody(classified, shape, componentConfig)
     : secondaryFunctionBody(shape)
 }
 
@@ -235,7 +257,7 @@ export function generateKotlinFile(
   groups: GroupClassification = allBooleans(classified),
 ) {
   const shape = buildComponentShape(classified, source, config, groups)
-  const componentConfig = readComponentConfig(config, classified.componentName, source.componentDir)
+  const componentConfig = readComponentConfig(config, classified.componentName)
 
   const header = [
     `// GENERATED — DO NOT EDIT`,
@@ -248,7 +270,7 @@ export function generateKotlinFile(
   ].join('\n')
 
   const enums = shape.enums.map(renderEnum).join('\n')
-  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig, groups)))
+  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig)))
   const body = [enums, ...functions].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`

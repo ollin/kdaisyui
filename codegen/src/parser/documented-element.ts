@@ -27,6 +27,10 @@ import fs from 'fs'
 import path from 'path'
 import { parseDocument, DomUtils } from 'htmlparser2'
 import type { ComponentName } from './frontmatter.ts'
+import { DocumentedClass } from './documented-classes.ts'
+
+/** The sentinel DaisyUI's documentation puts in front of its OWN class names. */
+const MARKER = '$$'
 
 const COMPONENTS_PATH = path.resolve(
   import.meta.dirname,
@@ -38,29 +42,105 @@ export function fencedHtmlBlocks(markdown: string): string {
   return [...markdown.matchAll(/```html\n([\s\S]*?)```/g)].map(match => match[1]).join('\n')
 }
 
+
+
 /**
- * The tag name of the first element whose class list carries `$$<componentClass>`, or null when
- * the documentation shows no such element.
- *
- * Null is a real answer and not an error: it means DaisyUI documents nothing this check can be
- * made against, which is exactly the case the caller must refuse to pass over in silence.
+ * EVERY element each marked class is shown on. What `documentedElementsIn` decides from, and
+ * what a caller needs when "shown on several" is itself the answer: `dropdown` is shown on a
+ * `<div>` and a `<details>`, and a class shown on either of those is on the dropdown.
  */
-export function documentedElementIn(html: string, componentClass: string): string | null {
-  const marker = `$$${componentClass}`
-  const element = DomUtils.findOne(
-    node => (node.attribs.class ?? '').split(/\s+/).includes(marker),
-    parseDocument(html).children,
-    true,
-  )
-  return element?.name.toUpperCase() ?? null
+export function documentedElementSetsIn(html: string): ReadonlyMap<string, ReadonlySet<string>> {
+  const sets = new Map<string, ReadonlySet<string>>()
+  for (const [className, tally] of documentedElementTalliesIn(html)) sets.set(className, new Set(tally.keys()))
+  return sets
 }
 
-/** The documented element for one component, read from its `+page.md`. */
-export function documentedElementFor(
-  componentName: ComponentName,
-  componentClass: string,
-): string | null {
-  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(file)) return null
-  return documentedElementIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')), componentClass)
+/**
+ * How many times each marked class is shown on each element — the reading the other two are
+ * views of, and the one that answers "which element is USUAL" for a class shown on several:
+ * `indicator-item` is a `<span>` 26 times and a `<div>` once.
+ */
+export function documentedElementTalliesIn(html: string): ReadonlyMap<string, ReadonlyMap<string, number>> {
+  const tallies = new Map<string, Map<string, number>>()
+  DomUtils.findAll(
+    node => (node.attribs?.class ?? '').includes(MARKER),
+    parseDocument(html).children,
+  ).forEach(element => {
+    for (const token of (element.attribs.class ?? '').split(/\s+/)) {
+      const parsed = DocumentedClass.parse(token)
+      if (parsed === null || parsed.isPrefixed) continue
+      const tally = tallies.get(parsed.className) ?? new Map()
+      const tag = element.name.toUpperCase()
+      tally.set(tag, (tally.get(tag) ?? 0) + 1)
+      tallies.set(parsed.className, tally)
+    }
+  })
+  return tallies
 }
+
+/**
+ * The element a class is shown on more often than on any other — or nothing, when the count
+ * is tied or the class is shown nowhere. A count rule, so that a single stray example does
+ * not decide and a tie does not pick by accident.
+ */
+export function usualElementOf(tally: ReadonlyMap<string, number> | undefined): string | undefined {
+  if (tally === undefined) return undefined
+  const ranked = [...tally].sort(([, left], [, right]) => right - left)
+  if (ranked.length === 0) return undefined
+  if (ranked.length > 1 && ranked[0][1] === ranked[1][1]) return undefined
+  return ranked[0][0]
+}
+
+/** `documentedElementTalliesIn` for one component's page; empty when the page does not exist. */
+export function documentedElementTalliesFor(componentName: ComponentName): ReadonlyMap<string, ReadonlyMap<string, number>> {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return new Map()
+  return documentedElementTalliesIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
+}
+
+/**
+ * The element each marked class's PARENT is shown as, where that is one element.
+ *
+ * What a part needs as its extension receiver when kotlinx.html opens its element only inside
+ * a specific parent: `<legend>` inside `<fieldset>`, `<li>` inside `<ul>`. Read the same way
+ * as the element itself, and absent for the same reasons — shown nowhere, on several, or at
+ * the top of an example with no parent at all.
+ */
+export function documentedParentsIn(html: string): ReadonlyMap<string, string> {
+  const seen = new Map<string, Set<string>>()
+  DomUtils.findAll(
+    node => (node.attribs?.class ?? '').includes(MARKER),
+    parseDocument(html).children,
+  ).forEach(element => {
+    const parent = element.parent
+    if (parent === null || parent.type !== 'tag') return
+    for (const token of (element.attribs.class ?? '').split(/\s+/)) {
+      const parsed = DocumentedClass.parse(token)
+      if (parsed === null || parsed.isPrefixed) continue
+      const parents = seen.get(parsed.className) ?? new Set()
+      parents.add(parent.name.toUpperCase())
+      seen.set(parsed.className, parents)
+    }
+  })
+  const unambiguous = new Map<string, string>()
+  for (const [className, parents] of seen) {
+    if (parents.size === 1) unambiguous.set(className, [...parents][0])
+  }
+  return unambiguous
+}
+
+/** `documentedParentsIn` for one component's page; empty when the page does not exist. */
+export function documentedParentsFor(componentName: ComponentName): ReadonlyMap<string, string> {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return new Map()
+  return documentedParentsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
+}
+
+/** `documentedElementSetsIn` for one component's page; empty when the page does not exist. */
+export function documentedElementSetsFor(componentName: ComponentName): ReadonlyMap<string, ReadonlySet<string>> {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return new Map()
+  return documentedElementSetsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
+}
+
+

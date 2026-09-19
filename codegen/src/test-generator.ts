@@ -12,7 +12,8 @@ import {
 // is the generic string form.
 import { classifyFromFrontmatter, toPascalCase as toPascalClassName } from './classifier.ts'
 import { classifyGroups } from './class-groups.ts'
-import { loadMeasurement } from './measurement.ts'
+import { loadEvidence } from './measurement.ts'
+import type { Evidence } from './measurement.ts'
 import { booleanParameterName, escapeKotlinKeyword, readComponentConfig } from './component-shape.ts'
 import {
   documentedElementClasses,
@@ -191,6 +192,11 @@ interface ClassBinding {
   readonly argument: string
 }
 
+/** `text` under prefix `skeleton` is the class `skeleton-text`; an unprefixed class is itself. */
+function qualifiedClass(prefix: string | null, cls: string): string {
+  return prefix === null || cls.startsWith(`${prefix}-`) ? cls : `${prefix}-${cls}`
+}
+
 /**
  * A documented class with the component prefix stripped, which is the key the classified model
  * uses. `menu-horizontal` -> `horizontal`, and `glass` -> `glass` because DaisyUI files a few
@@ -206,9 +212,8 @@ function strippedClass(prefix: string | null, cssClass: string): string {
  *
  * That sharing is the point. This file used to build its own `class -> camelCase parameter` map,
  * which was right only while every parameter was a boolean called exactly `toCamelCase(class)`.
- * It now has to agree with two decisions it cannot see: which groups the exclusivity measurement
- * turned into enums, and which parameters `parameterNames` renamed. Deriving them twice is how
- * the two copies drift.
+ * It now has to agree with a decision it cannot see: which groups the exclusivity measurement
+ * turned into enums. Deriving that twice is how the two copies drift.
  */
 function classBindings(classified, componentConfig, groups): Record<string, ClassBinding> {
   const bindings: Record<string, ClassBinding> = {}
@@ -226,8 +231,14 @@ function classBindings(classified, componentConfig, groups): Record<string, Clas
 
   // Everything the measurement left as a flag. Enums are written first and not overwritten: a
   // class cannot be both, and if it somehow were, the enum is the one that reaches the CSS.
+  // Minus the classes a custom part writes on every call: those have no boolean on the main
+  // function, so no call to it can produce them. An `extras`-covered class is NOT subtracted —
+  // it has no boolean either, but it does have a parameter, the `extras` entry's own, under
+  // the same name.
+  const writtenByCustomPart = new Set(componentConfig.customParts.flatMap(part => part.modifierClasses ?? []))
   for (const cls of groups.booleans) {
-    bindings[cls] ??= { parameter: booleanParameterName(cls, componentConfig), argument: 'true' }
+    if (writtenByCustomPart.has(qualifiedClass(classified.prefix, cls))) continue
+    bindings[cls] ??= { parameter: booleanParameterName(cls), argument: 'true' }
   }
 
   return bindings
@@ -253,6 +264,12 @@ interface CallModel {
   readonly prefix: string | null
   readonly allowedClasses: Set<string>
   readonly bindings: Record<string, ClassBinding>
+  /**
+   * Classes a custom part writes on every call, so the main function offers no parameter for
+   * them. The example documenting one is that part's example, and the part has its own
+   * assertions — reproducing it through the main function is not possible and not wanted.
+   */
+  readonly writtenByCustomPart: ReadonlySet<string>
 }
 
 /** One generated call: its argument list and the classes it is expected to render. */
@@ -346,6 +363,9 @@ function customPartAssertions(part, tag) {
   const assertions = [`        assertTrue(html.contains("<${tag}"))`]
   if (part.cssClass) {
     assertions.push(`        assertTrue(html.contains("class=\\"${part.cssClass}"))`)
+  }
+  for (const cssClass of part.modifierClasses || []) {
+    assertions.push(`        assertTrue(html.contains("${cssClass}"))`)
   }
   assertions.push(...staticAttributeAssertions(part.staticAttributes))
   return assertions.join('\n')
@@ -458,15 +478,18 @@ function generateClassTest(className, { testName, args, expectedClasses, caseNam
  * tests are generated against the signature the components were generated with rather than
  * against a second guess at it.
  */
-function buildCallModel(componentName, frontmatter, config, measurement): CallModel {
+function buildCallModel(componentName, frontmatter, config, evidence: Evidence): CallModel {
   const { allowedClasses, componentClass } = buildClassMappings(frontmatter)
   const classified = classifyFromFrontmatter(frontmatter, componentName)
-  const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, measurement)
+  const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, evidence)
   return {
     componentClass,
     prefix: classified.prefix,
     allowedClasses,
-    bindings: classBindings(classified, readComponentConfig(config, classified.componentName, componentName), groups),
+    bindings: classBindings(classified, readComponentConfig(config, classified.componentName), groups),
+    writtenByCustomPart: new Set(
+      configSection(config, 'customParts', componentName, []).flatMap(part => part.modifierClasses ?? []),
+    ),
   }
 }
 
@@ -479,6 +502,7 @@ function buildCallModel(componentName, frontmatter, config, measurement): CallMo
  */
 function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
   const calls = documentedElementClasses(html, model.componentClass)
+    .filter(classes => !classes.some(documented => model.writtenByCustomPart.has(documented.className)))
     .map(classes => componentCallFor(model, classes))
   const seen = new Set<string>()
   return calls.filter(call => {
@@ -489,9 +513,9 @@ function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
   })
 }
 
-function generateKotlinTest(componentName, testCases, frontmatter, config, measurement) {
+function generateKotlinTest(componentName, testCases, frontmatter, config, evidence: Evidence) {
   const className = toClassName(componentName)
-  const model = buildCallModel(componentName, frontmatter, config, measurement)
+  const model = buildCallModel(componentName, frontmatter, config, evidence)
   const customParts = configSection(config, 'customParts', componentName, [])
   const attributeTest = generateComponentAttributeTest(className, configSection(config, 'componentAttributes', componentName, {}))
   
@@ -543,7 +567,7 @@ class ${className}Test {
   return { kotlin, testCount }
 }
 
-function generateForComponent(componentName, config, measurement) {
+function generateForComponent(componentName, config, evidence: Evidence) {
   const pageFile = path.join(DOCS_DIR, componentName, '+page.md')
   
   if (!fs.existsSync(pageFile)) {
@@ -562,7 +586,7 @@ function generateForComponent(componentName, config, measurement) {
     return { success: false, error: 'No test cases' }
   }
   
-  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, config, measurement)
+  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, config, evidence)
   const className = toClassName(componentName)
   const outFile = path.join(OUTPUT_DIR, `${className}Test.kt`)
   
@@ -713,9 +737,16 @@ function classifyParam(raw, enums) {
 }
 
 /** The single unguarded `addClassNames("...")` that names this element. */
+/**
+ * Every class the body writes unconditionally, as the sorted string the assertion compares to.
+ *
+ * All of them, not the first: a `customParts` entry with `modifierClasses` emits two literal
+ * `addClassNames` lines — `daisySkeletonText` renders `class="skeleton skeleton-text"` — and
+ * reading only the first asserted a class list the function does not produce.
+ */
 function parseBaseClass(body) {
-  const m = body.match(/^\s*addClassNames\("([^"]+)"\)\s*$/m)
-  return m ? m[1] : null
+  const classes = [...body.matchAll(/^\s*addClassNames\("([^"]+)"\)\s*$/gm)].map(match => match[1])
+  return classes.length > 0 ? sortedClasses(classes) : null
 }
 
 /**
@@ -1079,12 +1110,12 @@ function generateAllCoverage() {
  * Generate one component and print its progress line.
  * @returns whether it produced tests — the caller only needs the tally.
  */
-function generateAndReport(componentName, config, measurement) {
+function generateAndReport(componentName, config, evidence: Evidence) {
   if (config.skip?.includes(componentName)) {
     console.log(`  ⊘ ${componentName}: Skipped (alias)`)
     return false
   }
-  const result = generateForComponent(componentName, config, measurement)
+  const result = generateForComponent(componentName, config, evidence)
   console.log(
     result.success
       ? `  ✓ ${componentName}: ${result.testCount} tests`
@@ -1093,13 +1124,13 @@ function generateAndReport(componentName, config, measurement) {
   return result.success
 }
 
-function generateAllComponents(config, measurement) {
+function generateAllComponents(config, evidence: Evidence) {
   console.log('Generating tests for all components...\n')
 
   let generated = 0
   let skipped = 0
   for (const componentName of getAllComponentDirs()) {
-    if (generateAndReport(componentName, config, measurement)) generated++
+    if (generateAndReport(componentName, config, evidence)) generated++
     else skipped++
   }
 
@@ -1108,12 +1139,12 @@ function generateAllComponents(config, measurement) {
 }
 
 /** Single-component mode. Unlike the bulk mode, a failure here is fatal: it was asked for. */
-function generateSingleComponent(componentName, config, measurement) {
+function generateSingleComponent(componentName, config, evidence: Evidence) {
   if (config.skip?.includes(componentName)) {
     console.error(`Error: ${componentName} is skipped (alias)`)
     process.exit(1)
   }
-  const result = generateForComponent(componentName, config, measurement)
+  const result = generateForComponent(componentName, config, evidence)
   if (!result.success) {
     console.error(`Error: ${result.error}`)
     process.exit(1)
@@ -1134,10 +1165,10 @@ function main() {
   const config = loadConfig()
   // One file describing every component, read once rather than 66 times — the same call
   // `index-new.ts` makes, so both generators decide from the identical measurement.
-  const measurement = loadMeasurement()
+  const evidence = loadEvidence()
 
-  if (mode === 'all') return generateAllComponents(config, measurement)
-  if (mode) return generateSingleComponent(mode, config, measurement)
+  if (mode === 'all') return generateAllComponents(config, evidence)
+  if (mode) return generateSingleComponent(mode, config, evidence)
   printUsageAndExit()
 }
 

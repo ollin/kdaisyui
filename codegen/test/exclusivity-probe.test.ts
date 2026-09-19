@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { inject, stripSentinel } from '../src/exclusivity-probe.ts'
+import { inject, pageFor, stripSentinel } from '../src/exclusivity-probe.ts'
 
 /**
  * One test per defect the probe has actually had.
@@ -50,6 +50,25 @@ describe('the probe defects', () => {
     ])
 
     assert.equal(result, '<div class="alert alert-info alert-soft">x</div>')
+  })
+
+  it('renders a baseline with the group stripped and nothing injected', () => {
+    // `tooltip-top` restates `.tooltip`'s own declarations, so alone it equals every other
+    // member alone and the pair rule called it exclusive with all six. Only a case with
+    // nothing injected can tell "changed nothing" from "exclusive with everything".
+    const result = inject('<div class="tooltip tooltip-top">x</div>', 'tooltip', ['top', 'bottom'], [], [])
+
+    assert.equal(result, '<div class="tooltip">x</div>')
+  })
+
+  it('inlines the stylesheet, because a linked file:// sheet hides its rules from the page', () => {
+    // Chromium treats a stylesheet linked from a file:// page as cross-origin, and `cssRules`
+    // throws SecurityError — which is what `declares` reads. Found on the first measurement
+    // run after `declares` was added.
+    const page = pageFor([], '.tooltip{--tt-off:1px}')
+
+    assert.match(page, /<style>\.tooltip\{--tt-off:1px\}<\/style>/)
+    assert.doesNotMatch(page, /<link/)
   })
 
   it('injects both members of a pair onto the same element', () => {

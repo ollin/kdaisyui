@@ -27,6 +27,10 @@
  * 4. **Render DaisyUI's real example, not a stub.** `pin-rows` styles `:where(thead tr)`, so
  *    against a bare `div` it changes nothing and the pair reads as exclusive. A false "inert"
  *    INVENTS exclusivity, which is the error whose cost is asymmetric.
+ * 5. **Render a baseline with nothing injected.** A class that changes nothing — `tooltip-top`
+ *    restates `.tooltip`'s own declarations — equals every other member alone, so the pair
+ *    rule calls it exclusive with all of them and the group looks like two overlapping
+ *    cliques. Against the baseline it is simply `inert`, and the derivation leaves it out.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -101,7 +105,13 @@ export function inject(
 export interface ProbeCase {
   /** `<directory>.<category>`, the key `exclusivity.json` uses. */
   group: string
-  /** One member, or two joined by `|` — the pair key the verdicts are recorded under. */
+  /** The component's class prefix, so the browser can find the rules a member's class matches. */
+  prefix: string
+  /**
+   * One member, two joined by `|` — the pair key the verdicts are recorded under — or the
+   * empty string for the group's baseline: the example with every member stripped and nothing
+   * injected. A member whose single case equals the baseline is `inert` (detail 5).
+   */
   pair: string
   html: string
 }
@@ -135,6 +145,7 @@ const NOTHING: ComponentCases = { cases: [], unmeasurable: [] }
 function caseFor(probe: ComponentProbe, group: GroupUnderTest, injected: readonly string[]): ProbeCase {
   return {
     group: `${probe.directory}.${group.category}`,
+    prefix: probe.prefix,
     pair: injected.join('|'),
     html: inject(probe.example, probe.prefix, group.members, injected, probe.context),
   }
@@ -145,13 +156,21 @@ interface GroupUnderTest {
   readonly members: readonly string[]
 }
 
-/** Every member on its own, then every pair — the three cases each verdict is derived from. */
+/**
+ * The baseline, every member on its own, then every pair.
+ *
+ * The baseline is what exposes a member that changes nothing: `tooltip-top` declares exactly
+ * what `.tooltip` already sets, so alone it equals the baseline and against any other member
+ * it equals that member alone — which the pair rule reads as `exclusive` six times over. Only
+ * a case with nothing injected can tell "inert" from "exclusive with everything".
+ */
 function casesFor(probe: ComponentProbe, group: GroupUnderTest): ProbeCase[] {
+  const baseline = caseFor(probe, group, [])
   const singles = group.members.map((member) => caseFor(probe, group, [member]))
   const pairs = ClassPair.allOf(group.members).map((pair) =>
     caseFor(probe, group, [pair.left, pair.right]),
   )
-  return [...singles, ...pairs]
+  return [baseline, ...singles, ...pairs]
 }
 
 function componentCases(directory: string): ComponentCases {
@@ -182,24 +201,31 @@ function componentCases(directory: string): ComponentCases {
   return { cases: groups.flatMap((group) => casesFor(probe, group)), unmeasurable: [] }
 }
 
-/** Every case for every multi-member group, plus the page that holds them. */
-export function buildProbePage(): ProbePage {
+/**
+ * Every case for every multi-member group, plus the page that holds them.
+ *
+ * @param stylesheet the complete webjar `daisyui.css`, inlined rather than linked: the page is
+ *   opened from `file://`, where Chromium treats a linked sheet as cross-origin and refuses
+ *   `cssRules` — which `declares` reads. Inline, the sheet is the page's own.
+ */
+export function buildProbePage(stylesheet: string): ProbePage {
   const perComponent = getAllComponentDirs().map(componentCases)
   const cases = perComponent.flatMap((component) => component.cases)
   const unmeasurable = perComponent.flatMap((component) => component.unmeasurable)
 
   return {
-    html: pageFor(cases),
+    html: pageFor(cases, stylesheet),
     cases,
     groups: new Set(cases.map((probeCase) => probeCase.group)).size,
     unmeasurable,
   }
 }
 
-function pageFor(cases: readonly ProbeCase[]): string {
+export function pageFor(cases: readonly ProbeCase[], stylesheet: string): string {
   const body = cases
     .map(
-      (c) => `<div class="probe-case" data-group="${c.group}" data-pair="${c.pair}">${c.html}</div>`,
+      (c) =>
+        `<div class="probe-case" data-group="${c.group}" data-prefix="${c.prefix}" data-pair="${c.pair}">${c.html}</div>`,
     )
     .join('\n')
 
@@ -211,7 +237,7 @@ function pageFor(cases: readonly ProbeCase[]): string {
     // The whole bundle. A hand-picked subset of the webjar omitted every theme — leaving
     // --color-neutral undefined, so colour-dependent classes computed to the same transparent
     // black — and omitted utilities/join.css, where join-vertical and join-horizontal live.
-    '<link rel="stylesheet" href="daisyui.css">',
+    `<style>${stylesheet}</style>`,
     // The provenance travels INTO the page, so the browser can emit a COMPLETE
     // `exclusivity.json` and the file stays generated wholesale. Hand-writing it into the
     // JSON would mean the next measurement silently deletes it.

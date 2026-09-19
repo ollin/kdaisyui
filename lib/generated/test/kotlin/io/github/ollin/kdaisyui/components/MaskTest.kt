@@ -10,7 +10,7 @@ class MaskTest {
     @Test
     fun squircle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Squircle) {
+            daisyMask(style = MaskStyle.Squircle) {
             }
         }
         val expectedClasses = "mask mask-squircle"
@@ -21,7 +21,7 @@ class MaskTest {
     @Test
     fun heart() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Heart) {
+            daisyMask(style = MaskStyle.Heart) {
             }
         }
         val expectedClasses = "mask mask-heart"
@@ -32,7 +32,7 @@ class MaskTest {
     @Test
     fun hexagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Hexagon) {
+            daisyMask(style = MaskStyle.Hexagon) {
             }
         }
         val expectedClasses = "mask mask-hexagon"
@@ -43,7 +43,7 @@ class MaskTest {
     @Test
     fun hexagon_2_horizontal_hexagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Hexagon2) {
+            daisyMask(style = MaskStyle.Hexagon2) {
             }
         }
         val expectedClasses = "mask mask-hexagon-2"
@@ -54,7 +54,7 @@ class MaskTest {
     @Test
     fun decagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Decagon) {
+            daisyMask(style = MaskStyle.Decagon) {
             }
         }
         val expectedClasses = "mask mask-decagon"
@@ -65,7 +65,7 @@ class MaskTest {
     @Test
     fun pentagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Pentagon) {
+            daisyMask(style = MaskStyle.Pentagon) {
             }
         }
         val expectedClasses = "mask mask-pentagon"
@@ -76,7 +76,7 @@ class MaskTest {
     @Test
     fun diamond() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Diamond) {
+            daisyMask(style = MaskStyle.Diamond) {
             }
         }
         val expectedClasses = "mask mask-diamond"
@@ -87,7 +87,7 @@ class MaskTest {
     @Test
     fun square() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Square) {
+            daisyMask(style = MaskStyle.Square) {
             }
         }
         val expectedClasses = "mask mask-square"
@@ -98,7 +98,7 @@ class MaskTest {
     @Test
     fun circle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Circle) {
+            daisyMask(style = MaskStyle.Circle) {
             }
         }
         val expectedClasses = "mask mask-circle"
@@ -109,7 +109,7 @@ class MaskTest {
     @Test
     fun star() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Star) {
+            daisyMask(style = MaskStyle.Star) {
             }
         }
         val expectedClasses = "mask mask-star"
@@ -120,7 +120,7 @@ class MaskTest {
     @Test
     fun star_2_bold_star() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Star2) {
+            daisyMask(style = MaskStyle.Star2) {
             }
         }
         val expectedClasses = "mask mask-star-2"
@@ -131,7 +131,7 @@ class MaskTest {
     @Test
     fun triangle_pointing_top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Triangle) {
+            daisyMask(style = MaskStyle.Triangle) {
             }
         }
         val expectedClasses = "mask mask-triangle"
@@ -142,7 +142,7 @@ class MaskTest {
     @Test
     fun triangle_2_pointing_down() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Triangle2) {
+            daisyMask(style = MaskStyle.Triangle2) {
             }
         }
         val expectedClasses = "mask mask-triangle-2"
@@ -153,7 +153,7 @@ class MaskTest {
     @Test
     fun triangle_3_pointing_left() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Triangle3) {
+            daisyMask(style = MaskStyle.Triangle3) {
             }
         }
         val expectedClasses = "mask mask-triangle-3"
@@ -164,7 +164,7 @@ class MaskTest {
     @Test
     fun triangle_4_pointing_right() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(shape = MaskShape.Triangle4) {
+            daisyMask(style = MaskStyle.Triangle4) {
             }
         }
         val expectedClasses = "mask mask-triangle-4"

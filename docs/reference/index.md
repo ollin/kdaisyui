@@ -72,7 +72,7 @@ import io.github.ollin.kdaisyui.components.*
 | [Skeleton](skeleton.md) | Content placeholder loading indicator | `<div>` |
 | [Stack](stack.md) | Stack overlapping elements | `<div>` |
 | [Stat](stat.md) | Key metrics and numbers | `<div>` |
-| [Status](status.md) | Small status indicator dot | `<span>` |
+| [Status](status.md) | Small status indicator dot | `<div>` |
 | [Steps](steps.md) | Step-by-step progress indicator | `<ul>` |
 | [Swap](swap.md) | Toggle between two states | `<label>` |
 | [Tab](tab.md) | Tabbed navigation | `<button>` |

@@ -289,6 +289,77 @@ arguments are immune.
 Both baselines show this change in full — the parameters are removed and added, not merely
 retyped, so neither blind spot from 0.4.x applies.
 
+**5. A class is now declared on the function whose element wears it.** DaisyUI's own markup says
+which element carries each class, and where the generator had put a parameter on the container
+while DaisyUI puts the class on a child, the parameter moved. The class had been reaching the
+page and styling nothing.
+
+```kotlin
+// before — the placement classes sat on the container, where they do nothing
+daisyIndicator(verticalPlacement = IndicatorVerticalPlacement.Top) { daisyIndicatorItem { … } }
+
+// after — they are declared on the item, which is what DaisyUI shows them on
+daisyIndicator { daisyIndicatorItem(verticalPlacement = IndicatorVerticalPlacement.Top) { … } }
+```
+
+`timeline-box` moved the same way, from `daisyTimeline` to the parts that wear it.
+
+**6. Several functions render a different element, so their lambdas receive a different type.**
+Sixteen parts now render the element DaisyUI documents rather than one guessed from their name,
+and `daisyStatus` renders `<div>` — measured, because DaisyUI shows `status` on a `<div>` 16
+times and a `<span>` once, and all thirteen of its variant classes on `<div>` alone.
+
+```kotlin
+// before
+daisyStatus(attrs = { /* this: SPAN */ }) { /* this: SPAN */ }
+// after
+daisyStatus(attrs = { /* this: DIV */ })  { /* this: DIV */ }
+```
+
+Most call sites need no edit: an empty body, `+"text"`, or anything reached through
+`attributes[…]` compiles unchanged. Only code naming the tag type explicitly breaks, and it
+breaks at compile time. `lib/api/components.api` shows every one of these; `lib/api/lib.api`
+cannot, for the reason given under 0.3.x.
+
+**7. Two parts are now extensions of their parent, not of `FlowContent`.** kotlinx.html opens
+`<legend>` only inside `<fieldset>` and `<li>` only inside `<ul>`, so `daisyFieldsetLegend` and
+`daisyStepsStep` extend `FIELDSET` and `UL`. Calling them anywhere else no longer compiles —
+which is the point: it never rendered valid HTML.
+
+**8. `daisySkeleton(text = true)` is now `daisySkeletonText { }`.** DaisyUI documents
+`skeleton-text` in exactly one markup, `<span class="skeleton skeleton-text">`, and the boolean
+offered it on a `<div>` instead — for a modifier whose purpose is animating *text* colour.
+
+```kotlin
+// before
+daisySkeleton(text = true) { +"AI is thinking harder..." }
+// after
+daisySkeletonText { +"AI is thinking harder..." }
+```
+
+**9. `MaskShape` is `MaskStyle`.** The enum is named after DaisyUI's own category word rather
+than a hand-written entry. A rename, nothing else.
+
+**10. Three toggles no longer take a `content` lambda.** `daisyDrawerToggle`,
+`daisyFilterReset` and `daisyModalToggle` render `<input>`, which the HTML specification says
+cannot hold children — so the lambda described children that were never rendered.
+
+```kotlin
+// before — the lambda ran, and nothing it wrote appeared
+daisyModalToggle { }
+// after
+daisyModalToggle()
+```
+
+### What deliberately did NOT change
+
+`daisyBadge` still renders `<span>`, although every one of its variant classes is documented on a
+`<div>`. DaisyUI picks the tag by context: all seven of its `<span>` examples sit inside an
+`<h1>`–`<h5>` or a `<p>`, where a `<div>` is invalid HTML. `<span>` is valid in all 54 documented
+positions and `<div>` in 47, so the element that keeps `daisyBadge` usable everywhere wins over
+the commoner one. Tracked as #356. `daisyDropdown` keeps `<details>` for the same kind of reason
+— the `<div>` shape needs attributes the generator cannot emit — tracked as #357.
+
 ## Quick start
 
 ### 1. Add the dependency

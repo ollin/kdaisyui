@@ -9,14 +9,14 @@
     "codescene": { "enabled": true },
     "daisyui-blueprint": { "enabled": true },
     "memory": { "enabled": true },
+    "obsidian": { "enabled": true },
+    "dacli": { "enabled": true },
 
     "gitlab-katta": { "enabled": false },
     "gitlab-nimbus": { "enabled": false },
     "chrome-devtools": { "enabled": false },
     "archi": { "enabled": false },
     "structurizr-mcp": { "enabled": false },
-    "dacli": { "enabled": false },
-    "obsidian": { "enabled": false },
     "tasknotes": { "enabled": false },
     "nelson": { "enabled": false },
     "pdf-mcp": { "enabled": false },
@@ -26,11 +26,11 @@
   },
 
   "tools": {
-    "bash": false,
-    "interactive_bash": false,
-    "write": false,
-    "edit": false,
-    "patch": false,
-    "jetbrains_execute_terminal_command": false
+    "bash": true,
+    "interactive_bash": true,
+    "write": true,
+    "edit": true,
+    "patch": true,
+    "jetbrains_execute_terminal_command": true
   }
 }

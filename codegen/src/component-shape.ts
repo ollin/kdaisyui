@@ -17,7 +17,7 @@
  */
 
 import { toPascalCase, toCamelCase, type ClassifiedComponent } from './classifier.ts'
-import type { GroupClassification } from './class-groups.ts'
+import type { EnumGroup, GroupClassification } from './class-groups.ts'
 import { usualElementOf } from './parser/documented-element.ts'
 
 /**
@@ -555,6 +555,15 @@ function groupParameterType(enumName: string): string {
 }
 
 /** The enum-typed parameters: the two that were always enums, then the measured ones. */
+function enumParameter(group: EnumGroup): ParameterShape {
+  return {
+    name: escapeKotlinKeyword(group.parameterName),
+    type: groupParameterType(group.enumName),
+    default: 'null',
+    doc: `${capitalised(group.parameterName)} variant`,
+  }
+}
+
 function enumParameters(
   classified: ClassifiedComponent,
   groups: GroupClassification,
@@ -567,12 +576,7 @@ function enumParameters(
     parameters.push({ name: 'size', type: groupParameterType(`${classified.componentName}Size`), default: 'null', doc: 'Size variant' })
   }
   for (const group of groups.enums) {
-    parameters.push({
-      name: escapeKotlinKeyword(group.parameterName),
-      type: groupParameterType(group.enumName),
-      default: 'null',
-      doc: `${capitalised(group.parameterName)} variant`,
-    })
+    parameters.push(enumParameter(group))
   }
   return parameters
 }

@@ -21,7 +21,7 @@ member list was re-measured and was wrong (seven components, not five).
   changes; the point of deriving the list is precisely that a stale hand-count cannot reach the
   output. The test pins seven and will fail on the next DaisyUI bump that moves it, which is
   the intent.
-- [ ] 1.2 `^ F` Generate `JoinScope` and its member overloads; `daisyJoin`'s `content` becomes
+- [x] 1.2 `^ F` Generate `JoinScope` and its member overloads; `daisyJoin`'s `content` becomes
   `JoinScope.() -> Unit`. Test: `daisyJoin { daisyButton("A") }` renders `class="btn join-item"`;
   `daisyJoin { div { daisyInput() } }` renders no `join-item`; `daisyJoin { div {
   this@daisyJoin.daisyInput() } }` does; a `daisyButton("A", extraClasses = "join-item")` outside

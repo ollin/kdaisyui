@@ -12,6 +12,7 @@ import { observeElements } from './element-observation.ts'
 import {
   crossCheckElements,
   describeCrossCheckFailure,
+  DocumentedElements,
   type CrossCheckExceptions,
   type ElementObservation,
 } from './element-cross-check.ts'
@@ -170,10 +171,10 @@ function main() {
     const source = { componentDir: componentName, element, documentedElements, documentedParents }
     const shape = buildComponentShape(classified, source, config, groups)
     const documentedSets = documentedElementSetsFor(componentName)
-    observations.push(...observeElements(shape, {
-      componentClass: [...documentedSets.get(frontmatter.classnames.component[0].class) ?? []],
-      byClass: new Map([...documentedSets].map(([cls, elements]) => [cls, [...elements]])),
-    }))
+    observations.push(...observeElements(
+      shape,
+      new Map([...documentedSets].map(([cls, elements]) => [cls, DocumentedElements.of(elements)])),
+    ))
 
     const kotlin = generateKotlinFile(classified, source, config, groups)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)

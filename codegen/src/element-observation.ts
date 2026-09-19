@@ -7,6 +7,7 @@
  * main function in the Kotlin, the tests and the reference page alike.
  */
 import type { ComponentShape, FunctionShape } from './component-shape.ts'
+import { DocumentedElements } from './element-cross-check.ts'
 import type { ElementObservation } from './element-cross-check.ts'
 
 function classesEmittedBy(fn: FunctionShape, shape: ComponentShape): string[] {
@@ -18,33 +19,28 @@ function classesEmittedBy(fn: FunctionShape, shape: ComponentShape): string[] {
   return [...own, ...booleans, ...enums]
 }
 
-/** Where DaisyUI documents the component's classes — two readings, two contracts. */
-export interface DocumentedElements {
-  /**
-   * The component's own class: the FIRST documented example, as the component-level check has
-   * read it since 0.4.0. `btn` is shown on a `<button>` first and on an `<a>` later; the first
-   * is the one the generator is held to.
-   */
-  readonly componentClass: readonly string[]
-  /** Every other class, beside every element DaisyUI shows it on. */
-  readonly byClass: ReadonlyMap<string, readonly string[]>
-}
+/**
+ * Where DaisyUI documents each of a component's classes, the component's own among them.
+ *
+ * One lookup, not two. It used to carry the component class separately because that reading
+ * was different — the FIRST documented example, where every other class got the commonest.
+ * Both are now the set of every element the class is shown on, so a second field would be the
+ * same answer fetched a second way, which is how two answers start disagreeing.
+ */
+export type DocumentedClasses = ReadonlyMap<string, DocumentedElements>
 
-export function observeElements(shape: ComponentShape, documented: DocumentedElements): ElementObservation[] {
+export function observeElements(shape: ComponentShape, documented: DocumentedClasses): ElementObservation[] {
   return shape.functions.flatMap((fn) => observeFunction(fn, shape, documented))
 }
 
-function observeFunction(fn: FunctionShape, shape: ComponentShape, documented: DocumentedElements): ElementObservation[] {
-  const observations = classesEmittedBy(fn, shape).map((cssClass) => {
-    const isComponentClass = fn.kind === 'main' && cssClass === fn.cssClass
-    return {
-      componentDir: shape.componentDir,
-      cssClass,
-      isComponentClass,
-      chosen: fn.element,
-      documented: isComponentClass ? documented.componentClass : documented.byClass.get(cssClass) ?? [],
-    }
-  })
+function observeFunction(fn: FunctionShape, shape: ComponentShape, documented: DocumentedClasses): ElementObservation[] {
+  const observations = classesEmittedBy(fn, shape).map((cssClass) => ({
+    componentDir: shape.componentDir,
+    cssClass,
+    isComponentClass: fn.kind === 'main' && cssClass === fn.cssClass,
+    chosen: fn.element,
+    documented: documented.get(cssClass) ?? DocumentedElements.none(),
+  }))
   const own = observations.find((observation) => observation.cssClass === fn.cssClass)
   return observations.filter((observation) => !repeatsTheFunctionsOwnVerdict(observation, own))
 }
@@ -58,10 +54,5 @@ function observeFunction(fn: FunctionShape, shape: ComponentShape, documented: D
  */
 function repeatsTheFunctionsOwnVerdict(observation: ElementObservation, own: ElementObservation | undefined): boolean {
   if (own === undefined || observation === own) return false
-  const ownVerdict = own.documented.length > 0 ? own.documented : [own.chosen]
-  return sameElements(observation.documented, ownVerdict)
-}
-
-function sameElements(one: readonly string[], other: readonly string[]): boolean {
-  return one.length === other.length && one.every(element => other.includes(element))
+  return observation.documented.sameAs(own.documented.orElse(own.chosen))
 }

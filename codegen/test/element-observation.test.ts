@@ -2,8 +2,14 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { observeElements } from '../src/element-observation.ts'
+import type { DocumentedClasses } from '../src/element-observation.ts'
+import { DocumentedElements } from '../src/element-cross-check.ts'
 import { buildComponentShape } from '../src/component-shape.ts'
 import type { ClassifiedComponent } from '../src/classifier.ts'
+
+/** The documented elements of each class, written the way DaisyUI's pages read. */
+const documentedClasses = (byClass: Record<string, string[]>): DocumentedClasses =>
+  new Map(Object.entries(byClass).map(([cssClass, elements]) => [cssClass, DocumentedElements.of(elements)]))
 
 function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedComponent {
   return {
@@ -25,13 +31,7 @@ function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedCom
   } as ClassifiedComponent
 }
 
-const documented = {
-  componentClass: ['UL'],
-  byClass: new Map([
-    ['menu-active', ['LI']],
-    ['menu-title', ['LI']],
-  ]),
-}
+const documented = documentedClasses({ menu: ['UL'], 'menu-active': ['LI'], 'menu-title': ['LI'] })
 
 describe('observeElements', () => {
   test('observes the component class on the main function', () => {
@@ -39,7 +39,10 @@ describe('observeElements', () => {
 
     const [own] = observeElements(shape, documented)
 
-    assert.deepEqual(own, { componentDir: 'menu', cssClass: 'menu', isComponentClass: true, chosen: 'UL', documented: ['UL'] })
+    assert.equal(own.cssClass, 'menu')
+    assert.equal(own.isComponentClass, true)
+    assert.equal(own.chosen, 'UL')
+    assert.ok(own.documented.shows('UL'))
   })
 
   test('observes every boolean on the function that declares it', () => {
@@ -53,7 +56,9 @@ describe('observeElements', () => {
 
     const active = observeElements(shape, documented).find((o) => o.cssClass === 'menu-active')
 
-    assert.deepEqual(active, { componentDir: 'menu', cssClass: 'menu-active', isComponentClass: false, chosen: 'UL', documented: ['LI'] })
+    assert.equal(active?.isComponentClass, false)
+    assert.equal(active?.chosen, 'UL')
+    assert.ok(active?.documented.shows('LI'))
   })
 
   test('observes a part on its own function, not the main one', () => {
@@ -79,7 +84,7 @@ describe('observeElements', () => {
       { componentDir: 'badge', element: 'SPAN' },
       {},
     )
-    const onDiv = { componentClass: ['DIV'], byClass: new Map([['badge-primary', ['DIV']]]) }
+    const onDiv = documentedClasses({ badge: ['DIV'], 'badge-primary': ['DIV'] })
 
     const classes = observeElements(shape, onDiv).map((o) => o.cssClass)
 
@@ -93,7 +98,7 @@ describe('observeElements', () => {
       {},
     )
 
-    const classes = observeElements(shape, { componentClass: ['UL'], byClass: new Map([['menu-active', ['A']]]) }).map((o) => o.cssClass)
+    const classes = observeElements(shape, documentedClasses({ menu: ['UL'], 'menu-active': ['A'] })).map((o) => o.cssClass)
 
     assert.deepEqual(classes, ['menu', 'menu-active'])
   })
@@ -107,7 +112,7 @@ describe('observeElements', () => {
       {},
     )
 
-    const classes = observeElements(shape, { componentClass: [], byClass: new Map([['badge-primary', ['SPAN']]]) }).map((o) => o.cssClass)
+    const classes = observeElements(shape, documentedClasses({ 'badge-primary': ['SPAN'] })).map((o) => o.cssClass)
 
     assert.deepEqual(classes, ['badge'])
   })
@@ -121,6 +126,6 @@ describe('observeElements', () => {
 
     const ghostly = observeElements(shape, documented).find((o) => o.cssClass === 'menu-ghostly')
 
-    assert.deepEqual(ghostly?.documented, [])
+    assert.ok(ghostly?.documented.showsNothing())
   })
 })

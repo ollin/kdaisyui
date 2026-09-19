@@ -17,6 +17,7 @@ import {
   type ComponentShape,
   type FunctionShape,
   type ParameterShape,
+  type ScopeShape,
 } from './component-shape.ts'
 
 /**
@@ -205,6 +206,52 @@ export function generateIndexPage(
   ].join('\n')
 }
 
+/** A call and the comment explaining what it emits, aligned into one column. */
+function annotated(indent: number, call: string, comment: string): string {
+  return `${' '.repeat(indent)}${call.padEnd(40 - indent)}// ${comment}`
+}
+
+/**
+ * The section a scoped component's page needs and no other page has.
+ *
+ * Three shapes, and the middle one is why the section exists: a call NESTED inside another
+ * builder is not marked. A reader who does not know that writes it, sees no `join-item`, and
+ * has nothing on the page to explain it — the signature alone says only that the lambda has
+ * an unfamiliar receiver.
+ */
+function scopeSection(shape: ComponentShape, scope: ScopeShape): string {
+  const opener = shape.functions[0].name
+  const example = scope.members[0].name
+  return [
+    `## \`${scope.markerClass}\``,
+    '',
+    `Inside \`${opener} { }\` a component call marks itself. The scope carries a member for each`,
+    'component DaisyUI documents as an item, and a member wins over the top-level function of the',
+    'same name.',
+    '',
+    '```kotlin',
+    `${opener} {`,
+    annotated(4, `${example}()`, `marked \`${scope.markerClass}\``),
+    '    div {',
+    annotated(8, `${example}()`, 'NOT marked — the scope is hidden here'),
+    annotated(8, `this@${opener}.${example}()`, 'marked, named deliberately'),
+    '    }',
+    '}',
+    '```',
+    '',
+    "The nested call is not marked because kotlinx.html's `@HtmlTagMarker` is a `@DslMarker`:",
+    'inside another builder this receiver is hidden, so the call reaches the ordinary top-level',
+    'function. That follows the markup — DaisyUI documents the wrapper\'s child as the item, not',
+    'the wrapper.',
+    '',
+    `There is no parameter for this, deliberately. \`.${shape.prefix}\` writes four corner-radius`,
+    `variables onto its direct children and \`.${scope.markerClass}\` reads them, so outside a`,
+    `\`.${shape.prefix}\` the class strips the element's own corners rather than doing nothing.`,
+    '',
+    `Marks itself: ${scope.members.map(member => `\`${member.name}\``).join(', ')}.`,
+  ].join('\n')
+}
+
 /** One component's reference page. */
 export function generateComponentPage(
   shape: ComponentShape,
@@ -215,6 +262,7 @@ export function generateComponentPage(
   const blocks = [
     signatureBlock(main, enumComments(shape)),
     ...rest.map(fn => signatureBlock(fn, [])),
+    ...(shape.scope === undefined ? [] : [scopeSection(shape, shape.scope)]),
   ]
 
   return [

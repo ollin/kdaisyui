@@ -86,7 +86,7 @@ every member DaisyUI shows on a part's element belongs to that part whole.
   the booleans already did.
   *`:lib:pitest` fails at test strength 99 on a surviving mutant in `daisyModalToggle`,
   verified identical on `d690848`: pre-existing on this branch, not this task's. See 5.3.*
-- [ ] 2.2 `. d` After block 3: read the regeneration diff against the exception list — every
+- [x] 2.2 `. d` Done 2026-09-19 as part of the census above. Every
   class that moved has expired its exception, every one that did not is still excused with a
   reason that still holds. `menu-active` and `menu-disabled` sit on an `<a>`/`<li>` the library
   does not generate — 3.1's decision.
@@ -124,7 +124,17 @@ every member DaisyUI shows on a part's element belongs to that part whole.
   `2a3021f`). Regenerated: 12 parts changed element, 12 exceptions expired (`86c040e`,
   `38b5172`). Two more rules learnt and pinned: a part shown on several elements keeps the
   heuristic; a part on `<legend>`/`<li>` needs its parent and gets it from the docs.
-- [ ] 3.2b `. d` **What is left is a decision, not a rule** — read 22:09 from the generator's
+- [x] 3.2b `. d` **What is left is a decision, not a rule** — done 2026-09-19 (`0b56f3a`,
+  `d446c53`, `e7c1ff7`, `52759d2`, `f506789`). Kind 2 became a rule (the cross-check reads the
+  SET of documented elements) and it retired far less than predicted — 4 entries, not 36,
+  because it only helps a class DaisyUI shows on several elements. Kind 4 was already fixed by
+  2.1 and only the observer had not noticed. Kind 1 split three ways on measurement: `status`
+  moved to `<div>` (13 gone), `skeleton-text` became `daisySkeletonText` (1 gone), `badge`
+  keeps `<span>` as the only element valid in all 54 documented positions (12 permanent, #356).
+  Kind 3 stays excused and moves to `a-join-marks-its-items-by-the-call`; `dropdown` is
+  permanent too (#357). Exceptions 47 → 28, of which 20 are now decisions rather than debts.
+  ORIGINAL TEXT, left standing because the four kinds were a good decomposition even where the
+  estimates under them were not: — read 22:09 from the generator's
   47 excused. Four kinds:
   1. `badge` ×12, `status` ×13, `skeleton-text`: the component renders the `<span>` of
      DaisyUI's first example, every modifier example is a `<div>`. Element choice for the
@@ -144,34 +154,12 @@ every member DaisyUI shows on a part's element belongs to that part whole.
      heuristic `<div>` and the placements (shown on `<span>`) cannot move. Fix: let a part
      shown on several elements take the element its *classes* are shown on, when that is one.
   Kind 2 and kind 4 are rules (~20 min each). Kinds 1 and 3 are decisions.
-- [ ] 3.2c `^ F` Generate the parts that are plainly parts and still missing: `avatar-group`,
-  `carousel-item`, `megamenu-active`, and the rest of the 18 not covered above.
-- [ ] 3.3 `^ F (internal)` The generator derives the join-child list: every component class that
-  co-occurs with `join-item` on one element in DaisyUI's markup. Pin the measured set with a
-  test; a further component appearing in DaisyUI's docs must extend it without a config edit.
-  **Measured 2026-09-19 at v5.7.17 and it is SEVEN, not the five named in 3.1**: `btn` 60,
-  `input` 5, `theme-controller` 5, `collapse` 3, `card` 3, `select` 1, `validator` 1. The two
-  the plan missed are real components in this library, and `btn`'s count is 60 rather than 52 —
-  so 3.1's list was written from a narrower reading or an older tag. Nothing about the design
-  changes; the point of deriving the list is precisely that a stale hand-count cannot reach the
-  output. The test pins seven and will fail on the next DaisyUI bump that moves it, which is
-  the intent.
-- [ ] 3.4 `^ F` Generate `JoinScope` and its member overloads; `daisyJoin`'s `content` becomes
-  `JoinScope.() -> Unit`. Test: `daisyJoin { daisyButton("A") }` renders `class="btn join-item"`;
-  `daisyJoin { div { daisyInput() } }` renders no `join-item`; `daisyJoin { div {
-  this@daisyJoin.daisyInput() } }` does; a `daisyButton("A", extraClasses = "join-item")` outside
-  a join is unchanged (still reachable, still a string).
-- [ ] 3.5 `. d` Reference page for `join` shows the three shapes: plain child, wrapper with
-  `this@daisyJoin.`, and why a nested button is not marked.
-
-## 4. `tab` — container and item trade places — 1.0 h
-
-- [ ] 4.1 `. d` **Decide the item element.** DaisyUI documents `<button>`, `<a>` and
-  `<input type="radio">`; #342 suggests `customParts` since there is more than one.
-- [ ] 4.2 `^ F` `daisyTab` renders `<div class="tabs">`, the item renders the focusable element
-  carrying `tab`, and `tabActive`/`tabDisabled` move to the item.
-- [ ] 4.3 `. d` Remove the cross-check exception #341 recorded for `tab`; it must fail if left.
-
+- [x] 3.2c **Nothing to do — measured 2026-09-19, the task was already stale when written.**
+  `carousel-item` and `megamenu-active` had functions by then, and checking DaisyUI's own `part`
+  frontmatter against `lib/api/components.api` across all 68 pages leaves exactly ONE part with
+  no function: `pagination/join-item`, and `pagination` is in `skip` as an alias. 3.2a generated
+  the rest. A task that dissolves when measured is the cheapest possible outcome, and it would
+  have been bought earlier by measuring before listing.
 ## 5. Migration, baselines, gate — 0.8 h
 
 - [ ] 5.0 `. d` Create the change's issue (§5 of the house rules; this session had no GitHub

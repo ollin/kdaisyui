@@ -9,11 +9,10 @@
  * shape with exactly one consumer.
  */
 
-import { toCamelCase, type ClassifiedComponent } from './classifier.ts'
+import type { ClassifiedComponent } from './classifier.ts'
 import {
   allBooleans,
   buildComponentShape,
-  escapeKotlinKeyword,
   readComponentConfig,
   staticAttributeDoc,
   type ComponentConfig,
@@ -126,7 +125,6 @@ function mainFunctionBody(
   classified: ClassifiedComponent,
   shape: FunctionShape,
   componentConfig: ComponentConfig,
-  groups: GroupClassification,
 ): string {
   const { prefix } = classified
   const { extras, hasTextParam, role, inputType } = componentConfig
@@ -198,10 +196,9 @@ function renderBody(
   shape: FunctionShape,
   classified: ClassifiedComponent,
   componentConfig: ComponentConfig,
-  groups: GroupClassification,
 ): string {
   return shape.kind === 'main'
-    ? mainFunctionBody(classified, shape, componentConfig, groups)
+    ? mainFunctionBody(classified, shape, componentConfig)
     : secondaryFunctionBody(shape)
 }
 
@@ -264,7 +261,7 @@ export function generateKotlinFile(
   ].join('\n')
 
   const enums = shape.enums.map(renderEnum).join('\n')
-  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig, groups)))
+  const functions = shape.functions.map(fn => renderFunction(fn, renderBody(fn, classified, componentConfig)))
   const body = [enums, ...functions].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`

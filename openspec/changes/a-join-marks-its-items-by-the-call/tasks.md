@@ -71,5 +71,5 @@ one of those reasons names a block no reader can act on.
 
 - [x] 3.1 `. d` **How to migrate**: `daisyJoin`'s `content` changes receiver type.
 - [x] 3.2 `. d` Re-dump both baselines and read each diff.
-- [ ] 3.3 Full green per `openspec/config.yaml`, plus `:lib:pitest`.
-- [ ] 3.4 `. d` Write the evaluation under `tmp/`.
+- [x] 3.3 Full green per `openspec/config.yaml`, plus `:lib:pitest`.
+- [x] 3.4 `. d` Write the evaluation under `tmp/`.

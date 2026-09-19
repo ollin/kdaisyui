@@ -761,6 +761,39 @@ function parseEmittedBuilder(body: string): BuilderName | null {
   return m ? (m[1] as BuilderName) : null
 }
 
+/** One overload on a generated scope, and what a test needs to call it. */
+interface ScopeMember {
+  readonly name: string
+  /** Whether its element can hold children, so the call must pass a `content` lambda. */
+  readonly requiresContent: boolean
+  /** The function whose lambda the member lives in — the call has to be written inside it. */
+  readonly opener: string
+}
+
+/**
+ * The members of a generated scope, so the coverage tests can reach them.
+ *
+ * Each member is a generated function with its own parameter defaults, and the aggregated
+ * 100% line gate counts every one of those lines. Enumerating them by hand in a test file
+ * would put a second copy of a DERIVED list into the repository — which is the duplication
+ * that deriving the set was meant to remove, and the one that a DaisyUI bump silently
+ * invalidates.
+ *
+ * Returns nothing for a file with no scope, which is 65 of the 66.
+ */
+function parseScopeMembers(file: string): ScopeMember[] {
+  const opener = file.match(/^fun \w+\.(\w+)\(/m)
+  const scope = file.match(/^class \w+ internal constructor\(([\s\S]*)$/m)
+  if (!opener || !scope) return []
+  return [...scope[1].matchAll(/^ {4}fun (\w+)\(([\s\S]*?)^ {4}\) \{/gm)].map(member => ({
+    name: member[1],
+    // A `content` parameter with no `= null` is required — the same reading the emitter uses,
+    // and the reason it can be absent at all is that a void element cannot hold children.
+    requiresContent: /^\s*content: \([^)]*\.\(\) -> Unit\),$/m.test(member[2]),
+    opener: opener[1],
+  }))
+}
+
 /**
  * The builder a SCOPED function stands in for.
  *
@@ -1066,14 +1099,33 @@ function buildCoverageTests(fn, enums, file) {
   return defaultsTest(ctx) + allFlagsTest(ctx) + enumArmTests(ctx) + textArmTest(ctx)
 }
 
-function generateCoverageForFile(fileName) {
-  const filePath = path.join(GENERATED_MAIN_DIR, fileName)
-  const content = fs.readFileSync(filePath, 'utf8')
-  const className = fileName.replace(/\.kt$/, '')
-  const enums = parseEnumDefinitions(content)
-  const funcs = findFunctions(content)
-  if (funcs.length === 0) return { success: false, error: 'No functions' }
+/**
+ * One call per scope member, with no arguments beyond the ones it cannot do without.
+ *
+ * No arguments is the point rather than an economy: supplying a parameter means its DEFAULT
+ * expression never runs, and those defaults are the lines the aggregated coverage gate counts.
+ * One bare call reaches every default AND the delegation body, which is the whole member.
+ *
+ * The assertion is the marker class, because that is the only thing the member adds over the
+ * top-level function its own component already tests.
+ */
+function scopeMemberTest(member): string {
+  const args = member.requiresContent ? 'content = { }' : ''
+  return `
+    @Test
+    fun scope_${member.name}() {
+        val html = createHTML(prettyPrint = false).div {
+            ${member.opener} {
+                ${member.name}(${args})
+            }
+        }
+        assertTrue(html.contains("join-item"), "${member.name} in a ${member.opener}")
+    }
+`
+}
 
+/** What a coverage file needs: the fixed five, each non-flow wrapper, each external enum. */
+function coverageImports(funcs, enums): Set<string> {
   const imports = new Set([
     'import io.github.ollin.kdaisyui.core.htmlId',
     'import kotlinx.html.div',
@@ -1085,13 +1137,27 @@ function generateCoverageForFile(fileName) {
   for (const fn of funcs) {
     if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
     for (const raw of splitParams(fn.paramBlock)) {
-      const p = classifyParam(raw, enums)
-      if (p.kind === 'enumExternal' && EXTERNAL_ENUM_IMPORTS[p.baseType]) imports.add(EXTERNAL_ENUM_IMPORTS[p.baseType])
+      const parameter = classifyParam(raw, enums)
+      const external = parameter.kind === 'enumExternal' && EXTERNAL_ENUM_IMPORTS[parameter.baseType]
+      if (external) imports.add(external)
     }
   }
+  return imports
+}
+
+function generateCoverageForFile(fileName) {
+  const filePath = path.join(GENERATED_MAIN_DIR, fileName)
+  const content = fs.readFileSync(filePath, 'utf8')
+  const className = fileName.replace(/\.kt$/, '')
+  const enums = parseEnumDefinitions(content)
+  const funcs = findFunctions(content)
+  if (funcs.length === 0) return { success: false, error: 'No functions' }
+
+  const imports = coverageImports(funcs, enums)
 
   let body = ''
   for (const fn of funcs) body += buildCoverageTests(fn, enums, content)
+  for (const member of parseScopeMembers(content)) body += scopeMemberTest(member)
 
   const kotlin = `package io.github.ollin.kdaisyui.components
 
@@ -1212,6 +1278,7 @@ export {
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
   parseEmittedBuilder,
   parseScopeBuilder,
+  parseScopeMembers,
   htmlTagForFn,
   parseAttrProps,
   attrAssert,

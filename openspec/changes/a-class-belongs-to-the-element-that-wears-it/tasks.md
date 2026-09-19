@@ -147,8 +147,15 @@ every member DaisyUI shows on a part's element belongs to that part whole.
 - [ ] 3.2c `^ F` Generate the parts that are plainly parts and still missing: `avatar-group`,
   `carousel-item`, `megamenu-active`, and the rest of the 18 not covered above.
 - [ ] 3.3 `^ F (internal)` The generator derives the join-child list: every component class that
-  co-occurs with `join-item` on one element in DaisyUI's markup. Pin the five with a test; a
-  sixth component appearing in DaisyUI's docs must extend the list without a config edit.
+  co-occurs with `join-item` on one element in DaisyUI's markup. Pin the measured set with a
+  test; a further component appearing in DaisyUI's docs must extend it without a config edit.
+  **Measured 2026-09-19 at v5.7.17 and it is SEVEN, not the five named in 3.1**: `btn` 60,
+  `input` 5, `theme-controller` 5, `collapse` 3, `card` 3, `select` 1, `validator` 1. The two
+  the plan missed are real components in this library, and `btn`'s count is 60 rather than 52 —
+  so 3.1's list was written from a narrower reading or an older tag. Nothing about the design
+  changes; the point of deriving the list is precisely that a stale hand-count cannot reach the
+  output. The test pins seven and will fail on the next DaisyUI bump that moves it, which is
+  the intent.
 - [ ] 3.4 `^ F` Generate `JoinScope` and its member overloads; `daisyJoin`'s `content` becomes
   `JoinScope.() -> Unit`. Test: `daisyJoin { daisyButton("A") }` renders `class="btn join-item"`;
   `daisyJoin { div { daisyInput() } }` renders no `join-item`; `daisyJoin { div {

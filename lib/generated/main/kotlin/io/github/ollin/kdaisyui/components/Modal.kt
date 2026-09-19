@@ -107,14 +107,12 @@ fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
-    content: (INPUT.() -> Unit),
 ) {
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("modal-toggle")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        content()
     }
 }
 

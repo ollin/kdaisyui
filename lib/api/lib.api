@@ -361,8 +361,8 @@ public final class io/github/ollin/kdaisyui/components/DrawerKt {
 	public static synthetic fun daisyDrawerOverlay$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyDrawerSide (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDrawerSide$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyDrawerToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyDrawerToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDrawerToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyDrawerToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DropdownHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -451,8 +451,8 @@ public final class io/github/ollin/kdaisyui/components/FileInputVariant : java/l
 public final class io/github/ollin/kdaisyui/components/FilterKt {
 	public static final fun daisyFilter (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFilter$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyFilterReset (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyFilterReset$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFilterReset (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyFilterReset$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/FooterKt {
@@ -766,8 +766,8 @@ public final class io/github/ollin/kdaisyui/components/ModalKt {
 	public static synthetic fun daisyModalBox$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyModalPopover (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyModalPopover$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyModalToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyModalToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyModalToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyModalToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/NavbarKt {

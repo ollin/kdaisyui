@@ -53,9 +53,7 @@ class DrawerCoverageTest {
     @Test
     fun drawerToggle_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerToggle(
-                content = { },
-            )
+            daisyDrawerToggle()
         }
         assertRendered(html, "drawer-toggle", "DrawerToggle defaults")
     }
@@ -67,11 +65,10 @@ class DrawerCoverageTest {
                 id = htmlId("x-cov-id"),
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
             )
         }
         assertRendered(html, "drawer-toggle zz-extra", "DrawerToggle all flags")
-        assertCommonFlags(html, "DrawerToggle")
+        assertCommonFlags(html, "DrawerToggle", content = false)
     }
 
     @Test

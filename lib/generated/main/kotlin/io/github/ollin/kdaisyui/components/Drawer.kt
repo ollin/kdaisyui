@@ -47,14 +47,12 @@ fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
-    content: (INPUT.() -> Unit),
 ) {
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-toggle")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        content()
     }
 }
 

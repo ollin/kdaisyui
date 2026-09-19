@@ -57,7 +57,6 @@ fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
-    content: (INPUT.() -> Unit),
 )
 ```
 

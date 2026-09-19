@@ -93,7 +93,7 @@ fun FlowContent.daisyDockLabel(id: HtmlId? = null, extraClasses: String? = null,
 
 # Drawer <div>
 fun FlowContent.daisyDrawer(id: HtmlId? = null, end: Boolean = false, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyDrawerToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null, content: (INPUT.() -> Unit))
+fun FlowContent.daisyDrawerToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 fun FlowContent.daisyDrawerContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyDrawerSide(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyDrawerOverlay(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
@@ -122,7 +122,7 @@ fun FlowContent.daisyFileInput(id: HtmlId? = null, variant: ClassValues<FileInpu
 
 # Filter <form>
 fun FlowContent.daisyFilter(id: HtmlId? = null, extraClasses: String? = null, attrs: (FORM.() -> Unit)? = null, content: (FORM.() -> Unit))
-fun FlowContent.daisyFilterReset(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null, content: (INPUT.() -> Unit))
+fun FlowContent.daisyFilterReset(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 
 # Footer <footer>
 fun FlowContent.daisyFooter(id: HtmlId? = null, center: Boolean = false, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (FOOTER.() -> Unit)? = null, content: (FOOTER.() -> Unit))
@@ -213,7 +213,7 @@ fun FlowContent.daisyModal(id: HtmlId? = null, bottom: Boolean = false, end: Boo
 fun FlowContent.daisyModalBox(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalAction(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalBackdrop(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyModalToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null, content: (INPUT.() -> Unit))
+fun FlowContent.daisyModalToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 fun FlowContent.daisyModalPopover(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 
 # Navbar <div>

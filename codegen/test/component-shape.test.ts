@@ -483,6 +483,19 @@ describe('buildComponentShape', () => {
     assert.ok(!names(shape.functions[0].parameters).includes('text'))
   })
 
+  test('a custom part on a void element takes no content, like every other function', () => {
+    // `daisyModalToggle` renders an <input> and required a content lambda for it. The rule is
+    // derived from the element for main functions and was not reaching the other two shapes,
+    // so the same <input> had no content on `daisyInput` and a required one here.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Modal', prefix: 'modal' }),
+      { componentDir: 'modal', element: 'DIALOG' },
+      { customParts: { modal: [{ name: 'Toggle', element: 'INPUT', cssClass: 'modal-toggle' }] } },
+    )
+
+    assert.ok(!names(shape.functions[1].parameters).includes('content'))
+  })
+
   test('a custom part carries the modifier classes its construction always writes', () => {
     // DaisyUI shows `skeleton-text` on exactly one markup: `<span class="skeleton
     // skeleton-text">`. Two classes, so the function's own class cannot say it alone.

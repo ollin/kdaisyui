@@ -525,13 +525,21 @@ function contentParameter(element: TagClass, hasTextParam: boolean): ParameterSh
 }
 
 /** The four parameters every part and custom part shares, in declaration order. */
+/**
+ * The four parameters every generated function has, plus `text` where the component takes it.
+ *
+ * `content` is absent for a void element, here rather than at each call site: an element the
+ * HTML specification says cannot hold children cannot hold them on a part or a custom part
+ * either. The check used to sit on the main function's path alone, so `daisyModalToggle`
+ * required a content lambda for the same `<input>` that `daisyInput` correctly refuses one for.
+ */
 function escapeHatchParameters(element: TagClass, hasTextParam: boolean): ParameterShape[] {
   return [
     ...(hasTextParam ? [TEXT_PARAMETER] : []),
     ID_PARAMETER,
     EXTRA_CLASSES_PARAMETER,
     attrsParameter(element),
-    contentParameter(element, hasTextParam),
+    ...(isVoidElement(element) ? [] : [contentParameter(element, hasTextParam)]),
   ]
 }
 

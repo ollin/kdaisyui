@@ -112,7 +112,15 @@ function applyLines(extras: readonly ExtraParameter[]): string[] {
 }
 
 /** The `content` / `text` tail shared by every function that can take children. */
-function contentLines(hasTextParam: boolean): string[] {
+/**
+ * How the body writes the children — read off the SIGNATURE, like the classes above it.
+ *
+ * A function with no `content` parameter writes none: its element is void and cannot hold any.
+ * The body used to call `content()` unconditionally, so the day the void rule reached parts and
+ * custom parts, three generated files stopped compiling.
+ */
+function contentLines(shape: FunctionShape, hasTextParam: boolean): string[] {
+  if (!shape.parameters.some(parameter => parameter.name === 'content')) return []
   if (!hasTextParam) return ['        content()']
   return [
     '        when {',
@@ -131,7 +139,6 @@ function mainFunctionBody(
   const { extras, hasTextParam, role, inputType } = componentConfig
   // The body follows the SIGNATURE rather than re-deriving the rule: if the shape declares no
   // `content` parameter, there is nothing to call, and the two can never disagree.
-  const takesContent = shape.parameters.some(parameter => parameter.name === 'content')
 
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
@@ -146,7 +153,7 @@ function mainFunctionBody(
 
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')
-  if (takesContent) lines.push(...contentLines(hasTextParam))
+  lines.push(...contentLines(shape, hasTextParam))
 
   return lines.join('\n')
 }
@@ -189,7 +196,7 @@ function secondaryFunctionBody(shape: FunctionShape): string {
   lines.push(...booleanLines(shape))
   lines.push('        addClassNames(extraClasses)')
   lines.push('        if (attrs != null) attrs()')
-  lines.push(...contentLines(hasTextParam))
+  lines.push(...contentLines(shape, hasTextParam))
 
   return lines.join('\n')
 }

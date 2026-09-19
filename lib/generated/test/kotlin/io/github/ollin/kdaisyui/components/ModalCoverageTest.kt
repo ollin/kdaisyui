@@ -129,9 +129,7 @@ class ModalCoverageTest {
     @Test
     fun modalToggle_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModalToggle(
-                content = { },
-            )
+            daisyModalToggle()
         }
         assertRendered(html, "modal-toggle", "ModalToggle defaults")
     }
@@ -143,11 +141,10 @@ class ModalCoverageTest {
                 id = htmlId("x-cov-id"),
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
             )
         }
         assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags")
-        assertCommonFlags(html, "ModalToggle")
+        assertCommonFlags(html, "ModalToggle", content = false)
     }
 
     @Test

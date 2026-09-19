@@ -26,7 +26,6 @@ fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
-    content: (INPUT.() -> Unit),
 )
 ```
 

@@ -35,4 +35,22 @@ class VoidElementNestingTest {
             html,
         )
     }
+
+    /**
+     * The same fact about a CUSTOM part, which reaches its element by a different path in the
+     * generator and so is a different mutant. `daisyModalToggle` renders `<input>` too, and
+     * until the void rule reached custom parts it also demanded a content lambda for it.
+     */
+    @Test
+    fun modalToggleLeavesTheNestingLevelIntactForItsSiblings() {
+        val html = createHTML(prettyPrint = true).div {
+            daisyModalToggle()
+            div { +"after" }
+        }
+
+        assertEquals(
+            "<div><input class=\"modal-toggle\">\n  <div>after</div>\n</div>\n",
+            html,
+        )
+    }
 }

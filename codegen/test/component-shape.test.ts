@@ -465,6 +465,24 @@ describe('buildComponentShape', () => {
     assert.deepEqual(custom.modifierClasses, [])
   })
 
+  test('a class a custom part always writes is not also a boolean on the main function', () => {
+    // Otherwise `skeleton-text` is askable twice: once as `daisySkeletonText`, which is
+    // DaisyUI's markup, and once as `daisySkeleton(text = true)`, which is a <div> wearing a
+    // class DaisyUI only ever shows on a <span>. Derived from the part's own declaration —
+    // nothing to configure, and nothing that can disagree with it.
+    const shape = buildComponentShape(
+      classified({ componentName: 'Skeleton', prefix: 'skeleton', modifiers: ['text'] }),
+      { componentDir: 'skeleton', element: 'DIV' },
+      {
+        customParts: {
+          skeleton: [{ name: 'Text', element: 'SPAN', cssClass: 'skeleton', modifierClasses: ['skeleton-text'] }],
+        },
+      },
+    )
+
+    assert.ok(!names(shape.functions[0].parameters).includes('text'))
+  })
+
   test('a custom part carries the modifier classes its construction always writes', () => {
     // DaisyUI shows `skeleton-text` on exactly one markup: `<span class="skeleton
     // skeleton-text">`. Two classes, so the function's own class cannot say it alone.

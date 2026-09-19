@@ -4,6 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class SkeletonTest {
 
@@ -41,13 +42,13 @@ class SkeletonTest {
     }
 
     @Test
-    fun skeleton_text_animated_gradient_text() {
+    fun custom_part_text_renders_span() {
         val html = createHTML(prettyPrint = false).div {
-            daisySkeleton(text = true) {
+            daisySkeletonText {
             }
         }
-        val expectedClasses = "skeleton skeleton-text"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for skeleton-text - animated gradient text")
+        assertTrue(html.contains("<span"))
+        assertTrue(html.contains("class=\"skeleton"))
+        assertTrue(html.contains("skeleton-text"))
     }
 }

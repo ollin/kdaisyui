@@ -308,19 +308,30 @@ export function booleanParameterClasses(
   groups: GroupClassification = allBooleans(classified),
 ): string[] {
   const covered = new Set(componentConfig.extras.map(e => e.name))
+  // A class a custom part writes on every call is spoken for. `skeleton-text` appears only as
+  // `<span class="skeleton skeleton-text">`, which `daisySkeletonText` is; leaving the boolean
+  // as well would offer the same class a second way, on the <div> DaisyUI never shows it on.
+  // Derived from what the part already declares — nothing to configure, nothing to disagree.
+  const written = new Set(componentConfig.customParts.flatMap(part => part.modifierClasses ?? []))
+  const takenAlready = (cls: string) => covered.has(toCamelCase(cls)) || written.has(qualified(classified.prefix, cls))
   const booleans: string[] = []
 
   // Only the classes the measurement left as flags. Everything else is now an enum constant,
   // and a class appearing in both would be settable two ways at once.
   for (const cls of groups.booleans) {
-    if (!covered.has(toCamelCase(cls))) booleans.push(cls)
+    if (!takenAlready(cls)) booleans.push(cls)
   }
 
   for (const cls of componentConfig.additionalBooleans) {
-    if (!booleans.includes(cls) && !covered.has(toCamelCase(cls))) booleans.push(cls)
+    if (!booleans.includes(cls) && !takenAlready(cls)) booleans.push(cls)
   }
 
   return booleans.sort()
+}
+
+/** `text` under prefix `skeleton` is the class `skeleton-text`; an unprefixed class is itself. */
+function qualified(prefix: string | null, cls: string): string {
+  return prefix === null || cls.startsWith(`${prefix}-`) ? cls : `${prefix}-${cls}`
 }
 
 /**

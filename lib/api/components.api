@@ -254,7 +254,8 @@ enum SelectSize: Xs, Sm, Md, Lg, Xl
 fun FlowContent.daisySelect(id: HtmlId? = null, variant: ClassValues<SelectVariant>? = null, size: ClassValues<SelectSize>? = null, ghost: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (SELECT.() -> Unit)? = null, content: (SELECT.() -> Unit))
 
 # Skeleton <div>
-fun FlowContent.daisySkeleton(id: HtmlId? = null, text: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisySkeleton(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisySkeletonText(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # Stack <div>
 fun FlowContent.daisyStack(id: HtmlId? = null, bottom: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))

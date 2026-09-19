@@ -192,6 +192,11 @@ interface ClassBinding {
   readonly argument: string
 }
 
+/** `text` under prefix `skeleton` is the class `skeleton-text`; an unprefixed class is itself. */
+function qualifiedClass(prefix: string | null, cls: string): string {
+  return prefix === null || cls.startsWith(`${prefix}-`) ? cls : `${prefix}-${cls}`
+}
+
 /**
  * A documented class with the component prefix stripped, which is the key the classified model
  * uses. `menu-horizontal` -> `horizontal`, and `glass` -> `glass` because DaisyUI files a few
@@ -226,7 +231,13 @@ function classBindings(classified, componentConfig, groups): Record<string, Clas
 
   // Everything the measurement left as a flag. Enums are written first and not overwritten: a
   // class cannot be both, and if it somehow were, the enum is the one that reaches the CSS.
+  // Minus the classes a custom part writes on every call: those have no boolean on the main
+  // function, so no call to it can produce them. An `extras`-covered class is NOT subtracted —
+  // it has no boolean either, but it does have a parameter, the `extras` entry's own, under
+  // the same name.
+  const writtenByCustomPart = new Set(componentConfig.customParts.flatMap(part => part.modifierClasses ?? []))
   for (const cls of groups.booleans) {
+    if (writtenByCustomPart.has(qualifiedClass(classified.prefix, cls))) continue
     bindings[cls] ??= { parameter: booleanParameterName(cls), argument: 'true' }
   }
 
@@ -253,6 +264,12 @@ interface CallModel {
   readonly prefix: string | null
   readonly allowedClasses: Set<string>
   readonly bindings: Record<string, ClassBinding>
+  /**
+   * Classes a custom part writes on every call, so the main function offers no parameter for
+   * them. The example documenting one is that part's example, and the part has its own
+   * assertions — reproducing it through the main function is not possible and not wanted.
+   */
+  readonly writtenByCustomPart: ReadonlySet<string>
 }
 
 /** One generated call: its argument list and the classes it is expected to render. */
@@ -470,6 +487,9 @@ function buildCallModel(componentName, frontmatter, config, evidence: Evidence):
     prefix: classified.prefix,
     allowedClasses,
     bindings: classBindings(classified, readComponentConfig(config, classified.componentName), groups),
+    writtenByCustomPart: new Set(
+      configSection(config, 'customParts', componentName, []).flatMap(part => part.modifierClasses ?? []),
+    ),
   }
 }
 
@@ -482,6 +502,7 @@ function buildCallModel(componentName, frontmatter, config, evidence: Evidence):
  */
 function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
   const calls = documentedElementClasses(html, model.componentClass)
+    .filter(classes => !classes.some(documented => model.writtenByCustomPart.has(documented.className)))
     .map(classes => componentCallFor(model, classes))
   const seen = new Set<string>()
   return calls.filter(call => {
@@ -716,9 +737,16 @@ function classifyParam(raw, enums) {
 }
 
 /** The single unguarded `addClassNames("...")` that names this element. */
+/**
+ * Every class the body writes unconditionally, as the sorted string the assertion compares to.
+ *
+ * All of them, not the first: a `customParts` entry with `modifierClasses` emits two literal
+ * `addClassNames` lines — `daisySkeletonText` renders `class="skeleton skeleton-text"` — and
+ * reading only the first asserted a class list the function does not produce.
+ */
 function parseBaseClass(body) {
-  const m = body.match(/^\s*addClassNames\("([^"]+)"\)\s*$/m)
-  return m ? m[1] : null
+  const classes = [...body.matchAll(/^\s*addClassNames\("([^"]+)"\)\s*$/gm)].map(match => match[1])
+  return classes.length > 0 ? sortedClasses(classes) : null
 }
 
 /**

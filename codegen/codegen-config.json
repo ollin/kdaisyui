@@ -111,10 +111,6 @@
     "rating/rating-hidden": {
       "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <input>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
       "issue": 347
-    },
-    "skeleton/skeleton-text": {
-      "reason": "Part rendered as <div> by the name heuristic; DaisyUI shows it on <span>. Block 3 of a-class-belongs-to-the-element-that-wears-it.",
-      "issue": 347
     }
   },
   "skip": ["accordion", "pagination"],
@@ -344,6 +340,14 @@
         "element": "DIV",
         "cssClass": null,
         "staticAttributes": { "popover": "" }
+      }
+    ],
+    "skeleton": [
+      {
+        "name": "Text",
+        "element": "SPAN",
+        "cssClass": "skeleton",
+        "modifierClasses": ["skeleton-text"]
       }
     ]
   },

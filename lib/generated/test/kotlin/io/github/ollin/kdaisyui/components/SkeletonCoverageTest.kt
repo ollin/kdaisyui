@@ -39,13 +39,36 @@ class SkeletonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySkeleton(
                 id = htmlId("x-cov-id"),
-                text = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "skeleton skeleton-text zz-extra", "Skeleton all flags", closes = "</div></div>")
+        assertRendered(html, "skeleton zz-extra", "Skeleton all flags", closes = "</div></div>")
         assertCommonFlags(html, "Skeleton")
+    }
+
+    @Test
+    fun skeletonText_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySkeletonText(
+                content = { },
+            )
+        }
+        assertRendered(html, "skeleton skeleton-text", "SkeletonText defaults", closes = "</span></div>")
+    }
+
+    @Test
+    fun skeletonText_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySkeletonText(
+                id = htmlId("x-cov-id"),
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+                content = { attributes["data-content"] = "yes" },
+            )
+        }
+        assertRendered(html, "skeleton skeleton-text zz-extra", "SkeletonText all flags", closes = "</span></div>")
+        assertCommonFlags(html, "SkeletonText")
     }
 }

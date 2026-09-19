@@ -162,15 +162,15 @@ every member DaisyUI shows on a part's element belongs to that part whole.
   have been bought earlier by measuring before listing.
 ## 5. Migration, baselines, gate — 0.8 h
 
-- [ ] 5.0 `. d` Create the change's issue (§5 of the house rules; this session had no GitHub
+- [x] 5.0 `. d` #359. Create the change's issue (§5 of the house rules; this session had no GitHub
   access) and re-point the 58 exceptions from #347 to it.
-- [ ] 5.1 `. d` **How to migrate**, naming every moved parameter. This withdraws public API that
+- [x] 5.1 `. d` Six entries plus a section for what deliberately did NOT change (`9b5fd08`). **How to migrate**, naming every moved parameter. This withdraws public API that
   0.6.0 introduced — say so plainly rather than describing it as a refinement. Delete the "Five
   booleans were renamed" entry outright: after block 6 those parameters are identical to 0.5.x,
   so there is nothing to migrate.
-- [ ] 5.2 `. d` Re-dump both baselines with `just update-api` and read each diff.
-- [ ] 5.3 Full green per `openspec/config.yaml`, plus the new check and `:lib:pitest`.
-- [ ] 5.4 Write the evaluation under `tmp/`.
+- [x] 5.2 `. d` Both read; `lib.api` sees these changes, unlike 0.3.x's. Re-dump both baselines with `just update-api` and read each diff.
+- [x] 5.3 Green, 1673 tests, and `:lib:pitest` at test strength **100** — the surviving mutant was a missing assertion, not code that cannot matter (`f39f0ef`). Full green per `openspec/config.yaml`, plus the new check and `:lib:pitest`.
+- [x] 5.4 Written at `tmp/a-class-belongs-to-the-element-that-wears-it/EVALUATION-a-class-belongs-to-the-element-that-wears-it.md`; run note in the vault at `pages/ai-estimates/2026-09-19-kdaisyui-...`.
 
 ## 6. Remove the `parameterNames` indirection — 0.4 h, added 2026-09-15
 

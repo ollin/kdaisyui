@@ -152,7 +152,7 @@ fun FlowContent.daisyInput(id: HtmlId? = null, variant: ClassValues<InputVariant
 
 # Join <div>
 enum JoinDirection: Vertical, Horizontal
-fun FlowContent.daisyJoin(id: HtmlId? = null, direction: ClassValues<JoinDirection>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyJoin(id: HtmlId? = null, direction: ClassValues<JoinDirection>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (JoinScope.() -> Unit))
 
 # Kbd <kbd>
 enum KbdSize: Xs, Sm, Md, Lg, Xl

@@ -2,12 +2,16 @@
 
 ### Requirement: A class is declared on the function whose element wears it
 
-Every DaisyUI class a generated function emits SHALL land on the element DaisyUI's own
+Every DaisyUI class a generated function emits SHALL land on an element DaisyUI's own
 documentation puts it on. The codegen SHALL compare, for every documented class, the element the
-function declaring it renders against the element carrying that class in the documented markup,
-and SHALL fail generation on a disagreement that has no recorded exception. An exception SHALL
-name a reason and a tracking issue, and SHALL fail generation the moment the disagreement it
-covers goes away.
+function declaring it renders against **every** element carrying that class in the documented
+markup, and SHALL fail generation on a disagreement that has no recorded exception. A class a
+function writes on every call SHALL NOT also be offered as a parameter of another function.
+
+An exception SHALL name a reason and a tracking issue, SHALL state the condition under which the
+disagreement would go away, and SHALL fail generation the moment it does. The condition is what
+separates an exception deferring a defect from one recording a deliberate divergence; without it
+the two are one list and the second kind quietly outlives its reason.
 
 The authority is the same as for the component element: the fenced ```html examples of
 `packages/docs/src/routes/(routes)/components/<name>/+page.md`, in which every daisyUI class is
@@ -26,10 +30,31 @@ of `apply-classes-at-variants`) and each time only because someone looked.
 frontmatter category says what a class *means*, not which element wears it, and `indicator` and
 `toast` carry the identical two-axis category shape with the class on different elements.
 
+**Verified, and it corrected this requirement** — measured 2026-09-19: DaisyUI documents many
+classes on SEVERAL elements, choosing by the surrounding HTML content model rather than
+arbitrarily. `badge` is a `<div>` 47 times and a `<span>` 7, and all seven `<span>`s sit inside an
+`<h1>`–`<h5>` or a `<p>`, where a `<div>` is invalid HTML. `dropdown` is documented on `<div>`,
+`<details>` and `<ul>`; `skeleton` on `<div>` and `<span>`. This requirement first said "**the**
+element", singular, and on that reading 47 disagreements were all defects. Against the set, 19 of
+them were never disagreements at all.
+
+**Verified** that one generated function cannot follow DaisyUI here, tested 2026-09-19 in the
+Kotlin REPL: `createHTML().h1 { div { } }` compiles and renders, because kotlinx.html makes `H1`,
+`P` and `BUTTON` themselves `FlowContent` — the DSL does not model content categories. An overload
+pair on `FlowContent` and `PhrasingContent` is ambiguous inside any tag that is both, which is all
+of them. So where a component's documented set has more than one member, the generator picks one
+and the classes documented only on the others diverge permanently.
+
 *Wrong if:* DaisyUI stops marking classes with `$$`, or documents the same class on the container
 in one example and on a child in another with no wrapper in between. The first makes the check
 fail rather than answer; the second would need a per-example rule the check does not have, and
 the failing component is the correction.
+
+*This falsifier fired on 2026-09-19, and not in either shape it predicted.* What actually happened
+is the paragraph above: the same class on several elements of the same example, chosen by context.
+The prediction was about a container and a child disagreeing; the reality was one element wearing
+the class in two valid ways. A falsifier that fires in an unforeseen shape is the requirement
+being corrected, which is what it is for.
 
 #### Scenario: Every class sits where DaisyUI puts it
 
@@ -47,6 +72,26 @@ the failing component is the correction.
 
 - **WHEN** DaisyUI documents a class on a child the library already generates a function for
 - **THEN** the parameter is declared on that function and removed from the container's
+
+#### Scenario: DaisyUI documents the class on several elements
+
+- **WHEN** DaisyUI shows a class on more than one element
+- **AND** the declaring function renders one of them
+- **THEN** generation succeeds, because DaisyUI itself offers that element for the class
+
+#### Scenario: The component's element excludes a class documented only elsewhere
+
+- **WHEN** a component renders one of the several elements DaisyUI documents it on
+- **AND** one of its modifier classes is documented only on the others
+- **THEN** generation fails without an exception, and the exception that resolves it records the
+  measurement and the condition under which the divergence would end — not a date by which it
+  will be fixed, because one function renders one element
+
+#### Scenario: A construction writes a class, so no parameter offers it
+
+- **WHEN** a generated function writes a class on every call
+- **THEN** no other function offers that class as a parameter, so the class cannot be asked for on
+  an element DaisyUI does not show it on
 
 #### Scenario: A misplaced parameter has no function to move to
 

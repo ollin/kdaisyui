@@ -57,9 +57,12 @@ describe('the committed measurement', () => {
     }
   })
 
-  it('covers 44 groups and 310 pairs', () => {
+  it('covers 44 groups and 296 pairs', () => {
+    // 310 at DaisyUI 5.7.17. The fourteen lost are every pair naming `mask-square`, which
+    // 5.7.42 deleted from the documentation — the class itself had been gone since v5. No
+    // group was added or removed, which is why the group count did not move.
     assert.equal(measurement.groupCount(), 44)
-    assert.equal(measurement.pairCount(), 310)
+    assert.equal(measurement.pairCount(), 296)
   })
 })
 

@@ -283,7 +283,6 @@ mask-heart
 mask-hexagon
 mask-hexagon-2
 mask-pentagon
-mask-square
 mask-squircle
 mask-star
 mask-star-2

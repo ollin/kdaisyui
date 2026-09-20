@@ -398,6 +398,28 @@ strips the element's own corners rather than doing nothing — a parameter would
 exactly where it does harm. The seven components with a member are derived from DaisyUI's
 markup, so a release that documents a new one adds it without a config edit.
 
+**12. `MaskStyle.Square` is gone, because the CSS class behind it does not exist.** DaisyUI
+removed `mask-square` from the library **in v5** and only removed it from the documentation in
+5.7.19 ([daisyui#4722](https://github.com/saadeghi/daisyui/pull/4722), *"remove mask-square
+which was removed from the library in v5"*). kdaisyui generated the constant from those docs,
+so it has been emitting a class no stylesheet matches.
+
+```kotlin
+// before — compiled, rendered class="mask mask-square", and no rule ever matched it
+daisyMask(style = ClassValues.of(MaskStyle.Square)) { src = "/cat.png" }
+
+// after — pick a shape that exists
+daisyMask(style = ClassValues.of(MaskStyle.Squircle)) { src = "/cat.png" }
+```
+
+Source-breaking, and it replaces a silent failure with a compile error: code using it was
+already not getting a square. There is no rename to apply — the shape was withdrawn, not
+renamed. `MaskStyle` still offers fourteen shapes, `Squircle` being the closest rounded square.
+
+This is the failure mode the class-based test layers cannot see: the class was in the markup,
+every assertion passed, and nothing rendered. Only DaisyUI withdrawing the documentation
+surfaced it.
+
 ### What deliberately did NOT change
 
 `daisyBadge` still renders `<span>`, although every one of its variant classes is documented on a

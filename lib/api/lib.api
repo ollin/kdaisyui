@@ -679,7 +679,6 @@ public final class io/github/ollin/kdaisyui/components/MaskStyle : java/lang/Enu
 	public static final field Hexagon Lio/github/ollin/kdaisyui/components/MaskStyle;
 	public static final field Hexagon2 Lio/github/ollin/kdaisyui/components/MaskStyle;
 	public static final field Pentagon Lio/github/ollin/kdaisyui/components/MaskStyle;
-	public static final field Square Lio/github/ollin/kdaisyui/components/MaskStyle;
 	public static final field Squircle Lio/github/ollin/kdaisyui/components/MaskStyle;
 	public static final field Star Lio/github/ollin/kdaisyui/components/MaskStyle;
 	public static final field Star2 Lio/github/ollin/kdaisyui/components/MaskStyle;

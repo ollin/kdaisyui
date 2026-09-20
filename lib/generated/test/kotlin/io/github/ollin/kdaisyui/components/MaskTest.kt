@@ -85,17 +85,6 @@ class MaskTest {
     }
 
     @Test
-    fun square() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Square) {
-            }
-        }
-        val expectedClasses = "mask mask-square"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Square")
-    }
-
-    @Test
     fun circle() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Circle) {

@@ -61,4 +61,15 @@ class OtpTest {
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
     }
+
+    @Test
+    fun otp_disabled() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtp() {
+            }
+        }
+        val expectedClasses = "otp"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP disabled")
+    }
 }

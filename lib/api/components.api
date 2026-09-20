@@ -175,7 +175,7 @@ enum LoadingStyle: Spinner, Dots, Ring, Ball, Bars, Infinity
 fun FlowContent.daisyLoading(id: HtmlId? = null, size: ClassValues<LoadingSize>? = null, style: ClassValues<LoadingStyle>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 
 # Mask <img>
-enum MaskStyle: Squircle, Heart, Hexagon, Hexagon2, Decagon, Pentagon, Diamond, Square, Circle, Star, Star2, Triangle, Triangle2, Triangle3, Triangle4
+enum MaskStyle: Squircle, Heart, Hexagon, Hexagon2, Decagon, Pentagon, Diamond, Circle, Star, Star2, Triangle, Triangle2, Triangle3, Triangle4
 enum MaskModifier: Half1, Half2
 fun FlowContent.daisyMask(id: HtmlId? = null, style: ClassValues<MaskStyle>? = null, modifier: ClassValues<MaskModifier>? = null, extraClasses: String? = null, attrs: (IMG.() -> Unit)? = null)
 

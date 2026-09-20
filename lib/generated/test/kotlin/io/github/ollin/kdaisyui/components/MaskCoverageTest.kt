@@ -116,16 +116,6 @@ class MaskCoverageTest {
     }
 
     @Test
-    fun mask_style_square() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMask(
-                style = MaskStyle.Square,
-            )
-        }
-        assertRendered(html, "mask mask-square", "Mask style Square")
-    }
-
-    @Test
     fun mask_style_circle() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(

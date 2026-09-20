@@ -27,8 +27,6 @@ enum class MaskStyle(internal val className: String) : ClassValues<MaskStyle> {
     Pentagon("mask-pentagon"),
     /** CSS: `mask-diamond` — diamond */
     Diamond("mask-diamond"),
-    /** CSS: `mask-square` — square */
-    Square("mask-square"),
     /** CSS: `mask-circle` — circle */
     Circle("mask-circle"),
     /** CSS: `mask-star` — star */

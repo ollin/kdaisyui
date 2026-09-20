@@ -6,7 +6,8 @@
     "generate": "node src/index-new.ts",
     "generate:heroicons": "node src/index-heroicons.ts",
     "generate:heroicon-tests": "node src/test-generator-heroicons.ts",
-    "test": "node --test test/"
+    "test": "node --test test/",
+    "test:integration": "node --test integration/"
   },
   "dependencies": {
     "htmlparser2": "12.0.0"

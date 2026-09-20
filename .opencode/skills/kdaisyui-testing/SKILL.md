@@ -140,7 +140,7 @@ then five — so check the file rather than trusting this count.
 
 | Job | Runs | Needs |
 |---|---|---|
-| `generated-sources-drift` | the four `:lib:generate*` tasks, then `git status --porcelain` | `submodules: recursive`, Node, JDK |
+| `generated-sources-drift` | the four `:lib:generate*` tasks, `git status --porcelain`, and `npm run test:integration` | `submodules: recursive`, Node, JDK |
 | `codegen-tests` | `npm test` in `codegen/` (`node --test test/`) | Node only |
 | `api-baseline` | `:lib:checkKotlinAbi` | JDK |
 | `unit-tests` | `:lib:test koverVerify koverXmlReport` | JDK |
@@ -155,8 +155,28 @@ strength rather than mutation score.
 **Only the drift job needs submodules** — the others build from committed sources, which is the
 point of committing them. **`codegen-tests` is the only job with no JDK at all**: it imports the
 generator modules and asserts on pure functions, so it needs neither a compiler nor the DaisyUI
-checkout. If it ever grows one, the tests have drifted into integration work that
-`generated-sources-drift` already covers end to end.
+checkout.
+
+### A codegen test that needs the submodule goes in `codegen/integration/`
+
+That rule is now enforced by layout rather than by remembering it, because forgetting it turned
+`main` red for a day:
+
+| Directory | Runs in | Task | May read the submodule |
+|---|---|---|---|
+| `codegen/test/` | `codegen-tests` | `:lib:testCodegen` | **no** |
+| `codegen/integration/` | `generated-sources-drift` | `:lib:testCodegenIntegration` | yes |
+
+A test in the wrong place does not fail an assertion — it dies with `ENOENT` on a path inside
+`daisyui/`, which reads like a broken checkout rather than a misplaced test.
+
+**Do not "fix" such a test by skipping it when the submodule is absent.** That produces a test
+CI can never fail, which is the failure this pipeline exists to prevent; move it instead.
+
+And watch for the indirect case, which is how one of the two got there: the test asserted only
+on a string, but the function it called read `daisyui/packages/daisyui/package.json` internally
+for provenance. The fix was to pass the version in rather than to move the test — a unit test
+that looks pure and is not means the *production* function has the hidden dependency.
 
 Its Node version comes from `node-version-file: .tool-versions`, not a literal — the test
 runner's default file patterns have changed between majors, and a mismatch there fails quietly.

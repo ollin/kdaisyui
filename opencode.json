@@ -3,28 +3,14 @@
   "mcp": {
     "gradle": { "enabled": true },
     "jetbrains": { "enabled": true },
-    "github": { "enabled": true },
-    "git": { "enabled": true },
-    "playwright": { "enabled": true },
     "codescene": { "enabled": true },
+    "git": { "enabled": true },
+    "github": { "enabled": true },
     "daisyui-blueprint": { "enabled": true },
-    "memory": { "enabled": true },
-    "obsidian": { "enabled": true },
-    "dacli": { "enabled": true },
-
-    "gitlab-katta": { "enabled": false },
-    "gitlab-nimbus": { "enabled": false },
-    "chrome-devtools": { "enabled": false },
-    "archi": { "enabled": false },
-    "structurizr-mcp": { "enabled": false },
-    "tasknotes": { "enabled": false },
-    "nelson": { "enabled": false },
-    "pdf-mcp": { "enabled": false },
-    "pdf-reader": { "enabled": false },
-    "booksearch": { "enabled": false },
-    "unifi": { "enabled": false }
+    "playwright": { "enabled": true },
+    "chrome-devtools": { "enabled": true },
+    "dacli": { "enabled": true }
   },
-
   "tools": {
     "bash": true,
     "interactive_bash": true,

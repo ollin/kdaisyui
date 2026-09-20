@@ -23,99 +23,113 @@ const DAISYUI_ROOT = path.resolve(import.meta.dirname, '../../../daisyui')
 const STATIC_LLMS_TXT = path.join(DAISYUI_ROOT, 'packages/docs/static/llms.txt')
 const COMPONENT_SKILLS_DIR = path.join(DAISYUI_ROOT, 'skills/daisyui/components')
 
-function readElementRuleSource(): string {
-  if (fs.existsSync(STATIC_LLMS_TXT)) {
-    return fs.readFileSync(STATIC_LLMS_TXT, 'utf8')
-  }
-  if (fs.existsSync(COMPONENT_SKILLS_DIR)) {
-    return fs.readdirSync(COMPONENT_SKILLS_DIR)
+/**
+ * Each component's skill document, keyed by FILENAME; null when the directory is absent.
+ *
+ * The files used to be concatenated into one string and parsed as a single blob, which threw
+ * the filenames away and left the `### ` heading as the only name available. Keeping them
+ * apart is what lets the authoritative name survive.
+ */
+function readComponentSkillFiles(): Map<ComponentName, string> | null {
+  if (!fs.existsSync(COMPONENT_SKILLS_DIR)) return null
+  return new Map(
+    fs.readdirSync(COMPONENT_SKILLS_DIR)
       .filter((name) => name.endsWith('.md'))
       .sort()
-      .map((name) => fs.readFileSync(path.join(COMPONENT_SKILLS_DIR, name), 'utf8'))
-      .join('\n')
+      .map((name) => [
+        // The directory name of the component — the same string every caller looks up by.
+        name.slice(0, -'.md'.length) as ComponentName,
+        fs.readFileSync(path.join(COMPONENT_SKILLS_DIR, name), 'utf8'),
+      ]),
+  )
+}
+
+/**
+ * One component's rule, read from one file, named by that FILE rather than by its heading.
+ *
+ * The heading is a human title and cannot be relied on. DaisyUI 5.7.42 retitled 67 of its 68
+ * component documents — `### card` became `### Card`, `### file-input` became `### File input`
+ * — and reworded four of them outright, so `mockup-browser.md` is headed "Browser mockup".
+ * Lowercasing and hyphenating recovers the first two kinds and gets `browser-mockup` for the
+ * third, which matches no component.
+ *
+ * The name is load-bearing twice over: it keys the map every caller looks up by, and
+ * `findComponentInSyntax` matches it against the component's CSS class, which is named after
+ * the directory and not after the prose.
+ */
+function parseComponentDoc(content: string, name: ComponentName): ElementRule {
+  const rule: ElementRule = { component: name, elements: [], primaryElement: null }
+  const syntaxBlock: string[] = []
+  let section: 'syntax' | 'rules' | null = null
+
+  for (const line of content.split('\n')) {
+    if (line.startsWith('#### Syntax')) section = 'syntax'
+    else if (line.startsWith('#### Rules')) section = 'rules'
+    else if (line.startsWith('#### ') || line.startsWith('### ')) section = null
+    else if (section === 'syntax') collectSyntaxLine(line, syntaxBlock)
+    else if (section === 'rules') collectRuleElements(line, rule)
   }
+
+  resolvePrimaryElement(rule, syntaxBlock)
+  return rule
+}
+
+function collectSyntaxLine(line: string, syntaxBlock: string[]): void {
+  if (line.startsWith('```')) return
+  if (line.trim()) syntaxBlock.push(line)
+}
+
+function collectRuleElements(line: string, rule: ElementRule): void {
+  if (!line.includes('<') || !line.includes('>')) return
+  for (const wrapped of line.match(/<(\w+)>/g) ?? []) {
+    // `<button>` in the Rules prose — one of the places a TagName is created.
+    const element = wrapped.slice(1, -1) as TagName
+    if (!rule.elements.includes(element)) rule.elements.push(element)
+  }
+}
+
+function resolvePrimaryElement(rule: ElementRule, syntaxBlock: string[]): void {
+  const documented = findComponentInSyntax(syntaxBlock, rule.component)
+  if (documented) {
+    rule.primaryElement = documented.element
+    if (!rule.elements.includes(documented.element)) rule.elements.push(documented.element)
+  }
+  if (!rule.primaryElement && rule.elements.length > 0) rule.primaryElement = rule.elements[0]
+}
+
+/** The element rules of DaisyUI's per-component skill documents, keyed by filename. */
+export function parseComponentSkills(
+  files: ReadonlyMap<ComponentName, string>,
+): Map<ComponentName, ElementRule> {
+  return new Map([...files].map(([name, content]) => [name, parseComponentDoc(content, name)]))
+}
+
+export function parseLlmsTxt(): Map<ComponentName, ElementRule> {
+  // Order preserved from before: the single file wins where it still exists, so an older pin
+  // behaves exactly as it did.
+  if (fs.existsSync(STATIC_LLMS_TXT)) {
+    return parseLlmsTxtContent(fs.readFileSync(STATIC_LLMS_TXT, 'utf8'))
+  }
+  const skills = readComponentSkillFiles()
+  if (skills) return parseComponentSkills(skills)
   throw new Error(
     `DaisyUI layout changed: found neither ${STATIC_LLMS_TXT} nor ${COMPONENT_SKILLS_DIR}. ` +
     `Check the pinned daisyui version and the codegen path.`
   )
 }
 
-export function parseLlmsTxt(): Map<ComponentName, ElementRule> {
-  return parseLlmsTxtContent(readElementRuleSource())
-}
-
-function parseLlmsTxtContent(content: string): Map<ComponentName, ElementRule> {
+/**
+ * The legacy single-file source, where the `### ` heading is the only name there is.
+ *
+ * `packages/docs/static/llms.txt` vanished in DaisyUI 5.5.23. Kept so an older pin behaves as
+ * it always did; a blob has no filenames, so heading-keyed is correct HERE and nowhere else.
+ */
+export function parseLlmsTxtContent(content: string): Map<ComponentName, ElementRule> {
   const rules = new Map<ComponentName, ElementRule>()
-  const syntaxBlocks = new Map<ComponentName, string[]>()
-  const lines = content.split('\n')
-  let currentComponent: ComponentName | null = null
-  let inSyntaxSection = false
-  let inRulesSection = false
-  
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    
-    if (line.startsWith('### ')) {
-      // A `### ` heading names a component; this is where a ComponentName is created.
-      currentComponent = line.slice(4).trim() as ComponentName
-      inSyntaxSection = false
-      inRulesSection = false
-      rules.set(currentComponent, {
-        component: currentComponent,
-        elements: [],
-        primaryElement: null
-      })
-      syntaxBlocks.set(currentComponent, [])
-    } else if (line.startsWith('#### Syntax') && currentComponent) {
-      inSyntaxSection = true
-      inRulesSection = false
-    } else if (line.startsWith('#### Rules') && currentComponent) {
-      inSyntaxSection = false
-      inRulesSection = true
-    } else if (line.startsWith('#### ') && currentComponent) {
-      inSyntaxSection = false
-      inRulesSection = false
-    } else if (inSyntaxSection && currentComponent) {
-      if (line.startsWith('```')) {
-        continue
-      }
-      if (line.trim()) {
-        syntaxBlocks.get(currentComponent)!.push(line)
-      }
-    } else if (inRulesSection && currentComponent) {
-      if (line.includes('<') && line.includes('>')) {
-        const elements = line.match(/<(\w+)>/g)
-        if (elements) {
-          const rule = rules.get(currentComponent)!
-          for (const el of elements) {
-            // `<button>` in the Rules prose — the second place a TagName is created.
-            const element = el.slice(1, -1) as TagName
-            if (!rule.elements.includes(element)) {
-              rule.elements.push(element)
-            }
-          }
-        }
-      }
-    }
+  for (const section of content.split(/^### /m).slice(1)) {
+    const name = section.slice(0, section.indexOf('\n')).trim() as ComponentName
+    rules.set(name, parseComponentDoc(section, name))
   }
-  
-  for (const [name, rule] of rules) {
-    const syntaxBlock = syntaxBlocks.get(name) || []
-    const component = findComponentInSyntax(syntaxBlock, name)
-    if (component) {
-      rule.primaryElement = component.element
-      if (!rule.elements.includes(component.element)) {
-        rule.elements.push(component.element)
-      }
-    }
-  }
-  
-  for (const [name, rule] of rules) {
-    if (!rule.primaryElement && rule.elements.length > 0) {
-      rule.primaryElement = rule.elements[0]
-    }
-  }
-  
   return rules
 }
 

@@ -762,6 +762,27 @@ function parseEmittedBuilder(body: string): BuilderName | null {
 }
 
 /**
+ * The builder a SCOPED function stands in for.
+ *
+ * A function whose `content` runs in a generated scope opens no builder — it constructs the
+ * scope and visits it, which is what `div { }` expands to with the scope class in `DIV`'s
+ * place. So `parseEmittedBuilder` finds nothing, and the `closes` assertion it feeds silently
+ * disappeared from the generated coverage test the day the join gained a scope.
+ *
+ * The element is not in the body; it is the scope's superclass, declared in the same file.
+ * Returns null when the body opens no scope, or when the file declares no such class —
+ * refusing to answer beats answering wrongly, which is the rule `htmlTagForFn` already follows.
+ */
+function parseScopeBuilder(body: string, file: string): BuilderName | null {
+  const opened = body.match(/^\s*([A-Z]\w*)\(emptyMap\(\), consumer\)\.visit \{\s*$/m)
+  if (!opened) return null
+  const declared = file.match(
+    new RegExp(`^class ${opened[1]} internal constructor\\([\\s\\S]*?\\) : (\\w+)\\(`, 'm'),
+  )
+  return declared ? htmlTagFnFor(declared[1].toLowerCase() as TagName) : null
+}
+
+/**
  * The HTML tag a kotlinx.html builder emits — the inverse of `htmlTagFnFor`.
  *
  * The two differ: the builder for `<fieldset>` is `fieldSet` and for `<textarea>`
@@ -937,7 +958,7 @@ ${asserts.map((a) => `        ${a}`).join('\n')}
 `
 }
 
-function coverageContext(fn, enums) {
+function coverageContext(fn, enums, file: string) {
   const params = splitParams(fn.paramBlock).map((raw) => classifyParam(raw, enums))
   return {
     params,
@@ -948,7 +969,9 @@ function coverageContext(fn, enums) {
     // because `htmlTagFnFor` renames a few builders away from their tag (`object`
     // becomes `htmlObject`) and `</htmlObject>` is not a thing.
     wrapperTag: wrapperTagOf(fn.receiver),
-    tagFn: parseEmittedBuilder(fn.body),
+    // A scoped function opens its scope instead of a builder, and the scope stands in for the
+    // element it extends — so the closing tag is still assertable.
+    tagFn: parseEmittedBuilder(fn.body) ?? parseScopeBuilder(fn.body, file),
     fnBase: lowerFirst(fn.name),
     daisyName: fn.name,
     required: params.find((p) => p.kind === 'contentRequired'),
@@ -1038,8 +1061,8 @@ function textArmTest(ctx) {
   return wrapTest(ctx, `${ctx.fnBase}_text`, ['text = "txtmark"'], asserts)
 }
 
-function buildCoverageTests(fn, enums) {
-  const ctx = coverageContext(fn, enums)
+function buildCoverageTests(fn, enums, file) {
+  const ctx = coverageContext(fn, enums, file)
   return defaultsTest(ctx) + allFlagsTest(ctx) + enumArmTests(ctx) + textArmTest(ctx)
 }
 
@@ -1068,7 +1091,7 @@ function generateCoverageForFile(fileName) {
   }
 
   let body = ''
-  for (const fn of funcs) body += buildCoverageTests(fn, enums)
+  for (const fn of funcs) body += buildCoverageTests(fn, enums, content)
 
   const kotlin = `package io.github.ollin.kdaisyui.components
 
@@ -1188,6 +1211,7 @@ export {
   buildClassMappings,
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
   parseEmittedBuilder,
+  parseScopeBuilder,
   htmlTagForFn,
   parseAttrProps,
   attrAssert,

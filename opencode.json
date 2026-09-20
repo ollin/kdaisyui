@@ -1,18 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "chrome-attach": { "enabled": true },
-    "citra": { "enabled": true },
+    "gradle": { "enabled": true },
+    "jetbrains": { "enabled": true },
     "codescene": { "enabled": true },
-    "dacli": { "enabled": true },
-    "daisyui-blueprint": { "enabled": true },
     "git": { "enabled": true },
     "github": { "enabled": true },
-    "gradle": { "enabled": true },
-    "graphify": { "enabled": true },
-    "jetbrains": { "enabled": true },
-    "obsidian": { "enabled": true },
-    "playwright": { "enabled": true }
+    "daisyui-blueprint": { "enabled": true },
+    "playwright": { "enabled": true },
+    "dacli": { "enabled": true }
   },
   "tools": {
     "bash": true,

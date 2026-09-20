@@ -1,7 +1,7 @@
 {
   "measurement": {
     "what": "For every pair of classes in a multi-member DaisyUI class group, whether the two can be worn at once.",
-    "daisyui": "5.7.17",
+    "daisyui": "5.7.42",
     "procedure": [
       "Render DaisyUI's own documented example for the component three times: with class a, with class b, and with both — and once per group with nothing injected, the baseline.",
       "Every member of the group under test is stripped from the example first, so the case measures the injected classes and not what the example happened to carry.",
@@ -982,7 +982,6 @@
           "squircle|decagon",
           "squircle|pentagon",
           "squircle|diamond",
-          "squircle|square",
           "squircle|circle",
           "squircle|star",
           "squircle|star-2",
@@ -995,7 +994,6 @@
           "heart|decagon",
           "heart|pentagon",
           "heart|diamond",
-          "heart|square",
           "heart|circle",
           "heart|star",
           "heart|star-2",
@@ -1007,7 +1005,6 @@
           "hexagon|decagon",
           "hexagon|pentagon",
           "hexagon|diamond",
-          "hexagon|square",
           "hexagon|circle",
           "hexagon|star",
           "hexagon|star-2",
@@ -1018,7 +1015,6 @@
           "hexagon-2|decagon",
           "hexagon-2|pentagon",
           "hexagon-2|diamond",
-          "hexagon-2|square",
           "hexagon-2|circle",
           "hexagon-2|star",
           "hexagon-2|star-2",
@@ -1028,7 +1024,6 @@
           "hexagon-2|triangle-4",
           "decagon|pentagon",
           "decagon|diamond",
-          "decagon|square",
           "decagon|circle",
           "decagon|star",
           "decagon|star-2",
@@ -1037,7 +1032,6 @@
           "decagon|triangle-3",
           "decagon|triangle-4",
           "pentagon|diamond",
-          "pentagon|square",
           "pentagon|circle",
           "pentagon|star",
           "pentagon|star-2",
@@ -1045,7 +1039,6 @@
           "pentagon|triangle-2",
           "pentagon|triangle-3",
           "pentagon|triangle-4",
-          "diamond|square",
           "diamond|circle",
           "diamond|star",
           "diamond|star-2",
@@ -1053,13 +1046,6 @@
           "diamond|triangle-2",
           "diamond|triangle-3",
           "diamond|triangle-4",
-          "square|circle",
-          "square|star",
-          "square|star-2",
-          "square|triangle",
-          "square|triangle-2",
-          "square|triangle-3",
-          "square|triangle-4",
           "circle|star",
           "circle|star-2",
           "circle|triangle",
@@ -1081,9 +1067,6 @@
           "triangle-2|triangle-3",
           "triangle-2|triangle-4",
           "triangle-3|triangle-4"
-        ],
-        "inert": [
-          "square"
         ],
         "declares": {
           "squircle": [
@@ -1107,7 +1090,6 @@
           "diamond": [
             "mask-image"
           ],
-          "square": [],
           "circle": [
             "mask-image"
           ],

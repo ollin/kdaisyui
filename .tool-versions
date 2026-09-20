@@ -6,6 +6,13 @@ java temurin-25.0.4+101.0.LTS
 # Node is NOT needed to build or test — the generated sources are committed.
 # It is pinned anyway because `just generate` needs it, and a fixed Node keeps
 # regeneration reproducible, which is what the generated-sources-drift job relies on.
-nodejs 26.9.0
+#
+# Held at 26.8.2 because that is the newest version node-build can actually
+# install. 26.9.0 (published 2026-09-16) landed here before the renovate guard
+# in renovate.json existed, and node-build still has no definition for it, so
+# every local `npx`/`node` in this checkout died with `No version is set`. CI
+# never noticed: actions/setup-node resolves from nodejs.org. Raise this only
+# once `asdf list all nodejs` lists the target.
+nodejs 26.8.2
 
 just 1.58.0

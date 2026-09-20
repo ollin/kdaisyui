@@ -75,6 +75,14 @@ jobs:
       - name: Fail if the exclusivity measurement no longer describes DaisyUI
         run: ./gradlew :lib:verifyExclusivity --no-daemon
 
+      # The codegen tests that READ the submodule, which is why they run here and not in
+      # `codegen-tests`: that job checks out none, on purpose. Skipping them when the
+      # submodule is absent would have been cheaper and would have produced a test CI can
+      # never fail — the failure mode this pipeline exists to prevent.
+      - name: Run the codegen tests that need the submodule
+        working-directory: codegen
+        run: npm run test:integration
+
       - name: Fail if the committed sources no longer match their inputs
         run: |
           # --porcelain also reports untracked files, so a newly added component

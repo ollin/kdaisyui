@@ -337,6 +337,26 @@ tasks.register<Exec>("testCodegen") {
     outputs.upToDateWhen { false }
 }
 
+// The codegen tests that READ the DaisyUI submodule, kept apart from the ones above because
+// the CI job running those checks out no submodules — deliberately, which is what makes it the
+// only job needing neither a JDK nor the DaisyUI checkout. Two tests reading the submodule
+// landed in it and turned `main` red with an ENOENT rather than a failing assertion.
+//
+// Locally the submodule is present, so this is the task to run beside `testCodegen`. In CI it
+// runs inside `generated-sources-drift`, which already has the checkout.
+tasks.register<Exec>("testCodegenIntegration") {
+    group = "codegen"
+    description = "Run the codegen tests that need the DaisyUI submodule (needs Node; not part of `check`)"
+    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
+    workingDir = rootProject.file("codegen")
+    commandLine("sh", "-c", "npm run test:integration")
+    inputs.dir(rootProject.file("codegen/src"))
+    inputs.dir(rootProject.file("codegen/integration"))
+    inputs.file(rootProject.file("codegen/package.json"))
+    inputs.file(rootProject.file("codegen/package-lock.json"))
+    outputs.upToDateWhen { false }
+}
+
 val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     group = "codegen"
     description = "Regenerate exhaustive Kotlin icon render tests from Heroicons SVG source (git submodule)"

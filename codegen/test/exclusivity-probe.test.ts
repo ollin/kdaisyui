@@ -65,7 +65,7 @@ describe('the probe defects', () => {
     // Chromium treats a stylesheet linked from a file:// page as cross-origin, and `cssRules`
     // throws SecurityError — which is what `declares` reads. Found on the first measurement
     // run after `declares` was added.
-    const page = pageFor([], '.tooltip{--tt-off:1px}')
+    const page = pageFor([], '.tooltip{--tt-off:1px}', '5.7.17')
 
     assert.match(page, /<style>\.tooltip\{--tt-off:1px\}<\/style>/)
     assert.doesNotMatch(page, /<link/)

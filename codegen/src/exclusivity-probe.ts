@@ -214,14 +214,25 @@ export function buildProbePage(stylesheet: string): ProbePage {
   const unmeasurable = perComponent.flatMap((component) => component.unmeasurable)
 
   return {
-    html: pageFor(cases, stylesheet),
+    // The submodule is read HERE, at the edge, rather than inside `pageFor`. This function
+    // already reads it (`getAllComponentDirs`) and only runs when a measurement is happening.
+    html: pageFor(cases, stylesheet, daisyuiVersion()),
     cases,
     groups: new Set(cases.map((probeCase) => probeCase.group)).size,
     unmeasurable,
   }
 }
 
-export function pageFor(cases: readonly ProbeCase[], stylesheet: string): string {
+/**
+ * The probe page, built from its arguments and nothing else.
+ *
+ * `daisyui` is passed in rather than read here. It used to call `daisyuiVersion()` itself,
+ * which put a FILE READ of the DaisyUI submodule inside a function that otherwise only joins
+ * strings — so a unit test asserting how the stylesheet is embedded could not run without the
+ * submodule checked out, and `codegen-tests` deliberately checks out none. The job went red
+ * for a test that is not about the submodule at all.
+ */
+export function pageFor(cases: readonly ProbeCase[], stylesheet: string, daisyui: string): string {
   const body = cases
     .map(
       (c) =>
@@ -241,7 +252,7 @@ export function pageFor(cases: readonly ProbeCase[], stylesheet: string): string
     // The provenance travels INTO the page, so the browser can emit a COMPLETE
     // `exclusivity.json` and the file stays generated wholesale. Hand-writing it into the
     // JSON would mean the next measurement silently deletes it.
-    `<script type="application/json" id="kdaisyui-provenance">${JSON.stringify(provenance(daisyuiVersion()))}</script>`,
+    `<script type="application/json" id="kdaisyui-provenance">${JSON.stringify(provenance(daisyui))}</script>`,
     '<script src="exclusivity-verdicts.js"></script>',
     '</head><body>',
     '<pre id="kdaisyui-summary"></pre>',

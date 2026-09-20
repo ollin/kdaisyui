@@ -36,18 +36,4 @@ describe('PropertyTable', () => {
   it('says nothing about a variable the table does not list', () => {
     assert.equal(table.describe('--indicator-y'), undefined)
   })
-
-  it('reads the real page from the submodule', () => {
-    // The rows the axis names depend on. If DaisyUI drops or rewords one, this is the test
-    // that says so before generation fails with a less specific message.
-    const real = PropertyTable.fromSubmodule()
-
-    assert.equal(real.describe('--indicator-y'), 'vertical position of the indicator')
-    assert.equal(real.describe('--indicator-x'), 'horizontal position of the indicator')
-    assert.equal(real.describe('--toast-y'), 'vertical position of the toast')
-    assert.equal(real.describe('--toast-x'), 'horizontal position of the toast')
-    assert.equal(real.describe('--anchor-v'), 'vertical position of the anchor')
-    assert.equal(real.describe('--anchor-h'), 'horizontal position of the anchor')
-    assert.ok(real.size() > 100)
-  })
 })

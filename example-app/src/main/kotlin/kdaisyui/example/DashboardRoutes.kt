@@ -20,6 +20,7 @@ fun Route.dashboardRoutes() {
     get<MegamenuReference> { call.respondHtml(HttpStatusCode.OK) { megamenuReferencePage() } }
 
     get<TailwindVariantCheck> { call.respondHtml(HttpStatusCode.OK) { tailwindVariantPage() } }
+    get<DisabledStateCheck> { call.respondHtml(HttpStatusCode.OK) { disabledStatePage() } }
 
     get<Fragments.Stats> { call.respondHtmlFragment { statsFragment() } }
     get<Fragments.CardsRow1> { call.respondHtmlFragment { cardsRow1Fragment() } }

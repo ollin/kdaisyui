@@ -14,6 +14,9 @@ class MegamenuReference
 @Resource("/tailwind-variant")
 class TailwindVariantCheck
 
+@Resource("/disabled-state")
+class DisabledStateCheck
+
 @Resource("/fragments")
 class Fragments {
     @Resource("/stats")

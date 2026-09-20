@@ -413,6 +413,39 @@ export interface FunctionShape {
   /** Prose sentence preceding the `Renders ...` clause. Empty when there is none. */
   readonly desc: string
   readonly parameters: readonly ParameterShape[]
+  /**
+   * The lambda receiver of `content`, when it is a generated SCOPE rather than the element.
+   *
+   * Absent for every function whose children are ordinary content. Present on `daisyJoin`,
+   * whose body opens a `JoinScope` instead of a plain `div` so that a component call written
+   * directly in the lambda reaches a member that marks it `join-item`.
+   */
+  readonly contentScope?: string
+}
+
+/**
+ * A generated class that a component's `content` lambda runs in, carrying member overloads.
+ *
+ * The one instance is the join's. `.join` writes four corner-radius variables onto its direct
+ * children and `.join-item` reads them, so the class is harmful anywhere else — which rules out
+ * a parameter, since a parameter is writable wherever its function is. A scope is not: outside
+ * the lambda the members do not exist, and `@HtmlTagMarker` hides them inside a nested one.
+ */
+export interface ScopeShape {
+  /** The generated Kotlin class name, e.g. `JoinScope`. */
+  readonly name: string
+  /** The class every member adds to whatever it renders, e.g. `join-item`. */
+  readonly markerClass: CssClass
+  /** The functions the scope overloads, each mirroring a top-level one. */
+  readonly members: readonly FunctionShape[]
+  /**
+   * Imports the MEMBERS' signatures need and the host component has no reason to carry.
+   *
+   * A mirrored parameter list brings its types with it: `daisyButton` declares
+   * `type: ButtonType?`, so the join's file needs `kotlinx.html.ButtonType` although nothing
+   * the join itself renders mentions one.
+   */
+  readonly imports: readonly string[]
 }
 
 /** One generated enum, e.g. `CardSize`. */
@@ -479,6 +512,13 @@ export interface ComponentShape {
   readonly enums: readonly EnumShape[]
   /** The main function first, then parts in declaration order, then custom parts. */
   readonly functions: readonly FunctionShape[]
+  /**
+   * The scope the main function's `content` runs in, when it has one.
+   *
+   * Attached after the per-component build rather than by `buildComponentShape`, because a
+   * scope's members are OTHER components' functions and this shape knows only its own.
+   */
+  readonly scope?: ScopeShape
 }
 
 const ID_PARAMETER: ParameterShape = {

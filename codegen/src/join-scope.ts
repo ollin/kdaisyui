@@ -23,10 +23,10 @@
 import { documentedElementClasses } from './parser/documented-classes.ts'
 import { fencedHtmlFor } from './parser/documented-element.ts'
 import type { ComponentName } from './parser/frontmatter.ts'
-import type { ComponentShape, FunctionShape } from './component-shape.ts'
+import type { ComponentShape, CssClass, FunctionShape, ParameterShape } from './component-shape.ts'
 
 /** The class a join's children wear, and the whole reason this scope exists. */
-export const JOIN_ITEM_CLASS = 'join-item'
+export const JOIN_ITEM_CLASS = 'join-item' as CssClass
 
 /**
  * Every unprefixed daisyUI class DaisyUI shows on an element that ALSO carries `join-item`.
@@ -64,6 +64,60 @@ export function documentedJoinItemCompanions(componentDirs: readonly ComponentNa
   return companions
 }
 
+/** The generated Kotlin class the join's `content` lambda runs in. */
+const JOIN_SCOPE_NAME = 'JoinScope'
+
+/**
+ * Whether this component is the one that DECLARES `join-item`, and so owns the scope.
+ *
+ * Derived rather than a hardcoded `'join'`: DaisyUI lists `join-item` as the join's second
+ * `component:` class, and that entry is the only statement anywhere that the two belong
+ * together. It currently reaches no generated function at all — which is precisely the gap the
+ * scope fills.
+ */
+export function declaresJoinItem(frontmatter): boolean {
+  return Object.values(frontmatter?.classnames ?? {}).some(
+    entries => Array.isArray(entries) && entries.some(entry => entry?.class === JOIN_ITEM_CLASS),
+  )
+}
+
+/**
+ * The join component, with its content lambda moved onto the scope.
+ *
+ * Only the RECEIVER of `content` changes. `JoinScope` extends the `<div>` the join already
+ * rendered, so `attrs` still reaches a `DIV`, every kotlinx.html builder still works inside the
+ * lambda, and nothing a caller could write before stops working — except writing `join-item`
+ * by hand, which was never a typed option.
+ */
+export function withJoinScope(
+  shape: ComponentShape,
+  members: readonly FunctionShape[],
+  imports: readonly string[] = [],
+): ComponentShape {
+  const [main, ...rest] = shape.functions
+  return {
+    ...shape,
+    scope: { name: JOIN_SCOPE_NAME, markerClass: JOIN_ITEM_CLASS, members, imports },
+    functions: [inScope(main), ...rest],
+  }
+}
+
+function inScope(fn: FunctionShape): FunctionShape {
+  return {
+    ...fn,
+    contentScope: JOIN_SCOPE_NAME,
+    parameters: fn.parameters.map(parameter =>
+      parameter.name === 'content' ? received(parameter) : parameter,
+    ),
+  }
+}
+
+/** The same lambda parameter, on the scope — nullability preserved, since only the type moves. */
+function received(content: ParameterShape): ParameterShape {
+  const optional = content.type.endsWith('?') ? '?' : ''
+  return { ...content, type: `(${JOIN_SCOPE_NAME}.() -> Unit)${optional}` }
+}
+
 /**
  * The scope's members: the main function of every component whose class is a companion.
  *
@@ -82,7 +136,19 @@ export function joinScopeMembers(
   companionClasses: ReadonlySet<string>,
 ): readonly FunctionShape[] {
   return shapes
-    .filter(shape => shape.prefix !== null && companionClasses.has(shape.prefix))
+    .filter(shape => isJoinItemComponent(shape, companionClasses))
     .flatMap(shape => shape.functions.filter(fn => fn.kind === 'main'))
     .sort((left, right) => left.name.localeCompare(right.name))
+}
+
+/**
+ * Whether this component's own class shares an element with `join-item` in DaisyUI's markup.
+ *
+ * Exported because the scope needs two different things from the same set of components — the
+ * functions to mirror, and the imports those functions' signatures name. A `type: ButtonType`
+ * parameter copied into the join's file does not compile without `kotlinx.html.ButtonType`, and
+ * the join has no reason of its own to import it.
+ */
+export function isJoinItemComponent(shape: ComponentShape, companionClasses: ReadonlySet<string>): boolean {
+  return shape.prefix !== null && companionClasses.has(shape.prefix)
 }

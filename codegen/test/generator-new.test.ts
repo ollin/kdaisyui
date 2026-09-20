@@ -3,6 +3,8 @@ import assert from 'node:assert/strict'
 
 import { generateKotlinFile } from '../src/generator-new.ts'
 import { allBooleans, buildComponentShape } from '../src/component-shape.ts'
+import { withJoinScope } from '../src/join-scope.ts'
+import type { FunctionShape } from '../src/component-shape.ts'
 import type { ComponentSource } from '../src/component-shape.ts'
 import type { GroupClassification } from '../src/class-groups.ts'
 import type { ClassifiedComponent } from '../src/classifier.ts'
@@ -134,5 +136,69 @@ describe('the doc comment', () => {
     )
 
     assert.ok(!kotlin.includes('<fieldSet'))
+  })
+})
+
+describe('the join scope', () => {
+  /** A button reduced to the two parameters that show how a member mirrors and delegates. */
+  const button = (): FunctionShape =>
+    buildComponentShape(
+      classified({ componentName: 'Button', componentClass: 'Button', prefix: 'btn' }),
+      { componentDir: 'button', element: 'BUTTON' },
+      {},
+      allBooleans(classified({ componentName: 'Button', componentClass: 'Button', prefix: 'btn' })),
+    ).functions[0]
+
+  const joined = () =>
+    generateKotlinFile(
+      withJoinScope(
+        buildComponentShape(
+          classified({ componentName: 'Join', componentClass: 'Join', prefix: 'join' }),
+          { componentDir: 'join', element: 'DIV' },
+          {},
+          allBooleans(classified({ componentName: 'Join', componentClass: 'Join', prefix: 'join' })),
+        ),
+        [button()],
+      ),
+      {},
+    )
+
+  test('the main function opens the scope instead of a plain div', () => {
+    // The scope has to BE the element, not wrap it: the class it marks its children with is
+    // read by CSS variables that `.join` writes onto its direct children.
+    assert.match(joined(), /^ {4}JoinScope\(emptyMap\(\), consumer\)\.visit \{$/m)
+  })
+
+  test('the scope extends the element the component renders', () => {
+    assert.match(joined(), /^class JoinScope internal constructor\($/m)
+    assert.match(joined(), /\) : DIV\(initialAttributes, consumer\) \{$/m)
+  })
+
+  test('the tag builder is not imported, because nothing calls it any more', () => {
+    // Positive control beside it: the element class IS still needed, for `attrs`.
+    assert.match(joined(), /^import kotlinx\.html\.DIV$/m)
+    assert.ok(!joined().includes('import kotlinx.html.div\n'))
+  })
+
+  test('a member delegates to the top-level function with the marker class added', () => {
+    assert.match(joined(), /^ {8}flow\.daisyButton\($/m)
+    assert.match(joined(), /^ {12}extraClasses = joinItem\(extraClasses\),$/m)
+  })
+
+  test('a member mirrors the top-level parameter list', () => {
+    const scope = joined().split('class JoinScope')[1]
+
+    assert.match(scope, /^ {4}fun daisyButton\($/m)
+    assert.match(scope, /^ {8}attrs: \(BUTTON\.\(\) -> Unit\)\? = null,$/m)
+  })
+
+  test('the scope is the only way to write the marker class', () => {
+    // No parameter anywhere emits it. `join-item` outside a join strips the element's own
+    // corners, so a writable parameter would let a caller do that silently.
+    assert.ok(!joined().includes('addClassNames("join-item")'))
+  })
+
+  test('a component with no scope opens its tag exactly as before', () => {
+    assert.match(kotlinFor(classified({ componentName: 'Card', componentClass: 'Card', prefix: 'card' }), { componentDir: 'card', element: 'DIV' }), /^ {4}div \{$/m)
   })
 })

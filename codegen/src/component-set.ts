@@ -17,10 +17,11 @@ import {
 } from './parser/frontmatter.ts'
 import { parseLlmsTxt, getElementForComponent } from './parser/llms-txt.ts'
 import { classifyFromFrontmatter, type ClassifiedComponent } from './classifier.ts'
-import { buildComponentShape, type ComponentShape, type ComponentSource } from './component-shape.ts'
+import { buildComponentShape, readComponentConfig, type ComponentShape, type ComponentSource } from './component-shape.ts'
 import { classifyGroups, type GroupClassification } from './class-groups.ts'
 import { loadEvidence, type Evidence } from './measurement.ts'
 import { documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
+import { declaresJoinItem, documentedJoinItemCompanions, isJoinItemComponent, joinScopeMembers, withJoinScope } from './join-scope.ts'
 
 /** Why a component produces no output. Reported rather than swallowed, so a caller can log it. */
 export type SkipReason = 'configured-skip' | 'no-frontmatter' | 'no-component-class'
@@ -106,6 +107,32 @@ function classify(
   }
 }
 
+/**
+ * The join component, given the scope its content lambda runs in.
+ *
+ * Here rather than in `buildComponentShape` because the scope's members are OTHER components'
+ * functions: a builder that sees one component at a time cannot assemble it. And here rather
+ * than in one emitter, because all three read this set — a scope attached in the Kotlin run
+ * alone would leave the reference page and the API baseline describing a different signature.
+ */
+function withScopes(
+  generated: readonly GeneratedComponent[],
+  componentDirs: readonly ComponentName[],
+  config,
+): GeneratedComponent[] {
+  const companions = documentedJoinItemCompanions(componentDirs)
+  const members = joinScopeMembers(generated.map(component => component.shape), companions)
+  const imports = generated
+    .filter(component => isJoinItemComponent(component.shape, companions))
+    .flatMap(component => readComponentConfig(config, component.shape.componentName).extras)
+    .flatMap(extra => extra.imports ?? [])
+  return generated.map(component =>
+    declaresJoinItem(component.frontmatter)
+      ? { ...component, shape: withJoinScope(component.shape, members, imports) }
+      : component,
+  )
+}
+
 /** Every component that produces output, and every one that does not, with the reason. */
 export function readComponentSet(config): ComponentSet {
   const elementRules = parseLlmsTxt()
@@ -115,11 +142,12 @@ export function readComponentSet(config): ComponentSet {
   const generated: GeneratedComponent[] = []
   const skipped: SkippedComponent[] = []
 
-  for (const componentDir of getAllComponentDirs() as ComponentName[]) {
+  const componentDirs = getAllComponentDirs() as ComponentName[]
+  for (const componentDir of componentDirs) {
     const result = classify(componentDir, config, elementRules, evidence)
     if (typeof result === 'string') skipped.push({ componentDir, reason: result })
     else generated.push(result)
   }
 
-  return { generated, skipped }
+  return { generated: withScopes(generated, componentDirs, config), skipped }
 }

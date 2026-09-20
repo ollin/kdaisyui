@@ -1,8 +1,10 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { classesJoinedWith, joinScopeMembers } from '../src/join-scope.ts'
-import type { ComponentShape, FunctionShape } from '../src/component-shape.ts'
+import { classesJoinedWith, joinScopeMembers, withJoinScope } from '../src/join-scope.ts'
+import { allBooleans, buildComponentShape } from '../src/component-shape.ts'
+import type { ComponentShape, FunctionShape, ParameterShape } from '../src/component-shape.ts'
+import type { ClassifiedComponent } from '../src/classifier.ts'
 
 /** A component shape reduced to what the scope reads: its class, and the functions it has. */
 function shape(prefix: string, functions: readonly Partial<FunctionShape>[]): ComponentShape {
@@ -14,6 +16,30 @@ function shape(prefix: string, functions: readonly Partial<FunctionShape>[]): Co
     functions: functions.map(fn => ({ kind: 'main', name: `daisy${prefix}`, ...fn })),
   } as ComponentShape
 }
+
+/** The join component as the generator builds it, before the scope is attached. */
+function joinShape(): ComponentShape {
+  const join = {
+    componentName: 'Join',
+    componentClass: 'Join',
+    desc: '',
+    prefix: 'join',
+    colors: [],
+    styles: [],
+    sizes: [],
+    modifiers: [],
+    behaviors: [],
+    parts: [],
+    directions: [],
+    placements: [],
+    defaultSize: null,
+    descs: {},
+  } as ClassifiedComponent
+  return buildComponentShape(join, { componentDir: 'join', element: 'DIV' }, {}, allBooleans(join))
+}
+
+const parameterNamed = (shape: ComponentShape, name: string): ParameterShape | undefined =>
+  shape.functions[0].parameters.find(parameter => parameter.name === name)
 
 describe('classesJoinedWith', () => {
   test('collects a class that shares an element with join-item', () => {
@@ -110,5 +136,50 @@ describe('joinScopeMembers', () => {
     const members = joinScopeMembers([shape('btn', [{ name: 'daisyButton' }])], new Set(['btn', 'mask']))
 
     assert.deepEqual(members.map(member => member.name), ['daisyButton'])
+  })
+})
+
+describe('withJoinScope', () => {
+  const member = (name: string): FunctionShape =>
+    ({ kind: 'main', name, element: 'BUTTON', parameters: [] }) as unknown as FunctionShape
+
+  test("the content lambda's receiver becomes the scope", () => {
+    const joined = withJoinScope(joinShape(), [member('daisyButton')])
+
+    assert.equal(parameterNamed(joined, 'content')?.type, '(JoinScope.() -> Unit)')
+  })
+
+  test('the element keeps its own escape hatch, because the scope IS that element', () => {
+    // JoinScope extends DIV, so `attrs` still reaches a DIV and every kotlinx.html builder
+    // still works inside the lambda. Only the RECEIVER of `content` changes.
+    const joined = withJoinScope(joinShape(), [member('daisyButton')])
+
+    assert.equal(parameterNamed(joined, 'attrs')?.type, '(DIV.() -> Unit)?')
+  })
+
+  test('the main function says which scope its body must open', () => {
+    const joined = withJoinScope(joinShape(), [member('daisyButton')])
+
+    assert.equal(joined.functions[0].contentScope, 'JoinScope')
+  })
+
+  test('the scope carries its members and the class each of them adds', () => {
+    const joined = withJoinScope(joinShape(), [member('daisyButton'), member('daisySelect')])
+
+    assert.equal(joined.scope?.name, 'JoinScope')
+    assert.equal(joined.scope?.markerClass, 'join-item')
+    assert.deepEqual(joined.scope?.members.map(fn => fn.name), ['daisyButton', 'daisySelect'])
+  })
+
+  test('nothing else about the component moves', () => {
+    const before = joinShape()
+    const after = withJoinScope(before, [member('daisyButton')])
+
+    assert.equal(after.functions.length, before.functions.length)
+    assert.deepEqual(after.enums, before.enums)
+    assert.deepEqual(
+      after.functions[0].parameters.map(parameter => parameter.name),
+      before.functions[0].parameters.map(parameter => parameter.name),
+    )
   })
 })

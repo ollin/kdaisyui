@@ -9,15 +9,18 @@
  * shape with exactly one consumer.
  */
 
+import { toCamelCase } from './classifier.ts'
 import {
   readComponentConfig,
   staticAttributeDoc,
   type ComponentConfig,
   type ComponentShape,
+  type CssClass,
   type EnumShape,
   type ExtraParameter,
   type FunctionShape,
   type ParameterShape,
+  type ScopeShape,
   type StaticAttribute,
 } from './component-shape.ts'
 
@@ -90,9 +93,91 @@ function renderKdoc(shape: FunctionShape): string {
   return `/**\n * ${lines.join('\n * ')}\n */\n`
 }
 
+/**
+ * How the body opens its element.
+ *
+ * Normally the kotlinx.html builder. A function whose `content` runs in a generated scope
+ * constructs that scope instead and `visit`s it — which is what `div { }` itself expands to,
+ * with the scope class in place of `DIV`. The tag is the scope, rather than the scope wrapping
+ * a tag, because `.join` writes its corner-radius variables onto DIRECT children: a wrapper
+ * would put an element between the two and the variables would not reach it.
+ */
+function tagOpening(shape: FunctionShape): string {
+  if (shape.contentScope === undefined) return `${shape.tagBuilder} {`
+  return `${shape.contentScope}(emptyMap(), consumer).visit {`
+}
+
 function renderFunction(shape: FunctionShape, body: string): string {
   const params = shape.parameters.map(renderParameter).join('\n')
-  return `${renderKdoc(shape)}fun ${shape.receiver}.${shape.name}(\n${params}\n) {\n    ${shape.tagBuilder} {\n${body}\n    }\n}`
+  return `${renderKdoc(shape)}fun ${shape.receiver}.${shape.name}(\n${params}\n) {\n    ${tagOpening(shape)}\n${body}\n    }\n}`
+}
+
+/** `join-item` -> `joinItem`, the private helper a member calls to prepend the marker. */
+function markerFunctionName(markerClass: string): string {
+  return toCamelCase(markerClass)
+}
+
+/**
+ * One member: the same signature as the top-level function, delegating to it with the marker
+ * class added.
+ *
+ * The delegation goes through `flow`, whose declared type is `FlowContent`. Calling
+ * `daisyButton(...)` unqualified here would resolve to this very member and recurse — a member
+ * beats an extension, which is the same rule that makes the scope work at all. An explicit
+ * receiver typed as the extension's own receiver is what reaches past it.
+ *
+ * Arguments are named rather than positional: the two parameter lists are generated from one
+ * shape and cannot disagree about order, but a reader cannot see that, and a named argument
+ * costs nothing.
+ */
+function renderScopeMember(shape: FunctionShape, markerClass: CssClass): string {
+  const params = shape.parameters.map(parameter => `    ${renderParameter(parameter)}`).join('\n')
+  const marker = markerFunctionName(markerClass)
+  const args = shape.parameters
+    .map(parameter =>
+      parameter.name === 'extraClasses'
+        ? `            extraClasses = ${marker}(extraClasses),`
+        : `            ${parameter.name} = ${parameter.name},`,
+    )
+    .join('\n')
+  return (
+    `    /** [${shape.name}], marked \`${markerClass}\` because the call sits directly in the join. */\n` +
+    `    fun ${shape.name}(\n${params}\n    ) {\n` +
+    `        ${shape.name.replace(/^daisy/, 'flow.daisy')}(\n${args}\n        )\n` +
+    `    }`
+  )
+}
+
+/**
+ * The scope class: the component's own element, plus one member per join item.
+ *
+ * `internal constructor`, so the only way to obtain one is to be inside the lambda. That is
+ * what makes the marker class unwritable elsewhere — it is not merely undocumented outside a
+ * join, it does not exist there.
+ */
+function renderScope(scope: ScopeShape, element: string): string {
+  const marker = markerFunctionName(scope.markerClass)
+  const members = scope.members.map(member => renderScopeMember(member, scope.markerClass)).join('\n\n')
+  return (
+    `/**\n` +
+    ` * The content of a join. Extends [${element}], so every kotlinx.html builder still works here.\n` +
+    ` *\n` +
+    ` * A component call written DIRECTLY in this lambda resolves to the member below and emits\n` +
+    ` * \`${scope.markerClass}\`; the same call nested inside another builder does not, because\n` +
+    ` * kotlinx.html's \`@HtmlTagMarker\` hides this receiver there. Write \`this@daisyJoin.\` to reach\n` +
+    ` * a member from a nested lambda deliberately.\n` +
+    ` */\n` +
+    `class ${scope.name} internal constructor(\n` +
+    `    initialAttributes: Map<String, String>,\n` +
+    `    consumer: TagConsumer<*>,\n` +
+    `) : ${element}(initialAttributes, consumer) {\n\n` +
+    `    /** This element as plain flow content, so a member below reaches the top-level function. */\n` +
+    `    private val flow: FlowContent get() = this\n\n` +
+    `${members}\n}\n\n` +
+    `/** \`${scope.markerClass}\`, ahead of whatever the caller wrote. */\n` +
+    `private fun ${marker}(extraClasses: String?): String =\n` +
+    `    if (extraClasses == null) "${scope.markerClass}" else "${scope.markerClass} $extraClasses"\n`
+  )
 }
 
 /** Renders static attributes as kotlinx.html body lines, indented for a tag block. */
@@ -205,27 +290,50 @@ function renderBody(
     : secondaryFunctionBody(fn)
 }
 
+/** What one function's own signature and body name: its element, its builder, its receiver. */
+function functionImports(fn: FunctionShape): string[] {
+  return [
+    `kotlinx.html.${fn.element}`,
+    // A scoped function constructs its tag rather than calling the builder, so importing the
+    // builder would leave the generated file with an import nothing uses.
+    ...(fn.contentScope === undefined ? [`kotlinx.html.${fn.tagBuilder}`] : []),
+    ...(fn.receiver !== 'FlowContent' ? [`kotlinx.html.${fn.receiver}`] : []),
+  ]
+}
+
+/**
+ * What a scope needs: the two pieces `div { }` uses internally to construct and visit a tag,
+ * each member's element, and whatever the members' mirrored parameter lists name.
+ */
+function scopeImports(scope: ScopeShape): string[] {
+  return [
+    'kotlinx.html.TagConsumer',
+    'kotlinx.html.visit',
+    ...scope.members.map(member => `kotlinx.html.${member.element}`),
+    ...scope.imports,
+  ]
+}
+
+/** What the per-component config asks the body to call. */
+function configImports(componentConfig: ComponentConfig): string[] {
+  return [
+    ...(componentConfig.role ? ['kotlinx.html.role'] : []),
+    ...(componentConfig.inputType ? ['kotlinx.html.InputType'] : []),
+    ...componentConfig.extras.flatMap(extra => extra.imports ?? []),
+  ]
+}
+
 function collectImports(shape: ComponentShape, componentConfig: ComponentConfig): string[] {
   const imports = new Set([
     'io.github.ollin.kdaisyui.core.HtmlId',
     'io.github.ollin.kdaisyui.core.addClassNames',
     'kotlinx.html.FlowContent',
+    // Every generated enum implements it, and every enum parameter is typed by it.
+    ...(shape.enums.length > 0 ? ['io.github.ollin.kdaisyui.core.ClassValues'] : []),
+    ...shape.functions.flatMap(functionImports),
+    ...(shape.scope === undefined ? [] : scopeImports(shape.scope)),
+    ...configImports(componentConfig),
   ])
-
-  // Every generated enum implements it, and every enum parameter is typed by it.
-  if (shape.enums.length > 0) imports.add('io.github.ollin.kdaisyui.core.ClassValues')
-
-  for (const fn of shape.functions) {
-    imports.add(`kotlinx.html.${fn.element}`)
-    imports.add(`kotlinx.html.${fn.tagBuilder}`)
-    if (fn.receiver !== 'FlowContent') imports.add(`kotlinx.html.${fn.receiver}`)
-  }
-
-  if (componentConfig.role) imports.add('kotlinx.html.role')
-  if (componentConfig.inputType) imports.add('kotlinx.html.InputType')
-  for (const extra of componentConfig.extras) {
-    for (const imported of extra.imports ?? []) imports.add(imported)
-  }
 
   // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
   // ahead of kotlin/kotlinx, so no special-casing is needed to group it first.
@@ -261,7 +369,8 @@ export function generateKotlinFile(shape: ComponentShape, config) {
   const functions = shape.functions.map(fn =>
     renderFunction(fn, renderBody(fn, shape.prefix ?? '', componentConfig)),
   )
-  const body = [enums, ...functions].filter(Boolean).join('\n\n')
+  const scope = shape.scope === undefined ? '' : renderScope(shape.scope, shape.functions[0].element)
+  const body = [enums, ...functions, scope].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`
 }

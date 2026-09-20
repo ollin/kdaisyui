@@ -8,6 +8,7 @@
     "github": { "enabled": true },
     "daisyui-blueprint": { "enabled": true },
     "playwright": { "enabled": true },
+    "chrome-devtools": { "enabled": true },
     "dacli": { "enabled": true }
   },
   "tools": {

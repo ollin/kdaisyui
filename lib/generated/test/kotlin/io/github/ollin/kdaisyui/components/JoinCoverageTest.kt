@@ -69,4 +69,74 @@ class JoinCoverageTest {
         }
         assertRendered(html, "join join-horizontal", "Join direction Horizontal")
     }
+
+    @Test
+    fun scope_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin {
+                daisyButton()
+            }
+        }
+        assertTrue(html.contains("join-item"), "daisyButton in a daisyJoin")
+    }
+
+    @Test
+    fun scope_daisyCard() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin {
+                daisyCard(content = { })
+            }
+        }
+        assertTrue(html.contains("join-item"), "daisyCard in a daisyJoin")
+    }
+
+    @Test
+    fun scope_daisyCollapse() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin {
+                daisyCollapse(content = { })
+            }
+        }
+        assertTrue(html.contains("join-item"), "daisyCollapse in a daisyJoin")
+    }
+
+    @Test
+    fun scope_daisyInput() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin {
+                daisyInput()
+            }
+        }
+        assertTrue(html.contains("join-item"), "daisyInput in a daisyJoin")
+    }
+
+    @Test
+    fun scope_daisySelect() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin {
+                daisySelect(content = { })
+            }
+        }
+        assertTrue(html.contains("join-item"), "daisySelect in a daisyJoin")
+    }
+
+    @Test
+    fun scope_daisyThemeController() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin {
+                daisyThemeController()
+            }
+        }
+        assertTrue(html.contains("join-item"), "daisyThemeController in a daisyJoin")
+    }
+
+    @Test
+    fun scope_daisyValidator() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoin {
+                daisyValidator()
+            }
+        }
+        assertTrue(html.contains("join-item"), "daisyValidator in a daisyJoin")
+    }
 }

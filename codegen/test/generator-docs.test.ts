@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 
 import { docFileNameFor, generateComponentPage, generateIndexPage } from '../src/generator-docs.ts'
 import { buildComponentShape } from '../src/component-shape.ts'
+import { withJoinScope } from '../src/join-scope.ts'
 import type { ClassifiedComponent } from '../src/classifier.ts'
 
 /**
@@ -275,5 +276,56 @@ describe('generateIndexPage', () => {
     const result = generateIndexPage([shape('Card', 'card', 'DIV')], {})
 
     assert.match(result, /^<!--\nGENERATED — DO NOT EDIT\n/)
+  })
+})
+
+describe('a component whose content runs in a scope', () => {
+  const page = () => {
+    const join = classified({ componentName: 'Join', componentClass: 'Join', prefix: 'join', desc: '' })
+    const button = classified({ componentName: 'Button', componentClass: 'Button', prefix: 'btn', desc: '' })
+    const members = buildComponentShape(button, { componentDir: 'button', element: 'BUTTON' }, {}).functions
+    return generateComponentPage(
+      withJoinScope(buildComponentShape(join, { componentDir: 'join', element: 'DIV' }, {}), members),
+      undefined,
+    )
+  }
+
+  test('shows the call that is marked', () => {
+    assert.match(page(), /^ {4}daisyButton\(\) {2,}\/\/ marked `join-item`$/m)
+  })
+
+  test('shows the nested call that is NOT marked, which is the surprising one', () => {
+    assert.match(page(), /^ {8}daisyButton\(\) {2,}\/\/ NOT marked/m)
+  })
+
+  test('shows how to mark a nested call deliberately', () => {
+    assert.match(page(), /this@daisyJoin\.daisyButton\(\)/)
+  })
+
+  test('names every member, so the page says which calls this applies to', () => {
+    assert.match(page(), /`daisyButton`/)
+  })
+
+  test('says why there is no parameter for it, naming both classes', () => {
+    assert.match(page(), /`\.join` writes four corner-radius/)
+    assert.match(page(), /`\.join-item` reads them/)
+    assert.match(page(), /outside a\n`\.join` the class strips the element's own corners/)
+  })
+
+  test('interpolates every placeholder', () => {
+    // A single-quoted line among template literals shipped a literal `${shape.prefix}` onto
+    // the page. Nothing else would have caught it: the surrounding assertions matched the
+    // prose on either side of it.
+    assert.ok(!page().includes('${'))
+  })
+
+  test('a component without a scope grows no such section', () => {
+    const plain = generateComponentPage(
+      buildComponentShape(classified(), { componentDir: 'card', element: 'DIV' }, {}),
+      undefined,
+    )
+
+    assert.ok(!plain.includes('join-item'))
+    assert.ok(!plain.includes('## Join items'))
   })
 })

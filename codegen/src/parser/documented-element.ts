@@ -91,11 +91,22 @@ export function usualElementOf(tally: ReadonlyMap<string, number> | undefined): 
   return ranked[0][0]
 }
 
+/**
+ * Every fenced ```html block of one component's page; empty when the page does not exist.
+ *
+ * The one place that knows where a component's documented markup lives. The readers below
+ * each carried their own copy of this, and a caller wanting the markup for something other
+ * than an element tally had no way to ask for it without adding a fourth.
+ */
+export function fencedHtmlFor(componentName: ComponentName): string {
+  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  if (!fs.existsSync(file)) return ''
+  return fencedHtmlBlocks(fs.readFileSync(file, 'utf8'))
+}
+
 /** `documentedElementTalliesIn` for one component's page; empty when the page does not exist. */
 export function documentedElementTalliesFor(componentName: ComponentName): ReadonlyMap<string, ReadonlyMap<string, number>> {
-  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(file)) return new Map()
-  return documentedElementTalliesIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
+  return documentedElementTalliesIn(fencedHtmlFor(componentName))
 }
 
 /**
@@ -131,16 +142,12 @@ export function documentedParentsIn(html: string): ReadonlyMap<string, string> {
 
 /** `documentedParentsIn` for one component's page; empty when the page does not exist. */
 export function documentedParentsFor(componentName: ComponentName): ReadonlyMap<string, string> {
-  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(file)) return new Map()
-  return documentedParentsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
+  return documentedParentsIn(fencedHtmlFor(componentName))
 }
 
 /** `documentedElementSetsIn` for one component's page; empty when the page does not exist. */
 export function documentedElementSetsFor(componentName: ComponentName): ReadonlyMap<string, ReadonlySet<string>> {
-  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(file)) return new Map()
-  return documentedElementSetsIn(fencedHtmlBlocks(fs.readFileSync(file, 'utf8')))
+  return documentedElementSetsIn(fencedHtmlFor(componentName))
 }
 
 

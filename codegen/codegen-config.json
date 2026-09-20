@@ -57,7 +57,7 @@
       "issue": 356
     },
     "dock/dock-active": {
-      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <button>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <button> the library generates no function for, so a caller cannot reach it. NOT the join-item shape: measured 2026-09-19 at v5.7.17, all 7 sightings sit on a bare <button> with no daisyUI class beside it, where join-item's 72 sightings all carry a component class. A scope member needs a function to overload and there is none.",
       "issue": 347
     },
     "dropdown/dropdown-close": {
@@ -93,23 +93,23 @@
       "issue": 357
     },
     "list/list-col-wrap": {
-      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <p>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <p> the library generates no function for, so a caller cannot reach it. NOT the join-item shape: measured 2026-09-19 at v5.7.17, all 3 sightings sit on a bare <p> inside a <li class=\"list-row\">, and List.kt generates one function. A scope member needs a function to overload and there is none.",
       "issue": 347
     },
     "list/list-col-grow": {
-      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <div>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <div> the library generates no function for, so a caller cannot reach it. NOT the join-item shape: measured 2026-09-19 at v5.7.17, all 3 sightings sit on a bare <div> inside a <li class=\"list-row\">, and List.kt generates one function. A scope member needs a function to overload and there is none.",
       "issue": 347
     },
     "menu/menu-active": {
-      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <a>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child the library generates no function for. Worse than the other five and measured 2026-09-19 at v5.7.17: this class has NO element by design. DaisyUI's own desc reads 'For the element inside <li> to look active', and the page shows it on a <button> in the rendered preview and on an <a> in the $$-marked example below, so the cross-check sees one <a>. A cross-check that assumes one class has one element cannot be right about it.",
       "issue": 347
     },
     "menu/menu-disabled": {
-      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <li>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <li> the library generates no function for, so a caller cannot reach it. NOT the join-item shape: measured 2026-09-19 at v5.7.17, both sightings sit on a bare <li> with no daisyUI class beside it. A scope member needs a function to overload and there is none.",
       "issue": 347
     },
     "rating/rating-hidden": {
-      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <input>, where a caller cannot reach it. Block 2 of a-class-belongs-to-the-element-that-wears-it.",
+      "reason": "Declared on the container's function (<div>) while DaisyUI puts it on a child <input> the library generates no function for, so a caller cannot reach it. NOT the join-item shape: measured 2026-09-19 at v5.7.17, both sightings sit on a bare <input> — the SIBLING inputs carry $$mask, this one carries nothing — and Rating.kt generates one function. A scope member needs a function to overload and there is none.",
       "issue": 347
     }
   },

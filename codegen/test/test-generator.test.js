@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { parseTestCases, buildClassMappings } from '../src/test-generator.ts'
+import { parseTestCases, buildClassMappings, parseScopeBuilder, parseScopeMembers } from '../src/test-generator.ts'
 
 // Characterization tests: they pin what `parseTestCases` does TODAY, so section 2 can
 // restructure it and know immediately whether anything moved. They were green on the
@@ -148,4 +148,83 @@ describe('buildClassMappings', () => {
     assert.deepEqual([...allowedClasses].sort(), ['btn', 'btn-ghost'])
   })
 
+})
+
+describe('the builder a scoped function opens', () => {
+  // A component whose `content` runs in a generated scope does not call a kotlinx.html
+  // builder — it constructs the scope and visits it. The builder parser saw no builder and
+  // returned null, and the `closes` assertion silently vanished from the generated coverage
+  // test. A generated assertion that disappears is exactly the failure the mutation gate
+  // exists to catch, and here it disappeared from the generator itself.
+  const scopeBody = '        JoinScope(emptyMap(), consumer).visit {\n            addClassNames("join")'
+  const file = [
+    'class JoinScope internal constructor(',
+    '    initialAttributes: Map<String, String>,',
+    '    consumer: TagConsumer<*>,',
+    ') : DIV(initialAttributes, consumer) {',
+  ].join('\n')
+
+  test('resolves to the element the scope extends', () => {
+    assert.equal(parseScopeBuilder(scopeBody, file), 'div')
+  })
+
+  test('is absent for an ordinary body, which parseEmittedBuilder already answers', () => {
+    assert.equal(parseScopeBuilder('        div {', file), null)
+  })
+
+  test('is absent when the file declares no such scope', () => {
+    assert.equal(parseScopeBuilder(scopeBody, 'class Something else'), null)
+  })
+})
+
+describe('the scope members a coverage test must reach', () => {
+  // Every member is a generated function with its own parameter defaults, so the aggregated
+  // 100% line gate counts them. Hand-listing them in a test would be a second copy of a
+  // DERIVED list — the thing deriving the set was meant to avoid — so the coverage tests are
+  // generated from the same file the members are.
+  const file = [
+    'fun FlowContent.daisyJoin(',
+    '    content: (JoinScope.() -> Unit),',
+    ') {',
+    '    JoinScope(emptyMap(), consumer).visit {',
+    '    }',
+    '}',
+    '',
+    'class JoinScope internal constructor(',
+    '    initialAttributes: Map<String, String>,',
+    '    consumer: TagConsumer<*>,',
+    ') : DIV(initialAttributes, consumer) {',
+    '',
+    '    fun daisyButton(',
+    '        text: String? = null,',
+    '        content: (BUTTON.() -> Unit)? = null,',
+    '    ) {',
+    '    }',
+    '',
+    '    fun daisyCard(',
+    '        id: HtmlId? = null,',
+    '        content: (DIV.() -> Unit),',
+    '    ) {',
+    '    }',
+    '}',
+  ].join('\n')
+
+  test('finds every member', () => {
+    assert.deepEqual(parseScopeMembers(file).map((m) => m.name), ['daisyButton', 'daisyCard'])
+  })
+
+  test('knows which member must be given a content lambda', () => {
+    const [button, card] = parseScopeMembers(file)
+
+    assert.equal(button.requiresContent, false)
+    assert.equal(card.requiresContent, true)
+  })
+
+  test('names the function whose lambda the members live in', () => {
+    assert.equal(parseScopeMembers(file)[0].opener, 'daisyJoin')
+  })
+
+  test('finds nothing in a file with no scope', () => {
+    assert.deepEqual(parseScopeMembers('fun FlowContent.daisyCard(\n) {\n    div {\n    }\n}'), [])
+  })
 })

@@ -351,6 +351,53 @@ daisyModalToggle { }
 daisyModalToggle()
 ```
 
+**11. `daisyJoin`'s `content` lambda receives a `JoinScope`, not a `DIV`.** Inside it, a
+component call DaisyUI documents as a join item marks itself:
+
+```kotlin
+// before — join-item was unreachable except as a raw string
+daisyJoin {
+    daisyButton("One", extraClasses = "join-item")
+}
+
+// after — the call is the marking
+daisyJoin {
+    daisyButton("One")
+}
+```
+
+**Most call sites need no change at all.** `JoinScope` extends the `<div>` the join already
+rendered, so every kotlinx.html builder still opens, `attrs` still receives a `DIV`, and
+`this` is still a `DIV` wherever one is wanted. What stops compiling is naming the old type:
+a lambda stored in a `DIV.() -> Unit` variable, or a helper declared to take one, has to be
+retyped to `JoinScope.() -> Unit`.
+
+An existing `extraClasses = "join-item"` is now redundant but harmless — classes are collected
+into a set, so it renders once, not twice.
+
+Two behaviours are worth knowing before you rely on them, both of which follow DaisyUI's own
+markup rather than being choices:
+
+```kotlin
+daisyJoin {
+    daisyButton("One")                       // marked
+    div {
+        daisyButton("Two")                   // NOT marked — the scope is hidden here
+        this@daisyJoin.daisyButton("Three")  // marked, named deliberately
+    }
+}
+```
+
+A nested call is not marked because kotlinx.html's `@HtmlTagMarker` is a `@DslMarker`, and
+that matches what DaisyUI documents: of 72 direct children of a `.join`, the three that do not
+carry `join-item` are wrappers whose own child carries it.
+
+There is no parameter for this and there will not be one. `.join` writes four corner-radius
+variables onto its direct children and `.join-item` reads them, so outside a join the class
+strips the element's own corners rather than doing nothing — a parameter would be writable
+exactly where it does harm. The seven components with a member are derived from DaisyUI's
+markup, so a release that documents a new one adds it without a config edit.
+
 ### What deliberately did NOT change
 
 `daisyBadge` still renders `<span>`, although every one of its variant classes is documented on a

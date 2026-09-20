@@ -53,6 +53,12 @@
       "pinDigests": false
     },
     {
+      "description": "`.tool-versions` is read by asdf, which installs Node through node-build — and node-build adds a definition DAYS after nodejs.org publishes a release. Renovate resolves Node from nodejs.org and knows nothing about node-build, so it offers versions asdf cannot install: 26.9.0 was published 2026-09-16, raised and automerged here on 2026-09-19, and four days later `asdf install nodejs 26.9.0` still fails with `definition not found`. Until it lands, no local checkout can install the pinned Node, so `just generate` and every other Node task dies with `No version is set for command node`. CI is unaffected — actions/setup-node resolves from nodejs.org too. Hence both settings: wait for node-build to catch up, and never automerge the one file that decides whether local Node works at all. The 7 days is a guess, not a measurement; the honest number needs the nodejs.org-to-node-build lag measured over a run of releases. See #364.",
+      "matchManagers": ["asdf"],
+      "minimumReleaseAge": "7 days",
+      "automerge": false
+    },
+    {
       "description": "A DaisyUI bump moves the submodule tag and regenerates every component, so it always needs a human on the generated diff — never automerge. No version cap: the 5.5.22 ceiling came from codegen/src/parser/llms-txt.js requiring a static llms.txt that DaisyUI deleted in 5.5.23, and the parser now falls back to daisyui/skills/daisyui/components/. Renovate resolves this through the webjar coordinate in gradle/libs.versions.toml, so it only ever offers a version whose CSS artifact actually exists.",
       "matchDepNames": ["org.webjars.npm:daisyui"],
       "automerge": false

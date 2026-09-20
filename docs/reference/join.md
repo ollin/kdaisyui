@@ -17,6 +17,6 @@ fun FlowContent.daisyJoin(
     direction: ClassValues<JoinDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    content: (JoinScope.() -> Unit),
 )
 ```

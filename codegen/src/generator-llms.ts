@@ -15,6 +15,16 @@ import { renderFunction } from './component-api-dump.ts'
 /** Where the template takes the component API. */
 const PLACEHOLDER = '{{COMPONENTS}}'
 
+/** Written by the generator rather than the template, so no template edit can drop it. */
+const HEADER = [
+  '<!--',
+  'GENERATED — DO NOT EDIT',
+  'Source: codegen/llms-template.md and the generated component API',
+  'Regenerate: just generate',
+  '-->',
+  '',
+].join('\n')
+
 export function generateLlmsTxt(
   template: string,
   shapes: readonly ComponentShape[],
@@ -22,7 +32,7 @@ export function generateLlmsTxt(
 ): string {
   if (!template.includes(PLACEHOLDER)) throw new Error(`llms template has no ${PLACEHOLDER} line`)
   const sections = shapes.map(shape => componentSection(shape, docSummaries[shape.componentDir]))
-  return template.replace(PLACEHOLDER, sections.join('\n'))
+  return HEADER + template.replace(PLACEHOLDER, sections.join('\n'))
 }
 
 function componentSection(shape: ComponentShape, docSummary: DocSummary | undefined): string {

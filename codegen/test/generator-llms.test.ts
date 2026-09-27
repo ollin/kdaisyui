@@ -36,6 +36,12 @@ describe('generateLlmsTxt', () => {
     assert.match(llms, /^### Kbd\n\nKeyboard key display — renders `<kbd>`\.\n\n```kotlin\n(.+\n)+```$/m)
   })
 
+  test('opens with a header saying the file is generated and from what', () => {
+    const llms = generateLlmsTxt('{{COMPONENTS}}', [KBD], {})
+
+    assert.match(llms, /^<!--\nGENERATED — DO NOT EDIT\nSource: codegen\/llms-template\.md and the generated component API\nRegenerate: just generate\n-->\n/)
+  })
+
   test('refuses a template that has lost its placeholder', () => {
     assert.throws(() => generateLlmsTxt('no placeholder here\n', [KBD], {}), /\{\{COMPONENTS\}\}/)
   })

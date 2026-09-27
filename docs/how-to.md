@@ -277,7 +277,7 @@ Use `"load"` for above-the-fold content, `"revealed"` for below-the-fold section
 Combine dropdown, indicator, badge, and avatar:
 
 ```kotlin
-daisyDropdown(end = true, extraClasses = "z-10") {
+daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.End, extraClasses = "z-10") {
     div {
         attributes["tabindex"] = "0"
         classes = setOf("btn", "btn-circle", "btn-ghost")

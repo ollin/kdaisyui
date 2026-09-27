@@ -376,8 +376,8 @@ public final class io/github/ollin/kdaisyui/components/DropdownHorizontalPlaceme
 }
 
 public final class io/github/ollin/kdaisyui/components/DropdownKt {
-	public static final fun daisyDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyDropdownContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDropdownContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }

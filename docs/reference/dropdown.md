@@ -20,13 +20,8 @@ fun FlowContent.daisyDropdown(
     horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null,
     verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null,
     close: Boolean = false,  // Force close
-    end: Boolean = false,
-    start: Boolean = false,
-    top: Boolean = false,
-    bottom: Boolean = false,
-    left: Boolean = false,
-    right: Boolean = false,
-    center: Boolean = false,
+    left: Boolean = false,  // Open from left
+    right: Boolean = false,  // Open from right
     extraClasses: String? = null,
     attrs: (DETAILS.() -> Unit)? = null,
     content: (DETAILS.() -> Unit),

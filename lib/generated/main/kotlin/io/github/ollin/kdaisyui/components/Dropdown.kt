@@ -56,13 +56,8 @@ enum class DropdownVerticalPlacement(internal val className: String) : ClassValu
  * @param horizontalPlacement — HorizontalPlacement variant
  * @param verticalPlacement — VerticalPlacement variant
  * @param close — Force close
- * @param end
- * @param start
- * @param top
- * @param bottom
- * @param left
- * @param right
- * @param center
+ * @param left — Open from left
+ * @param right — Open from right
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -73,13 +68,8 @@ fun FlowContent.daisyDropdown(
     horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null,
     verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null,
     close: Boolean = false,
-    end: Boolean = false,
-    start: Boolean = false,
-    top: Boolean = false,
-    bottom: Boolean = false,
     left: Boolean = false,
     right: Boolean = false,
-    center: Boolean = false,
     extraClasses: String? = null,
     attrs: (DETAILS.() -> Unit)? = null,
     content: (DETAILS.() -> Unit),
@@ -91,13 +81,8 @@ fun FlowContent.daisyDropdown(
         addClassNames(horizontalPlacement)
         addClassNames(verticalPlacement)
         if (close) addClassNames("dropdown-close")
-        if (end) addClassNames("dropdown-end")
-        if (start) addClassNames("dropdown-start")
-        if (top) addClassNames("dropdown-top")
-        if (bottom) addClassNames("dropdown-bottom")
         if (left) addClassNames("dropdown-left")
         if (right) addClassNames("dropdown-right")
-        if (center) addClassNames("dropdown-center")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

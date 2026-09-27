@@ -18,8 +18,17 @@ export interface OfferedTwice {
 }
 
 export function classesOfferedTwice(
-  _shape: ComponentShape,
-  _extras: readonly ExtraParameter[],
+  shape: ComponentShape,
+  extras: readonly ExtraParameter[],
 ): OfferedTwice[] {
-  return []
+  const main = shape.functions.find(fn => fn.kind === 'main')
+  const enumOf = new Map(shape.enums.flatMap(e => e.entries.map(entry => [entry.cssClass as string, e.name])))
+  return extras.flatMap(extra => classesWrittenBy(extra)
+    .filter(cls => enumOf.has(cls))
+    .map(cls => ({ functionName: main.name, booleanName: extra.name, enumName: enumOf.get(cls), cssClass: cls })))
+}
+
+/** The class literals an `extras` fragment passes to `addClassNames`. */
+function classesWrittenBy(extra: ExtraParameter): string[] {
+  return [...extra.apply.matchAll(/addClassNames\("([^"]+)"\)/g)].map(match => match[1])
 }

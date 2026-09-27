@@ -18,6 +18,8 @@ import {
   findUnreadEntries,
   type ConsumedKeys,
 } from './config-consumption.ts'
+import { readComponentConfig } from './component-shape.ts'
+import { classesOfferedTwice, type OfferedTwice } from './offered-twice.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -99,6 +101,17 @@ function reportUnreadConfig(config, consumed: ConsumedKeys): void {
   process.exitCode = 1
 }
 
+/**
+ * Fails the run on any class a generated function offers both as a boolean and as an enum
+ * constant. Runs after generation, like the two checks above, so the offending Kotlin is on disk.
+ */
+function reportOfferedTwice(offered: readonly OfferedTwice[]): void {
+  if (offered.length === 0) return
+  const lines = offered.map(o => `  ${o.functionName}: boolean \`${o.booleanName}\` writes ${o.cssClass}, already ${o.enumName}`)
+  console.error(`\nA class is offered twice — as a boolean and as an enum constant:\n${lines.join('\n')}`)
+  process.exitCode = 1
+}
+
 /** What each skip reason reads as on the console, so the run says why a component is absent. */
 const SKIP_MESSAGES: Readonly<Record<SkipReason, string>> = {
   'configured-skip': 'Skipped (alias)',
@@ -125,6 +138,7 @@ function main() {
 
   const allClasses = []
   const observations: ElementObservation[] = []
+  const offeredTwice: OfferedTwice[] = []
   // Every identifier a config lookup could legitimately have matched this run. A section key
   // that matches none of these was never read, and an unread key is indistinguishable from an
   // absent one at run time — which is how two dead `noContent` entries survived.
@@ -160,6 +174,7 @@ function main() {
       shape,
       new Map([...documentedSets].map(([cls, elements]) => [cls, DocumentedElements.of(elements)])),
     ))
+    offeredTwice.push(...classesOfferedTwice(shape, readComponentConfig(config, classified.componentName).extras))
 
     const kotlin = generateKotlinFile(shape, config)
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
@@ -180,6 +195,7 @@ function main() {
 
   reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {}, consumed)
   reportUnreadConfig(config, consumed.keys())
+  reportOfferedTwice(offeredTwice)
 }
 
 main()

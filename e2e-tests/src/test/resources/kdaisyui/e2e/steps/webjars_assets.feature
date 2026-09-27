@@ -1,10 +1,9 @@
 Feature: Static Assets
   The stylesheet the build compiles, and the webjars the application still uses
 
-  Scenario: DaisyUI CSS is served from webjars
-    Given the user navigates to the dashboard
-    Then the asset "/webjars/daisyui/daisyui.css" returns status 200 with content type containing "text/css"
-
+  # The DaisyUI-webjar scenario went for the same reason as the Tailwind one below: the page
+  # loads the compiled stylesheet, not DaisyUI's prebuilt one, and the webjar only ever arrived
+  # transitively from :ktor-integration - which stopped exporting it in 0.7.0.
   Scenario: htmx JS is served from webjars
     Given the user navigates to the dashboard
     Then the asset "/webjars/htmx.org/dist/htmx.min.js" returns status 200 with content type containing "javascript"

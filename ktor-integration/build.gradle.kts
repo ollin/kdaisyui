@@ -16,12 +16,14 @@ repositories {
 dependencies {
     api(project(":lib"))
 
-    api(libs.ktor.server.resources)
-
-    // DaisyUI CSS + Tailwind + htmx assets, served via Ktor's Webjars plugin.
-    // Exposed transitively so Ktor consumers get the matching asset versions.
-    api(libs.ktor.server.webjars)
-    api(libs.bundles.webjars)
+    // compileOnly: the consumer owns its Ktor version. As `api` this published a hard
+    // requirement that Gradle's conflict resolution let win over the consumer's own - and the
+    // public inline functions inline Ktor's `href` into the caller, so the caller needs
+    // ktor-server-resources on its compile classpath regardless. A missing one fails there.
+    //
+    // No webjars: nothing here serves or references an asset. Exporting htmx, Tailwind and
+    // DaisyUI upgraded a consumer pinned to htmx 2.x to 4.x without a compile error.
+    compileOnly(libs.ktor.server.resources)
 }
 
 testing {

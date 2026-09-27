@@ -73,11 +73,6 @@ ktor-server-app = [
     "ktor-server-status-pages",
     "ktor-server-resources",
 ]
-webjars = [
-    "webjar-daisyui",
-    "webjar-tailwindcss-browser",
-    "webjar-htmx",
-]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

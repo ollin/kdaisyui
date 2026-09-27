@@ -6,12 +6,8 @@ import io.kotest.matchers.string.shouldContain
 class WebjarsAssetsTest : PlaywrightSpec() {
 
     init {
-        test("DaisyUI CSS is served from webjars") {
-            val response = page.request().get("$BASE_URL/webjars/daisyui/daisyui.css")
-            response.status() shouldBe 200
-            response.headers()["content-type"]!! shouldContain "text/css"
-        }
-
+        // No DaisyUI-webjar test, for the reason given on the stylesheet test below: nothing
+        // loads it, and it arrived only transitively from :ktor-integration until 0.7.0.
         test("htmx JS is served from webjars") {
             val response = page.request().get("$BASE_URL/webjars/htmx.org/dist/htmx.min.js")
             response.status() shouldBe 200

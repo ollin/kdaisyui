@@ -23,9 +23,14 @@ export function classesOfferedTwice(
 ): OfferedTwice[] {
   const main = shape.functions.find(fn => fn.kind === 'main')
   const enumOf = new Map(shape.enums.flatMap(e => e.entries.map(entry => [entry.cssClass as string, e.name])))
-  return extras.flatMap(extra => classesWrittenBy(extra)
-    .filter(cls => enumOf.has(cls))
-    .map(cls => ({ functionName: main.name, booleanName: extra.name, enumName: enumOf.get(cls), cssClass: cls })))
+  const classified = shape.functions.flatMap(fn => fn.parameters
+    .filter(parameter => parameter.cssClass !== undefined)
+    .map(parameter => ({ functionName: fn.name, booleanName: parameter.name, cssClass: parameter.cssClass as string })))
+  const hand = extras.flatMap(extra => classesWrittenBy(extra)
+    .map(cls => ({ functionName: main.name, booleanName: extra.name, cssClass: cls })))
+  return [...hand, ...classified]
+    .filter(boolean => enumOf.has(boolean.cssClass))
+    .map(boolean => ({ ...boolean, enumName: enumOf.get(boolean.cssClass) }))
 }
 
 /** The class literals an `extras` fragment passes to `addClassNames`. */

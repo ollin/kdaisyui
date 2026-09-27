@@ -46,4 +46,14 @@ describe('classesOfferedTwice', () => {
       { functionName: 'daisyDropdown', booleanName: 'end', enumName: 'DropdownHorizontalPlacement', cssClass: 'dropdown-end' },
     ])
   })
+
+  test('reports a classified boolean whose class its function offers as an enum constant', () => {
+    const start: ParameterShape = { name: 'start', type: 'Boolean', default: 'false', doc: null, cssClass: 'dropdown-start' }
+
+    const offered = classesOfferedTwice(dropdown([PLACEMENT_PARAMETER, start]), [])
+
+    assert.deepEqual(offered, [
+      { functionName: 'daisyDropdown', booleanName: 'start', enumName: 'DropdownHorizontalPlacement', cssClass: 'dropdown-start' },
+    ])
+  })
 })

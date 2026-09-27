@@ -35,4 +35,8 @@ describe('generateLlmsTxt', () => {
 
     assert.match(llms, /^### Kbd\n\nKeyboard key display — renders `<kbd>`\.\n\n```kotlin\n(.+\n)+```$/m)
   })
+
+  test('refuses a template that has lost its placeholder', () => {
+    assert.throws(() => generateLlmsTxt('no placeholder here\n', [KBD], {}), /\{\{COMPONENTS\}\}/)
+  })
 })

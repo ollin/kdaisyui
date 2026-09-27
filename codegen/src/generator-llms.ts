@@ -12,13 +12,17 @@ import type { ComponentShape } from './component-shape.ts'
 import { summaryLine, type DocSummary } from './generator-docs.ts'
 import { renderFunction } from './component-api-dump.ts'
 
+/** Where the template takes the component API. */
+const PLACEHOLDER = '{{COMPONENTS}}'
+
 export function generateLlmsTxt(
   template: string,
   shapes: readonly ComponentShape[],
   docSummaries: Readonly<Record<string, DocSummary>>,
 ): string {
+  if (!template.includes(PLACEHOLDER)) throw new Error(`llms template has no ${PLACEHOLDER} line`)
   const sections = shapes.map(shape => componentSection(shape, docSummaries[shape.componentDir]))
-  return template.replace('{{COMPONENTS}}', sections.join('\n'))
+  return template.replace(PLACEHOLDER, sections.join('\n'))
 }
 
 function componentSection(shape: ComponentShape, docSummary: DocSummary | undefined): string {

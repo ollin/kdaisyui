@@ -113,7 +113,8 @@ dependencies {
 
     implementation(libs.bundles.ktor.server.app)
 
-    // Webjar assets (daisyui, tailwind, htmx) come transitively from :ktor-integration.
+    // htmx is the only asset served from a webjar; the stylesheet is compiled above.
+    implementation(libs.webjar.htmx)
 
     implementation(libs.logback.classic)
 }

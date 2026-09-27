@@ -458,6 +458,30 @@ The five had come from a hand-written configuration block older than the measure
 nothing compared the two. The generator now refuses to run while any function offers one class
 both as a boolean and as an enum constant, so this cannot come back for any component.
 
+**2. `kdaisyui-ktor-integration` no longer brings Ktor or any webjar.** Up to 0.6.0 it exported
+Ktor Resources, Ktor Webjars and the htmx, Tailwind and DaisyUI webjars as `api` dependencies.
+Gradle's conflict resolution picks the highest requested version, so a consumer pinned to htmx 2.x
+was moved to htmx 4 — a major version — with no compile error and no warning. The artifact now
+depends on `kdaisyui` alone.
+
+Add what you actually use, at the versions you choose:
+
+```kotlin
+// build.gradle.kts
+implementation("io.ktor:ktor-server-resources")            // needed to compile against the integration
+implementation("io.ktor:ktor-server-webjars")              // only if you serve webjars
+implementation("org.webjars.npm:htmx.org:YOUR_VERSION")    // only if you relied on the transitive one
+implementation("org.webjars.npm:daisyui:DAISYUI_VERSION")  // only for the prebuilt stylesheet
+```
+
+**Missing Ktor Resources breaks at compile time**, naming the class. A missing webjar does not: the
+page loads and `/webjars/htmx.org/…` or `/webjars/daisyui/…` answers 404. Check what your pages
+reference under `/webjars/` before upgrading.
+
+The BOM still aligns only the kdaisyui artifacts. It deliberately carries no constraint for Ktor or
+an asset: a Gradle constraint takes part in conflict resolution exactly like a dependency, so it
+would re-create the silent upgrade for anyone importing the BOM.
+
 ## Quick start
 
 ### 1. Add the dependency
@@ -478,6 +502,16 @@ dependencies {
 ```
 
 > **Note:** Released to Maven Central via JReleaser. The latest version is shown on the badge at the top of this README.
+
+**Neither artifact chooses a Ktor version or any web asset for you.** `kdaisyui-ktor-integration`
+compiles against Ktor Resources but does not export it: your application owns its Ktor version,
+and you add `io.ktor:ktor-server-resources` yourself — an application that uses Ktor Resources has
+it already. Its inline functions compile Ktor's own `href` into your code, so a missing module is
+a compile error, never a runtime one. It is built and tested against the `ktor` version in
+[`gradle/libs.versions.toml`](gradle/libs.versions.toml) at the release tag you depend on.
+
+htmx, Tailwind and the DaisyUI stylesheet are likewise yours to add, at the versions you choose —
+see step 3.
 
 ### 2. Render your first component
 
@@ -538,12 +572,24 @@ component and forgets, and the failure is silent.
 
 #### The quick path, and what it costs
 
-For a prototype you can skip the build step and load DaisyUI's prebuilt stylesheet, which
-`:ktor-integration` already puts on your classpath as a webjar:
+For a prototype you can skip the build step and serve DaisyUI's prebuilt stylesheet from its
+webjar, through Ktor's Webjars plugin:
 
 ```kotlin
+// build.gradle.kts — DAISYUI_VERSION: see below
+implementation("io.ktor:ktor-server-webjars")
+implementation("org.webjars.npm:daisyui:DAISYUI_VERSION")
+```
+
+```kotlin
+install(Webjars)
+// …
 link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
 ```
+
+Take `DAISYUI_VERSION` from `daisyui` in [`gradle/libs.versions.toml`](gradle/libs.versions.toml)
+at the release tag you depend on. That is the version the components were generated from, so
+it is the version whose stylesheet has every class they emit; a newer DaisyUI 5 normally does too.
 
 This works and needs no toolchain. **What it cannot do is Tailwind variants of DaisyUI classes,
 beyond the five prefixes DaisyUI pre-generates.** Measured against 5.7.17:
@@ -564,7 +610,7 @@ responsive or state variants on DaisyUI classes, compile.
 | Module | Description |
 |---|---|
 | `:lib` | Core library — DSL component wrappers (published as `kdaisyui`) |
-| `:ktor-integration` | Ktor Resources integration; brings DaisyUI/Tailwind/htmx webjars transitively (published as `kdaisyui-ktor-integration`) |
+| `:ktor-integration` | Ktor Resources integration (published as `kdaisyui-ktor-integration`). Depends on `kdaisyui` only — Ktor and every web asset are yours to add |
 | `:bom` | Bill of Materials aligning the two artifact versions (published as `kdaisyui-bom`) |
 | `:example-app` | Ktor + htmx demo dashboard |
 
@@ -597,8 +643,8 @@ Exact versions are the single source of truth in these files:
 |---|---|
 | JDK that runs Gradle | [`.tool-versions`](.tool-versions) |
 | Kotlin, kotlinx-html, DaisyUI, Heroicons | [`gradle/libs.versions.toml`](gradle/libs.versions.toml) |
+| Ktor and webjars the build and the example app use — not exported to consumers | [`gradle/libs.versions.toml`](gradle/libs.versions.toml) |
 | Gradle wrapper | [`gradle/wrapper/gradle-wrapper.properties`](gradle/wrapper/gradle-wrapper.properties) |
-| Ktor, webjars | [`example-app/build.gradle.kts`](example-app/build.gradle.kts) |
 
 ## Common tasks
 

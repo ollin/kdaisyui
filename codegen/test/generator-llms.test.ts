@@ -29,4 +29,10 @@ describe('generateLlmsTxt', () => {
 
     assert.match(llms, /^enum class KbdSize \{ Sm, Lg \}$/m)
   })
+
+  test('heads each component with its summary and element, then fences its API as Kotlin', () => {
+    const llms = generateLlmsTxt('{{COMPONENTS}}', [KBD], { kbd: { summary: 'Keyboard key display' } })
+
+    assert.match(llms, /^### Kbd\n\nKeyboard key display — renders `<kbd>`\.\n\n```kotlin\n(.+\n)+```$/m)
+  })
 })

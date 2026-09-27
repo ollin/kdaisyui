@@ -21,5 +21,6 @@ export function generateLlmsTxt(
 }
 
 function componentSection(shape: ComponentShape): string {
-  return shape.functions.map(renderFunction).join('\n')
+  const enums = shape.enums.map(e => `enum class ${e.name} { ${e.entries.map(entry => entry.name).join(', ')} }`)
+  return [...enums, ...shape.functions.map(renderFunction)].join('\n')
 }

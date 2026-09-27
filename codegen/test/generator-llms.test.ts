@@ -23,4 +23,10 @@ describe('generateLlmsTxt', () => {
     assert.match(llms, /^fun FlowContent\.daisyKbd\(size: ClassValues<KbdSize>\? = null, content: \(KBD\.\(\) -> Unit\)\)$/m)
     assert.doesNotMatch(llms, /\{\{COMPONENTS\}\}/)
   })
+
+  test('lists each enum a component declares with the constants a caller can name', () => {
+    const llms = generateLlmsTxt('{{COMPONENTS}}', [KBD], {})
+
+    assert.match(llms, /^enum class KbdSize \{ Sm, Lg \}$/m)
+  })
 })

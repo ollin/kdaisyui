@@ -24,7 +24,7 @@ From `lib/build.gradle.kts`:
 | `generateHeroicons` | `codegen/src/index-heroicons.ts` | `lib/generated/main/kotlin/io/github/ollin/kdaisyui/icons/` |
 | `generateComponentTests` | `codegen/src/test-generator.ts` | `lib/generated/test/kotlin/io/github/ollin/kdaisyui/components/` |
 | `generateHeroiconTests` | `codegen/src/test-generator-heroicons.ts` | `lib/generated/test/kotlin/io/github/ollin/kdaisyui/icons/` |
-| `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/` |
+| `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/` and `llms.txt` (prose from `codegen/llms-template.md`) |
 
 The fifth is the only one that is not Kotlin, and the only one writing outside `lib/`. It reads
 the same parsed frontmatter and the same classified model as `generateComponents`, which is the

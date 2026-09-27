@@ -37,7 +37,7 @@ function renderParameter(parameter: ParameterShape): string {
  * multi-line rendering would report a changed parameter as a hunk in the middle of a block,
  * which is what makes `lib/api/lib.api` hard to read even where it is correct.
  */
-function renderFunction(shape: FunctionShape): string {
+export function renderFunction(shape: FunctionShape): string {
   const parameters = shape.parameters.map(renderParameter).join(', ')
   return `fun ${shape.receiver}.${shape.name}(${parameters})`
 }

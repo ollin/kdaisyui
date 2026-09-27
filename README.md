@@ -482,6 +482,13 @@ The BOM still aligns only the kdaisyui artifacts. It deliberately carries no con
 an asset: a Gradle constraint takes part in conflict resolution exactly like a dependency, so it
 would re-create the silent upgrade for anyone importing the BOM.
 
+**3. `llms.txt` describes the API that actually ships.** Nothing to change in your code — but if
+you pointed an AI tool at `llms.txt`, what it read until now was the **0.1.x** API: badge and
+dropdown booleans that 0.6.0 had replaced with enums, a `DIV` receiver for `daisyDropdownContent`
+where it takes a `UL`, and no `id` parameter anywhere. Code an assistant wrote from it will not
+have compiled against 0.6.0. The file is now generated from the same model as the library and
+`docs/reference/`, and CI fails when it drifts, so it is exact for the release it ships with.
+
 ## Quick start
 
 ### 1. Add the dependency
@@ -671,7 +678,7 @@ This project ships AI-ready context files so AI tools can work with kdaisyui eff
 |---|---|---|
 | Contributors (all AI tools) | [`AGENTS.md`](AGENTS.md) | Single source of truth: conventions, codegen, tooling, anti-patterns |
 | Claude Code | [`CLAUDE.md`](CLAUDE.md) | Thin pointer to AGENTS.md |
-| Library users (any AI) | [`llms.txt`](llms.txt) | API reference for consuming the library |
+| Library users (any AI) | [`llms.txt`](llms.txt) | API reference for consuming the library — generated from the library itself |
 
 If you're using kdaisyui as a dependency and want AI assistance, point your AI tool to [`llms.txt`](llms.txt).
 

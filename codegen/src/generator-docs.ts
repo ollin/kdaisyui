@@ -173,8 +173,12 @@ function byDisplayName(a: ComponentShape, b: ComponentShape): number {
 /** One row: the component, its one-line summary, and the element it renders. */
 function indexRow(shape: ComponentShape, docSummary: DocSummary | undefined): string {
   const main = shape.functions[0]
-  const summary = docSummary?.summary ?? firstSentence(main.desc)
-  return `| [${shape.componentName}](${docFileNameFor(shape.componentDir)}.md) | ${summary} | \`<${main.htmlTag}>\` |`
+  return `| [${shape.componentName}](${docFileNameFor(shape.componentDir)}.md) | ${summaryLine(shape, docSummary)} | \`<${main.htmlTag}>\` |`
+}
+
+/** The committed one-line summary, or the first sentence of DaisyUI's own description. */
+export function summaryLine(shape: ComponentShape, docSummary: DocSummary | undefined): string {
+  return docSummary?.summary ?? firstSentence(shape.functions[0].desc)
 }
 
 /**

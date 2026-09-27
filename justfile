@@ -19,8 +19,8 @@ build:
 generate:
     ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs
     @echo
-    @git status --short lib/generated docs/reference || true
-    @git --no-pager diff --stat -- lib/generated docs/reference || true
+    @git status --short lib/generated docs/reference llms.txt || true
+    @git --no-pager diff --stat -- lib/generated docs/reference llms.txt || true
 
 # Re-dump BOTH committed public API baselines in lib/api and show what changed.
 # Only run this when an API change is intended: the diff is the change, and a

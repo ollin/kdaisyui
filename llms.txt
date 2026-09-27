@@ -1,8 +1,13 @@
+<!--
+GENERATED — DO NOT EDIT
+Source: codegen/llms-template.md and the generated component API
+Regenerate: just generate
+-->
 # kdaisyui — llms.txt
 
 > Type-safe DaisyUI component DSL for Kotlin kotlinx.html.
-> Wraps Tailwind CSS classes into compile-time-checked Kotlin extension functions.
-> No frontend build tools required. No JavaScript frameworks. Just Kotlin.
+> Wraps DaisyUI's CSS classes into compile-time-checked Kotlin extension functions.
+> No JavaScript framework. The library emits class names; your Tailwind build turns them into CSS.
 
 ## Quick start
 
@@ -19,7 +24,10 @@ dependencies {
     // the artifacts without versions — the BOM keeps them aligned.
     implementation(platform("io.github.ollin.kdaisyui:kdaisyui-bom:VERSION"))
     implementation("io.github.ollin.kdaisyui:kdaisyui")
-    implementation("io.github.ollin.kdaisyui:kdaisyui-ktor-integration") // optional
+
+    // Optional Ktor Resources integration. It brings no Ktor and no web assets:
+    // add io.ktor:ktor-server-resources at your own Ktor version.
+    implementation("io.github.ollin.kdaisyui:kdaisyui-ktor-integration")
 }
 ```
 
@@ -42,16 +50,36 @@ val html = createHTML().div {
 // → <div><button class="btn btn-primary btn-lg">Deploy</button></div>
 ```
 
-## Common parameters
+### CSS
 
-Every component accepts these parameters:
+kdaisyui emits class names only. The jar ships `kdaisyui-classes.txt`, the list of every class it
+can emit; point your Tailwind `@source` at it, because a class assembled at runtime from an enum
+appears in none of your source files. See the README's Quick start, step 3.
+
+## Reading the signatures below
+
+Every signature is generated from the library itself, so it is exact for the release this file
+shipped with.
+
+- **Enum parameters are typed `ClassValues<E>?`.** Pass the enum constant: `size = ButtonSize.Lg`.
+  Every generated enum *is* a `ClassValues` of itself, so nothing needs wrapping.
+- **An enum parameter is a choice.** Its constants are DaisyUI classes a browser measured as
+  mutually exclusive, so exactly one can apply. Classes that can be combined are separate
+  `Boolean` parameters instead.
+- **A `Boolean` parameter is named after its DaisyUI class**: `soft = true` emits `alert-soft`.
+- **CSS class to Kotlin**: `btn-primary` → `ButtonVariant.Primary`, `btn-lg` → `ButtonSize.Lg`.
+- **Always use named arguments.** Parameter order is generated and changes between releases.
+- **The lambda receiver is the element the function renders** — `daisyDropdownContent` renders
+  `<ul>`, so its `content` lambda runs on `UL`.
+
+Every function also takes these:
 
 | Parameter | Type | Description |
 |---|---|---|
-| `id` | `HtmlId?` | Type-safe HTML id from `HtmlId` hierarchy |
-| `extraClasses` | `String?` | Additional CSS classes, merged safely (no duplicates) |
+| `id` | `HtmlId?` | Type-safe HTML id from the `HtmlId` hierarchy |
+| `extraClasses` | `String?` | Additional CSS classes, merged without duplicates |
 | `attrs` | `(TAG.() -> Unit)?` | Direct access to the underlying kotlinx.html tag |
-| `content` | `(TAG.() -> Unit)?` | Nested HTML content (some components require this) |
+| `content` | `(TAG.() -> Unit)` | Nested HTML content — required, except where the function also takes `text: String?` (then optional) or renders an element that cannot hold children (then absent) |
 
 ## Type-safe HTML IDs
 
@@ -78,108 +106,6 @@ daisyButton("Save", id = htmlId("my-button"))
 Dashboard.Sidebar().target  // → "#dashboard-sidebar"
 ```
 
-## Naming conventions
-
-- CSS `btn-primary` → Kotlin `ButtonVariant.Primary`
-- CSS `btn-lg` → Kotlin `ButtonSize.Lg`
-- Boolean params map directly: `outline = true` → CSS class `btn-outline`
-- All components are `FlowContent.daisyXxx()` extension functions
-- Variant enums: `XxxVariant`, Size enums: `XxxSize`
-- Both have `internal val className: String`
-
-## Available components (66)
-
-<!-- HAND-MAINTAINED, and the largest remaining copy of facts that exist in the codegen.
-     docs/reference/ is generated from the DaisyUI submodule and CI rejects any drift; this
-     table and the "Detailed component signatures" section below are neither, and both have
-     already been wrong — the Megamenu and Drawer rows were missing daisyMegamenuPanel and
-     daisyDrawerButton, and no signature here mentions the `id: HtmlId?` parameter every
-     generated function takes. Check against docs/reference/ before trusting a signature here.
-     Generating this file is tracked as its own change. -->
-
-| Component | Function | Description | Variants | Sizes |
-|---|---|---|---|---|
-| Alert | `daisyAlert` | Status messages and notifications | Info, Success, Warning, Error | — |
-| Aura | `daisyAura` | Border light effect wrapping a component | dual, glow, gold, holo, rainbow, silver | Xs–Xl |
-| Avatar | `daisyAvatar` | User and entity representations | — | — |
-| Badge | `daisyBadge` | Labels, counts, and status tags | 8 colors | Xs–Xl |
-| Breadcrumbs | `daisyBreadcrumbs`, `daisyBreadcrumbsItems`, `daisyBreadcrumbsItem` | Navigation trail | — | — |
-| Button | `daisyButton` | Actions and triggers | 8 colors | Xs–Xl |
-| Calendar | `daisyCalendar` | Date picker | — | — |
-| Card | `daisyCard`, `daisyCardTitle`, `daisyCardBody`, `daisyCardActions` | Content containers | — | Xs–Xl |
-| Carousel | `daisyCarousel` | Image/content slider | — | — |
-| Chat | `daisyChat` | Chat message bubbles | — | — |
-| Checkbox | `daisyCheckbox` | Boolean toggles for forms | 8 colors | Xs–Xl |
-| Collapse | `daisyCollapse` | Collapsible content sections | — | — |
-| Countdown | `daisyCountdown` | Timer/countdown display | — | — |
-| Diff | `daisyDiff` | Side-by-side comparison | — | — |
-| Divider | `daisyDivider` | Visual separators | — | — |
-| Dock | `daisyDock` | macOS-style dock | — | — |
-| Drawer | `daisyDrawer`, `daisyDrawerToggle`, `daisyDrawerContent`, `daisyDrawerSide`, `daisyDrawerOverlay`, `daisyDrawerButton` | Sidebar layout with toggle | — | — |
-| Dropdown | `daisyDropdown`, `daisyDropdownContent` | Context menus and action lists | — | — |
-| Fab | `daisyFab` | Floating action button | — | — |
-| Fieldset | `daisyFieldset` | Groups related form controls | — | — |
-| FileInput | `daisyFileInput` | File upload fields | 8 colors | Xs–Xl |
-| Filter | `daisyFilter` | Filter controls | — | — |
-| Footer | `daisyFooter` | Page footer | — | — |
-| Hero | `daisyHero` | Full-width hero sections | — | — |
-| Hover3d | `daisyHover3d` | 3D hover effect | — | — |
-| HoverGallery | `daisyHoverGallery` | Image gallery with hover | — | — |
-| Indicator | `daisyIndicator`, `daisyIndicatorItem` | Overlay badges on elements | — | — |
-| Input | `daisyInput` | Text entry fields | 8 colors | Xs–Xl |
-| Join | `daisyJoin` | Groups buttons and inputs | — | — |
-| Kbd | `daisyKbd` | Keyboard key display | — | Xs–Xl |
-| Label | `daisyLabel` | Field labels and helper text | — | — |
-| Link | `daisyLink` | Styled anchor elements | 7 colors | — |
-| List | `daisyList` | Styled list | — | — |
-| Loading | `daisyLoading` | Loading spinners | — | Xs–Xl |
-| Mask | `daisyMask` | CSS mask shapes | — | — |
-| Megamenu | `daisyMegamenu`, `daisyMegamenuActive`, `daisyMegamenuPanel` | Horizontal menu with popover navigation blocks | full, vertical, wide | Xs–Xl |
-| Menu | `daisyMenu`, `daisyMenuTitle`, `daisyMenuDropdown`, `daisyMenuDropdownToggle` | Navigation lists with submenus | — | Xs–Xl |
-| MockupBrowser | `daisyMockupBrowser` | Browser frame mockup | — | — |
-| MockupCode | `daisyMockupCode` | Code block mockup | — | — |
-| MockupPhone | `daisyMockupPhone` | Phone frame mockup | — | — |
-| MockupWindow | `daisyMockupWindow` | Window frame mockup | — | — |
-| Modal | `daisyModal`, `daisyModalPopover`, `daisyModalBox`, `daisyModalAction`, `daisyModalBackdrop` | Modal dialogs | — | — |
-| Navbar | `daisyNavbar` | Top navigation bar | — | — |
-| Otp | `daisyOtp` | One-time password / verification code input | 8 colors | Xs–Xl |
-| Progress | `daisyProgress` | Progress bars | — | — |
-| RadialProgress | `daisyRadialProgress` | Circular progress indicator | — | — |
-| Radio | `daisyRadio` | Single-choice option groups | 8 colors | Xs–Xl |
-| Range | `daisyRange` | Slider for numeric ranges | 8 colors | Xs–Xl |
-| Rating | `daisyRating` | Star rating input | — | — |
-| Select | `daisySelect` | Dropdown option pickers | 7 colors | Xs–Xl |
-| Skeleton | `daisySkeleton` | Loading placeholder | — | — |
-| Stack | `daisyStack` | Overlapping stack layout | — | — |
-| Stat | `daisyStat`, `daisyStatStat`, `daisyStatStatTitle`, `daisyStatStatValue`, `daisyStatStatDesc`, `daisyStatStatFigure`, `daisyStatStatActions` | Key metrics and numbers | — | — |
-| Status | `daisyStatus` | Status indicators | — | — |
-| Steps | `daisySteps`, `daisyStep` | Step progress indicators | — | Xs–Xl |
-| Swap | `daisySwap` | Toggle between two states | — | — |
-| Tab | `daisyTab` | Tab navigation | — | Xs–Xl |
-| Table | `daisyTable` | Structured data in rows | — | — |
-| Textarea | `daisyTextarea` | Multi-line text input | — | Xs–Xl |
-| TextRotate | `daisyTextRotate` | Rotated text display | — | — |
-| ThemeController | `daisyThemeController` | Theme switcher | — | — |
-| Timeline | `daisyTimeline` | Vertical chronological display | — | — |
-| Toast | `daisyToast` | Notification popups | — | — |
-| Toggle | `daisyToggle` | Switch-style boolean input | 8 colors | Xs–Xl |
-| Tooltip | `daisyTooltip` | Hover information popup | — | — |
-| Validator | `daisyValidator` | Form validation wrapper | — | — |
-
-## Common variant values
-
-Most color variant enums follow the same pattern:
-
-```
-Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error
-```
-
-Size enums:
-
-```
-Xs, Sm, Md, Lg, Xl
-```
-
 ## Core utility
 
 ```kotlin
@@ -191,402 +117,678 @@ div {
 }
 ```
 
-## Detailed component signatures
+## Components
 
 ### Alert
 
-```kotlin
-fun FlowContent.daisyAlert(
-    variant: AlertVariant? = null,   // Info | Success | Warning | Error
-    dash: Boolean = false,
-    horizontal: Boolean = false,
-    outline: Boolean = false,
-    soft: Boolean = false,
-    vertical: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
+Status messages and notifications — renders `<div>`.
 
-daisyAlert(variant = AlertVariant.Success) {
-    span { +"Pipeline completed successfully." }
-}
+```kotlin
+enum class AlertVariant { Info, Success, Warning, Error }
+enum class AlertStyle { Outline, Dash }
+enum class AlertDirection { Vertical, Horizontal }
+fun FlowContent.daisyAlert(id: HtmlId? = null, variant: ClassValues<AlertVariant>? = null, style: ClassValues<AlertStyle>? = null, direction: ClassValues<AlertDirection>? = null, soft: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Aura
+
+Border light effect wrapping a component — renders `<div>`.
+
+```kotlin
+enum class AuraSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyAura(id: HtmlId? = null, size: ClassValues<AuraSize>? = null, dual: Boolean = false, glow: Boolean = false, gold: Boolean = false, holo: Boolean = false, rainbow: Boolean = false, silver: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Avatar
 
-```kotlin
-fun FlowContent.daisyAvatar(
-    offline: Boolean = false,
-    online: Boolean = false,
-    placeholder: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
+User and entity representations — renders `<div>`.
 
-daisyAvatar(online = true) {
-    div("w-12 rounded-full") { img(src = "user.jpg") }
-}
+```kotlin
+enum class AvatarModifier { Online, Offline }
+fun FlowContent.daisyAvatar(id: HtmlId? = null, modifier: ClassValues<AvatarModifier>? = null, placeholder: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Badge
 
-```kotlin
-fun FlowContent.daisyBadge(
-    text: String? = null,
-    variant: BadgeVariant? = null,   // 8 colors
-    size: BadgeSize? = null,         // Xs | Sm | Md | Lg | Xl
-    dash: Boolean = false,
-    ghost: Boolean = false,
-    outline: Boolean = false,
-    soft: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit)? = null,
-)
+Labels, counts, and status tags — renders `<span>`.
 
-daisyBadge("Passing", variant = BadgeVariant.Success)
-daisyBadge("3", variant = BadgeVariant.Error, size = BadgeSize.Sm)
+```kotlin
+enum class BadgeVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class BadgeSize { Xs, Sm, Md, Lg, Xl }
+enum class BadgeOutlineStyle { Outline, Dash }
+enum class BadgeFillStyle { Soft, Ghost }
+fun FlowContent.daisyBadge(text: String? = null, id: HtmlId? = null, variant: ClassValues<BadgeVariant>? = null, size: ClassValues<BadgeSize>? = null, outlineStyle: ClassValues<BadgeOutlineStyle>? = null, fillStyle: ClassValues<BadgeFillStyle>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
 ```
 
 ### Breadcrumbs
 
+Navigation trail showing current location — renders `<div>`.
+
 ```kotlin
-fun FlowContent.daisyBreadcrumbs(
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
-
-fun FlowContent.daisyBreadcrumbsItems(     // structural <ul> wrapper
-    extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
-)
-
-fun UL.daisyBreadcrumbsItem(               // structural <li> wrapper (scoped to UL)
-    extraClasses: String? = null,
-    attrs: (LI.() -> Unit)? = null,
-    content: (LI.() -> Unit),
-)
-
-// Usage:
-daisyBreadcrumbs(extraClasses = "text-sm") {
-    daisyBreadcrumbsItems {
-        daisyBreadcrumbsItem { a { href = "/persons"; +"Persons" } }
-        daisyBreadcrumbsItem { +"Birthdays" }   // terminal item (no link)
-    }
-}
+fun FlowContent.daisyBreadcrumbs(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyBreadcrumbsItems(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun UL.daisyBreadcrumbsItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
 ```
 
 ### Button
 
-```kotlin
-fun FlowContent.daisyButton(
-    text: String? = null,
-    variant: ButtonVariant? = null,  // 8 colors
-    size: ButtonSize? = null,        // Xs | Sm | Md | Lg | Xl
-    active: Boolean = false,
-    block: Boolean = false,
-    circle: Boolean = false,
-    dash: Boolean = false,
-    ghost: Boolean = false,
-    link: Boolean = false,
-    outline: Boolean = false,
-    soft: Boolean = false,
-    square: Boolean = false,
-    wide: Boolean = false,
-    disabled: Boolean = false,
-    type: ButtonType? = null,
-    extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit)? = null,
-)
+Actions and triggers — renders `<button>`.
 
-daisyButton("Deploy", variant = ButtonVariant.Primary)
-daisyButton("Cancel", variant = ButtonVariant.Ghost)
-daisyButton("Delete", variant = ButtonVariant.Error, outline = true, size = ButtonSize.Sm)
+```kotlin
+enum class ButtonVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class ButtonSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyButton(text: String? = null, id: HtmlId? = null, variant: ClassValues<ButtonVariant>? = null, size: ClassValues<ButtonSize>? = null, active: Boolean = false, block: Boolean = false, circle: Boolean = false, dash: Boolean = false, ghost: Boolean = false, link: Boolean = false, outline: Boolean = false, soft: Boolean = false, square: Boolean = false, wide: Boolean = false, disabled: Boolean = false, type: ButtonType? = null, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit)? = null)
+```
+
+### Calendar
+
+Calendar date picker widget — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyCalendar(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Card
 
-```kotlin
-fun FlowContent.daisyCard(
-    size: CardSize? = null,          // Xs | Sm | Md | Lg | Xl
-    border: Boolean = false,
-    dash: Boolean = false,
-    imageFull: Boolean = false,
-    side: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
-fun FlowContent.daisyCardTitle(text: String? = null, extraClasses, attrs, content)
-fun FlowContent.daisyCardBody(extraClasses, attrs, content: (DIV.() -> Unit))
-fun FlowContent.daisyCardActions(extraClasses, attrs, content: (DIV.() -> Unit))
+Content containers with body and title — renders `<div>`.
 
-daisyCard(extraClasses = "bg-base-100 shadow-xs") {
-    daisyCardBody {
-        daisyCardTitle { +"Pipeline Status" }
-        p { +"api-gateway · main · 2m 14s" }
-        daisyCardActions {
-            daisyButton("View logs", variant = ButtonVariant.Primary, size = ButtonSize.Sm)
-        }
-    }
-}
+```kotlin
+enum class CardSize { Xs, Sm, Md, Lg, Xl }
+enum class CardStyle { Border, Dash }
+enum class CardModifier { Side, ImageFull }
+fun FlowContent.daisyCard(id: HtmlId? = null, size: ClassValues<CardSize>? = null, style: ClassValues<CardStyle>? = null, modifier: ClassValues<CardModifier>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyCardTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
+fun FlowContent.daisyCardBody(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyCardActions(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Carousel
+
+Slideshow of images or content — renders `<div>`.
+
+```kotlin
+enum class CarouselModifier { Start, Center, End }
+fun FlowContent.daisyCarousel(id: HtmlId? = null, modifier: ClassValues<CarouselModifier>? = null, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyCarouselItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Chat
+
+Chat bubble layout for conversations — renders `<div>`.
+
+```kotlin
+enum class ChatVariant { BubbleNeutral, BubblePrimary, BubbleSecondary, BubbleAccent, BubbleInfo, BubbleSuccess, BubbleWarning, BubbleError }
+fun FlowContent.daisyChat(id: HtmlId? = null, variant: ClassValues<ChatVariant>? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyChatImage(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyChatHeader(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyChatFooter(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyChatBubble(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Checkbox
 
-```kotlin
-fun FlowContent.daisyCheckbox(
-    variant: CheckboxVariant? = null,  // 8 colors
-    size: CheckboxSize? = null,        // Xs | Sm | Md | Lg | Xl
-    checked: Boolean = false,
-    disabled: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
-)
+Boolean toggles for forms — renders `<input>`.
 
-label("flex cursor-pointer gap-4") {
-    daisyCheckbox(size = CheckboxSize.Sm, checked = true)
-    span("label-text") { +"Branch protection enabled" }
-}
+```kotlin
+enum class CheckboxVariant { Primary, Secondary, Accent, Neutral, Success, Warning, Info, Error }
+enum class CheckboxSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyCheckbox(id: HtmlId? = null, variant: ClassValues<CheckboxVariant>? = null, size: ClassValues<CheckboxSize>? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+```
+
+### Collapse
+
+Collapsible content sections — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyCollapse(id: HtmlId? = null, arrow: Boolean = false, close: Boolean = false, open: Boolean = false, plus: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyCollapseTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
+fun FlowContent.daisyCollapseContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Countdown
+
+Timer countdown display — renders `<span>`.
+
+```kotlin
+fun FlowContent.daisyCountdown(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+```
+
+### Diff
+
+Side-by-side diff viewer — renders `<figure>`.
+
+```kotlin
+fun FlowContent.daisyDiff(id: HtmlId? = null, extraClasses: String? = null, attrs: (FIGURE.() -> Unit)? = null, content: (FIGURE.() -> Unit))
+fun FlowContent.daisyDiffItem1(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDiffItem2(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDiffResizer(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Divider
+
+Visual separator between sections — renders `<div>`.
+
+```kotlin
+enum class DividerVariant { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
+enum class DividerDirection { Vertical, Horizontal }
+fun FlowContent.daisyDivider(id: HtmlId? = null, variant: ClassValues<DividerVariant>? = null, direction: ClassValues<DividerDirection>? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Dock
+
+macOS-style dock navigation — renders `<div>`.
+
+```kotlin
+enum class DockSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyDock(id: HtmlId? = null, size: ClassValues<DockSize>? = null, active: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDockLabel(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 ```
 
 ### Drawer
 
-```kotlin
-fun FlowContent.daisyDrawer(
-    end: Boolean = false,
-    open: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
-fun FlowContent.daisyDrawerToggle(extraClasses, attrs, content)
-fun FlowContent.daisyDrawerContent(extraClasses, attrs, content)
-fun FlowContent.daisyDrawerSide(extraClasses, attrs, content)
-fun FlowContent.daisyDrawerOverlay(extraClasses, attrs, content: (LABEL.() -> Unit))
+Sidebar layout with toggle — renders `<div>`.
 
-daisyDrawer(extraClasses = "lg:drawer-open") {
-    daisyDrawerToggle { /* checkbox input */ }
-    daisyDrawerContent { /* main content */ }
-    daisyDrawerSide { /* sidebar nav */ }
-}
+```kotlin
+fun FlowContent.daisyDrawer(id: HtmlId? = null, end: Boolean = false, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDrawerToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyDrawerContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDrawerSide(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDrawerOverlay(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+fun FlowContent.daisyDrawerButton(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
 ```
 
 ### Dropdown
 
+Context menus and action lists — renders `<details>`.
+
 ```kotlin
-fun FlowContent.daisyDropdown(
-    close: Boolean = false,
-    hover: Boolean = false,
-    open: Boolean = false,
-    end: Boolean = false, start: Boolean = false,
-    top: Boolean = false, bottom: Boolean = false,
-    left: Boolean = false, right: Boolean = false,
-    center: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (DETAILS.() -> Unit)? = null,
-    content: (DETAILS.() -> Unit),
-)
-fun FlowContent.daisyDropdownContent(extraClasses, attrs, content: (DIV.() -> Unit))
+enum class DropdownModifier { Hover, Open }
+enum class DropdownHorizontalPlacement { Start, Center, End }
+enum class DropdownVerticalPlacement { Top, Bottom }
+fun FlowContent.daisyDropdown(id: HtmlId? = null, modifier: ClassValues<DropdownModifier>? = null, horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null, verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null, close: Boolean = false, left: Boolean = false, right: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
+fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+```
+
+### Fab
+
+Floating action button with expandable actions — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyFab(id: HtmlId? = null, flower: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyFabClose(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyFabMainAction(id: HtmlId? = null, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
+```
+
+### Fieldset
+
+Groups related form controls — renders `<fieldset>`.
+
+```kotlin
+fun FlowContent.daisyFieldset(id: HtmlId? = null, extraClasses: String? = null, attrs: (FIELDSET.() -> Unit)? = null, content: (FIELDSET.() -> Unit))
+fun FIELDSET.daisyFieldsetLegend(id: HtmlId? = null, extraClasses: String? = null, attrs: (LEGEND.() -> Unit)? = null, content: (LEGEND.() -> Unit))
+```
+
+### FileInput
+
+File upload input field — renders `<input>`.
+
+```kotlin
+enum class FileInputVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class FileInputSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyFileInput(id: HtmlId? = null, variant: ClassValues<FileInputVariant>? = null, size: ClassValues<FileInputSize>? = null, ghost: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+```
+
+### Filter
+
+Filter reset for search and forms — renders `<form>`.
+
+```kotlin
+fun FlowContent.daisyFilter(id: HtmlId? = null, extraClasses: String? = null, attrs: (FORM.() -> Unit)? = null, content: (FORM.() -> Unit))
+fun FlowContent.daisyFilterReset(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+```
+
+### Footer
+
+Page footer layout — renders `<footer>`.
+
+```kotlin
+fun FlowContent.daisyFooter(id: HtmlId? = null, center: Boolean = false, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (FOOTER.() -> Unit)? = null, content: (FOOTER.() -> Unit))
+fun FlowContent.daisyFooterTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H6.() -> Unit)? = null, content: (H6.() -> Unit)? = null)
+```
+
+### Hero
+
+Hero banner with overlay — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyHero(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyHeroContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyHeroOverlay(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Hover3d
+
+3D hover effect container — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyHover3d(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### HoverGallery
+
+Gallery with hover effects — renders `<figure>`.
+
+```kotlin
+fun FlowContent.daisyHoverGallery(id: HtmlId? = null, extraClasses: String? = null, attrs: (FIGURE.() -> Unit)? = null, content: (FIGURE.() -> Unit))
+```
+
+### Indicator
+
+Overlays badges on elements — renders `<div>`.
+
+```kotlin
+enum class IndicatorHorizontalPlacement { Start, Center, End }
+enum class IndicatorVerticalPlacement { Top, Middle, Bottom }
+fun FlowContent.daisyIndicator(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyIndicatorItem(id: HtmlId? = null, horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null, verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 ```
 
 ### Input
 
-```kotlin
-fun FlowContent.daisyInput(
-    variant: InputVariant? = null,    // 8 colors
-    size: InputSize? = null,          // Xs | Sm | Md | Lg | Xl
-    ghost: Boolean = false,
-    type: InputType = InputType.text,
-    placeholder: String? = null,
-    value: String? = null,
-    disabled: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
-)
+Text entry fields — renders `<input>`.
 
-daisyInput(placeholder = "Search...", extraClasses = "w-full")
+```kotlin
+enum class InputVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class InputSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyInput(id: HtmlId? = null, variant: ClassValues<InputVariant>? = null, size: ClassValues<InputSize>? = null, ghost: Boolean = false, type: InputType = InputType.text, placeholder: String? = null, value: String? = null, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Join
 
-```kotlin
-fun FlowContent.daisyJoin(
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
+Groups buttons and inputs together — renders `<div>`.
 
-// Add extraClasses = "join-item" to each child
-daisyJoin {
-    daisyButton("«", extraClasses = "join-item")
-    daisyButton("1", extraClasses = "join-item")
-}
+```kotlin
+enum class JoinDirection { Vertical, Horizontal }
+fun FlowContent.daisyJoin(id: HtmlId? = null, direction: ClassValues<JoinDirection>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (JoinScope.() -> Unit))
+```
+
+### Kbd
+
+Keyboard key display — renders `<kbd>`.
+
+```kotlin
+enum class KbdSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyKbd(text: String? = null, id: HtmlId? = null, size: ClassValues<KbdSize>? = null, extraClasses: String? = null, attrs: (KBD.() -> Unit)? = null, content: (KBD.() -> Unit)? = null)
+```
+
+### Label
+
+Field labels and helper text — renders `<span>`.
+
+```kotlin
+fun FlowContent.daisyLabel(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
+```
+
+### Link
+
+Styled anchor elements — renders `<a>`.
+
+```kotlin
+enum class LinkVariant { Neutral, Primary, Secondary, Accent, Success, Info, Warning, Error }
+fun FlowContent.daisyLink(text: String? = null, id: HtmlId? = null, variant: ClassValues<LinkVariant>? = null, hover: Boolean = false, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit)? = null)
+```
+
+### List
+
+Styled list layout — renders `<ul>`.
+
+```kotlin
+enum class ListModifier { ColWrap, ColGrow }
+fun FlowContent.daisyList(id: HtmlId? = null, modifier: ClassValues<ListModifier>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+```
+
+### Loading
+
+Loading spinners and indicators — renders `<span>`.
+
+```kotlin
+enum class LoadingSize { Xs, Sm, Md, Lg, Xl }
+enum class LoadingStyle { Spinner, Dots, Ring, Ball, Bars, Infinity }
+fun FlowContent.daisyLoading(id: HtmlId? = null, size: ClassValues<LoadingSize>? = null, style: ClassValues<LoadingStyle>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+```
+
+### Mask
+
+CSS masks for cropping images to shapes — renders `<img>`.
+
+```kotlin
+enum class MaskStyle { Squircle, Heart, Hexagon, Hexagon2, Decagon, Pentagon, Diamond, Circle, Star, Star2, Triangle, Triangle2, Triangle3, Triangle4 }
+enum class MaskModifier { Half1, Half2 }
+fun FlowContent.daisyMask(id: HtmlId? = null, style: ClassValues<MaskStyle>? = null, modifier: ClassValues<MaskModifier>? = null, extraClasses: String? = null, attrs: (IMG.() -> Unit)? = null)
+```
+
+### Megamenu
+
+Horizontal menu with popover navigation blocks — renders `<div>`.
+
+```kotlin
+enum class MegamenuSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyMegamenu(id: HtmlId? = null, size: ClassValues<MegamenuSize>? = null, full: Boolean = false, vertical: Boolean = false, wide: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyMegamenuActive(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+fun FlowContent.daisyMegamenuPanel(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Menu
 
+Navigation lists with submenus — renders `<ul>`.
+
 ```kotlin
-fun FlowContent.daisyMenu(
-    size: MenuSize? = null,   // Xs | Sm | Md | Lg | Xl
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
-    // ...more params
-    extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
-)
-fun FlowContent.daisyMenuTitle(text: String? = null, extraClasses, attrs, content)
+enum class MenuSize { Xs, Sm, Md, Lg, Xl }
+enum class MenuDirection { Vertical, Horizontal }
+fun FlowContent.daisyMenu(id: HtmlId? = null, size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focus: Boolean = false, paged: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun FlowContent.daisyMenuTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
+fun FlowContent.daisyMenuDropdown(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun FlowContent.daisyMenuDropdownToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+```
+
+### MockupBrowser
+
+Browser window mockup frame — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyMockupBrowser(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyMockupBrowserToolbar(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### MockupCode
+
+Code block mockup frame — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyMockupCode(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### MockupPhone
+
+Phone mockup frame — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyMockupPhone(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyMockupPhoneCamera(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyMockupPhoneDisplay(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### MockupWindow
+
+Desktop window mockup frame — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyMockupWindow(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Modal
 
+Modal dialogs — renders `<dialog>`.
+
 ```kotlin
-fun FlowContent.daisyModal(
-    bottom: Boolean = false, end: Boolean = false,
-    middle: Boolean = false, open: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (DIALOG.() -> Unit)? = null,
-    content: (DIALOG.() -> Unit),
-)
-fun FlowContent.daisyModalPopover(
-    id: HtmlId? = null,
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
-fun FlowContent.daisyModalBox(extraClasses, attrs, content: (DIV.() -> Unit))
-fun FlowContent.daisyModalAction(extraClasses, attrs, content: (DIV.() -> Unit))
-fun FlowContent.daisyModalBackdrop(extraClasses, attrs, content: (DIV.() -> Unit))
+fun FlowContent.daisyModal(id: HtmlId? = null, bottom: Boolean = false, end: Boolean = false, middle: Boolean = false, open: Boolean = false, start: Boolean = false, top: Boolean = false, extraClasses: String? = null, attrs: (DIALOG.() -> Unit)? = null, content: (DIALOG.() -> Unit))
+fun FlowContent.daisyModalBox(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyModalAction(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyModalBackdrop(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyModalToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyModalPopover(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
 
-daisyModal(open = true) {
-    daisyModalBox { h3("text-lg font-bold") { +"Edit Profile" } }
-    daisyModalBackdrop { }
-}
+### Navbar
 
-// The popover method: <div class="modal" popover>, opened and closed by the
-// browser with no JavaScript. Pair it with a button carrying popovertarget.
-daisyButton(text = "Open", attrs = { attributes["popovertarget"] = modalId.id })
-daisyModalPopover(id = modalId) {
-    daisyModalBox { h3("text-lg font-bold") { +"Edit Profile" } }
-}
+Navigation bar layout — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyNavbar(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyNavbarStart(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyNavbarCenter(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyNavbarEnd(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Otp
+
+One-time password / verification code input — renders `<label>`.
+
+```kotlin
+enum class OtpVariant { Neutral, Primary, Secondary, Accent, Success, Info, Warning, Error }
+enum class OtpSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyOtp(id: HtmlId? = null, variant: ClassValues<OtpVariant>? = null, size: ClassValues<OtpSize>? = null, joined: Boolean = false, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+```
+
+### Progress
+
+Progress bar indicator — renders `<progress>`.
+
+```kotlin
+enum class ProgressVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+fun FlowContent.daisyProgress(id: HtmlId? = null, variant: ClassValues<ProgressVariant>? = null, extraClasses: String? = null, attrs: (PROGRESS.() -> Unit)? = null, content: (PROGRESS.() -> Unit))
+```
+
+### RadialProgress
+
+Circular progress indicator — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyRadialProgress(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Radio
 
-```kotlin
-fun FlowContent.daisyRadio(
-    variant: RadioVariant? = null,   // 8 colors
-    size: RadioSize? = null,         // Xs | Sm | Md | Lg | Xl
-    name: String? = null,
-    checked: Boolean = false,
-    disabled: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
-)
-```
-
-### Select
+Single-choice option groups — renders `<input>`.
 
 ```kotlin
-fun FlowContent.daisySelect(
-    variant: SelectVariant? = null,   // 7 colors
-    size: SelectSize? = null,         // Xs | Sm | Md | Lg | Xl
-    ghost: Boolean = false,
-    disabled: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (SELECT.() -> Unit)? = null,
-    content: (SELECT.() -> Unit),
-)
-
-daisySelect(extraClasses = "w-full") {
-    option { +"Option A" }
-    option { +"Option B" }
-}
-```
-
-### Stats
-
-```kotlin
-fun FlowContent.daisyStat(horizontal: Boolean = false, vertical: Boolean = false, ...)
-fun FlowContent.daisyStatStat(extraClasses, attrs, content)
-fun FlowContent.daisyStatStatTitle(text: String? = null, ...)
-fun FlowContent.daisyStatStatValue(text: String? = null, ...)
-fun FlowContent.daisyStatStatDesc(text: String? = null, ...)
-```
-
-### Swap
-
-```kotlin
-fun FlowContent.daisySwap(
-    rotate: Boolean = false,
-    flip: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
-)
-
-daisySwap(rotate = true) {
-    span("swap-on text-2xl") { +"🌙" }
-    span("swap-off text-2xl") { +"☀️" }
-}
-```
-
-### Table
-
-```kotlin
-fun FlowContent.daisyTable(
-    zebra: Boolean = false,
-    pin: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (TABLE.() -> Unit)? = null,
-    content: (TABLE.() -> Unit),
-)
-```
-
-### Toggle
-
-```kotlin
-fun FlowContent.daisyToggle(
-    variant: ToggleVariant? = null,   // 8 colors
-    size: ToggleSize? = null,         // Xs | Sm | Md | Lg | Xl
-    checked: Boolean = false,
-    disabled: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
-)
+enum class RadioVariant { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
+enum class RadioSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyRadio(id: HtmlId? = null, variant: ClassValues<RadioVariant>? = null, size: ClassValues<RadioSize>? = null, name: String? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Range
 
+Slider for numeric ranges — renders `<input>`.
+
 ```kotlin
-fun FlowContent.daisyRange(
-    variant: RangeVariant? = null,    // 8 colors
-    size: RangeSize? = null,          // Xs | Sm | Md | Lg | Xl
-    min: String? = null, max: String? = null,
-    value: String? = null, step: String? = null,
-    disabled: Boolean = false,
-    extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
-)
+enum class RangeVariant { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
+enum class RangeSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyRange(id: HtmlId? = null, variant: ClassValues<RangeVariant>? = null, size: ClassValues<RangeSize>? = null, vertical: Boolean = false, min: String? = null, max: String? = null, value: String? = null, step: String? = null, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+```
+
+### Rating
+
+Star rating input — renders `<div>`.
+
+```kotlin
+enum class RatingSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyRating(id: HtmlId? = null, size: ClassValues<RatingSize>? = null, half: Boolean = false, hidden: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Select
+
+Dropdown option pickers — renders `<select>`.
+
+```kotlin
+enum class SelectVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class SelectSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisySelect(id: HtmlId? = null, variant: ClassValues<SelectVariant>? = null, size: ClassValues<SelectSize>? = null, ghost: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (SELECT.() -> Unit)? = null, content: (SELECT.() -> Unit))
+```
+
+### Skeleton
+
+Content placeholder loading indicator — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisySkeleton(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisySkeletonText(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+```
+
+### Stack
+
+Stack overlapping elements — renders `<div>`.
+
+```kotlin
+fun FlowContent.daisyStack(id: HtmlId? = null, bottom: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Stat
+
+Key metrics and numbers — renders `<div>`.
+
+```kotlin
+enum class StatDirection { Horizontal, Vertical }
+fun FlowContent.daisyStat(id: HtmlId? = null, direction: ClassValues<StatDirection>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStatStat(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStatStatTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
+fun FlowContent.daisyStatStatValue(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
+fun FlowContent.daisyStatStatDesc(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
+fun FlowContent.daisyStatStatFigure(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStatStatActions(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Status
+
+Small status indicator dot — renders `<div>`.
+
+```kotlin
+enum class StatusVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class StatusSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyStatus(id: HtmlId? = null, variant: ClassValues<StatusVariant>? = null, size: ClassValues<StatusSize>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Steps
+
+Step-by-step progress indicator — renders `<ul>`.
+
+```kotlin
+enum class StepsVariant { StepNeutral, StepPrimary, StepSecondary, StepAccent, StepInfo, StepSuccess, StepWarning, StepError }
+enum class StepsDirection { Vertical, Horizontal }
+fun FlowContent.daisySteps(id: HtmlId? = null, variant: ClassValues<StepsVariant>? = null, direction: ClassValues<StepsDirection>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun UL.daisyStepsStep(id: HtmlId? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
+fun FlowContent.daisyStepsStepIcon(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+```
+
+### Swap
+
+Toggle between two states — renders `<label>`.
+
+```kotlin
+fun FlowContent.daisySwap(id: HtmlId? = null, active: Boolean = false, flip: Boolean = false, rotate: Boolean = false, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+fun FlowContent.daisySwapOn(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisySwapOff(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisySwapIndeterminate(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Tab
+
+Tabbed navigation — renders `<button>`.
+
+```kotlin
+enum class TabSize { Xs, Sm, Md, Lg, Xl }
+enum class TabPlacement { Top, Bottom }
+fun FlowContent.daisyTab(id: HtmlId? = null, size: ClassValues<TabSize>? = null, placement: ClassValues<TabPlacement>? = null, border: Boolean = false, box: Boolean = false, lift: Boolean = false, tabActive: Boolean = false, tabDisabled: Boolean = false, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
+fun FlowContent.daisyTabTab(id: HtmlId? = null, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit))
+fun FlowContent.daisyTabTabContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Table
+
+Structured data in rows and columns — renders `<table>`.
+
+```kotlin
+enum class TableSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyTable(id: HtmlId? = null, size: ClassValues<TableSize>? = null, pinCols: Boolean = false, pinRows: Boolean = false, zebra: Boolean = false, extraClasses: String? = null, attrs: (TABLE.() -> Unit)? = null, content: (TABLE.() -> Unit))
+```
+
+### TextRotate
+
+Rotated text display — renders `<span>`.
+
+```kotlin
+fun FlowContent.daisyTextRotate(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+```
+
+### Textarea
+
+Multi-line text input — renders `<textarea>`.
+
+```kotlin
+enum class TextareaVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class TextareaSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyTextarea(id: HtmlId? = null, variant: ClassValues<TextareaVariant>? = null, size: ClassValues<TextareaSize>? = null, ghost: Boolean = false, extraClasses: String? = null, attrs: (TEXTAREA.() -> Unit)? = null, content: (TEXTAREA.() -> Unit))
+```
+
+### ThemeController
+
+DaisyUI theme controller toggle — renders `<input>`.
+
+```kotlin
+fun FlowContent.daisyThemeController(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+```
+
+### Timeline
+
+Vertical or horizontal timeline — renders `<ul>`.
+
+```kotlin
+fun FlowContent.daisyTimeline(id: HtmlId? = null, compact: Boolean = false, horizontal: Boolean = false, snapIcon: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun FlowContent.daisyTimelineStart(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTimelineMiddle(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTimelineEnd(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Toast
+
+Toast notification container — renders `<div>`.
+
+```kotlin
+enum class ToastHorizontalPlacement { Start, Center, End }
+enum class ToastVerticalPlacement { Top, Middle, Bottom }
+fun FlowContent.daisyToast(id: HtmlId? = null, horizontalPlacement: ClassValues<ToastHorizontalPlacement>? = null, verticalPlacement: ClassValues<ToastVerticalPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Toggle
+
+Switch-style boolean input — renders `<input>`.
+
+```kotlin
+enum class ToggleVariant { Primary, Secondary, Accent, Neutral, Success, Warning, Info, Error }
+enum class ToggleSize { Xs, Sm, Md, Lg, Xl }
+fun FlowContent.daisyToggle(id: HtmlId? = null, variant: ClassValues<ToggleVariant>? = null, size: ClassValues<ToggleSize>? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+```
+
+### Tooltip
+
+Hover tooltip on elements — renders `<div>`.
+
+```kotlin
+enum class TooltipVariant { Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class TooltipSidePlacement { Top, Bottom, Left, Right }
+enum class TooltipAlignPlacement { Start, Center, End }
+fun FlowContent.daisyTooltip(id: HtmlId? = null, variant: ClassValues<TooltipVariant>? = null, sidePlacement: ClassValues<TooltipSidePlacement>? = null, alignPlacement: ClassValues<TooltipAlignPlacement>? = null, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTooltipContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+```
+
+### Validator
+
+Form validation wrapper — renders `<input>`.
+
+```kotlin
+fun FlowContent.daisyValidator(id: HtmlId? = null, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyValidatorHint(id: HtmlId? = null, extraClasses: String? = null, attrs: (P.() -> Unit)? = null, content: (P.() -> Unit))
 ```
 
 ## Requirements
 
 - JDK 21+
-- Kotlin, kotlinx-html, DaisyUI (a Tailwind v4 plugin) and Tailwind: exact versions are in
-  `gradle/libs.versions.toml`. They are deliberately not restated here — this file said
-  "DaisyUI 5.5.20" for two minor releases after that stopped being true.
+- Kotlin, kotlinx-html and the DaisyUI version the components were generated from: exact
+  versions are in `gradle/libs.versions.toml` at the release tag you depend on.
 
 ## Links
 
 - Source: https://github.com/ollin/kdaisyui
+- Component reference: https://github.com/ollin/kdaisyui/tree/main/docs/reference
 - DaisyUI: https://daisyui.com
 - kotlinx.html: https://github.com/Kotlin/kotlinx.html

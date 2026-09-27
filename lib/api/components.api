@@ -103,7 +103,7 @@ fun FlowContent.daisyDrawerButton(id: HtmlId? = null, extraClasses: String? = nu
 enum DropdownModifier: Hover, Open
 enum DropdownHorizontalPlacement: Start, Center, End
 enum DropdownVerticalPlacement: Top, Bottom
-fun FlowContent.daisyDropdown(id: HtmlId? = null, modifier: ClassValues<DropdownModifier>? = null, horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null, verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null, close: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, bottom: Boolean = false, left: Boolean = false, right: Boolean = false, center: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
+fun FlowContent.daisyDropdown(id: HtmlId? = null, modifier: ClassValues<DropdownModifier>? = null, horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null, verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null, close: Boolean = false, left: Boolean = false, right: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
 fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 
 # Fab <div>

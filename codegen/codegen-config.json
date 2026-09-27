@@ -92,6 +92,14 @@
       "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
       "issue": 357
     },
+    "dropdown/dropdown-left": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
+    "dropdown/dropdown-right": {
+      "reason": "daisyDropdown renders <details> deliberately: the <div> shape is the popover variant, which needs attributes the generator cannot emit and produced a dropdown that could not open. This class is documented on the <div> shape alone. The CSS attaches to .dropdown whatever the tag, so this is a documentation divergence, not a rendering one. Permanent until a daisyDropdownPopover exists; see the issue.",
+      "issue": 357
+    },
     "list/list-col-wrap": {
       "reason": "Declared on the container's function (<ul>) while DaisyUI puts it on a child <p> the library generates no function for, so a caller cannot reach it. NOT the join-item shape: measured 2026-09-19 at v5.7.17, all 3 sightings sit on a bare <p> inside a <li class=\"list-row\">, and List.kt generates one function. A scope member needs a function to overload and there is none.",
       "issue": 347
@@ -255,50 +263,6 @@
         "type": "Boolean",
         "default": "false",
         "apply": "if (disabled) this.disabled = true"
-      }
-    ],
-    "dropdown": [
-      {
-        "name": "end",
-        "type": "Boolean",
-        "default": "false",
-        "apply": "if (end) addClassNames(\"dropdown-end\")"
-      },
-      {
-        "name": "start",
-        "type": "Boolean",
-        "default": "false",
-        "apply": "if (start) addClassNames(\"dropdown-start\")"
-      },
-      {
-        "name": "top",
-        "type": "Boolean",
-        "default": "false",
-        "apply": "if (top) addClassNames(\"dropdown-top\")"
-      },
-      {
-        "name": "bottom",
-        "type": "Boolean",
-        "default": "false",
-        "apply": "if (bottom) addClassNames(\"dropdown-bottom\")"
-      },
-      {
-        "name": "left",
-        "type": "Boolean",
-        "default": "false",
-        "apply": "if (left) addClassNames(\"dropdown-left\")"
-      },
-      {
-        "name": "right",
-        "type": "Boolean",
-        "default": "false",
-        "apply": "if (right) addClassNames(\"dropdown-right\")"
-      },
-      {
-        "name": "center",
-        "type": "Boolean",
-        "default": "false",
-        "apply": "if (center) addClassNames(\"dropdown-center\")"
       }
     ]
   },

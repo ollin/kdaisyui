@@ -429,6 +429,35 @@ positions and `<div>` in 47, so the element that keeps `daisyBadge` usable every
 the commoner one. Tracked as #356. `daisyDropdown` keeps `<details>` for the same kind of reason
 — the `<div>` shape needs attributes the generator cannot emit — tracked as #357.
 
+### How to migrate from 0.6.x
+
+**1. `daisyDropdown` lost the placement booleans that 0.6.0 should already have removed.** The
+0.5.x entry above says `horizontalPlacement` and `verticalPlacement` *replace* five booleans.
+In 0.6.0 they did not: `end`, `start`, `center`, `top` and `bottom` were still parameters beside
+the enums, so `daisyDropdown(end = true, horizontalPlacement = DropdownHorizontalPlacement.Start)`
+compiled and emitted both classes. They are gone now, and it breaks at compile time:
+
+```kotlin
+// before — compiled in 0.6.0
+daisyDropdown(end = true, top = true) { … }
+
+// after
+daisyDropdown(
+    horizontalPlacement = DropdownHorizontalPlacement.End,
+    verticalPlacement = DropdownVerticalPlacement.Top,
+) { … }
+```
+
+| Boolean in 0.6.0 | Use instead |
+|---|---|
+| `start`, `center`, `end` | `horizontalPlacement = DropdownHorizontalPlacement.Start` / `.Center` / `.End` |
+| `top`, `bottom` | `verticalPlacement = DropdownVerticalPlacement.Top` / `.Bottom` |
+| `left`, `right` | unchanged — they compose with the vertical axis, so they stay booleans |
+
+The five had come from a hand-written configuration block older than the measured enums, and
+nothing compared the two. The generator now refuses to run while any function offers one class
+both as a boolean and as an enum constant, so this cannot come back for any component.
+
 ## Quick start
 
 ### 1. Add the dependency

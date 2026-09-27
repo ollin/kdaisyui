@@ -40,19 +40,14 @@ class DropdownCoverageTest {
             daisyDropdown(
                 id = htmlId("x-cov-id"),
                 close = true,
-                end = true,
-                start = true,
-                top = true,
-                bottom = true,
                 left = true,
                 right = true,
-                center = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dropdown dropdown-bottom dropdown-center dropdown-close dropdown-end dropdown-left dropdown-right dropdown-start dropdown-top zz-extra", "Dropdown all flags", closes = "</details></div>")
+        assertRendered(html, "dropdown dropdown-close dropdown-left dropdown-right zz-extra", "Dropdown all flags", closes = "</details></div>")
         assertCommonFlags(html, "Dropdown")
     }
 

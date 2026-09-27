@@ -10,11 +10,16 @@
  */
 import type { ComponentShape } from './component-shape.ts'
 import type { DocSummary } from './generator-docs.ts'
+import { renderFunction } from './component-api-dump.ts'
 
 export function generateLlmsTxt(
   template: string,
-  _shapes: readonly ComponentShape[],
+  shapes: readonly ComponentShape[],
   _docSummaries: Readonly<Record<string, DocSummary>>,
 ): string {
-  return template
+  return template.replace('{{COMPONENTS}}', shapes.map(componentSection).join('\n'))
+}
+
+function componentSection(shape: ComponentShape): string {
+  return shape.functions.map(renderFunction).join('\n')
 }

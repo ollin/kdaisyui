@@ -8,6 +8,7 @@ import {
   generateIndexPage,
   type DocSummary,
 } from './generator-docs.ts'
+import { generateLlmsTxt } from './generator-llms.ts'
 
 // Committed prose tree, not build output — the same argument as `lib/generated/`: a reader of a
 // fresh clone gets the reference documentation without running anything.
@@ -22,6 +23,8 @@ function parseArg(flag: string, fallback: string): string {
 }
 
 const OUTPUT_DIR = parseArg('--output-dir', DEFAULT_OUTPUT_DIR)
+const LLMS_TXT = parseArg('--llms-txt', path.resolve(import.meta.dirname, '../../llms.txt'))
+const LLMS_TEMPLATE = path.resolve(import.meta.dirname, '../llms-template.md')
 
 function loadConfig() {
   if (!fs.existsSync(CONFIG_PATH)) return {}
@@ -102,6 +105,9 @@ function main() {
   const written = writeComponentPages(config, docSummaries)
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.md'), generateIndexPage(written.shapes, docSummaries))
   const removed = removeStalePages(written.fileNames)
+  // Same shapes, same summaries, same run: llms.txt cannot describe a different API than the pages.
+  fs.writeFileSync(LLMS_TXT, generateLlmsTxt(fs.readFileSync(LLMS_TEMPLATE, 'utf8'), written.shapes, docSummaries))
+  console.log(`llms.txt: ${LLMS_TXT}`)
 
   console.log(`\nGenerated ${written.shapes.length} pages plus index.md, skipped ${written.skipped}`)
   console.log(`Output: ${OUTPUT_DIR}`)

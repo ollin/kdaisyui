@@ -31,6 +31,11 @@ once — and that decides which groups become a Kotlin enum. It is written whole
 `just measure-exclusivity`, which needs a system Chromium, and `:lib:verifyExclusivity` fails the
 build when it stops describing the submodule. → skill **`kdaisyui-daisyui-upgrade`**.
 
+**`llms.txt` joined that rule in 0.7.0.** It is what the README tells library users to point
+their AI tools at, and while hand-maintained it still showed the 0.1.x API a release after 0.6.0
+had replaced it. `generateReferenceDocs` now writes it whole; its prose lives in
+**`codegen/llms-template.md`** — edit that, never `llms.txt`.
+
 Note the singular: **`docs/reference.md`** is the hand-written entry point and is NOT generated.
 Nothing else under `docs/` is either. One editorial fact per page is hand-written too — its
 one-line description, in `codegen-config.json` → `docSummaries`.
@@ -228,7 +233,7 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 ## Anti-patterns
 
-- Editing `lib/generated/**`, `docs/reference/**` or `codegen/exclusivity.json`
+- Editing `lib/generated/**`, `docs/reference/**`, `llms.txt` or `codegen/exclusivity.json`
 - Reasoning about whether two DaisyUI classes conflict instead of measuring it — six attempts
   derived it from the CSS or from the shape of class names, and all six were wrong
 - Hardcoding CSS class strings instead of using the generated enums

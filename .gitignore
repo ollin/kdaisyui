@@ -34,3 +34,8 @@ tmp/
 .junie/
 .playwright-mcp/
 .air/
+
+# Per-machine opencode config: generated from the local profile by the MCP-menu
+# sweep, full of absolute paths and host details. Never commit it.
+opencode.json
+opencode.jsonc

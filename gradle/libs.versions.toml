@@ -30,7 +30,7 @@ webjar-htmx = "4.0.0"
 
 # E2E test stack
 playwright = "1.63.0"
-kotest = "6.2.5"
+kotest = "6.2.6"
 cucumber = "7.34.9"
 junit-platform = "6.1.3"
 

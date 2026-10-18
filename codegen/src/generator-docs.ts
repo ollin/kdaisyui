@@ -7,9 +7,9 @@
  * `SPAN`, and shipped that way in v0.4.0.
  *
  * One fact a page carries is NOT in the shape: its one-line editorial description. All 66 are
- * hand-written — none matches DaisyUI's own `desc` — so they live in `codegen-config.json` under
- * `docSummaries` and arrive here as an input like any other. See the change's design.md for why
- * DaisyUI's text cannot replace them.
+ * hand-written — none matches DaisyUI's own `desc` — so they live in each component's model
+ * file under `summary` and arrive here as an input like any other. DaisyUI's text cannot replace
+ * them: the index is a one-cell table column, and some of DaisyUI's descriptions run to 48 words.
  */
 
 import {
@@ -30,7 +30,7 @@ function inlineComment(parameter: ParameterShape): string {
   return parameter.doc && parameter.type === 'Boolean' ? `  // ${parameter.doc}` : ''
 }
 
-/** The editorial text for one component, from `codegen-config.json`. */
+/** The editorial text for one component, from its model file. */
 export interface DocSummary {
   /** One line, also used as the component's row in the index table. Written without a period. */
   readonly summary: string

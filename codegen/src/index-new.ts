@@ -44,14 +44,6 @@ function writeClassList(classes) {
   fs.writeFileSync(CLASS_LIST_FILE, `${header.join('\n')}${sorted.join('\n')}\n`)
   return sorted.length
 }
-const CONFIG_PATH = path.resolve(import.meta.dirname, '../codegen-config.json')
-
-function loadConfig() {
-  if (!fs.existsSync(CONFIG_PATH)) {
-    return { extras: {}, textParams: [], roles: {}, inputTypes: {} }
-  }
-  return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
-}
 
 /**
  * Fails the run when a component's model and the classes DaisyUI declares for it disagree.
@@ -73,7 +65,6 @@ const SKIP_MESSAGES: Readonly<Record<SkipReason, string>> = {
 function main() {
   console.log('Generating kdaisyui components from DaisyUI source...\n')
 
-  const config = loadConfig()
   const componentDirs = getAllComponentDirs()
 
   console.log(`Found ${componentDirs.length} components in DaisyUI docs\n`)

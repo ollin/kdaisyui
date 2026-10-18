@@ -15,7 +15,6 @@ import { readComponentSet } from './component-set.ts'
 import { generateComponentApiDump } from './component-api-dump.ts'
 
 const DEFAULT_BASELINE = path.resolve(import.meta.dirname, '../../lib/api/components.api')
-const CONFIG_PATH = path.resolve(import.meta.dirname, '../codegen-config.json')
 
 function parseArg(flag: string, fallback: string): string {
   for (const arg of process.argv) {
@@ -26,10 +25,6 @@ function parseArg(flag: string, fallback: string): string {
 
 const BASELINE = parseArg('--baseline', DEFAULT_BASELINE)
 const CHECK_ONLY = process.argv.includes('--check')
-
-function loadConfig() {
-  return fs.existsSync(CONFIG_PATH) ? JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8')) : {}
-}
 
 /** The first differing line, which is more use than "they differ". */
 function firstDifference(expected: string, actual: string): string {

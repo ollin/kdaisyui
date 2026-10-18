@@ -347,9 +347,8 @@ function collectImports(shape: ComponentShape, componentConfig: MainFunctionConf
  * build, because its members are other components' functions, and a rebuild inside here would
  * have discarded it.
  *
- * `config` is deliberately left to inference: it is the whole of `codegen-config.json`,
- * a large object with per-component sections, and modelling it properly is its own piece
- * of work rather than a side effect of a rename.
+ * `componentConfig` is what the main function's body needs beyond its shape — the extras'
+ * fragments, the role and the input type — read from the component's model file.
  */
 export function generateKotlinFile(shape: ComponentShape, componentConfig: MainFunctionConfig) {
 

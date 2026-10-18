@@ -1,27 +1,13 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { claimingGroups, documentedCall, expressingFunction, gapFindings, gapKey, gapsIn, pageFirst } from '../src/documented-elements.ts'
+import { claimingGroups, documentedCall, gapFindings, gapKey, gapsIn, pageFirst } from '../src/documented-elements.ts'
 import { markedElements } from '../src/parser/documented-classes.ts'
 import { component, enumParameter, part, toggle } from './model-fixture.ts'
 
 const CARD = component('card', 'Card', 'card')
 const CARD_WITH_BODY = { ...CARD, functions: [...CARD.functions, part('daisyCardBody', 'card-body')] }
 const BUTTON = component('button', 'Button', 'btn', {}, { parameters: [toggle('active', 'btn-active')], joinItem: true })
-
-describe('expressingFunction', () => {
-  it("finds the part whose own class the element carries", () => {
-    assert.equal(expressingFunction([CARD_WITH_BODY], ['card-body'])?.fn.name, 'daisyCardBody')
-  })
-
-  it("finds another component's function, with its modifiers and the join item", () => {
-    assert.equal(expressingFunction([CARD_WITH_BODY, BUTTON], ['btn', 'btn-active', 'join-item'])?.fn.name, 'daisyButton')
-  })
-
-  it('finds nothing when the function lacks one of the classes', () => {
-    assert.equal(expressingFunction([CARD_WITH_BODY, BUTTON], ['btn', 'btn-ghost']), null)
-  })
-})
 
 describe('gapKey', () => {
   it("keys two components on one element by their own classes, whatever modifiers ride along", () => {

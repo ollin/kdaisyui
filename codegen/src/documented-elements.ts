@@ -53,11 +53,6 @@ function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: 
   return owners.length === 0 ? [] : [owners.reduce((best, next) => (share(next) > share(best) ? next : best))]
 }
 
-/** The one function expressing the element alone, or null; several groups are not accepted yet. */
-export function expressingFunction(models: readonly ComponentModel[], counted: readonly string[]): ModelledFunction | null {
-  const { groups, unclaimed } = claimingGroups(models, counted)
-  return groups.length === 1 && unclaimed.length === 0 ? groups[0] : null
-}
 
 function offers(model: ComponentModel, fn: ModelFunction, cls: string): boolean {
   return offeredBy(model, fn).includes(cls) || (cls === JOIN_ITEM_CLASS && fn.kind === 'main' && fn.joinItem === true)

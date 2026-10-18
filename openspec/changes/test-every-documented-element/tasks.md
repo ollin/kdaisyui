@@ -31,7 +31,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 ## 2. Enablers, zero diff
 
-- [ ] 2.1 `^ r (internal)` Bind classes per function, not across the whole model (`design.md` D4).
+- [x] 2.1 `^ r (internal)` Bind classes per function, not across the whole model (`design.md` D4).
   Zero diff under regeneration.
 - [ ] 2.2 `^ F (internal)` The classifier `documented-elements.ts` (D1, D3), with unit tests from
   fixtures: an element is expressed by the first function whose class it carries and that offers

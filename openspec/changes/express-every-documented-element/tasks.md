@@ -71,7 +71,7 @@ regenerating.
   `notOffered`.
 - [x] 5.2 `^ F` `daisyFloatingLabel`, the same way.
 - [x] 5.3 `^ F` `daisyAvatarGroup`, the same way.
-- [ ] 5.4 `^ F` `daisyVc`, the same way.
+- [x] 5.4 `^ F` `daisyVc`, the same way.
 - [ ] 5.5 `. d` Confirm no `notExpressed` declaration is left in `codegen/model/`, and record it
   against the spec's Assumed.
 

@@ -39,8 +39,6 @@ class ButtonCoverageTest {
             daisyButton(
                 id = htmlId("x-cov-id"),
                 active = true,
-                block = true,
-                wide = true,
                 disabled = true,
                 type = ButtonType.button,
                 extraClasses = "zz-extra",
@@ -48,7 +46,7 @@ class ButtonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "btn btn-active btn-block btn-disabled btn-wide zz-extra", "Button all flags", closes = "</button></div>")
+        assertRendered(html, "btn btn-active btn-disabled zz-extra", "Button all flags", closes = "</button></div>")
         assertCommonFlags(html, "Button")
         assertTrue(html.contains("disabled=\""), "Button sets disabled")
         assertTrue(html.contains("type=\""), "Button sets type")
@@ -252,6 +250,26 @@ class ButtonCoverageTest {
             )
         }
         assertRendered(html, "btn btn-circle", "Button shape Circle")
+    }
+
+    @Test
+    fun button_width_wide() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                width = ButtonWidth.Wide,
+            )
+        }
+        assertRendered(html, "btn btn-wide", "Button width Wide")
+    }
+
+    @Test
+    fun button_width_block() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                width = ButtonWidth.Block,
+            )
+        }
+        assertRendered(html, "btn btn-block", "Button width Block")
     }
 
     @Test

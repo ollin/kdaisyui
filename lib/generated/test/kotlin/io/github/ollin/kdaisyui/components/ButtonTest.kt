@@ -142,7 +142,7 @@ class ButtonTest {
     @Test
     fun wide_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(wide = true) {
+            daisyButton(width = ButtonWidth.Wide) {
             }
         }
         val expectedClasses = "btn btn-wide"
@@ -219,7 +219,7 @@ class ButtonTest {
     @Test
     fun button_block() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(block = true) {
+            daisyButton(width = ButtonWidth.Block) {
             }
         }
         val expectedClasses = "btn btn-block"

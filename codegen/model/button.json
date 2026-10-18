@@ -23,7 +23,8 @@
       "label": "Style variants",
       "classes": ["btn-outline", "btn-dash", "btn-soft", "btn-ghost", "btn-link"]
     },
-    { "name": "ButtonShape", "label": "Shape variants", "classes": ["btn-square", "btn-circle"] }
+    { "name": "ButtonShape", "label": "Shape variants", "classes": ["btn-square", "btn-circle"] },
+    { "name": "ButtonWidth", "label": "Width variants", "classes": ["btn-wide", "btn-block"] }
   ],
   "functions": [
     {
@@ -39,9 +40,8 @@
         { "kind": "enum", "name": "size", "enum": "ButtonSize", "doc": "Size variant" },
         { "kind": "enum", "name": "style", "enum": "ButtonStyle", "doc": "Style variant" },
         { "kind": "enum", "name": "shape", "enum": "ButtonShape", "doc": "Shape variant" },
+        { "kind": "enum", "name": "width", "enum": "ButtonWidth", "doc": "Width variant" },
         { "kind": "toggle", "name": "active", "class": "btn-active" },
-        { "kind": "toggle", "name": "block", "class": "btn-block" },
-        { "kind": "toggle", "name": "wide", "class": "btn-wide" },
         {
           "kind": "extra",
           "name": "disabled",

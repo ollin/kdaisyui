@@ -80,6 +80,17 @@ enum class ButtonShape(internal val className: String) : ClassValues<ButtonShape
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Width variants for this component (CSS prefix: `btn-`) */
+enum class ButtonWidth(internal val className: String) : ClassValues<ButtonWidth> {
+    /** CSS: `btn-wide` — more horizontal padding */
+    Wide("btn-wide"),
+    /** CSS: `btn-block` — Full width */
+    Block("btn-block"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
@@ -89,9 +100,8 @@ enum class ButtonShape(internal val className: String) : ClassValues<ButtonShape
  * @param size — Size variant
  * @param style — Style variant
  * @param shape — Shape variant
+ * @param width — Width variant
  * @param active — looks active
- * @param block — Full width
- * @param wide — more horizontal padding
  * @param disabled
  * @param type
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -105,9 +115,8 @@ fun FlowContent.daisyButton(
     size: ClassValues<ButtonSize>? = null,
     style: ClassValues<ButtonStyle>? = null,
     shape: ClassValues<ButtonShape>? = null,
+    width: ClassValues<ButtonWidth>? = null,
     active: Boolean = false,
-    block: Boolean = false,
-    wide: Boolean = false,
     disabled: Boolean = false,
     type: ButtonType? = null,
     extraClasses: String? = null,
@@ -121,9 +130,8 @@ fun FlowContent.daisyButton(
         addClassNames(size)
         addClassNames(style)
         addClassNames(shape)
+        addClassNames(width)
         if (active) addClassNames("btn-active")
-        if (block) addClassNames("btn-block")
-        if (wide) addClassNames("btn-wide")
         if (disabled) { this.disabled = true; addClassNames("btn-disabled") }
         if (type != null) this.type = type
         addClassNames(extraClasses)

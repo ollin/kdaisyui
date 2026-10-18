@@ -15,6 +15,7 @@ Actions and triggers. Renders `<button class="btn ...">`.
 // ButtonSize: Xs | Sm | Md | Lg | Xl
 // ButtonStyle: Outline | Dash | Soft | Ghost | Link
 // ButtonShape: Square | Circle
+// ButtonWidth: Wide | Block
 fun FlowContent.daisyButton(
     text: String? = null,
     id: HtmlId? = null,
@@ -22,9 +23,8 @@ fun FlowContent.daisyButton(
     size: ClassValues<ButtonSize>? = null,
     style: ClassValues<ButtonStyle>? = null,
     shape: ClassValues<ButtonShape>? = null,
+    width: ClassValues<ButtonWidth>? = null,
     active: Boolean = false,  // looks active
-    block: Boolean = false,  // Full width
-    wide: Boolean = false,  // more horizontal padding
     disabled: Boolean = false,
     type: ButtonType? = null,
     extraClasses: String? = null,

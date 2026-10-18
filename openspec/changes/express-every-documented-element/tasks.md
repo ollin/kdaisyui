@@ -87,7 +87,7 @@ regenerating.
 - [x] 6.3 `. d` Re-dump both API baselines after block 5 and read the diff.
   Done in every step that changed a signature, since `./gradlew build` checks `lib.api` (2.4);
   each commit body names its diff. Nothing left to re-dump after block 5.
-- [ ] 6.4 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
+- [x] 6.4 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
   `:lib:testCodegen`, `:lib:checkComponentApi`, regeneration drift, CodeScene. No mutation tool for
   the TypeScript codegen; say so.
 - [ ] 6.5 `. d` Write `tmp/express-every-documented-element/EVALUATION-express-every-documented-element.md`.

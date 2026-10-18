@@ -22,7 +22,7 @@
  * the failure being fixed.
  */
 
-import type { ComponentShape, FunctionShape, ParameterShape } from './component-shape.ts'
+import { hasSibling, siblingParameters, type ComponentShape, type FunctionShape, type ParameterShape } from './component-shape.ts'
 
 /** One parameter, in the form a Kotlin caller sees it. */
 function renderParameter(parameter: ParameterShape): string {
@@ -42,6 +42,12 @@ export function renderFunction(shape: FunctionShape): string {
   return `fun ${shape.receiver}.${shape.name}(${parameters})`
 }
 
+/** A function's signature, followed by its class sibling's where it has one. */
+export function renderSignatures(shape: FunctionShape): string[] {
+  const sibling = `fun Tag.${shape.name}Classes(${siblingParameters(shape).map(renderParameter).join(', ')})`
+  return [renderFunction(shape), ...(hasSibling(shape) ? [sibling] : [])]
+}
+
 /** The enum entries a caller can name, which are as much API as the functions are. */
 function renderEnums(shape: ComponentShape): string[] {
   return shape.enums.map(e => `enum ${e.name}: ${e.entries.map(entry => entry.name).join(', ')}`)
@@ -59,7 +65,7 @@ function renderComponent(shape: ComponentShape): string[] {
   return [
     `# ${shape.componentName} <${main.htmlTag}>`,
     ...renderEnums(shape),
-    ...shape.functions.map(renderFunction),
+    ...shape.functions.flatMap(renderSignatures),
     '',
   ]
 }

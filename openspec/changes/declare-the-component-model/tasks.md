@@ -181,7 +181,7 @@ Same cadence as block 4.
 - [x] 5.2 `^ F` `daisyAura`, `daisySwap`: `style` axes.
 - [x] 5.3 `^ F` `daisyCarousel`, `daisyFooter`, `daisyTimeline`: `direction` axes.
 - [x] 5.4 `^ F` `daisyChat`, `daisyDivider`, `daisyStack`: `placement` axes.
-- [ ] 5.5 `^ F` `daisyCollapse`: `icon` and `state` axes.
+- [x] 5.5 `^ F` `daisyCollapse`: `icon` and `state` axes.
 - [ ] 5.6 `^ F` `daisyModal`: two placement axes. `daisyMegamenu`: `width` axis.
 - [ ] 5.7 `^ F` `daisyDropdown`: `side`, `align` and `state` axes; `hover` stays a toggle.
 - [ ] 5.8 `. d` **Check the tab item assumption:** list the tab constructions `fwb-ssr` and

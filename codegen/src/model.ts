@@ -24,6 +24,7 @@ import {
 } from './component-shape.ts'
 import { toPascalCase } from './classifier.ts'
 import { joinScopeMembers, withJoinScope } from './join-scope.ts'
+import type { DocSummary } from './generator-docs.ts'
 
 /** One enum the component declares, with its classes in declaration order. */
 export interface ModelEnum {
@@ -72,6 +73,10 @@ export interface ModelFunction {
   readonly attributes?: Readonly<Record<string, string>>
   /** On a main function: inside a join's content, this call marks itself `join-item`. */
   readonly joinItem?: true
+  /** On a main function: the ARIA role it always sets, e.g. `alert`. */
+  readonly role?: string
+  /** On a main function rendering `<input>`: the `InputType` it always sets, e.g. `checkBox`. */
+  readonly inputType?: string
 }
 
 export interface ComponentModel {
@@ -85,6 +90,8 @@ export interface ComponentModel {
   readonly functions: readonly ModelFunction[]
   /** The main function's content runs in the join scope, whose members are the join items. */
   readonly joinScope?: true
+  /** The hand-written line for the reference index, and the optional longer opening. */
+  readonly summary?: DocSummary
 }
 
 /** What the frontmatter supplies: the component's sentence and each class's, by stripped name. */
@@ -197,6 +204,8 @@ function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig, join
     ...(fn.modifierClasses.length > 0 ? { always: [...fn.modifierClasses] } : {}),
     ...(fn.staticAttributes.length > 0 ? { attributes: Object.fromEntries(fn.staticAttributes) } : {}),
     ...(joinItem && fn.kind === 'main' ? { joinItem: true as const } : {}),
+    ...(fn.kind === 'main' && componentConfig.role !== null ? { role: componentConfig.role } : {}),
+    ...(fn.kind === 'main' && componentConfig.inputType !== null ? { inputType: componentConfig.inputType } : {}),
   }
 }
 
@@ -205,7 +214,11 @@ function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig, join
  * committed model from today's inferred shapes. The extras' Kotlin fragments are not in the shape,
  * so they come from the component's configuration.
  */
-export function modelFromShape(shape: ComponentShape, componentConfig: ComponentConfig, joinItem = false): ComponentModel {
+export function modelFromShape(
+  shape: ComponentShape,
+  componentConfig: ComponentConfig,
+  { joinItem = false, summary }: { readonly joinItem?: boolean, readonly summary?: DocSummary } = {},
+): ComponentModel {
   return {
     component: shape.componentDir,
     name: shape.componentName,
@@ -213,6 +226,24 @@ export function modelFromShape(shape: ComponentShape, componentConfig: Component
     enums: shape.enums.map(declared => ({ name: declared.name, label: declared.categoryLabel, classes: declared.entries.map(entry => entry.cssClass) })),
     functions: shape.functions.map(fn => modelFunction(fn, componentConfig, joinItem)),
     ...(shape.scope !== undefined ? { joinScope: true as const } : {}),
+    ...(summary !== undefined ? { summary } : {}),
+  }
+}
+
+/** What the main function's body needs beyond its shape: the extras' fragments, text, role, input type. */
+export type MainFunctionConfig = Pick<ComponentConfig, 'extras' | 'hasTextParam' | 'role' | 'inputType'>
+
+export function mainFunctionConfig(model: ComponentModel): MainFunctionConfig {
+  const main = model.functions.find(fn => fn.kind === 'main')
+  return {
+    extras: (main?.parameters ?? []).flatMap(parameter => {
+      if (parameter.kind !== 'extra') return []
+      const { kind, ...extra } = parameter
+      return [extra]
+    }),
+    hasTextParam: main?.text ?? false,
+    role: main?.role ?? null,
+    inputType: main?.inputType ?? null,
   }
 }
 

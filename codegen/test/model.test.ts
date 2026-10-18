@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { modelFromShape, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
+import { mainFunctionConfig, modelFromShape, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
 import type { ComponentConfig } from '../src/component-shape.ts'
 
 /** The smallest real component: one function, one enum, inline text. */
@@ -95,7 +95,7 @@ describe('shapeFromModel', () => {
       { ...KBD.functions[0], parameters: [...KBD.functions[0].parameters, { kind: 'toggle', name: 'wide', class: 'kbd-wide' }, disabled] },
       { kind: 'custom', name: 'daisyKbdPopover', receiver: 'FlowContent', element: 'DIV', class: null, text: false, parameters: [], attributes: { popover: '' } },
     ] }
-    const config = { extras: [{ name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' }] } as unknown as ComponentConfig
+    const config = { extras: [{ name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' }], role: null, inputType: null } as unknown as ComponentConfig
 
     assert.deepEqual(modelFromShape(shapeFromModel(full, DESCRIPTIONS), config), full)
   })
@@ -108,5 +108,17 @@ describe('shapeFromModel', () => {
     const [, joined] = withDeclaredScopes(declared)
 
     assert.deepEqual([joined.scope?.members.map(fn => fn.name), joined.functions[0].contentScope], [['daisyKbd'], 'JoinScope'])
+  })
+
+  test('hands the main function body its extras, text, role and input type', () => {
+    const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
+    const checkbox: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'INPUT', parameters: [disabled], role: 'switch', inputType: 'checkBox' }] }
+
+    assert.deepEqual(mainFunctionConfig(checkbox), {
+      extras: [{ name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' }],
+      hasTextParam: true,
+      role: 'switch',
+      inputType: 'checkBox',
+    })
   })
 })

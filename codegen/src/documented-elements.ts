@@ -114,14 +114,23 @@ export interface DocumentedCall {
  */
 export function documentedCall(models: readonly ComponentModel[], element: MarkedElement, componentClasses: ReadonlySet<string>): DocumentedCall | null {
   const counted = countedClasses(element, componentClasses)
-  const expressing = counted.length > 0 ? expressingFunction(models, counted) : null
-  if (expressing === null) return null
-  const { model, fn } = expressing
-  const passed = counted.filter(cls => cls !== fn.class && cls !== JOIN_ITEM_CLASS && !(fn.always ?? []).includes(cls))
+  const { groups, unclaimed } = claimingGroups(models, counted)
+  if (groups.length === 0 || unclaimed.length > 0) return null
+  const [primary, ...others] = [...groups].sort((left, right) => models.indexOf(left.model) - models.indexOf(right.model))
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
-  const args = [...passed.map(cls => argumentFor(model, fn, cls)), ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : [])]
+  const siblings = others.map(group => `${group.fn.name}Classes(${groupArguments(group).join(', ')})`)
+  const args = [
+    ...groupArguments(primary),
+    ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : []),
+    ...(siblings.length > 0 ? [`attrs = { ${siblings.join('; ')} }`] : []),
+  ]
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
-  return { fn, args: args.join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+  return { fn: primary.fn, args: args.join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+}
+
+/** The named arguments that make a group's function write the group's classes. */
+function groupArguments({ model, fn, classes }: ClaimedGroup): string[] {
+  return classes.filter(cls => cls !== fn.class && cls !== JOIN_ITEM_CLASS && !(fn.always ?? []).includes(cls)).map(cls => argumentFor(model, fn, cls))
 }
 
 /** The named argument that makes `fn` write `cls`; the classifier has already found that one does. */

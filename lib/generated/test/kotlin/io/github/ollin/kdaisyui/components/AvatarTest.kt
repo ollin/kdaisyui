@@ -21,8 +21,7 @@ class AvatarTest {
     @Test
     fun avatar_with_mask_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Heart) {
-            }
+            daisyMask(style = MaskStyle.Heart)
         }
         val expectedClasses = "mask mask-heart"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -32,8 +31,7 @@ class AvatarTest {
     @Test
     fun avatar_with_mask_daisyMask_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Squircle) {
-            }
+            daisyMask(style = MaskStyle.Squircle)
         }
         val expectedClasses = "mask mask-squircle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -43,8 +41,7 @@ class AvatarTest {
     @Test
     fun avatar_with_mask_daisyMask_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Hexagon2) {
-            }
+            daisyMask(style = MaskStyle.Hexagon2)
         }
         val expectedClasses = "mask mask-hexagon-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

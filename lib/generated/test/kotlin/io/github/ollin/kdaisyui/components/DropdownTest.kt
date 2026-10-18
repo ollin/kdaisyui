@@ -30,6 +30,28 @@ class DropdownTest {
     }
 
     @Test
+    fun dropdown_using_details_and_summary_daisyDropdownContent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownContent(attrs = { daisyMenuClasses() }) {
+            }
+        }
+        val expectedClasses = "dropdown-content menu"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown using details and summary")
+    }
+
+    @Test
+    fun dropdown_using_popover_api_and_anchor_positioning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdown(attrs = { daisyMenuClasses() }) {
+            }
+        }
+        val expectedClasses = "dropdown menu"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown using popover API and anchor positioning")
+    }
+
+    @Test
     fun dropdown_aligns_to_start_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(align = DropdownAlign.Start) {
@@ -225,6 +247,17 @@ class DropdownTest {
         val expectedClasses = "dropdown dropdown-close"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Force close")
+    }
+
+    @Test
+    fun card_as_dropdown_daisyDropdownContent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownContent(attrs = { daisyCardClasses(size = CardSize.Sm) }) {
+            }
+        }
+        val expectedClasses = "card card-sm dropdown-content"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card as dropdown")
     }
 
     @Test

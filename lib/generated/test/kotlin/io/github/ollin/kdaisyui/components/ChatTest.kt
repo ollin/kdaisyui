@@ -41,6 +41,17 @@ class ChatTest {
     }
 
     @Test
+    fun chat_with_image_daisyChatImage() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatImage(attrs = { daisyAvatarClasses() }) {
+            }
+        }
+        val expectedClasses = "avatar chat-image"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image")
+    }
+
+    @Test
     fun chat_with_image_header_and_footer_daisyChatHeader() {
         val html = createHTML(prettyPrint = false).div {
             daisyChatHeader() {

@@ -54,8 +54,7 @@ class NavbarTest {
     @Test
     fun navbar_with_search_input_and_dropdown_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput() {
-            }
+            daisyInput()
         }
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -69,6 +68,28 @@ class NavbarTest {
             }
         }
         val expectedClasses = "dropdown dropdown-end"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+    }
+
+    @Test
+    fun navbar_with_search_input_and_dropdown_daisyAvatar() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatar(attrs = { daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) }) {
+            }
+        }
+        val expectedClasses = "avatar btn btn-circle btn-ghost"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+    }
+
+    @Test
+    fun navbar_with_search_input_and_dropdown_daisyDropdownContent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) {
+            }
+        }
+        val expectedClasses = "dropdown-content menu menu-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
     }
@@ -102,6 +123,28 @@ class NavbarTest {
             }
         }
         val expectedClasses = "indicator"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+    }
+
+    @Test
+    fun navbar_with_icon_indicator_and_dropdown_daisyBadge() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(size = BadgeSize.Sm, attrs = { daisyIndicatorItemClasses() }) {
+            }
+        }
+        val expectedClasses = "badge badge-sm indicator-item"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+    }
+
+    @Test
+    fun navbar_with_icon_indicator_and_dropdown_daisyCard() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(size = CardSize.Sm, attrs = { daisyDropdownContentClasses() }) {
+            }
+        }
+        val expectedClasses = "card card-sm dropdown-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
     }
@@ -184,6 +227,17 @@ class NavbarTest {
     }
 
     @Test
+    fun navbar_with_dropdown_center_logo_and_icon_daisyBadge() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Primary, attrs = { daisyIndicatorItemClasses() }) {
+            }
+        }
+        val expectedClasses = "badge badge-primary badge-xs indicator-item"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+    }
+
+    @Test
     fun responsive_dropdown_menu_on_small_screen_center_menu_on_large_screen_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton() {
@@ -192,6 +246,17 @@ class NavbarTest {
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (dropdown menu on small screen, center menu on large screen)")
+    }
+
+    @Test
+    fun responsive_collapse_on_small_screen_full_content_on_large_screen() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbar(attrs = { daisyCollapseTitleClasses() }) {
+            }
+        }
+        val expectedClasses = "collapse-title navbar"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (collapse on small screen, full content on large screen)")
     }
 
     @Test

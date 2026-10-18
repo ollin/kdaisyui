@@ -10,6 +10,7 @@ import {
 import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
 import { documentedCall, pageFirst, type DocumentedCall } from './documented-elements.ts'
+import { isVoidElement, type TagClass } from './component-shape.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
@@ -248,8 +249,7 @@ function generateClassTest(fn: ModelFunction, { testName, args, expectedClasses,
     @Test
     fun ${testName}() {
         val html = createHTML(prettyPrint = false).${htmlTagFnFor(wrapperTagOf(fn.receiver))} {
-            ${fn.name}(${args}) {
-            }
+            ${fn.name}(${args})${isVoidElement(fn.element as TagClass) ? '' : ' {\n            }'}
         }
         val expectedClasses = "${expectedClasses}"
         val actualClasses = html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" ")

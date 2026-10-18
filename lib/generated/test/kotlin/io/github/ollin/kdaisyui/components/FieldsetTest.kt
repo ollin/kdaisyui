@@ -33,8 +33,7 @@ class FieldsetTest {
     @Test
     fun fieldset_fieldset_legend_and_label_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput() {
-            }
+            daisyInput()
         }
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

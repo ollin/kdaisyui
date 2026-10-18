@@ -11,8 +11,7 @@ class InputTest {
     @Test
     fun text_input() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput() {
-            }
+            daisyInput()
         }
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -44,8 +43,7 @@ class InputTest {
     @Test
     fun ghost_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(ghost = true) {
-            }
+            daisyInput(ghost = true)
         }
         val expectedClasses = "input input-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -88,8 +86,7 @@ class InputTest {
     @Test
     fun input_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Neutral) {
-            }
+            daisyInput(color = InputColor.Neutral)
         }
         val expectedClasses = "input input-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -99,8 +96,7 @@ class InputTest {
     @Test
     fun input_colors_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Primary) {
-            }
+            daisyInput(color = InputColor.Primary)
         }
         val expectedClasses = "input input-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -110,8 +106,7 @@ class InputTest {
     @Test
     fun input_colors_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Secondary) {
-            }
+            daisyInput(color = InputColor.Secondary)
         }
         val expectedClasses = "input input-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -121,8 +116,7 @@ class InputTest {
     @Test
     fun input_colors_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Accent) {
-            }
+            daisyInput(color = InputColor.Accent)
         }
         val expectedClasses = "input input-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -132,8 +126,7 @@ class InputTest {
     @Test
     fun input_colors_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Info) {
-            }
+            daisyInput(color = InputColor.Info)
         }
         val expectedClasses = "input input-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -143,8 +136,7 @@ class InputTest {
     @Test
     fun input_colors_6() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Success) {
-            }
+            daisyInput(color = InputColor.Success)
         }
         val expectedClasses = "input input-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -154,8 +146,7 @@ class InputTest {
     @Test
     fun input_colors_7() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Warning) {
-            }
+            daisyInput(color = InputColor.Warning)
         }
         val expectedClasses = "input input-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -165,8 +156,7 @@ class InputTest {
     @Test
     fun input_colors_8() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(color = InputColor.Error) {
-            }
+            daisyInput(color = InputColor.Error)
         }
         val expectedClasses = "input input-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -176,8 +166,7 @@ class InputTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Xs) {
-            }
+            daisyInput(size = InputSize.Xs)
         }
         val expectedClasses = "input input-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -187,8 +176,7 @@ class InputTest {
     @Test
     fun sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Sm) {
-            }
+            daisyInput(size = InputSize.Sm)
         }
         val expectedClasses = "input input-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -198,8 +186,7 @@ class InputTest {
     @Test
     fun sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Md) {
-            }
+            daisyInput(size = InputSize.Md)
         }
         val expectedClasses = "input input-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -209,8 +196,7 @@ class InputTest {
     @Test
     fun sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Lg) {
-            }
+            daisyInput(size = InputSize.Lg)
         }
         val expectedClasses = "input input-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -220,12 +206,21 @@ class InputTest {
     @Test
     fun sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Xl) {
-            }
+            daisyInput(size = InputSize.Xl)
         }
         val expectedClasses = "input input-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+    }
+
+    @Test
+    fun username_text_input_with_icon_and_validator() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInput(attrs = { daisyValidatorClasses() })
+        }
+        val expectedClasses = "input validator"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Username text input with icon and validator")
     }
 
     @Test

@@ -10,8 +10,7 @@ class LabelTest {
     @Test
     fun label_for_input_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput() {
-            }
+            daisyInput()
         }
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -43,8 +42,7 @@ class LabelTest {
     @Test
     fun floating_label_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Md) {
-            }
+            daisyInput(size = InputSize.Md)
         }
         val expectedClasses = "input input-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -54,8 +52,7 @@ class LabelTest {
     @Test
     fun floating_label_with_different_sizes_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Xs) {
-            }
+            daisyInput(size = InputSize.Xs)
         }
         val expectedClasses = "input input-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -65,8 +62,7 @@ class LabelTest {
     @Test
     fun floating_label_with_different_sizes_daisyInput_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Sm) {
-            }
+            daisyInput(size = InputSize.Sm)
         }
         val expectedClasses = "input input-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -76,8 +72,7 @@ class LabelTest {
     @Test
     fun floating_label_with_different_sizes_daisyInput_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Lg) {
-            }
+            daisyInput(size = InputSize.Lg)
         }
         val expectedClasses = "input input-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -87,8 +82,7 @@ class LabelTest {
     @Test
     fun floating_label_with_different_sizes_daisyInput_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Xl) {
-            }
+            daisyInput(size = InputSize.Xl)
         }
         val expectedClasses = "input input-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -98,8 +92,7 @@ class LabelTest {
     @Test
     fun responsive_size_floating_label_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(size = InputSize.Xs, extraClasses = "sm:input-sm md:input-md lg:input-lg xl:input-xl") {
-            }
+            daisyInput(size = InputSize.Xs, extraClasses = "sm:input-sm md:input-md lg:input-lg xl:input-xl")
         }
         val expectedClasses = "input input-xs lg:input-lg md:input-md sm:input-sm xl:input-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

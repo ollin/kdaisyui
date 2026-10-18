@@ -21,8 +21,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_daisyDrawerToggle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerToggle() {
-            }
+            daisyDrawerToggle()
         }
         val expectedClasses = "drawer-toggle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -36,6 +35,17 @@ class DrawerTest {
             }
         }
         val expectedClasses = "drawer-content"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+    }
+
+    @Test
+    fun drawer_sidebar_daisyDrawerButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDrawerButton(attrs = { daisyButtonClasses() }) {
+            }
+        }
+        val expectedClasses = "btn drawer-button"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
     }
@@ -85,6 +95,17 @@ class DrawerTest {
     }
 
     @Test
+    fun navbar_menu_for_desktop_sidebar_drawer_for_mobile_daisyDrawerButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDrawerButton(attrs = { daisyButtonClasses(shape = ButtonShape.Square, style = ButtonStyle.Ghost) }) {
+            }
+        }
+        val expectedClasses = "btn btn-ghost btn-square drawer-button"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+    }
+
+    @Test
     fun navbar_menu_for_desktop_sidebar_drawer_for_mobile_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenu(direction = MenuDirection.Horizontal) {
@@ -113,6 +134,17 @@ class DrawerTest {
             }
         }
         val expectedClasses = "drawer drawer-end"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar that opens from right side of page")
+    }
+
+    @Test
+    fun drawer_sidebar_that_opens_from_right_side_of_page_daisyDrawerButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDrawerButton(attrs = { daisyButtonClasses(color = ButtonColor.Primary) }) {
+            }
+        }
+        val expectedClasses = "btn btn-primary drawer-button"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar that opens from right side of page")
     }

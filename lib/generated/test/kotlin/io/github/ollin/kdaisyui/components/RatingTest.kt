@@ -21,8 +21,7 @@ class RatingTest {
     @Test
     fun rating_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star) {
-            }
+            daisyMask(style = MaskStyle.Star)
         }
         val expectedClasses = "mask mask-star"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -32,8 +31,7 @@ class RatingTest {
     @Test
     fun mask_star_2_with_warning_color_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star2) {
-            }
+            daisyMask(style = MaskStyle.Star2)
         }
         val expectedClasses = "mask mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -43,8 +41,7 @@ class RatingTest {
     @Test
     fun mask_heart_with_multiple_colors_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Heart) {
-            }
+            daisyMask(style = MaskStyle.Heart)
         }
         val expectedClasses = "mask mask-heart"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -120,8 +117,7 @@ class RatingTest {
     @Test
     fun half_stars_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star2, half = MaskHalf.Half1) {
-            }
+            daisyMask(style = MaskStyle.Star2, half = MaskHalf.Half1)
         }
         val expectedClasses = "mask mask-half-1 mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -131,8 +127,7 @@ class RatingTest {
     @Test
     fun half_stars_daisyMask_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star2, half = MaskHalf.Half2) {
-            }
+            daisyMask(style = MaskStyle.Star2, half = MaskHalf.Half2)
         }
         val expectedClasses = "mask mask-half-2 mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

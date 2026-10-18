@@ -68,6 +68,12 @@ describe('documentedCall', () => {
     assert.equal(callFor('<button class="$$btn $$join-item">x</button>')?.expectedClasses, 'btn')
   })
 
+  it("calls the first model's function and adds another component's classes through its sibling", () => {
+    const call = documentedCall([CARD_WITH_BODY, sized], markedElements('<div class="$$btn $$btn-lg $$card-body">x</div>')[0], new Set([...classes, 'card-body']))
+
+    assert.deepEqual({ fn: call?.fn.name, args: call?.args, expected: call?.expectedClasses }, { fn: 'daisyCardBody', args: 'attrs = { daisyButtonClasses(size = ButtonSize.Lg) }', expected: 'btn btn-lg card-body' })
+  })
+
   it('makes no call for a gap', () => {
     assert.equal(callFor('<li class="$$list-row">x</li>'), null)
   })

@@ -52,6 +52,17 @@ class SwapTest {
     }
 
     @Test
+    fun hamburger_button() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwap(style = SwapStyle.Rotate, attrs = { daisyButtonClasses(shape = ButtonShape.Circle) }) {
+            }
+        }
+        val expectedClasses = "btn btn-circle swap swap-rotate"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hamburger button")
+    }
+
+    @Test
     fun swap_icons_with_flip_effect() {
         val html = createHTML(prettyPrint = false).div {
             daisySwap(style = SwapStyle.Flip) {

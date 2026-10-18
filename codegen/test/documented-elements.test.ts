@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { expressingFunction } from '../src/documented-elements.ts'
+import { expressingFunction, gapKey } from '../src/documented-elements.ts'
 import { component, part, toggle } from './model-fixture.ts'
 
 const CARD = component('card', 'Card', 'card')
@@ -19,5 +19,15 @@ describe('expressingFunction', () => {
 
   it('finds nothing when the function lacks one of the classes', () => {
     assert.equal(expressingFunction([CARD_WITH_BODY, BUTTON], ['btn', 'btn-ghost']), null)
+  })
+})
+
+describe('gapKey', () => {
+  it("keys two components on one element by their own classes, whatever modifiers ride along", () => {
+    assert.equal(gapKey([CARD_WITH_BODY, BUTTON], ['card-body', 'btn-active', 'btn']), 'btn card-body')
+  })
+
+  it('keys a gap within one component by every class', () => {
+    assert.equal(gapKey([BUTTON], ['btn-ghost', 'btn']), 'btn btn-ghost')
   })
 })

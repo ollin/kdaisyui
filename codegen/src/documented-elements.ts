@@ -27,3 +27,13 @@ export function expressingFunction(models: readonly ComponentModel[], counted: r
 function offers(model: ComponentModel, fn: ModelFunction, cls: string): boolean {
   return offeredBy(model, fn).includes(cls) || (cls === JOIN_ITEM_CLASS && fn.kind === 'main' && fn.joinItem === true)
 }
+
+/**
+ * What a gap is declared by: the own classes of the functions involved when two components share
+ * the element, whichever modifiers ride along; otherwise every counted class. Sorted.
+ */
+export function gapKey(models: readonly ComponentModel[], counted: readonly string[]): string {
+  const own = new Set(models.flatMap(model => model.functions.map(fn => fn.class)))
+  const owned = counted.filter(cls => own.has(cls))
+  return [...(owned.length >= 2 ? owned : counted)].sort().join(' ')
+}

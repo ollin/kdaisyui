@@ -67,7 +67,7 @@ regenerating.
 
 ## 5. The four classes no function renders
 
-- [ ] 5.1 `^ F` `daisyListRow`: delete its declaration, then the part; `list-row` leaves
+- [x] 5.1 `^ F` `daisyListRow`: delete its declaration, then the part; `list-row` leaves
   `notOffered`.
 - [ ] 5.2 `^ F` `daisyFloatingLabel`, the same way.
 - [ ] 5.3 `^ F` `daisyAvatarGroup`, the same way.

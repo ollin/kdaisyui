@@ -10,6 +10,7 @@
 
 import {
   functionParameters,
+  type ExtraParameter,
   htmlTagNameFor,
   tagBuilderFor,
   type ComponentShape,
@@ -45,7 +46,12 @@ export interface ModelToggleParameter {
   readonly class: string
 }
 
-export type ModelParameter = ModelEnumParameter | ModelToggleParameter
+/** A hand-written parameter: its Kotlin type, default and the fragment that applies it. */
+export interface ModelExtraParameter extends ExtraParameter {
+  readonly kind: 'extra'
+}
+
+export type ModelParameter = ModelEnumParameter | ModelToggleParameter | ModelExtraParameter
 
 export interface ModelFunction {
   readonly kind: FunctionKind
@@ -107,6 +113,7 @@ function toggleShape(model: ComponentModel, toggle: ModelToggleParameter, descri
 
 function parameterShape(model: ComponentModel, parameter: ModelParameter, descriptions: Descriptions): ParameterShape {
   if (parameter.kind === 'toggle') return toggleShape(model, parameter, descriptions)
+  if (parameter.kind === 'extra') return { name: parameter.name, type: parameter.type, default: parameter.default, doc: null }
   return {
     name: parameter.name,
     type: `ClassValues<${parameter.enum}>?`,

@@ -58,4 +58,13 @@ describe('shapeFromModel', () => {
 
     assert.deepEqual(active, { name: 'active', type: 'Boolean', default: 'false', doc: 'looks active', cssClass: 'btn-active' })
   })
+
+  test('makes an extra parameter what it declares, with no description', () => {
+    const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
+    const input: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [disabled] }] }
+
+    const parameter = shapeFromModel(input, DESCRIPTIONS).functions[0].parameters[2]
+
+    assert.deepEqual(parameter, { name: 'disabled', type: 'Boolean', default: 'false', doc: null })
+  })
 })

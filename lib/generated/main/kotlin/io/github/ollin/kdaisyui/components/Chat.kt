@@ -11,23 +11,23 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-enum class ChatColor(internal val className: String) : ClassValues<ChatColor> {
+enum class ChatBubbleColor(internal val className: String) : ClassValues<ChatBubbleColor> {
     /** CSS: `chat-bubble-neutral` */
-    BubbleNeutral("chat-bubble-neutral"),
+    Neutral("chat-bubble-neutral"),
     /** CSS: `chat-bubble-primary` */
-    BubblePrimary("chat-bubble-primary"),
+    Primary("chat-bubble-primary"),
     /** CSS: `chat-bubble-secondary` */
-    BubbleSecondary("chat-bubble-secondary"),
+    Secondary("chat-bubble-secondary"),
     /** CSS: `chat-bubble-accent` */
-    BubbleAccent("chat-bubble-accent"),
+    Accent("chat-bubble-accent"),
     /** CSS: `chat-bubble-info` */
-    BubbleInfo("chat-bubble-info"),
+    Info("chat-bubble-info"),
     /** CSS: `chat-bubble-success` */
-    BubbleSuccess("chat-bubble-success"),
+    Success("chat-bubble-success"),
     /** CSS: `chat-bubble-warning` */
-    BubbleWarning("chat-bubble-warning"),
+    Warning("chat-bubble-warning"),
     /** CSS: `chat-bubble-error` */
-    BubbleError("chat-bubble-error"),
+    Error("chat-bubble-error"),
     ;
 
     override val classNames: List<String> get() = listOf(className)
@@ -37,7 +37,6 @@ enum class ChatColor(internal val className: String) : ClassValues<ChatColor> {
 /**
  * Chat bubbles are used to show one line of conversation and all its data, including the author image, author name, time, etc. Renders `<div class="chat ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param color — Color variant
  * @param end
  * @param start
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -46,7 +45,6 @@ enum class ChatColor(internal val className: String) : ClassValues<ChatColor> {
  */
 fun FlowContent.daisyChat(
     id: HtmlId? = null,
-    color: ClassValues<ChatColor>? = null,
     end: Boolean = false,
     start: Boolean = false,
     extraClasses: String? = null,
@@ -56,7 +54,6 @@ fun FlowContent.daisyChat(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("chat")
-        addClassNames(color)
         if (end) addClassNames("chat-end")
         if (start) addClassNames("chat-start")
         addClassNames(extraClasses)
@@ -116,6 +113,7 @@ fun FlowContent.daisyChatFooter(
 /** Renders `<div class="chat-bubble ...">`. */
 fun FlowContent.daisyChatBubble(
     id: HtmlId? = null,
+    color: ClassValues<ChatBubbleColor>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -123,6 +121,7 @@ fun FlowContent.daisyChatBubble(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("chat-bubble")
+        addClassNames(color)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

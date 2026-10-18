@@ -11,10 +11,9 @@ Regenerate: just generate
 Chat bubble layout for conversations. Renders `<div class="chat ...">`.
 
 ```kotlin
-// ChatColor: BubbleNeutral | BubblePrimary | BubbleSecondary | BubbleAccent | BubbleInfo | BubbleSuccess | BubbleWarning | BubbleError
+// ChatBubbleColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 fun FlowContent.daisyChat(
     id: HtmlId? = null,
-    color: ClassValues<ChatColor>? = null,
     end: Boolean = false,
     start: Boolean = false,
     extraClasses: String? = null,
@@ -53,6 +52,7 @@ fun FlowContent.daisyChatFooter(
 ```kotlin
 fun FlowContent.daisyChatBubble(
     id: HtmlId? = null,
+    color: ClassValues<ChatBubbleColor>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

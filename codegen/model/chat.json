@@ -4,7 +4,7 @@
   "class": "chat",
   "enums": [
     {
-      "name": "ChatColor",
+      "name": "ChatBubbleColor",
       "label": "Color variants",
       "classes": [
         "chat-bubble-neutral",
@@ -27,7 +27,6 @@
       "class": "chat",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "color", "enum": "ChatColor", "doc": "Color variant" },
         { "kind": "toggle", "name": "end", "class": "chat-end" },
         { "kind": "toggle", "name": "start", "class": "chat-start" }
       ]
@@ -66,7 +65,7 @@
       "element": "DIV",
       "class": "chat-bubble",
       "text": false,
-      "parameters": []
+      "parameters": [{ "kind": "enum", "name": "color", "enum": "ChatBubbleColor", "doc": "Color variant" }]
     }
   ],
   "summary": { "summary": "Chat bubble layout for conversations" }

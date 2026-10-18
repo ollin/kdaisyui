@@ -21,8 +21,10 @@ regenerating.
   it took the first of two functions with own class `skeleton`; D4 now takes the one offering the
   most of the element's classes. A rendering part with no own class (`daisyDockItem`) claims a
   remaining group like a class-only function; spec and D4 say so.
-- [ ] 1.2 `. d` **Check the receiver assumption**: every receiver the generated functions give
+- [x] 1.2 `. d` **Check the receiver assumption**: every receiver the generated functions give
   their `attrs` and `content` lambdas is a kotlinx.html `Tag`, read from the kotlinx.html sources.
+  **Read 2026-10-18 in kotlinx-html-jvm 0.12.0's sources: it holds.** Every element class the model
+  uses (24 of them) is generated as `open class X(…) : HTMLTag(…)`, and `HTMLTag` implements `Tag`.
 
 ## 2. A class sibling for every function
 

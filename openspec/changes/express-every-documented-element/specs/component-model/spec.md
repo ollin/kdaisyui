@@ -21,9 +21,9 @@ is two overloads for two receivers), so 132 siblings.
 `daisyButton`'s `disabled`, which sets `disabled` and writes `btn-disabled`. Every other extra sets
 a property and writes no class.
 
-**Assumed** that a sibling can be called in every function's `attrs` and `content` lambda, because
-every receiver kotlinx.html gives them is a `Tag`. *Wrong if:* a generated test calling a sibling
-inside some function's lambda does not compile.
+**Verified** that a sibling can be called in every function's `attrs` and `content` lambda, read
+2026-10-18 in kotlinx-html-jvm 0.12.0's sources: every element class the model uses is an
+`HTMLTag`, and `HTMLTag` implements `Tag`.
 
 #### Scenario: A sibling adds the same classes as its function
 - **WHEN** `div { daisyButtonClasses(color = ButtonColor.Primary, active = true) }` is rendered

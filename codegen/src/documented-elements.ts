@@ -45,10 +45,13 @@ export interface DocumentedGap {
   readonly key: string
 }
 
-/** Every element of a page's examples that no function expresses by its unprefixed classes. */
-export function gapsIn(html: string, models: readonly ComponentModel[]): DocumentedGap[] {
+/**
+ * Every element of a page's examples that no function expresses by its counted classes: the
+ * unprefixed ones some frontmatter declares. `rounded-box`, a DaisyUI utility, is no component's.
+ */
+export function gapsIn(html: string, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): DocumentedGap[] {
   return markedElements(html)
-    .map(element => ({ tag: element.tag, counted: element.classes.filter(cls => !cls.isPrefixed).map(cls => cls.className) }))
+    .map(element => ({ tag: element.tag, counted: element.classes.filter(cls => !cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.className) }))
     .filter(({ counted }) => counted.length > 0 && expressingFunction(models, counted) === null)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }

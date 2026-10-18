@@ -33,9 +33,9 @@ describe('gapKey', () => {
 })
 
 describe('gapsIn', () => {
-  it('names each element no function expresses, by its tag and key, and passes the rest', () => {
-    const html = '<div class="$$card-body"><button class="$$btn $$btn-ghost">x</button><li class="$$list-row lg:$$card-body">y</li></div>'
+  it('names each element no function expresses, by its tag and key, ignoring classes no component declares', () => {
+    const html = '<div class="$$card-body $$rounded-box"><button class="$$btn $$btn-ghost">x</button><li class="$$list-row lg:$$card-body">y</li></div>'
 
-    assert.deepEqual(gapsIn(html, [CARD_WITH_BODY, BUTTON]), [{ tag: 'button', key: 'btn btn-ghost' }, { tag: 'li', key: 'list-row' }])
+    assert.deepEqual(gapsIn(html, [CARD_WITH_BODY, BUTTON], new Set(['card-body', 'btn', 'btn-ghost', 'list-row'])), [{ tag: 'button', key: 'btn btn-ghost' }, { tag: 'li', key: 'list-row' }])
   })
 })

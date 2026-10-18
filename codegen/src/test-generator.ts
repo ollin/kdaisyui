@@ -489,59 +489,50 @@ function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
   })
 }
 
+/** The imports a test file needs beyond the four every one of them has. */
+function extraImportLines(customParts, hasAttributeTest: boolean): string {
+  const imports = new Set<string>()
+  if (customParts.length > 0 || hasAttributeTest) imports.add('import kotlin.test.assertTrue')
+  for (const part of customParts) {
+    if (part.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(part.receiver))}`)
+  }
+  return [...imports].sort().map(line => `\n${line}`).join('')
+}
+
+/**
+ * One class test per documented element, deduplicated, with how many there were. That is no longer
+ * the number of test cases: one heading can document several elements, and one that documents
+ * none produces no test at all.
+ */
+function classTests(model: CallModel, mainName: string, testCases): { kotlin: string, testCount: number } {
+  const usedNames = new Set()
+  const tests = testCases.flatMap(tc => componentCallsIn(model, tc.html).map(call => generateClassTest(mainName, {
+    testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
+    args: call.args,
+    expectedClasses: call.expectedClasses,
+    caseName: tc.name,
+  })))
+  return { kotlin: tests.join(''), testCount: tests.length }
+}
+
 function generateKotlinTest(componentName, testCases, frontmatter, componentModel: ComponentModel) {
   const className = toClassName(componentName)
-  const model = buildCallModel(frontmatter, componentModel)
+  const main = componentModel.functions.find(fn => fn.kind === 'main')
+  const mainName = main?.name ?? `daisy${className}`
   const customParts = customPartsOf(componentModel)
-  const mainAttributes = componentModel.functions.find(fn => fn.kind === 'main')?.attributes ?? {}
-  const mainName = componentModel.functions.find(fn => fn.kind === 'main')?.name ?? `daisy${className}`
-  const attributeTest = generateComponentAttributeTest(mainName, mainAttributes)
-  
-  const extraImports = new Set()
-  if (customParts.length > 0 || attributeTest) {
-    extraImports.add('import kotlin.test.assertTrue')
-  }
-  for (const part of customParts) {
-    const receiver = part.receiver || 'FlowContent'
-    if (receiver !== 'FlowContent') {
-      extraImports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(receiver))}`)
-    }
-  }
-  const extraImportLines = [...extraImports].sort().join('\n')
-  
-  let kotlin = `package io.github.ollin.kdaisyui.components
+  const attributeTest = generateComponentAttributeTest(mainName, main?.attributes ?? {})
+  const { kotlin: classTestKotlin, testCount } = classTests(buildCallModel(frontmatter, componentModel), mainName, testCases)
+
+  const kotlin = `package io.github.ollin.kdaisyui.components
 
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
-import kotlin.test.assertEquals${extraImportLines ? '\n' + extraImportLines : ''}
+import kotlin.test.assertEquals${extraImportLines(customParts, attributeTest !== '')}
 
 class ${className}Test {
+${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}}
 `
-  
-  const usedNames = new Set()
-  // The number of TESTS, which is no longer the number of test cases: one heading can document
-  // several elements, and one that documents none produces no test at all.
-  let testCount = 0
-  
-  for (const tc of testCases) {
-    for (const call of componentCallsIn(model, tc.html)) {
-      testCount++
-      kotlin += generateClassTest(mainName, {
-        testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
-        args: call.args,
-        expectedClasses: call.expectedClasses,
-        caseName: tc.name,
-      })
-    }
-  }
-  
-  kotlin += attributeTest
-  kotlin += generateCustomPartTests(customParts)
-  
-  kotlin += `}
-`
-  
   return { kotlin, testCount }
 }
 

@@ -30,14 +30,24 @@ enum class MegamenuSize(internal val className: String) : ClassValues<MegamenuSi
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Width variants for this component (CSS prefix: `megamenu-`) */
+enum class MegamenuWidth(internal val className: String) : ClassValues<MegamenuWidth> {
+    /** CSS: `megamenu-wide` — megamenu dropdown will be as wide as the megamenu container */
+    Wide("megamenu-wide"),
+    /** CSS: `megamenu-full` — megamenu dropdown will fill the entire width of the page */
+    Full("megamenu-full"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * A megamenu is a large, horizontal menu where each item opens a popover to show a large block of navigation links. Megamenu must be used once, on top of the page. Inside each popover, you can use a daisyUI menu, or any custom content. Megamenu fits better on large screens only, and for small screens, you can hide the megamenu and show the content in a dropdown or a drawer. Renders `<div class="megamenu ..." popover>`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param full — megamenu dropdown will fill the entire width of the page
+ * @param width — Width variant
  * @param vertical — Hides horizontal megamenu so we can open a vertical megamenu in small screens
- * @param wide — megamenu dropdown will be as wide as the megamenu container
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -45,9 +55,8 @@ enum class MegamenuSize(internal val className: String) : ClassValues<MegamenuSi
 fun FlowContent.daisyMegamenu(
     id: HtmlId? = null,
     size: ClassValues<MegamenuSize>? = null,
-    full: Boolean = false,
+    width: ClassValues<MegamenuWidth>? = null,
     vertical: Boolean = false,
-    wide: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -57,9 +66,8 @@ fun FlowContent.daisyMegamenu(
         attributes["popover"] = ""
         addClassNames("megamenu")
         addClassNames(size)
-        if (full) addClassNames("megamenu-full")
+        addClassNames(width)
         if (vertical) addClassNames("megamenu-vertical")
-        if (wide) addClassNames("megamenu-wide")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

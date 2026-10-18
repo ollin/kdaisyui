@@ -483,7 +483,8 @@ Horizontal menu with popover navigation blocks — renders `<div>`.
 
 ```kotlin
 enum class MegamenuSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyMegamenu(id: HtmlId? = null, size: ClassValues<MegamenuSize>? = null, full: Boolean = false, vertical: Boolean = false, wide: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class MegamenuWidth { Wide, Full }
+fun FlowContent.daisyMegamenu(id: HtmlId? = null, size: ClassValues<MegamenuSize>? = null, width: ClassValues<MegamenuWidth>? = null, vertical: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyMegamenuActive(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 fun FlowContent.daisyMegamenuPanel(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```

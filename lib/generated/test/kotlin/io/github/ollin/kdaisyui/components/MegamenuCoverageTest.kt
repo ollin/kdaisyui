@@ -39,15 +39,13 @@ class MegamenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenu(
                 id = htmlId("x-cov-id"),
-                full = true,
                 vertical = true,
-                wide = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "megamenu megamenu-full megamenu-vertical megamenu-wide zz-extra", "Megamenu all flags", closes = "</div></div>")
+        assertRendered(html, "megamenu megamenu-vertical zz-extra", "Megamenu all flags", closes = "</div></div>")
         assertCommonFlags(html, "Megamenu")
     }
 
@@ -104,6 +102,28 @@ class MegamenuCoverageTest {
             )
         }
         assertRendered(html, "megamenu megamenu-xl", "Megamenu size Xl")
+    }
+
+    @Test
+    fun megamenu_width_wide() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenu(
+                width = MegamenuWidth.Wide,
+                content = { },
+            )
+        }
+        assertRendered(html, "megamenu megamenu-wide", "Megamenu width Wide")
+    }
+
+    @Test
+    fun megamenu_width_full() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenu(
+                width = MegamenuWidth.Full,
+                content = { },
+            )
+        }
+        assertRendered(html, "megamenu megamenu-full", "Megamenu width Full")
     }
 
     @Test

@@ -115,7 +115,7 @@ do not exist and change exactly those.
   gaps; `react-day-picker` and `vc` belong to calendar libraries this library does not wrap;
   `is-drawer-open:` and `is-drawer-close:` are Tailwind variants (#345); `label` under `fieldset`
   is offered by `daisyLabel`.
-- [ ] 3.9 `^ F (internal)` Completeness gate: a directory with no model file and no skip entry
+- [x] 3.9 `^ F (internal)` Completeness gate: a directory with no model file and no skip entry
   fails, and a model file naming no directory fails.
 - [ ] 3.10 `. r (internal)` Delete `codegen-config.json`, `config-consumption.ts` and
   `offered-twice.ts` with their tests.

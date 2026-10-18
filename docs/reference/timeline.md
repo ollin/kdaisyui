@@ -11,12 +11,12 @@ Regenerate: just generate
 Vertical or horizontal timeline. Renders `<ul class="timeline ...">`.
 
 ```kotlin
+// TimelineDirection: Horizontal | Vertical
 fun FlowContent.daisyTimeline(
     id: HtmlId? = null,
+    direction: ClassValues<TimelineDirection>? = null,
     compact: Boolean = false,
-    horizontal: Boolean = false,
     snapIcon: Boolean = false,
-    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),

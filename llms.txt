@@ -740,7 +740,8 @@ fun FlowContent.daisyThemeController(id: HtmlId? = null, extraClasses: String? =
 Vertical or horizontal timeline — renders `<ul>`.
 
 ```kotlin
-fun FlowContent.daisyTimeline(id: HtmlId? = null, compact: Boolean = false, horizontal: Boolean = false, snapIcon: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+enum class TimelineDirection { Horizontal, Vertical }
+fun FlowContent.daisyTimeline(id: HtmlId? = null, direction: ClassValues<TimelineDirection>? = null, compact: Boolean = false, snapIcon: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 fun FlowContent.daisyTimelineStart(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyTimelineMiddle(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyTimelineEnd(id: HtmlId? = null, box: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))

@@ -40,16 +40,36 @@ class TimelineCoverageTest {
             daisyTimeline(
                 id = htmlId("x-cov-id"),
                 compact = true,
-                horizontal = true,
                 snapIcon = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "timeline timeline-compact timeline-horizontal timeline-snap-icon timeline-vertical zz-extra", "Timeline all flags", closes = "</ul></div>")
+        assertRendered(html, "timeline timeline-compact timeline-snap-icon zz-extra", "Timeline all flags", closes = "</ul></div>")
         assertCommonFlags(html, "Timeline")
+    }
+
+    @Test
+    fun timeline_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimeline(
+                direction = TimelineDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "timeline timeline-horizontal", "Timeline direction Horizontal")
+    }
+
+    @Test
+    fun timeline_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimeline(
+                direction = TimelineDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "timeline timeline-vertical", "Timeline direction Vertical")
     }
 
     @Test

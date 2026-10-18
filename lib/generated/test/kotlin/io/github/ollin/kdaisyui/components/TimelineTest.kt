@@ -76,7 +76,7 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_text_on_both_sides_and_icon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true) {
+            daisyTimeline(direction = TimelineDirection.Vertical) {
             }
         }
         val expectedClasses = "timeline timeline-vertical"
@@ -87,7 +87,7 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_right_side_only() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true) {
+            daisyTimeline(direction = TimelineDirection.Vertical) {
             }
         }
         val expectedClasses = "timeline timeline-vertical"
@@ -98,7 +98,7 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_left_side_only() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true) {
+            daisyTimeline(direction = TimelineDirection.Vertical) {
             }
         }
         val expectedClasses = "timeline timeline-vertical"
@@ -109,7 +109,7 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_different_sides() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true) {
+            daisyTimeline(direction = TimelineDirection.Vertical) {
             }
         }
         val expectedClasses = "timeline timeline-vertical"
@@ -120,7 +120,7 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_colorful_lines() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true) {
+            daisyTimeline(direction = TimelineDirection.Vertical) {
             }
         }
         val expectedClasses = "timeline timeline-vertical"
@@ -131,7 +131,7 @@ class TimelineTest {
     @Test
     fun vertical_timeline_without_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true) {
+            daisyTimeline(direction = TimelineDirection.Vertical) {
             }
         }
         val expectedClasses = "timeline timeline-vertical"
@@ -142,7 +142,7 @@ class TimelineTest {
     @Test
     fun responsive_vertical_by_default_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(vertical = true, extraClasses = "lg:timeline-horizontal") {
+            daisyTimeline(direction = TimelineDirection.Vertical, extraClasses = "lg:timeline-horizontal") {
             }
         }
         val expectedClasses = "lg:timeline-horizontal timeline timeline-vertical"
@@ -153,7 +153,7 @@ class TimelineTest {
     @Test
     fun timeline_with_icon_snapped_to_the_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(snapIcon = true, vertical = true, extraClasses = "max-md:timeline-compact") {
+            daisyTimeline(snapIcon = true, direction = TimelineDirection.Vertical, extraClasses = "max-md:timeline-compact") {
             }
         }
         val expectedClasses = "max-md:timeline-compact timeline timeline-snap-icon timeline-vertical"

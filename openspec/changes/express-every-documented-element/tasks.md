@@ -70,7 +70,7 @@ regenerating.
 - [x] 5.1 `^ F` `daisyListRow`: delete its declaration, then the part; `list-row` leaves
   `notOffered`.
 - [x] 5.2 `^ F` `daisyFloatingLabel`, the same way.
-- [ ] 5.3 `^ F` `daisyAvatarGroup`, the same way.
+- [x] 5.3 `^ F` `daisyAvatarGroup`, the same way.
 - [ ] 5.4 `^ F` `daisyVc`, the same way.
 - [ ] 5.5 `. d` Confirm no `notExpressed` declaration is left in `codegen/model/`, and record it
   against the spec's Assumed.

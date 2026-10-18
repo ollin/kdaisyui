@@ -106,7 +106,15 @@ do not exist and change exactly those.
 - [ ] 3.7 `^ F (internal)` Completeness gate: generation fails when a component's frontmatter
   classes and the classes its model places differ, naming component and class. Tests: an unplaced
   class, a stale class.
-- [ ] 3.8 `^ F (internal)` Completeness gate: a class placed twice fails, naming both places.
+- [ ] 3.8 `^ F (internal)` Completeness gate: one function offering one class twice fails, naming
+  the function and the class. Corrected 2026-10-18 from "a class placed twice": measured before
+  the gate existed, `modal`, `skeleton` and `timeline-box` are each correctly placed on several
+  functions.
+  The gate's first run also needs `notOffered` entries for the eight frontmatter classes no
+  function offers, each with a reason: `avatar-group`, `floating-label` and `list-row` are API
+  gaps; `react-day-picker` and `vc` belong to calendar libraries this library does not wrap;
+  `is-drawer-open:` and `is-drawer-close:` are Tailwind variants (#345); `label` under `fieldset`
+  is offered by `daisyLabel`.
 - [ ] 3.9 `^ F (internal)` Completeness gate: a directory with no model file and no skip entry
   fails, and a model file naming no directory fails.
 - [ ] 3.10 `. r (internal)` Delete `codegen-config.json`, `config-consumption.ts` and

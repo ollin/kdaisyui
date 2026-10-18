@@ -128,7 +128,9 @@ once the switch has landed, and the model files are hand-maintained from then on
 ### D4. Frontmatter stays the class source; the gate is a set comparison
 
 The completeness gate compares two sets per component: the frontmatter's classes, and the classes
-the model places, counted with multiplicity. It fails on a difference or on a class counted twice.
+the model places or lists under `notOffered`. It fails on a difference, and on one function
+offering one class twice. A class on several functions is allowed: `modal` and `skeleton` are each
+the own class of two constructions, and `timeline-box` is a toggle on three parts.
 It replaces `config-consumption.ts`, `offered-twice.ts` and the measured-group completeness check.
 
 The frontmatter keeps supplying class descriptions for KDoc. Copying them into the model would put

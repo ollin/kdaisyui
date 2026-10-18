@@ -60,11 +60,17 @@ before the join scope was modelled.
 ### Requirement: The model accounts for every class DaisyUI declares
 
 Generation SHALL fail, naming the component and the class, unless every class in a component's
-frontmatter is placed exactly once in its model: as a function's own class, a part's class, an
-axis member, a toggle, a class an extra parameter or a construction writes, or an entry listed as
-not offered with a reason. Generation SHALL also fail when the model names a class the frontmatter
-does not declare, when a DaisyUI component directory has no model file and is not listed as
-skipped, and when a model file names no existing directory.
+frontmatter is placed in its model: as a function's own class, a part's class, an axis member, a
+toggle, a class an extra parameter or a construction writes, or an entry listed as not offered with
+a reason. Generation SHALL fail when one function offers the same class twice. Generation SHALL
+also fail when the model names a class the frontmatter does not declare, when a DaisyUI component
+directory has no model file and is not listed as skipped, and when a model file names no existing
+directory.
+
+A class MAY be placed on several functions. Measured 2026-10-18 before the gate was written:
+`modal` and `skeleton` are each the own class of two constructions, and `timeline-box` is a toggle
+on three parts. All three are correct. The defect the duplicate check exists for is one function
+offering one class twice.
 
 This replaces three guards with one set comparison: the unread-configuration guard, the
 offered-twice guard and the measured-group completeness check.
@@ -101,8 +107,13 @@ class; re-running this measurement on a bump is the check.
 
 #### Scenario: A class is placed twice
 
-- **WHEN** the model places one class in two roles, such as a toggle and an axis member
-- **THEN** generation fails naming both places
+- **WHEN** one function offers one class in two roles, such as a toggle and an axis member
+- **THEN** generation fails naming the function and the class
+
+#### Scenario: One class on several functions
+
+- **WHEN** two constructions of one component both write the component's class
+- **THEN** generation succeeds
 
 #### Scenario: DaisyUI adds a component
 

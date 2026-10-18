@@ -75,6 +75,16 @@ class TabTest {
     }
 
     @Test
+    fun tabs_box_using_radio_inputs_daisyTabRadio() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabRadio()
+        }
+        val expectedClasses = "tab"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-box using radio inputs")
+    }
+
+    @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
             daisyTabs(style = TabsStyle.Lift, size = TabsSize.Xs) {

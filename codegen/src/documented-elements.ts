@@ -38,19 +38,22 @@ export interface Claims {
  * classes claims what it offers; what remains is claimed whole by a function with no own class,
  * or by nobody.
  */
-export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[]): Claims {
+export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[], tag = ''): Claims {
   const candidates = models.flatMap(model => model.functions.map(fn => ({ model, fn })))
-  const owned = counted.flatMap(own => ownerOf(candidates, own, counted)).map(owner => ({ ...owner, classes: counted.filter(cls => offers(owner.model, owner.fn, cls)) }))
+  const owned = counted.flatMap(own => ownerOf(candidates, own, counted, tag)).map(owner => ({ ...owner, classes: counted.filter(cls => offers(owner.model, owner.fn, cls)) }))
   const rest = counted.filter(cls => !owned.some(group => group.classes.includes(cls)))
   const free = rest.length === 0 ? undefined : candidates.find(({ model, fn }) => fn.class === null && rest.every(cls => offers(model, fn, cls)))
   return free === undefined ? { groups: owned, unclaimed: rest } : { groups: [...owned, { ...free, classes: rest }], unclaimed: [] }
 }
 
-/** Of the functions whose own class is `own`, the one offering the most of the element's classes. */
-function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: readonly string[]): ModelledFunction[] {
-  const share = ({ model, fn }: ModelledFunction) => counted.filter(cls => offers(model, fn, cls)).length
+/**
+ * Of the functions whose own class is `own`, the one offering the most of the element's classes,
+ * and of those offering equally much, the one rendering the documented tag.
+ */
+function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: readonly string[], tag: string): ModelledFunction[] {
+  const score = ({ model, fn }: ModelledFunction) => 2 * counted.filter(cls => offers(model, fn, cls)).length + (fn.element?.toLowerCase() === tag ? 1 : 0)
   const owners = candidates.filter(({ fn }) => fn.class === own)
-  return owners.length === 0 ? [] : [owners.reduce((best, next) => (share(next) > share(best) ? next : best))]
+  return owners.length === 0 ? [] : [owners.reduce((best, next) => (score(next) > score(best) ? next : best))]
 }
 
 
@@ -81,7 +84,7 @@ export interface DocumentedGap {
 export function gapsIn(html: string, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): DocumentedGap[] {
   return markedElements(html)
     .map(element => ({ tag: element.tag, counted: countedClasses(element, componentClasses) }))
-    .filter(({ counted }) => counted.length > 0 && claimingGroups(models, counted).unclaimed.length > 0)
+    .filter(({ tag, counted }) => counted.length > 0 && claimingGroups(models, counted, tag).unclaimed.length > 0)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }
 
@@ -109,7 +112,7 @@ export interface DocumentedCall {
  */
 export function documentedCall(models: readonly ComponentModel[], element: MarkedElement, componentClasses: ReadonlySet<string>): DocumentedCall | null {
   const counted = countedClasses(element, componentClasses)
-  const { groups, unclaimed } = claimingGroups(models, counted)
+  const { groups, unclaimed } = claimingGroups(models, counted, element.tag)
   if (groups.length === 0 || unclaimed.length > 0) return null
   const [primary, ...others] = [...groups].sort((left, right) => rank(models, left) - rank(models, right))
   if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)

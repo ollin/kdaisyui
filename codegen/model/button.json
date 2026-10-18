@@ -23,6 +23,7 @@
     {
       "kind": "main",
       "name": "daisyButton",
+      "stem": "Button",
       "receiver": "FlowContent",
       "element": "BUTTON",
       "class": "btn",

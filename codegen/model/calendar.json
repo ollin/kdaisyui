@@ -7,6 +7,7 @@
     {
       "kind": "main",
       "name": "daisyCalendar",
+      "stem": "Calendar",
       "receiver": "FlowContent",
       "element": "DIV",
       "class": "cally",

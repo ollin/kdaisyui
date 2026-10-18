@@ -679,7 +679,8 @@ fun FlowContent.daisyStepIcon(id: HtmlId? = null, extraClasses: String? = null, 
 Toggle between two states — renders `<label>`.
 
 ```kotlin
-fun FlowContent.daisySwap(id: HtmlId? = null, active: Boolean = false, flip: Boolean = false, rotate: Boolean = false, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+enum class SwapStyle { Rotate, Flip }
+fun FlowContent.daisySwap(id: HtmlId? = null, style: ClassValues<SwapStyle>? = null, active: Boolean = false, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
 fun FlowContent.daisySwapOn(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisySwapOff(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisySwapIndeterminate(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))

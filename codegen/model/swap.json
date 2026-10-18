@@ -2,7 +2,7 @@
   "component": "swap",
   "name": "Swap",
   "class": "swap",
-  "enums": [],
+  "enums": [{ "name": "SwapStyle", "label": "Style variants", "classes": ["swap-rotate", "swap-flip"] }],
   "functions": [
     {
       "kind": "main",
@@ -12,9 +12,8 @@
       "class": "swap",
       "text": false,
       "parameters": [
-        { "kind": "toggle", "name": "active", "class": "swap-active" },
-        { "kind": "toggle", "name": "flip", "class": "swap-flip" },
-        { "kind": "toggle", "name": "rotate", "class": "swap-rotate" }
+        { "kind": "enum", "name": "style", "enum": "SwapStyle", "doc": "Style variant" },
+        { "kind": "toggle", "name": "active", "class": "swap-active" }
       ]
     },
     {

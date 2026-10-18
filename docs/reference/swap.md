@@ -11,11 +11,11 @@ Regenerate: just generate
 Toggle between two states. Renders `<label class="swap ...">`.
 
 ```kotlin
+// SwapStyle: Rotate | Flip
 fun FlowContent.daisySwap(
     id: HtmlId? = null,
+    style: ClassValues<SwapStyle>? = null,
     active: Boolean = false,  // Activates the swap (no need for checkbox)
-    flip: Boolean = false,  // Adds flip effect to swap
-    rotate: Boolean = false,  // Adds rotate effect to swap
     extraClasses: String? = null,
     attrs: (LABEL.() -> Unit)? = null,
     content: (LABEL.() -> Unit),

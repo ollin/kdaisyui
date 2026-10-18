@@ -63,7 +63,7 @@ class DashboardTest {
             }
             div("grow") { h1("lg:text-2xl lg:font-light") { +"Overview" } }
             daisyInput(size = InputSize.Sm, placeholder = "Search", extraClasses = "rounded-full max-sm:w-24")
-            daisySwap(rotate = true) {
+            daisySwap(style = SwapStyle.Rotate) {
                 attributes["data-toggle-theme"] = "dark"
                 attributes["data-act-class"] = "swap-active"
                 span("swap-off") { +"☀\uFE0F" }

@@ -23,6 +23,8 @@ fun Tag.daisyAuraClasses(size: ClassValues<AuraSize>? = null, style: ClassValues
 enum AvatarPresence: Online, Offline
 fun FlowContent.daisyAvatar(id: HtmlId? = null, presence: ClassValues<AvatarPresence>? = null, placeholder: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun Tag.daisyAvatarClasses(presence: ClassValues<AvatarPresence>? = null, placeholder: Boolean = false)
+fun FlowContent.daisyAvatarGroup(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun Tag.daisyAvatarGroupClasses()
 
 # Badge <span>
 enum BadgeColor: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error

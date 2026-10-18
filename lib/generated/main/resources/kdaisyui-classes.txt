@@ -26,6 +26,7 @@ aura-sm
 aura-xl
 aura-xs
 avatar
+avatar-group
 avatar-offline
 avatar-online
 avatar-placeholder

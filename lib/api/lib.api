@@ -71,6 +71,9 @@ public final class io/github/ollin/kdaisyui/components/AvatarKt {
 	public static synthetic fun daisyAvatar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyAvatarClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
 	public static synthetic fun daisyAvatarClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
+	public static final fun daisyAvatarGroup (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyAvatarGroup$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyAvatarGroupClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/AvatarPresence : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {

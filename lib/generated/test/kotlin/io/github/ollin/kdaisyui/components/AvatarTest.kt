@@ -49,6 +49,17 @@ class AvatarTest {
     }
 
     @Test
+    fun avatar_group_daisyAvatarGroup() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatarGroup() {
+            }
+        }
+        val expectedClasses = "avatar-group"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar group")
+    }
+
+    @Test
     fun avatar_group_with_counter() {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatar(placeholder = true) {

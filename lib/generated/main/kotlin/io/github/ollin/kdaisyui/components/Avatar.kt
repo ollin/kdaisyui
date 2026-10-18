@@ -60,3 +60,24 @@ fun Tag.daisyAvatarClasses(
     addClassNames(presence)
     if (placeholder) addClassNames("avatar-placeholder")
 }
+
+/** Renders `<div class="avatar-group ...">`. */
+fun FlowContent.daisyAvatarGroup(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        if (id != null) attributes["id"] = id.id
+        addClassNames("avatar-group")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyAvatarGroup` writes, on the element this is called on. */
+fun Tag.daisyAvatarGroupClasses() {
+    addClassNames("avatar-group")
+}

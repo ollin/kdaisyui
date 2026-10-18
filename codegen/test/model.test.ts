@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { modelFromShape, shapeFromModel, type ComponentModel, type Descriptions } from '../src/model.ts'
+import { modelFromShape, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
 import type { ComponentConfig } from '../src/component-shape.ts'
 
 /** The smallest real component: one function, one enum, inline text. */
@@ -98,5 +98,15 @@ describe('shapeFromModel', () => {
     const config = { extras: [{ name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' }] } as unknown as ComponentConfig
 
     assert.deepEqual(modelFromShape(shapeFromModel(full, DESCRIPTIONS), config), full)
+  })
+
+  test('opens the join scope on the component that declares it, with the declared items as members', () => {
+    const item: ComponentModel = { ...KBD, functions: [{ ...KBD.functions[0], joinItem: true }] }
+    const join: ComponentModel = { component: 'join', name: 'Join', class: 'join', enums: [], joinScope: true, functions: [{ ...KBD.functions[0], name: 'daisyJoin', element: 'DIV', class: 'join', text: false, parameters: [] }] }
+    const declared = [item, join].map(model => ({ model, shape: shapeFromModel(model, DESCRIPTIONS) }))
+
+    const [, joined] = withDeclaredScopes(declared)
+
+    assert.deepEqual([joined.scope?.members.map(fn => fn.name), joined.functions[0].contentScope], [['daisyKbd'], 'JoinScope'])
   })
 })

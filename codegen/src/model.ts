@@ -23,6 +23,7 @@ import {
   type TagClass,
 } from './component-shape.ts'
 import { toPascalCase } from './classifier.ts'
+import { joinScopeMembers, withJoinScope } from './join-scope.ts'
 
 /** One enum the component declares, with its classes in declaration order. */
 export interface ModelEnum {
@@ -69,6 +70,8 @@ export interface ModelFunction {
   readonly always?: readonly string[]
   /** Attributes written on every call, e.g. `{ "popover": "" }`. */
   readonly attributes?: Readonly<Record<string, string>>
+  /** On a main function: inside a join's content, this call marks itself `join-item`. */
+  readonly joinItem?: true
 }
 
 export interface ComponentModel {
@@ -80,6 +83,8 @@ export interface ComponentModel {
   readonly class: string | null
   readonly enums: readonly ModelEnum[]
   readonly functions: readonly ModelFunction[]
+  /** The main function's content runs in the join scope, whose members are the join items. */
+  readonly joinScope?: true
 }
 
 /** What the frontmatter supplies: the component's sentence and each class's, by stripped name. */
@@ -178,7 +183,7 @@ function modelParameter(parameter: ParameterShape, extras: readonly ExtraParamet
   return { kind: 'extra', ...extra }
 }
 
-function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig): ModelFunction {
+function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig, joinItem: boolean): ModelFunction {
   return {
     kind: fn.kind,
     name: fn.name,
@@ -191,6 +196,7 @@ function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig): Mod
       .map(parameter => modelParameter(parameter, componentConfig.extras)),
     ...(fn.modifierClasses.length > 0 ? { always: [...fn.modifierClasses] } : {}),
     ...(fn.staticAttributes.length > 0 ? { attributes: Object.fromEntries(fn.staticAttributes) } : {}),
+    ...(joinItem && fn.kind === 'main' ? { joinItem: true as const } : {}),
   }
 }
 
@@ -199,12 +205,36 @@ function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig): Mod
  * committed model from today's inferred shapes. The extras' Kotlin fragments are not in the shape,
  * so they come from the component's configuration.
  */
-export function modelFromShape(shape: ComponentShape, componentConfig: ComponentConfig): ComponentModel {
+export function modelFromShape(shape: ComponentShape, componentConfig: ComponentConfig, joinItem = false): ComponentModel {
   return {
     component: shape.componentDir,
     name: shape.componentName,
     class: shape.prefix,
     enums: shape.enums.map(declared => ({ name: declared.name, label: declared.categoryLabel, classes: declared.entries.map(entry => entry.cssClass) })),
-    functions: shape.functions.map(fn => modelFunction(fn, componentConfig)),
+    functions: shape.functions.map(fn => modelFunction(fn, componentConfig, joinItem)),
+    ...(shape.scope !== undefined ? { joinScope: true as const } : {}),
   }
+}
+
+/** One component as both the model declares it and the shape built from it. */
+export interface DeclaredComponent {
+  readonly model: ComponentModel
+  readonly shape: ComponentShape
+}
+
+function isJoinItem(model: ComponentModel): boolean {
+  return model.functions.some(fn => fn.kind === 'main' && fn.joinItem === true)
+}
+
+/**
+ * The join scope, attached across components: its members are the main functions the models
+ * declare as join items, and it imports whatever their extra parameters' types need.
+ */
+export function withDeclaredScopes(components: readonly DeclaredComponent[]): ComponentShape[] {
+  const items = components.filter(component => isJoinItem(component.model))
+  const members = joinScopeMembers(items.map(component => component.shape), new Set(items.map(component => component.model.class ?? '')))
+  const imports = items.flatMap(component => component.model.functions.filter(fn => fn.kind === 'main'))
+    .flatMap(fn => fn.parameters)
+    .flatMap(parameter => (parameter.kind === 'extra' ? parameter.imports ?? [] : []))
+  return components.map(component => (component.model.joinScope ? withJoinScope(component.shape, members, imports) : component.shape))
 }

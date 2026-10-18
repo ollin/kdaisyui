@@ -99,6 +99,8 @@ export interface ComponentModel {
   readonly summary?: DocSummary
   /** Classes DaisyUI declares that no function offers, each with the reason. */
   readonly notOffered?: Readonly<Record<string, string>>
+  /** Gaps this page's examples document and no function expresses, by key, each with the reason. */
+  readonly notExpressed?: Readonly<Record<string, string>>
 }
 
 /** A DaisyUI directory the library deliberately generates nothing for, and why. */

@@ -55,3 +55,13 @@ export function gapsIn(html: string, models: readonly ComponentModel[], componen
     .filter(({ counted }) => counted.length > 0 && expressingFunction(models, counted) === null)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }
+
+/** What the gate reports for one page: gaps nothing declares, and declarations no gap needs. */
+export function gapFindings(model: ComponentModel, gaps: readonly DocumentedGap[]): string[] {
+  const declared = model.notExpressed ?? {}
+  const keys = new Set(gaps.map(gap => gap.key))
+  return [...new Set([
+    ...gaps.filter(gap => !(gap.key in declared)).map(gap => `${model.component}: <${gap.tag}> ${gap.key} is documented, and no function expresses it`),
+    ...Object.keys(declared).filter(key => !keys.has(key)).map(key => `${model.component}: ${key} is declared not expressed, and no element on the page needs it`),
+  ])]
+}

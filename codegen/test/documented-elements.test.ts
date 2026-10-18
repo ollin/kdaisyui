@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { expressingFunction, gapKey, gapsIn } from '../src/documented-elements.ts'
+import { expressingFunction, gapFindings, gapKey, gapsIn } from '../src/documented-elements.ts'
 import { component, part, toggle } from './model-fixture.ts'
 
 const CARD = component('card', 'Card', 'card')
@@ -37,5 +37,18 @@ describe('gapsIn', () => {
     const html = '<div class="$$card-body $$rounded-box"><button class="$$btn $$btn-ghost">x</button><li class="$$list-row lg:$$card-body">y</li></div>'
 
     assert.deepEqual(gapsIn(html, [CARD_WITH_BODY, BUTTON], new Set(['card-body', 'btn', 'btn-ghost', 'list-row'])), [{ tag: 'button', key: 'btn btn-ghost' }, { tag: 'li', key: 'list-row' }])
+  })
+})
+
+describe('gapFindings', () => {
+  const gaps = [{ tag: 'li', key: 'list-row' }, { tag: 'li', key: 'list-row' }, { tag: 'button', key: 'btn btn-ghost' }]
+
+  it('names each undeclared gap once, and each declaration no gap needs', () => {
+    const list = { ...CARD, component: 'list', notExpressed: { 'list-row': 'no function yet', 'list-col-grow': 'gone' } }
+
+    assert.deepEqual(gapFindings(list, gaps), [
+      'list: <button> btn btn-ghost is documented, and no function expresses it',
+      'list: list-col-grow is declared not expressed, and no element on the page needs it',
+    ])
   })
 })

@@ -32,7 +32,7 @@ enum class TooltipColor(internal val className: String) : ClassValues<TooltipCol
     override val classNames: List<String> get() = listOf(className)
 }
 
-/** SidePlacement variants for this component (CSS prefix: `tooltip-`) */
+/** Side variants for this component (CSS prefix: `tooltip-`) */
 enum class TooltipSide(internal val className: String) : ClassValues<TooltipSide> {
     /** CSS: `tooltip-top` — Put tooltip on top */
     Top("tooltip-top"),
@@ -47,7 +47,7 @@ enum class TooltipSide(internal val className: String) : ClassValues<TooltipSide
     override val classNames: List<String> get() = listOf(className)
 }
 
-/** AlignPlacement variants for this component (CSS prefix: `tooltip-`) */
+/** Align variants for this component (CSS prefix: `tooltip-`) */
 enum class TooltipAlign(internal val className: String) : ClassValues<TooltipAlign> {
     /** CSS: `tooltip-start` — Align tooltip on start */
     Start("tooltip-start"),
@@ -65,8 +65,8 @@ enum class TooltipAlign(internal val className: String) : ClassValues<TooltipAli
  * Tooltip can be used to show a message when hovering over an element. Renders `<div class="tooltip ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
- * @param side — SidePlacement variant
- * @param align — AlignPlacement variant
+ * @param side — Side variant
+ * @param align — Align variant
  * @param open — Force open tooltip
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes

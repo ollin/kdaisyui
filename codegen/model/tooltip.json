@@ -18,12 +18,12 @@
     },
     {
       "name": "TooltipSide",
-      "label": "SidePlacement variants",
+      "label": "Side variants",
       "classes": ["tooltip-top", "tooltip-bottom", "tooltip-left", "tooltip-right"]
     },
     {
       "name": "TooltipAlign",
-      "label": "AlignPlacement variants",
+      "label": "Align variants",
       "classes": ["tooltip-start", "tooltip-center", "tooltip-end"]
     }
   ],
@@ -37,8 +37,8 @@
       "text": false,
       "parameters": [
         { "kind": "enum", "name": "color", "enum": "TooltipColor", "doc": "Color variant" },
-        { "kind": "enum", "name": "side", "enum": "TooltipSide", "doc": "SidePlacement variant" },
-        { "kind": "enum", "name": "align", "enum": "TooltipAlign", "doc": "AlignPlacement variant" },
+        { "kind": "enum", "name": "side", "enum": "TooltipSide", "doc": "Side variant" },
+        { "kind": "enum", "name": "align", "enum": "TooltipAlign", "doc": "Align variant" },
         { "kind": "toggle", "name": "open", "class": "tooltip-open" }
       ]
     },

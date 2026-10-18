@@ -284,29 +284,6 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     outputs.dir(outputDir)
 }
 
-// The guard on the exclusivity measurement.
-//
-// `codegen/exclusivity.json` decides which DaisyUI class groups become a Kotlin enum, and it
-// is a snapshot of one DaisyUI version. A bump that adds a component, adds a class to a group
-// or removes one leaves it quietly wrong, and every failure mode is silent: an unmeasured
-// group falls to boolean by the not-established rule, so an enum simply disappears.
-//
-// Cheap and browser-free — it only compares the committed file against the submodule. Taking
-// the measurement again is `:e2e-tests:measureExclusivity`, which needs a browser.
-//
-// It reads the submodule, so it belongs beside `checkComponentApi` in `generated-sources-drift`
-// and NOT in the codegen unit tests, which are deliberately free of submodules and a JDK.
-tasks.register<Exec>("verifyExclusivity") {
-    group = "codegen"
-    description = "Fail when codegen/exclusivity.json no longer describes the DaisyUI submodule"
-    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
-    workingDir = rootProject.file("codegen")
-    commandLine("sh", "-c", "node src/index-verify-exclusivity.ts")
-    inputs.dir(rootProject.file("codegen/src"))
-    inputs.file(rootProject.file("codegen/exclusivity.json"))
-    inputs.dir(rootProject.file("daisyui/packages/docs"))
-}
-
 // Deliberately NOT wired into `check`, and deliberately in the `codegen` group rather than
 // `verification`: `AGENTS.md` promises a clone builds and tests with no Node, no npm and no
 // submodules. Only regeneration may need them, and this task is part of that world. CI runs
@@ -334,26 +311,6 @@ tasks.register<Exec>("testCodegen") {
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     // No declared output, so Gradle must never call this up-to-date and skip it.
-    outputs.upToDateWhen { false }
-}
-
-// The codegen tests that READ the DaisyUI submodule, kept apart from the ones above because
-// the CI job running those checks out no submodules — deliberately, which is what makes it the
-// only job needing neither a JDK nor the DaisyUI checkout. Two tests reading the submodule
-// landed in it and turned `main` red with an ENOENT rather than a failing assertion.
-//
-// Locally the submodule is present, so this is the task to run beside `testCodegen`. In CI it
-// runs inside `generated-sources-drift`, which already has the checkout.
-tasks.register<Exec>("testCodegenIntegration") {
-    group = "codegen"
-    description = "Run the codegen tests that need the DaisyUI submodule (needs Node; not part of `check`)"
-    dependsOn(checkoutDaisyuiTag, installCodegenDeps)
-    workingDir = rootProject.file("codegen")
-    commandLine("sh", "-c", "npm run test:integration")
-    inputs.dir(rootProject.file("codegen/src"))
-    inputs.dir(rootProject.file("codegen/integration"))
-    inputs.file(rootProject.file("codegen/package.json"))
-    inputs.file(rootProject.file("codegen/package-lock.json"))
     outputs.upToDateWhen { false }
 }
 

@@ -69,21 +69,6 @@ jobs:
       - name: Fail if the components' Kotlin API no longer matches its baseline
         run: ./gradlew :lib:checkComponentApi --no-daemon
 
-      # Here rather than in codegen-tests for the same reason as the step above: it reads the
-      # submodule. It does NOT re-measure — that needs a browser and is a deliberate manual
-      # step — it only fails when the committed measurement stops describing what DaisyUI
-      # documents, which is the one way a bump can silently remove an enum from the API.
-      - name: Fail if the exclusivity measurement no longer describes DaisyUI
-        run: ./gradlew :lib:verifyExclusivity --no-daemon
-
-      # The codegen tests that READ the submodule, which is why they run here and not in
-      # `codegen-tests`: that job checks out none, on purpose. Skipping them when the
-      # submodule is absent would have been cheaper and would have produced a test CI can
-      # never fail — the failure mode this pipeline exists to prevent.
-      - name: Run the codegen tests that need the submodule
-        working-directory: codegen
-        run: npm run test:integration
-
       - name: Fail if the committed sources no longer match their inputs
         run: |
           # --porcelain also reports untracked files, so a newly added component

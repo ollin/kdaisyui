@@ -131,8 +131,13 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
     expectedClasses: [...new Set(expected)].sort().join(' '),
     tag: element.tag,
     rendersTag: primary.fn.kind !== 'classes' && rendersTag(primary.fn, element.tag),
-    onTag: [...[primary, ...others].map(siblingCall), ...(variants.length > 0 ? [`addClassNames("${variants.join(' ')}")`] : [])].join('; '),
+    onTag: tagStatements([primary, ...others], variants),
   }
+}
+
+/** What a test writes inside DaisyUI's tag: every group's sibling, then the variant classes. */
+function tagStatements(groups: readonly ClaimedGroup[], variants: readonly string[]): string {
+  return [...groups.map(siblingCall), ...(variants.length > 0 ? [`addClassNames("${variants.join(' ')}")`] : [])].join('; ')
 }
 
 /** A group's classes as its function's class sibling writes them. */

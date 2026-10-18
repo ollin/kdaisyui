@@ -222,7 +222,7 @@ ${customPartAssertions(part, tag)}
  * costs one cast and deletes four copies of a conditional.
  */
 function wrapperTagOf(receiver: string): TagName {
-  return (receiver === 'FlowContent' ? 'div' : receiver.toLowerCase()) as TagName
+  return (receiver === 'FlowContent' || receiver === 'Tag' ? 'div' : receiver.toLowerCase()) as TagName
 }
 
 function htmlTagFnFor(tag: TagName): BuilderName {
@@ -780,6 +780,9 @@ function coverageContext(fn, enums, file: string) {
     required: params.find((p) => p.kind === 'contentRequired'),
     hasContent: params.some((p) => p.kind === 'contentRequired' || p.kind === 'contentOptional'),
     textParam: params.find((p) => p.kind === 'text'),
+    // A class sibling takes no id, extraClasses or attrs: it adds classes to an element it does
+    // not open.
+    hasHatches: params.some((p) => p.kind === 'id'),
   }
 }
 
@@ -803,14 +806,14 @@ function defaultsTest(ctx) {
 }
 
 function allFlagsArgs(ctx, boolCss) {
-  const args = ['id = htmlId("x-cov-id")']
+  const args = ctx.hasHatches ? ['id = htmlId("x-cov-id")'] : []
   for (const b of ctx.params.filter((p) => p.kind === 'boolean')) {
     args.push(`${b.name} = true`)
     boolCss.push(...boolClassesFor(ctx.body, b.name))
   }
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
   for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
-  args.push('extraClasses = "zz-extra"', 'attrs = { attributes["data-attrs"] = "yes" }')
+  if (ctx.hasHatches) args.push('extraClasses = "zz-extra"', 'attrs = { attributes["data-attrs"] = "yes" }')
   if (ctx.hasContent) args.push('content = { attributes["data-content"] = "yes" }')
   return args
 }
@@ -824,8 +827,8 @@ function allFlagsAsserts(ctx, boolCss) {
   // the duplication for an Excess Number of Function Arguments smell. Two helpers of three
   // and four parameters say the same thing and trip neither rule.
   const asserts = [
-    renderedAssert(ctx, sortedClasses([ctx.base, ...boolCss, 'zz-extra']), `${ctx.daisyName} all flags`, true),
-    `assertCommonFlags(html, "${ctx.daisyName}"${ctx.hasContent ? '' : ', content = false'})`,
+    renderedAssert(ctx, sortedClasses([ctx.base, ...boolCss, ...(ctx.hasHatches ? ['zz-extra'] : [])]), `${ctx.daisyName} all flags`, true),
+    ...(ctx.hasHatches ? [`assertCommonFlags(html, "${ctx.daisyName}"${ctx.hasContent ? '' : ', content = false'})`] : []),
   ]
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)

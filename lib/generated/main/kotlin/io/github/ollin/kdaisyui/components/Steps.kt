@@ -76,7 +76,7 @@ fun FlowContent.daisySteps(
 }
 
 /** A single step node Renders `<li class="step ...">`. */
-fun UL.daisyStepsStep(
+fun UL.daisyStep(
     id: HtmlId? = null,
     variant: ClassValues<StepsVariant>? = null,
     extraClasses: String? = null,
@@ -94,7 +94,7 @@ fun UL.daisyStepsStep(
 }
 
 /** For custom icon inside step Renders `<span class="step-icon ...">`. */
-fun FlowContent.daisyStepsStepIcon(
+fun FlowContent.daisyStepIcon(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,

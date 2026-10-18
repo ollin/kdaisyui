@@ -23,7 +23,7 @@ fun FlowContent.daisySteps(
 ```
 
 ```kotlin
-fun UL.daisyStepsStep(
+fun UL.daisyStep(
     id: HtmlId? = null,
     variant: ClassValues<StepsVariant>? = null,
     extraClasses: String? = null,
@@ -33,7 +33,7 @@ fun UL.daisyStepsStep(
 ```
 
 ```kotlin
-fun FlowContent.daisyStepsStepIcon(
+fun FlowContent.daisyStepIcon(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,

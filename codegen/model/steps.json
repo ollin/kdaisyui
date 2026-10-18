@@ -33,7 +33,7 @@
     },
     {
       "kind": "part",
-      "name": "daisyStepsStep",
+      "name": "daisyStep",
       "receiver": "UL",
       "element": "LI",
       "class": "step",
@@ -42,7 +42,7 @@
     },
     {
       "kind": "part",
-      "name": "daisyStepsStepIcon",
+      "name": "daisyStepIcon",
       "receiver": "FlowContent",
       "element": "SPAN",
       "class": "step-icon",

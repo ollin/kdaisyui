@@ -666,8 +666,8 @@ Step-by-step progress indicator — renders `<ul>`.
 enum class StepsVariant { StepNeutral, StepPrimary, StepSecondary, StepAccent, StepInfo, StepSuccess, StepWarning, StepError }
 enum class StepsDirection { Vertical, Horizontal }
 fun FlowContent.daisySteps(id: HtmlId? = null, direction: ClassValues<StepsDirection>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
-fun UL.daisyStepsStep(id: HtmlId? = null, variant: ClassValues<StepsVariant>? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
-fun FlowContent.daisyStepsStepIcon(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+fun UL.daisyStep(id: HtmlId? = null, variant: ClassValues<StepsVariant>? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
+fun FlowContent.daisyStepIcon(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 ```
 
 ### Swap

@@ -1,7 +1,8 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { shapeFromModel, type ComponentModel, type Descriptions } from '../src/model.ts'
+import { modelFromShape, shapeFromModel, type ComponentModel, type Descriptions } from '../src/model.ts'
+import type { ComponentConfig } from '../src/component-shape.ts'
 
 /** The smallest real component: one function, one enum, inline text. */
 const KBD: ComponentModel = {
@@ -86,5 +87,16 @@ describe('shapeFromModel', () => {
     const descs = shapeFromModel(parts, { desc: 'Keyboard key.', classes: { 'kbd-part': 'A part.' } }).functions.map(fn => fn.desc)
 
     assert.deepEqual(descs, ['Keyboard key.', 'A part.', ''])
+  })
+
+  test('writes back the model a shape was read from', () => {
+    const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
+    const full: ComponentModel = { ...KBD, functions: [
+      { ...KBD.functions[0], parameters: [...KBD.functions[0].parameters, { kind: 'toggle', name: 'wide', class: 'kbd-wide' }, disabled] },
+      { kind: 'custom', name: 'daisyKbdPopover', receiver: 'FlowContent', element: 'DIV', class: null, text: false, parameters: [], attributes: { popover: '' } },
+    ] }
+    const config = { extras: [{ name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' }] } as unknown as ComponentConfig
+
+    assert.deepEqual(modelFromShape(shapeFromModel(full, DESCRIPTIONS), config), full)
   })
 })

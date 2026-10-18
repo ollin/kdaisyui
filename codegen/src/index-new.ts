@@ -3,8 +3,8 @@ import path from 'path'
 import { getAllComponentDirs, getClassesByCategory } from './parser/frontmatter.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
-import { classFindings, directoryFindings } from './model-completeness.ts'
-import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
+import { classFindings, directoryFindings, namingFindings } from './model-completeness.ts'
+import { mainFunctionConfig, modelFileNames } from './model.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -51,7 +51,7 @@ function writeClassList(classes) {
  */
 function reportIncompleteModels(findings: readonly string[]): void {
   if (findings.length === 0) return
-  console.error(`\nThe model and DaisyUI's classes disagree:\n${findings.map(finding => `  ${finding}`).join('\n')}`)
+  console.error(`\nThe model disagrees with DaisyUI's classes or with the naming rule:\n${findings.map(finding => `  ${finding}`).join('\n')}`)
   process.exitCode = 1
 }
 
@@ -107,7 +107,7 @@ function main() {
     // Only generated components contribute: a skipped one emits nothing, so listing its
     // classes would put CSS in a consumer's bundle that this library can never produce.
     allClasses.push(...collectClasses(frontmatter.classnames))
-    modelFindings.push(...classFindings(readModel(componentName) as ComponentModel, collectClasses(frontmatter.classnames)))
+    modelFindings.push(...classFindings(component.model, collectClasses(frontmatter.classnames)), ...namingFindings(component.model))
     console.log(`  ✓ ${classified.componentName}.kt (${shape.functions[0].element})`)
   }
 

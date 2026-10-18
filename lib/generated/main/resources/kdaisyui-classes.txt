@@ -1,7 +1,7 @@
 # Every DaisyUI class kdaisyui can emit. Generated - do not edit.
 #
 # Point your Tailwind @source at this file. Scanning your own sources is not enough:
-# a class like btn-primary is assembled at runtime from ButtonVariant.Primary, so it
+# a class like btn-primary is assembled at runtime from ButtonColor.Primary, so it
 # appears nowhere in your code, and the published jar carries no Kotlin sources.
 alert
 alert-dash

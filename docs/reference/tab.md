@@ -8,21 +8,20 @@ Regenerate: just generate
 
 [DaisyUI documentation →](https://daisyui.com/components/tab/)
 
-Tabbed navigation. Renders `<button class="tabs ...">`.
+Tabbed navigation. Renders `<div class="tabs ..." role="tablist">`.
 
 ```kotlin
 // TabsSize: Xs | Sm | Md | Lg | Xl
 // TabsPlacement: Top | Bottom
+// TabsStyle: Box | Border | Lift
 fun FlowContent.daisyTabs(
     id: HtmlId? = null,
     size: ClassValues<TabsSize>? = null,
     placement: ClassValues<TabsPlacement>? = null,
-    border: Boolean = false,  // bottom border style
-    box: Boolean = false,  // box style
-    lift: Boolean = false,  // lift style
+    style: ClassValues<TabsStyle>? = null,
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 )
 ```
 
@@ -34,6 +33,16 @@ fun FlowContent.daisyTab(
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit),
+)
+```
+
+```kotlin
+fun FlowContent.daisyTabRadio(
+    id: HtmlId? = null,
+    active: Boolean = false,  // Makes a single tab look active
+    disabled: Boolean = false,  // Makes a single tab look disabled
+    extraClasses: String? = null,
+    attrs: (INPUT.() -> Unit)? = null,
 )
 ```
 

@@ -75,7 +75,7 @@ import io.github.ollin.kdaisyui.components.*
 | [Status](status.md) | Small status indicator dot | `<div>` |
 | [Steps](steps.md) | Step-by-step progress indicator | `<ul>` |
 | [Swap](swap.md) | Toggle between two states | `<label>` |
-| [Tab](tab.md) | Tabbed navigation | `<button>` |
+| [Tab](tab.md) | Tabbed navigation | `<div>` |
 | [Table](table.md) | Structured data in rows and columns | `<table>` |
 | [Textarea](textarea.md) | Multi-line text input | `<textarea>` |
 | [TextRotate](textRotate.md) | Rotated text display | `<span>` |

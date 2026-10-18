@@ -698,13 +698,15 @@ fun FlowContent.daisySwapIndeterminate(id: HtmlId? = null, extraClasses: String?
 
 ### Tab
 
-Tabbed navigation — renders `<button>`.
+Tabbed navigation — renders `<div>`.
 
 ```kotlin
 enum class TabsSize { Xs, Sm, Md, Lg, Xl }
 enum class TabsPlacement { Top, Bottom }
-fun FlowContent.daisyTabs(id: HtmlId? = null, size: ClassValues<TabsSize>? = null, placement: ClassValues<TabsPlacement>? = null, border: Boolean = false, box: Boolean = false, lift: Boolean = false, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
+enum class TabsStyle { Box, Border, Lift }
+fun FlowContent.daisyTabs(id: HtmlId? = null, size: ClassValues<TabsSize>? = null, placement: ClassValues<TabsPlacement>? = null, style: ClassValues<TabsStyle>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyTab(id: HtmlId? = null, active: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit))
+fun FlowContent.daisyTabRadio(id: HtmlId? = null, active: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 fun FlowContent.daisyTabContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 

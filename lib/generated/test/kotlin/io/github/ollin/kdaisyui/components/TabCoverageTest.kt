@@ -31,7 +31,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs", "Tabs defaults", closes = "</button></div>")
+        assertRendered(html, "tabs", "Tabs defaults", closes = "</div></div>")
     }
 
     @Test
@@ -39,15 +39,12 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabs(
                 id = htmlId("x-cov-id"),
-                border = true,
-                box = true,
-                lift = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tabs tabs-border tabs-box tabs-lift zz-extra", "Tabs all flags", closes = "</button></div>")
+        assertRendered(html, "tabs zz-extra", "Tabs all flags", closes = "</div></div>")
         assertCommonFlags(html, "Tabs")
     }
 
@@ -129,6 +126,39 @@ class TabCoverageTest {
     }
 
     @Test
+    fun tabs_style_box() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabs(
+                style = TabsStyle.Box,
+                content = { },
+            )
+        }
+        assertRendered(html, "tabs tabs-box", "Tabs style Box")
+    }
+
+    @Test
+    fun tabs_style_border() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabs(
+                style = TabsStyle.Border,
+                content = { },
+            )
+        }
+        assertRendered(html, "tabs tabs-border", "Tabs style Border")
+    }
+
+    @Test
+    fun tabs_style_lift() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabs(
+                style = TabsStyle.Lift,
+                content = { },
+            )
+        }
+        assertRendered(html, "tabs tabs-lift", "Tabs style Lift")
+    }
+
+    @Test
     fun tab_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyTab(
@@ -152,6 +182,29 @@ class TabCoverageTest {
         }
         assertRendered(html, "tab tab-active tab-disabled zz-extra", "Tab all flags", closes = "</a></div>")
         assertCommonFlags(html, "Tab")
+    }
+
+    @Test
+    fun tabRadio_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabRadio()
+        }
+        assertRendered(html, "tab", "TabRadio defaults")
+    }
+
+    @Test
+    fun tabRadio_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabRadio(
+                id = htmlId("x-cov-id"),
+                active = true,
+                disabled = true,
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+            )
+        }
+        assertRendered(html, "tab tab-active tab-disabled zz-extra", "TabRadio all flags")
+        assertCommonFlags(html, "TabRadio", content = false)
     }
 
     @Test

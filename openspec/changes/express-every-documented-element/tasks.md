@@ -45,7 +45,7 @@ regenerating.
 - [x] 3.2 `^ F` Generate a composition's test as the call plus its siblings in `attrs`, while the
   gate still accepts one group: every composite element DaisyUI documents is rendered and its
   classes asserted before the gate relies on it.
-- [ ] 3.3 `^ F (internal)` Accept several groups in the gate, and delete the 27 composition
+- [x] 3.3 `^ F (internal)` Accept several groups in the gate, and delete the 27 composition
   declarations in the same commit. Red first, observed and recorded in the commit body:
   regeneration with the rule and the declarations still in fails naming all 27 as stale.
   Reordered 2026-10-18 from "rule, then tests and deletions per page": with the rule in and any

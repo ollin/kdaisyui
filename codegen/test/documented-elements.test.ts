@@ -64,6 +64,16 @@ describe('documentedCall', () => {
     assert.deepEqual({ fn: call?.fn.name, args: call?.args, expected: call?.expectedClasses }, { fn: 'daisyCardBody', args: 'attrs = { daisyButtonClasses(size = ButtonSize.Lg) }', expected: 'btn btn-lg card-body' })
   })
 
+  it("never calls a class-only function as the element's function, and lets it express a child alone", () => {
+    const item = { ...part('daisyMenuItem', 'unused'), kind: 'classes' as const, class: null, parameters: [toggle('active', 'menu-active')] }
+    const menu = { ...component('menu', 'Menu', 'menu'), functions: [item] }
+    const both = documentedCall([menu, sized], markedElements('<a class="$$btn $$menu-active">x</a>')[0], new Set([...classes, 'menu-active']))
+    const alone = documentedCall([menu], markedElements('<a class="$$menu-active">x</a>')[0], new Set(['menu-active']))
+
+    assert.deepEqual([both?.fn.name, both?.args], ['daisyButton', 'attrs = { daisyMenuItemClasses(active = true) }'])
+    assert.deepEqual([alone?.fn.kind, alone?.args, alone?.expectedClasses], ['classes', 'active = true', 'menu-active'])
+  })
+
   it('makes no call for a gap', () => {
     assert.equal(callFor('<li class="$$list-row">x</li>'), null)
   })

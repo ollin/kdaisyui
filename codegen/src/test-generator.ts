@@ -249,7 +249,7 @@ function generateClassTest(fn: ModelFunction, { testName, args, expectedClasses,
     @Test
     fun ${testName}() {
         val html = createHTML(prettyPrint = false).${htmlTagFnFor(wrapperTagOf(fn.receiver))} {
-            ${fn.name}(${args})${isVoidElement(fn.element as TagClass) ? '' : ' {\n            }'}
+            ${fn.kind === 'classes' ? `${fn.name}Classes(${args})` : `${fn.name}(${args})${isVoidElement(fn.element as TagClass) ? '' : ' {\n            }'}`}
         }
         val expectedClasses = "${expectedClasses}"
         val actualClasses = html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" ")

@@ -111,7 +111,8 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   const counted = countedClasses(element, componentClasses)
   const { groups, unclaimed } = claimingGroups(models, counted)
   if (groups.length === 0 || unclaimed.length > 0) return null
-  const [primary, ...others] = [...groups].sort((left, right) => models.indexOf(left.model) - models.indexOf(right.model))
+  const [primary, ...others] = [...groups].sort((left, right) => rank(models, left) - rank(models, right))
+  if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
   const siblings = others.map(group => `${group.fn.name}Classes(${groupArguments(group).join(', ')})`)
   const args = [
@@ -121,6 +122,11 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   ]
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
   return { fn: primary.fn, args: args.join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+}
+
+/** A rendering function's group before any class-only one, then the page's own model first. */
+function rank(models: readonly ComponentModel[], group: ClaimedGroup): number {
+  return (group.fn.kind === 'classes' ? models.length : 0) + models.indexOf(group.model)
 }
 
 /** The named arguments that make a group's function write the group's classes. */

@@ -2,7 +2,7 @@
   "component": "avatar",
   "name": "Avatar",
   "class": "avatar",
-  "enums": [{ "name": "AvatarPresence", "label": "Modifier variants", "classes": ["avatar-online", "avatar-offline"] }],
+  "enums": [{ "name": "AvatarPresence", "label": "Presence variants", "classes": ["avatar-online", "avatar-offline"] }],
   "functions": [
     {
       "kind": "main",
@@ -12,7 +12,7 @@
       "class": "avatar",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "presence", "enum": "AvatarPresence", "doc": "Modifier variant" },
+        { "kind": "enum", "name": "presence", "enum": "AvatarPresence", "doc": "Presence variant" },
         { "kind": "toggle", "name": "placeholder", "class": "avatar-placeholder" }
       ]
     }

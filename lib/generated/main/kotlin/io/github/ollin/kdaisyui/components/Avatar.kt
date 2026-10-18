@@ -25,7 +25,7 @@ enum class AvatarPresence(internal val className: String) : ClassValues<AvatarPr
 /**
  * Avatars are used to show a thumbnail representation of an individual or business in the interface. Renders `<div class="avatar ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param presence — Modifier variant
+ * @param presence — Presence variant
  * @param placeholder
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes

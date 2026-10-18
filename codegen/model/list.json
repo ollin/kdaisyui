@@ -2,7 +2,7 @@
   "component": "list",
   "name": "List",
   "class": "list",
-  "enums": [{ "name": "ListColumn", "label": "Modifier variants", "classes": ["list-col-wrap", "list-col-grow"] }],
+  "enums": [{ "name": "ListColumn", "label": "Column variants", "classes": ["list-col-wrap", "list-col-grow"] }],
   "functions": [
     {
       "kind": "main",
@@ -11,7 +11,7 @@
       "element": "UL",
       "class": "list",
       "text": false,
-      "parameters": [{ "kind": "enum", "name": "column", "enum": "ListColumn", "doc": "Modifier variant" }]
+      "parameters": [{ "kind": "enum", "name": "column", "enum": "ListColumn", "doc": "Column variant" }]
     }
   ],
   "summary": { "summary": "Styled list layout" },

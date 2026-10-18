@@ -18,7 +18,7 @@
       "class": "carousel",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "snap", "enum": "CarouselSnap", "doc": "Modifier variant" },
+        { "kind": "enum", "name": "snap", "enum": "CarouselSnap", "doc": "Snap variant" },
         { "kind": "toggle", "name": "horizontal", "class": "carousel-horizontal" },
         { "kind": "toggle", "name": "vertical", "class": "carousel-vertical" }
       ]

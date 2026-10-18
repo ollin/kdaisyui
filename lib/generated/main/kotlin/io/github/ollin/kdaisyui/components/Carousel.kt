@@ -28,7 +28,7 @@ enum class CarouselSnap(internal val className: String) : ClassValues<CarouselSn
 /**
  * Carousel show images or content in a scrollable area. Renders `<div class="carousel ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param snap — Modifier variant
+ * @param snap — Snap variant
  * @param horizontal — Horizontal layout (default)
  * @param vertical — Vertical layout
  * @param extraClasses — Additional CSS classes appended after the generated ones

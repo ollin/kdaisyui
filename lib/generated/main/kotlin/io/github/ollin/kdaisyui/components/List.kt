@@ -11,7 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.ul
 import kotlinx.html.UL
 
-/** Modifier variants for this component (CSS prefix: `list-`) */
+/** Column variants for this component (CSS prefix: `list-`) */
 enum class ListColumn(internal val className: String) : ClassValues<ListColumn> {
     /** CSS: `list-col-wrap` — For one of direct children of list-row to push it to the next line */
     ColWrap("list-col-wrap"),
@@ -26,7 +26,7 @@ enum class ListColumn(internal val className: String) : ClassValues<ListColumn> 
 /**
  * List is a vertical layout to display information in rows. Renders `<ul class="list ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param column — Modifier variant
+ * @param column — Column variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content

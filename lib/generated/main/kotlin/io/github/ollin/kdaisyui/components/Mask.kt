@@ -46,7 +46,7 @@ enum class MaskStyle(internal val className: String) : ClassValues<MaskStyle> {
     override val classNames: List<String> get() = listOf(className)
 }
 
-/** Modifier variants for this component (CSS prefix: `mask-`) */
+/** Half variants for this component (CSS prefix: `mask-`) */
 enum class MaskHalf(internal val className: String) : ClassValues<MaskHalf> {
     /** CSS: `mask-half-1` — Crops only the first half of mask */
     Half1("mask-half-1"),
@@ -62,7 +62,7 @@ enum class MaskHalf(internal val className: String) : ClassValues<MaskHalf> {
  * Mask crops the content of the element to common shapes. Renders `<img class="mask ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param style — Style variant
- * @param half — Modifier variant
+ * @param half — Half variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  */

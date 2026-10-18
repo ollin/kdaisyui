@@ -41,7 +41,7 @@ enum class CardStyle(internal val className: String) : ClassValues<CardStyle> {
     override val classNames: List<String> get() = listOf(className)
 }
 
-/** Modifier variants for this component (CSS prefix: `card-`) */
+/** Layout variants for this component (CSS prefix: `card-`) */
 enum class CardLayout(internal val className: String) : ClassValues<CardLayout> {
     /** CSS: `card-side` — The image in <figure> will be on to the side */
     Side("card-side"),
@@ -58,7 +58,7 @@ enum class CardLayout(internal val className: String) : ClassValues<CardLayout> 
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param style — Style variant
- * @param layout — Modifier variant
+ * @param layout — Layout variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content

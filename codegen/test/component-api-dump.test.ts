@@ -118,3 +118,12 @@ describe('the class siblings', () => {
     assert.equal(lines[function_ + 1], 'fun Tag.daisyButtonClasses(size: ClassValues<ButtonSize>? = null, active: Boolean = false)')
   })
 })
+
+describe('a class-only function', () => {
+  test('is dumped as its sibling, after the functions', () => {
+    const menu = { ...component('menu', 'Menu', 'menu'), functions: [...component('menu', 'Menu', 'menu').functions, { kind: 'classes' as const, name: 'daisyMenuItem', receiver: 'Tag', element: null as unknown as string, class: null, text: false, parameters: [toggle('active', 'menu-active')] }] }
+    const lines = generateComponentApiDump([shapeOf(menu)]).split('\n')
+
+    assert.equal(lines[lines.findIndex(line => line.startsWith('fun Tag.daisyMenuClasses(')) + 1], 'fun Tag.daisyMenuItemClasses(active: Boolean = false)')
+  })
+})

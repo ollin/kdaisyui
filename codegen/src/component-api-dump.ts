@@ -22,7 +22,7 @@
  * the failure being fixed.
  */
 
-import { hasSibling, siblingParameters, type ComponentShape, type FunctionShape, type ParameterShape } from './component-shape.ts'
+import { hasSibling, siblingParameters, type ComponentShape, type FunctionShape, type ParameterShape, type SiblingShape } from './component-shape.ts'
 
 /** One parameter, in the form a Kotlin caller sees it. */
 function renderParameter(parameter: ParameterShape): string {
@@ -42,10 +42,19 @@ export function renderFunction(shape: FunctionShape): string {
   return `fun ${shape.receiver}.${shape.name}(${parameters})`
 }
 
+/** A class sibling's signature. */
+export function renderSiblingSignature(shape: SiblingShape): string {
+  return `fun Tag.${shape.name}Classes(${siblingParameters(shape).map(renderParameter).join(', ')})`
+}
+
 /** A function's signature, followed by its class sibling's where it has one. */
 export function renderSignatures(shape: FunctionShape): string[] {
-  const sibling = `fun Tag.${shape.name}Classes(${siblingParameters(shape).map(renderParameter).join(', ')})`
-  return [renderFunction(shape), ...(hasSibling(shape) ? [sibling] : [])]
+  return [renderFunction(shape), ...(hasSibling(shape) ? [renderSiblingSignature(shape)] : [])]
+}
+
+/** Every signature of a component: its functions with their siblings, then its class-only functions. */
+export function componentSignatures(shape: ComponentShape): string[] {
+  return [...shape.functions.flatMap(renderSignatures), ...(shape.siblingsOnly ?? []).map(renderSiblingSignature)]
 }
 
 /** The enum entries a caller can name, which are as much API as the functions are. */
@@ -65,7 +74,7 @@ function renderComponent(shape: ComponentShape): string[] {
   return [
     `# ${shape.componentName} <${main.htmlTag}>`,
     ...renderEnums(shape),
-    ...shape.functions.flatMap(renderSignatures),
+    ...componentSignatures(shape),
     '',
   ]
 }

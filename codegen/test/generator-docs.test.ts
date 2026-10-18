@@ -326,3 +326,11 @@ describe('the class sibling on a reference page', () => {
     assert.ok(page.includes(")\n\n// The same classes on an element you write yourself, or beside another component's:\nfun Tag.daisyKbdClasses()\n```"))
   })
 })
+
+describe('a class-only function on a reference page', () => {
+  test('gets a block of its own, after the functions', () => {
+    const menu = { ...component('menu', 'Menu', 'menu'), functions: [...component('menu', 'Menu', 'menu').functions, { kind: 'classes' as const, name: 'daisyMenuItem', receiver: 'Tag', element: null as unknown as string, class: null, text: false, parameters: [toggle('active', 'menu-active')] }] }
+
+    assert.ok(generateComponentPage(shapeOf(menu), undefined).endsWith("```kotlin\n// Classes only, for a child DaisyUI gives no class of its own:\nfun Tag.daisyMenuItemClasses(active: Boolean = false)\n```\n"))
+  })
+})

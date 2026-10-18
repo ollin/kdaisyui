@@ -42,10 +42,14 @@ regenerating.
 
 - [ ] 3.1 `^ r (internal)` The classifier returns the claiming groups of D4, still accepting only
   a single group. Zero diff.
-- [ ] 3.2 `^ F (internal)` Accept several groups: the composition rule. Regeneration then fails on
-  the 27 composition declarations as stale, which is this task's red.
-- [ ] 3.3 `^ F` Generate a composition's test as the call plus its siblings in `attrs`, and delete
-  the 27 declarations, one commit per page, each after its tests pass.
+- [ ] 3.2 `^ F` Generate a composition's test as the call plus its siblings in `attrs`, while the
+  gate still accepts one group: every composite element DaisyUI documents is rendered and its
+  classes asserted before the gate relies on it.
+- [ ] 3.3 `^ F (internal)` Accept several groups in the gate, and delete the 27 composition
+  declarations in the same commit. Red first, observed and recorded in the commit body:
+  regeneration with the rule and the declarations still in fails naming all 27 as stale.
+  Reordered 2026-10-18 from "rule, then tests and deletions per page": with the rule in and any
+  declaration left, generation fails, so no commit in between would regenerate cleanly.
 
 ## 4. Classes where DaisyUI puts them (#347)
 

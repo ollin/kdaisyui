@@ -91,7 +91,7 @@ do not exist and change exactly those.
 
 - [x] 3.1 `. r (internal)` `component-set.ts` builds each shape from the model instead of
   classifying. Covers the Kotlin, the reference pages, `llms.txt` and the API dump.
-- [ ] 3.2 `. r (internal)` `test-generator.ts` takes its parameter bindings from the model,
+- [x] 3.2 `. r (internal)` `test-generator.ts` takes its parameter bindings from the model,
   ending its second classification loop. It keeps reading DaisyUI's examples as test input; that
   was corrected into the spec on 2026-10-18, before task 1.2.
 - [ ] 3.3 `. r (internal)` Delete the export script and the shape-equality test; the model is now

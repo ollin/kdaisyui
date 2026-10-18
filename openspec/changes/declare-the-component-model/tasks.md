@@ -99,7 +99,7 @@ do not exist and change exactly those.
 - [x] 3.4 `^ B` `CardModifier.ImageFull` emits `image-full`, the class DaisyUI defines, not
   `card-image-full`. The regenerated component test for DaisyUI's `image-full` example is the
   reproducing test, in the same run.
-- [ ] 3.5 `^ B` The step colors move from `daisySteps` to `daisyStepsStep` and emit `step-*`, not
+- [x] 3.5 `^ B` The step colors move from `daisySteps` to `daisyStepsStep` and emit `step-*`, not
   `steps-step-*`. Moved here from 4.7, which now only renames.
 - [ ] 3.6 `^ B` `tab-active` and `tab-disabled` move from `daisyTab` to the item function and emit
   `tab-*`, not `tabs-tab-*`. 5.9 still renames the functions and adds the radio item.

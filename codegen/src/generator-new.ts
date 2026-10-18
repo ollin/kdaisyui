@@ -9,11 +9,10 @@
  * shape with exactly one consumer.
  */
 
+import type { MainFunctionConfig } from './model.ts'
 import { toCamelCase } from './classifier.ts'
 import {
-  readComponentConfig,
   staticAttributeDoc,
-  type ComponentConfig,
   type ComponentShape,
   type CssClass,
   type EnumShape,
@@ -213,7 +212,7 @@ function contentLines(shape: FunctionShape, hasTextParam: boolean): string[] {
 function mainFunctionBody(
   prefix: string,
   shape: FunctionShape,
-  componentConfig: ComponentConfig,
+  componentConfig: MainFunctionConfig,
 ): string {
   const { extras, hasTextParam, role, inputType } = componentConfig
   // The body follows the SIGNATURE rather than re-deriving the rule: if the shape declares no
@@ -283,7 +282,7 @@ function secondaryFunctionBody(shape: FunctionShape): string {
 function renderBody(
   fn: FunctionShape,
   prefix: string,
-  componentConfig: ComponentConfig,
+  componentConfig: MainFunctionConfig,
 ): string {
   return fn.kind === 'main'
     ? mainFunctionBody(prefix, fn, componentConfig)
@@ -315,7 +314,7 @@ function scopeImports(scope: ScopeShape): string[] {
 }
 
 /** What the per-component config asks the body to call. */
-function configImports(componentConfig: ComponentConfig): string[] {
+function configImports(componentConfig: MainFunctionConfig): string[] {
   return [
     ...(componentConfig.role ? ['kotlinx.html.role'] : []),
     ...(componentConfig.inputType ? ['kotlinx.html.InputType'] : []),
@@ -323,7 +322,7 @@ function configImports(componentConfig: ComponentConfig): string[] {
   ]
 }
 
-function collectImports(shape: ComponentShape, componentConfig: ComponentConfig): string[] {
+function collectImports(shape: ComponentShape, componentConfig: MainFunctionConfig): string[] {
   const imports = new Set([
     'io.github.ollin.kdaisyui.core.HtmlId',
     'io.github.ollin.kdaisyui.core.addClassNames',
@@ -352,8 +351,7 @@ function collectImports(shape: ComponentShape, componentConfig: ComponentConfig)
  * a large object with per-component sections, and modelling it properly is its own piece
  * of work rather than a side effect of a rename.
  */
-export function generateKotlinFile(shape: ComponentShape, config) {
-  const componentConfig = readComponentConfig(config, shape.componentName)
+export function generateKotlinFile(shape: ComponentShape, componentConfig: MainFunctionConfig) {
 
   const header = [
     `// GENERATED — DO NOT EDIT`,

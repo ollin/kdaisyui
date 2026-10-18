@@ -24,6 +24,7 @@ export type SkipReason = 'configured-skip' | 'no-frontmatter' | 'no-component-cl
 
 export interface GeneratedComponent {
   readonly componentDir: ComponentName
+  readonly model: ComponentModel
   readonly classified: ClassifiedComponent
   readonly shape: ComponentShape
   /** The raw frontmatter, for the callers that need its class names. */
@@ -57,7 +58,7 @@ export function readComponentSet(): ComponentSet {
       continue
     }
     const frontmatter = readComponentFrontmatter(componentDir)
-    declared.push({ model, component: { componentDir, frontmatter, classified: classifyFromFrontmatter(frontmatter, componentDir) } })
+    declared.push({ model, component: { componentDir, model, frontmatter, classified: classifyFromFrontmatter(frontmatter, componentDir) } })
   }
 
   const shapes = withDeclaredScopes(declared.map(({ model, component }) => ({

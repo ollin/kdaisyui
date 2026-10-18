@@ -2,7 +2,7 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { generateKotlinFile } from '../src/generator-new.ts'
-import { allBooleans, buildComponentShape } from '../src/component-shape.ts'
+import { allBooleans, buildComponentShape, readComponentConfig } from '../src/component-shape.ts'
 import { withJoinScope } from '../src/join-scope.ts'
 import type { FunctionShape } from '../src/component-shape.ts'
 import type { ComponentSource } from '../src/component-shape.ts'
@@ -49,7 +49,7 @@ function kotlinFor(
   config = {},
   groups: GroupClassification = allBooleans(component),
 ): string {
-  return generateKotlinFile(buildComponentShape(component, source, config, groups), config)
+  return generateKotlinFile(buildComponentShape(component, source, config, groups), readComponentConfig(config, component.componentName))
 }
 
 describe('the // Source: attribution', () => {
@@ -160,7 +160,7 @@ describe('the join scope', () => {
         ),
         [button()],
       ),
-      {},
+      readComponentConfig({}, 'Join'),
     )
 
   test('the main function opens the scope instead of a plain div', () => {

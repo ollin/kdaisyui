@@ -21,7 +21,7 @@ import {
 import { readComponentConfig } from './component-shape.ts'
 import { classesOfferedTwice, type OfferedTwice } from './offered-twice.ts'
 import { classFindings, directoryFindings } from './model-completeness.ts'
-import { modelFileNames, readModel, type ComponentModel } from './model.ts'
+import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -194,7 +194,7 @@ function main() {
     ))
     offeredTwice.push(...classesOfferedTwice(shape, readComponentConfig(config, classified.componentName).extras))
 
-    const kotlin = generateKotlinFile(shape, config)
+    const kotlin = generateKotlinFile(shape, mainFunctionConfig(component.model))
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
 
     fs.mkdirSync(OUTPUT_DIR, { recursive: true })

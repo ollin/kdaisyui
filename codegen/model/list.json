@@ -24,11 +24,16 @@
         { "kind": "toggle", "name": "colGrow", "class": "list-col-grow" },
         { "kind": "toggle", "name": "colWrap", "class": "list-col-wrap" }
       ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyListRow",
+      "receiver": "UL",
+      "element": "LI",
+      "class": "list-row",
+      "text": false,
+      "parameters": []
     }
   ],
-  "summary": { "summary": "Styled list layout" },
-  "notOffered": {
-    "list-row": "A row of a list. No function renders it yet, which is also why list-col-wrap and list-col-grow have no element to sit on (#347)."
-  },
-  "notExpressed": { "list-row": "No function renders list-row, a row of a list; it is listed in notOffered (#347)." }
+  "summary": { "summary": "Styled list layout" }
 }

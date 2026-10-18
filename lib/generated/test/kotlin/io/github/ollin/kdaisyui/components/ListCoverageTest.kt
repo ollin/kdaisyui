@@ -6,6 +6,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
+import kotlinx.html.ul
 
 class ListCoverageTest {
 
@@ -62,6 +63,46 @@ class ListCoverageTest {
             daisyListClasses()
         }
         assertRendered(html, "list", "ListClasses all flags")
+    }
+
+    @Test
+    fun listRow_defaults() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyListRow(
+                content = { },
+            )
+        }
+        assertRendered(html, "list-row", "ListRow defaults", closes = "</li></ul>")
+    }
+
+    @Test
+    fun listRow_all_flags() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyListRow(
+                id = htmlId("x-cov-id"),
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+                content = { attributes["data-content"] = "yes" },
+            )
+        }
+        assertRendered(html, "list-row zz-extra", "ListRow all flags", closes = "</li></ul>")
+        assertCommonFlags(html, "ListRow")
+    }
+
+    @Test
+    fun listRowClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListRowClasses()
+        }
+        assertRendered(html, "list-row", "ListRowClasses defaults")
+    }
+
+    @Test
+    fun listRowClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListRowClasses()
+        }
+        assertRendered(html, "list-row", "ListRowClasses all flags")
     }
 
     @Test

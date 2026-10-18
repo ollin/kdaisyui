@@ -7,6 +7,8 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
+import kotlinx.html.li
+import kotlinx.html.LI
 import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
@@ -36,6 +38,27 @@ fun FlowContent.daisyList(
 /** The classes `daisyList` writes, on the element this is called on. */
 fun Tag.daisyListClasses() {
     addClassNames("list")
+}
+
+/** Renders `<li class="list-row ...">`. */
+fun UL.daisyListRow(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (LI.() -> Unit)? = null,
+    content: (LI.() -> Unit),
+) {
+    li {
+        if (id != null) attributes["id"] = id.id
+        addClassNames("list-row")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyListRow` writes, on the element this is called on. */
+fun Tag.daisyListRowClasses() {
+    addClassNames("list-row")
 }
 
 /** The classes `daisyListCell` writes, on the element this is called on. */

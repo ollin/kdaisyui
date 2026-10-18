@@ -240,6 +240,8 @@ fun Tag.daisyLinkClasses(color: ClassValues<LinkColor>? = null, hover: Boolean =
 # List <ul>
 fun FlowContent.daisyList(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 fun Tag.daisyListClasses()
+fun UL.daisyListRow(id: HtmlId? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
+fun Tag.daisyListRowClasses()
 fun Tag.daisyListCellClasses(colGrow: Boolean = false, colWrap: Boolean = false)
 
 # Loading <span>

@@ -805,6 +805,9 @@ public final class io/github/ollin/kdaisyui/components/ListKt {
 	public static final fun daisyListCellClasses (Lkotlinx/html/Tag;ZZ)V
 	public static synthetic fun daisyListCellClasses$default (Lkotlinx/html/Tag;ZZILjava/lang/Object;)V
 	public static final fun daisyListClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyListRow (Lkotlinx/html/UL;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyListRow$default (Lkotlinx/html/UL;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyListRowClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/LoadingKt {

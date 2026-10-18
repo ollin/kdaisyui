@@ -5,6 +5,7 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.html.div
+import kotlinx.html.ul
 
 class ListTest {
 
@@ -15,6 +16,17 @@ class ListTest {
             }
         }
         val expectedClasses = "list"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
+    }
+
+    @Test
+    fun list_second_column_grows_default_daisyListRow() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyListRow() {
+            }
+        }
+        val expectedClasses = "list-row"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
     }

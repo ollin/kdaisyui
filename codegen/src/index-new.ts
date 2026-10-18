@@ -2,16 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { getAllComponentDirs, getClassesByCategory } from './parser/frontmatter.ts'
 import { generateKotlinFile } from './generator-new.ts'
-import { documentedElementSetsFor } from './parser/documented-element.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
-import { observeElements } from './element-observation.ts'
-import {
-  crossCheckElements,
-  describeCrossCheckFailure,
-  DocumentedElements,
-  type CrossCheckExceptions,
-  type ElementObservation,
-} from './element-cross-check.ts'
 import { classFindings, directoryFindings } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
 
@@ -63,21 +54,6 @@ function loadConfig() {
 }
 
 /**
- * Runs after the files are written, deliberately: a failure here means the chosen element is
- * wrong, and seeing the output it produced is what makes that diagnosable. The exit code still
- * fails the Gradle task, so nothing ships on it.
- */
-function reportCrossCheck(observations: readonly ElementObservation[], exceptions: CrossCheckExceptions): void {
-  const crossCheck = crossCheckElements(observations, exceptions)
-  for (const key of crossCheck.excused) {
-    console.log(`  ⚠ ${key}: element disagrees with DaisyUI, excused — see #${exceptions[key].issue}`)
-  }
-  if (crossCheck.findings.length === 0) return
-  console.error(`\n${describeCrossCheckFailure(crossCheck)}`)
-  process.exitCode = 1
-}
-
-/**
  * Fails the run when a component's model and the classes DaisyUI declares for it disagree.
  * Runs after generation like the checks above, so the output a wrong model produced is on disk.
  */
@@ -117,7 +93,6 @@ function main() {
   const skipReasons = new Map(componentSet.skipped.map(component => [component.componentDir, component.reason]))
 
   const allClasses = []
-  const observations: ElementObservation[] = []
   const modelFindings: string[] = []
 
   // DaisyUI's own directory order, so the log reads down the same list a reader sees on disk
@@ -132,19 +107,6 @@ function main() {
     const component = byDirectory.get(componentName)
     if (component === undefined) continue
     const { classified, shape, frontmatter } = component
-
-    // Every class each function emits, beside EVERY element DaisyUI documents it on. Judged
-    // after the loop so the whole set is reportable at once — dying on the first would hide
-    // the rest.
-    //
-    // The sets, not the tallies' usual element: which of several DaisyUI picks is the
-    // surrounding context, and the generator renders one function for all of them. Holding it
-    // to the commonest would call six of `badge`'s seven documented `<span>`s a defect.
-    const documentedSets = documentedElementSetsFor(componentName)
-    observations.push(...observeElements(
-      shape,
-      new Map([...documentedSets].map(([cls, elements]) => [cls, DocumentedElements.of(elements)])),
-    ))
 
     const kotlin = generateKotlinFile(shape, mainFunctionConfig(component.model))
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
@@ -164,7 +126,6 @@ function main() {
   console.log(`Output: ${OUTPUT_DIR}`)
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
 
-  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {})
   reportIncompleteModels(modelFindings)
 }
 

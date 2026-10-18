@@ -24,10 +24,15 @@ parameter binding from the model, never from its own classification.
 Whether a function takes content stays derived from its declared element by the HTML
 specification's void-element list. That is a rule of HTML, not an inference about DaisyUI.
 
-**Assumed** that the model can carry every fact today's inferred shape holds, so the switch is
-behaviour-preserving before any desired change is made. *Wrong if:* generating from the
-bootstrapped model produces any difference under `lib/generated/`, `docs/reference/`, `llms.txt`
-or `lib/api/`.
+**Verified** that the model carries every fact today's inferred shape holds, 2026-10-18 (task 1.4):
+the 68 committed model files rebuild all 66 component shapes deep-equal to the inferred ones, the
+join scope included, and reproduce every main function's extras, text flag, role and input type,
+every editorial summary and both skip reasons. A corrupted model file fails that test and names the
+component. Shape equality is what the emitters render from, so generation cannot differ; block 3
+still regenerates after every switch, because the emitters also read the configuration until then.
+
+It took no field beyond the eleven listed in task 1.2 and 1.4, and 65 of 66 components round-tripped
+before the join scope was modelled.
 
 #### Scenario: Generating without reading example markup
 

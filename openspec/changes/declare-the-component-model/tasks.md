@@ -43,6 +43,13 @@ The three Assumed claims this change rests on are checked here, before anything 
 - [ ] 1.4 `. r (internal)` **Shape equality, the proof for block 3:** a test that builds every
   component's shape from its model file and deep-equals it against the inferred shape, for all
   66. A failure names the missing fact; fix the export, never the comparison.
+  **Done 2026-10-18,** in `codegen/integration/model-equality.test.ts`. All 66 shapes are equal,
+  join scope included, and so are the main functions' extras, text, role and input type, the
+  summaries and the skip reasons. A positive control, one corrupted class and one corrupted
+  summary in `button.json`, failed two of the four tests and named `button`. Fields added beyond
+  1.2: parameter kinds `toggle` and `extra`; function fields `always`, `attributes`, `joinItem`,
+  `role`, `inputType`; component fields `joinScope`, `summary`; a skipped component is
+  `{ component, skip }`.
 - [ ] 1.5 `. d` **Run the element and placement cross-check once against the model**, by the code
   that still exists. Record that the only disagreements are the 30 that carry exceptions today.
   Anything else refutes the placement requirement's assumption; revise before block 3. Also

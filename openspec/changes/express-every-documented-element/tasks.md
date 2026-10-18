@@ -28,7 +28,7 @@ regenerating.
 
 ## 2. A class sibling for every function
 
-- [ ] 2.1 `^ r (internal)` The shape carries each function's class-bearing parameters as a list
+- [x] 2.1 `^ r (internal)` The shape carries each function's class-bearing parameters as a list
   the sibling can be emitted from. Zero diff.
 - [ ] 2.2 `^ F` Emit `Tag.daisy<Name>Classes` after every function that writes a class (D1), its
   generator unit test first, and its coverage tests (D5) in the same step so `koverVerify` holds.

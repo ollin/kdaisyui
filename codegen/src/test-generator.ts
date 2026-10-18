@@ -183,16 +183,16 @@ function strippedClass(prefix: string | null, cssClass: string): string {
 }
 
 /**
- * What each of a component's classes becomes at a call site, read from the component model the
+ * What each class one function offers becomes at its call site, read from the component model the
  * Kotlin is generated from, keyed by the class with the component prefix stripped.
  *
  * Enum entries first, then toggles, then the classes an extra parameter writes; the first binding
- * of a class wins. A class a construction always writes is left out: the main function has no
+ * of a class wins. A class a construction always writes is left out: the function has no
  * parameter for it, and the construction has its own test.
  */
-function classBindings(model: ComponentModel): Record<string, ClassBinding> {
+function classBindings(model: ComponentModel, fn: ModelFunction): Record<string, ClassBinding> {
   const bindings: Record<string, ClassBinding> = {}
-  const parameters = model.functions.flatMap(fn => fn.parameters)
+  const parameters = fn.parameters
   for (const [cssClass, binding] of [...enumBindings(model, parameters), ...toggleBindings(model, parameters), ...writtenBindings(parameters)]) {
     bindings[strippedClass(model.class, cssClass)] ??= binding
   }
@@ -464,7 +464,7 @@ function buildCallModel(frontmatter, model: ComponentModel): CallModel {
     componentClass,
     prefix: model.class,
     allowedClasses,
-    bindings: classBindings(model),
+    bindings: classBindings(model, model.functions.find(fn => fn.kind === 'main') as ModelFunction),
     writtenByCustomPart: new Set(model.functions.flatMap(fn => fn.always ?? [])),
   }
 }

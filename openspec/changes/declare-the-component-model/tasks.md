@@ -55,6 +55,16 @@ The three Assumed claims this change rests on are checked here, before anything 
   Anything else refutes the placement requirement's assumption; revise before block 3. Also
   record why it does not report `ChatVariant` on `daisyChat` or `StepsVariant` on `daisySteps`,
   whose classes DaisyUI documents on the bubble and the step (`design.md` D13).
+  **Measured 2026-10-18, the assumption holds:** generation reports exactly the 30 excused
+  disagreements and no other. **And the cross-check has two blind spots,** which explain both
+  misses. It compares tag names, not elements: `chat-bubble-primary` sits on `daisyChat`'s
+  `<div>` while DaisyUI puts it on the bubble's `<div>`, and two `<div>`s agree. It skips a class
+  DaisyUI never documents: `StepsVariant` emits `steps-step-primary`, which does not exist, so
+  there was nothing to compare. Measuring every emitted class against all frontmatter found
+  **eleven that do not exist**: the eight step colors (`steps-step-*`), the two tab toggles
+  (`tabs-tab-active`, `tabs-tab-disabled`) and `card-image-full`, which DaisyUI calls
+  `image-full`. All have shipped styling nothing. They are repaired in the new tasks 3.4 to 3.6,
+  before the completeness gate, which would refuse every one of them.
 
 ## 2. The bump report — 1.5 h
 
@@ -72,7 +82,8 @@ Built before block 3 deletes the cross-check, because it is what replaces it on 
 
 ## 3. Generate from the model — 4 h
 
-Enablers. Each commit regenerates and shows no diff.
+Enablers, each regenerating with no diff, except 3.4 to 3.6, which repair the eleven classes that
+do not exist and change exactly those.
 
 - [ ] 3.1 `. r (internal)` `component-set.ts` builds each shape from the model instead of
   classifying. Covers the Kotlin, the reference pages, `llms.txt` and the API dump.
@@ -81,22 +92,29 @@ Enablers. Each commit regenerates and shows no diff.
   was corrected into the spec on 2026-10-18, before task 1.2.
 - [ ] 3.3 `. r (internal)` Delete the export script and the shape-equality test; the model is now
   the input, and the inferred side no longer exists to compare against.
-- [ ] 3.4 `^ F (internal)` Completeness gate: generation fails when a component's frontmatter
+- [ ] 3.4 `^ B` `CardModifier.ImageFull` emits `image-full`, the class DaisyUI defines, not
+  `card-image-full`. The regenerated component test for DaisyUI's `image-full` example is the
+  reproducing test, in the same run.
+- [ ] 3.5 `^ B` The step colors move from `daisySteps` to `daisyStepsStep` and emit `step-*`, not
+  `steps-step-*`. Moved here from 4.7, which now only renames.
+- [ ] 3.6 `^ B` `tab-active` and `tab-disabled` move from `daisyTab` to the item function and emit
+  `tab-*`, not `tabs-tab-*`. 5.9 still renames the functions and adds the radio item.
+- [ ] 3.7 `^ F (internal)` Completeness gate: generation fails when a component's frontmatter
   classes and the classes its model places differ, naming component and class. Tests: an unplaced
   class, a stale class.
-- [ ] 3.5 `^ F (internal)` Completeness gate: a class placed twice fails, naming both places.
-- [ ] 3.6 `^ F (internal)` Completeness gate: a directory with no model file and no skip entry
+- [ ] 3.8 `^ F (internal)` Completeness gate: a class placed twice fails, naming both places.
+- [ ] 3.9 `^ F (internal)` Completeness gate: a directory with no model file and no skip entry
   fails, and a model file naming no directory fails.
-- [ ] 3.7 `. r (internal)` Delete `codegen-config.json`, `config-consumption.ts` and
+- [ ] 3.10 `. r (internal)` Delete `codegen-config.json`, `config-consumption.ts` and
   `offered-twice.ts` with their tests.
-- [ ] 3.8 `. r (internal)` Delete the element heuristic, `element-observation.ts` and
+- [ ] 3.11 `. r (internal)` Delete the element heuristic, `element-observation.ts` and
   `element-cross-check.ts` with their tests.
-- [ ] 3.9 `. r (internal)` Delete `class-groups.ts`, `axis-derivation.ts`, `axis-names.ts`,
+- [ ] 3.12 `. r (internal)` Delete `class-groups.ts`, `axis-derivation.ts`, `axis-names.ts`,
   `parser/property-table.ts` and the classification parts of `component-shape.ts` with their
   tests.
-- [ ] 3.10 `. r (internal)` Delete the join-item derivation from `join-scope.ts`; keep the scope
+- [ ] 3.13 `. r (internal)` Delete the join-item derivation from `join-scope.ts`; keep the scope
   emitter.
-- [ ] 3.11 `. r (internal)` Delete the exclusivity measurement: `exclusivity.json`, the probe
+- [ ] 3.14 `. r (internal)` Delete the exclusivity measurement: `exclusivity.json`, the probe
   modules, `:lib:verifyExclusivity`, its CI step, `just measure-exclusivity` and
   `just verify-exclusivity`, the `exclusivity` source set in `e2e-tests`. Cite the last commit
   that carried them in the body.
@@ -119,7 +137,8 @@ Each commit edits the model, regenerates, and migrates every call site in `examp
 - [ ] 4.5 `^ F` `daisyTooltip`: `side` and `align`.
 - [ ] 4.6 `^ B` The chat bubble colors move from `daisyChat` to `daisyChatBubble`. The generated
   test asserting the class on the bubble is the reproducing test, in the same run.
-- [ ] 4.7 `^ B` The step colors move from `daisySteps` to `daisyStep`, the same way.
+- [ ] 4.7 `. d` Nothing left for the step colors: 3.5 moved them. Kept so the numbers above
+  stay stable; tick it with that note.
 
 ## 5. Declare the axes, trade the tab functions — 4 h
 

@@ -259,8 +259,19 @@ arrive misnamed.
 `ChatVariant` sits on `daisyChat`, but DaisyUI documents `chat-bubble-primary` on
 `<div class="chat-bubble chat-bubble-primary">`. `StepsVariant` sits on `daisySteps`, but DaisyUI
 documents `step-primary` on `<li class="step step-primary">`. Both were checked on 2026-10-18 at
-the pinned tag. The element cross-check did not report either; task 1.5 records why, because a
-defect the old gate missed is evidence about the gate this change removes.
+the pinned tag.
+
+The element cross-check missed both, for two reasons measured in task 1.5. It compares tag names,
+so a class on the wrong `<div>` agrees with the right `<div>`. And it skips a class DaisyUI never
+documents, so `StepsVariant`, which emits `steps-step-primary` instead of `step-primary`, was never
+compared at all. The same blind spot hid `card-image-full` and `tabs-tab-active`. The completeness
+gate catches all eleven such classes, because it compares names, not tags.
+
+| Class emitted in 0.7.0 | DaisyUI's class | Repaired by |
+|---|---|---|
+| `steps-step-neutral` … `steps-step-error` (8) | `step-neutral` … `step-error`, on the step | task 3.5 |
+| `tabs-tab-active`, `tabs-tab-disabled` | `tab-active`, `tab-disabled`, on the item | task 3.6 |
+| `card-image-full` | `image-full` | task 3.4 |
 
 ## Risks / Trade-offs
 

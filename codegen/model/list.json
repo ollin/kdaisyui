@@ -17,5 +17,10 @@
   "summary": { "summary": "Styled list layout" },
   "notOffered": {
     "list-row": "A row of a list. No function renders it yet, which is also why list-col-wrap and list-col-grow have no element to sit on (#347)."
+  },
+  "notExpressed": {
+    "list-col-grow": "#347: DaisyUI puts it on a child no function renders; daisyList offers it on the <ul> itself, where it has no effect.",
+    "list-col-wrap": "#347: DaisyUI puts it on a child no function renders; daisyList offers it on the <ul> itself, where it has no effect.",
+    "list-row": "No function renders list-row, a row of a list; it is listed in notOffered (#347)."
   }
 }

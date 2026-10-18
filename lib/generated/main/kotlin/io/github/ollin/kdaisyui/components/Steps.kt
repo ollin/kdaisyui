@@ -16,7 +16,7 @@ import kotlinx.html.ul
 import kotlinx.html.UL
 
 /** Color variants for this component (CSS prefix: `steps-`) */
-enum class StepsVariant(internal val className: String) : ClassValues<StepsVariant> {
+enum class StepColor(internal val className: String) : ClassValues<StepColor> {
     /** CSS: `step-neutral` — neutral color */
     Neutral("step-neutral"),
     /** CSS: `step-primary` — primary color */
@@ -78,7 +78,7 @@ fun FlowContent.daisySteps(
 /** A single step node Renders `<li class="step ...">`. */
 fun UL.daisyStep(
     id: HtmlId? = null,
-    variant: ClassValues<StepsVariant>? = null,
+    color: ClassValues<StepColor>? = null,
     extraClasses: String? = null,
     attrs: (LI.() -> Unit)? = null,
     content: (LI.() -> Unit),
@@ -86,7 +86,7 @@ fun UL.daisyStep(
     li {
         if (id != null) attributes["id"] = id.id
         addClassNames("step")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

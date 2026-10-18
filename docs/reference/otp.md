@@ -11,11 +11,11 @@ Regenerate: just generate
 One-time password input for verification codes, typically four to six digits, used for two-factor authentication or passwordless login. Renders `<label class="otp ...">`.
 
 ```kotlin
-// OtpVariant: Neutral | Primary | Secondary | Accent | Success | Info | Warning | Error
+// OtpColor: Neutral | Primary | Secondary | Accent | Success | Info | Warning | Error
 // OtpSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyOtp(
     id: HtmlId? = null,
-    variant: ClassValues<OtpVariant>? = null,
+    color: ClassValues<OtpColor>? = null,
     size: ClassValues<OtpSize>? = null,
     joined: Boolean = false,  // Connects the character boxes together
     extraClasses: String? = null,

@@ -4,7 +4,7 @@
   "class": "radio",
   "enums": [
     {
-      "name": "RadioVariant",
+      "name": "RadioColor",
       "label": "Color variants",
       "classes": [
         "radio-neutral",
@@ -32,7 +32,7 @@
       "class": "radio",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "RadioVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "RadioColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "RadioSize", "doc": "Size variant" },
         {
           "kind": "extra",

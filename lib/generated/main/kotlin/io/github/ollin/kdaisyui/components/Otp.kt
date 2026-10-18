@@ -12,7 +12,7 @@ import kotlinx.html.label
 import kotlinx.html.LABEL
 
 /** Color variants for this component (CSS prefix: `otp-`) */
-enum class OtpVariant(internal val className: String) : ClassValues<OtpVariant> {
+enum class OtpColor(internal val className: String) : ClassValues<OtpColor> {
     /** CSS: `otp-neutral` — neutral color */
     Neutral("otp-neutral"),
     /** CSS: `otp-primary` — primary color */
@@ -55,7 +55,7 @@ enum class OtpSize(internal val className: String) : ClassValues<OtpSize> {
 /**
  * OTP (One-Time Password) component for inputting verification codes. It's usually 4 to 6 digits long and is used for two-factor authentication (2FA) or passwordless login. Renders `<label class="otp ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param joined — Connects the character boxes together
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -64,7 +64,7 @@ enum class OtpSize(internal val className: String) : ClassValues<OtpSize> {
  */
 fun FlowContent.daisyOtp(
     id: HtmlId? = null,
-    variant: ClassValues<OtpVariant>? = null,
+    color: ClassValues<OtpColor>? = null,
     size: ClassValues<OtpSize>? = null,
     joined: Boolean = false,
     extraClasses: String? = null,
@@ -74,7 +74,7 @@ fun FlowContent.daisyOtp(
     label {
         if (id != null) attributes["id"] = id.id
         addClassNames("otp")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (joined) addClassNames("otp-joined")
         addClassNames(extraClasses)

@@ -12,7 +12,7 @@ import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
-enum class InputVariant(internal val className: String) : ClassValues<InputVariant> {
+enum class InputColor(internal val className: String) : ClassValues<InputColor> {
     /** CSS: `input-neutral` */
     Neutral("input-neutral"),
     /** CSS: `input-primary` */
@@ -54,7 +54,7 @@ enum class InputSize(internal val className: String) : ClassValues<InputSize> {
 /**
  * Text Input is a simple input field. Renders `<input class="input ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param ghost
  * @param type
@@ -66,7 +66,7 @@ enum class InputSize(internal val className: String) : ClassValues<InputSize> {
  */
 fun FlowContent.daisyInput(
     id: HtmlId? = null,
-    variant: ClassValues<InputVariant>? = null,
+    color: ClassValues<InputColor>? = null,
     size: ClassValues<InputSize>? = null,
     ghost: Boolean = false,
     type: InputType = InputType.text,
@@ -80,7 +80,7 @@ fun FlowContent.daisyInput(
         if (id != null) attributes["id"] = id.id
         this.type = type
         addClassNames("input")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (ghost) addClassNames("input-ghost")
         if (placeholder != null) this.placeholder = placeholder

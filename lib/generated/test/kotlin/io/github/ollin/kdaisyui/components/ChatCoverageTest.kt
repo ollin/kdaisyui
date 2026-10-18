@@ -51,91 +51,91 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chat_variant_bubbleneutral() {
+    fun chat_color_bubbleneutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubbleNeutral,
+                color = ChatColor.BubbleNeutral,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-neutral", "Chat variant BubbleNeutral")
+        assertRendered(html, "chat chat-bubble-neutral", "Chat color BubbleNeutral")
     }
 
     @Test
-    fun chat_variant_bubbleprimary() {
+    fun chat_color_bubbleprimary() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubblePrimary,
+                color = ChatColor.BubblePrimary,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-primary", "Chat variant BubblePrimary")
+        assertRendered(html, "chat chat-bubble-primary", "Chat color BubblePrimary")
     }
 
     @Test
-    fun chat_variant_bubblesecondary() {
+    fun chat_color_bubblesecondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubbleSecondary,
+                color = ChatColor.BubbleSecondary,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-secondary", "Chat variant BubbleSecondary")
+        assertRendered(html, "chat chat-bubble-secondary", "Chat color BubbleSecondary")
     }
 
     @Test
-    fun chat_variant_bubbleaccent() {
+    fun chat_color_bubbleaccent() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubbleAccent,
+                color = ChatColor.BubbleAccent,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-accent", "Chat variant BubbleAccent")
+        assertRendered(html, "chat chat-bubble-accent", "Chat color BubbleAccent")
     }
 
     @Test
-    fun chat_variant_bubbleinfo() {
+    fun chat_color_bubbleinfo() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubbleInfo,
+                color = ChatColor.BubbleInfo,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-info", "Chat variant BubbleInfo")
+        assertRendered(html, "chat chat-bubble-info", "Chat color BubbleInfo")
     }
 
     @Test
-    fun chat_variant_bubblesuccess() {
+    fun chat_color_bubblesuccess() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubbleSuccess,
+                color = ChatColor.BubbleSuccess,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-success", "Chat variant BubbleSuccess")
+        assertRendered(html, "chat chat-bubble-success", "Chat color BubbleSuccess")
     }
 
     @Test
-    fun chat_variant_bubblewarning() {
+    fun chat_color_bubblewarning() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubbleWarning,
+                color = ChatColor.BubbleWarning,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-warning", "Chat variant BubbleWarning")
+        assertRendered(html, "chat chat-bubble-warning", "Chat color BubbleWarning")
     }
 
     @Test
-    fun chat_variant_bubbleerror() {
+    fun chat_color_bubbleerror() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
-                variant = ChatVariant.BubbleError,
+                color = ChatColor.BubbleError,
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-bubble-error", "Chat variant BubbleError")
+        assertRendered(html, "chat chat-bubble-error", "Chat color BubbleError")
     }
 
     @Test

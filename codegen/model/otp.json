@@ -4,7 +4,7 @@
   "class": "otp",
   "enums": [
     {
-      "name": "OtpVariant",
+      "name": "OtpColor",
       "label": "Color variants",
       "classes": [
         "otp-neutral",
@@ -28,7 +28,7 @@
       "class": "otp",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "OtpVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "OtpColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "OtpSize", "doc": "Size variant" },
         { "kind": "toggle", "name": "joined", "class": "otp-joined" }
       ]

@@ -4,7 +4,7 @@
   "class": "checkbox",
   "enums": [
     {
-      "name": "CheckboxVariant",
+      "name": "CheckboxColor",
       "label": "Color variants",
       "classes": [
         "checkbox-primary",
@@ -32,7 +32,7 @@
       "class": "checkbox",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "CheckboxVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "CheckboxColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "CheckboxSize", "doc": "Size variant" },
         {
           "kind": "extra",

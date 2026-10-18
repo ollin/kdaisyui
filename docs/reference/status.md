@@ -11,11 +11,11 @@ Regenerate: just generate
 Small status indicator dot. Renders `<div class="status ...">`.
 
 ```kotlin
-// StatusVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// StatusColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // StatusSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyStatus(
     id: HtmlId? = null,
-    variant: ClassValues<StatusVariant>? = null,
+    color: ClassValues<StatusColor>? = null,
     size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

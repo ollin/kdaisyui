@@ -57,83 +57,83 @@ class InputCoverageTest {
     }
 
     @Test
-    fun input_variant_neutral() {
+    fun input_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Neutral,
+                color = InputColor.Neutral,
             )
         }
-        assertRendered(html, "input input-neutral", "Input variant Neutral")
+        assertRendered(html, "input input-neutral", "Input color Neutral")
     }
 
     @Test
-    fun input_variant_primary() {
+    fun input_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Primary,
+                color = InputColor.Primary,
             )
         }
-        assertRendered(html, "input input-primary", "Input variant Primary")
+        assertRendered(html, "input input-primary", "Input color Primary")
     }
 
     @Test
-    fun input_variant_secondary() {
+    fun input_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Secondary,
+                color = InputColor.Secondary,
             )
         }
-        assertRendered(html, "input input-secondary", "Input variant Secondary")
+        assertRendered(html, "input input-secondary", "Input color Secondary")
     }
 
     @Test
-    fun input_variant_accent() {
+    fun input_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Accent,
+                color = InputColor.Accent,
             )
         }
-        assertRendered(html, "input input-accent", "Input variant Accent")
+        assertRendered(html, "input input-accent", "Input color Accent")
     }
 
     @Test
-    fun input_variant_info() {
+    fun input_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Info,
+                color = InputColor.Info,
             )
         }
-        assertRendered(html, "input input-info", "Input variant Info")
+        assertRendered(html, "input input-info", "Input color Info")
     }
 
     @Test
-    fun input_variant_success() {
+    fun input_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Success,
+                color = InputColor.Success,
             )
         }
-        assertRendered(html, "input input-success", "Input variant Success")
+        assertRendered(html, "input input-success", "Input color Success")
     }
 
     @Test
-    fun input_variant_warning() {
+    fun input_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Warning,
+                color = InputColor.Warning,
             )
         }
-        assertRendered(html, "input input-warning", "Input variant Warning")
+        assertRendered(html, "input input-warning", "Input color Warning")
     }
 
     @Test
-    fun input_variant_error() {
+    fun input_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(
-                variant = InputVariant.Error,
+                color = InputColor.Error,
             )
         }
-        assertRendered(html, "input input-error", "Input variant Error")
+        assertRendered(html, "input input-error", "Input color Error")
     }
 
     @Test

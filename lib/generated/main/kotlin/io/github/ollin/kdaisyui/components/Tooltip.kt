@@ -12,7 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `tooltip-`) */
-enum class TooltipVariant(internal val className: String) : ClassValues<TooltipVariant> {
+enum class TooltipColor(internal val className: String) : ClassValues<TooltipColor> {
     /** CSS: `tooltip-primary` — primary color */
     Primary("tooltip-primary"),
     /** CSS: `tooltip-secondary` — secondary color */
@@ -64,7 +64,7 @@ enum class TooltipAlignPlacement(internal val className: String) : ClassValues<T
 /**
  * Tooltip can be used to show a message when hovering over an element. Renders `<div class="tooltip ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param sidePlacement — SidePlacement variant
  * @param alignPlacement — AlignPlacement variant
  * @param open — Force open tooltip
@@ -74,7 +74,7 @@ enum class TooltipAlignPlacement(internal val className: String) : ClassValues<T
  */
 fun FlowContent.daisyTooltip(
     id: HtmlId? = null,
-    variant: ClassValues<TooltipVariant>? = null,
+    color: ClassValues<TooltipColor>? = null,
     sidePlacement: ClassValues<TooltipSidePlacement>? = null,
     alignPlacement: ClassValues<TooltipAlignPlacement>? = null,
     open: Boolean = false,
@@ -85,7 +85,7 @@ fun FlowContent.daisyTooltip(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("tooltip")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(sidePlacement)
         addClassNames(alignPlacement)
         if (open) addClassNames("tooltip-open")

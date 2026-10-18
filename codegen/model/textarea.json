@@ -4,7 +4,7 @@
   "class": "textarea",
   "enums": [
     {
-      "name": "TextareaVariant",
+      "name": "TextareaColor",
       "label": "Color variants",
       "classes": [
         "textarea-neutral",
@@ -32,7 +32,7 @@
       "class": "textarea",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "TextareaVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "TextareaColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "TextareaSize", "doc": "Size variant" },
         { "kind": "toggle", "name": "ghost", "class": "textarea-ghost" }
       ]

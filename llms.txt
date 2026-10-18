@@ -124,10 +124,10 @@ div {
 Status messages and notifications — renders `<div>`.
 
 ```kotlin
-enum class AlertVariant { Info, Success, Warning, Error }
+enum class AlertColor { Info, Success, Warning, Error }
 enum class AlertStyle { Outline, Dash }
 enum class AlertDirection { Vertical, Horizontal }
-fun FlowContent.daisyAlert(id: HtmlId? = null, variant: ClassValues<AlertVariant>? = null, style: ClassValues<AlertStyle>? = null, direction: ClassValues<AlertDirection>? = null, soft: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyAlert(id: HtmlId? = null, color: ClassValues<AlertColor>? = null, style: ClassValues<AlertStyle>? = null, direction: ClassValues<AlertDirection>? = null, soft: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Aura
@@ -153,11 +153,11 @@ fun FlowContent.daisyAvatar(id: HtmlId? = null, modifier: ClassValues<AvatarModi
 Labels, counts, and status tags — renders `<span>`.
 
 ```kotlin
-enum class BadgeVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class BadgeColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class BadgeSize { Xs, Sm, Md, Lg, Xl }
 enum class BadgeOutlineStyle { Outline, Dash }
 enum class BadgeFillStyle { Soft, Ghost }
-fun FlowContent.daisyBadge(text: String? = null, id: HtmlId? = null, variant: ClassValues<BadgeVariant>? = null, size: ClassValues<BadgeSize>? = null, outlineStyle: ClassValues<BadgeOutlineStyle>? = null, fillStyle: ClassValues<BadgeFillStyle>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
+fun FlowContent.daisyBadge(text: String? = null, id: HtmlId? = null, color: ClassValues<BadgeColor>? = null, size: ClassValues<BadgeSize>? = null, outlineStyle: ClassValues<BadgeOutlineStyle>? = null, fillStyle: ClassValues<BadgeFillStyle>? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
 ```
 
 ### Breadcrumbs
@@ -175,9 +175,9 @@ fun UL.daisyBreadcrumbsItem(id: HtmlId? = null, extraClasses: String? = null, at
 Actions and triggers — renders `<button>`.
 
 ```kotlin
-enum class ButtonVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class ButtonColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class ButtonSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyButton(text: String? = null, id: HtmlId? = null, variant: ClassValues<ButtonVariant>? = null, size: ClassValues<ButtonSize>? = null, active: Boolean = false, block: Boolean = false, circle: Boolean = false, dash: Boolean = false, ghost: Boolean = false, link: Boolean = false, outline: Boolean = false, soft: Boolean = false, square: Boolean = false, wide: Boolean = false, disabled: Boolean = false, type: ButtonType? = null, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit)? = null)
+fun FlowContent.daisyButton(text: String? = null, id: HtmlId? = null, color: ClassValues<ButtonColor>? = null, size: ClassValues<ButtonSize>? = null, active: Boolean = false, block: Boolean = false, circle: Boolean = false, dash: Boolean = false, ghost: Boolean = false, link: Boolean = false, outline: Boolean = false, soft: Boolean = false, square: Boolean = false, wide: Boolean = false, disabled: Boolean = false, type: ButtonType? = null, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit)? = null)
 ```
 
 ### Calendar
@@ -217,8 +217,8 @@ fun FlowContent.daisyCarouselItem(id: HtmlId? = null, extraClasses: String? = nu
 Chat bubble layout for conversations — renders `<div>`.
 
 ```kotlin
-enum class ChatVariant { BubbleNeutral, BubblePrimary, BubbleSecondary, BubbleAccent, BubbleInfo, BubbleSuccess, BubbleWarning, BubbleError }
-fun FlowContent.daisyChat(id: HtmlId? = null, variant: ClassValues<ChatVariant>? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class ChatColor { BubbleNeutral, BubblePrimary, BubbleSecondary, BubbleAccent, BubbleInfo, BubbleSuccess, BubbleWarning, BubbleError }
+fun FlowContent.daisyChat(id: HtmlId? = null, color: ClassValues<ChatColor>? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyChatImage(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyChatHeader(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyChatFooter(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
@@ -230,9 +230,9 @@ fun FlowContent.daisyChatBubble(id: HtmlId? = null, extraClasses: String? = null
 Boolean toggles for forms — renders `<input>`.
 
 ```kotlin
-enum class CheckboxVariant { Primary, Secondary, Accent, Neutral, Success, Warning, Info, Error }
+enum class CheckboxColor { Primary, Secondary, Accent, Neutral, Success, Warning, Info, Error }
 enum class CheckboxSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyCheckbox(id: HtmlId? = null, variant: ClassValues<CheckboxVariant>? = null, size: ClassValues<CheckboxSize>? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyCheckbox(id: HtmlId? = null, color: ClassValues<CheckboxColor>? = null, size: ClassValues<CheckboxSize>? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Collapse
@@ -269,9 +269,9 @@ fun FlowContent.daisyDiffResizer(id: HtmlId? = null, extraClasses: String? = nul
 Visual separator between sections — renders `<div>`.
 
 ```kotlin
-enum class DividerVariant { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
+enum class DividerColor { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
 enum class DividerDirection { Vertical, Horizontal }
-fun FlowContent.daisyDivider(id: HtmlId? = null, variant: ClassValues<DividerVariant>? = null, direction: ClassValues<DividerDirection>? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyDivider(id: HtmlId? = null, color: ClassValues<DividerColor>? = null, direction: ClassValues<DividerDirection>? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Dock
@@ -333,9 +333,9 @@ fun FIELDSET.daisyFieldsetLegend(id: HtmlId? = null, extraClasses: String? = nul
 File upload input field — renders `<input>`.
 
 ```kotlin
-enum class FileInputVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class FileInputColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class FileInputSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyFileInput(id: HtmlId? = null, variant: ClassValues<FileInputVariant>? = null, size: ClassValues<FileInputSize>? = null, ghost: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyFileInput(id: HtmlId? = null, color: ClassValues<FileInputColor>? = null, size: ClassValues<FileInputSize>? = null, ghost: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Filter
@@ -398,9 +398,9 @@ fun FlowContent.daisyIndicatorItem(id: HtmlId? = null, horizontalPlacement: Clas
 Text entry fields — renders `<input>`.
 
 ```kotlin
-enum class InputVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class InputColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class InputSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyInput(id: HtmlId? = null, variant: ClassValues<InputVariant>? = null, size: ClassValues<InputSize>? = null, ghost: Boolean = false, type: InputType = InputType.text, placeholder: String? = null, value: String? = null, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyInput(id: HtmlId? = null, color: ClassValues<InputColor>? = null, size: ClassValues<InputSize>? = null, ghost: Boolean = false, type: InputType = InputType.text, placeholder: String? = null, value: String? = null, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Join
@@ -434,8 +434,8 @@ fun FlowContent.daisyLabel(text: String? = null, id: HtmlId? = null, extraClasse
 Styled anchor elements — renders `<a>`.
 
 ```kotlin
-enum class LinkVariant { Neutral, Primary, Secondary, Accent, Success, Info, Warning, Error }
-fun FlowContent.daisyLink(text: String? = null, id: HtmlId? = null, variant: ClassValues<LinkVariant>? = null, hover: Boolean = false, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit)? = null)
+enum class LinkColor { Neutral, Primary, Secondary, Accent, Success, Info, Warning, Error }
+fun FlowContent.daisyLink(text: String? = null, id: HtmlId? = null, color: ClassValues<LinkColor>? = null, hover: Boolean = false, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit)? = null)
 ```
 
 ### List
@@ -555,9 +555,9 @@ fun FlowContent.daisyNavbarEnd(id: HtmlId? = null, extraClasses: String? = null,
 One-time password / verification code input — renders `<label>`.
 
 ```kotlin
-enum class OtpVariant { Neutral, Primary, Secondary, Accent, Success, Info, Warning, Error }
+enum class OtpColor { Neutral, Primary, Secondary, Accent, Success, Info, Warning, Error }
 enum class OtpSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyOtp(id: HtmlId? = null, variant: ClassValues<OtpVariant>? = null, size: ClassValues<OtpSize>? = null, joined: Boolean = false, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+fun FlowContent.daisyOtp(id: HtmlId? = null, color: ClassValues<OtpColor>? = null, size: ClassValues<OtpSize>? = null, joined: Boolean = false, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
 ```
 
 ### Progress
@@ -565,8 +565,8 @@ fun FlowContent.daisyOtp(id: HtmlId? = null, variant: ClassValues<OtpVariant>? =
 Progress bar indicator — renders `<progress>`.
 
 ```kotlin
-enum class ProgressVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
-fun FlowContent.daisyProgress(id: HtmlId? = null, variant: ClassValues<ProgressVariant>? = null, extraClasses: String? = null, attrs: (PROGRESS.() -> Unit)? = null, content: (PROGRESS.() -> Unit))
+enum class ProgressColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+fun FlowContent.daisyProgress(id: HtmlId? = null, color: ClassValues<ProgressColor>? = null, extraClasses: String? = null, attrs: (PROGRESS.() -> Unit)? = null, content: (PROGRESS.() -> Unit))
 ```
 
 ### RadialProgress
@@ -582,9 +582,9 @@ fun FlowContent.daisyRadialProgress(id: HtmlId? = null, extraClasses: String? = 
 Single-choice option groups — renders `<input>`.
 
 ```kotlin
-enum class RadioVariant { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
+enum class RadioColor { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
 enum class RadioSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyRadio(id: HtmlId? = null, variant: ClassValues<RadioVariant>? = null, size: ClassValues<RadioSize>? = null, name: String? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyRadio(id: HtmlId? = null, color: ClassValues<RadioColor>? = null, size: ClassValues<RadioSize>? = null, name: String? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Range
@@ -592,9 +592,9 @@ fun FlowContent.daisyRadio(id: HtmlId? = null, variant: ClassValues<RadioVariant
 Slider for numeric ranges — renders `<input>`.
 
 ```kotlin
-enum class RangeVariant { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
+enum class RangeColor { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
 enum class RangeSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyRange(id: HtmlId? = null, variant: ClassValues<RangeVariant>? = null, size: ClassValues<RangeSize>? = null, vertical: Boolean = false, min: String? = null, max: String? = null, value: String? = null, step: String? = null, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyRange(id: HtmlId? = null, color: ClassValues<RangeColor>? = null, size: ClassValues<RangeSize>? = null, vertical: Boolean = false, min: String? = null, max: String? = null, value: String? = null, step: String? = null, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Rating
@@ -611,9 +611,9 @@ fun FlowContent.daisyRating(id: HtmlId? = null, size: ClassValues<RatingSize>? =
 Dropdown option pickers — renders `<select>`.
 
 ```kotlin
-enum class SelectVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class SelectColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class SelectSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisySelect(id: HtmlId? = null, variant: ClassValues<SelectVariant>? = null, size: ClassValues<SelectSize>? = null, ghost: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (SELECT.() -> Unit)? = null, content: (SELECT.() -> Unit))
+fun FlowContent.daisySelect(id: HtmlId? = null, color: ClassValues<SelectColor>? = null, size: ClassValues<SelectSize>? = null, ghost: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (SELECT.() -> Unit)? = null, content: (SELECT.() -> Unit))
 ```
 
 ### Skeleton
@@ -653,9 +653,9 @@ fun FlowContent.daisyStatActions(id: HtmlId? = null, extraClasses: String? = nul
 Small status indicator dot — renders `<div>`.
 
 ```kotlin
-enum class StatusVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class StatusColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class StatusSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyStatus(id: HtmlId? = null, variant: ClassValues<StatusVariant>? = null, size: ClassValues<StatusSize>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStatus(id: HtmlId? = null, color: ClassValues<StatusColor>? = null, size: ClassValues<StatusSize>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Steps
@@ -663,10 +663,10 @@ fun FlowContent.daisyStatus(id: HtmlId? = null, variant: ClassValues<StatusVaria
 Step-by-step progress indicator — renders `<ul>`.
 
 ```kotlin
-enum class StepsVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class StepColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class StepsDirection { Vertical, Horizontal }
 fun FlowContent.daisySteps(id: HtmlId? = null, direction: ClassValues<StepsDirection>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
-fun UL.daisyStep(id: HtmlId? = null, variant: ClassValues<StepsVariant>? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
+fun UL.daisyStep(id: HtmlId? = null, color: ClassValues<StepColor>? = null, extraClasses: String? = null, attrs: (LI.() -> Unit)? = null, content: (LI.() -> Unit))
 fun FlowContent.daisyStepIcon(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 ```
 
@@ -715,9 +715,9 @@ fun FlowContent.daisyTextRotate(id: HtmlId? = null, extraClasses: String? = null
 Multi-line text input — renders `<textarea>`.
 
 ```kotlin
-enum class TextareaVariant { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class TextareaColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class TextareaSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyTextarea(id: HtmlId? = null, variant: ClassValues<TextareaVariant>? = null, size: ClassValues<TextareaSize>? = null, ghost: Boolean = false, extraClasses: String? = null, attrs: (TEXTAREA.() -> Unit)? = null, content: (TEXTAREA.() -> Unit))
+fun FlowContent.daisyTextarea(id: HtmlId? = null, color: ClassValues<TextareaColor>? = null, size: ClassValues<TextareaSize>? = null, ghost: Boolean = false, extraClasses: String? = null, attrs: (TEXTAREA.() -> Unit)? = null, content: (TEXTAREA.() -> Unit))
 ```
 
 ### ThemeController
@@ -754,9 +754,9 @@ fun FlowContent.daisyToast(id: HtmlId? = null, horizontalPlacement: ClassValues<
 Switch-style boolean input — renders `<input>`.
 
 ```kotlin
-enum class ToggleVariant { Primary, Secondary, Accent, Neutral, Success, Warning, Info, Error }
+enum class ToggleColor { Primary, Secondary, Accent, Neutral, Success, Warning, Info, Error }
 enum class ToggleSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyToggle(id: HtmlId? = null, variant: ClassValues<ToggleVariant>? = null, size: ClassValues<ToggleSize>? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
+fun FlowContent.daisyToggle(id: HtmlId? = null, color: ClassValues<ToggleColor>? = null, size: ClassValues<ToggleSize>? = null, checked: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (INPUT.() -> Unit)? = null)
 ```
 
 ### Tooltip
@@ -764,10 +764,10 @@ fun FlowContent.daisyToggle(id: HtmlId? = null, variant: ClassValues<ToggleVaria
 Hover tooltip on elements — renders `<div>`.
 
 ```kotlin
-enum class TooltipVariant { Primary, Secondary, Accent, Info, Success, Warning, Error }
+enum class TooltipColor { Primary, Secondary, Accent, Info, Success, Warning, Error }
 enum class TooltipSidePlacement { Top, Bottom, Left, Right }
 enum class TooltipAlignPlacement { Start, Center, End }
-fun FlowContent.daisyTooltip(id: HtmlId? = null, variant: ClassValues<TooltipVariant>? = null, sidePlacement: ClassValues<TooltipSidePlacement>? = null, alignPlacement: ClassValues<TooltipAlignPlacement>? = null, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyTooltip(id: HtmlId? = null, color: ClassValues<TooltipColor>? = null, sidePlacement: ClassValues<TooltipSidePlacement>? = null, alignPlacement: ClassValues<TooltipAlignPlacement>? = null, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyTooltipContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 

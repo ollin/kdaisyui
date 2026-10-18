@@ -11,12 +11,12 @@ Regenerate: just generate
 Hover tooltip on elements. Renders `<div class="tooltip ...">`.
 
 ```kotlin
-// TooltipVariant: Primary | Secondary | Accent | Info | Success | Warning | Error
+// TooltipColor: Primary | Secondary | Accent | Info | Success | Warning | Error
 // TooltipSidePlacement: Top | Bottom | Left | Right
 // TooltipAlignPlacement: Start | Center | End
 fun FlowContent.daisyTooltip(
     id: HtmlId? = null,
-    variant: ClassValues<TooltipVariant>? = null,
+    color: ClassValues<TooltipColor>? = null,
     sidePlacement: ClassValues<TooltipSidePlacement>? = null,
     alignPlacement: ClassValues<TooltipAlignPlacement>? = null,
     open: Boolean = false,  // Force open tooltip

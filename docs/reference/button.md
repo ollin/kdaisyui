@@ -11,12 +11,12 @@ Regenerate: just generate
 Actions and triggers. Renders `<button class="btn ...">`.
 
 ```kotlin
-// ButtonVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// ButtonColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // ButtonSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyButton(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ClassValues<ButtonVariant>? = null,
+    color: ClassValues<ButtonColor>? = null,
     size: ClassValues<ButtonSize>? = null,
     active: Boolean = false,  // looks active
     block: Boolean = false,  // Full width

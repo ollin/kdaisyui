@@ -4,7 +4,7 @@
   "class": "divider",
   "enums": [
     {
-      "name": "DividerVariant",
+      "name": "DividerColor",
       "label": "Color variants",
       "classes": [
         "divider-neutral",
@@ -28,7 +28,7 @@
       "class": "divider",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "DividerVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "DividerColor", "doc": "Color variant" },
         { "kind": "enum", "name": "direction", "enum": "DividerDirection", "doc": "Direction variant" },
         { "kind": "toggle", "name": "end", "class": "divider-end" },
         { "kind": "toggle", "name": "start", "class": "divider-start" }

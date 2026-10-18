@@ -52,7 +52,7 @@ private fun TagConsumer<*>.otpCard() {
             // the spans-only form is also why the characters sat high and right, since otp.css
             // paints them from the `> input` layer with the letter-spacing that centres one
             // character per box.
-            daisyOtp(id = Dashboard.WhatsNew.Otp(), variant = OtpVariant.Primary, joined = true) {
+            daisyOtp(id = Dashboard.WhatsNew.Otp(), color = OtpColor.Primary, joined = true) {
                 repeat(OTP_DIGITS) { span { } }
                 input {
                     type = InputType.text

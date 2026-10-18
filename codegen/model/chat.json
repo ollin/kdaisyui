@@ -4,7 +4,7 @@
   "class": "chat",
   "enums": [
     {
-      "name": "ChatVariant",
+      "name": "ChatColor",
       "label": "Color variants",
       "classes": [
         "chat-bubble-neutral",
@@ -27,7 +27,7 @@
       "class": "chat",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "ChatVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "ChatColor", "doc": "Color variant" },
         { "kind": "toggle", "name": "end", "class": "chat-end" },
         { "kind": "toggle", "name": "start", "class": "chat-start" }
       ]

@@ -11,11 +11,11 @@ Regenerate: just generate
 Styled anchor elements. Renders `<a class="link ...">`.
 
 ```kotlin
-// LinkVariant: Neutral | Primary | Secondary | Accent | Success | Info | Warning | Error
+// LinkColor: Neutral | Primary | Secondary | Accent | Success | Info | Warning | Error
 fun FlowContent.daisyLink(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ClassValues<LinkVariant>? = null,
+    color: ClassValues<LinkColor>? = null,
     hover: Boolean = false,  // Only shows underline on hover
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,

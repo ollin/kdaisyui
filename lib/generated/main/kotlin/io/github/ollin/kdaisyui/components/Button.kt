@@ -13,7 +13,7 @@ import kotlinx.html.ButtonType
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `btn-`) */
-enum class ButtonVariant(internal val className: String) : ClassValues<ButtonVariant> {
+enum class ButtonColor(internal val className: String) : ClassValues<ButtonColor> {
     /** CSS: `btn-neutral` — neutral color */
     Neutral("btn-neutral"),
     /** CSS: `btn-primary` — primary color */
@@ -57,7 +57,7 @@ enum class ButtonSize(internal val className: String) : ClassValues<ButtonSize> 
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
  * @param text — Shortcut for inline text content (mutually exclusive with [content])
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param active — looks active
  * @param block — Full width
@@ -78,7 +78,7 @@ enum class ButtonSize(internal val className: String) : ClassValues<ButtonSize> 
 fun FlowContent.daisyButton(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ClassValues<ButtonVariant>? = null,
+    color: ClassValues<ButtonColor>? = null,
     size: ClassValues<ButtonSize>? = null,
     active: Boolean = false,
     block: Boolean = false,
@@ -99,7 +99,7 @@ fun FlowContent.daisyButton(
     button {
         if (id != null) attributes["id"] = id.id
         addClassNames("btn")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (active) addClassNames("btn-active")
         if (block) addClassNames("btn-block")

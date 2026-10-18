@@ -47,83 +47,83 @@ class BadgeCoverageTest {
     }
 
     @Test
-    fun badge_variant_neutral() {
+    fun badge_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Neutral,
+                color = BadgeColor.Neutral,
             )
         }
-        assertRendered(html, "badge badge-neutral", "Badge variant Neutral")
+        assertRendered(html, "badge badge-neutral", "Badge color Neutral")
     }
 
     @Test
-    fun badge_variant_primary() {
+    fun badge_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Primary,
+                color = BadgeColor.Primary,
             )
         }
-        assertRendered(html, "badge badge-primary", "Badge variant Primary")
+        assertRendered(html, "badge badge-primary", "Badge color Primary")
     }
 
     @Test
-    fun badge_variant_secondary() {
+    fun badge_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Secondary,
+                color = BadgeColor.Secondary,
             )
         }
-        assertRendered(html, "badge badge-secondary", "Badge variant Secondary")
+        assertRendered(html, "badge badge-secondary", "Badge color Secondary")
     }
 
     @Test
-    fun badge_variant_accent() {
+    fun badge_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Accent,
+                color = BadgeColor.Accent,
             )
         }
-        assertRendered(html, "badge badge-accent", "Badge variant Accent")
+        assertRendered(html, "badge badge-accent", "Badge color Accent")
     }
 
     @Test
-    fun badge_variant_info() {
+    fun badge_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Info,
+                color = BadgeColor.Info,
             )
         }
-        assertRendered(html, "badge badge-info", "Badge variant Info")
+        assertRendered(html, "badge badge-info", "Badge color Info")
     }
 
     @Test
-    fun badge_variant_success() {
+    fun badge_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Success,
+                color = BadgeColor.Success,
             )
         }
-        assertRendered(html, "badge badge-success", "Badge variant Success")
+        assertRendered(html, "badge badge-success", "Badge color Success")
     }
 
     @Test
-    fun badge_variant_warning() {
+    fun badge_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Warning,
+                color = BadgeColor.Warning,
             )
         }
-        assertRendered(html, "badge badge-warning", "Badge variant Warning")
+        assertRendered(html, "badge badge-warning", "Badge color Warning")
     }
 
     @Test
-    fun badge_variant_error() {
+    fun badge_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge(
-                variant = BadgeVariant.Error,
+                color = BadgeColor.Error,
             )
         }
-        assertRendered(html, "badge badge-error", "Badge variant Error")
+        assertRendered(html, "badge badge-error", "Badge color Error")
     }
 
     @Test

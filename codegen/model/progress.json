@@ -4,7 +4,7 @@
   "class": "progress",
   "enums": [
     {
-      "name": "ProgressVariant",
+      "name": "ProgressColor",
       "label": "Color variants",
       "classes": [
         "progress-neutral",
@@ -26,7 +26,7 @@
       "element": "PROGRESS",
       "class": "progress",
       "text": false,
-      "parameters": [{ "kind": "enum", "name": "variant", "enum": "ProgressVariant", "doc": "Color variant" }]
+      "parameters": [{ "kind": "enum", "name": "color", "enum": "ProgressColor", "doc": "Color variant" }]
     }
   ],
   "summary": { "summary": "Progress bar indicator" }

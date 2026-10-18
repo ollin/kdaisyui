@@ -12,7 +12,7 @@ import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
-enum class ToggleVariant(internal val className: String) : ClassValues<ToggleVariant> {
+enum class ToggleColor(internal val className: String) : ClassValues<ToggleColor> {
     /** CSS: `toggle-primary` */
     Primary("toggle-primary"),
     /** CSS: `toggle-secondary` */
@@ -54,7 +54,7 @@ enum class ToggleSize(internal val className: String) : ClassValues<ToggleSize> 
 /**
  * Toggle is a checkbox that is styled to look like a switch button. Renders `<input class="toggle ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param checked
  * @param disabled
@@ -63,7 +63,7 @@ enum class ToggleSize(internal val className: String) : ClassValues<ToggleSize> 
  */
 fun FlowContent.daisyToggle(
     id: HtmlId? = null,
-    variant: ClassValues<ToggleVariant>? = null,
+    color: ClassValues<ToggleColor>? = null,
     size: ClassValues<ToggleSize>? = null,
     checked: Boolean = false,
     disabled: Boolean = false,
@@ -74,7 +74,7 @@ fun FlowContent.daisyToggle(
         if (id != null) attributes["id"] = id.id
         type = InputType.checkBox
         addClassNames("toggle")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (checked) this.checked = true
         if (disabled) this.disabled = true

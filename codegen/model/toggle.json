@@ -4,7 +4,7 @@
   "class": "toggle",
   "enums": [
     {
-      "name": "ToggleVariant",
+      "name": "ToggleColor",
       "label": "Color variants",
       "classes": [
         "toggle-primary",
@@ -32,7 +32,7 @@
       "class": "toggle",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "ToggleVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "ToggleColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "ToggleSize", "doc": "Size variant" },
         {
           "kind": "extra",

@@ -13,7 +13,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.role
 
 /** Color variants for this component (CSS prefix: `alert-`) */
-enum class AlertVariant(internal val className: String) : ClassValues<AlertVariant> {
+enum class AlertColor(internal val className: String) : ClassValues<AlertColor> {
     /** CSS: `alert-info` — info color */
     Info("alert-info"),
     /** CSS: `alert-success` — success color */
@@ -53,7 +53,7 @@ enum class AlertDirection(internal val className: String) : ClassValues<AlertDir
 /**
  * Alert informs users about important events. Renders `<div class="alert ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param style — Style variant
  * @param direction — Direction variant
  * @param soft — soft style
@@ -63,7 +63,7 @@ enum class AlertDirection(internal val className: String) : ClassValues<AlertDir
  */
 fun FlowContent.daisyAlert(
     id: HtmlId? = null,
-    variant: ClassValues<AlertVariant>? = null,
+    color: ClassValues<AlertColor>? = null,
     style: ClassValues<AlertStyle>? = null,
     direction: ClassValues<AlertDirection>? = null,
     soft: Boolean = false,
@@ -75,7 +75,7 @@ fun FlowContent.daisyAlert(
         if (id != null) attributes["id"] = id.id
         role = "alert"
         addClassNames("alert")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(style)
         addClassNames(direction)
         if (soft) addClassNames("alert-soft")

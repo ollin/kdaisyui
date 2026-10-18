@@ -4,7 +4,7 @@
   "class": "link",
   "enums": [
     {
-      "name": "LinkVariant",
+      "name": "LinkColor",
       "label": "Color variants",
       "classes": [
         "link-neutral",
@@ -27,7 +27,7 @@
       "class": "link",
       "text": true,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "LinkVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "LinkColor", "doc": "Color variant" },
         { "kind": "toggle", "name": "hover", "class": "link-hover" }
       ]
     }

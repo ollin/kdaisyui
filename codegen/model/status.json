@@ -4,7 +4,7 @@
   "class": "status",
   "enums": [
     {
-      "name": "StatusVariant",
+      "name": "StatusColor",
       "label": "Color variants",
       "classes": [
         "status-neutral",
@@ -32,7 +32,7 @@
       "class": "status",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "StatusVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "StatusColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "StatusSize", "doc": "Size variant" }
       ],
       "role": "status"

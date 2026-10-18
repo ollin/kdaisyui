@@ -50,80 +50,80 @@ class TooltipCoverageTest {
     }
 
     @Test
-    fun tooltip_variant_primary() {
+    fun tooltip_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
-                variant = TooltipVariant.Primary,
+                color = TooltipColor.Primary,
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-primary", "Tooltip variant Primary")
+        assertRendered(html, "tooltip tooltip-primary", "Tooltip color Primary")
     }
 
     @Test
-    fun tooltip_variant_secondary() {
+    fun tooltip_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
-                variant = TooltipVariant.Secondary,
+                color = TooltipColor.Secondary,
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-secondary", "Tooltip variant Secondary")
+        assertRendered(html, "tooltip tooltip-secondary", "Tooltip color Secondary")
     }
 
     @Test
-    fun tooltip_variant_accent() {
+    fun tooltip_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
-                variant = TooltipVariant.Accent,
+                color = TooltipColor.Accent,
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-accent", "Tooltip variant Accent")
+        assertRendered(html, "tooltip tooltip-accent", "Tooltip color Accent")
     }
 
     @Test
-    fun tooltip_variant_info() {
+    fun tooltip_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
-                variant = TooltipVariant.Info,
+                color = TooltipColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-info", "Tooltip variant Info")
+        assertRendered(html, "tooltip tooltip-info", "Tooltip color Info")
     }
 
     @Test
-    fun tooltip_variant_success() {
+    fun tooltip_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
-                variant = TooltipVariant.Success,
+                color = TooltipColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-success", "Tooltip variant Success")
+        assertRendered(html, "tooltip tooltip-success", "Tooltip color Success")
     }
 
     @Test
-    fun tooltip_variant_warning() {
+    fun tooltip_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
-                variant = TooltipVariant.Warning,
+                color = TooltipColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-warning", "Tooltip variant Warning")
+        assertRendered(html, "tooltip tooltip-warning", "Tooltip color Warning")
     }
 
     @Test
-    fun tooltip_variant_error() {
+    fun tooltip_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip(
-                variant = TooltipVariant.Error,
+                color = TooltipColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-error", "Tooltip variant Error")
+        assertRendered(html, "tooltip tooltip-error", "Tooltip color Error")
     }
 
     @Test

@@ -25,7 +25,7 @@ private fun TagConsumer<*>.inviteTeamMemberForm() {
         form(classes = "card-body") {
             id = Dashboard.Team.Invite.Form().id
             action = ""
-            daisyAlert(variant = AlertVariant.Success) {
+            daisyAlert(color = AlertColor.Success) {
                 span { +"Invitation sent successfully" }
             }
             teamEmailField()
@@ -90,12 +90,12 @@ private fun TBODY.teamMemberRow(
         }
         td {
             val variant = when (role) {
-                "Owner" -> BadgeVariant.Primary
-                "Maintainer" -> BadgeVariant.Info
-                "Developer" -> BadgeVariant.Success
-                else -> BadgeVariant.Warning
+                "Owner" -> BadgeColor.Primary
+                "Maintainer" -> BadgeColor.Info
+                "Developer" -> BadgeColor.Success
+                else -> BadgeColor.Warning
             }
-            daisyBadge(role, variant = variant, size = BadgeSize.Sm)
+            daisyBadge(role, color = variant, size = BadgeSize.Sm)
         }
         td { +repositories }
         td { +lastActive }

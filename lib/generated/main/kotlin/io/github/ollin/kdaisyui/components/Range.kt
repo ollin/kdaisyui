@@ -13,7 +13,7 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
 /** Color variants for this component (CSS prefix: `range-`) */
-enum class RangeVariant(internal val className: String) : ClassValues<RangeVariant> {
+enum class RangeColor(internal val className: String) : ClassValues<RangeColor> {
     /** CSS: `range-neutral` — neutral color */
     Neutral("range-neutral"),
     /** CSS: `range-primary` — primary color */
@@ -56,7 +56,7 @@ enum class RangeSize(internal val className: String) : ClassValues<RangeSize> {
 /**
  * Range slider is used to select a value by sliding a handle. Renders `<input class="range ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param vertical — Vertical slider
  * @param min
@@ -69,7 +69,7 @@ enum class RangeSize(internal val className: String) : ClassValues<RangeSize> {
  */
 fun FlowContent.daisyRange(
     id: HtmlId? = null,
-    variant: ClassValues<RangeVariant>? = null,
+    color: ClassValues<RangeColor>? = null,
     size: ClassValues<RangeSize>? = null,
     vertical: Boolean = false,
     min: String? = null,
@@ -84,7 +84,7 @@ fun FlowContent.daisyRange(
         if (id != null) attributes["id"] = id.id
         type = InputType.range
         addClassNames("range")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (vertical) addClassNames("range-vertical")
         if (min != null) this.min = min

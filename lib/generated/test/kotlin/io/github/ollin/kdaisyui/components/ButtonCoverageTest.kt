@@ -62,83 +62,83 @@ class ButtonCoverageTest {
     }
 
     @Test
-    fun button_variant_neutral() {
+    fun button_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Neutral,
+                color = ButtonColor.Neutral,
             )
         }
-        assertRendered(html, "btn btn-neutral", "Button variant Neutral")
+        assertRendered(html, "btn btn-neutral", "Button color Neutral")
     }
 
     @Test
-    fun button_variant_primary() {
+    fun button_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Primary,
+                color = ButtonColor.Primary,
             )
         }
-        assertRendered(html, "btn btn-primary", "Button variant Primary")
+        assertRendered(html, "btn btn-primary", "Button color Primary")
     }
 
     @Test
-    fun button_variant_secondary() {
+    fun button_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Secondary,
+                color = ButtonColor.Secondary,
             )
         }
-        assertRendered(html, "btn btn-secondary", "Button variant Secondary")
+        assertRendered(html, "btn btn-secondary", "Button color Secondary")
     }
 
     @Test
-    fun button_variant_accent() {
+    fun button_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Accent,
+                color = ButtonColor.Accent,
             )
         }
-        assertRendered(html, "btn btn-accent", "Button variant Accent")
+        assertRendered(html, "btn btn-accent", "Button color Accent")
     }
 
     @Test
-    fun button_variant_info() {
+    fun button_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Info,
+                color = ButtonColor.Info,
             )
         }
-        assertRendered(html, "btn btn-info", "Button variant Info")
+        assertRendered(html, "btn btn-info", "Button color Info")
     }
 
     @Test
-    fun button_variant_success() {
+    fun button_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Success,
+                color = ButtonColor.Success,
             )
         }
-        assertRendered(html, "btn btn-success", "Button variant Success")
+        assertRendered(html, "btn btn-success", "Button color Success")
     }
 
     @Test
-    fun button_variant_warning() {
+    fun button_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Warning,
+                color = ButtonColor.Warning,
             )
         }
-        assertRendered(html, "btn btn-warning", "Button variant Warning")
+        assertRendered(html, "btn btn-warning", "Button color Warning")
     }
 
     @Test
-    fun button_variant_error() {
+    fun button_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(
-                variant = ButtonVariant.Error,
+                color = ButtonColor.Error,
             )
         }
-        assertRendered(html, "btn btn-error", "Button variant Error")
+        assertRendered(html, "btn btn-error", "Button color Error")
     }
 
     @Test

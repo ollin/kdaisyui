@@ -50,91 +50,91 @@ class TextareaCoverageTest {
     }
 
     @Test
-    fun textarea_variant_neutral() {
+    fun textarea_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Neutral,
+                color = TextareaColor.Neutral,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-neutral", "Textarea variant Neutral")
+        assertRendered(html, "textarea textarea-neutral", "Textarea color Neutral")
     }
 
     @Test
-    fun textarea_variant_primary() {
+    fun textarea_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Primary,
+                color = TextareaColor.Primary,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-primary", "Textarea variant Primary")
+        assertRendered(html, "textarea textarea-primary", "Textarea color Primary")
     }
 
     @Test
-    fun textarea_variant_secondary() {
+    fun textarea_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Secondary,
+                color = TextareaColor.Secondary,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-secondary", "Textarea variant Secondary")
+        assertRendered(html, "textarea textarea-secondary", "Textarea color Secondary")
     }
 
     @Test
-    fun textarea_variant_accent() {
+    fun textarea_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Accent,
+                color = TextareaColor.Accent,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-accent", "Textarea variant Accent")
+        assertRendered(html, "textarea textarea-accent", "Textarea color Accent")
     }
 
     @Test
-    fun textarea_variant_info() {
+    fun textarea_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Info,
+                color = TextareaColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-info", "Textarea variant Info")
+        assertRendered(html, "textarea textarea-info", "Textarea color Info")
     }
 
     @Test
-    fun textarea_variant_success() {
+    fun textarea_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Success,
+                color = TextareaColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-success", "Textarea variant Success")
+        assertRendered(html, "textarea textarea-success", "Textarea color Success")
     }
 
     @Test
-    fun textarea_variant_warning() {
+    fun textarea_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Warning,
+                color = TextareaColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-warning", "Textarea variant Warning")
+        assertRendered(html, "textarea textarea-warning", "Textarea color Warning")
     }
 
     @Test
-    fun textarea_variant_error() {
+    fun textarea_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea(
-                variant = TextareaVariant.Error,
+                color = TextareaColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-error", "Textarea variant Error")
+        assertRendered(html, "textarea textarea-error", "Textarea color Error")
     }
 
     @Test

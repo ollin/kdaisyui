@@ -74,7 +74,7 @@ class JoinScope internal constructor(
     fun daisyButton(
         text: String? = null,
         id: HtmlId? = null,
-        variant: ClassValues<ButtonVariant>? = null,
+        color: ClassValues<ButtonColor>? = null,
         size: ClassValues<ButtonSize>? = null,
         active: Boolean = false,
         block: Boolean = false,
@@ -95,7 +95,7 @@ class JoinScope internal constructor(
         flow.daisyButton(
             text = text,
             id = id,
-            variant = variant,
+            color = color,
             size = size,
             active = active,
             block = block,
@@ -162,7 +162,7 @@ class JoinScope internal constructor(
     /** [daisyInput], marked `join-item` because the call sits directly in the join. */
     fun daisyInput(
         id: HtmlId? = null,
-        variant: ClassValues<InputVariant>? = null,
+        color: ClassValues<InputColor>? = null,
         size: ClassValues<InputSize>? = null,
         ghost: Boolean = false,
         type: InputType = InputType.text,
@@ -174,7 +174,7 @@ class JoinScope internal constructor(
     ) {
         flow.daisyInput(
             id = id,
-            variant = variant,
+            color = color,
             size = size,
             ghost = ghost,
             type = type,
@@ -189,7 +189,7 @@ class JoinScope internal constructor(
     /** [daisySelect], marked `join-item` because the call sits directly in the join. */
     fun daisySelect(
         id: HtmlId? = null,
-        variant: ClassValues<SelectVariant>? = null,
+        color: ClassValues<SelectColor>? = null,
         size: ClassValues<SelectSize>? = null,
         ghost: Boolean = false,
         disabled: Boolean = false,
@@ -199,7 +199,7 @@ class JoinScope internal constructor(
     ) {
         flow.daisySelect(
             id = id,
-            variant = variant,
+            color = color,
             size = size,
             ghost = ghost,
             disabled = disabled,

@@ -55,83 +55,83 @@ class RadioCoverageTest {
     }
 
     @Test
-    fun radio_variant_neutral() {
+    fun radio_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Neutral,
+                color = RadioColor.Neutral,
             )
         }
-        assertRendered(html, "radio radio-neutral", "Radio variant Neutral")
+        assertRendered(html, "radio radio-neutral", "Radio color Neutral")
     }
 
     @Test
-    fun radio_variant_primary() {
+    fun radio_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Primary,
+                color = RadioColor.Primary,
             )
         }
-        assertRendered(html, "radio radio-primary", "Radio variant Primary")
+        assertRendered(html, "radio radio-primary", "Radio color Primary")
     }
 
     @Test
-    fun radio_variant_secondary() {
+    fun radio_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Secondary,
+                color = RadioColor.Secondary,
             )
         }
-        assertRendered(html, "radio radio-secondary", "Radio variant Secondary")
+        assertRendered(html, "radio radio-secondary", "Radio color Secondary")
     }
 
     @Test
-    fun radio_variant_accent() {
+    fun radio_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Accent,
+                color = RadioColor.Accent,
             )
         }
-        assertRendered(html, "radio radio-accent", "Radio variant Accent")
+        assertRendered(html, "radio radio-accent", "Radio color Accent")
     }
 
     @Test
-    fun radio_variant_success() {
+    fun radio_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Success,
+                color = RadioColor.Success,
             )
         }
-        assertRendered(html, "radio radio-success", "Radio variant Success")
+        assertRendered(html, "radio radio-success", "Radio color Success")
     }
 
     @Test
-    fun radio_variant_warning() {
+    fun radio_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Warning,
+                color = RadioColor.Warning,
             )
         }
-        assertRendered(html, "radio radio-warning", "Radio variant Warning")
+        assertRendered(html, "radio radio-warning", "Radio color Warning")
     }
 
     @Test
-    fun radio_variant_info() {
+    fun radio_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Info,
+                color = RadioColor.Info,
             )
         }
-        assertRendered(html, "radio radio-info", "Radio variant Info")
+        assertRendered(html, "radio radio-info", "Radio color Info")
     }
 
     @Test
-    fun radio_variant_error() {
+    fun radio_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio(
-                variant = RadioVariant.Error,
+                color = RadioColor.Error,
             )
         }
-        assertRendered(html, "radio radio-error", "Radio variant Error")
+        assertRendered(html, "radio radio-error", "Radio color Error")
     }
 
     @Test

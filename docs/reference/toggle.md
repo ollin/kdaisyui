@@ -11,11 +11,11 @@ Regenerate: just generate
 Switch-style boolean input. Renders `<input class="toggle ...">`.
 
 ```kotlin
-// ToggleVariant: Primary | Secondary | Accent | Neutral | Success | Warning | Info | Error
+// ToggleColor: Primary | Secondary | Accent | Neutral | Success | Warning | Info | Error
 // ToggleSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyToggle(
     id: HtmlId? = null,
-    variant: ClassValues<ToggleVariant>? = null,
+    color: ClassValues<ToggleColor>? = null,
     size: ClassValues<ToggleSize>? = null,
     checked: Boolean = false,
     disabled: Boolean = false,

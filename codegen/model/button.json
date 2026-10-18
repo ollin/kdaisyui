@@ -4,7 +4,7 @@
   "class": "btn",
   "enums": [
     {
-      "name": "ButtonVariant",
+      "name": "ButtonColor",
       "label": "Color variants",
       "classes": [
         "btn-neutral",
@@ -29,7 +29,7 @@
       "class": "btn",
       "text": true,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "ButtonVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "ButtonColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "ButtonSize", "doc": "Size variant" },
         { "kind": "toggle", "name": "active", "class": "btn-active" },
         { "kind": "toggle", "name": "block", "class": "btn-block" },

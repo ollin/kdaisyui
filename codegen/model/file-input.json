@@ -4,7 +4,7 @@
   "class": "file-input",
   "enums": [
     {
-      "name": "FileInputVariant",
+      "name": "FileInputColor",
       "label": "Color variants",
       "classes": [
         "file-input-neutral",
@@ -32,7 +32,7 @@
       "class": "file-input",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "FileInputVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "FileInputColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "FileInputSize", "doc": "Size variant" },
         { "kind": "toggle", "name": "ghost", "class": "file-input-ghost" }
       ]

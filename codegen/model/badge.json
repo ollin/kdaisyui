@@ -4,7 +4,7 @@
   "class": "badge",
   "enums": [
     {
-      "name": "BadgeVariant",
+      "name": "BadgeColor",
       "label": "Color variants",
       "classes": [
         "badge-neutral",
@@ -34,7 +34,7 @@
       "class": "badge",
       "text": true,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "BadgeVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "BadgeColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "BadgeSize", "doc": "Size variant" },
         { "kind": "enum", "name": "outlineStyle", "enum": "BadgeOutlineStyle", "doc": "OutlineStyle variant" },
         { "kind": "enum", "name": "fillStyle", "enum": "BadgeFillStyle", "doc": "FillStyle variant" }

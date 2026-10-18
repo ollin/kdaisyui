@@ -4,7 +4,7 @@
   "class": "range",
   "enums": [
     {
-      "name": "RangeVariant",
+      "name": "RangeColor",
       "label": "Color variants",
       "classes": [
         "range-neutral",
@@ -32,7 +32,7 @@
       "class": "range",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "RangeVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "RangeColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "RangeSize", "doc": "Size variant" },
         { "kind": "toggle", "name": "vertical", "class": "range-vertical" },
         {

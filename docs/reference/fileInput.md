@@ -11,11 +11,11 @@ Regenerate: just generate
 File upload input field. Renders `<input class="file-input ...">`.
 
 ```kotlin
-// FileInputVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// FileInputColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // FileInputSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyFileInput(
     id: HtmlId? = null,
-    variant: ClassValues<FileInputVariant>? = null,
+    color: ClassValues<FileInputColor>? = null,
     size: ClassValues<FileInputSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,

@@ -11,12 +11,12 @@ Regenerate: just generate
 Status messages and notifications. Renders `<div class="alert ...">`.
 
 ```kotlin
-// AlertVariant: Info | Success | Warning | Error
+// AlertColor: Info | Success | Warning | Error
 // AlertStyle: Outline | Dash
 // AlertDirection: Vertical | Horizontal
 fun FlowContent.daisyAlert(
     id: HtmlId? = null,
-    variant: ClassValues<AlertVariant>? = null,
+    color: ClassValues<AlertColor>? = null,
     style: ClassValues<AlertStyle>? = null,
     direction: ClassValues<AlertDirection>? = null,
     soft: Boolean = false,  // soft style

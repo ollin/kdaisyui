@@ -48,83 +48,83 @@ class LinkCoverageTest {
     }
 
     @Test
-    fun link_variant_neutral() {
+    fun link_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Neutral,
+                color = LinkColor.Neutral,
             )
         }
-        assertRendered(html, "link link-neutral", "Link variant Neutral")
+        assertRendered(html, "link link-neutral", "Link color Neutral")
     }
 
     @Test
-    fun link_variant_primary() {
+    fun link_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Primary,
+                color = LinkColor.Primary,
             )
         }
-        assertRendered(html, "link link-primary", "Link variant Primary")
+        assertRendered(html, "link link-primary", "Link color Primary")
     }
 
     @Test
-    fun link_variant_secondary() {
+    fun link_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Secondary,
+                color = LinkColor.Secondary,
             )
         }
-        assertRendered(html, "link link-secondary", "Link variant Secondary")
+        assertRendered(html, "link link-secondary", "Link color Secondary")
     }
 
     @Test
-    fun link_variant_accent() {
+    fun link_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Accent,
+                color = LinkColor.Accent,
             )
         }
-        assertRendered(html, "link link-accent", "Link variant Accent")
+        assertRendered(html, "link link-accent", "Link color Accent")
     }
 
     @Test
-    fun link_variant_success() {
+    fun link_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Success,
+                color = LinkColor.Success,
             )
         }
-        assertRendered(html, "link link-success", "Link variant Success")
+        assertRendered(html, "link link-success", "Link color Success")
     }
 
     @Test
-    fun link_variant_info() {
+    fun link_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Info,
+                color = LinkColor.Info,
             )
         }
-        assertRendered(html, "link link-info", "Link variant Info")
+        assertRendered(html, "link link-info", "Link color Info")
     }
 
     @Test
-    fun link_variant_warning() {
+    fun link_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Warning,
+                color = LinkColor.Warning,
             )
         }
-        assertRendered(html, "link link-warning", "Link variant Warning")
+        assertRendered(html, "link link-warning", "Link color Warning")
     }
 
     @Test
-    fun link_variant_error() {
+    fun link_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyLink(
-                variant = LinkVariant.Error,
+                color = LinkColor.Error,
             )
         }
-        assertRendered(html, "link link-error", "Link variant Error")
+        assertRendered(html, "link link-error", "Link color Error")
     }
 
     @Test

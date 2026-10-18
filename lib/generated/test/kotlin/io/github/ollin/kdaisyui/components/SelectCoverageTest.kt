@@ -52,91 +52,91 @@ class SelectCoverageTest {
     }
 
     @Test
-    fun select_variant_neutral() {
+    fun select_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Neutral,
+                color = SelectColor.Neutral,
                 content = { },
             )
         }
-        assertRendered(html, "select select-neutral", "Select variant Neutral")
+        assertRendered(html, "select select-neutral", "Select color Neutral")
     }
 
     @Test
-    fun select_variant_primary() {
+    fun select_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Primary,
+                color = SelectColor.Primary,
                 content = { },
             )
         }
-        assertRendered(html, "select select-primary", "Select variant Primary")
+        assertRendered(html, "select select-primary", "Select color Primary")
     }
 
     @Test
-    fun select_variant_secondary() {
+    fun select_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Secondary,
+                color = SelectColor.Secondary,
                 content = { },
             )
         }
-        assertRendered(html, "select select-secondary", "Select variant Secondary")
+        assertRendered(html, "select select-secondary", "Select color Secondary")
     }
 
     @Test
-    fun select_variant_accent() {
+    fun select_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Accent,
+                color = SelectColor.Accent,
                 content = { },
             )
         }
-        assertRendered(html, "select select-accent", "Select variant Accent")
+        assertRendered(html, "select select-accent", "Select color Accent")
     }
 
     @Test
-    fun select_variant_info() {
+    fun select_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Info,
+                color = SelectColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "select select-info", "Select variant Info")
+        assertRendered(html, "select select-info", "Select color Info")
     }
 
     @Test
-    fun select_variant_success() {
+    fun select_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Success,
+                color = SelectColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "select select-success", "Select variant Success")
+        assertRendered(html, "select select-success", "Select color Success")
     }
 
     @Test
-    fun select_variant_warning() {
+    fun select_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Warning,
+                color = SelectColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "select select-warning", "Select variant Warning")
+        assertRendered(html, "select select-warning", "Select color Warning")
     }
 
     @Test
-    fun select_variant_error() {
+    fun select_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect(
-                variant = SelectVariant.Error,
+                color = SelectColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "select select-error", "Select variant Error")
+        assertRendered(html, "select select-error", "Select color Error")
     }
 
     @Test

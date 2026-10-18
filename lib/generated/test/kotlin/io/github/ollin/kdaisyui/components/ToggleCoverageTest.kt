@@ -52,83 +52,83 @@ class ToggleCoverageTest {
     }
 
     @Test
-    fun toggle_variant_primary() {
+    fun toggle_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Primary,
+                color = ToggleColor.Primary,
             )
         }
-        assertRendered(html, "toggle toggle-primary", "Toggle variant Primary")
+        assertRendered(html, "toggle toggle-primary", "Toggle color Primary")
     }
 
     @Test
-    fun toggle_variant_secondary() {
+    fun toggle_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Secondary,
+                color = ToggleColor.Secondary,
             )
         }
-        assertRendered(html, "toggle toggle-secondary", "Toggle variant Secondary")
+        assertRendered(html, "toggle toggle-secondary", "Toggle color Secondary")
     }
 
     @Test
-    fun toggle_variant_accent() {
+    fun toggle_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Accent,
+                color = ToggleColor.Accent,
             )
         }
-        assertRendered(html, "toggle toggle-accent", "Toggle variant Accent")
+        assertRendered(html, "toggle toggle-accent", "Toggle color Accent")
     }
 
     @Test
-    fun toggle_variant_neutral() {
+    fun toggle_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Neutral,
+                color = ToggleColor.Neutral,
             )
         }
-        assertRendered(html, "toggle toggle-neutral", "Toggle variant Neutral")
+        assertRendered(html, "toggle toggle-neutral", "Toggle color Neutral")
     }
 
     @Test
-    fun toggle_variant_success() {
+    fun toggle_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Success,
+                color = ToggleColor.Success,
             )
         }
-        assertRendered(html, "toggle toggle-success", "Toggle variant Success")
+        assertRendered(html, "toggle toggle-success", "Toggle color Success")
     }
 
     @Test
-    fun toggle_variant_warning() {
+    fun toggle_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Warning,
+                color = ToggleColor.Warning,
             )
         }
-        assertRendered(html, "toggle toggle-warning", "Toggle variant Warning")
+        assertRendered(html, "toggle toggle-warning", "Toggle color Warning")
     }
 
     @Test
-    fun toggle_variant_info() {
+    fun toggle_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Info,
+                color = ToggleColor.Info,
             )
         }
-        assertRendered(html, "toggle toggle-info", "Toggle variant Info")
+        assertRendered(html, "toggle toggle-info", "Toggle color Info")
     }
 
     @Test
-    fun toggle_variant_error() {
+    fun toggle_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(
-                variant = ToggleVariant.Error,
+                color = ToggleColor.Error,
             )
         }
-        assertRendered(html, "toggle toggle-error", "Toggle variant Error")
+        assertRendered(html, "toggle toggle-error", "Toggle color Error")
     }
 
     @Test

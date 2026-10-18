@@ -11,14 +11,14 @@ Regenerate: just generate
 Labels, counts, and status tags. Renders `<span class="badge ...">`.
 
 ```kotlin
-// BadgeVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// BadgeColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // BadgeSize: Xs | Sm | Md | Lg | Xl
 // BadgeOutlineStyle: Outline | Dash
 // BadgeFillStyle: Soft | Ghost
 fun FlowContent.daisyBadge(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ClassValues<BadgeVariant>? = null,
+    color: ClassValues<BadgeColor>? = null,
     size: ClassValues<BadgeSize>? = null,
     outlineStyle: ClassValues<BadgeOutlineStyle>? = null,
     fillStyle: ClassValues<BadgeFillStyle>? = null,

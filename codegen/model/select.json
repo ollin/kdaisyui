@@ -4,7 +4,7 @@
   "class": "select",
   "enums": [
     {
-      "name": "SelectVariant",
+      "name": "SelectColor",
       "label": "Color variants",
       "classes": [
         "select-neutral",
@@ -32,7 +32,7 @@
       "class": "select",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "SelectVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "SelectColor", "doc": "Color variant" },
         { "kind": "enum", "name": "size", "enum": "SelectSize", "doc": "Size variant" },
         { "kind": "toggle", "name": "ghost", "class": "select-ghost" },
         {

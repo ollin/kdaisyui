@@ -12,7 +12,7 @@ import kotlinx.html.progress
 import kotlinx.html.PROGRESS
 
 /** Color variants for this component (CSS prefix: `progress-`) */
-enum class ProgressVariant(internal val className: String) : ClassValues<ProgressVariant> {
+enum class ProgressColor(internal val className: String) : ClassValues<ProgressColor> {
     /** CSS: `progress-neutral` — neutral color */
     Neutral("progress-neutral"),
     /** CSS: `progress-primary` — primary color */
@@ -38,14 +38,14 @@ enum class ProgressVariant(internal val className: String) : ClassValues<Progres
 /**
  * Progress bar can be used to show the progress of a task or to show the passing of time. Renders `<progress class="progress ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyProgress(
     id: HtmlId? = null,
-    variant: ClassValues<ProgressVariant>? = null,
+    color: ClassValues<ProgressColor>? = null,
     extraClasses: String? = null,
     attrs: (PROGRESS.() -> Unit)? = null,
     content: (PROGRESS.() -> Unit),
@@ -53,7 +53,7 @@ fun FlowContent.daisyProgress(
     progress {
         if (id != null) attributes["id"] = id.id
         addClassNames("progress")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

@@ -12,7 +12,7 @@ import kotlinx.html.A
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `link-`) */
-enum class LinkVariant(internal val className: String) : ClassValues<LinkVariant> {
+enum class LinkColor(internal val className: String) : ClassValues<LinkColor> {
     /** CSS: `link-neutral` — neutral color */
     Neutral("link-neutral"),
     /** CSS: `link-primary` — primary color */
@@ -39,7 +39,7 @@ enum class LinkVariant(internal val className: String) : ClassValues<LinkVariant
  * Link adds the missing underline style to links. Renders `<a class="link ...">`.
  * @param text — Shortcut for inline text content (mutually exclusive with [content])
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param hover — Only shows underline on hover
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -48,7 +48,7 @@ enum class LinkVariant(internal val className: String) : ClassValues<LinkVariant
 fun FlowContent.daisyLink(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ClassValues<LinkVariant>? = null,
+    color: ClassValues<LinkColor>? = null,
     hover: Boolean = false,
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
@@ -57,7 +57,7 @@ fun FlowContent.daisyLink(
     a {
         if (id != null) attributes["id"] = id.id
         addClassNames("link")
-        addClassNames(variant)
+        addClassNames(color)
         if (hover) addClassNames("link-hover")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

@@ -4,7 +4,7 @@
   "class": "tooltip",
   "enums": [
     {
-      "name": "TooltipVariant",
+      "name": "TooltipColor",
       "label": "Color variants",
       "classes": [
         "tooltip-primary",
@@ -36,7 +36,7 @@
       "class": "tooltip",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "TooltipVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "TooltipColor", "doc": "Color variant" },
         { "kind": "enum", "name": "sidePlacement", "enum": "TooltipSidePlacement", "doc": "SidePlacement variant" },
         { "kind": "enum", "name": "alignPlacement", "enum": "TooltipAlignPlacement", "doc": "AlignPlacement variant" },
         { "kind": "toggle", "name": "open", "class": "tooltip-open" }

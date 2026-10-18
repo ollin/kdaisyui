@@ -12,7 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `divider-`) */
-enum class DividerVariant(internal val className: String) : ClassValues<DividerVariant> {
+enum class DividerColor(internal val className: String) : ClassValues<DividerColor> {
     /** CSS: `divider-neutral` — neutral color */
     Neutral("divider-neutral"),
     /** CSS: `divider-primary` — primary color */
@@ -49,7 +49,7 @@ enum class DividerDirection(internal val className: String) : ClassValues<Divide
 /**
  * Divider will be used to separate content vertically or horizontally. Renders `<div class="divider ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param direction — Direction variant
  * @param end — Pushes the divider text to the end
  * @param start — Pushes the divider text to the start
@@ -59,7 +59,7 @@ enum class DividerDirection(internal val className: String) : ClassValues<Divide
  */
 fun FlowContent.daisyDivider(
     id: HtmlId? = null,
-    variant: ClassValues<DividerVariant>? = null,
+    color: ClassValues<DividerColor>? = null,
     direction: ClassValues<DividerDirection>? = null,
     end: Boolean = false,
     start: Boolean = false,
@@ -70,7 +70,7 @@ fun FlowContent.daisyDivider(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("divider")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(direction)
         if (end) addClassNames("divider-end")
         if (start) addClassNames("divider-start")

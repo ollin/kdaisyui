@@ -11,11 +11,11 @@ Regenerate: just generate
 Single-choice option groups. Renders `<input class="radio ...">`.
 
 ```kotlin
-// RadioVariant: Neutral | Primary | Secondary | Accent | Success | Warning | Info | Error
+// RadioColor: Neutral | Primary | Secondary | Accent | Success | Warning | Info | Error
 // RadioSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyRadio(
     id: HtmlId? = null,
-    variant: ClassValues<RadioVariant>? = null,
+    color: ClassValues<RadioColor>? = null,
     size: ClassValues<RadioSize>? = null,
     name: String? = null,
     checked: Boolean = false,

@@ -11,7 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 
-enum class FileInputVariant(internal val className: String) : ClassValues<FileInputVariant> {
+enum class FileInputColor(internal val className: String) : ClassValues<FileInputColor> {
     /** CSS: `file-input-neutral` */
     Neutral("file-input-neutral"),
     /** CSS: `file-input-primary` */
@@ -53,7 +53,7 @@ enum class FileInputSize(internal val className: String) : ClassValues<FileInput
 /**
  * File Input is an input field for uploading files. Renders `<input class="file-input ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param ghost
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -61,7 +61,7 @@ enum class FileInputSize(internal val className: String) : ClassValues<FileInput
  */
 fun FlowContent.daisyFileInput(
     id: HtmlId? = null,
-    variant: ClassValues<FileInputVariant>? = null,
+    color: ClassValues<FileInputColor>? = null,
     size: ClassValues<FileInputSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
@@ -70,7 +70,7 @@ fun FlowContent.daisyFileInput(
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("file-input")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (ghost) addClassNames("file-input-ghost")
         addClassNames(extraClasses)

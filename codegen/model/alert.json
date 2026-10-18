@@ -4,7 +4,7 @@
   "class": "alert",
   "enums": [
     {
-      "name": "AlertVariant",
+      "name": "AlertColor",
       "label": "Color variants",
       "classes": ["alert-info", "alert-success", "alert-warning", "alert-error"]
     },
@@ -20,7 +20,7 @@
       "class": "alert",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "AlertVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "color", "enum": "AlertColor", "doc": "Color variant" },
         { "kind": "enum", "name": "style", "enum": "AlertStyle", "doc": "Style variant" },
         { "kind": "enum", "name": "direction", "enum": "AlertDirection", "doc": "Direction variant" },
         { "kind": "toggle", "name": "soft", "class": "alert-soft" }

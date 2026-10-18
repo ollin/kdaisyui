@@ -28,7 +28,7 @@ The three Assumed claims this change rests on are checked here, before anything 
   components' classes inside an example. Declared nowhere: six drawer tokens with a variant prefix,
   read as one token by the parser, and the utility `rounded-box`. The requirement is now
   Verified.
-- [ ] 1.2 `. r (internal)` Model reader: read one `codegen/model/<dir>.json` into the types
+- [x] 1.2 `. r (internal)` Model reader: read one `codegen/model/<dir>.json` into the types
   `component-shape.ts` already uses, with a test on a hand-written fixture. Settle the field
   names from `design.md` D2 here and record them in this task.
   **Settled 2026-10-18** in `codegen/src/model.ts`: a component has `component` (directory),

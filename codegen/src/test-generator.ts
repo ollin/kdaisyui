@@ -310,17 +310,22 @@ function generateKotlinTest(componentName, testCases, componentModel: ComponentM
   const attributeTest = generateComponentAttributeTest(mainName, main?.attributes ?? {})
   const { kotlin: classTestKotlin, testCount, receivers } = classTests(componentModel, context, mainName, testCases)
 
-  const kotlin = `package io.github.ollin.kdaisyui.components
+  const kotlin = kotlinTestFile(className, extraImportLines(customParts, attributeTest !== '', receivers), `${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}`)
+  return { kotlin, testCount }
+}
+
+/** A generated test file: the four imports every one has, the extra ones, and its tests. */
+function kotlinTestFile(className: string, extraImports: string, tests: string): string {
+  return `package io.github.ollin.kdaisyui.components
 
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
-import kotlin.test.assertEquals${extraImportLines(customParts, attributeTest !== '', receivers)}
+import kotlin.test.assertEquals${extraImports}
 
 class ${className}Test {
-${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}}
+${tests}}
 `
-  return { kotlin, testCount }
 }
 
 function generateForComponent(componentName, componentModel: ComponentModel, context: DocumentedContext) {

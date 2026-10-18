@@ -73,8 +73,8 @@ variant-prefixed drawer tokens.
 An element is expressible when its counted classes split into groups such that each group is
 offered by one function: a function whose own class is in the group and that offers the rest of
 it, as an axis member, a toggle, a class an extra parameter writes, a class it writes on every
-call, or `join-item` where the function is one the join scope marks; or a class-only function that
-offers the whole group. The functions may belong to any component, because DaisyUI's examples nest
+call, or `join-item` where the function is one the join scope marks; or a function with no own
+class, class-only or rendering, that offers the whole group. The functions may belong to any component, because DaisyUI's examples nest
 components, and two of them on one element are one call plus a class sibling. The element's tag is
 not compared; see "Each generated function renders the one element its model declares".
 
@@ -93,10 +93,11 @@ class no function offers on the element DaisyUI puts it on, 27 two components on
 **Verified** that no example puts two members of one axis on one element, measured the same day:
 the axis rule gives up nothing DaisyUI documents.
 
-**Assumed** that under the composition rule, with the class-only functions, the moves and the
-four new functions of `express-every-documented-element`, no declaration remains. *Wrong if:* the
-gate still names a gap after all of them are in, which would name a construction neither a class
-sibling nor a class-only function covers.
+**Verified** that under the composition rule, with the class-only functions, the moves and the
+four new functions of `express-every-documented-element`, no declaration remains, simulated
+2026-10-18 with those model edits applied in memory (task 1.1): 2,564 of 2,571 marked elements
+expressible, 117 of them as compositions, no gap, and no two own classes on one element offering
+the same modifier. The other seven count no class. Re-checked for real by task 5.5.
 
 #### Scenario: A part's element is expressible
 - **WHEN** an example shows `<div class="$$card-body">` and `daisyCardBody` offers `card-body`

@@ -81,9 +81,12 @@ the component's name (`btn`, `cally`); `vc` is the class itself.
 
 ### D4. The composition rule, one pass
 
-For an element's counted classes, in page-first order: each function whose own class is present
-claims the classes it offers that nothing has claimed yet. What remains must be offered whole by
-one class-only function. A class left over is the gap. The test's call is the first claiming
+For an element's counted classes, in page-first order: for each own class present, the function
+with that own class that offers the most of the element's counted classes claims what it offers.
+What remains must be offered whole by one function with no own class, class-only or rendering
+(`daisyDockItem`). A class left over is the gap. "The most" matters once: `skeleton` is the own
+class of `daisySkeleton` and `daisySkeletonText`, and only the second offers `skeleton-text`
+(task 1.1). The test's call is the first claiming
 function that renders an element, with the others' siblings in its `attrs`; with none, the
 siblings run on a `div`.
 

@@ -16,6 +16,11 @@ regenerating.
   model edits applied in memory: the spec assumes no declaration remains. Check on the way that no
   two own classes on one element offer the same modifier, which D4's single pass relies on. Any
   remaining gap refutes the Assumed; revise the plan with Oliver before block 2.
+  **Simulated 2026-10-18: it holds, after one refinement of D4.** No gap and no overlap; 2,564
+  elements expressible, 117 as compositions. The first pass left `skeleton skeleton-text`, because
+  it took the first of two functions with own class `skeleton`; D4 now takes the one offering the
+  most of the element's classes. A rendering part with no own class (`daisyDockItem`) claims a
+  remaining group like a class-only function; spec and D4 say so.
 - [ ] 1.2 `. d` **Check the receiver assumption**: every receiver the generated functions give
   their `attrs` and `content` lambdas is a kotlinx.html `Tag`, read from the kotlinx.html sources.
 

@@ -12,7 +12,7 @@ regenerating.
 
 ## 1. Check the assumptions first
 
-- [ ] 1.1 `. d` **Count what remains** under the composition rule of `design.md` D4, with D3's
+- [x] 1.1 `. d` **Count what remains** under the composition rule of `design.md` D4, with D3's
   model edits applied in memory: the spec assumes no declaration remains. Check on the way that no
   two own classes on one element offer the same modifier, which D4's single pass relies on. Any
   remaining gap refutes the Assumed; revise the plan with Oliver before block 2.

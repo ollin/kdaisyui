@@ -37,7 +37,7 @@ The three Assumed claims this change rests on are checked here, before anything 
   parameters being only its own, between `id` and the escape hatches. A parameter carries a
   `kind`; `enum` is the first. Task 1.4 adds the kinds and fields the equality test asks for, and
   records them here. Descriptions stay in the frontmatter and are passed in.
-- [ ] 1.3 `. r (internal)` Export script: write every component's current inferred shape, its
+- [x] 1.3 `. r (internal)` Export script: write every component's current inferred shape, its
   config entries and its editorial summary as `codegen/model/<dir>.json`, including the two
   skipped components as skip entries. Commit the script and its 68 output files together.
 - [ ] 1.4 `. r (internal)` **Shape equality, the proof for block 3:** a test that builds every

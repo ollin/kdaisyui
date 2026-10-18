@@ -1,10 +1,12 @@
 import fs from 'fs'
 import path from 'path'
-import { getAllComponentDirs, getClassesByCategory } from './parser/frontmatter.ts'
+import { getAllComponentDirs, getClassesByCategory, readComponentFrontmatter, readComponentPage, type ComponentName } from './parser/frontmatter.ts'
+import { fencedHtmlBlocks } from './parser/documented-element.ts'
+import { gapFindings, gapsIn } from './documented-elements.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
 import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
-import { mainFunctionConfig, modelFileNames } from './model.ts'
+import { mainFunctionConfig, modelFileNames, type ComponentModel } from './model.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -30,6 +32,12 @@ function collectClasses(classnames) {
   return Object.keys(classnames ?? {}).flatMap(category => getClassesByCategory(classnames, category))
 }
 
+/** The page's documented elements no function expresses and its model does not declare, and stale declarations. */
+function documentedGapFindings(model: ComponentModel, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): string[] {
+  const html = fencedHtmlBlocks(readComponentPage(model.component as ComponentName) ?? '')
+  return gapFindings(model, gapsIn(html, [model, ...models.filter(other => other !== model)], componentClasses))
+}
+
 function writeClassList(classes) {
   const sorted = [...new Set(classes)].sort()
   const header = [
@@ -51,7 +59,7 @@ function writeClassList(classes) {
  */
 function reportIncompleteModels(findings: readonly string[]): void {
   if (findings.length === 0) return
-  console.error(`\nThe model disagrees with DaisyUI's classes or with the naming rule:\n${findings.map(finding => `  ${finding}`).join('\n')}`)
+  console.error(`\nThe model disagrees with DaisyUI's classes, its documented elements or the naming rule:\n${findings.map(finding => `  ${finding}`).join('\n')}`)
   process.exitCode = 1
 }
 
@@ -85,6 +93,8 @@ function main() {
 
   const allClasses = []
   const modelFindings: string[] = []
+  const models = componentSet.generated.map(component => component.model)
+  const componentClasses = new Set(componentDirs.flatMap(dir => collectClasses(readComponentFrontmatter(dir)?.classnames)))
 
   // DaisyUI's own directory order, so the log reads down the same list a reader sees on disk
   // and a skipped component keeps its place among the generated ones.
@@ -107,7 +117,7 @@ function main() {
     // Only generated components contribute: a skipped one emits nothing, so listing its
     // classes would put CSS in a consumer's bundle that this library can never produce.
     allClasses.push(...offeredClasses(component.model))
-    modelFindings.push(...classFindings(component.model, collectClasses(frontmatter.classnames)), ...namingFindings(component.model))
+    modelFindings.push(...classFindings(component.model, collectClasses(frontmatter.classnames)), ...namingFindings(component.model), ...documentedGapFindings(component.model, models, componentClasses))
     console.log(`  ✓ ${classified.componentName}.kt (${shape.functions[0].element})`)
   }
 

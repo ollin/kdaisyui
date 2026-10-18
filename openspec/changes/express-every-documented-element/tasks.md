@@ -54,9 +54,11 @@ regenerating.
 ## 4. Classes where DaisyUI puts them (#347)
 
 - [x] 4.1 `^ F (internal)` `kind: "classes"` (D2): generates only the sibling, its test first.
-- [ ] 4.2 `! F` Menu: delete the four menu declarations (red), then `daisyMenuItem(active,
+- [x] 4.2 `! F` Menu: delete the four menu declarations (red), then `daisyMenuItem(active,
   disabled)` and the `show`/`dropdownShow` toggles on the dropdown parts; `daisyMenu` loses
   `active`, `disabled`, `dropdownShow`. Example app and README migration in the same step.
+  No call site in the example app or the hand-written tests used the three; the README entries for
+  every move are written together in 6.1.
 - [ ] 4.3 `! F` Dock: delete its declaration, then part `daisyDockItem`; `daisyDock` loses `active`.
 - [ ] 4.4 `! F` Rating: delete its declaration, then `daisyRatingItem(hidden)`; `daisyRating` loses
   `hidden`.

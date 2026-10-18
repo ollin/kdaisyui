@@ -33,7 +33,7 @@ enum class TooltipColor(internal val className: String) : ClassValues<TooltipCol
 }
 
 /** SidePlacement variants for this component (CSS prefix: `tooltip-`) */
-enum class TooltipSidePlacement(internal val className: String) : ClassValues<TooltipSidePlacement> {
+enum class TooltipSide(internal val className: String) : ClassValues<TooltipSide> {
     /** CSS: `tooltip-top` — Put tooltip on top */
     Top("tooltip-top"),
     /** CSS: `tooltip-bottom` — Put tooltip on bottom */
@@ -48,7 +48,7 @@ enum class TooltipSidePlacement(internal val className: String) : ClassValues<To
 }
 
 /** AlignPlacement variants for this component (CSS prefix: `tooltip-`) */
-enum class TooltipAlignPlacement(internal val className: String) : ClassValues<TooltipAlignPlacement> {
+enum class TooltipAlign(internal val className: String) : ClassValues<TooltipAlign> {
     /** CSS: `tooltip-start` — Align tooltip on start */
     Start("tooltip-start"),
     /** CSS: `tooltip-center` — Align tooltip on center */
@@ -65,8 +65,8 @@ enum class TooltipAlignPlacement(internal val className: String) : ClassValues<T
  * Tooltip can be used to show a message when hovering over an element. Renders `<div class="tooltip ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
- * @param sidePlacement — SidePlacement variant
- * @param alignPlacement — AlignPlacement variant
+ * @param side — SidePlacement variant
+ * @param align — AlignPlacement variant
  * @param open — Force open tooltip
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -75,8 +75,8 @@ enum class TooltipAlignPlacement(internal val className: String) : ClassValues<T
 fun FlowContent.daisyTooltip(
     id: HtmlId? = null,
     color: ClassValues<TooltipColor>? = null,
-    sidePlacement: ClassValues<TooltipSidePlacement>? = null,
-    alignPlacement: ClassValues<TooltipAlignPlacement>? = null,
+    side: ClassValues<TooltipSide>? = null,
+    align: ClassValues<TooltipAlign>? = null,
     open: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -86,8 +86,8 @@ fun FlowContent.daisyTooltip(
         if (id != null) attributes["id"] = id.id
         addClassNames("tooltip")
         addClassNames(color)
-        addClassNames(sidePlacement)
-        addClassNames(alignPlacement)
+        addClassNames(side)
+        addClassNames(align)
         if (open) addClassNames("tooltip-open")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

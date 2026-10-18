@@ -765,9 +765,9 @@ Hover tooltip on elements — renders `<div>`.
 
 ```kotlin
 enum class TooltipColor { Primary, Secondary, Accent, Info, Success, Warning, Error }
-enum class TooltipSidePlacement { Top, Bottom, Left, Right }
-enum class TooltipAlignPlacement { Start, Center, End }
-fun FlowContent.daisyTooltip(id: HtmlId? = null, color: ClassValues<TooltipColor>? = null, sidePlacement: ClassValues<TooltipSidePlacement>? = null, alignPlacement: ClassValues<TooltipAlignPlacement>? = null, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class TooltipSide { Top, Bottom, Left, Right }
+enum class TooltipAlign { Start, Center, End }
+fun FlowContent.daisyTooltip(id: HtmlId? = null, color: ClassValues<TooltipColor>? = null, side: ClassValues<TooltipSide>? = null, align: ClassValues<TooltipAlign>? = null, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyTooltipContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 

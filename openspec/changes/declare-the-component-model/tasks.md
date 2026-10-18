@@ -103,7 +103,7 @@ do not exist and change exactly those.
   `steps-step-*`. Moved here from 4.7, which now only renames.
 - [x] 3.6 `^ B` `tab-active` and `tab-disabled` move from `daisyTab` to the item function and emit
   `tab-*`, not `tabs-tab-*`. 5.9 still renames the functions and adds the radio item.
-- [ ] 3.7 `^ F (internal)` Completeness gate: generation fails when a component's frontmatter
+- [x] 3.7 `^ F (internal)` Completeness gate: generation fails when a component's frontmatter
   classes and the classes its model places differ, naming component and class. Tests: an unplaced
   class, a stale class.
 - [ ] 3.8 `^ F (internal)` Completeness gate: one function offering one class twice fails, naming

@@ -62,7 +62,7 @@ regenerating.
 - [x] 4.3 `! F` Dock: delete its declaration, then part `daisyDockItem`; `daisyDock` loses `active`.
 - [x] 4.4 `! F` Rating: delete its declaration, then `daisyRatingItem(hidden)`; `daisyRating` loses
   `hidden`.
-- [ ] 4.5 `! F` List: delete the two column declarations, then `daisyListCell(colGrow, colWrap)`;
+- [x] 4.5 `! F` List: delete the two column declarations, then `daisyListCell(colGrow, colWrap)`;
   `daisyList` loses `column` and `ListColumn` goes.
 
 ## 5. The four classes no function renders

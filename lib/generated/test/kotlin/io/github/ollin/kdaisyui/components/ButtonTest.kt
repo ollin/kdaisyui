@@ -54,7 +54,7 @@ class ButtonTest {
     @Test
     fun soft_buttons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(soft = true) {
+            daisyButton(style = ButtonStyle.Soft) {
             }
         }
         val expectedClasses = "btn btn-soft"
@@ -65,7 +65,7 @@ class ButtonTest {
     @Test
     fun outline_buttons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(outline = true) {
+            daisyButton(style = ButtonStyle.Outline) {
             }
         }
         val expectedClasses = "btn btn-outline"
@@ -76,7 +76,7 @@ class ButtonTest {
     @Test
     fun dash_buttons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(dash = true) {
+            daisyButton(style = ButtonStyle.Dash) {
             }
         }
         val expectedClasses = "btn btn-dash"
@@ -87,7 +87,7 @@ class ButtonTest {
     @Test
     fun neutral_button_with_outline_or_dash_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(outline = true) {
+            daisyButton(style = ButtonStyle.Outline) {
             }
         }
         val expectedClasses = "btn btn-outline"
@@ -98,7 +98,7 @@ class ButtonTest {
     @Test
     fun neutral_button_with_outline_or_dash_style_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(dash = true) {
+            daisyButton(style = ButtonStyle.Dash) {
             }
         }
         val expectedClasses = "btn btn-dash"
@@ -120,7 +120,7 @@ class ButtonTest {
     @Test
     fun buttons_ghost_and_button_link() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(ghost = true) {
+            daisyButton(style = ButtonStyle.Ghost) {
             }
         }
         val expectedClasses = "btn btn-ghost"
@@ -131,7 +131,7 @@ class ButtonTest {
     @Test
     fun buttons_ghost_and_button_link_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(link = true) {
+            daisyButton(style = ButtonStyle.Link) {
             }
         }
         val expectedClasses = "btn btn-link"

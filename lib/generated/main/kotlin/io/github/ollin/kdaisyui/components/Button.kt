@@ -52,6 +52,23 @@ enum class ButtonSize(internal val className: String) : ClassValues<ButtonSize> 
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Style variants for this component (CSS prefix: `btn-`) */
+enum class ButtonStyle(internal val className: String) : ClassValues<ButtonStyle> {
+    /** CSS: `btn-outline` — outline style */
+    Outline("btn-outline"),
+    /** CSS: `btn-dash` — dash style */
+    Dash("btn-dash"),
+    /** CSS: `btn-soft` — soft style */
+    Soft("btn-soft"),
+    /** CSS: `btn-ghost` — ghost style */
+    Ghost("btn-ghost"),
+    /** CSS: `btn-link` — looks like a link */
+    Link("btn-link"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
@@ -59,14 +76,10 @@ enum class ButtonSize(internal val className: String) : ClassValues<ButtonSize> 
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant
+ * @param style — Style variant
  * @param active — looks active
  * @param block — Full width
  * @param circle — 1:1 ratio with rounded corners
- * @param dash — dash style
- * @param ghost — ghost style
- * @param link — looks like a link
- * @param outline — outline style
- * @param soft — soft style
  * @param square — 1:1 ratio
  * @param wide — more horizontal padding
  * @param disabled
@@ -80,14 +93,10 @@ fun FlowContent.daisyButton(
     id: HtmlId? = null,
     color: ClassValues<ButtonColor>? = null,
     size: ClassValues<ButtonSize>? = null,
+    style: ClassValues<ButtonStyle>? = null,
     active: Boolean = false,
     block: Boolean = false,
     circle: Boolean = false,
-    dash: Boolean = false,
-    ghost: Boolean = false,
-    link: Boolean = false,
-    outline: Boolean = false,
-    soft: Boolean = false,
     square: Boolean = false,
     wide: Boolean = false,
     disabled: Boolean = false,
@@ -101,14 +110,10 @@ fun FlowContent.daisyButton(
         addClassNames("btn")
         addClassNames(color)
         addClassNames(size)
+        addClassNames(style)
         if (active) addClassNames("btn-active")
         if (block) addClassNames("btn-block")
         if (circle) addClassNames("btn-circle")
-        if (dash) addClassNames("btn-dash")
-        if (ghost) addClassNames("btn-ghost")
-        if (link) addClassNames("btn-link")
-        if (outline) addClassNames("btn-outline")
-        if (soft) addClassNames("btn-soft")
         if (square) addClassNames("btn-square")
         if (wide) addClassNames("btn-wide")
         if (disabled) { this.disabled = true; addClassNames("btn-disabled") }

@@ -359,7 +359,7 @@ class DashboardTest {
                 div("font-medium") { +name }
                 div("text-base-content/60 text-xs") { +role }
             }
-            daisyButton("Remove", size = ButtonSize.Xs, color = ButtonColor.Error, outline = true)
+            daisyButton("Remove", size = ButtonSize.Xs, color = ButtonColor.Error, style = ButtonStyle.Outline)
         }
     }
 

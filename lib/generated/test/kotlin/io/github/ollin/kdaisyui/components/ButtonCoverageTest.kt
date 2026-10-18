@@ -41,11 +41,6 @@ class ButtonCoverageTest {
                 active = true,
                 block = true,
                 circle = true,
-                dash = true,
-                ghost = true,
-                link = true,
-                outline = true,
-                soft = true,
                 square = true,
                 wide = true,
                 disabled = true,
@@ -55,7 +50,7 @@ class ButtonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "btn btn-active btn-block btn-circle btn-dash btn-disabled btn-ghost btn-link btn-outline btn-soft btn-square btn-wide zz-extra", "Button all flags", closes = "</button></div>")
+        assertRendered(html, "btn btn-active btn-block btn-circle btn-disabled btn-square btn-wide zz-extra", "Button all flags", closes = "</button></div>")
         assertCommonFlags(html, "Button")
         assertTrue(html.contains("disabled=\""), "Button sets disabled")
         assertTrue(html.contains("type=\""), "Button sets type")
@@ -189,6 +184,56 @@ class ButtonCoverageTest {
             )
         }
         assertRendered(html, "btn btn-xl", "Button size Xl")
+    }
+
+    @Test
+    fun button_style_outline() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                style = ButtonStyle.Outline,
+            )
+        }
+        assertRendered(html, "btn btn-outline", "Button style Outline")
+    }
+
+    @Test
+    fun button_style_dash() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                style = ButtonStyle.Dash,
+            )
+        }
+        assertRendered(html, "btn btn-dash", "Button style Dash")
+    }
+
+    @Test
+    fun button_style_soft() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                style = ButtonStyle.Soft,
+            )
+        }
+        assertRendered(html, "btn btn-soft", "Button style Soft")
+    }
+
+    @Test
+    fun button_style_ghost() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                style = ButtonStyle.Ghost,
+            )
+        }
+        assertRendered(html, "btn btn-ghost", "Button style Ghost")
+    }
+
+    @Test
+    fun button_style_link() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                style = ButtonStyle.Link,
+            )
+        }
+        assertRendered(html, "btn btn-link", "Button style Link")
     }
 
     @Test

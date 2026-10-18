@@ -50,7 +50,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 - [x] 3.1 `^ F (internal)` The classifier reports an element no function's class reaches, and one
   whose function lacks a counted class, naming page, element and classes.
-- [ ] 3.2 `^ F (internal)` Classes no frontmatter declares and variant-prefixed classes do not
+- [x] 3.2 `^ F (internal)` Classes no frontmatter declares and variant-prefixed classes do not
   count (`rounded-box`).
 - [ ] 3.3 `^ F (internal)` `notExpressed` in the model type (D2): a declared class set silences its
   finding; a declaration nothing on its page needs is a finding.

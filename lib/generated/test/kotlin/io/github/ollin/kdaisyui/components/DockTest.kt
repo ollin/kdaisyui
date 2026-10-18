@@ -30,6 +30,17 @@ class DockTest {
     }
 
     @Test
+    fun dock_daisyDockItem() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockItem(active = true) {
+            }
+        }
+        val expectedClasses = "dock-active"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock")
+    }
+
+    @Test
     fun dock_extra_small_size() {
         val html = createHTML(prettyPrint = false).div {
             daisyDock(size = DockSize.Xs) {

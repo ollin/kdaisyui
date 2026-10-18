@@ -318,8 +318,10 @@ macOS-style dock navigation — renders `<div>`.
 
 ```kotlin
 enum class DockSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyDock(id: HtmlId? = null, size: ClassValues<DockSize>? = null, active: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun Tag.daisyDockClasses(size: ClassValues<DockSize>? = null, active: Boolean = false)
+fun FlowContent.daisyDock(id: HtmlId? = null, size: ClassValues<DockSize>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun Tag.daisyDockClasses(size: ClassValues<DockSize>? = null)
+fun FlowContent.daisyDockItem(id: HtmlId? = null, active: Boolean = false, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
+fun Tag.daisyDockItemClasses(active: Boolean = false)
 fun FlowContent.daisyDockLabel(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
 fun Tag.daisyDockLabelClasses()
 ```

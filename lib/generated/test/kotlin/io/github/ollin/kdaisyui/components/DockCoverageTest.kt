@@ -39,13 +39,12 @@ class DockCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDock(
                 id = htmlId("x-cov-id"),
-                active = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dock dock-active zz-extra", "Dock all flags", closes = "</div></div>")
+        assertRendered(html, "dock zz-extra", "Dock all flags", closes = "</div></div>")
         assertCommonFlags(html, "Dock")
     }
 
@@ -115,11 +114,9 @@ class DockCoverageTest {
     @Test
     fun dockClasses_all_flags() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                active = true,
-            )
+            daisyDockClasses()
         }
-        assertRendered(html, "dock dock-active", "DockClasses all flags")
+        assertRendered(html, "dock", "DockClasses all flags")
     }
 
     @Test
@@ -170,6 +167,50 @@ class DockCoverageTest {
             )
         }
         assertRendered(html, "dock dock-xl", "DockClasses size Xl")
+    }
+
+    @Test
+    fun dockItem_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockItem(
+                content = { },
+            )
+        }
+        assertTrue(!html.contains("class=\""), "DockItem defaults emits no class")
+        assertTrue(html.endsWith("</button></div>"), "DockItem closes")
+    }
+
+    @Test
+    fun dockItem_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockItem(
+                id = htmlId("x-cov-id"),
+                active = true,
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+                content = { attributes["data-content"] = "yes" },
+            )
+        }
+        assertRendered(html, "dock-active zz-extra", "DockItem all flags", closes = "</button></div>")
+        assertCommonFlags(html, "DockItem")
+    }
+
+    @Test
+    fun dockItemClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockItemClasses()
+        }
+        assertTrue(!html.contains("class=\""), "DockItemClasses defaults emits no class")
+    }
+
+    @Test
+    fun dockItemClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockItemClasses(
+                active = true,
+            )
+        }
+        assertRendered(html, "dock-active", "DockItemClasses all flags")
     }
 
     @Test

@@ -460,10 +460,14 @@ public final class io/github/ollin/kdaisyui/components/DividerPlacement : java/l
 }
 
 public final class io/github/ollin/kdaisyui/components/DockKt {
-	public static final fun daisyDock (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyDock$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyDockClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
-	public static synthetic fun daisyDockClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
+	public static final fun daisyDock (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyDock$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDockClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyDockClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
+	public static final fun daisyDockItem (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyDockItem$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDockItemClasses (Lkotlinx/html/Tag;Z)V
+	public static synthetic fun daisyDockItemClasses$default (Lkotlinx/html/Tag;ZILjava/lang/Object;)V
 	public static final fun daisyDockLabel (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDockLabel$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyDockLabelClasses (Lkotlinx/html/Tag;)V

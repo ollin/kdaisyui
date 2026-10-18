@@ -66,8 +66,9 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 ## 5. Every expressible element is a test
 
-- [ ] 5.1 `^ B` Fix each model defect 1.3 listed, one commit each, reproducing test first.
-- [ ] 5.2 `^ F` The test generator emits a test for every expressible element of a page, parts and
+- [x] 5.1 `^ B` Fix each model defect 1.3 listed, one commit each, reproducing test first.
+  Nothing to fix: 1.3 listed none, and 5.2's generated tests, all green, found none either.
+- [x] 5.2 `^ F` The test generator emits a test for every expressible element of a page, parts and
   nested components included, wrapped by receiver (D5); identical calls once.
 - [ ] 5.3 `^ r (internal)` Delete the main-only path, `componentCallsIn` and its stale comments
   (D6). Zero diff under regeneration.

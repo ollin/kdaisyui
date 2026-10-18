@@ -5,7 +5,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { classChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, type ComponentDocs } from '../src/daisyui-delta.ts'
+import { classChanges, componentChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, type ComponentDocs } from '../src/daisyui-delta.ts'
 
 /** A throwaway repository with DaisyUI's layout and two tags. */
 class FixtureRepository {
@@ -104,5 +104,14 @@ describe('elementChanges', () => {
     const page = release({ otp: example('<div class="$$otp"></div>') })
 
     assert.deepEqual(elementChanges(page, page), [])
+  })
+})
+
+describe('componentChanges', () => {
+  it('names the components one release documents and the other does not', () => {
+    const older = release({ btn: frontmatter('btn'), pagination: frontmatter('join') })
+    const newer = release({ btn: frontmatter('btn'), aura: frontmatter('aura') })
+
+    assert.deepEqual(componentChanges(older, newer), { added: ['aura'], removed: ['pagination'] })
   })
 })

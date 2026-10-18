@@ -107,3 +107,23 @@ export function elementChanges(older: ComponentDocs, newer: ComponentDocs): Elem
     })
   })
 }
+
+/** Members of a set that one release has and the other does not. */
+export interface SetChange {
+  readonly added: readonly string[]
+  readonly removed: readonly string[]
+}
+
+function setChange(before: Iterable<string>, after: Iterable<string>): SetChange {
+  const was = new Set(before)
+  const is = new Set(after)
+  return {
+    added: [...is].filter(item => !was.has(item)).sort(),
+    removed: [...was].filter(item => !is.has(item)).sort(),
+  }
+}
+
+/** The component directories one release documents and the other does not. */
+export function componentChanges(older: ComponentDocs, newer: ComponentDocs): SetChange {
+  return setChange(older.componentDirs(), newer.componentDirs())
+}

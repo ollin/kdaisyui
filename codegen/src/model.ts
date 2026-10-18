@@ -80,6 +80,8 @@ export interface ModelFunction {
   readonly role?: string
   /** On a main function rendering `<input>`: the `InputType` it always sets, e.g. `checkBox`. */
   readonly inputType?: string
+  /** The name stem where the class is not the component's name: `Button` for `btn`. */
+  readonly stem?: string
 }
 
 export interface ComponentModel {

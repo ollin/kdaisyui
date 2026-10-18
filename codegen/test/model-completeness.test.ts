@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { classFindings, directoryFindings } from '../src/model-completeness.ts'
+import { classFindings, directoryFindings, namingFindings } from '../src/model-completeness.ts'
 import type { ComponentModel } from '../src/model.ts'
 
 const MASK: ComponentModel = {
@@ -43,5 +43,16 @@ describe('directoryFindings', () => {
       'aura: DaisyUI documents it, and it has no model file',
       'calendar: a model file for a directory DaisyUI does not have',
     ])
+  })
+})
+
+describe('namingFindings', () => {
+  it('names a part called otherwise than its class, and accepts a declared stem', () => {
+    const stats: ComponentModel = { ...MASK, component: 'stat', functions: [
+      { ...MASK.functions[0], name: 'daisyStatistics', class: 'stats', stem: 'Statistics' },
+      { ...MASK.functions[0], kind: 'part', name: 'daisyStatStat', class: 'stat', parameters: [] },
+    ] }
+
+    assert.deepEqual(namingFindings(stats), ['stat: daisyStatStat should be called daisyStat'])
   })
 })

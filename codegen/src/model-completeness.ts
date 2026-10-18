@@ -9,6 +9,7 @@
 
 import type { ComponentModel, ModelFunction } from './model.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
+import { toPascalCase } from './classifier.ts'
 
 /** Every class one function writes or offers, once per way it can reach the page. */
 export function offeredBy(model: ComponentModel, fn: ModelFunction): string[] {
@@ -50,4 +51,13 @@ export function directoryFindings(componentDirs: readonly string[], modelFiles: 
     ...componentDirs.filter(dir => !modelFiles.includes(dir)).map(dir => `${dir}: DaisyUI documents it, and it has no model file`),
     ...modelFiles.filter(file => !componentDirs.includes(file)).map(file => `${file}: a model file for a directory DaisyUI does not have`),
   ]
+}
+
+/** Main functions and parts named otherwise than `daisy` and their stem, the class's PascalCase. */
+export function namingFindings(model: ComponentModel): string[] {
+  return model.functions
+    .filter(fn => fn.kind !== 'custom' && fn.class !== null)
+    .map(fn => ({ fn, expected: `daisy${fn.stem ?? toPascalCase(fn.class ?? '')}` }))
+    .filter(({ fn, expected }) => fn.name !== expected)
+    .map(({ fn, expected }) => `${model.component}: ${fn.name} should be called ${expected}`)
 }

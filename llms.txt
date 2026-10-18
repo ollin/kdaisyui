@@ -311,10 +311,10 @@ fun FlowContent.daisyDrawerButton(id: HtmlId? = null, extraClasses: String? = nu
 Context menus and action lists — renders `<details>`.
 
 ```kotlin
-enum class DropdownModifier { Hover, Open }
-enum class DropdownHorizontalPlacement { Start, Center, End }
-enum class DropdownVerticalPlacement { Top, Bottom }
-fun FlowContent.daisyDropdown(id: HtmlId? = null, modifier: ClassValues<DropdownModifier>? = null, horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null, verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null, close: Boolean = false, left: Boolean = false, right: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
+enum class DropdownSide { Top, Bottom, Left, Right }
+enum class DropdownAlign { Start, Center, End }
+enum class DropdownState { Open, Close }
+fun FlowContent.daisyDropdown(id: HtmlId? = null, side: ClassValues<DropdownSide>? = null, align: ClassValues<DropdownAlign>? = null, state: ClassValues<DropdownState>? = null, hover: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
 fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 ```
 

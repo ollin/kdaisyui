@@ -3,17 +3,17 @@
   "name": "Dropdown",
   "class": "dropdown",
   "enums": [
-    { "name": "DropdownModifier", "label": "Modifier variants", "classes": ["dropdown-hover", "dropdown-open"] },
     {
-      "name": "DropdownHorizontalPlacement",
-      "label": "HorizontalPlacement variants",
-      "classes": ["dropdown-start", "dropdown-center", "dropdown-end"]
+      "name": "DropdownSide",
+      "label": "Side variants",
+      "classes": ["dropdown-top", "dropdown-bottom", "dropdown-left", "dropdown-right"]
     },
     {
-      "name": "DropdownVerticalPlacement",
-      "label": "VerticalPlacement variants",
-      "classes": ["dropdown-top", "dropdown-bottom"]
-    }
+      "name": "DropdownAlign",
+      "label": "Align variants",
+      "classes": ["dropdown-start", "dropdown-center", "dropdown-end"]
+    },
+    { "name": "DropdownState", "label": "State variants", "classes": ["dropdown-open", "dropdown-close"] }
   ],
   "functions": [
     {
@@ -24,22 +24,10 @@
       "class": "dropdown",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "modifier", "enum": "DropdownModifier", "doc": "Modifier variant" },
-        {
-          "kind": "enum",
-          "name": "horizontalPlacement",
-          "enum": "DropdownHorizontalPlacement",
-          "doc": "HorizontalPlacement variant"
-        },
-        {
-          "kind": "enum",
-          "name": "verticalPlacement",
-          "enum": "DropdownVerticalPlacement",
-          "doc": "VerticalPlacement variant"
-        },
-        { "kind": "toggle", "name": "close", "class": "dropdown-close" },
-        { "kind": "toggle", "name": "left", "class": "dropdown-left" },
-        { "kind": "toggle", "name": "right", "class": "dropdown-right" }
+        { "kind": "enum", "name": "side", "enum": "DropdownSide", "doc": "Side variant" },
+        { "kind": "enum", "name": "align", "enum": "DropdownAlign", "doc": "Align variant" },
+        { "kind": "enum", "name": "state", "enum": "DropdownState", "doc": "State variant" },
+        { "kind": "toggle", "name": "hover", "class": "dropdown-hover" }
       ]
     },
     {

@@ -69,7 +69,7 @@ class DashboardTest {
                 span("swap-off") { +"☀\uFE0F" }
                 span("swap-on") { +"🌙" }
             }
-            daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.End, extraClasses = "z-10") {
+            daisyDropdown(align = DropdownAlign.End, extraClasses = "z-10") {
                 div {
                     attributes["tabindex"] = "0"
                     classes = setOf("btn", "btn-circle", "btn-ghost")

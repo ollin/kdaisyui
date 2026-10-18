@@ -60,11 +60,24 @@ function componentsInBoth(older: ComponentDocs, newer: ComponentDocs): string[] 
   return newer.componentDirs().filter(dir => before.has(dir))
 }
 
-/** Classes a component's frontmatter declares in one release and not the other. */
-export interface ClassChange {
-  readonly component: string
+/** Members of a set that one release has and the other does not. */
+export interface SetChange {
   readonly added: readonly string[]
   readonly removed: readonly string[]
+}
+
+function setChange(before: Iterable<string>, after: Iterable<string>): SetChange {
+  const was = new Set(before)
+  const is = new Set(after)
+  return {
+    added: [...is].filter(item => !was.has(item)).sort(),
+    removed: [...was].filter(item => !is.has(item)).sort(),
+  }
+}
+
+/** Classes a component's frontmatter declares in one release and not the other. */
+export interface ClassChange extends SetChange {
+  readonly component: string
 }
 
 function declaredClasses(markdown: string | null): Set<string> {
@@ -75,10 +88,7 @@ function declaredClasses(markdown: string | null): Set<string> {
 /** Per component documented in both releases, the classes its frontmatter gained and lost. */
 export function classChanges(older: ComponentDocs, newer: ComponentDocs): ClassChange[] {
   return componentsInBoth(older, newer).flatMap(component => {
-    const before = declaredClasses(older.page(component))
-    const after = declaredClasses(newer.page(component))
-    const added = [...after].filter(cls => !before.has(cls)).sort()
-    const removed = [...before].filter(cls => !after.has(cls)).sort()
+    const { added, removed } = setChange(declaredClasses(older.page(component)), declaredClasses(newer.page(component)))
     return added.length + removed.length === 0 ? [] : [{ component, added, removed }]
   })
 }
@@ -106,21 +116,6 @@ export function elementChanges(older: ComponentDocs, newer: ComponentDocs): Elem
       return was.length === 0 || was.join() === is.join() ? [] : [{ component, cssClass, before: was, after: is }]
     })
   })
-}
-
-/** Members of a set that one release has and the other does not. */
-export interface SetChange {
-  readonly added: readonly string[]
-  readonly removed: readonly string[]
-}
-
-function setChange(before: Iterable<string>, after: Iterable<string>): SetChange {
-  const was = new Set(before)
-  const is = new Set(after)
-  return {
-    added: [...is].filter(item => !was.has(item)).sort(),
-    removed: [...was].filter(item => !is.has(item)).sort(),
-  }
 }
 
 /** The component directories one release documents and the other does not. */

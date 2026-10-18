@@ -1,5 +1,5 @@
 /**
- * Which component calls mark themselves as join items, derived from DaisyUI's markup.
+ * The join scope: inside `daisyJoin { }` a call to a join item marks itself `join-item`.
  *
  * `.join` writes four corner-radius variables onto its direct children and `.join-item` reads
  * them. Without an enclosing `.join` those variables are unset and the class strips the
@@ -8,78 +8,17 @@
  * therefore not a parameter at all: inside `daisyJoin { }` the CALL is the marking, through
  * member overloads on a scope type.
  *
- * A member needs a function to overload, and that is what decides the set. DaisyUI shows
- * `join-item` on 72 elements and every one of them also carries a component class — `btn`,
- * `input`, `select`, `card`, `collapse`, `theme-controller`, `validator — so every one has a
- * generated function already. (Measured 2026-09-19 at v5.7.17. The six exceptions this
- * library carries for classes on bare child tags are the opposite shape: 18 sightings, none
- * beside a component class, so none of them can have a member.)
- *
- * The set is DERIVED and not configured, so a DaisyUI release that documents `join-item` on a
- * new component extends the scope by regeneration. A hand-read list cannot reach the output —
- * and the hand-read list this change started from was wrong by two components.
+ * Which components are join items is declared in the model (`joinItem` on a main function). A
+ * DaisyUI release that documents `join-item` beside a new component shows up in the bump report.
  */
 
-import { documentedElementClasses } from './parser/documented-classes.ts'
-import { fencedHtmlFor } from './parser/documented-element.ts'
-import type { ComponentName } from './parser/frontmatter.ts'
 import type { ComponentShape, CssClass, FunctionShape, ParameterShape } from './component-shape.ts'
 
 /** The class a join's children wear, and the whole reason this scope exists. */
 export const JOIN_ITEM_CLASS = 'join-item' as CssClass
 
-/**
- * Every unprefixed daisyUI class DaisyUI shows on an element that ALSO carries `join-item`.
- *
- * The unit is the element, not the example block: a join whose children are a button and a
- * select documents two separate items, and reading the block whole would make each child's
- * class a companion of the other's.
- *
- * A class a Tailwind variant applies conditionally is not a companion. `lg:$$btn` is the
- * button class above `lg` and nothing below it, while `daisyButton` always emits `btn` — so a
- * member derived from that element would mark something DaisyUI does not document as a join
- * item at most widths.
- */
-export function classesJoinedWith(html: string): ReadonlySet<string> {
-  const companions = new Set<string>()
-  for (const element of documentedElementClasses(html, JOIN_ITEM_CLASS)) {
-    for (const documented of element) {
-      if (documented.isPrefixed) continue
-      if (documented.className === JOIN_ITEM_CLASS) continue
-      companions.add(documented.className)
-    }
-  }
-  return companions
-}
-
-/**
- * `classesJoinedWith` over every component page, because DaisyUI documents `join-item` on
- * eight of them and only 17 of its 72 sightings are on the join's own page.
- */
-export function documentedJoinItemCompanions(componentDirs: readonly ComponentName[]): ReadonlySet<string> {
-  const companions = new Set<string>()
-  for (const componentDir of componentDirs) {
-    for (const companion of classesJoinedWith(fencedHtmlFor(componentDir))) companions.add(companion)
-  }
-  return companions
-}
-
 /** The generated Kotlin class the join's `content` lambda runs in. */
 const JOIN_SCOPE_NAME = 'JoinScope'
-
-/**
- * Whether this component is the one that DECLARES `join-item`, and so owns the scope.
- *
- * Derived rather than a hardcoded `'join'`: DaisyUI lists `join-item` as the join's second
- * `component:` class, and that entry is the only statement anywhere that the two belong
- * together. It currently reaches no generated function at all — which is precisely the gap the
- * scope fills.
- */
-export function declaresJoinItem(frontmatter): boolean {
-  return Object.values(frontmatter?.classnames ?? {}).some(
-    entries => Array.isArray(entries) && entries.some(entry => entry?.class === JOIN_ITEM_CLASS),
-  )
-}
 
 /**
  * The join component, with its content lambda moved onto the scope.

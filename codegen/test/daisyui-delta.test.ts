@@ -5,7 +5,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { classChanges, componentChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, joinItemChanges, renderDelta, type ComponentDocs } from '../src/daisyui-delta.ts'
+import { classChanges, classesJoinedWith, componentChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, joinItemChanges, renderDelta, type ComponentDocs } from '../src/daisyui-delta.ts'
 
 /** A throwaway repository with DaisyUI's layout and two tags. */
 class FixtureRepository {
@@ -143,5 +143,54 @@ describe('renderDelta', () => {
     const page = release({ btn: frontmatter('btn') })
 
     assert.match(renderDelta(page, page, 'v1', 'v1'), /No class, element, component or join-item change found\.$/)
+  })
+})
+
+describe('classesJoinedWith', () => {
+  it('collects a class that shares an element with join-item', () => {
+    const classes = classesJoinedWith('<div class="$$join"><button class="$$btn $$join-item">A</button></div>')
+
+    assert.deepEqual([...classes], ['btn'])
+  })
+
+  it('does not collect join-item itself', () => {
+    const classes = classesJoinedWith('<button class="$$btn $$join-item">A</button>')
+
+    assert.equal(classes.has('join-item'), false)
+  })
+
+  it('does not collect a class on a sibling element', () => {
+    // The rule is about ONE element. A join whose children are a button and a select does not
+    // make `select` a companion of `btn`, and a rule reading the whole example block would say
+    // it did — the defect `documented-classes.ts` exists to prevent.
+    const classes = classesJoinedWith(
+      '<div class="$$join"><button class="$$btn $$join-item">A</button><select class="$$select"></select></div>',
+    )
+
+    assert.deepEqual([...classes], ['btn'])
+  })
+
+  it('does not collect a class a Tailwind variant applies conditionally', () => {
+    // `lg:$$btn` is the button class at one breakpoint and not at others, while the generated
+    // `daisyButton` always emits it. A member built from that element would mark an element
+    // DaisyUI does not document as a join item below `lg`.
+    const classes = classesJoinedWith('<button class="lg:$$btn $$join-item">A</button>')
+
+    assert.deepEqual([...classes], [])
+  })
+
+  it('ignores an element that does not carry join-item at all', () => {
+    const classes = classesJoinedWith('<button class="$$btn">A</button>')
+
+    assert.deepEqual([...classes], [])
+  })
+
+  it('collects every companion when one element carries two component classes', () => {
+    // Measured shape, not invented: DaisyUI documents
+    // `<input class="$$btn $$theme-controller $$join-item">`, which is why the derived set has
+    // seven members and only 72 sightings.
+    const classes = classesJoinedWith('<input class="$$btn $$theme-controller $$join-item" />')
+
+    assert.deepEqual([...classes].sort(), ['btn', 'theme-controller'])
   })
 })

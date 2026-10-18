@@ -10,7 +10,8 @@
 import { execFileSync } from 'node:child_process'
 import { getClassesByCategory, parseFrontmatter } from './parser/frontmatter.ts'
 import { documentedElementSetsIn, fencedHtmlBlocks } from './parser/documented-element.ts'
-import { classesJoinedWith } from './join-scope.ts'
+import { documentedElementClasses } from './parser/documented-classes.ts'
+import { JOIN_ITEM_CLASS } from './join-scope.ts'
 
 /** Where the component pages live inside the DaisyUI repository. */
 export const COMPONENTS_IN_REPO = 'packages/docs/src/routes/(routes)/components'
@@ -122,6 +123,30 @@ export function elementChanges(older: ComponentDocs, newer: ComponentDocs): Elem
 /** The component directories one release documents and the other does not. */
 export function componentChanges(older: ComponentDocs, newer: ComponentDocs): SetChange {
   return setChange(older.componentDirs(), newer.componentDirs())
+}
+
+/**
+ * Every unprefixed daisyUI class DaisyUI shows on an element that ALSO carries `join-item`.
+ *
+ * The unit is the element, not the example block: a join whose children are a button and a
+ * select documents two separate items, and reading the block whole would make each child's
+ * class a companion of the other's.
+ *
+ * A class a Tailwind variant applies conditionally is not a companion. `lg:$$btn` is the
+ * button class above `lg` and nothing below it, while `daisyButton` always emits `btn` — so a
+ * member derived from that element would mark something DaisyUI does not document as a join
+ * item at most widths.
+ */
+export function classesJoinedWith(html: string): ReadonlySet<string> {
+  const companions = new Set<string>()
+  for (const element of documentedElementClasses(html, JOIN_ITEM_CLASS)) {
+    for (const documented of element) {
+      if (documented.isPrefixed) continue
+      if (documented.className === JOIN_ITEM_CLASS) continue
+      companions.add(documented.className)
+    }
+  }
+  return companions
 }
 
 function joinItemCompanions(docs: ComponentDocs): string[] {

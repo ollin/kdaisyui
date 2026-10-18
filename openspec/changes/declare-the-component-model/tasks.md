@@ -203,7 +203,7 @@ Same cadence as block 4.
 - [ ] 6.1 `. d` **How to migrate from 0.7.x** in `README.md`: the renamed functions and enums,
   every removed boolean with its replacement, the tab table led by the `daisyTab { }` hazard, and
   the twelve two-look pairs that now need `extraClasses`.
-- [ ] 6.2 `. d` Re-dump `lib/api/lib.api` and `lib/api/components.api`; read both diffs against
+- [x] 6.2 `. d` Re-dump `lib/api/lib.api` and `lib/api/components.api`; read both diffs against
   the migration note.
 - [ ] 6.3 `. d` Rewrite `kdaisyui-codegen` and `kdaisyui-daisyui-upgrade`, the
   `/daisyui-upgrade` command and `AGENTS.md` for the declared model and the bump report.

@@ -67,4 +67,24 @@ describe('shapeFromModel', () => {
 
     assert.deepEqual(parameter, { name: 'disabled', type: 'Boolean', default: 'false', doc: null })
   })
+
+  test('writes the classes and attributes a construction always carries', () => {
+    const popover: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], kind: 'custom', parameters: [], always: ['kbd-x'], attributes: { popover: '' } }] }
+
+    const [fn] = shapeFromModel(popover, DESCRIPTIONS).functions
+
+    assert.deepEqual([fn.modifierClasses, fn.staticAttributes], [['kbd-x'], [['popover', '']]])
+  })
+
+  test('describes the main function by the component, a part by its own class, a construction by nothing', () => {
+    const parts: ComponentModel = { ...KBD, enums: [], functions: [
+      { ...KBD.functions[0], parameters: [] },
+      { ...KBD.functions[0], kind: 'part', class: 'kbd-part', parameters: [] },
+      { ...KBD.functions[0], kind: 'custom', parameters: [] },
+    ] }
+
+    const descs = shapeFromModel(parts, { desc: 'Keyboard key.', classes: { 'kbd-part': 'A part.' } }).functions.map(fn => fn.desc)
+
+    assert.deepEqual(descs, ['Keyboard key.', 'A part.', ''])
+  })
 })

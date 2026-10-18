@@ -64,6 +64,10 @@ export interface ModelFunction {
   readonly text: boolean
   /** The function's own parameters, between `id` and the escape hatches. */
   readonly parameters: readonly ModelParameter[]
+  /** Classes written beside `class` on every call, e.g. `skeleton-text`. */
+  readonly always?: readonly string[]
+  /** Attributes written on every call, e.g. `{ "popover": "" }`. */
+  readonly attributes?: Readonly<Record<string, string>>
 }
 
 export interface ComponentModel {
@@ -123,6 +127,17 @@ function parameterShape(model: ComponentModel, parameter: ModelParameter, descri
   }
 }
 
+/**
+ * A function's prose sentence. The main function's is the component's; a part's is looked up by
+ * its unstripped class, which matches only where a part carries no component prefix; a
+ * construction method has none. Faithful to the inferred shape, so the switch changes nothing.
+ */
+function functionDesc(declared: ModelFunction, descriptions: Descriptions): string {
+  if (declared.kind === 'main') return descriptions.desc
+  if (declared.kind === 'part' && declared.class !== null) return descriptions.classes[declared.class] ?? ''
+  return ''
+}
+
 function functionShape(model: ComponentModel, declared: ModelFunction, descriptions: Descriptions): FunctionShape {
   const element = declared.element as TagClass
   return {
@@ -133,9 +148,9 @@ function functionShape(model: ComponentModel, declared: ModelFunction, descripti
     tagBuilder: tagBuilderFor(element),
     htmlTag: htmlTagNameFor(element),
     cssClass: declared.class as CssClass | null,
-    modifierClasses: [],
-    staticAttributes: [],
-    desc: descriptions.desc,
+    modifierClasses: (declared.always ?? []) as CssClass[],
+    staticAttributes: Object.entries(declared.attributes ?? {}),
+    desc: functionDesc(declared, descriptions),
     parameters: functionParameters(element, declared.text, declared.parameters.map(parameter => parameterShape(model, parameter, descriptions))),
   }
 }

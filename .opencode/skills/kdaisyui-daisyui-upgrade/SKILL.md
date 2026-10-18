@@ -76,7 +76,10 @@ fails, naming component and class, when:
 - the model places a class DaisyUI does not declare;
 - one function offers one class twice;
 - a DaisyUI directory has no model file, or a model file names no directory;
-- a function or an enum is named against the naming rule (`kdaisyui-codegen` has the rule).
+- a function or an enum is named against the naming rule (`kdaisyui-codegen` has the rule);
+- a documented element is expressed by no function and its page does not declare it in
+  `notExpressed`, or a declaration no element needs any more. A release that adds an example
+  combining two components, or a modifier on an element no function renders, lands here.
 
 Choosing between an axis and a toggle is a design decision. An axis is one parameter; two of its
 members cannot be passed together except through `extraClasses`. Make a new class an axis member
@@ -85,8 +88,10 @@ make it a toggle when it switches a feature on and has no alternative.
 
 ## When a guard fires
 
-**Generation failed with "The model disagrees with DaisyUI's classes or with the naming rule".**
-That is step 4 not done. Read the named classes against `just daisyui-delta`.
+**Generation failed with "The model disagrees with DaisyUI's classes, its documented elements or
+the naming rule".** That is step 4 not done. Read the named classes against `just daisyui-delta`;
+a line naming an element and a key is a documented-element gap: give the model what the element
+needs, or declare the key with a reason.
 
 **`generated-sources-drift` failed.** The committed sources no longer match the model and the
 submodule. Run `just generate` and commit the result. It reports untracked files too, so a new

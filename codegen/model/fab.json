@@ -32,5 +32,8 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Floating action button with expandable actions" }
+  "summary": { "summary": "Floating action button with expandable actions" },
+  "notExpressed": {
+    "btn fab-main-action": "Two components on one element, daisyButton and daisyFabMainAction; one call renders one function. Call one and pass the other's classes through extraClasses."
+  }
 }

@@ -7,21 +7,23 @@
  * completeness check.
  */
 
-import type { ComponentModel, ModelFunction } from './model.ts'
+import type { ComponentModel, ModelFunction, ModelParameter } from './model.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
 import { toPascalCase } from './classifier.ts'
 
 /** Every class one function writes or offers, once per way it can reach the page. */
 export function offeredBy(model: ComponentModel, fn: ModelFunction): string[] {
-  const enums = new Map(model.enums.map(declared => [declared.name, declared.classes]))
   return [
     ...[fn.class, ...(fn.always ?? [])].filter((cls): cls is string => cls !== null),
-    ...fn.parameters.flatMap(parameter => {
-      if (parameter.kind === 'enum') return [...(enums.get(parameter.enum) ?? [])]
-      if (parameter.kind === 'toggle') return [parameter.class]
-      return [...(parameter.writes ?? [])]
-    }),
+    ...fn.parameters.flatMap(parameter => writtenBy(model, parameter)),
   ]
+}
+
+/** The classes one parameter can write: its axis's members, its toggle's class, or its extra's. */
+export function writtenBy(model: ComponentModel, parameter: ModelParameter): string[] {
+  if (parameter.kind === 'enum') return [...(model.enums.find(declared => declared.name === parameter.enum)?.classes ?? [])]
+  if (parameter.kind === 'toggle') return [parameter.class]
+  return [...(parameter.writes ?? [])]
 }
 
 /** Every class the model can put on the page: what a consumer's Tailwind must compile. */

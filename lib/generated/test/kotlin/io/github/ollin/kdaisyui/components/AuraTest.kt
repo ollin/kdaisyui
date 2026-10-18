@@ -19,12 +19,34 @@ class AuraTest {
     }
 
     @Test
-    fun aura_around_a_button() {
+    fun aura_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura() {
+            daisyCard() {
             }
         }
-        val expectedClasses = "aura"
+        val expectedClasses = "card"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura")
+    }
+
+    @Test
+    fun aura_daisyCardBody() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCardBody() {
+            }
+        }
+        val expectedClasses = "card-body"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura")
+    }
+
+    @Test
+    fun aura_around_a_button_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton() {
+            }
+        }
+        val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura around a button")
     }
@@ -96,34 +118,23 @@ class AuraTest {
     }
 
     @Test
-    fun aura_with_custom_color() {
+    fun aura_rainbow_around_a_pricing_card_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura() {
+            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning) {
             }
         }
-        val expectedClasses = "aura"
+        val expectedClasses = "badge badge-warning badge-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura with custom color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura rainbow around a pricing card")
     }
 
     @Test
-    fun aura_with_custom_color_and_custom_background_color() {
+    fun aura_rainbow_around_a_pricing_card_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura() {
+            daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block) {
             }
         }
-        val expectedClasses = "aura"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura with custom color and custom background color")
-    }
-
-    @Test
-    fun aura_rainbow_around_a_pricing_card() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Rainbow) {
-            }
-        }
-        val expectedClasses = "aura aura-rainbow"
+        val expectedClasses = "btn btn-block btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura rainbow around a pricing card")
     }
@@ -131,22 +142,44 @@ class AuraTest {
     @Test
     fun aura_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura() {
+            daisyAura(size = AuraSize.Xs) {
             }
         }
-        val expectedClasses = "aura"
+        val expectedClasses = "aura aura-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
     }
 
     @Test
-    fun aura_with_custom_animation_duration() {
+    fun aura_sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Rainbow) {
+            daisyAura(size = AuraSize.Sm) {
             }
         }
-        val expectedClasses = "aura aura-rainbow"
+        val expectedClasses = "aura aura-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura with custom animation duration")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
+    }
+
+    @Test
+    fun aura_sizes_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(size = AuraSize.Lg) {
+            }
+        }
+        val expectedClasses = "aura aura-lg"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
+    }
+
+    @Test
+    fun aura_sizes_4() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(size = AuraSize.Xl) {
+            }
+        }
+        val expectedClasses = "aura aura-xl"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
     }
 }

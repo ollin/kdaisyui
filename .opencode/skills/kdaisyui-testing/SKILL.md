@@ -14,14 +14,18 @@ Three layers, three different frameworks. Identify which one you are in before w
 
 Produced by `codegen/src/test-generator.ts` into `lib/generated/test/kotlin/…`, which is
 **committed**. Compiling does not regenerate them, so `:lib:test` needs no Node and no
-submodules. These are the bulk of the suite (`:lib:test` runs ~566 tests).
+submodules. These are the bulk of the suite: `:lib:test` ran 1,903 tests on 2026-10-18, of which
+830 are documented-element tests, one per distinct call any function makes for an element a
+DaisyUI page marks with `$$`, and the rest are the coverage tests.
 
 **Never hand-edit them** — `just generate` overwrites them wholesale and CI's
 `generated-sources-drift` job fails any hand edit. Fix `test-generator.ts` instead; see the
 `kdaisyui-codegen` skill.
 
 **A compile failure here is a FINDING, not a chore.** Their input is DaisyUI's own documented
-markup, so they assert that the generated API can express what DaisyUI documents. When an API
+markup, so they assert that the generated API can express what DaisyUI documents, element by
+element. What it cannot express never reaches them: the documented-element gate fails generation
+first, unless the page's model declares the gap (`kdaisyui-codegen`). When an API
 change stops them compiling, the question is whether the new API can still reach that markup —
 and making them compile again is the proof that it can. Changing the API to silence them, or
 excluding a case, throws away the only check of that claim.

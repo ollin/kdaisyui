@@ -19,12 +19,67 @@ class CardTest {
     }
 
     @Test
-    fun pricing_card() {
+    fun card_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyCardBody() {
             }
         }
-        val expectedClasses = "card"
+        val expectedClasses = "card-body"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+    }
+
+    @Test
+    fun card_daisyCardTitle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCardTitle() {
+            }
+        }
+        val expectedClasses = "card-title"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+    }
+
+    @Test
+    fun card_daisyCardActions() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCardActions() {
+            }
+        }
+        val expectedClasses = "card-actions"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+    }
+
+    @Test
+    fun card_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(color = ButtonColor.Primary) {
+            }
+        }
+        val expectedClasses = "btn btn-primary"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+    }
+
+    @Test
+    fun pricing_card_daisyBadge() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning) {
+            }
+        }
+        val expectedClasses = "badge badge-warning badge-xs"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Pricing Card")
+    }
+
+    @Test
+    fun pricing_card_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block) {
+            }
+        }
+        val expectedClasses = "btn btn-block btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Pricing Card")
     }
@@ -32,10 +87,54 @@ class CardTest {
     @Test
     fun card_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyCard(size = CardSize.Xs) {
             }
         }
-        val expectedClasses = "card"
+        val expectedClasses = "card card-xs"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+    }
+
+    @Test
+    fun card_sizes_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(size = CardSize.Sm) {
+            }
+        }
+        val expectedClasses = "card card-sm"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+    }
+
+    @Test
+    fun card_sizes_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(size = CardSize.Md) {
+            }
+        }
+        val expectedClasses = "card card-md"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+    }
+
+    @Test
+    fun card_sizes_4() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(size = CardSize.Lg) {
+            }
+        }
+        val expectedClasses = "card card-lg"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+    }
+
+    @Test
+    fun card_sizes_5() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCard(size = CardSize.Xl) {
+            }
+        }
+        val expectedClasses = "card card-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
     }
@@ -63,36 +162,25 @@ class CardTest {
     }
 
     @Test
-    fun card_with_badge() {
+    fun card_with_badge_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyBadge(color = BadgeColor.Secondary) {
             }
         }
-        val expectedClasses = "card"
+        val expectedClasses = "badge badge-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with badge")
     }
 
     @Test
-    fun card_with_bottom_image() {
+    fun card_with_badge_daisyBadge_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyBadge(outlineStyle = BadgeOutlineStyle.Outline) {
             }
         }
-        val expectedClasses = "card"
+        val expectedClasses = "badge badge-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with bottom image")
-    }
-
-    @Test
-    fun card_with_centered_content_and_paddings() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
-            }
-        }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with centered content and paddings")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with badge")
     }
 
     @Test
@@ -107,45 +195,34 @@ class CardTest {
     }
 
     @Test
-    fun card_with_no_image() {
+    fun card_with_custom_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyButton() {
             }
         }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with no image")
-    }
-
-    @Test
-    fun card_with_custom_color() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
-            }
-        }
-        val expectedClasses = "card"
+        val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with custom color")
     }
 
     @Test
-    fun centered_card_with_neutral_color() {
+    fun centered_card_with_neutral_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyButton(style = ButtonStyle.Ghost) {
             }
         }
-        val expectedClasses = "card"
+        val expectedClasses = "btn btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered card with neutral color")
     }
 
     @Test
-    fun card_with_action_on_top() {
+    fun card_with_action_on_top_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyButton(shape = ButtonShape.Square, size = ButtonSize.Sm) {
             }
         }
-        val expectedClasses = "card"
+        val expectedClasses = "btn btn-sm btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with action on top")
     }
@@ -173,12 +250,12 @@ class CardTest {
     }
 
     @Test
-    fun selectable_cards() {
+    fun selectable_cards_daisyJoin() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
+            daisyJoin() {
             }
         }
-        val expectedClasses = "card"
+        val expectedClasses = "join"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Selectable cards")
     }

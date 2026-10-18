@@ -40,5 +40,10 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Context menus and action lists" }
+  "summary": { "summary": "Context menus and action lists" },
+  "notExpressed": {
+    "card dropdown-content": "Two components on one element, daisyCard and daisyDropdownContent; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "dropdown menu": "Two components on one element, daisyDropdown and daisyMenu; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "dropdown-content menu": "Two components on one element, daisyDropdownContent and daisyMenu; one call renders one function. Call one and pass the other's classes through extraClasses."
+  }
 }

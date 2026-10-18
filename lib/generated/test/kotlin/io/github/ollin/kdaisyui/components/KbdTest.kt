@@ -21,66 +21,55 @@ class KbdTest {
     @Test
     fun kbd_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd() {
+            daisyKbd(size = KbdSize.Xs) {
             }
         }
-        val expectedClasses = "kbd"
+        val expectedClasses = "kbd kbd-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
     }
 
     @Test
-    fun in_text() {
+    fun kbd_sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd() {
+            daisyKbd(size = KbdSize.Sm) {
             }
         }
-        val expectedClasses = "kbd"
+        val expectedClasses = "kbd kbd-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for In text")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
     }
 
     @Test
-    fun key_combination() {
+    fun kbd_sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd() {
+            daisyKbd(size = KbdSize.Md) {
             }
         }
-        val expectedClasses = "kbd"
+        val expectedClasses = "kbd kbd-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Key combination")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
     }
 
     @Test
-    fun function_keys() {
+    fun kbd_sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd() {
+            daisyKbd(size = KbdSize.Lg) {
             }
         }
-        val expectedClasses = "kbd"
+        val expectedClasses = "kbd kbd-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Function Keys")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
     }
 
     @Test
-    fun a_full_keyboard() {
+    fun kbd_sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd() {
+            daisyKbd(size = KbdSize.Xl) {
             }
         }
-        val expectedClasses = "kbd"
+        val expectedClasses = "kbd kbd-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for A full keyboard")
-    }
-
-    @Test
-    fun arrow_keys() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbd() {
-            }
-        }
-        val expectedClasses = "kbd"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Arrow Keys")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
     }
 }

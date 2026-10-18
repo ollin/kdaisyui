@@ -28,5 +28,8 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "macOS-style dock navigation" }
+  "summary": { "summary": "macOS-style dock navigation" },
+  "notExpressed": {
+    "dock-active": "#347: DaisyUI puts it on a child no function renders; daisyDock offers it on the <div> itself, where it has no effect."
+  }
 }

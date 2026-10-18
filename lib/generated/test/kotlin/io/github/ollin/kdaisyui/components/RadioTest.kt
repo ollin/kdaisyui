@@ -21,10 +21,54 @@ class RadioTest {
     @Test
     fun radio_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(size = RadioSize.Xs) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-xs"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Radio sizes")
+    }
+
+    @Test
+    fun radio_sizes_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadio(size = RadioSize.Sm) {
+            }
+        }
+        val expectedClasses = "radio radio-sm"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Radio sizes")
+    }
+
+    @Test
+    fun radio_sizes_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadio(size = RadioSize.Md) {
+            }
+        }
+        val expectedClasses = "radio radio-md"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Radio sizes")
+    }
+
+    @Test
+    fun radio_sizes_4() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadio(size = RadioSize.Lg) {
+            }
+        }
+        val expectedClasses = "radio radio-lg"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Radio sizes")
+    }
+
+    @Test
+    fun radio_sizes_5() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadio(size = RadioSize.Xl) {
+            }
+        }
+        val expectedClasses = "radio radio-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Radio sizes")
     }
@@ -32,10 +76,10 @@ class RadioTest {
     @Test
     fun neutral_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Neutral) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
     }
@@ -43,10 +87,10 @@ class RadioTest {
     @Test
     fun primary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Primary) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
     }
@@ -54,10 +98,10 @@ class RadioTest {
     @Test
     fun secondary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Secondary) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
     }
@@ -65,10 +109,10 @@ class RadioTest {
     @Test
     fun accent_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Accent) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
     }
@@ -76,10 +120,10 @@ class RadioTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Success) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
     }
@@ -87,10 +131,10 @@ class RadioTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Warning) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
     }
@@ -98,10 +142,10 @@ class RadioTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Info) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
     }
@@ -109,33 +153,11 @@ class RadioTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
+            daisyRadio(color = RadioColor.Error) {
             }
         }
-        val expectedClasses = "radio"
+        val expectedClasses = "radio radio-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
-    }
-
-    @Test
-    fun disabled() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
-            }
-        }
-        val expectedClasses = "radio"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Disabled")
-    }
-
-    @Test
-    fun radio_with_custom_colors() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio() {
-            }
-        }
-        val expectedClasses = "radio"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Radio with custom colors")
     }
 }

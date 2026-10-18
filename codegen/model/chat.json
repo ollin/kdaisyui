@@ -66,5 +66,8 @@
       "parameters": [{ "kind": "enum", "name": "color", "enum": "ChatBubbleColor", "doc": "Color variant" }]
     }
   ],
-  "summary": { "summary": "Chat bubble layout for conversations" }
+  "summary": { "summary": "Chat bubble layout for conversations" },
+  "notExpressed": {
+    "avatar chat-image": "Two components on one element, daisyAvatar and daisyChatImage; one call renders one function. Call one and pass the other's classes through extraClasses."
+  }
 }

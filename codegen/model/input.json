@@ -69,5 +69,8 @@
       "joinItem": true
     }
   ],
-  "summary": { "summary": "Text entry fields" }
+  "summary": { "summary": "Text entry fields" },
+  "notExpressed": {
+    "input validator": "Two components on one element, daisyInput and daisyValidator; one call renders one function. Call one and pass the other's classes through extraClasses."
+  }
 }

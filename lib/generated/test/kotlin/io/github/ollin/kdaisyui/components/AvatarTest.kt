@@ -19,62 +19,40 @@ class AvatarTest {
     }
 
     @Test
-    fun avatar_in_custom_sizes() {
+    fun avatar_with_mask_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
+            daisyMask(style = MaskStyle.Heart) {
             }
         }
-        val expectedClasses = "avatar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar in custom sizes")
-    }
-
-    @Test
-    fun avatar_rounded() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
-            }
-        }
-        val expectedClasses = "avatar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar rounded")
-    }
-
-    @Test
-    fun avatar_with_mask() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
-            }
-        }
-        val expectedClasses = "avatar"
+        val expectedClasses = "mask mask-heart"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar with mask")
     }
 
     @Test
-    fun avatar_group() {
+    fun avatar_with_mask_daisyMask_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
+            daisyMask(style = MaskStyle.Squircle) {
             }
         }
-        val expectedClasses = "avatar"
+        val expectedClasses = "mask mask-squircle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar group")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar with mask")
+    }
+
+    @Test
+    fun avatar_with_mask_daisyMask_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMask(style = MaskStyle.Hexagon2) {
+            }
+        }
+        val expectedClasses = "mask mask-hexagon-2"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar with mask")
     }
 
     @Test
     fun avatar_group_with_counter() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
-            }
-        }
-        val expectedClasses = "avatar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar group with counter")
-    }
-
-    @Test
-    fun avatar_group_with_counter_2() {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatar(placeholder = true) {
             }
@@ -82,17 +60,6 @@ class AvatarTest {
         val expectedClasses = "avatar avatar-placeholder"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar group with counter")
-    }
-
-    @Test
-    fun avatar_with_ring() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
-            }
-        }
-        val expectedClasses = "avatar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar with ring")
     }
 
     @Test
@@ -119,17 +86,6 @@ class AvatarTest {
 
     @Test
     fun avatar_placeholder() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(placeholder = true) {
-            }
-        }
-        val expectedClasses = "avatar avatar-placeholder"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Avatar placeholder")
-    }
-
-    @Test
-    fun avatar_placeholder_2() {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatar(presence = AvatarPresence.Online, placeholder = true) {
             }

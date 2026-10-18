@@ -19,36 +19,69 @@ class StatTest {
     }
 
     @Test
-    fun stat_with_icons_or_image() {
+    fun stat_daisyStat() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats() {
+            daisyStat() {
             }
         }
-        val expectedClasses = "stats"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat with icons or image")
-    }
-
-    @Test
-    fun stat_2() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStats() {
-            }
-        }
-        val expectedClasses = "stats"
+        val expectedClasses = "stat"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
     }
 
     @Test
-    fun centered_items() {
+    fun stat_daisyStatTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats() {
+            daisyStatTitle() {
             }
         }
-        val expectedClasses = "stats"
+        val expectedClasses = "stat-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered items")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+    }
+
+    @Test
+    fun stat_daisyStatValue() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatValue() {
+            }
+        }
+        val expectedClasses = "stat-value"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+    }
+
+    @Test
+    fun stat_daisyStatDesc() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatDesc() {
+            }
+        }
+        val expectedClasses = "stat-desc"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+    }
+
+    @Test
+    fun stat_with_icons_or_image_daisyStatFigure() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatFigure() {
+            }
+        }
+        val expectedClasses = "stat-figure"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat with icons or image")
+    }
+
+    @Test
+    fun stat_with_icons_or_image_daisyAvatar() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatar(presence = AvatarPresence.Online) {
+            }
+        }
+        val expectedClasses = "avatar avatar-online"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat with icons or image")
     }
 
     @Test
@@ -74,12 +107,34 @@ class StatTest {
     }
 
     @Test
-    fun with_custom_colors_and_button() {
+    fun with_custom_colors_and_button_daisyStatActions() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats() {
+            daisyStatActions() {
             }
         }
-        val expectedClasses = "stats"
+        val expectedClasses = "stat-actions"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+    }
+
+    @Test
+    fun with_custom_colors_and_button_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(size = ButtonSize.Xs, color = ButtonColor.Success) {
+            }
+        }
+        val expectedClasses = "btn btn-success btn-xs"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+    }
+
+    @Test
+    fun with_custom_colors_and_button_daisyButton_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(size = ButtonSize.Xs) {
+            }
+        }
+        val expectedClasses = "btn btn-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
     }

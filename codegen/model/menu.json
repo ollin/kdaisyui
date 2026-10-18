@@ -52,5 +52,11 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Navigation lists with submenus" }
+  "summary": { "summary": "Navigation lists with submenus" },
+  "notExpressed": {
+    "menu-active": "#347: DaisyUI puts it on a child no function renders; daisyMenu offers it on the <ul> itself, where it has no effect.",
+    "menu-disabled": "#347: DaisyUI puts it on a child no function renders; daisyMenu offers it on the <ul> itself, where it has no effect.",
+    "menu-dropdown menu-dropdown-show": "#347: DaisyUI puts menu-dropdown-show on this element, which daisyMenuDropdown renders without offering it; daisyMenu offers it on the <ul> instead, where it has no effect.",
+    "menu-dropdown-show menu-dropdown-toggle": "#347: DaisyUI puts menu-dropdown-show on this element, which daisyMenuDropdownToggle renders without offering it; daisyMenu offers it on the <ul> instead, where it has no effect."
+  }
 }

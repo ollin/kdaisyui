@@ -21,10 +21,10 @@ class ProgressTest {
     @Test
     fun primary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Primary) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
     }
@@ -32,10 +32,10 @@ class ProgressTest {
     @Test
     fun secondary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Secondary) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
     }
@@ -43,10 +43,10 @@ class ProgressTest {
     @Test
     fun accent_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Accent) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
     }
@@ -54,10 +54,10 @@ class ProgressTest {
     @Test
     fun neutral_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Neutral) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
     }
@@ -65,10 +65,10 @@ class ProgressTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Info) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
     }
@@ -76,10 +76,10 @@ class ProgressTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Success) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
     }
@@ -87,10 +87,10 @@ class ProgressTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Warning) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
     }
@@ -98,22 +98,11 @@ class ProgressTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
+            daisyProgress(color = ProgressColor.Error) {
             }
         }
-        val expectedClasses = "progress"
+        val expectedClasses = "progress progress-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
-    }
-
-    @Test
-    fun indeterminate_without_value() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
-            }
-        }
-        val expectedClasses = "progress"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Indeterminate (without value)")
     }
 }

@@ -19,13 +19,24 @@ class MockupPhoneTest {
     }
 
     @Test
-    fun with_color_and_wallpaper() {
+    fun iphone_mockup_daisyMockupPhoneCamera() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupPhone() {
+            daisyMockupPhoneCamera() {
             }
         }
-        val expectedClasses = "mockup-phone"
+        val expectedClasses = "mockup-phone-camera"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With color and wallpaper")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
+    }
+
+    @Test
+    fun iphone_mockup_daisyMockupPhoneDisplay() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupPhoneDisplay() {
+            }
+        }
+        val expectedClasses = "mockup-phone-display"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
     }
 }

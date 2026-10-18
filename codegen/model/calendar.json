@@ -19,5 +19,6 @@
   "notOffered": {
     "react-day-picker": "Styles the react-day-picker library, which this library does not wrap.",
     "vc": "Styles the Vanilla Calendar Pro library, which this library does not wrap."
-  }
+  },
+  "notExpressed": { "vc": "A class of the calendar library DaisyUI styles, not of a component (#343)." }
 }

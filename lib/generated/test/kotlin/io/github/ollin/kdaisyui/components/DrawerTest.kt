@@ -19,12 +19,78 @@ class DrawerTest {
     }
 
     @Test
-    fun navbar_menu_for_desktop_sidebar_drawer_for_mobile() {
+    fun drawer_sidebar_daisyDrawerToggle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawer() {
+            daisyDrawerToggle() {
             }
         }
-        val expectedClasses = "drawer"
+        val expectedClasses = "drawer-toggle"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+    }
+
+    @Test
+    fun drawer_sidebar_daisyDrawerContent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDrawerContent() {
+            }
+        }
+        val expectedClasses = "drawer-content"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+    }
+
+    @Test
+    fun drawer_sidebar_daisyDrawerSide() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDrawerSide() {
+            }
+        }
+        val expectedClasses = "drawer-side"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+    }
+
+    @Test
+    fun drawer_sidebar_daisyDrawerOverlay() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDrawerOverlay() {
+            }
+        }
+        val expectedClasses = "drawer-overlay"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+    }
+
+    @Test
+    fun drawer_sidebar_daisyMenu() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenu() {
+            }
+        }
+        val expectedClasses = "menu"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+    }
+
+    @Test
+    fun navbar_menu_for_desktop_sidebar_drawer_for_mobile_daisyNavbar() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbar() {
+            }
+        }
+        val expectedClasses = "navbar"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+    }
+
+    @Test
+    fun navbar_menu_for_desktop_sidebar_drawer_for_mobile_daisyMenu() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenu(direction = MenuDirection.Horizontal) {
+            }
+        }
+        val expectedClasses = "menu menu-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
     }
@@ -38,17 +104,6 @@ class DrawerTest {
         val expectedClasses = "drawer lg:drawer-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
-    }
-
-    @Test
-    fun responsive_collapsible_icon_only_drawer_sidebar_using_is_drawer_close_and_is_drawer_open() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDrawer(extraClasses = "lg:drawer-open") {
-            }
-        }
-        val expectedClasses = "drawer lg:drawer-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive collapsible Icon-only drawer sidebar. Using is-drawer-close and is-drawer-open")
     }
 
     @Test

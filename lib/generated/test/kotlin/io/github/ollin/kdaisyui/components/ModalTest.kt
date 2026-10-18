@@ -9,6 +9,17 @@ import kotlin.test.assertTrue
 class ModalTest {
 
     @Test
+    fun dialog_modal_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton() {
+            }
+        }
+        val expectedClasses = "btn"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
+    }
+
+    @Test
     fun dialog_modal() {
         val html = createHTML(prettyPrint = false).div {
             daisyModal() {
@@ -20,36 +31,47 @@ class ModalTest {
     }
 
     @Test
-    fun dialog_modal_closes_when_clicked_outside() {
+    fun dialog_modal_daisyModalBox() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
+            daisyModalBox() {
             }
         }
-        val expectedClasses = "modal"
+        val expectedClasses = "modal-box"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
+    }
+
+    @Test
+    fun dialog_modal_daisyModalAction() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModalAction() {
+            }
+        }
+        val expectedClasses = "modal-action"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
+    }
+
+    @Test
+    fun dialog_modal_closes_when_clicked_outside_daisyModalBackdrop() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModalBackdrop() {
+            }
+        }
+        val expectedClasses = "modal-backdrop"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal, closes when clicked outside")
     }
 
     @Test
-    fun dialog_modal_with_a_close_button_at_corner() {
+    fun dialog_modal_with_a_close_button_at_corner_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
+            daisyButton(size = ButtonSize.Sm, shape = ButtonShape.Circle, style = ButtonStyle.Ghost) {
             }
         }
-        val expectedClasses = "modal"
+        val expectedClasses = "btn btn-circle btn-ghost btn-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal with a close button at corner")
-    }
-
-    @Test
-    fun dialog_modal_with_custom_width() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
-            }
-        }
-        val expectedClasses = "modal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal with custom width")
     }
 
     @Test
@@ -64,58 +86,14 @@ class ModalTest {
     }
 
     @Test
-    fun popover_modal() {
+    fun modal_using_checkbox_daisyModalToggle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
+            daisyModalToggle() {
             }
         }
-        val expectedClasses = "modal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Popover modal")
-    }
-
-    @Test
-    fun popover_modal_closes_when_clicked_outside() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
-            }
-        }
-        val expectedClasses = "modal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Popover modal closes when clicked outside")
-    }
-
-    @Test
-    fun modal_using_checkbox() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
-            }
-        }
-        val expectedClasses = "modal"
+        val expectedClasses = "modal-toggle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Modal using checkbox")
-    }
-
-    @Test
-    fun modal_that_closes_when_clicked_outside() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
-            }
-        }
-        val expectedClasses = "modal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Modal that closes when clicked outside")
-    }
-
-    @Test
-    fun modal_using_anchor_link() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
-            }
-        }
-        val expectedClasses = "modal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Modal using anchor link")
     }
 
     @Test

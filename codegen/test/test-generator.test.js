@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { parseTestCases, buildClassMappings, parseScopeBuilder, parseScopeMembers } from '../src/test-generator.ts'
+import { parseTestCases, parseScopeBuilder, parseScopeMembers } from '../src/test-generator.ts'
 
 // Characterization tests: they pin what `parseTestCases` does TODAY, so section 2 can
 // restructure it and know immediately whether anything moved. They were green on the
@@ -87,67 +87,6 @@ describe('parseTestCases', () => {
     // test asserting nothing at all.
     assert.deepEqual(cases, [{ name: 'First', html: '<i>1</i>\n### ~Second' }])
   })
-})
-
-// Characterization tests for the target of task 2.3 (cc 11, nesting depth 4). Same rules as
-// above: they record what the function does, not what it ought to do.
-
-const frontmatter = (classnames) => ({ classnames })
-
-describe('buildClassMappings', () => {
-  test('takes the component class from the first component entry', () => {
-    const { componentClass } = buildClassMappings(
-      frontmatter({ component: [{ class: 'btn' }, { class: 'ignored' }] }),
-    )
-
-    assert.equal(componentClass, 'btn')
-  })
-
-  test('allows the component class and every category class', () => {
-    const { allowedClasses } = buildClassMappings(
-      frontmatter({
-        component: [{ class: 'btn' }],
-        placement: [{ class: 'btn-top' }],
-        modifier: [{ class: 'btn-outline' }],
-        direction: [{ class: 'btn-end' }],
-        behavior: [{ class: 'btn-active' }],
-        style: [{ class: 'btn-ghost' }],
-      }),
-    )
-
-    assert.deepEqual(
-      [...allowedClasses].sort(),
-      ['btn', 'btn-active', 'btn-end', 'btn-ghost', 'btn-outline', 'btn-top'],
-    )
-  })
-
-  test('allows a class that does not carry the component prefix', () => {
-    const { allowedClasses } = buildClassMappings(
-      frontmatter({ component: [{ class: 'btn' }], style: [{ class: 'glass' }] }),
-    )
-
-    assert.deepEqual([...allowedClasses].sort(), ['btn', 'glass'])
-  })
-
-  test('tolerates a document with no classnames at all', () => {
-    const result = buildClassMappings({})
-
-    assert.equal(result.componentClass, undefined)
-    assert.deepEqual([...result.allowedClasses], [])
-  })
-
-  test('skips a category that is not an array, and an item with no class', () => {
-    const { allowedClasses } = buildClassMappings(
-      frontmatter({
-        component: [{ class: 'btn' }],
-        modifier: 'not-an-array',
-        style: [{ notAClass: 'x' }, { class: 'btn-ghost' }],
-      }),
-    )
-
-    assert.deepEqual([...allowedClasses].sort(), ['btn', 'btn-ghost'])
-  })
-
 })
 
 describe('the builder a scoped function opens', () => {

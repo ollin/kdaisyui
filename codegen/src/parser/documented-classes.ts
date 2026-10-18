@@ -111,6 +111,18 @@ export function documentedElementClasses(
   ).map((element: TaggedNode) => parsedClassesOf(element))
 }
 
+/** One element of a documented example that carries at least one daisyUI class. */
+export interface MarkedElement {
+  readonly tag: string
+  readonly classes: readonly DocumentedClass[]
+}
+
+/** Every element of the markup that carries a `$$` class, in document order. */
+export function markedElements(html: string): MarkedElement[] {
+  return DomUtils.findAll((node: TaggedNode) => classTokensOf(node).some(token => DocumentedClass.parse(token) !== null), parseDocument(html).children)
+    .map((element: TaggedNode & { name: string }) => ({ tag: element.name, classes: parsedClassesOf(element) }))
+}
+
 function parsedClassesOf(element: TaggedNode): DocumentedClass[] {
   return classTokensOf(element)
     .map(token => DocumentedClass.parse(token))

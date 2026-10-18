@@ -19,13 +19,24 @@ class MockupBrowserTest {
     }
 
     @Test
-    fun browser_mockup_with_background_color() {
+    fun browser_mockup_with_border_daisyMockupBrowserToolbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupBrowser() {
+            daisyMockupBrowserToolbar() {
             }
         }
-        val expectedClasses = "mockup-browser"
+        val expectedClasses = "mockup-browser-toolbar"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with background color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
+    }
+
+    @Test
+    fun browser_mockup_with_border_daisyInput() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInput() {
+            }
+        }
+        val expectedClasses = "input"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
     }
 }

@@ -24,5 +24,8 @@
       ]
     }
   ],
-  "summary": { "summary": "Star rating input" }
+  "summary": { "summary": "Star rating input" },
+  "notExpressed": {
+    "rating-hidden": "#347: DaisyUI puts it on a child no function renders; daisyRating offers it on the <div> itself, where it has no effect."
+  }
 }

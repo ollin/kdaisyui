@@ -19,14 +19,25 @@ class SwapTest {
     }
 
     @Test
-    fun swap_volume_icons() {
+    fun swap_text_daisySwapOn() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap() {
+            daisySwapOn() {
             }
         }
-        val expectedClasses = "swap"
+        val expectedClasses = "swap-on"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap volume icons")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
+    }
+
+    @Test
+    fun swap_text_daisySwapOff() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapOff() {
+            }
+        }
+        val expectedClasses = "swap-off"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
     }
 
     @Test
@@ -38,17 +49,6 @@ class SwapTest {
         val expectedClasses = "swap swap-rotate"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap icons with rotate effect")
-    }
-
-    @Test
-    fun hamburger_button() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwap(style = SwapStyle.Rotate) {
-            }
-        }
-        val expectedClasses = "swap swap-rotate"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hamburger button")
     }
 
     @Test
@@ -64,17 +64,6 @@ class SwapTest {
 
     @Test
     fun activate_using_class_name_instead_of_checkbox() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwap() {
-            }
-        }
-        val expectedClasses = "swap"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Activate using class name instead of checkbox")
-    }
-
-    @Test
-    fun activate_using_class_name_instead_of_checkbox_2() {
         val html = createHTML(prettyPrint = false).div {
             daisySwap(active = true) {
             }

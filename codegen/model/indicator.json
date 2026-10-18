@@ -47,5 +47,11 @@
       ]
     }
   ],
-  "summary": { "summary": "Overlays badges on elements" }
+  "summary": { "summary": "Overlays badges on elements" },
+  "notExpressed": {
+    "avatar indicator": "Two components on one element, daisyAvatar and daisyIndicator; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "badge indicator-item": "Two components on one element, daisyBadge and daisyIndicatorItem; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "indicator tab": "Two components on one element, daisyIndicator and daisyTab; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "indicator-item status": "Two components on one element, daisyIndicatorItem and daisyStatus; one call renders one function. Call one and pass the other's classes through extraClasses."
+  }
 }

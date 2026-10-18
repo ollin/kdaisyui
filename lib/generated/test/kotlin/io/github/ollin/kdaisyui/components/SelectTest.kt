@@ -4,6 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.fieldSet
 
 class SelectTest {
 
@@ -30,12 +31,34 @@ class SelectTest {
     }
 
     @Test
-    fun with_fieldset_and_labels() {
+    fun with_fieldset_and_labels_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisyFieldset() {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "fieldset"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and labels")
+    }
+
+    @Test
+    fun with_fieldset_and_labels_daisyFieldsetLegend() {
+        val html = createHTML(prettyPrint = false).fieldSet {
+            daisyFieldsetLegend() {
+            }
+        }
+        val expectedClasses = "fieldset-legend"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and labels")
+    }
+
+    @Test
+    fun with_fieldset_and_labels_daisyLabel() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabel() {
+            }
+        }
+        val expectedClasses = "label"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and labels")
     }
@@ -43,10 +66,10 @@ class SelectTest {
     @Test
     fun primary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Primary) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
     }
@@ -54,10 +77,10 @@ class SelectTest {
     @Test
     fun secondary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Secondary) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
     }
@@ -65,10 +88,10 @@ class SelectTest {
     @Test
     fun accent_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Accent) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
     }
@@ -76,10 +99,10 @@ class SelectTest {
     @Test
     fun neutral_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Neutral) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
     }
@@ -87,10 +110,10 @@ class SelectTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Info) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
     }
@@ -98,10 +121,10 @@ class SelectTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Success) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
     }
@@ -109,10 +132,10 @@ class SelectTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Warning) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
     }
@@ -120,10 +143,10 @@ class SelectTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(color = SelectColor.Error) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
     }
@@ -131,44 +154,55 @@ class SelectTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(size = SelectSize.Xs) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
     }
 
     @Test
-    fun disabled() {
+    fun sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(size = SelectSize.Sm) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Disabled")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
     }
 
     @Test
-    fun using_os_native_style_for_the_options_dropdown() {
+    fun sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(size = SelectSize.Md) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Using OS native style for the options dropdown")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
     }
 
     @Test
-    fun select_with_custom_dropdown_height() {
+    fun sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
+            daisySelect(size = SelectSize.Lg) {
             }
         }
-        val expectedClasses = "select"
+        val expectedClasses = "select select-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Select with custom dropdown height")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+    }
+
+    @Test
+    fun sizes_5() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelect(size = SelectSize.Xl) {
+            }
+        }
+        val expectedClasses = "select select-xl"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
     }
 }

@@ -343,7 +343,20 @@ export function getAllComponentDirs(): ComponentName[] {
 }
 
 export function readComponentFrontmatter(componentName: ComponentName): FrontmatterData | null {
+  const page = readComponentPage(componentName)
+  return page === null ? null : parseFrontmatter(page)
+}
+
+/** A component's whole `+page.md`, frontmatter and examples, or null where it has none. */
+export function readComponentPage(componentName: ComponentName): string | null {
   const filePath = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(filePath)) return null
-  return parseFrontmatter(fs.readFileSync(filePath, 'utf8'))
+  return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : null
+}
+
+/** Every class some component's frontmatter declares, in any category: what a gap is judged by. */
+export function everyDeclaredClass(componentDirs: readonly ComponentName[]): Set<string> {
+  return new Set(componentDirs.flatMap(dir => {
+    const classnames = readComponentFrontmatter(dir)?.classnames
+    return (Object.keys(classnames ?? {}) as ClassCategory[]).flatMap(category => getClassesByCategory(classnames, category))
+  }))
 }

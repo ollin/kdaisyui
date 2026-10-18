@@ -19,24 +19,24 @@ class Hover3dTest {
     }
 
     @Test
-    fun test_3d_card_hover_effect() {
+    fun test_3d_card_hover_effect_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHover3d() {
+            daisyCard() {
             }
         }
-        val expectedClasses = "hover-3d"
+        val expectedClasses = "card"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for 3D card hover effect")
     }
 
     @Test
-    fun test_3d_hover_effect_for_image_gallery() {
+    fun test_3d_card_hover_effect_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHover3d() {
+            daisyCardBody() {
             }
         }
-        val expectedClasses = "hover-3d"
+        val expectedClasses = "card-body"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for 3D hover effect for image gallery")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for 3D card hover effect")
     }
 }

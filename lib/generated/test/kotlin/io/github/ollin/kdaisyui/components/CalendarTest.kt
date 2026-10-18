@@ -19,12 +19,23 @@ class CalendarTest {
     }
 
     @Test
-    fun cally_date_picker_example() {
+    fun cally_date_picker_example_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCalendar() {
+            daisyInput() {
             }
         }
-        val expectedClasses = "cally"
+        val expectedClasses = "input"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally date picker example")
+    }
+
+    @Test
+    fun cally_date_picker_example_daisyDropdown() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdown() {
+            }
+        }
+        val expectedClasses = "dropdown"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally date picker example")
     }

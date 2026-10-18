@@ -54,7 +54,9 @@ const TAG_BUILDER_EXCEPTIONS: Record<string, string> = {
  * Elements kotlinx.html has no class for, which the library defines in core: the tag class, its
  * builder, and the element's HTML name. A web component DaisyUI styles is the reason to add one.
  */
-const LIBRARY_ELEMENTS: Readonly<Record<string, { readonly builder: string, readonly html: string }>> = {}
+const LIBRARY_ELEMENTS: Readonly<Record<string, { readonly builder: string, readonly html: string }>> = {
+  CALENDAR_DATE: { builder: 'calendarDate', html: 'calendar-date' },
+}
 
 /** The HTML elements kotlinx.html 0.12.0 builds, by their HTML name: the standard set. */
 const KOTLINX_HTML_ELEMENTS: ReadonlySet<string> = new Set(`

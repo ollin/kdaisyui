@@ -73,7 +73,7 @@ Built before block 3 deletes the cross-check, because it is what replaces it on 
 - [x] 2.1 `. r (internal)` Read a component page from a DaisyUI tag through `git show`, without a
   checkout. Test against a fixture repository with two tags.
 - [x] 2.2 `^ F (internal)` Report classes added and removed per component between two tags.
-- [ ] 2.3 `^ F (internal)` Report per class the set of documented elements, where it changed.
+- [x] 2.3 `^ F (internal)` Report per class the set of documented elements, where it changed.
 - [ ] 2.4 `^ F (internal)` Report the `join-item` companion set and components added or removed.
 - [ ] 2.5 `. F (internal)` `just daisyui-delta <old> <new>`, exit code 0 whatever it finds.
 - [ ] 2.6 `. d` **Positive control:** run it for `v5.7.17` to `v5.7.42`. It must name

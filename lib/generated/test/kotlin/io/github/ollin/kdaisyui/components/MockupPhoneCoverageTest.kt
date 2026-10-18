@@ -49,6 +49,22 @@ class MockupPhoneCoverageTest {
     }
 
     @Test
+    fun mockupPhoneClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupPhoneClasses()
+        }
+        assertRendered(html, "mockup-phone", "MockupPhoneClasses defaults")
+    }
+
+    @Test
+    fun mockupPhoneClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupPhoneClasses()
+        }
+        assertRendered(html, "mockup-phone", "MockupPhoneClasses all flags")
+    }
+
+    @Test
     fun mockupPhoneCamera_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneCamera(
@@ -73,6 +89,22 @@ class MockupPhoneCoverageTest {
     }
 
     @Test
+    fun mockupPhoneCameraClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupPhoneCameraClasses()
+        }
+        assertRendered(html, "mockup-phone-camera", "MockupPhoneCameraClasses defaults")
+    }
+
+    @Test
+    fun mockupPhoneCameraClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupPhoneCameraClasses()
+        }
+        assertRendered(html, "mockup-phone-camera", "MockupPhoneCameraClasses all flags")
+    }
+
+    @Test
     fun mockupPhoneDisplay_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneDisplay(
@@ -94,5 +126,21 @@ class MockupPhoneCoverageTest {
         }
         assertRendered(html, "mockup-phone-display zz-extra", "MockupPhoneDisplay all flags", closes = "</div></div>")
         assertCommonFlags(html, "MockupPhoneDisplay")
+    }
+
+    @Test
+    fun mockupPhoneDisplayClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupPhoneDisplayClasses()
+        }
+        assertRendered(html, "mockup-phone-display", "MockupPhoneDisplayClasses defaults")
+    }
+
+    @Test
+    fun mockupPhoneDisplayClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupPhoneDisplayClasses()
+        }
+        assertRendered(html, "mockup-phone-display", "MockupPhoneDisplayClasses all flags")
     }
 }

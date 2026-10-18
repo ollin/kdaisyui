@@ -11,6 +11,7 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.role
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `status-`) */
 enum class StatusColor(internal val className: String) : ClassValues<StatusColor> {
@@ -80,4 +81,14 @@ fun FlowContent.daisyStatus(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyStatus` writes, on the element this is called on. */
+fun Tag.daisyStatusClasses(
+    color: ClassValues<StatusColor>? = null,
+    size: ClassValues<StatusSize>? = null,
+) {
+    addClassNames("status")
+    addClassNames(color)
+    addClassNames(size)
 }

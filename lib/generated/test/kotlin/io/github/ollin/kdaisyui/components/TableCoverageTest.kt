@@ -105,4 +105,74 @@ class TableCoverageTest {
         }
         assertRendered(html, "table table-xl", "Table size Xl")
     }
+
+    @Test
+    fun tableClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTableClasses()
+        }
+        assertRendered(html, "table", "TableClasses defaults")
+    }
+
+    @Test
+    fun tableClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTableClasses(
+                pinCols = true,
+                pinRows = true,
+                zebra = true,
+            )
+        }
+        assertRendered(html, "table table-pin-cols table-pin-rows table-zebra", "TableClasses all flags")
+    }
+
+    @Test
+    fun tableClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTableClasses(
+                size = TableSize.Xs,
+            )
+        }
+        assertRendered(html, "table table-xs", "TableClasses size Xs")
+    }
+
+    @Test
+    fun tableClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTableClasses(
+                size = TableSize.Sm,
+            )
+        }
+        assertRendered(html, "table table-sm", "TableClasses size Sm")
+    }
+
+    @Test
+    fun tableClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTableClasses(
+                size = TableSize.Md,
+            )
+        }
+        assertRendered(html, "table table-md", "TableClasses size Md")
+    }
+
+    @Test
+    fun tableClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTableClasses(
+                size = TableSize.Lg,
+            )
+        }
+        assertRendered(html, "table table-lg", "TableClasses size Lg")
+    }
+
+    @Test
+    fun tableClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTableClasses(
+                size = TableSize.Xl,
+            )
+        }
+        assertRendered(html, "table table-xl", "TableClasses size Xl")
+    }
 }

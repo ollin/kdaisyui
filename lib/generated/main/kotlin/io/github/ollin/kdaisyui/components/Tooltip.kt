@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `tooltip-`) */
 enum class TooltipColor(internal val className: String) : ClassValues<TooltipColor> {
@@ -95,6 +96,20 @@ fun FlowContent.daisyTooltip(
     }
 }
 
+/** The classes `daisyTooltip` writes, on the element this is called on. */
+fun Tag.daisyTooltipClasses(
+    color: ClassValues<TooltipColor>? = null,
+    side: ClassValues<TooltipSide>? = null,
+    align: ClassValues<TooltipAlign>? = null,
+    open: Boolean = false,
+) {
+    addClassNames("tooltip")
+    addClassNames(color)
+    addClassNames(side)
+    addClassNames(align)
+    if (open) addClassNames("tooltip-open")
+}
+
 /** Renders `<div class="tooltip-content ...">`. */
 fun FlowContent.daisyTooltipContent(
     id: HtmlId? = null,
@@ -109,4 +124,9 @@ fun FlowContent.daisyTooltipContent(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTooltipContent` writes, on the element this is called on. */
+fun Tag.daisyTooltipContentClasses() {
+    addClassNames("tooltip-content")
 }

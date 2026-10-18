@@ -14,6 +14,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.SELECT
+import kotlinx.html.Tag
 import kotlinx.html.TagConsumer
 import kotlinx.html.visit
 
@@ -52,6 +53,14 @@ fun FlowContent.daisyJoin(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyJoin` writes, on the element this is called on. */
+fun Tag.daisyJoinClasses(
+    direction: ClassValues<JoinDirection>? = null,
+) {
+    addClassNames("join")
+    addClassNames(direction)
 }
 
 /**

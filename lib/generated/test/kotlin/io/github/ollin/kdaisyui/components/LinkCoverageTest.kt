@@ -137,4 +137,102 @@ class LinkCoverageTest {
         assertRendered(html, "link", "Link text")
         assertTrue(html.contains("txtmark"), "Link text content")
     }
+
+    @Test
+    fun linkClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses()
+        }
+        assertRendered(html, "link", "LinkClasses defaults")
+    }
+
+    @Test
+    fun linkClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                hover = true,
+            )
+        }
+        assertRendered(html, "link link-hover", "LinkClasses all flags")
+    }
+
+    @Test
+    fun linkClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Neutral,
+            )
+        }
+        assertRendered(html, "link link-neutral", "LinkClasses color Neutral")
+    }
+
+    @Test
+    fun linkClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Primary,
+            )
+        }
+        assertRendered(html, "link link-primary", "LinkClasses color Primary")
+    }
+
+    @Test
+    fun linkClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Secondary,
+            )
+        }
+        assertRendered(html, "link link-secondary", "LinkClasses color Secondary")
+    }
+
+    @Test
+    fun linkClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Accent,
+            )
+        }
+        assertRendered(html, "link link-accent", "LinkClasses color Accent")
+    }
+
+    @Test
+    fun linkClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Success,
+            )
+        }
+        assertRendered(html, "link link-success", "LinkClasses color Success")
+    }
+
+    @Test
+    fun linkClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Info,
+            )
+        }
+        assertRendered(html, "link link-info", "LinkClasses color Info")
+    }
+
+    @Test
+    fun linkClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Warning,
+            )
+        }
+        assertRendered(html, "link link-warning", "LinkClasses color Warning")
+    }
+
+    @Test
+    fun linkClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLinkClasses(
+                color = LinkColor.Error,
+            )
+        }
+        assertRendered(html, "link link-error", "LinkClasses color Error")
+    }
 }

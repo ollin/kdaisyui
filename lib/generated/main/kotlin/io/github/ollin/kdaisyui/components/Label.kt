@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /**
  * Label is used to provide a name or title for an input field. Label can be placed before or after the field. Renders `<span class="label ...">`.
@@ -35,4 +36,9 @@ fun FlowContent.daisyLabel(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyLabel` writes, on the element this is called on. */
+fun Tag.daisyLabelClasses() {
+    addClassNames("label")
 }

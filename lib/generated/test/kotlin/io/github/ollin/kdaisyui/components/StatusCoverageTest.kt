@@ -192,4 +192,150 @@ class StatusCoverageTest {
         }
         assertRendered(html, "status status-xl", "Status size Xl")
     }
+
+    @Test
+    fun statusClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses()
+        }
+        assertRendered(html, "status", "StatusClasses defaults")
+    }
+
+    @Test
+    fun statusClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses()
+        }
+        assertRendered(html, "status", "StatusClasses all flags")
+    }
+
+    @Test
+    fun statusClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Neutral,
+            )
+        }
+        assertRendered(html, "status status-neutral", "StatusClasses color Neutral")
+    }
+
+    @Test
+    fun statusClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Primary,
+            )
+        }
+        assertRendered(html, "status status-primary", "StatusClasses color Primary")
+    }
+
+    @Test
+    fun statusClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Secondary,
+            )
+        }
+        assertRendered(html, "status status-secondary", "StatusClasses color Secondary")
+    }
+
+    @Test
+    fun statusClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Accent,
+            )
+        }
+        assertRendered(html, "status status-accent", "StatusClasses color Accent")
+    }
+
+    @Test
+    fun statusClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Info,
+            )
+        }
+        assertRendered(html, "status status-info", "StatusClasses color Info")
+    }
+
+    @Test
+    fun statusClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Success,
+            )
+        }
+        assertRendered(html, "status status-success", "StatusClasses color Success")
+    }
+
+    @Test
+    fun statusClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Warning,
+            )
+        }
+        assertRendered(html, "status status-warning", "StatusClasses color Warning")
+    }
+
+    @Test
+    fun statusClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                color = StatusColor.Error,
+            )
+        }
+        assertRendered(html, "status status-error", "StatusClasses color Error")
+    }
+
+    @Test
+    fun statusClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                size = StatusSize.Xs,
+            )
+        }
+        assertRendered(html, "status status-xs", "StatusClasses size Xs")
+    }
+
+    @Test
+    fun statusClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                size = StatusSize.Sm,
+            )
+        }
+        assertRendered(html, "status status-sm", "StatusClasses size Sm")
+    }
+
+    @Test
+    fun statusClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                size = StatusSize.Md,
+            )
+        }
+        assertRendered(html, "status status-md", "StatusClasses size Md")
+    }
+
+    @Test
+    fun statusClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                size = StatusSize.Lg,
+            )
+        }
+        assertRendered(html, "status status-lg", "StatusClasses size Lg")
+    }
+
+    @Test
+    fun statusClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStatusClasses(
+                size = StatusSize.Xl,
+            )
+        }
+        assertRendered(html, "status status-xl", "StatusClasses size Xl")
+    }
 }

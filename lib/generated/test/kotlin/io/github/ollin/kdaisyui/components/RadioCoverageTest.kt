@@ -183,4 +183,150 @@ class RadioCoverageTest {
         }
         assertRendered(html, "radio radio-xl", "Radio size Xl")
     }
+
+    @Test
+    fun radioClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses()
+        }
+        assertRendered(html, "radio", "RadioClasses defaults")
+    }
+
+    @Test
+    fun radioClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses()
+        }
+        assertRendered(html, "radio", "RadioClasses all flags")
+    }
+
+    @Test
+    fun radioClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Neutral,
+            )
+        }
+        assertRendered(html, "radio radio-neutral", "RadioClasses color Neutral")
+    }
+
+    @Test
+    fun radioClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Primary,
+            )
+        }
+        assertRendered(html, "radio radio-primary", "RadioClasses color Primary")
+    }
+
+    @Test
+    fun radioClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Secondary,
+            )
+        }
+        assertRendered(html, "radio radio-secondary", "RadioClasses color Secondary")
+    }
+
+    @Test
+    fun radioClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Accent,
+            )
+        }
+        assertRendered(html, "radio radio-accent", "RadioClasses color Accent")
+    }
+
+    @Test
+    fun radioClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Success,
+            )
+        }
+        assertRendered(html, "radio radio-success", "RadioClasses color Success")
+    }
+
+    @Test
+    fun radioClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Warning,
+            )
+        }
+        assertRendered(html, "radio radio-warning", "RadioClasses color Warning")
+    }
+
+    @Test
+    fun radioClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Info,
+            )
+        }
+        assertRendered(html, "radio radio-info", "RadioClasses color Info")
+    }
+
+    @Test
+    fun radioClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                color = RadioColor.Error,
+            )
+        }
+        assertRendered(html, "radio radio-error", "RadioClasses color Error")
+    }
+
+    @Test
+    fun radioClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                size = RadioSize.Xs,
+            )
+        }
+        assertRendered(html, "radio radio-xs", "RadioClasses size Xs")
+    }
+
+    @Test
+    fun radioClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                size = RadioSize.Sm,
+            )
+        }
+        assertRendered(html, "radio radio-sm", "RadioClasses size Sm")
+    }
+
+    @Test
+    fun radioClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                size = RadioSize.Md,
+            )
+        }
+        assertRendered(html, "radio radio-md", "RadioClasses size Md")
+    }
+
+    @Test
+    fun radioClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                size = RadioSize.Lg,
+            )
+        }
+        assertRendered(html, "radio radio-lg", "RadioClasses size Lg")
+    }
+
+    @Test
+    fun radioClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadioClasses(
+                size = RadioSize.Xl,
+            )
+        }
+        assertRendered(html, "radio radio-xl", "RadioClasses size Xl")
+    }
 }

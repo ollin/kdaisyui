@@ -11,6 +11,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /**
  * Skeleton is a component that can be used to show a loading state of a component. Renders `<div class="skeleton ...">`.
@@ -34,6 +35,11 @@ fun FlowContent.daisySkeleton(
     }
 }
 
+/** The classes `daisySkeleton` writes, on the element this is called on. */
+fun Tag.daisySkeletonClasses() {
+    addClassNames("skeleton")
+}
+
 /** Renders `<span class="skeleton skeleton-text ...">`. */
 fun FlowContent.daisySkeletonText(
     id: HtmlId? = null,
@@ -49,4 +55,10 @@ fun FlowContent.daisySkeletonText(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisySkeletonText` writes, on the element this is called on. */
+fun Tag.daisySkeletonTextClasses() {
+    addClassNames("skeleton")
+    addClassNames("skeleton-text")
 }

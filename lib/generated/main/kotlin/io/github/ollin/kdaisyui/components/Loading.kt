@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `loading-`) */
 enum class LoadingSize(internal val className: String) : ClassValues<LoadingSize> {
@@ -74,4 +75,14 @@ fun FlowContent.daisyLoading(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyLoading` writes, on the element this is called on. */
+fun Tag.daisyLoadingClasses(
+    size: ClassValues<LoadingSize>? = null,
+    style: ClassValues<LoadingStyle>? = null,
+) {
+    addClassNames("loading")
+    addClassNames(size)
+    addClassNames(style)
 }

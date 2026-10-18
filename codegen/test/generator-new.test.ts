@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 
 import { generateKotlinFile } from '../src/generator-new.ts'
 import { mainFunctionConfig, withDeclaredScopes, type ComponentModel } from '../src/model.ts'
-import { component, enumParameter, part, shapeOf } from './model-fixture.ts'
+import { component, enumParameter, part, shapeOf, toggle } from './model-fixture.ts'
 
 /**
  * What the generated Kotlin SAYS about itself.
@@ -127,5 +127,31 @@ describe('the join scope', () => {
 
   test('a component with no scope opens its tag exactly as before', () => {
     assert.match(kotlinFor(component('card', 'Card', 'card')), /^ {4}div \{$/m)
+  })
+})
+
+describe('the class sibling', () => {
+  const button = component('button', 'Button', 'btn', { enums: [{ name: 'ButtonColor', label: 'Color variants', classes: ['btn-primary'] }] }, {
+    parameters: [enumParameter('color', 'ButtonColor', 'Color variant'), toggle('active', 'btn-active'), { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) { this.disabled = true; addClassNames("btn-disabled") }', writes: ['btn-disabled'] }],
+  })
+
+  test("adds the function's classes from the same typed parameters, an extra's class as a toggle", () => {
+    const sibling = kotlinFor(button).split('fun Tag.daisyButtonClasses')[1]
+
+    assert.equal(sibling, `(
+    color: ClassValues<ButtonColor>? = null,
+    active: Boolean = false,
+    disabled: Boolean = false,
+) {
+    addClassNames("btn")
+    addClassNames(color)
+    if (active) addClassNames("btn-active")
+    if (disabled) addClassNames("btn-disabled")
+}
+`)
+  })
+
+  test('takes no parameters where its function offers no class', () => {
+    assert.ok(kotlinFor(withParts(button, part('daisyButtonIcon', 'btn-icon'))).includes('fun Tag.daisyButtonIconClasses() {\n    addClassNames("btn-icon")\n}'))
   })
 })

@@ -47,4 +47,20 @@ class HoverGalleryCoverageTest {
         assertRendered(html, "hover-gallery zz-extra", "HoverGallery all flags", closes = "</figure></div>")
         assertCommonFlags(html, "HoverGallery")
     }
+
+    @Test
+    fun hoverGalleryClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHoverGalleryClasses()
+        }
+        assertRendered(html, "hover-gallery", "HoverGalleryClasses defaults")
+    }
+
+    @Test
+    fun hoverGalleryClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHoverGalleryClasses()
+        }
+        assertRendered(html, "hover-gallery", "HoverGalleryClasses all flags")
+    }
 }

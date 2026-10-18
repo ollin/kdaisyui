@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Window mockup shows a box that looks like an operating system window. Renders `<div class="mockup-window ...">`.
@@ -30,4 +31,9 @@ fun FlowContent.daisyMockupWindow(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMockupWindow` writes, on the element this is called on. */
+fun Tag.daisyMockupWindowClasses() {
+    addClassNames("mockup-window")
 }

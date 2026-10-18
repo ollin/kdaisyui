@@ -11,6 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
+import kotlinx.html.Tag
 
 enum class InputColor(internal val className: String) : ClassValues<InputColor> {
     /** CSS: `input-neutral` */
@@ -89,4 +90,16 @@ fun FlowContent.daisyInput(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyInput` writes, on the element this is called on. */
+fun Tag.daisyInputClasses(
+    color: ClassValues<InputColor>? = null,
+    size: ClassValues<InputSize>? = null,
+    ghost: Boolean = false,
+) {
+    addClassNames("input")
+    addClassNames(color)
+    addClassNames(size)
+    if (ghost) addClassNames("input-ghost")
 }

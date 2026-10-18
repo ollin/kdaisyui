@@ -93,6 +93,62 @@ class CollapseCoverageTest {
     }
 
     @Test
+    fun collapseClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseClasses()
+        }
+        assertRendered(html, "collapse", "CollapseClasses defaults")
+    }
+
+    @Test
+    fun collapseClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseClasses()
+        }
+        assertRendered(html, "collapse", "CollapseClasses all flags")
+    }
+
+    @Test
+    fun collapseClasses_icon_arrow() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseClasses(
+                icon = CollapseIcon.Arrow,
+            )
+        }
+        assertRendered(html, "collapse collapse-arrow", "CollapseClasses icon Arrow")
+    }
+
+    @Test
+    fun collapseClasses_icon_plus() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseClasses(
+                icon = CollapseIcon.Plus,
+            )
+        }
+        assertRendered(html, "collapse collapse-plus", "CollapseClasses icon Plus")
+    }
+
+    @Test
+    fun collapseClasses_state_open() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseClasses(
+                state = CollapseState.Open,
+            )
+        }
+        assertRendered(html, "collapse collapse-open", "CollapseClasses state Open")
+    }
+
+    @Test
+    fun collapseClasses_state_close() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseClasses(
+                state = CollapseState.Close,
+            )
+        }
+        assertRendered(html, "collapse collapse-close", "CollapseClasses state Close")
+    }
+
+    @Test
     fun collapseTitle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyCollapseTitle()
@@ -126,6 +182,22 @@ class CollapseCoverageTest {
     }
 
     @Test
+    fun collapseTitleClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseTitleClasses()
+        }
+        assertRendered(html, "collapse-title", "CollapseTitleClasses defaults")
+    }
+
+    @Test
+    fun collapseTitleClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseTitleClasses()
+        }
+        assertRendered(html, "collapse-title", "CollapseTitleClasses all flags")
+    }
+
+    @Test
     fun collapseContent_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyCollapseContent(
@@ -147,5 +219,21 @@ class CollapseCoverageTest {
         }
         assertRendered(html, "collapse-content zz-extra", "CollapseContent all flags", closes = "</div></div>")
         assertCommonFlags(html, "CollapseContent")
+    }
+
+    @Test
+    fun collapseContentClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseContentClasses()
+        }
+        assertRendered(html, "collapse-content", "CollapseContentClasses defaults")
+    }
+
+    @Test
+    fun collapseContentClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapseContentClasses()
+        }
+        assertRendered(html, "collapse-content", "CollapseContentClasses all flags")
     }
 }

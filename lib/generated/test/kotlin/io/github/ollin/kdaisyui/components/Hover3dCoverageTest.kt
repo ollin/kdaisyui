@@ -47,4 +47,20 @@ class Hover3dCoverageTest {
         assertRendered(html, "hover-3d zz-extra", "Hover3d all flags", closes = "</div></div>")
         assertCommonFlags(html, "Hover3d")
     }
+
+    @Test
+    fun hover3dClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHover3dClasses()
+        }
+        assertRendered(html, "hover-3d", "Hover3dClasses defaults")
+    }
+
+    @Test
+    fun hover3dClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHover3dClasses()
+        }
+        assertRendered(html, "hover-3d", "Hover3dClasses all flags")
+    }
 }

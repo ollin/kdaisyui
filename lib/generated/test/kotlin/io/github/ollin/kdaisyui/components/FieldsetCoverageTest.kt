@@ -50,6 +50,22 @@ class FieldsetCoverageTest {
     }
 
     @Test
+    fun fieldsetClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFieldsetClasses()
+        }
+        assertRendered(html, "fieldset", "FieldsetClasses defaults")
+    }
+
+    @Test
+    fun fieldsetClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFieldsetClasses()
+        }
+        assertRendered(html, "fieldset", "FieldsetClasses all flags")
+    }
+
+    @Test
     fun fieldsetLegend_defaults() {
         val html = createHTML(prettyPrint = false).fieldSet {
             daisyFieldsetLegend(
@@ -71,5 +87,21 @@ class FieldsetCoverageTest {
         }
         assertRendered(html, "fieldset-legend zz-extra", "FieldsetLegend all flags", closes = "</legend></fieldset>")
         assertCommonFlags(html, "FieldsetLegend")
+    }
+
+    @Test
+    fun fieldsetLegendClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFieldsetLegendClasses()
+        }
+        assertRendered(html, "fieldset-legend", "FieldsetLegendClasses defaults")
+    }
+
+    @Test
+    fun fieldsetLegendClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFieldsetLegendClasses()
+        }
+        assertRendered(html, "fieldset-legend", "FieldsetLegendClasses all flags")
     }
 }

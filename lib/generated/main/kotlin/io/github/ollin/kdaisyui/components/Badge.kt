@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `badge-`) */
 enum class BadgeColor(internal val className: String) : ClassValues<BadgeColor> {
@@ -111,4 +112,18 @@ fun FlowContent.daisyBadge(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyBadge` writes, on the element this is called on. */
+fun Tag.daisyBadgeClasses(
+    color: ClassValues<BadgeColor>? = null,
+    size: ClassValues<BadgeSize>? = null,
+    outlineStyle: ClassValues<BadgeOutlineStyle>? = null,
+    fillStyle: ClassValues<BadgeFillStyle>? = null,
+) {
+    addClassNames("badge")
+    addClassNames(color)
+    addClassNames(size)
+    addClassNames(outlineStyle)
+    addClassNames(fillStyle)
 }

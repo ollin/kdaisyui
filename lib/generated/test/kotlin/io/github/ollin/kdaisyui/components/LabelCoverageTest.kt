@@ -56,4 +56,20 @@ class LabelCoverageTest {
         assertRendered(html, "label", "Label text")
         assertTrue(html.contains("txtmark"), "Label text content")
     }
+
+    @Test
+    fun labelClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabelClasses()
+        }
+        assertRendered(html, "label", "LabelClasses defaults")
+    }
+
+    @Test
+    fun labelClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabelClasses()
+        }
+        assertRendered(html, "label", "LabelClasses all flags")
+    }
 }

@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.kbd
 import kotlinx.html.KBD
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `kbd-`) */
 enum class KbdSize(internal val className: String) : ClassValues<KbdSize> {
@@ -57,4 +58,12 @@ fun FlowContent.daisyKbd(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyKbd` writes, on the element this is called on. */
+fun Tag.daisyKbdClasses(
+    size: ClassValues<KbdSize>? = null,
+) {
+    addClassNames("kbd")
+    addClassNames(size)
 }

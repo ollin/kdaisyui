@@ -113,4 +113,80 @@ class ToastCoverageTest {
         }
         assertRendered(html, "toast toast-bottom", "Toast verticalPlacement Bottom")
     }
+
+    @Test
+    fun toastClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses()
+        }
+        assertRendered(html, "toast", "ToastClasses defaults")
+    }
+
+    @Test
+    fun toastClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses()
+        }
+        assertRendered(html, "toast", "ToastClasses all flags")
+    }
+
+    @Test
+    fun toastClasses_horizontalPlacement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses(
+                horizontalPlacement = ToastHorizontalPlacement.Start,
+            )
+        }
+        assertRendered(html, "toast toast-start", "ToastClasses horizontalPlacement Start")
+    }
+
+    @Test
+    fun toastClasses_horizontalPlacement_center() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses(
+                horizontalPlacement = ToastHorizontalPlacement.Center,
+            )
+        }
+        assertRendered(html, "toast toast-center", "ToastClasses horizontalPlacement Center")
+    }
+
+    @Test
+    fun toastClasses_horizontalPlacement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses(
+                horizontalPlacement = ToastHorizontalPlacement.End,
+            )
+        }
+        assertRendered(html, "toast toast-end", "ToastClasses horizontalPlacement End")
+    }
+
+    @Test
+    fun toastClasses_verticalPlacement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses(
+                verticalPlacement = ToastVerticalPlacement.Top,
+            )
+        }
+        assertRendered(html, "toast toast-top", "ToastClasses verticalPlacement Top")
+    }
+
+    @Test
+    fun toastClasses_verticalPlacement_middle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses(
+                verticalPlacement = ToastVerticalPlacement.Middle,
+            )
+        }
+        assertRendered(html, "toast toast-middle", "ToastClasses verticalPlacement Middle")
+    }
+
+    @Test
+    fun toastClasses_verticalPlacement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToastClasses(
+                verticalPlacement = ToastVerticalPlacement.Bottom,
+            )
+        }
+        assertRendered(html, "toast toast-bottom", "ToastClasses verticalPlacement Bottom")
+    }
 }

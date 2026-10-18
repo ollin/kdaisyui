@@ -14,6 +14,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `tabs-`) */
 enum class TabsSize(internal val className: String) : ClassValues<TabsSize> {
@@ -89,6 +90,18 @@ fun FlowContent.daisyTabs(
     }
 }
 
+/** The classes `daisyTabs` writes, on the element this is called on. */
+fun Tag.daisyTabsClasses(
+    size: ClassValues<TabsSize>? = null,
+    placement: ClassValues<TabsPlacement>? = null,
+    style: ClassValues<TabsStyle>? = null,
+) {
+    addClassNames("tabs")
+    addClassNames(size)
+    addClassNames(placement)
+    addClassNames(style)
+}
+
 /** A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ..." role="tab">`. */
 fun FlowContent.daisyTab(
     id: HtmlId? = null,
@@ -108,6 +121,16 @@ fun FlowContent.daisyTab(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTab` writes, on the element this is called on. */
+fun Tag.daisyTabClasses(
+    active: Boolean = false,
+    disabled: Boolean = false,
+) {
+    addClassNames("tab")
+    if (active) addClassNames("tab-active")
+    if (disabled) addClassNames("tab-disabled")
 }
 
 /** Renders `<input class="tab ..." type="radio" role="tab">`. */
@@ -130,6 +153,16 @@ fun FlowContent.daisyTabRadio(
     }
 }
 
+/** The classes `daisyTabRadio` writes, on the element this is called on. */
+fun Tag.daisyTabRadioClasses(
+    active: Boolean = false,
+    disabled: Boolean = false,
+) {
+    addClassNames("tab")
+    if (active) addClassNames("tab-active")
+    if (disabled) addClassNames("tab-disabled")
+}
+
 /** Tab content that comes immediately after a tab Renders `<div class="tab-content ...">`. */
 fun FlowContent.daisyTabContent(
     id: HtmlId? = null,
@@ -144,4 +177,9 @@ fun FlowContent.daisyTabContent(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTabContent` writes, on the element this is called on. */
+fun Tag.daisyTabContentClasses() {
+    addClassNames("tab-content")
 }

@@ -47,4 +47,20 @@ class TextRotateCoverageTest {
         assertRendered(html, "text-rotate zz-extra", "TextRotate all flags", closes = "</span></div>")
         assertCommonFlags(html, "TextRotate")
     }
+
+    @Test
+    fun textRotateClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextRotateClasses()
+        }
+        assertRendered(html, "text-rotate", "TextRotateClasses defaults")
+    }
+
+    @Test
+    fun textRotateClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextRotateClasses()
+        }
+        assertRendered(html, "text-rotate", "TextRotateClasses all flags")
+    }
 }

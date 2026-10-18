@@ -91,4 +91,60 @@ class StackCoverageTest {
         }
         assertRendered(html, "stack stack-end", "Stack placement End")
     }
+
+    @Test
+    fun stackClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStackClasses()
+        }
+        assertRendered(html, "stack", "StackClasses defaults")
+    }
+
+    @Test
+    fun stackClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStackClasses()
+        }
+        assertRendered(html, "stack", "StackClasses all flags")
+    }
+
+    @Test
+    fun stackClasses_placement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStackClasses(
+                placement = StackPlacement.Top,
+            )
+        }
+        assertRendered(html, "stack stack-top", "StackClasses placement Top")
+    }
+
+    @Test
+    fun stackClasses_placement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStackClasses(
+                placement = StackPlacement.Bottom,
+            )
+        }
+        assertRendered(html, "stack stack-bottom", "StackClasses placement Bottom")
+    }
+
+    @Test
+    fun stackClasses_placement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStackClasses(
+                placement = StackPlacement.Start,
+            )
+        }
+        assertRendered(html, "stack stack-start", "StackClasses placement Start")
+    }
+
+    @Test
+    fun stackClasses_placement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStackClasses(
+                placement = StackPlacement.End,
+            )
+        }
+        assertRendered(html, "stack stack-end", "StackClasses placement End")
+    }
 }

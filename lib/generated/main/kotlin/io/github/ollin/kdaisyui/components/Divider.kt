@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `divider-`) */
 enum class DividerColor(internal val className: String) : ClassValues<DividerColor> {
@@ -86,4 +87,16 @@ fun FlowContent.daisyDivider(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDivider` writes, on the element this is called on. */
+fun Tag.daisyDividerClasses(
+    color: ClassValues<DividerColor>? = null,
+    direction: ClassValues<DividerDirection>? = null,
+    placement: ClassValues<DividerPlacement>? = null,
+) {
+    addClassNames("divider")
+    addClassNames(color)
+    addClassNames(direction)
+    addClassNames(placement)
 }

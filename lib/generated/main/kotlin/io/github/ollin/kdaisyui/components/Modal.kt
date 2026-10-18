@@ -14,6 +14,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
+import kotlinx.html.Tag
 
 /** VerticalPlacement variants for this component (CSS prefix: `modal-`) */
 enum class ModalVerticalPlacement(internal val className: String) : ClassValues<ModalVerticalPlacement> {
@@ -71,6 +72,18 @@ fun FlowContent.daisyModal(
     }
 }
 
+/** The classes `daisyModal` writes, on the element this is called on. */
+fun Tag.daisyModalClasses(
+    verticalPlacement: ClassValues<ModalVerticalPlacement>? = null,
+    horizontalPlacement: ClassValues<ModalHorizontalPlacement>? = null,
+    open: Boolean = false,
+) {
+    addClassNames("modal")
+    addClassNames(verticalPlacement)
+    addClassNames(horizontalPlacement)
+    if (open) addClassNames("modal-open")
+}
+
 /** Renders `<div class="modal-box ...">`. */
 fun FlowContent.daisyModalBox(
     id: HtmlId? = null,
@@ -85,6 +98,11 @@ fun FlowContent.daisyModalBox(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyModalBox` writes, on the element this is called on. */
+fun Tag.daisyModalBoxClasses() {
+    addClassNames("modal-box")
 }
 
 /** Renders `<div class="modal-action ...">`. */
@@ -103,6 +121,11 @@ fun FlowContent.daisyModalAction(
     }
 }
 
+/** The classes `daisyModalAction` writes, on the element this is called on. */
+fun Tag.daisyModalActionClasses() {
+    addClassNames("modal-action")
+}
+
 /** Renders `<div class="modal-backdrop ...">`. */
 fun FlowContent.daisyModalBackdrop(
     id: HtmlId? = null,
@@ -119,6 +142,11 @@ fun FlowContent.daisyModalBackdrop(
     }
 }
 
+/** The classes `daisyModalBackdrop` writes, on the element this is called on. */
+fun Tag.daisyModalBackdropClasses() {
+    addClassNames("modal-backdrop")
+}
+
 /** Renders `<input class="modal-toggle ...">`. */
 fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
@@ -131,6 +159,11 @@ fun FlowContent.daisyModalToggle(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyModalToggle` writes, on the element this is called on. */
+fun Tag.daisyModalToggleClasses() {
+    addClassNames("modal-toggle")
 }
 
 /** Renders `<div class="modal ..." popover>`. */
@@ -148,4 +181,9 @@ fun FlowContent.daisyModalPopover(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyModalPopover` writes, on the element this is called on. */
+fun Tag.daisyModalPopoverClasses() {
+    addClassNames("modal")
 }

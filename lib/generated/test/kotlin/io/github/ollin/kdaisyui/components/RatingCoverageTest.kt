@@ -104,4 +104,73 @@ class RatingCoverageTest {
         }
         assertRendered(html, "rating rating-xl", "Rating size Xl")
     }
+
+    @Test
+    fun ratingClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses()
+        }
+        assertRendered(html, "rating", "RatingClasses defaults")
+    }
+
+    @Test
+    fun ratingClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                half = true,
+                hidden = true,
+            )
+        }
+        assertRendered(html, "rating rating-half rating-hidden", "RatingClasses all flags")
+    }
+
+    @Test
+    fun ratingClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Xs,
+            )
+        }
+        assertRendered(html, "rating rating-xs", "RatingClasses size Xs")
+    }
+
+    @Test
+    fun ratingClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Sm,
+            )
+        }
+        assertRendered(html, "rating rating-sm", "RatingClasses size Sm")
+    }
+
+    @Test
+    fun ratingClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Md,
+            )
+        }
+        assertRendered(html, "rating rating-md", "RatingClasses size Md")
+    }
+
+    @Test
+    fun ratingClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Lg,
+            )
+        }
+        assertRendered(html, "rating rating-lg", "RatingClasses size Lg")
+    }
+
+    @Test
+    fun ratingClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Xl,
+            )
+        }
+        assertRendered(html, "rating rating-xl", "RatingClasses size Xl")
+    }
 }

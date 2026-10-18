@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.details
 import kotlinx.html.DETAILS
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -87,6 +88,20 @@ fun FlowContent.daisyDropdown(
     }
 }
 
+/** The classes `daisyDropdown` writes, on the element this is called on. */
+fun Tag.daisyDropdownClasses(
+    side: ClassValues<DropdownSide>? = null,
+    align: ClassValues<DropdownAlign>? = null,
+    state: ClassValues<DropdownState>? = null,
+    hover: Boolean = false,
+) {
+    addClassNames("dropdown")
+    addClassNames(side)
+    addClassNames(align)
+    addClassNames(state)
+    if (hover) addClassNames("dropdown-hover")
+}
+
 /** Renders `<ul class="dropdown-content ...">`. */
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
@@ -101,4 +116,9 @@ fun FlowContent.daisyDropdownContent(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDropdownContent` writes, on the element this is called on. */
+fun Tag.daisyDropdownContentClasses() {
+    addClassNames("dropdown-content")
 }

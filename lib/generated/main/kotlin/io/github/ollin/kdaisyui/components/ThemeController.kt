@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
+import kotlinx.html.Tag
 
 /**
  * If a checked checkbox input or a checked radio input with theme-controller class exists in the page, The page will have the same theme as that input's value. Renders `<input class="theme-controller ...">`.
@@ -27,4 +28,9 @@ fun FlowContent.daisyThemeController(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyThemeController` writes, on the element this is called on. */
+fun Tag.daisyThemeControllerClasses() {
+    addClassNames("theme-controller")
 }

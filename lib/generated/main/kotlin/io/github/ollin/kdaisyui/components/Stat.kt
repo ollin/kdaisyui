@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 enum class StatsDirection(internal val className: String) : ClassValues<StatsDirection> {
     /** CSS: `stats-horizontal` */
@@ -47,6 +48,14 @@ fun FlowContent.daisyStats(
     }
 }
 
+/** The classes `daisyStats` writes, on the element this is called on. */
+fun Tag.daisyStatsClasses(
+    direction: ClassValues<StatsDirection>? = null,
+) {
+    addClassNames("stats")
+    addClassNames(direction)
+}
+
 /** Renders `<div class="stat ...">`. */
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
@@ -61,6 +70,11 @@ fun FlowContent.daisyStat(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyStat` writes, on the element this is called on. */
+fun Tag.daisyStatClasses() {
+    addClassNames("stat")
 }
 
 /** Renders `<div class="stat-title ...">`. */
@@ -83,6 +97,11 @@ fun FlowContent.daisyStatTitle(
     }
 }
 
+/** The classes `daisyStatTitle` writes, on the element this is called on. */
+fun Tag.daisyStatTitleClasses() {
+    addClassNames("stat-title")
+}
+
 /** Renders `<div class="stat-value ...">`. */
 fun FlowContent.daisyStatValue(
     text: String? = null,
@@ -101,6 +120,11 @@ fun FlowContent.daisyStatValue(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyStatValue` writes, on the element this is called on. */
+fun Tag.daisyStatValueClasses() {
+    addClassNames("stat-value")
 }
 
 /** Renders `<div class="stat-desc ...">`. */
@@ -123,6 +147,11 @@ fun FlowContent.daisyStatDesc(
     }
 }
 
+/** The classes `daisyStatDesc` writes, on the element this is called on. */
+fun Tag.daisyStatDescClasses() {
+    addClassNames("stat-desc")
+}
+
 /** Renders `<div class="stat-figure ...">`. */
 fun FlowContent.daisyStatFigure(
     id: HtmlId? = null,
@@ -139,6 +168,11 @@ fun FlowContent.daisyStatFigure(
     }
 }
 
+/** The classes `daisyStatFigure` writes, on the element this is called on. */
+fun Tag.daisyStatFigureClasses() {
+    addClassNames("stat-figure")
+}
+
 /** Renders `<div class="stat-actions ...">`. */
 fun FlowContent.daisyStatActions(
     id: HtmlId? = null,
@@ -153,4 +187,9 @@ fun FlowContent.daisyStatActions(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyStatActions` writes, on the element this is called on. */
+fun Tag.daisyStatActionsClasses() {
+    addClassNames("stat-actions")
 }

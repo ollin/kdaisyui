@@ -191,4 +191,152 @@ class RangeCoverageTest {
         }
         assertRendered(html, "range range-xl", "Range size Xl")
     }
+
+    @Test
+    fun rangeClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses()
+        }
+        assertRendered(html, "range", "RangeClasses defaults")
+    }
+
+    @Test
+    fun rangeClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                vertical = true,
+            )
+        }
+        assertRendered(html, "range range-vertical", "RangeClasses all flags")
+    }
+
+    @Test
+    fun rangeClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Neutral,
+            )
+        }
+        assertRendered(html, "range range-neutral", "RangeClasses color Neutral")
+    }
+
+    @Test
+    fun rangeClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Primary,
+            )
+        }
+        assertRendered(html, "range range-primary", "RangeClasses color Primary")
+    }
+
+    @Test
+    fun rangeClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Secondary,
+            )
+        }
+        assertRendered(html, "range range-secondary", "RangeClasses color Secondary")
+    }
+
+    @Test
+    fun rangeClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Accent,
+            )
+        }
+        assertRendered(html, "range range-accent", "RangeClasses color Accent")
+    }
+
+    @Test
+    fun rangeClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Success,
+            )
+        }
+        assertRendered(html, "range range-success", "RangeClasses color Success")
+    }
+
+    @Test
+    fun rangeClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Warning,
+            )
+        }
+        assertRendered(html, "range range-warning", "RangeClasses color Warning")
+    }
+
+    @Test
+    fun rangeClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Info,
+            )
+        }
+        assertRendered(html, "range range-info", "RangeClasses color Info")
+    }
+
+    @Test
+    fun rangeClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                color = RangeColor.Error,
+            )
+        }
+        assertRendered(html, "range range-error", "RangeClasses color Error")
+    }
+
+    @Test
+    fun rangeClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                size = RangeSize.Xs,
+            )
+        }
+        assertRendered(html, "range range-xs", "RangeClasses size Xs")
+    }
+
+    @Test
+    fun rangeClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                size = RangeSize.Sm,
+            )
+        }
+        assertRendered(html, "range range-sm", "RangeClasses size Sm")
+    }
+
+    @Test
+    fun rangeClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                size = RangeSize.Md,
+            )
+        }
+        assertRendered(html, "range range-md", "RangeClasses size Md")
+    }
+
+    @Test
+    fun rangeClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                size = RangeSize.Lg,
+            )
+        }
+        assertRendered(html, "range range-lg", "RangeClasses size Lg")
+    }
+
+    @Test
+    fun rangeClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRangeClasses(
+                size = RangeSize.Xl,
+            )
+        }
+        assertRendered(html, "range range-xl", "RangeClasses size Xl")
+    }
 }

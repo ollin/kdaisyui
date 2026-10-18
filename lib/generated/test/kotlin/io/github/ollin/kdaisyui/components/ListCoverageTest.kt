@@ -69,4 +69,40 @@ class ListCoverageTest {
         }
         assertRendered(html, "list list-col-grow", "List column ColGrow")
     }
+
+    @Test
+    fun listClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListClasses()
+        }
+        assertRendered(html, "list", "ListClasses defaults")
+    }
+
+    @Test
+    fun listClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListClasses()
+        }
+        assertRendered(html, "list", "ListClasses all flags")
+    }
+
+    @Test
+    fun listClasses_column_colwrap() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListClasses(
+                column = ListColumn.ColWrap,
+            )
+        }
+        assertRendered(html, "list list-col-wrap", "ListClasses column ColWrap")
+    }
+
+    @Test
+    fun listClasses_column_colgrow() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListClasses(
+                column = ListColumn.ColGrow,
+            )
+        }
+        assertRendered(html, "list list-col-grow", "ListClasses column ColGrow")
+    }
 }

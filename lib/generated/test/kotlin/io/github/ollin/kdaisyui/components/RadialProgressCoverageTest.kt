@@ -47,4 +47,20 @@ class RadialProgressCoverageTest {
         assertRendered(html, "radial-progress zz-extra", "RadialProgress all flags", closes = "</div></div>")
         assertCommonFlags(html, "RadialProgress")
     }
+
+    @Test
+    fun radialProgressClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadialProgressClasses()
+        }
+        assertRendered(html, "radial-progress", "RadialProgressClasses defaults")
+    }
+
+    @Test
+    fun radialProgressClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRadialProgressClasses()
+        }
+        assertRendered(html, "radial-progress", "RadialProgressClasses all flags")
+    }
 }

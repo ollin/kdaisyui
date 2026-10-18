@@ -8,6 +8,7 @@ import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -46,4 +47,12 @@ fun FlowContent.daisyList(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyList` writes, on the element this is called on. */
+fun Tag.daisyListClasses(
+    column: ClassValues<ListColumn>? = null,
+) {
+    addClassNames("list")
+    addClassNames(column)
 }

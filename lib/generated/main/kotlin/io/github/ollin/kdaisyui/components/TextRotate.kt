@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /**
  * Text Rotate can show up to 6 lines of text, one at a time, with an infinite loop animation. Duration is 10 seconds by default. The animation will pause on hover. Renders `<span class="text-rotate ...">`.
@@ -30,4 +31,9 @@ fun FlowContent.daisyTextRotate(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTextRotate` writes, on the element this is called on. */
+fun Tag.daisyTextRotateClasses() {
+    addClassNames("text-rotate")
 }

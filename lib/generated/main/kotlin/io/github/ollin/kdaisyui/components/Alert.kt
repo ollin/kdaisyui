@@ -11,6 +11,7 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.role
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `alert-`) */
 enum class AlertColor(internal val className: String) : ClassValues<AlertColor> {
@@ -83,4 +84,18 @@ fun FlowContent.daisyAlert(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyAlert` writes, on the element this is called on. */
+fun Tag.daisyAlertClasses(
+    color: ClassValues<AlertColor>? = null,
+    style: ClassValues<AlertStyle>? = null,
+    direction: ClassValues<AlertDirection>? = null,
+    soft: Boolean = false,
+) {
+    addClassNames("alert")
+    addClassNames(color)
+    addClassNames(style)
+    addClassNames(direction)
+    if (soft) addClassNames("alert-soft")
 }

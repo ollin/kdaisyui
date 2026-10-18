@@ -131,6 +131,98 @@ class MenuCoverageTest {
     }
 
     @Test
+    fun menuClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses()
+        }
+        assertRendered(html, "menu", "MenuClasses defaults")
+    }
+
+    @Test
+    fun menuClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                active = true,
+                disabled = true,
+                dropdownShow = true,
+                focus = true,
+                paged = true,
+            )
+        }
+        assertRendered(html, "menu menu-active menu-disabled menu-dropdown-show menu-focus menu-paged", "MenuClasses all flags")
+    }
+
+    @Test
+    fun menuClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                size = MenuSize.Xs,
+            )
+        }
+        assertRendered(html, "menu menu-xs", "MenuClasses size Xs")
+    }
+
+    @Test
+    fun menuClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                size = MenuSize.Sm,
+            )
+        }
+        assertRendered(html, "menu menu-sm", "MenuClasses size Sm")
+    }
+
+    @Test
+    fun menuClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                size = MenuSize.Md,
+            )
+        }
+        assertRendered(html, "menu menu-md", "MenuClasses size Md")
+    }
+
+    @Test
+    fun menuClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                size = MenuSize.Lg,
+            )
+        }
+        assertRendered(html, "menu menu-lg", "MenuClasses size Lg")
+    }
+
+    @Test
+    fun menuClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                size = MenuSize.Xl,
+            )
+        }
+        assertRendered(html, "menu menu-xl", "MenuClasses size Xl")
+    }
+
+    @Test
+    fun menuClasses_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                direction = MenuDirection.Vertical,
+            )
+        }
+        assertRendered(html, "menu menu-vertical", "MenuClasses direction Vertical")
+    }
+
+    @Test
+    fun menuClasses_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuClasses(
+                direction = MenuDirection.Horizontal,
+            )
+        }
+        assertRendered(html, "menu menu-horizontal", "MenuClasses direction Horizontal")
+    }
+
+    @Test
     fun menuTitle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuTitle()
@@ -164,6 +256,22 @@ class MenuCoverageTest {
     }
 
     @Test
+    fun menuTitleClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuTitleClasses()
+        }
+        assertRendered(html, "menu-title", "MenuTitleClasses defaults")
+    }
+
+    @Test
+    fun menuTitleClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuTitleClasses()
+        }
+        assertRendered(html, "menu-title", "MenuTitleClasses all flags")
+    }
+
+    @Test
     fun menuDropdown_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdown(
@@ -188,6 +296,22 @@ class MenuCoverageTest {
     }
 
     @Test
+    fun menuDropdownClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuDropdownClasses()
+        }
+        assertRendered(html, "menu-dropdown", "MenuDropdownClasses defaults")
+    }
+
+    @Test
+    fun menuDropdownClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuDropdownClasses()
+        }
+        assertRendered(html, "menu-dropdown", "MenuDropdownClasses all flags")
+    }
+
+    @Test
     fun menuDropdownToggle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdownToggle(
@@ -209,5 +333,21 @@ class MenuCoverageTest {
         }
         assertRendered(html, "menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</span></div>")
         assertCommonFlags(html, "MenuDropdownToggle")
+    }
+
+    @Test
+    fun menuDropdownToggleClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuDropdownToggleClasses()
+        }
+        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggleClasses defaults")
+    }
+
+    @Test
+    fun menuDropdownToggleClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuDropdownToggleClasses()
+        }
+        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggleClasses all flags")
     }
 }

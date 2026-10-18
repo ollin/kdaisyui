@@ -180,4 +180,150 @@ class ToggleCoverageTest {
         }
         assertRendered(html, "toggle toggle-xl", "Toggle size Xl")
     }
+
+    @Test
+    fun toggleClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses()
+        }
+        assertRendered(html, "toggle", "ToggleClasses defaults")
+    }
+
+    @Test
+    fun toggleClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses()
+        }
+        assertRendered(html, "toggle", "ToggleClasses all flags")
+    }
+
+    @Test
+    fun toggleClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Primary,
+            )
+        }
+        assertRendered(html, "toggle toggle-primary", "ToggleClasses color Primary")
+    }
+
+    @Test
+    fun toggleClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Secondary,
+            )
+        }
+        assertRendered(html, "toggle toggle-secondary", "ToggleClasses color Secondary")
+    }
+
+    @Test
+    fun toggleClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Accent,
+            )
+        }
+        assertRendered(html, "toggle toggle-accent", "ToggleClasses color Accent")
+    }
+
+    @Test
+    fun toggleClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Neutral,
+            )
+        }
+        assertRendered(html, "toggle toggle-neutral", "ToggleClasses color Neutral")
+    }
+
+    @Test
+    fun toggleClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Success,
+            )
+        }
+        assertRendered(html, "toggle toggle-success", "ToggleClasses color Success")
+    }
+
+    @Test
+    fun toggleClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Warning,
+            )
+        }
+        assertRendered(html, "toggle toggle-warning", "ToggleClasses color Warning")
+    }
+
+    @Test
+    fun toggleClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Info,
+            )
+        }
+        assertRendered(html, "toggle toggle-info", "ToggleClasses color Info")
+    }
+
+    @Test
+    fun toggleClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                color = ToggleColor.Error,
+            )
+        }
+        assertRendered(html, "toggle toggle-error", "ToggleClasses color Error")
+    }
+
+    @Test
+    fun toggleClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                size = ToggleSize.Xs,
+            )
+        }
+        assertRendered(html, "toggle toggle-xs", "ToggleClasses size Xs")
+    }
+
+    @Test
+    fun toggleClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                size = ToggleSize.Sm,
+            )
+        }
+        assertRendered(html, "toggle toggle-sm", "ToggleClasses size Sm")
+    }
+
+    @Test
+    fun toggleClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                size = ToggleSize.Md,
+            )
+        }
+        assertRendered(html, "toggle toggle-md", "ToggleClasses size Md")
+    }
+
+    @Test
+    fun toggleClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                size = ToggleSize.Lg,
+            )
+        }
+        assertRendered(html, "toggle toggle-lg", "ToggleClasses size Lg")
+    }
+
+    @Test
+    fun toggleClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyToggleClasses(
+                size = ToggleSize.Xl,
+            )
+        }
+        assertRendered(html, "toggle toggle-xl", "ToggleClasses size Xl")
+    }
 }

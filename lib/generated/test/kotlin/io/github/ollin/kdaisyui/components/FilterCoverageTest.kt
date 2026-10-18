@@ -49,6 +49,22 @@ class FilterCoverageTest {
     }
 
     @Test
+    fun filterClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFilterClasses()
+        }
+        assertRendered(html, "filter", "FilterClasses defaults")
+    }
+
+    @Test
+    fun filterClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFilterClasses()
+        }
+        assertRendered(html, "filter", "FilterClasses all flags")
+    }
+
+    @Test
     fun filterReset_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyFilterReset()
@@ -67,5 +83,21 @@ class FilterCoverageTest {
         }
         assertRendered(html, "filter-reset zz-extra", "FilterReset all flags")
         assertCommonFlags(html, "FilterReset", content = false)
+    }
+
+    @Test
+    fun filterResetClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFilterResetClasses()
+        }
+        assertRendered(html, "filter-reset", "FilterResetClasses defaults")
+    }
+
+    @Test
+    fun filterResetClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFilterResetClasses()
+        }
+        assertRendered(html, "filter-reset", "FilterResetClasses all flags")
     }
 }

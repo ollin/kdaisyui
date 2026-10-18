@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.label
 import kotlinx.html.LABEL
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `otp-`) */
 enum class OtpColor(internal val className: String) : ClassValues<OtpColor> {
@@ -81,4 +82,16 @@ fun FlowContent.daisyOtp(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyOtp` writes, on the element this is called on. */
+fun Tag.daisyOtpClasses(
+    color: ClassValues<OtpColor>? = null,
+    size: ClassValues<OtpSize>? = null,
+    joined: Boolean = false,
+) {
+    addClassNames("otp")
+    addClassNames(color)
+    addClassNames(size)
+    if (joined) addClassNames("otp-joined")
 }

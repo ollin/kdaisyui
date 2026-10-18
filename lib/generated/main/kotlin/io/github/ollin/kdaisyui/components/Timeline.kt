@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -55,6 +56,18 @@ fun FlowContent.daisyTimeline(
     }
 }
 
+/** The classes `daisyTimeline` writes, on the element this is called on. */
+fun Tag.daisyTimelineClasses(
+    direction: ClassValues<TimelineDirection>? = null,
+    compact: Boolean = false,
+    snapIcon: Boolean = false,
+) {
+    addClassNames("timeline")
+    addClassNames(direction)
+    if (compact) addClassNames("timeline-compact")
+    if (snapIcon) addClassNames("timeline-snap-icon")
+}
+
 /** Renders `<div class="timeline-start ...">`. */
 fun FlowContent.daisyTimelineStart(
     id: HtmlId? = null,
@@ -71,6 +84,14 @@ fun FlowContent.daisyTimelineStart(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTimelineStart` writes, on the element this is called on. */
+fun Tag.daisyTimelineStartClasses(
+    box: Boolean = false,
+) {
+    addClassNames("timeline-start")
+    if (box) addClassNames("timeline-box")
 }
 
 /** Renders `<div class="timeline-middle ...">`. */
@@ -91,6 +112,14 @@ fun FlowContent.daisyTimelineMiddle(
     }
 }
 
+/** The classes `daisyTimelineMiddle` writes, on the element this is called on. */
+fun Tag.daisyTimelineMiddleClasses(
+    box: Boolean = false,
+) {
+    addClassNames("timeline-middle")
+    if (box) addClassNames("timeline-box")
+}
+
 /** Renders `<div class="timeline-end ...">`. */
 fun FlowContent.daisyTimelineEnd(
     id: HtmlId? = null,
@@ -107,4 +136,12 @@ fun FlowContent.daisyTimelineEnd(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTimelineEnd` writes, on the element this is called on. */
+fun Tag.daisyTimelineEndClasses(
+    box: Boolean = false,
+) {
+    addClassNames("timeline-end")
+    if (box) addClassNames("timeline-box")
 }

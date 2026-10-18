@@ -12,6 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 enum class IndicatorItemHorizontalPlacement(internal val className: String) : ClassValues<IndicatorItemHorizontalPlacement> {
     /** CSS: `indicator-start` */
@@ -60,6 +61,11 @@ fun FlowContent.daisyIndicator(
     }
 }
 
+/** The classes `daisyIndicator` writes, on the element this is called on. */
+fun Tag.daisyIndicatorClasses() {
+    addClassNames("indicator")
+}
+
 /** Renders `<span class="indicator-item ...">`. */
 fun FlowContent.daisyIndicatorItem(
     id: HtmlId? = null,
@@ -78,4 +84,14 @@ fun FlowContent.daisyIndicatorItem(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyIndicatorItem` writes, on the element this is called on. */
+fun Tag.daisyIndicatorItemClasses(
+    horizontalPlacement: ClassValues<IndicatorItemHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<IndicatorItemVerticalPlacement>? = null,
+) {
+    addClassNames("indicator-item")
+    addClassNames(horizontalPlacement)
+    addClassNames(verticalPlacement)
 }

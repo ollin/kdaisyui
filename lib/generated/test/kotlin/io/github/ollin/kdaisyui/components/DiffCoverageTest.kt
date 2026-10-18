@@ -49,6 +49,22 @@ class DiffCoverageTest {
     }
 
     @Test
+    fun diffClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffClasses()
+        }
+        assertRendered(html, "diff", "DiffClasses defaults")
+    }
+
+    @Test
+    fun diffClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffClasses()
+        }
+        assertRendered(html, "diff", "DiffClasses all flags")
+    }
+
+    @Test
     fun diffItem1_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyDiffItem1(
@@ -70,6 +86,22 @@ class DiffCoverageTest {
         }
         assertRendered(html, "diff-item-1 zz-extra", "DiffItem1 all flags", closes = "</div></div>")
         assertCommonFlags(html, "DiffItem1")
+    }
+
+    @Test
+    fun diffItem1Classes_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffItem1Classes()
+        }
+        assertRendered(html, "diff-item-1", "DiffItem1Classes defaults")
+    }
+
+    @Test
+    fun diffItem1Classes_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffItem1Classes()
+        }
+        assertRendered(html, "diff-item-1", "DiffItem1Classes all flags")
     }
 
     @Test
@@ -97,6 +129,22 @@ class DiffCoverageTest {
     }
 
     @Test
+    fun diffItem2Classes_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffItem2Classes()
+        }
+        assertRendered(html, "diff-item-2", "DiffItem2Classes defaults")
+    }
+
+    @Test
+    fun diffItem2Classes_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffItem2Classes()
+        }
+        assertRendered(html, "diff-item-2", "DiffItem2Classes all flags")
+    }
+
+    @Test
     fun diffResizer_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyDiffResizer(
@@ -118,5 +166,21 @@ class DiffCoverageTest {
         }
         assertRendered(html, "diff-resizer zz-extra", "DiffResizer all flags", closes = "</div></div>")
         assertCommonFlags(html, "DiffResizer")
+    }
+
+    @Test
+    fun diffResizerClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffResizerClasses()
+        }
+        assertRendered(html, "diff-resizer", "DiffResizerClasses defaults")
+    }
+
+    @Test
+    fun diffResizerClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffResizerClasses()
+        }
+        assertRendered(html, "diff-resizer", "DiffResizerClasses all flags")
     }
 }

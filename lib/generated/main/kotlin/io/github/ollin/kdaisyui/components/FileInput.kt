@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
+import kotlinx.html.Tag
 
 enum class FileInputColor(internal val className: String) : ClassValues<FileInputColor> {
     /** CSS: `file-input-neutral` */
@@ -76,4 +77,16 @@ fun FlowContent.daisyFileInput(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyFileInput` writes, on the element this is called on. */
+fun Tag.daisyFileInputClasses(
+    color: ClassValues<FileInputColor>? = null,
+    size: ClassValues<FileInputSize>? = null,
+    ghost: Boolean = false,
+) {
+    addClassNames("file-input")
+    addClassNames(color)
+    addClassNames(size)
+    if (ghost) addClassNames("file-input-ghost")
 }

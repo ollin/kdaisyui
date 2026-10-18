@@ -11,6 +11,7 @@ import kotlinx.html.DIV
 import kotlinx.html.figure
 import kotlinx.html.FIGURE
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Diff component shows a side-by-side comparison of two items. Renders `<figure class="diff ...">`.
@@ -34,6 +35,11 @@ fun FlowContent.daisyDiff(
     }
 }
 
+/** The classes `daisyDiff` writes, on the element this is called on. */
+fun Tag.daisyDiffClasses() {
+    addClassNames("diff")
+}
+
 /** Renders `<div class="diff-item-1 ...">`. */
 fun FlowContent.daisyDiffItem1(
     id: HtmlId? = null,
@@ -48,6 +54,11 @@ fun FlowContent.daisyDiffItem1(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDiffItem1` writes, on the element this is called on. */
+fun Tag.daisyDiffItem1Classes() {
+    addClassNames("diff-item-1")
 }
 
 /** Renders `<div class="diff-item-2 ...">`. */
@@ -66,6 +77,11 @@ fun FlowContent.daisyDiffItem2(
     }
 }
 
+/** The classes `daisyDiffItem2` writes, on the element this is called on. */
+fun Tag.daisyDiffItem2Classes() {
+    addClassNames("diff-item-2")
+}
+
 /** Renders `<div class="diff-resizer ...">`. */
 fun FlowContent.daisyDiffResizer(
     id: HtmlId? = null,
@@ -80,4 +96,9 @@ fun FlowContent.daisyDiffResizer(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDiffResizer` writes, on the element this is called on. */
+fun Tag.daisyDiffResizerClasses() {
+    addClassNames("diff-resizer")
 }

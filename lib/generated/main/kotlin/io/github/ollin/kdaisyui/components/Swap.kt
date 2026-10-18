@@ -12,6 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.label
 import kotlinx.html.LABEL
+import kotlinx.html.Tag
 
 /** Style variants for this component (CSS prefix: `swap-`) */
 enum class SwapStyle(internal val className: String) : ClassValues<SwapStyle> {
@@ -53,6 +54,16 @@ fun FlowContent.daisySwap(
     }
 }
 
+/** The classes `daisySwap` writes, on the element this is called on. */
+fun Tag.daisySwapClasses(
+    style: ClassValues<SwapStyle>? = null,
+    active: Boolean = false,
+) {
+    addClassNames("swap")
+    addClassNames(style)
+    if (active) addClassNames("swap-active")
+}
+
 /** Renders `<div class="swap-on ...">`. */
 fun FlowContent.daisySwapOn(
     id: HtmlId? = null,
@@ -67,6 +78,11 @@ fun FlowContent.daisySwapOn(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisySwapOn` writes, on the element this is called on. */
+fun Tag.daisySwapOnClasses() {
+    addClassNames("swap-on")
 }
 
 /** Renders `<div class="swap-off ...">`. */
@@ -85,6 +101,11 @@ fun FlowContent.daisySwapOff(
     }
 }
 
+/** The classes `daisySwapOff` writes, on the element this is called on. */
+fun Tag.daisySwapOffClasses() {
+    addClassNames("swap-off")
+}
+
 /** Renders `<div class="swap-indeterminate ...">`. */
 fun FlowContent.daisySwapIndeterminate(
     id: HtmlId? = null,
@@ -99,4 +120,9 @@ fun FlowContent.daisySwapIndeterminate(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisySwapIndeterminate` writes, on the element this is called on. */
+fun Tag.daisySwapIndeterminateClasses() {
+    addClassNames("swap-indeterminate")
 }

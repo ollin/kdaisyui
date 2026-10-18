@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Radial progress can be used to show the progress of a task or to show the passing of time. Renders `<div class="radial-progress ...">`.
@@ -30,4 +31,9 @@ fun FlowContent.daisyRadialProgress(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyRadialProgress` writes, on the element this is called on. */
+fun Tag.daisyRadialProgressClasses() {
+    addClassNames("radial-progress")
 }

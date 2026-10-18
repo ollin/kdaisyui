@@ -105,6 +105,74 @@ class DockCoverageTest {
     }
 
     @Test
+    fun dockClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockClasses()
+        }
+        assertRendered(html, "dock", "DockClasses defaults")
+    }
+
+    @Test
+    fun dockClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockClasses(
+                active = true,
+            )
+        }
+        assertRendered(html, "dock dock-active", "DockClasses all flags")
+    }
+
+    @Test
+    fun dockClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockClasses(
+                size = DockSize.Xs,
+            )
+        }
+        assertRendered(html, "dock dock-xs", "DockClasses size Xs")
+    }
+
+    @Test
+    fun dockClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockClasses(
+                size = DockSize.Sm,
+            )
+        }
+        assertRendered(html, "dock dock-sm", "DockClasses size Sm")
+    }
+
+    @Test
+    fun dockClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockClasses(
+                size = DockSize.Md,
+            )
+        }
+        assertRendered(html, "dock dock-md", "DockClasses size Md")
+    }
+
+    @Test
+    fun dockClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockClasses(
+                size = DockSize.Lg,
+            )
+        }
+        assertRendered(html, "dock dock-lg", "DockClasses size Lg")
+    }
+
+    @Test
+    fun dockClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockClasses(
+                size = DockSize.Xl,
+            )
+        }
+        assertRendered(html, "dock dock-xl", "DockClasses size Xl")
+    }
+
+    @Test
     fun dockLabel_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyDockLabel(
@@ -126,5 +194,21 @@ class DockCoverageTest {
         }
         assertRendered(html, "dock-label zz-extra", "DockLabel all flags", closes = "</span></div>")
         assertCommonFlags(html, "DockLabel")
+    }
+
+    @Test
+    fun dockLabelClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockLabelClasses()
+        }
+        assertRendered(html, "dock-label", "DockLabelClasses defaults")
+    }
+
+    @Test
+    fun dockLabelClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDockLabelClasses()
+        }
+        assertRendered(html, "dock-label", "DockLabelClasses all flags")
     }
 }

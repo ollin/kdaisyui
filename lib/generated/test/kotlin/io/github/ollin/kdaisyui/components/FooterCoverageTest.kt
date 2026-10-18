@@ -72,6 +72,44 @@ class FooterCoverageTest {
     }
 
     @Test
+    fun footerClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooterClasses()
+        }
+        assertRendered(html, "footer", "FooterClasses defaults")
+    }
+
+    @Test
+    fun footerClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooterClasses(
+                center = true,
+            )
+        }
+        assertRendered(html, "footer footer-center", "FooterClasses all flags")
+    }
+
+    @Test
+    fun footerClasses_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooterClasses(
+                direction = FooterDirection.Horizontal,
+            )
+        }
+        assertRendered(html, "footer footer-horizontal", "FooterClasses direction Horizontal")
+    }
+
+    @Test
+    fun footerClasses_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooterClasses(
+                direction = FooterDirection.Vertical,
+            )
+        }
+        assertRendered(html, "footer footer-vertical", "FooterClasses direction Vertical")
+    }
+
+    @Test
     fun footerTitle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyFooterTitle()
@@ -102,5 +140,21 @@ class FooterCoverageTest {
         }
         assertRendered(html, "footer-title", "FooterTitle text")
         assertTrue(html.contains("txtmark"), "FooterTitle text content")
+    }
+
+    @Test
+    fun footerTitleClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooterTitleClasses()
+        }
+        assertRendered(html, "footer-title", "FooterTitleClasses defaults")
+    }
+
+    @Test
+    fun footerTitleClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooterTitleClasses()
+        }
+        assertRendered(html, "footer-title", "FooterTitleClasses all flags")
     }
 }

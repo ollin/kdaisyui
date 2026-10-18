@@ -12,6 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `dock-`) */
 enum class DockSize(internal val className: String) : ClassValues<DockSize> {
@@ -59,6 +60,16 @@ fun FlowContent.daisyDock(
     }
 }
 
+/** The classes `daisyDock` writes, on the element this is called on. */
+fun Tag.daisyDockClasses(
+    size: ClassValues<DockSize>? = null,
+    active: Boolean = false,
+) {
+    addClassNames("dock")
+    addClassNames(size)
+    if (active) addClassNames("dock-active")
+}
+
 /** Renders `<span class="dock-label ...">`. */
 fun FlowContent.daisyDockLabel(
     id: HtmlId? = null,
@@ -73,4 +84,9 @@ fun FlowContent.daisyDockLabel(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDockLabel` writes, on the element this is called on. */
+fun Tag.daisyDockLabelClasses() {
+    addClassNames("dock-label")
 }

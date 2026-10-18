@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Hover 3D is a wrapper component that adds a 3D hover effect to its content. When we hover over the component, it tilts and rotates based on the mouse position, creating an interactive 3D effect. Renders `<div class="hover-3d ...">`.
@@ -30,4 +31,9 @@ fun FlowContent.daisyHover3d(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyHover3d` writes, on the element this is called on. */
+fun Tag.daisyHover3dClasses() {
+    addClassNames("hover-3d")
 }

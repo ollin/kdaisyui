@@ -44,4 +44,20 @@ class ThemeControllerCoverageTest {
         assertRendered(html, "theme-controller zz-extra", "ThemeController all flags")
         assertCommonFlags(html, "ThemeController", content = false)
     }
+
+    @Test
+    fun themeControllerClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyThemeControllerClasses()
+        }
+        assertRendered(html, "theme-controller", "ThemeControllerClasses defaults")
+    }
+
+    @Test
+    fun themeControllerClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyThemeControllerClasses()
+        }
+        assertRendered(html, "theme-controller", "ThemeControllerClasses all flags")
+    }
 }

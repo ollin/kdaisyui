@@ -21,6 +21,8 @@ public final class io/github/ollin/kdaisyui/components/AlertDirection : java/lan
 public final class io/github/ollin/kdaisyui/components/AlertKt {
 	public static final fun daisyAlert (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyAlert$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyAlertClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyAlertClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/AlertStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -35,6 +37,8 @@ public final class io/github/ollin/kdaisyui/components/AlertStyle : java/lang/En
 public final class io/github/ollin/kdaisyui/components/AuraKt {
 	public static final fun daisyAura (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyAura$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyAuraClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyAuraClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/AuraSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -65,6 +69,8 @@ public final class io/github/ollin/kdaisyui/components/AuraStyle : java/lang/Enu
 public final class io/github/ollin/kdaisyui/components/AvatarKt {
 	public static final fun daisyAvatar (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyAvatar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyAvatarClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyAvatarClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/AvatarPresence : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -103,6 +109,8 @@ public final class io/github/ollin/kdaisyui/components/BadgeFillStyle : java/lan
 public final class io/github/ollin/kdaisyui/components/BadgeKt {
 	public static final fun daisyBadge (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyBadge$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyBadgeClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyBadgeClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/BadgeOutlineStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -129,6 +137,7 @@ public final class io/github/ollin/kdaisyui/components/BadgeSize : java/lang/Enu
 public final class io/github/ollin/kdaisyui/components/BreadcrumbsKt {
 	public static final fun daisyBreadcrumbs (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyBreadcrumbs$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyBreadcrumbsClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyBreadcrumbsItem (Lkotlinx/html/UL;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyBreadcrumbsItem$default (Lkotlinx/html/UL;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyBreadcrumbsItems (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
@@ -153,6 +162,8 @@ public final class io/github/ollin/kdaisyui/components/ButtonColor : java/lang/E
 public final class io/github/ollin/kdaisyui/components/ButtonKt {
 	public static final fun daisyButton (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLkotlinx/html/ButtonType;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyButton$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLkotlinx/html/ButtonType;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyButtonClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZ)V
+	public static synthetic fun daisyButtonClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ButtonShape : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -200,6 +211,7 @@ public final class io/github/ollin/kdaisyui/components/ButtonWidth : java/lang/E
 public final class io/github/ollin/kdaisyui/components/CalendarKt {
 	public static final fun daisyCalendar (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCalendar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCalendarClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/CardKt {
@@ -207,10 +219,15 @@ public final class io/github/ollin/kdaisyui/components/CardKt {
 	public static synthetic fun daisyCard$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyCardActions (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCardActions$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCardActionsClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyCardBody (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCardBody$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCardBodyClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyCardClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyCardClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 	public static final fun daisyCardTitle (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCardTitle$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCardTitleClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/CardLayout : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -255,8 +272,11 @@ public final class io/github/ollin/kdaisyui/components/CarouselDirection : java/
 public final class io/github/ollin/kdaisyui/components/CarouselKt {
 	public static final fun daisyCarousel (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCarousel$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCarouselClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyCarouselClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 	public static final fun daisyCarouselItem (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCarouselItem$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCarouselItemClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/CarouselSnap : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -289,12 +309,19 @@ public final class io/github/ollin/kdaisyui/components/ChatKt {
 	public static synthetic fun daisyChat$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyChatBubble (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyChatBubble$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyChatBubbleClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyChatBubbleClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
+	public static final fun daisyChatClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyChatClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 	public static final fun daisyChatFooter (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyChatFooter$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyChatFooterClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyChatHeader (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyChatHeader$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyChatHeaderClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyChatImage (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyChatImage$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyChatImageClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ChatPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -324,6 +351,8 @@ public final class io/github/ollin/kdaisyui/components/CheckboxColor : java/lang
 public final class io/github/ollin/kdaisyui/components/CheckboxKt {
 	public static final fun daisyCheckbox (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCheckbox$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCheckboxClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyCheckboxClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/CheckboxSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -350,10 +379,14 @@ public final class io/github/ollin/kdaisyui/components/CollapseIcon : java/lang/
 public final class io/github/ollin/kdaisyui/components/CollapseKt {
 	public static final fun daisyCollapse (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCollapse$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCollapseClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyCollapseClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 	public static final fun daisyCollapseContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCollapseContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCollapseContentClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyCollapseTitle (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCollapseTitle$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCollapseTitleClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/CollapseState : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -368,17 +401,22 @@ public final class io/github/ollin/kdaisyui/components/CollapseState : java/lang
 public final class io/github/ollin/kdaisyui/components/CountdownKt {
 	public static final fun daisyCountdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCountdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyCountdownClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DiffKt {
 	public static final fun daisyDiff (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDiff$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDiffClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyDiffItem1 (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDiffItem1$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDiffItem1Classes (Lkotlinx/html/Tag;)V
 	public static final fun daisyDiffItem2 (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDiffItem2$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDiffItem2Classes (Lkotlinx/html/Tag;)V
 	public static final fun daisyDiffResizer (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDiffResizer$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDiffResizerClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DividerColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -408,6 +446,8 @@ public final class io/github/ollin/kdaisyui/components/DividerDirection : java/l
 public final class io/github/ollin/kdaisyui/components/DividerKt {
 	public static final fun daisyDivider (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDivider$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDividerClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyDividerClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DividerPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -422,8 +462,11 @@ public final class io/github/ollin/kdaisyui/components/DividerPlacement : java/l
 public final class io/github/ollin/kdaisyui/components/DockKt {
 	public static final fun daisyDock (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDock$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDockClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyDockClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 	public static final fun daisyDockLabel (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDockLabel$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDockLabelClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DockSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -443,14 +486,21 @@ public final class io/github/ollin/kdaisyui/components/DrawerKt {
 	public static synthetic fun daisyDrawer$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyDrawerButton (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDrawerButton$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDrawerButtonClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyDrawerClasses (Lkotlinx/html/Tag;ZZ)V
+	public static synthetic fun daisyDrawerClasses$default (Lkotlinx/html/Tag;ZZILjava/lang/Object;)V
 	public static final fun daisyDrawerContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDrawerContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDrawerContentClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyDrawerOverlay (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDrawerOverlay$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDrawerOverlayClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyDrawerSide (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDrawerSide$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDrawerSideClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyDrawerToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDrawerToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDrawerToggleClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DropdownAlign : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -466,8 +516,11 @@ public final class io/github/ollin/kdaisyui/components/DropdownAlign : java/lang
 public final class io/github/ollin/kdaisyui/components/DropdownKt {
 	public static final fun daisyDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDropdownClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyDropdownClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 	public static final fun daisyDropdownContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDropdownContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDropdownContentClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DropdownSide : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -493,17 +546,23 @@ public final class io/github/ollin/kdaisyui/components/DropdownState : java/lang
 public final class io/github/ollin/kdaisyui/components/FabKt {
 	public static final fun daisyFab (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFab$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFabClasses (Lkotlinx/html/Tag;Z)V
+	public static synthetic fun daisyFabClasses$default (Lkotlinx/html/Tag;ZILjava/lang/Object;)V
 	public static final fun daisyFabClose (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFabClose$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFabCloseClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyFabMainAction (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFabMainAction$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFabMainActionClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/FieldsetKt {
 	public static final fun daisyFieldset (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFieldset$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFieldsetClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyFieldsetLegend (Lkotlinx/html/FIELDSET;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFieldsetLegend$default (Lkotlinx/html/FIELDSET;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFieldsetLegendClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/FileInputColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -524,6 +583,8 @@ public final class io/github/ollin/kdaisyui/components/FileInputColor : java/lan
 public final class io/github/ollin/kdaisyui/components/FileInputKt {
 	public static final fun daisyFileInput (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFileInput$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFileInputClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyFileInputClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/FileInputSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -541,8 +602,10 @@ public final class io/github/ollin/kdaisyui/components/FileInputSize : java/lang
 public final class io/github/ollin/kdaisyui/components/FilterKt {
 	public static final fun daisyFilter (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFilter$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFilterClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyFilterReset (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFilterReset$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFilterResetClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/FooterDirection : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -557,27 +620,35 @@ public final class io/github/ollin/kdaisyui/components/FooterDirection : java/la
 public final class io/github/ollin/kdaisyui/components/FooterKt {
 	public static final fun daisyFooter (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFooter$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFooterClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyFooterClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 	public static final fun daisyFooterTitle (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyFooterTitle$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyFooterTitleClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/HeroKt {
 	public static final fun daisyHero (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyHero$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyHeroClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyHeroContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyHeroContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyHeroContentClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyHeroOverlay (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyHeroOverlay$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyHeroOverlayClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/Hover3dKt {
 	public static final fun daisyHover3d (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyHover3d$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyHover3dClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/HoverGalleryKt {
 	public static final fun daisyHoverGallery (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyHoverGallery$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyHoverGalleryClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/IndicatorItemHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -603,8 +674,11 @@ public final class io/github/ollin/kdaisyui/components/IndicatorItemVerticalPlac
 public final class io/github/ollin/kdaisyui/components/IndicatorKt {
 	public static final fun daisyIndicator (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyIndicator$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyIndicatorClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyIndicatorItem (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyIndicatorItem$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyIndicatorItemClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyIndicatorItemClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/InputColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -625,6 +699,8 @@ public final class io/github/ollin/kdaisyui/components/InputColor : java/lang/En
 public final class io/github/ollin/kdaisyui/components/InputKt {
 	public static final fun daisyInput (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLkotlinx/html/InputType;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyInput$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLkotlinx/html/InputType;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyInputClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyInputClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/InputSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -651,6 +727,8 @@ public final class io/github/ollin/kdaisyui/components/JoinDirection : java/lang
 public final class io/github/ollin/kdaisyui/components/JoinKt {
 	public static final fun daisyJoin (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyJoin$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyJoinClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyJoinClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/JoinScope : kotlinx/html/DIV {
@@ -673,6 +751,8 @@ public final class io/github/ollin/kdaisyui/components/JoinScope : kotlinx/html/
 public final class io/github/ollin/kdaisyui/components/KbdKt {
 	public static final fun daisyKbd (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyKbd$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyKbdClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyKbdClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/KbdSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -690,6 +770,7 @@ public final class io/github/ollin/kdaisyui/components/KbdSize : java/lang/Enum,
 public final class io/github/ollin/kdaisyui/components/LabelKt {
 	public static final fun daisyLabel (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyLabel$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyLabelClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/LinkColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -710,6 +791,8 @@ public final class io/github/ollin/kdaisyui/components/LinkColor : java/lang/Enu
 public final class io/github/ollin/kdaisyui/components/LinkKt {
 	public static final fun daisyLink (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyLink$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyLinkClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyLinkClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ListColumn : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -724,11 +807,15 @@ public final class io/github/ollin/kdaisyui/components/ListColumn : java/lang/En
 public final class io/github/ollin/kdaisyui/components/ListKt {
 	public static final fun daisyList (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyList$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyListClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyListClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/LoadingKt {
 	public static final fun daisyLoading (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyLoading$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyLoadingClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyLoadingClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/LoadingSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -768,6 +855,8 @@ public final class io/github/ollin/kdaisyui/components/MaskHalf : java/lang/Enum
 public final class io/github/ollin/kdaisyui/components/MaskKt {
 	public static final fun daisyMask (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMask$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMaskClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyMaskClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/MaskStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -796,6 +885,9 @@ public final class io/github/ollin/kdaisyui/components/MegamenuKt {
 	public static synthetic fun daisyMegamenu$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyMegamenuActive (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMegamenuActive$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMegamenuActiveClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyMegamenuClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyMegamenuClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 	public static final fun daisyMegamenuPanel (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMegamenuPanel$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
@@ -833,12 +925,17 @@ public final class io/github/ollin/kdaisyui/components/MenuDirection : java/lang
 public final class io/github/ollin/kdaisyui/components/MenuKt {
 	public static final fun daisyMenu (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMenu$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMenuClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZ)V
+	public static synthetic fun daisyMenuClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZILjava/lang/Object;)V
 	public static final fun daisyMenuDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMenuDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMenuDropdownClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyMenuDropdownToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMenuDropdownToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMenuDropdownToggleClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyMenuTitle (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMenuTitle$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMenuTitleClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/MenuSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -856,13 +953,16 @@ public final class io/github/ollin/kdaisyui/components/MenuSize : java/lang/Enum
 public final class io/github/ollin/kdaisyui/components/MockupBrowserKt {
 	public static final fun daisyMockupBrowser (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMockupBrowser$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMockupBrowserClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyMockupBrowserToolbar (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMockupBrowserToolbar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMockupBrowserToolbarClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/MockupCodeKt {
 	public static final fun daisyMockupCode (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMockupCode$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMockupCodeClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/MockupPhoneKt {
@@ -870,13 +970,17 @@ public final class io/github/ollin/kdaisyui/components/MockupPhoneKt {
 	public static synthetic fun daisyMockupPhone$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyMockupPhoneCamera (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMockupPhoneCamera$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMockupPhoneCameraClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyMockupPhoneClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyMockupPhoneDisplay (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMockupPhoneDisplay$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMockupPhoneDisplayClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/MockupWindowKt {
 	public static final fun daisyMockupWindow (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMockupWindow$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMockupWindowClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ModalHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -893,14 +997,21 @@ public final class io/github/ollin/kdaisyui/components/ModalKt {
 	public static synthetic fun daisyModal$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyModalAction (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyModalAction$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyModalActionClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyModalBackdrop (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyModalBackdrop$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyModalBackdropClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyModalBox (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyModalBox$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyModalBoxClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyModalClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyModalClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 	public static final fun daisyModalPopover (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyModalPopover$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyModalPopoverClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyModalToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyModalToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyModalToggleClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ModalVerticalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -918,10 +1029,14 @@ public final class io/github/ollin/kdaisyui/components/NavbarKt {
 	public static synthetic fun daisyNavbar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyNavbarCenter (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyNavbarCenter$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyNavbarCenterClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyNavbarClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyNavbarEnd (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyNavbarEnd$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyNavbarEndClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyNavbarStart (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyNavbarStart$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyNavbarStartClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/OtpColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -942,6 +1057,8 @@ public final class io/github/ollin/kdaisyui/components/OtpColor : java/lang/Enum
 public final class io/github/ollin/kdaisyui/components/OtpKt {
 	public static final fun daisyOtp (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyOtp$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyOtpClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyOtpClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/OtpSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -974,11 +1091,14 @@ public final class io/github/ollin/kdaisyui/components/ProgressColor : java/lang
 public final class io/github/ollin/kdaisyui/components/ProgressKt {
 	public static final fun daisyProgress (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyProgress$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyProgressClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyProgressClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/RadialProgressKt {
 	public static final fun daisyRadialProgress (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyRadialProgress$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyRadialProgressClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/RadioColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -999,6 +1119,8 @@ public final class io/github/ollin/kdaisyui/components/RadioColor : java/lang/En
 public final class io/github/ollin/kdaisyui/components/RadioKt {
 	public static final fun daisyRadio (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyRadio$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyRadioClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyRadioClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/RadioSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1031,6 +1153,8 @@ public final class io/github/ollin/kdaisyui/components/RangeColor : java/lang/En
 public final class io/github/ollin/kdaisyui/components/RangeKt {
 	public static final fun daisyRange (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyRange$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyRangeClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyRangeClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/RangeSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1048,6 +1172,8 @@ public final class io/github/ollin/kdaisyui/components/RangeSize : java/lang/Enu
 public final class io/github/ollin/kdaisyui/components/RatingKt {
 	public static final fun daisyRating (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyRating$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyRatingClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZZ)V
+	public static synthetic fun daisyRatingClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/RatingSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1080,6 +1206,8 @@ public final class io/github/ollin/kdaisyui/components/SelectColor : java/lang/E
 public final class io/github/ollin/kdaisyui/components/SelectKt {
 	public static final fun daisySelect (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySelect$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisySelectClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisySelectClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/SelectSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1097,13 +1225,17 @@ public final class io/github/ollin/kdaisyui/components/SelectSize : java/lang/En
 public final class io/github/ollin/kdaisyui/components/SkeletonKt {
 	public static final fun daisySkeleton (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySkeleton$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisySkeletonClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisySkeletonText (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySkeletonText$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisySkeletonTextClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/StackKt {
 	public static final fun daisyStack (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStack$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStackClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyStackClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/StackPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1122,16 +1254,24 @@ public final class io/github/ollin/kdaisyui/components/StatKt {
 	public static synthetic fun daisyStat$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyStatActions (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStatActions$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStatActionsClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyStatClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyStatDesc (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStatDesc$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStatDescClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyStatFigure (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStatFigure$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStatFigureClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyStatTitle (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStatTitle$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStatTitleClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyStatValue (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStatValue$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStatValueClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyStats (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStats$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStatsClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyStatsClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/StatsDirection : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1161,6 +1301,8 @@ public final class io/github/ollin/kdaisyui/components/StatusColor : java/lang/E
 public final class io/github/ollin/kdaisyui/components/StatusKt {
 	public static final fun daisyStatus (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStatus$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStatusClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyStatusClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/StatusSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1202,21 +1344,31 @@ public final class io/github/ollin/kdaisyui/components/StepsDirection : java/lan
 public final class io/github/ollin/kdaisyui/components/StepsKt {
 	public static final fun daisyStep (Lkotlinx/html/UL;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStep$default (Lkotlinx/html/UL;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStepClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyStepClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 	public static final fun daisyStepIcon (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyStepIcon$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStepIconClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisySteps (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySteps$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyStepsClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyStepsClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/SwapKt {
 	public static final fun daisySwap (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySwap$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisySwapClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisySwapClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 	public static final fun daisySwapIndeterminate (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySwapIndeterminate$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisySwapIndeterminateClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisySwapOff (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySwapOff$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisySwapOffClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisySwapOn (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySwapOn$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisySwapOnClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/SwapStyle : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1231,17 +1383,26 @@ public final class io/github/ollin/kdaisyui/components/SwapStyle : java/lang/Enu
 public final class io/github/ollin/kdaisyui/components/TabKt {
 	public static final fun daisyTab (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTab$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTabClasses (Lkotlinx/html/Tag;ZZ)V
+	public static synthetic fun daisyTabClasses$default (Lkotlinx/html/Tag;ZZILjava/lang/Object;)V
 	public static final fun daisyTabContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTabContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTabContentClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyTabRadio (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTabRadio$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTabRadioClasses (Lkotlinx/html/Tag;ZZ)V
+	public static synthetic fun daisyTabRadioClasses$default (Lkotlinx/html/Tag;ZZILjava/lang/Object;)V
 	public static final fun daisyTabs (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTabs$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTabsClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyTabsClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/TableKt {
 	public static final fun daisyTable (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTable$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTableClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZ)V
+	public static synthetic fun daisyTableClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/TableSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1290,6 +1451,7 @@ public final class io/github/ollin/kdaisyui/components/TabsStyle : java/lang/Enu
 public final class io/github/ollin/kdaisyui/components/TextRotateKt {
 	public static final fun daisyTextRotate (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTextRotate$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTextRotateClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/TextareaColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1310,6 +1472,8 @@ public final class io/github/ollin/kdaisyui/components/TextareaColor : java/lang
 public final class io/github/ollin/kdaisyui/components/TextareaKt {
 	public static final fun daisyTextarea (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTextarea$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTextareaClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyTextareaClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/TextareaSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1327,6 +1491,7 @@ public final class io/github/ollin/kdaisyui/components/TextareaSize : java/lang/
 public final class io/github/ollin/kdaisyui/components/ThemeControllerKt {
 	public static final fun daisyThemeController (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyThemeController$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyThemeControllerClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/TimelineDirection : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1341,12 +1506,20 @@ public final class io/github/ollin/kdaisyui/components/TimelineDirection : java/
 public final class io/github/ollin/kdaisyui/components/TimelineKt {
 	public static final fun daisyTimeline (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTimeline$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimelineClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZZ)V
+	public static synthetic fun daisyTimelineClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZZILjava/lang/Object;)V
 	public static final fun daisyTimelineEnd (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTimelineEnd$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimelineEndClasses (Lkotlinx/html/Tag;Z)V
+	public static synthetic fun daisyTimelineEndClasses$default (Lkotlinx/html/Tag;ZILjava/lang/Object;)V
 	public static final fun daisyTimelineMiddle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTimelineMiddle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimelineMiddleClasses (Lkotlinx/html/Tag;Z)V
+	public static synthetic fun daisyTimelineMiddleClasses$default (Lkotlinx/html/Tag;ZILjava/lang/Object;)V
 	public static final fun daisyTimelineStart (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTimelineStart$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTimelineStartClasses (Lkotlinx/html/Tag;Z)V
+	public static synthetic fun daisyTimelineStartClasses$default (Lkotlinx/html/Tag;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ToastHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1362,6 +1535,8 @@ public final class io/github/ollin/kdaisyui/components/ToastHorizontalPlacement 
 public final class io/github/ollin/kdaisyui/components/ToastKt {
 	public static final fun daisyToast (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyToast$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyToastClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyToastClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ToastVerticalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1392,6 +1567,8 @@ public final class io/github/ollin/kdaisyui/components/ToggleColor : java/lang/E
 public final class io/github/ollin/kdaisyui/components/ToggleKt {
 	public static final fun daisyToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyToggleClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyToggleClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/ToggleSize : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1433,8 +1610,11 @@ public final class io/github/ollin/kdaisyui/components/TooltipColor : java/lang/
 public final class io/github/ollin/kdaisyui/components/TooltipKt {
 	public static final fun daisyTooltip (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTooltip$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTooltipClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Z)V
+	public static synthetic fun daisyTooltipClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 	public static final fun daisyTooltipContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyTooltipContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyTooltipContentClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/TooltipSide : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
@@ -1451,8 +1631,10 @@ public final class io/github/ollin/kdaisyui/components/TooltipSide : java/lang/E
 public final class io/github/ollin/kdaisyui/components/ValidatorKt {
 	public static final fun daisyValidator (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyValidator$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyValidatorClasses (Lkotlinx/html/Tag;)V
 	public static final fun daisyValidatorHint (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyValidatorHint$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyValidatorHintClasses (Lkotlinx/html/Tag;)V
 }
 
 public abstract class io/github/ollin/kdaisyui/core/AnnotatedIdBase : io/github/ollin/kdaisyui/core/HtmlId {

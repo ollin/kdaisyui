@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `rating-`) */
 enum class RatingSize(internal val className: String) : ClassValues<RatingSize> {
@@ -58,4 +59,16 @@ fun FlowContent.daisyRating(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyRating` writes, on the element this is called on. */
+fun Tag.daisyRatingClasses(
+    size: ClassValues<RatingSize>? = null,
+    half: Boolean = false,
+    hidden: Boolean = false,
+) {
+    addClassNames("rating")
+    addClassNames(size)
+    if (half) addClassNames("rating-half")
+    if (hidden) addClassNames("rating-hidden")
 }

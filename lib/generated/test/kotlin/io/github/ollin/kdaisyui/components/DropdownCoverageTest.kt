@@ -149,6 +149,114 @@ class DropdownCoverageTest {
     }
 
     @Test
+    fun dropdownClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses()
+        }
+        assertRendered(html, "dropdown", "DropdownClasses defaults")
+    }
+
+    @Test
+    fun dropdownClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                hover = true,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-hover", "DropdownClasses all flags")
+    }
+
+    @Test
+    fun dropdownClasses_side_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                side = DropdownSide.Top,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-top", "DropdownClasses side Top")
+    }
+
+    @Test
+    fun dropdownClasses_side_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                side = DropdownSide.Bottom,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-bottom", "DropdownClasses side Bottom")
+    }
+
+    @Test
+    fun dropdownClasses_side_left() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                side = DropdownSide.Left,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-left", "DropdownClasses side Left")
+    }
+
+    @Test
+    fun dropdownClasses_side_right() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                side = DropdownSide.Right,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-right", "DropdownClasses side Right")
+    }
+
+    @Test
+    fun dropdownClasses_align_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                align = DropdownAlign.Start,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-start", "DropdownClasses align Start")
+    }
+
+    @Test
+    fun dropdownClasses_align_center() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                align = DropdownAlign.Center,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-center", "DropdownClasses align Center")
+    }
+
+    @Test
+    fun dropdownClasses_align_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                align = DropdownAlign.End,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-end", "DropdownClasses align End")
+    }
+
+    @Test
+    fun dropdownClasses_state_open() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                state = DropdownState.Open,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-open", "DropdownClasses state Open")
+    }
+
+    @Test
+    fun dropdownClasses_state_close() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownClasses(
+                state = DropdownState.Close,
+            )
+        }
+        assertRendered(html, "dropdown dropdown-close", "DropdownClasses state Close")
+    }
+
+    @Test
     fun dropdownContent_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdownContent(
@@ -170,5 +278,21 @@ class DropdownCoverageTest {
         }
         assertRendered(html, "dropdown-content zz-extra", "DropdownContent all flags", closes = "</ul></div>")
         assertCommonFlags(html, "DropdownContent")
+    }
+
+    @Test
+    fun dropdownContentClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownContentClasses()
+        }
+        assertRendered(html, "dropdown-content", "DropdownContentClasses defaults")
+    }
+
+    @Test
+    fun dropdownContentClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownContentClasses()
+        }
+        assertRendered(html, "dropdown-content", "DropdownContentClasses all flags")
     }
 }

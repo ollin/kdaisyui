@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 enum class CollapseIcon(internal val className: String) : ClassValues<CollapseIcon> {
     /** CSS: `collapse-arrow` */
@@ -60,6 +61,16 @@ fun FlowContent.daisyCollapse(
     }
 }
 
+/** The classes `daisyCollapse` writes, on the element this is called on. */
+fun Tag.daisyCollapseClasses(
+    icon: ClassValues<CollapseIcon>? = null,
+    state: ClassValues<CollapseState>? = null,
+) {
+    addClassNames("collapse")
+    addClassNames(icon)
+    addClassNames(state)
+}
+
 /** Renders `<div class="collapse-title ...">`. */
 fun FlowContent.daisyCollapseTitle(
     text: String? = null,
@@ -80,6 +91,11 @@ fun FlowContent.daisyCollapseTitle(
     }
 }
 
+/** The classes `daisyCollapseTitle` writes, on the element this is called on. */
+fun Tag.daisyCollapseTitleClasses() {
+    addClassNames("collapse-title")
+}
+
 /** Renders `<div class="collapse-content ...">`. */
 fun FlowContent.daisyCollapseContent(
     id: HtmlId? = null,
@@ -94,4 +110,9 @@ fun FlowContent.daisyCollapseContent(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyCollapseContent` writes, on the element this is called on. */
+fun Tag.daisyCollapseContentClasses() {
+    addClassNames("collapse-content")
 }

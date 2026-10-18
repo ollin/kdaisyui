@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Snap variants for this component (CSS prefix: `carousel-`) */
 enum class CarouselSnap(internal val className: String) : ClassValues<CarouselSnap> {
@@ -64,6 +65,16 @@ fun FlowContent.daisyCarousel(
     }
 }
 
+/** The classes `daisyCarousel` writes, on the element this is called on. */
+fun Tag.daisyCarouselClasses(
+    snap: ClassValues<CarouselSnap>? = null,
+    direction: ClassValues<CarouselDirection>? = null,
+) {
+    addClassNames("carousel")
+    addClassNames(snap)
+    addClassNames(direction)
+}
+
 /** Renders `<div class="carousel-item ...">`. */
 fun FlowContent.daisyCarouselItem(
     id: HtmlId? = null,
@@ -78,4 +89,9 @@ fun FlowContent.daisyCarouselItem(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyCarouselItem` writes, on the element this is called on. */
+fun Tag.daisyCarouselItemClasses() {
+    addClassNames("carousel-item")
 }

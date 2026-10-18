@@ -12,6 +12,7 @@ import kotlinx.html.h2
 import kotlinx.html.H2
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -87,6 +88,26 @@ fun FlowContent.daisyMenu(
     }
 }
 
+/** The classes `daisyMenu` writes, on the element this is called on. */
+fun Tag.daisyMenuClasses(
+    size: ClassValues<MenuSize>? = null,
+    direction: ClassValues<MenuDirection>? = null,
+    active: Boolean = false,
+    disabled: Boolean = false,
+    dropdownShow: Boolean = false,
+    focus: Boolean = false,
+    paged: Boolean = false,
+) {
+    addClassNames("menu")
+    addClassNames(size)
+    addClassNames(direction)
+    if (active) addClassNames("menu-active")
+    if (disabled) addClassNames("menu-disabled")
+    if (dropdownShow) addClassNames("menu-dropdown-show")
+    if (focus) addClassNames("menu-focus")
+    if (paged) addClassNames("menu-paged")
+}
+
 /** Renders `<h2 class="menu-title ...">`. */
 fun FlowContent.daisyMenuTitle(
     text: String? = null,
@@ -107,6 +128,11 @@ fun FlowContent.daisyMenuTitle(
     }
 }
 
+/** The classes `daisyMenuTitle` writes, on the element this is called on. */
+fun Tag.daisyMenuTitleClasses() {
+    addClassNames("menu-title")
+}
+
 /** Renders `<ul class="menu-dropdown ...">`. */
 fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
@@ -123,6 +149,11 @@ fun FlowContent.daisyMenuDropdown(
     }
 }
 
+/** The classes `daisyMenuDropdown` writes, on the element this is called on. */
+fun Tag.daisyMenuDropdownClasses() {
+    addClassNames("menu-dropdown")
+}
+
 /** Renders `<span class="menu-dropdown-toggle ...">`. */
 fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
@@ -137,4 +168,9 @@ fun FlowContent.daisyMenuDropdownToggle(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMenuDropdownToggle` writes, on the element this is called on. */
+fun Tag.daisyMenuDropdownToggleClasses() {
+    addClassNames("menu-dropdown-toggle")
 }

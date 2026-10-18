@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Calendar includes styles for different calendar libraries. Renders `<div class="cally ...">`.
@@ -30,4 +31,9 @@ fun FlowContent.daisyCalendar(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyCalendar` writes, on the element this is called on. */
+fun Tag.daisyCalendarClasses() {
+    addClassNames("cally")
 }

@@ -70,4 +70,42 @@ class AvatarCoverageTest {
         }
         assertRendered(html, "avatar avatar-offline", "Avatar presence Offline")
     }
+
+    @Test
+    fun avatarClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatarClasses()
+        }
+        assertRendered(html, "avatar", "AvatarClasses defaults")
+    }
+
+    @Test
+    fun avatarClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatarClasses(
+                placeholder = true,
+            )
+        }
+        assertRendered(html, "avatar avatar-placeholder", "AvatarClasses all flags")
+    }
+
+    @Test
+    fun avatarClasses_presence_online() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatarClasses(
+                presence = AvatarPresence.Online,
+            )
+        }
+        assertRendered(html, "avatar avatar-online", "AvatarClasses presence Online")
+    }
+
+    @Test
+    fun avatarClasses_presence_offline() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatarClasses(
+                presence = AvatarPresence.Offline,
+            )
+        }
+        assertRendered(html, "avatar avatar-offline", "AvatarClasses presence Offline")
+    }
 }

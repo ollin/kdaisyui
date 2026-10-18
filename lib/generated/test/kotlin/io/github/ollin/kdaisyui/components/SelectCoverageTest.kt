@@ -193,4 +193,152 @@ class SelectCoverageTest {
         }
         assertRendered(html, "select select-xl", "Select size Xl")
     }
+
+    @Test
+    fun selectClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses()
+        }
+        assertRendered(html, "select", "SelectClasses defaults")
+    }
+
+    @Test
+    fun selectClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                ghost = true,
+            )
+        }
+        assertRendered(html, "select select-ghost", "SelectClasses all flags")
+    }
+
+    @Test
+    fun selectClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Neutral,
+            )
+        }
+        assertRendered(html, "select select-neutral", "SelectClasses color Neutral")
+    }
+
+    @Test
+    fun selectClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Primary,
+            )
+        }
+        assertRendered(html, "select select-primary", "SelectClasses color Primary")
+    }
+
+    @Test
+    fun selectClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Secondary,
+            )
+        }
+        assertRendered(html, "select select-secondary", "SelectClasses color Secondary")
+    }
+
+    @Test
+    fun selectClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Accent,
+            )
+        }
+        assertRendered(html, "select select-accent", "SelectClasses color Accent")
+    }
+
+    @Test
+    fun selectClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Info,
+            )
+        }
+        assertRendered(html, "select select-info", "SelectClasses color Info")
+    }
+
+    @Test
+    fun selectClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Success,
+            )
+        }
+        assertRendered(html, "select select-success", "SelectClasses color Success")
+    }
+
+    @Test
+    fun selectClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Warning,
+            )
+        }
+        assertRendered(html, "select select-warning", "SelectClasses color Warning")
+    }
+
+    @Test
+    fun selectClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                color = SelectColor.Error,
+            )
+        }
+        assertRendered(html, "select select-error", "SelectClasses color Error")
+    }
+
+    @Test
+    fun selectClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                size = SelectSize.Xs,
+            )
+        }
+        assertRendered(html, "select select-xs", "SelectClasses size Xs")
+    }
+
+    @Test
+    fun selectClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                size = SelectSize.Sm,
+            )
+        }
+        assertRendered(html, "select select-sm", "SelectClasses size Sm")
+    }
+
+    @Test
+    fun selectClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                size = SelectSize.Md,
+            )
+        }
+        assertRendered(html, "select select-md", "SelectClasses size Md")
+    }
+
+    @Test
+    fun selectClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                size = SelectSize.Lg,
+            )
+        }
+        assertRendered(html, "select select-lg", "SelectClasses size Lg")
+    }
+
+    @Test
+    fun selectClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySelectClasses(
+                size = SelectSize.Xl,
+            )
+        }
+        assertRendered(html, "select select-xl", "SelectClasses size Xl")
+    }
 }

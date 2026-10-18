@@ -185,4 +185,152 @@ class InputCoverageTest {
         }
         assertRendered(html, "input input-xl", "Input size Xl")
     }
+
+    @Test
+    fun inputClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses()
+        }
+        assertRendered(html, "input", "InputClasses defaults")
+    }
+
+    @Test
+    fun inputClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                ghost = true,
+            )
+        }
+        assertRendered(html, "input input-ghost", "InputClasses all flags")
+    }
+
+    @Test
+    fun inputClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Neutral,
+            )
+        }
+        assertRendered(html, "input input-neutral", "InputClasses color Neutral")
+    }
+
+    @Test
+    fun inputClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Primary,
+            )
+        }
+        assertRendered(html, "input input-primary", "InputClasses color Primary")
+    }
+
+    @Test
+    fun inputClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Secondary,
+            )
+        }
+        assertRendered(html, "input input-secondary", "InputClasses color Secondary")
+    }
+
+    @Test
+    fun inputClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Accent,
+            )
+        }
+        assertRendered(html, "input input-accent", "InputClasses color Accent")
+    }
+
+    @Test
+    fun inputClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Info,
+            )
+        }
+        assertRendered(html, "input input-info", "InputClasses color Info")
+    }
+
+    @Test
+    fun inputClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Success,
+            )
+        }
+        assertRendered(html, "input input-success", "InputClasses color Success")
+    }
+
+    @Test
+    fun inputClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Warning,
+            )
+        }
+        assertRendered(html, "input input-warning", "InputClasses color Warning")
+    }
+
+    @Test
+    fun inputClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                color = InputColor.Error,
+            )
+        }
+        assertRendered(html, "input input-error", "InputClasses color Error")
+    }
+
+    @Test
+    fun inputClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                size = InputSize.Xs,
+            )
+        }
+        assertRendered(html, "input input-xs", "InputClasses size Xs")
+    }
+
+    @Test
+    fun inputClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                size = InputSize.Sm,
+            )
+        }
+        assertRendered(html, "input input-sm", "InputClasses size Sm")
+    }
+
+    @Test
+    fun inputClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                size = InputSize.Md,
+            )
+        }
+        assertRendered(html, "input input-md", "InputClasses size Md")
+    }
+
+    @Test
+    fun inputClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                size = InputSize.Lg,
+            )
+        }
+        assertRendered(html, "input input-lg", "InputClasses size Lg")
+    }
+
+    @Test
+    fun inputClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInputClasses(
+                size = InputSize.Xl,
+            )
+        }
+        assertRendered(html, "input input-xl", "InputClasses size Xl")
+    }
 }

@@ -47,4 +47,20 @@ class CalendarCoverageTest {
         assertRendered(html, "cally zz-extra", "Calendar all flags", closes = "</div></div>")
         assertCommonFlags(html, "Calendar")
     }
+
+    @Test
+    fun calendarClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCalendarClasses()
+        }
+        assertRendered(html, "cally", "CalendarClasses defaults")
+    }
+
+    @Test
+    fun calendarClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCalendarClasses()
+        }
+        assertRendered(html, "cally", "CalendarClasses all flags")
+    }
 }

@@ -11,6 +11,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.li
 import kotlinx.html.LI
+import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -34,6 +35,11 @@ fun FlowContent.daisyBreadcrumbs(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyBreadcrumbs` writes, on the element this is called on. */
+fun Tag.daisyBreadcrumbsClasses() {
+    addClassNames("breadcrumbs")
 }
 
 /** Structural wrapper. Renders `<ul>`. */

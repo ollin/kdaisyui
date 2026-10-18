@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.progress
 import kotlinx.html.PROGRESS
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `progress-`) */
 enum class ProgressColor(internal val className: String) : ClassValues<ProgressColor> {
@@ -58,4 +59,12 @@ fun FlowContent.daisyProgress(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyProgress` writes, on the element this is called on. */
+fun Tag.daisyProgressClasses(
+    color: ClassValues<ProgressColor>? = null,
+) {
+    addClassNames("progress")
+    addClassNames(color)
 }

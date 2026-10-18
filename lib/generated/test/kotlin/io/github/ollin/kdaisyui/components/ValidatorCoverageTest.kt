@@ -46,6 +46,22 @@ class ValidatorCoverageTest {
     }
 
     @Test
+    fun validatorClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidatorClasses()
+        }
+        assertRendered(html, "validator", "ValidatorClasses defaults")
+    }
+
+    @Test
+    fun validatorClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidatorClasses()
+        }
+        assertRendered(html, "validator", "ValidatorClasses all flags")
+    }
+
+    @Test
     fun validatorHint_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyValidatorHint(
@@ -67,5 +83,21 @@ class ValidatorCoverageTest {
         }
         assertRendered(html, "validator-hint zz-extra", "ValidatorHint all flags", closes = "</p></div>")
         assertCommonFlags(html, "ValidatorHint")
+    }
+
+    @Test
+    fun validatorHintClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidatorHintClasses()
+        }
+        assertRendered(html, "validator-hint", "ValidatorHintClasses defaults")
+    }
+
+    @Test
+    fun validatorHintClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidatorHintClasses()
+        }
+        assertRendered(html, "validator-hint", "ValidatorHintClasses all flags")
     }
 }

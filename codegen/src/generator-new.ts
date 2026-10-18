@@ -262,6 +262,35 @@ function booleanLines(shape: FunctionShape): string[] {
     .map(parameter => `        if (${parameter.name}) addClassNames("${parameter.cssClass}")`)
 }
 
+/** The parameters a class sibling takes: the function's classes, with an extra's as a toggle. */
+function siblingParameters(shape: FunctionShape): ParameterShape[] {
+  return shape.parameters
+    .filter(parameter => parameter.enumName !== undefined || parameter.cssClass !== undefined || parameter.writes !== undefined)
+    .map(parameter => (parameter.writes === undefined ? parameter : { ...parameter, type: 'Boolean', default: 'false' }))
+}
+
+/** Whether a function writes any class, and so has a class sibling. */
+function hasSibling(shape: FunctionShape): boolean {
+  return shape.cssClass !== null || shape.modifierClasses.length > 0 || siblingParameters(shape).length > 0
+}
+
+/**
+ * `Tag.<name>Classes`: the function's classes, from the same typed parameters, added to the
+ * element it is called on. It is how one element wears two components, and how a component's
+ * classes reach an element its function does not render.
+ */
+function renderSibling(shape: FunctionShape): string {
+  const parameters = siblingParameters(shape)
+  const signature = parameters.length === 0 ? '()' : `(\n${parameters.map(renderParameter).join('\n')}\n)`
+  const lines = [
+    ...[shape.cssClass, ...shape.modifierClasses].filter(cls => cls !== null).map(cls => `addClassNames("${cls}")`),
+    ...classValuesLines(shape).map(line => line.trim()),
+    ...booleanLines(shape).map(line => line.trim()),
+    ...parameters.flatMap(parameter => (parameter.writes ?? []).map(cls => `if (${parameter.name}) addClassNames("${cls}")`)),
+  ]
+  return `/** The classes \`${shape.name}\` writes, on the element this is called on. */\nfun Tag.${shape.name}Classes${signature} {\n${lines.map(line => `    ${line}`).join('\n')}\n}`
+}
+
 /** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
 function secondaryFunctionBody(shape: FunctionShape): string {
   const hasTextParam = shape.parameters.some(parameter => parameter.name === 'text')
@@ -332,6 +361,7 @@ function collectImports(shape: ComponentShape, componentConfig: MainFunctionConf
     ...shape.functions.flatMap(functionImports),
     ...(shape.scope === undefined ? [] : scopeImports(shape.scope)),
     ...configImports(componentConfig),
+    ...(shape.functions.some(hasSibling) ? ['kotlinx.html.Tag'] : []),
   ])
 
   // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
@@ -363,9 +393,10 @@ export function generateKotlinFile(shape: ComponentShape, componentConfig: MainF
   ].join('\n')
 
   const enums = shape.enums.map(renderEnum).join('\n')
-  const functions = shape.functions.map(fn =>
+  const functions = shape.functions.map(fn => [
     renderFunction(fn, renderBody(fn, shape.prefix ?? '', componentConfig)),
-  )
+    ...(hasSibling(fn) ? [renderSibling(fn)] : []),
+  ].join('\n\n'))
   const scope = shape.scope === undefined ? '' : renderScope(shape.scope, shape.functions[0].element)
   const body = [enums, ...functions, scope].filter(Boolean).join('\n\n')
 

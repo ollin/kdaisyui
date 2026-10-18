@@ -4,12 +4,12 @@
   "class": "indicator",
   "enums": [
     {
-      "name": "IndicatorHorizontalPlacement",
+      "name": "IndicatorItemHorizontalPlacement",
       "label": "HorizontalPlacement variants",
       "classes": ["indicator-start", "indicator-center", "indicator-end"]
     },
     {
-      "name": "IndicatorVerticalPlacement",
+      "name": "IndicatorItemVerticalPlacement",
       "label": "VerticalPlacement variants",
       "classes": ["indicator-top", "indicator-middle", "indicator-bottom"]
     }
@@ -35,13 +35,13 @@
         {
           "kind": "enum",
           "name": "horizontalPlacement",
-          "enum": "IndicatorHorizontalPlacement",
+          "enum": "IndicatorItemHorizontalPlacement",
           "doc": "HorizontalPlacement variant"
         },
         {
           "kind": "enum",
           "name": "verticalPlacement",
-          "enum": "IndicatorVerticalPlacement",
+          "enum": "IndicatorItemVerticalPlacement",
           "doc": "VerticalPlacement variant"
         }
       ]

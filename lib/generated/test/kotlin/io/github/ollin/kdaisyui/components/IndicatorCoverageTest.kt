@@ -76,7 +76,7 @@ class IndicatorCoverageTest {
     fun indicatorItem_horizontalPlacement_start() {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItem(
-                horizontalPlacement = IndicatorHorizontalPlacement.Start,
+                horizontalPlacement = IndicatorItemHorizontalPlacement.Start,
                 content = { },
             )
         }
@@ -87,7 +87,7 @@ class IndicatorCoverageTest {
     fun indicatorItem_horizontalPlacement_center() {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItem(
-                horizontalPlacement = IndicatorHorizontalPlacement.Center,
+                horizontalPlacement = IndicatorItemHorizontalPlacement.Center,
                 content = { },
             )
         }
@@ -98,7 +98,7 @@ class IndicatorCoverageTest {
     fun indicatorItem_horizontalPlacement_end() {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItem(
-                horizontalPlacement = IndicatorHorizontalPlacement.End,
+                horizontalPlacement = IndicatorItemHorizontalPlacement.End,
                 content = { },
             )
         }
@@ -109,7 +109,7 @@ class IndicatorCoverageTest {
     fun indicatorItem_verticalPlacement_top() {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItem(
-                verticalPlacement = IndicatorVerticalPlacement.Top,
+                verticalPlacement = IndicatorItemVerticalPlacement.Top,
                 content = { },
             )
         }
@@ -120,7 +120,7 @@ class IndicatorCoverageTest {
     fun indicatorItem_verticalPlacement_middle() {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItem(
-                verticalPlacement = IndicatorVerticalPlacement.Middle,
+                verticalPlacement = IndicatorItemVerticalPlacement.Middle,
                 content = { },
             )
         }
@@ -131,7 +131,7 @@ class IndicatorCoverageTest {
     fun indicatorItem_verticalPlacement_bottom() {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItem(
-                verticalPlacement = IndicatorVerticalPlacement.Bottom,
+                verticalPlacement = IndicatorItemVerticalPlacement.Bottom,
                 content = { },
             )
         }

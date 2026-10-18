@@ -13,7 +13,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
 
-enum class IndicatorHorizontalPlacement(internal val className: String) : ClassValues<IndicatorHorizontalPlacement> {
+enum class IndicatorItemHorizontalPlacement(internal val className: String) : ClassValues<IndicatorItemHorizontalPlacement> {
     /** CSS: `indicator-start` */
     Start("indicator-start"),
     /** CSS: `indicator-center` */
@@ -25,7 +25,7 @@ enum class IndicatorHorizontalPlacement(internal val className: String) : ClassV
     override val classNames: List<String> get() = listOf(className)
 }
 
-enum class IndicatorVerticalPlacement(internal val className: String) : ClassValues<IndicatorVerticalPlacement> {
+enum class IndicatorItemVerticalPlacement(internal val className: String) : ClassValues<IndicatorItemVerticalPlacement> {
     /** CSS: `indicator-top` */
     Top("indicator-top"),
     /** CSS: `indicator-middle` */
@@ -63,8 +63,8 @@ fun FlowContent.daisyIndicator(
 /** Renders `<span class="indicator-item ...">`. */
 fun FlowContent.daisyIndicatorItem(
     id: HtmlId? = null,
-    horizontalPlacement: ClassValues<IndicatorHorizontalPlacement>? = null,
-    verticalPlacement: ClassValues<IndicatorVerticalPlacement>? = null,
+    horizontalPlacement: ClassValues<IndicatorItemHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<IndicatorItemVerticalPlacement>? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),

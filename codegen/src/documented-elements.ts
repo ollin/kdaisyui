@@ -8,6 +8,7 @@
 import type { ComponentModel, ModelFunction } from './model.ts'
 import { offeredBy } from './model-completeness.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
+import { markedElements } from './parser/documented-classes.ts'
 
 /** A function and the component model that declares it. */
 export interface ModelledFunction {
@@ -36,4 +37,18 @@ export function gapKey(models: readonly ComponentModel[], counted: readonly stri
   const own = new Set(models.flatMap(model => model.functions.map(fn => fn.class)))
   const owned = counted.filter(cls => own.has(cls))
   return [...(owned.length >= 2 ? owned : counted)].sort().join(' ')
+}
+
+/** A documented element no function expresses: its tag and the key its gap is declared by. */
+export interface DocumentedGap {
+  readonly tag: string
+  readonly key: string
+}
+
+/** Every element of a page's examples that no function expresses by its unprefixed classes. */
+export function gapsIn(html: string, models: readonly ComponentModel[]): DocumentedGap[] {
+  return markedElements(html)
+    .map(element => ({ tag: element.tag, counted: element.classes.filter(cls => !cls.isPrefixed).map(cls => cls.className) }))
+    .filter(({ counted }) => counted.length > 0 && expressingFunction(models, counted) === null)
+    .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }

@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { expressingFunction, gapKey } from '../src/documented-elements.ts'
+import { expressingFunction, gapKey, gapsIn } from '../src/documented-elements.ts'
 import { component, part, toggle } from './model-fixture.ts'
 
 const CARD = component('card', 'Card', 'card')
@@ -29,5 +29,13 @@ describe('gapKey', () => {
 
   it('keys a gap within one component by every class', () => {
     assert.equal(gapKey([BUTTON], ['btn-ghost', 'btn']), 'btn btn-ghost')
+  })
+})
+
+describe('gapsIn', () => {
+  it('names each element no function expresses, by its tag and key, and passes the rest', () => {
+    const html = '<div class="$$card-body"><button class="$$btn $$btn-ghost">x</button><li class="$$list-row lg:$$card-body">y</li></div>'
+
+    assert.deepEqual(gapsIn(html, [CARD_WITH_BODY, BUTTON]), [{ tag: 'button', key: 'btn btn-ghost' }, { tag: 'li', key: 'list-row' }])
   })
 })

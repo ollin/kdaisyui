@@ -97,10 +97,9 @@ This replaces the example tests that addressed the main function only.
 called through the main function. 606 such tests exist; parts and nested components are never
 compared with what DaisyUI shows.
 
-**Assumed** that every function's receiver can be supplied in a generated test by a wrapping
-element, as the custom-part tests already do for their receivers. *Wrong if:* a part's receiver
-is a type no single kotlinx.html builder produces, such as a receiver only a sibling function's
-content lambda provides.
+**Verified** that every function's receiver can be supplied in a generated test by a wrapping
+element, as the custom-part tests already do, read from `codegen/model/` on 2026-10-18 (task 1.2):
+the receivers are `FlowContent`, `UL` and `FIELDSET`, each one kotlinx.html builder.
 
 **Assumed** that a function writes nothing on every call that DaisyUI's element omits, so "exactly
 the counted classes" holds. *Wrong if:* the first generation under this rule reports an expressible

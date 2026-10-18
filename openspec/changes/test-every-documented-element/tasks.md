@@ -17,9 +17,11 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
   functions involved: **39 keys**, 12 missing classes and 27 compositions. Spec and D2 revised.
   Expressible by class: 2,083 elements (1,336 main, 722 part, 25 custom); 322 of them on another
   element than the function renders, out of scope.
-- [ ] 1.2 `. d` **Check the receiver assumption**: list every part's receiver and whether a single
+- [x] 1.2 `. d` **Check the receiver assumption**: list every part's receiver and whether a single
   kotlinx.html builder supplies it, as `wrapperTagOf` does for the custom parts. A receiver none
   supplies refutes it; revise the test requirement before block 5.
+  **Checked 2026-10-18, it holds.** The model has three receivers: `FlowContent` (129 functions),
+  `UL` (2) and `FIELDSET` (1). `wrapperTagOf` maps each to one builder, `div`, `ul` and `fieldSet`.
 - [ ] 1.3 `. d` **Check "exactly the counted classes"**: for every expressible element, compare the
   classes its call would write on every call (`class`, `always`) with the counted ones. Each extra
   class is a model defect, listed here and fixed in block 5 before the tests that would fail on it.

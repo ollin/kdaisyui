@@ -80,7 +80,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 ## 6. Documentation and the gate
 
-- [ ] 6.1 `. d` `kdaisyui-codegen`: the classifier, `notExpressed`, what the generated tests now
+- [x] 6.1 `. d` `kdaisyui-codegen`: the classifier, `notExpressed`, what the generated tests now
   cover. `kdaisyui-daisyui-upgrade`: a bump can fail the new gate; step 4 places new gaps.
   `kdaisyui-testing`: the generated test count and what a compile failure there means now.
 - [ ] 6.2 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,

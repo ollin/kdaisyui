@@ -40,8 +40,11 @@ does not compile, because the tag form needs a builder. With `daisyCalendar` ren
   types only.
 - [x] 4.2 `^ F (internal)` The gate fails on a documented tag the table does not know. Red: it names
   `<calendar-date>` on the calendar page.
-- [ ] 4.3 `! F` `CALENDAR_DATE` and `calendarDate` in core, in the table, and `daisyCalendar` renders
+- [x] 4.3 `! F` `CALENDAR_DATE` and `calendarDate` in core, in the table, and `daisyCalendar` renders
   it. BREAKING; README migration entry. Closes #343.
+  Done in two steps after a revert: the first attempt failed `tagFindings`' own test, which used
+  `<calendar-date>` as its tag without a builder. That test moved to a fictional tag; then core's
+  `CALENDAR_DATE` with its own Kotlin test; then the model change.
 
 ## 5. Documentation and the gate
 

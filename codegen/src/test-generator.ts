@@ -5,14 +5,9 @@ import {
   getAllComponentDirs,
   readComponentFrontmatter,
   toPascalCase,
-  type ClassCategory,
 } from './parser/frontmatter.ts'
-import { entryName, isSkipped, readModel, type ComponentModel, type ModelFunction, type ModelParameter } from './model.ts'
-import {
-  documentedElementClasses,
-  markedElements,
-  type DocumentedClass,
-} from './parser/documented-classes.ts'
+import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
+import { markedElements } from './parser/documented-classes.ts'
 import { documentedCall, type DocumentedCall } from './documented-elements.ts'
 
 /**
@@ -121,108 +116,6 @@ function toClassName(componentName) {
   return toPascalCase(componentName)
 }
 
-// The five frontmatter sections whose entries become component parameters. `component` is
-// not among them: it names the element itself, not a modifier of it.
-// `ClassCategory[]`, not `string[]`. This hand-written list is indexed straight into the
-// parsed YAML, and the lookup is `classnames?.[category]` — so a typo here returns undefined,
-// the `?? []` below swallows it, and the component silently loses every modifier in that
-// category with nothing failing. The type is what makes that a mistake you cannot make.
-const MODIFIER_CATEGORIES: ClassCategory[] = ['placement', 'modifier', 'direction', 'behavior', 'style']
-
-/**
- * Every class named under the modifier categories, in document order.
- *
- * A category that is not an array is skipped rather than trusted — the frontmatter is
- * hand-written YAML in a submodule we do not control, and a scalar where a list belongs
- * should not take the build down.
- */
-function modifierClasses(classnames) {
-  return MODIFIER_CATEGORIES
-    .flatMap((category) => {
-      const items = classnames?.[category]
-      return Array.isArray(items) ? items : []
-    })
-    .filter((item) => item.class)
-    .map((item) => item.class)
-}
-
-/**
- * Which classes of a documented example belong to this component, and what it is called.
- *
- * This is a FILTER and nothing more. It used to also answer "and which parameter does each
- * class become", by camel-casing the class name — an answer that was right only while every
- * parameter was a boolean. `classBindings` below answers it now, from the measured model, so
- * the two possible answers cannot disagree.
- */
-function buildClassMappings(frontmatter) {
-  const componentClass = frontmatter.classnames?.component?.[0]?.class
-  const allowedClasses = new Set(componentClass ? [componentClass] : [])
-
-  for (const cssClass of modifierClasses(frontmatter.classnames)) {
-    allowedClasses.add(cssClass)
-  }
-
-  return { allowedClasses, componentClass }
-}
-
-/**
- * How one documented class reaches the generated function: the PARAMETER, `direction` for
- * `menu-horizontal`, and the ARGUMENT, `MenuDirection.Horizontal`, both as the model declares them.
- */
-interface ClassBinding {
-  readonly parameter: string
-  /** Kotlin expression, e.g. `true` or `MenuDirection.Horizontal`. */
-  readonly argument: string
-}
-
-/**
- * A documented class with the component prefix stripped, which is the key the classified model
- * uses. `menu-horizontal` -> `horizontal`, and `glass` -> `glass` because DaisyUI files a few
- * classes under a component without prefixing them.
- */
-function strippedClass(prefix: string | null, cssClass: string): string {
-  return prefix && cssClass.startsWith(`${prefix}-`) ? cssClass.slice(prefix.length + 1) : cssClass
-}
-
-/**
- * What each class one function offers becomes at its call site, read from the component model the
- * Kotlin is generated from, keyed by the class with the component prefix stripped.
- *
- * Enum entries first, then toggles, then the classes an extra parameter writes; the first binding
- * of a class wins. A class a construction always writes is left out: the function has no
- * parameter for it, and the construction has its own test.
- */
-function classBindings(model: ComponentModel, fn: ModelFunction): Record<string, ClassBinding> {
-  const bindings: Record<string, ClassBinding> = {}
-  const parameters = fn.parameters
-  for (const [cssClass, binding] of [...enumBindings(model, parameters), ...toggleBindings(model, parameters), ...writtenBindings(parameters)]) {
-    bindings[strippedClass(model.class, cssClass)] ??= binding
-  }
-  return bindings
-}
-
-type BoundClass = readonly [cssClass: string, binding: ClassBinding]
-
-function enumBindings(model: ComponentModel, parameters: readonly ModelParameter[]): BoundClass[] {
-  const enums = new Map(model.enums.map(declared => [declared.name, declared.classes]))
-  return parameters.flatMap(parameter => (parameter.kind !== 'enum' ? [] : (enums.get(parameter.enum) ?? []).map(
-    (cssClass): BoundClass => [cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${entryName(model, parameter.enum, cssClass)}` }],
-  )))
-}
-
-function toggleBindings(model: ComponentModel, parameters: readonly ModelParameter[]): BoundClass[] {
-  const writtenByConstruction = new Set(model.functions.flatMap(fn => fn.always ?? []))
-  return parameters.flatMap(parameter => (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)
-    ? [[parameter.class, { parameter: parameter.name, argument: 'true' }] as BoundClass]
-    : []))
-}
-
-function writtenBindings(parameters: readonly ModelParameter[]): BoundClass[] {
-  return parameters.flatMap(parameter => (parameter.kind !== 'extra' ? [] : (parameter.writes ?? []).map(
-    (cssClass): BoundClass => [cssClass, { parameter: parameter.name, argument: 'true' }],
-  )))
-}
-
 /** A construction method as the custom-part tests address it: its suffix and what it writes. */
 function customPartsOf(model: ComponentModel) {
   return model.functions.filter(fn => fn.kind === 'custom').map((fn: ModelFunction) => ({
@@ -248,95 +141,6 @@ function toTestFunctionName(name) {
   }
   
   return funcName
-}
-
-/** Everything one component needs to turn a documented element into a call. */
-interface CallModel {
-  readonly componentClass: string
-  readonly prefix: string | null
-  readonly allowedClasses: Set<string>
-  readonly bindings: Record<string, ClassBinding>
-  /**
-   * Classes a custom part writes on every call, so the main function offers no parameter for
-   * them. The example documenting one is that part's example, and the part has its own
-   * assertions — reproducing it through the main function is not possible and not wanted.
-   */
-  readonly writtenByCustomPart: ReadonlySet<string>
-}
-
-/** One generated call: its argument list and the classes it is expected to render. */
-interface ComponentCall {
-  readonly args: string
-  readonly expectedClasses: string
-}
-
-/**
- * A prefixed class as it reaches the page: `lg:menu-horizontal`.
- *
- * Expected as DaisyUI writes it, never as the model declares it: a test that expects what the
- * model says cannot notice the model being wrong. That is how `card-image-full` shipped while
- * DaisyUI's example said `image-full`.
- */
-function emittedVariantClass(documented: DocumentedClass): string {
-  return `${documented.variant}:${documented.className}`
-}
-
-function argumentFor(model: CallModel, documented: DocumentedClass): string {
-  const binding = model.bindings[strippedClass(model.prefix, documented.className)]
-  if (!binding) {
-    throw new Error(
-      `${model.componentClass}: the documented class "${documented.className}" reaches no ` +
-        `generated parameter. Every class DaisyUI lists under a modifier category becomes ` +
-        `either an enum entry or a boolean, so this means the classified model and the ` +
-        `documented markup disagree.`,
-    )
-  }
-  return `${binding.parameter} = ${binding.argument}`
-}
-
-/**
- * Two documented classes answering the SAME parameter cannot both be passed.
- *
- * It means the example wears two members of one exclusive group at once, which contradicts the
- * measurement in `codegen/exclusivity.json`. Failing here says so; emitting the call would
- * produce Kotlin that names an argument twice and a compiler error nobody can trace back.
- */
-function rejectRepeatedParameters(model: CallModel, args: readonly string[]): void {
-  const parameters = args.map(arg => arg.slice(0, arg.indexOf(' =')))
-  const repeated = parameters.filter((name, index) => parameters.indexOf(name) !== index)
-  if (repeated.length === 0) return
-  throw new Error(
-    `${model.componentClass}: a documented example sets ${repeated.join(', ')} twice, so two ` +
-      `members of one exclusive group are worn at once. Either the example or ` +
-      `codegen/exclusivity.json is wrong — re-run \`just measure-exclusivity\`.`,
-  )
-}
-
-/**
- * One documented element turned into the call that reproduces it.
- *
- * A class carrying a Tailwind variant goes to `extraClasses`, because `at()` is parked while the
- * compiled stylesheet cannot see a composed class. The expected-class string is the same either
- * way, so the day `at()` ships, only the argument changes.
- */
-function componentCallFor(model: CallModel, classes: readonly DocumentedClass[]): ComponentCall {
-  const relevant = classes.filter(documented => model.allowedClasses.has(documented.className))
-  const variants = relevant.filter(documented => documented.isPrefixed)
-  const modifiers = relevant.filter(
-    documented => !documented.isPrefixed && documented.className !== model.componentClass,
-  )
-
-  const variantClasses = variants.map(emittedVariantClass)
-  const args = modifiers.map(documented => argumentFor(model, documented))
-  rejectRepeatedParameters(model, args)
-  if (variantClasses.length > 0) args.push(`extraClasses = "${variantClasses.join(' ')}"`)
-
-  const rendered = [
-    model.componentClass,
-    ...modifiers.map(documented => documented.className),
-    ...variantClasses,
-  ]
-  return { args: args.join(', '), expectedClasses: [...new Set(rendered)].sort().join(' ') }
 }
 
 /** One `assertTrue` per statically-emitted attribute, indented for a test body. */
@@ -451,44 +255,6 @@ function generateClassTest(fn: ModelFunction, { testName, args, expectedClasses,
         assertEquals(expectedClasses, actualClasses, "Class mismatch for ${caseName}")
     }
 `
-}
-
-/**
- * Everything needed to turn this component's documented markup into calls.
- *
- * `classifyGroups` is the same call `index-new.ts` makes, with the same measurement, so the
- * tests are generated against the signature the components were generated with rather than
- * against a second guess at it.
- */
-function buildCallModel(frontmatter, model: ComponentModel): CallModel {
-  const { allowedClasses, componentClass } = buildClassMappings(frontmatter)
-  return {
-    componentClass,
-    prefix: model.class,
-    allowedClasses,
-    bindings: classBindings(model, model.functions.find(fn => fn.kind === 'main') as ModelFunction),
-    writtenByCustomPart: new Set(model.functions.flatMap(fn => fn.always ?? [])),
-  }
-}
-
-/**
- * One test per documented element, deduplicated.
- *
- * A page often shows the same component several times under one heading — a row of identical
- * buttons differing only in their label. Those produce the same call and the same assertion, so
- * emitting each would add test methods that cannot fail independently.
- */
-function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
-  const calls = documentedElementClasses(html, model.componentClass)
-    .filter(classes => !classes.some(documented => model.writtenByCustomPart.has(documented.className)))
-    .map(classes => componentCallFor(model, classes))
-  const seen = new Set<string>()
-  return calls.filter(call => {
-    const signature = `${call.args}|${call.expectedClasses}`
-    if (seen.has(signature)) return false
-    seen.add(signature)
-    return true
-  })
 }
 
 /** The imports a test file needs beyond the four every one of them has. */
@@ -1270,7 +1036,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 export {
   // Targets of the refactorings in section 2.
   parseTestCases,
-  buildClassMappings,
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
   parseEmittedBuilder,
   parseScopeBuilder,

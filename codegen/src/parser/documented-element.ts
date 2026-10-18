@@ -1,41 +1,30 @@
 /**
- * The element DaisyUI's own documentation shows for a component.
+ * Which elements DaisyUI's own documentation shows each of its classes on.
  *
- * The generator picks a component's element with a heuristic over `llms.txt`-style syntax
- * blocks, and a heuristic is a thing that can be wrong: `dropdown` rendered a popover variant
- * that could not open, `otp` renders a `<div>` where a `<label>` is documented, and `tab`
- * renders the container class on a `<button>`. None of those changes a CSS class, so nothing in
- * the class-based safety net could see them.
+ * Read by the bump report, `just daisyui-delta`, to say when a release moves a class to another
+ * element. The generators no longer read it: the element of every function is declared in
+ * `codegen/model/`.
  *
- * This module reads what DaisyUI states, so the generator can be checked against it instead of
- * trusted. The statement is in every component's `+page.md`: fenced ```html examples in which
- * daisyUI class names carry a `$$` marker.
+ * The statement is in every component's `+page.md`: fenced ```html examples in which daisyUI
+ * class names carry a `$$` marker.
  *
  *     <label class="$$swap">
  *       <div class="$$swap-on">ON</div>
  *     </label>
  *
- * That marker is what makes this mechanical rather than another heuristic — it separates
- * daisyUI's own classes from Tailwind utilities without inferring anything.
+ * That marker is what makes this mechanical rather than a heuristic — it separates daisyUI's
+ * own classes from Tailwind utilities without inferring anything.
  *
  * Parsed with a real HTML parser rather than a regex. Measured on the three constructs that
  * defeat a regex — a `>` inside a quoted attribute value, a comment containing a tag, and
  * `<script>` content — the regex gets all three wrong and the parser gets all three right.
  */
 
-import fs from 'fs'
-import path from 'path'
 import { parseDocument, DomUtils } from 'htmlparser2'
-import type { ComponentName } from './frontmatter.ts'
 import { DocumentedClass } from './documented-classes.ts'
 
 /** The sentinel DaisyUI's documentation puts in front of its OWN class names. */
 const MARKER = '$$'
-
-const COMPONENTS_PATH = path.resolve(
-  import.meta.dirname,
-  '../../../daisyui/packages/docs/src/routes/(routes)/components',
-)
 
 /** Every fenced ```html block in a documentation page, concatenated in document order. */
 export function fencedHtmlBlocks(markdown: string): string {
@@ -45,9 +34,8 @@ export function fencedHtmlBlocks(markdown: string): string {
 
 
 /**
- * EVERY element each marked class is shown on. What `documentedElementsIn` decides from, and
- * what a caller needs when "shown on several" is itself the answer: `dropdown` is shown on a
- * `<div>` and a `<details>`, and a class shown on either of those is on the dropdown.
+ * EVERY element each marked class is shown on: `dropdown` is shown on a `<div>` and a
+ * `<details>`, and a class shown on either of those is on the dropdown.
  */
 export function documentedElementSetsIn(html: string): ReadonlyMap<string, ReadonlySet<string>> {
   const sets = new Map<string, ReadonlySet<string>>()
@@ -55,12 +43,8 @@ export function documentedElementSetsIn(html: string): ReadonlyMap<string, Reado
   return sets
 }
 
-/**
- * How many times each marked class is shown on each element — the reading the other two are
- * views of, and the one that answers "which element is USUAL" for a class shown on several:
- * `indicator-item` is a `<span>` 26 times and a `<div>` once.
- */
-export function documentedElementTalliesIn(html: string): ReadonlyMap<string, ReadonlyMap<string, number>> {
+/** How many times each marked class is shown on each element. */
+function documentedElementTalliesIn(html: string): ReadonlyMap<string, ReadonlyMap<string, number>> {
   const tallies = new Map<string, Map<string, number>>()
   DomUtils.findAll(
     node => (node.attribs?.class ?? '').includes(MARKER),
@@ -77,77 +61,3 @@ export function documentedElementTalliesIn(html: string): ReadonlyMap<string, Re
   })
   return tallies
 }
-
-/**
- * The element a class is shown on more often than on any other — or nothing, when the count
- * is tied or the class is shown nowhere. A count rule, so that a single stray example does
- * not decide and a tie does not pick by accident.
- */
-export function usualElementOf(tally: ReadonlyMap<string, number> | undefined): string | undefined {
-  if (tally === undefined) return undefined
-  const ranked = [...tally].sort(([, left], [, right]) => right - left)
-  if (ranked.length === 0) return undefined
-  if (ranked.length > 1 && ranked[0][1] === ranked[1][1]) return undefined
-  return ranked[0][0]
-}
-
-/**
- * Every fenced ```html block of one component's page; empty when the page does not exist.
- *
- * The one place that knows where a component's documented markup lives. The readers below
- * each carried their own copy of this, and a caller wanting the markup for something other
- * than an element tally had no way to ask for it without adding a fourth.
- */
-export function fencedHtmlFor(componentName: ComponentName): string {
-  const file = path.join(COMPONENTS_PATH, componentName, '+page.md')
-  if (!fs.existsSync(file)) return ''
-  return fencedHtmlBlocks(fs.readFileSync(file, 'utf8'))
-}
-
-/** `documentedElementTalliesIn` for one component's page; empty when the page does not exist. */
-export function documentedElementTalliesFor(componentName: ComponentName): ReadonlyMap<string, ReadonlyMap<string, number>> {
-  return documentedElementTalliesIn(fencedHtmlFor(componentName))
-}
-
-/**
- * The element each marked class's PARENT is shown as, where that is one element.
- *
- * What a part needs as its extension receiver when kotlinx.html opens its element only inside
- * a specific parent: `<legend>` inside `<fieldset>`, `<li>` inside `<ul>`. Read the same way
- * as the element itself, and absent for the same reasons — shown nowhere, on several, or at
- * the top of an example with no parent at all.
- */
-export function documentedParentsIn(html: string): ReadonlyMap<string, string> {
-  const seen = new Map<string, Set<string>>()
-  DomUtils.findAll(
-    node => (node.attribs?.class ?? '').includes(MARKER),
-    parseDocument(html).children,
-  ).forEach(element => {
-    const parent = element.parent
-    if (parent === null || parent.type !== 'tag') return
-    for (const token of (element.attribs.class ?? '').split(/\s+/)) {
-      const parsed = DocumentedClass.parse(token)
-      if (parsed === null || parsed.isPrefixed) continue
-      const parents = seen.get(parsed.className) ?? new Set()
-      parents.add(parent.name.toUpperCase())
-      seen.set(parsed.className, parents)
-    }
-  })
-  const unambiguous = new Map<string, string>()
-  for (const [className, parents] of seen) {
-    if (parents.size === 1) unambiguous.set(className, [...parents][0])
-  }
-  return unambiguous
-}
-
-/** `documentedParentsIn` for one component's page; empty when the page does not exist. */
-export function documentedParentsFor(componentName: ComponentName): ReadonlyMap<string, string> {
-  return documentedParentsIn(fencedHtmlFor(componentName))
-}
-
-/** `documentedElementSetsIn` for one component's page; empty when the page does not exist. */
-export function documentedElementSetsFor(componentName: ComponentName): ReadonlyMap<string, ReadonlySet<string>> {
-  return documentedElementSetsIn(fencedHtmlFor(componentName))
-}
-
-

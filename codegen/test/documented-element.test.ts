@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { documentedElementSetsIn, documentedElementTalliesIn, documentedParentsIn, fencedHtmlBlocks, usualElementOf } from '../src/parser/documented-element.ts'
+import { documentedElementSetsIn, fencedHtmlBlocks } from '../src/parser/documented-element.ts'
 
 /**
  * Reading the element DaisyUI documents.
@@ -81,40 +81,5 @@ describe('documentedElementSetsIn', () => {
 
   test('ignores classes without the marker', () => {
     assert.equal(documentedElementSetsIn(`<div class="flex $$card"></div>`).has('flex'), false)
-  })
-})
-
-describe('documentedParentsIn', () => {
-  test('names the parent element of each marked class', () => {
-    const html = `<fieldset class="$$fieldset"><legend class="$$fieldset-legend">T</legend></fieldset>`
-
-    assert.equal(documentedParentsIn(html).get('fieldset-legend'), 'FIELDSET')
-  })
-
-  test('has no parent for a class at the top of an example', () => {
-    assert.equal(documentedParentsIn(`<fieldset class="$$fieldset"></fieldset>`).has('fieldset'), false)
-  })
-
-  test('leaves out a class whose parent differs between examples', () => {
-    const html = `<ul><li class="$$step">a</li></ul><ol><li class="$$step">b</li></ol>`
-
-    assert.equal(documentedParentsIn(html).has('step'), false)
-  })
-})
-
-describe('usualElementOf', () => {
-  const html = `<span class="$$item"></span><span class="$$item"></span><div class="$$item"></div><p class="$$tie"></p><b class="$$tie"></b>`
-  const tallies = documentedElementTalliesIn(html)
-
-  test('names the element a class is shown on more often than any other', () => {
-    assert.equal(usualElementOf(tallies.get('item')), 'SPAN')
-  })
-
-  test('names nothing on a tie, so a coin toss cannot become an element', () => {
-    assert.equal(usualElementOf(tallies.get('tie')), undefined)
-  })
-
-  test('names nothing for a class shown nowhere', () => {
-    assert.equal(usualElementOf(tallies.get('absent')), undefined)
   })
 })

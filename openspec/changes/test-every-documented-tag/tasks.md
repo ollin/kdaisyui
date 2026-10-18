@@ -7,9 +7,13 @@ gate 45. Known ratios for kdaisyui codegen work, not folded in: 0.06, 0.09, 0.12
 
 ## 1. Check first
 
-- [ ] 1.1 `. d` **Simulate** D3's tie-break and D1's tag form over every documented element: how
+- [x] 1.1 `. d` **Simulate** D3's tie-break and D1's tag form over every documented element: how
   many tests switch function, how many take the tag form, and which tags have no builder. The
   proposal expects `<calendar-date>` alone; another tag refutes it and the plan is revised first.
+  **Simulated 2026-10-18: it holds.** 24 elements switch function (`daisyTab` to `daisyTabRadio` 19,
+  `daisyModal` to `daisyModalPopover` 5); 2,220 then sit on their function's tag, 333 take the tag
+  form, 11 are class-only; the only tag without a builder is `<calendar-date>`, twice, on the
+  calendar page.
 
 ## 2. The documented tag decides between equals
 

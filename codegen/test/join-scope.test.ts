@@ -2,9 +2,8 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { classesJoinedWith, joinScopeMembers, withJoinScope } from '../src/join-scope.ts'
-import { allBooleans, buildComponentShape } from '../src/component-shape.ts'
 import type { ComponentShape, FunctionShape, ParameterShape } from '../src/component-shape.ts'
-import type { ClassifiedComponent } from '../src/classifier.ts'
+import { component, shapeOf } from './model-fixture.ts'
 
 /** A component shape reduced to what the scope reads: its class, and the functions it has. */
 function shape(prefix: string, functions: readonly Partial<FunctionShape>[]): ComponentShape {
@@ -17,25 +16,9 @@ function shape(prefix: string, functions: readonly Partial<FunctionShape>[]): Co
   } as ComponentShape
 }
 
-/** The join component as the generator builds it, before the scope is attached. */
+/** The join component as the model declares it, before the scope is attached. */
 function joinShape(): ComponentShape {
-  const join = {
-    componentName: 'Join',
-    componentClass: 'Join',
-    desc: '',
-    prefix: 'join',
-    colors: [],
-    styles: [],
-    sizes: [],
-    modifiers: [],
-    behaviors: [],
-    parts: [],
-    directions: [],
-    placements: [],
-    defaultSize: null,
-    descs: {},
-  } as ClassifiedComponent
-  return buildComponentShape(join, { componentDir: 'join', element: 'DIV' }, {}, allBooleans(join))
+  return shapeOf(component('join', 'Join', 'join'))
 }
 
 const parameterNamed = (shape: ComponentShape, name: string): ParameterShape | undefined =>

@@ -23,6 +23,11 @@ The three Assumed claims this change rests on are checked here, before anything 
   page at the pinned tag, compare the `$$`-marked classes in the fenced examples with the
   frontmatter's classes. Record the difference in this task. A non-empty difference refutes the
   completeness requirement's assumption; revise `specs/component-model` before 1.2.
+  **Measured 2026-10-18, the assumption holds.** No marked component class is missing from every
+  frontmatter. 291 marked classes are missing from their own page's frontmatter, all of them other
+  components' classes inside an example. Declared nowhere: six drawer tokens with a variant prefix,
+  read as one token by the parser, and the utility `rounded-box`. The requirement is now
+  Verified.
 - [ ] 1.2 `. r (internal)` Model reader: read one `codegen/model/<dir>.json` into the types
   `component-shape.ts` already uses, with a test on a hand-written fixture. Settle the field
   names from `design.md` D2 here and record them in this task.

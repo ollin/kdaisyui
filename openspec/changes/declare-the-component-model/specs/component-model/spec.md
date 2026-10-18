@@ -60,9 +60,17 @@ the 5.7.42 bump (README, "How to migrate from 0.5.x", item 12).
 placement booleans beside the enums that replaced them (README, "How to migrate from 0.6.x", item
 1).
 
-**Assumed** that the frontmatter lists every class a component's examples use. *Wrong if:* a
-`$$`-marked class in a page's fenced examples is absent from that page's frontmatter at the pinned
-tag.
+**Verified** that the frontmatter is a complete class source, measured 2026-10-18 at the pinned tag
+(task 1.1): of every `$$`-marked class in the fenced examples of all component pages, none is
+missing from every frontmatter. 291 marked classes are absent from their own page's frontmatter,
+and all of them are other components' classes used inside an example, such as `btn` inside a card.
+The only seven declared nowhere are not component classes: six variant-prefixed drawer tokens such
+as `is-drawer-close:$$tooltip`, which the parser reads as one token, and `rounded-box`, a DaisyUI
+utility.
+
+*Wrong if:* a later DaisyUI release marks a component class in an example that no frontmatter
+declares. The bump report's class delta is built from the frontmatter, so it would not name such a
+class; re-running this measurement on a bump is the check.
 
 #### Scenario: DaisyUI adds a class
 

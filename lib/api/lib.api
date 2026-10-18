@@ -215,6 +215,9 @@ public final class io/github/ollin/kdaisyui/components/CalendarKt {
 	public static final fun daisyCalendar (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyCalendar$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyCalendarClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyVc (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyVc$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyVcClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/CardKt {

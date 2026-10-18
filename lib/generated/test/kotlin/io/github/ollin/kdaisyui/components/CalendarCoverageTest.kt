@@ -63,4 +63,44 @@ class CalendarCoverageTest {
         }
         assertRendered(html, "cally", "CalendarClasses all flags")
     }
+
+    @Test
+    fun vc_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyVc(
+                content = { },
+            )
+        }
+        assertRendered(html, "vc", "Vc defaults", closes = "</div></div>")
+    }
+
+    @Test
+    fun vc_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyVc(
+                id = htmlId("x-cov-id"),
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+                content = { attributes["data-content"] = "yes" },
+            )
+        }
+        assertRendered(html, "vc zz-extra", "Vc all flags", closes = "</div></div>")
+        assertCommonFlags(html, "Vc")
+    }
+
+    @Test
+    fun vcClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyVcClasses()
+        }
+        assertRendered(html, "vc", "VcClasses defaults")
+    }
+
+    @Test
+    fun vcClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyVcClasses()
+        }
+        assertRendered(html, "vc", "VcClasses all flags")
+    }
 }

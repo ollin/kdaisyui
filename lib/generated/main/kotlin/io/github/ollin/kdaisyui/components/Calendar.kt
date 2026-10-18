@@ -37,3 +37,24 @@ fun FlowContent.daisyCalendar(
 fun Tag.daisyCalendarClasses() {
     addClassNames("cally")
 }
+
+/** Renders `<div class="vc ...">`. */
+fun FlowContent.daisyVc(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        if (id != null) attributes["id"] = id.id
+        addClassNames("vc")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyVc` writes, on the element this is called on. */
+fun Tag.daisyVcClasses() {
+    addClassNames("vc")
+}

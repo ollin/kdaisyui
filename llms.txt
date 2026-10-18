@@ -200,6 +200,8 @@ Calendar date picker widget — renders `<div>`.
 ```kotlin
 fun FlowContent.daisyCalendar(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun Tag.daisyCalendarClasses()
+fun FlowContent.daisyVc(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun Tag.daisyVcClasses()
 ```
 
 ### Card

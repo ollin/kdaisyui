@@ -52,6 +52,8 @@ fun Tag.daisyButtonClasses(color: ClassValues<ButtonColor>? = null, size: ClassV
 # Calendar <div>
 fun FlowContent.daisyCalendar(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun Tag.daisyCalendarClasses()
+fun FlowContent.daisyVc(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun Tag.daisyVcClasses()
 
 # Card <div>
 enum CardSize: Xs, Sm, Md, Lg, Xl

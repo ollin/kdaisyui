@@ -40,5 +40,6 @@ export function classFindings(model: ComponentModel, declared: readonly string[]
   return [
     ...declared.filter(cls => !placed.has(cls)).map(cls => `${model.component}: DaisyUI declares ${cls}, and the model places it nowhere`),
     ...[...placed].filter(cls => !documented.has(cls)).map(cls => `${model.component}: the model places ${cls}, which DaisyUI does not declare`),
+    ...model.functions.flatMap(fn => offeredBy(model, fn).filter((cls, index, all) => all.indexOf(cls) !== index).map(cls => `${model.component}: ${fn.name} offers ${cls} twice`)),
   ]
 }

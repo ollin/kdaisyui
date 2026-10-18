@@ -29,4 +29,10 @@ describe('classFindings', () => {
       'mask: the model places mask-square, which DaisyUI does not declare',
     ])
   })
+
+  it('names a function that offers one class twice', () => {
+    const twice: ComponentModel = { ...MASK, functions: [{ ...MASK.functions[0], parameters: [...MASK.functions[0].parameters, { kind: 'toggle', name: 'circle', class: 'mask-circle' }] }] }
+
+    assert.deepEqual(classFindings(twice, ['mask', 'mask-circle', 'mask-square', 'mask-half']), ['mask: daisyMask offers mask-circle twice'])
+  })
 })

@@ -1,0 +1,66 @@
+## Estimate
+
+Frozen 2026-10-18 before the first commit, raw, ledger run
+`2026-10-18-kdaisyui-test-every-documented-element`: **255 min**. Blocks 1+2 30, block 3 45,
+block 4 declarations 45, block 5 tests 90, block 6 docs and gate 45. Known ratios for kdaisyui
+codegen work, not folded in: 0.06, 0.21, 0.26.
+
+## 1. Check the assumptions first
+
+- [ ] 1.1 `. d` **Count the gap under exactly the spec's rule**: counted classes only, `join-item`
+  only where the join scope marks the function, every model's functions as candidates. Record the
+  number of distinct class sets here. Above sixty refutes the Assumed in "Every documented element
+  is expressible…": stop and revise the rule with Oliver before block 2.
+- [ ] 1.2 `. d` **Check the receiver assumption**: list every part's receiver and whether a single
+  kotlinx.html builder supplies it, as `wrapperTagOf` does for the custom parts. A receiver none
+  supplies refutes it; revise the test requirement before block 5.
+- [ ] 1.3 `. d` **Check "exactly the counted classes"**: for every expressible element, compare the
+  classes its call would write on every call (`class`, `always`) with the counted ones. Each extra
+  class is a model defect, listed here and fixed in block 5 before the tests that would fail on it.
+
+## 2. Enablers, zero diff
+
+- [ ] 2.1 `^ r (internal)` Bind classes per function, not across the whole model (`design.md` D4).
+  Zero diff under regeneration.
+- [ ] 2.2 `^ F (internal)` The classifier `documented-elements.ts` (D1, D3), with unit tests from
+  fixtures: an element is expressed by the first function whose class it carries and that offers
+  the rest, with typed arguments.
+- [ ] 2.3 `^ r (internal)` The test generator takes its main-function calls from the classifier,
+  restricted to the page's main function. Zero diff under regeneration.
+
+## 3. The gate
+
+- [ ] 3.1 `^ F (internal)` The classifier reports an element no function's class reaches, and one
+  whose function lacks a counted class, naming page, element and classes.
+- [ ] 3.2 `^ F (internal)` Classes no frontmatter declares and variant-prefixed classes do not
+  count (`rounded-box`).
+- [ ] 3.3 `^ F (internal)` `notExpressed` in the model type (D2): a declared class set silences its
+  finding; a declaration nothing on its page needs is a finding.
+
+## 4. Declare the gaps
+
+- [ ] 4.1 `. d` Declare every class set 1.1 counted in its page's model file, with its reason and,
+  where one exists, its issue (#347 menu, dock and rating children; #343 calendar; #357 dropdown
+  popover). One commit per component, so each reason is reviewed with its component.
+- [ ] 4.2 `! F (internal)` Wire the gate into `index-new.ts` beside the completeness gate.
+  Positive control in the commit body: one declaration removed, generation fails naming it; one
+  declaration added for an expressible set, generation fails naming it.
+
+## 5. Every expressible element is a test
+
+- [ ] 5.1 `^ B` Fix each model defect 1.3 listed, one commit each, reproducing test first.
+- [ ] 5.2 `^ F` The test generator emits a test for every expressible element of a page, parts and
+  nested components included, wrapped by receiver (D5); identical calls once.
+- [ ] 5.3 `^ r (internal)` Delete the main-only path, `componentCallsIn` and its stale comments
+  (D6). Zero diff under regeneration.
+
+## 6. Documentation and the gate
+
+- [ ] 6.1 `. d` `kdaisyui-codegen`: the classifier, `notExpressed`, what the generated tests now
+  cover. `kdaisyui-daisyui-upgrade`: a bump can fail the new gate; step 4 places new gaps.
+  `kdaisyui-testing`: the generated test count and what a compile failure there means now.
+- [ ] 6.2 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
+  `:lib:testCodegen`, `:lib:checkComponentApi` unchanged, regeneration drift, CodeScene
+  `analyze_change_set`. No mutation tool for the TypeScript codegen yet; say so.
+- [ ] 6.3 `. d` Write `tmp/test-every-documented-element/EVALUATION-test-every-documented-element.md`,
+  listing every declared gap so Oliver can choose which deserve an API.

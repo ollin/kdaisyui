@@ -77,11 +77,12 @@ variant prefixes, so `max-sm:card-side` and `dark:alert-info` silently did nothi
 
 Hand-written Kotlin exists only here:
 
-- `lib/src/main/kotlin/io/github/ollin/kdaisyui/core/` — `ClassNames.kt`, `TagId.kt`
+- `lib/src/main/kotlin/io/github/ollin/kdaisyui/core/` — `ClassNames.kt`, `TagId.kt`, `Variants.kt`,
+  `CustomElements.kt` (elements kotlinx.html has no class for, today `<calendar-date>`)
 - `lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/` — `HeroIconSize.kt`, `HeroIconVariant.kt`
   (the icon *functions* next to them are generated; these two support files are not)
 - `ktor-integration/src/main/kotlin/io/github/ollin/kdaisyui/ktor/Resolvable.kt`
-- tests: `lib/src/test/…` (2 files), `ktor-integration/src/test/…` (1), `e2e-tests/src/test/…`
+- tests: `lib/src/test/…` (10 files), `ktor-integration/src/test/…` (1), `e2e-tests/src/test/…`
 - `example-app/…`
 
 Package is `io.github.ollin.kdaisyui` — never `com.github.ollin`.

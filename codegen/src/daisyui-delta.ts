@@ -8,12 +8,19 @@
  */
 
 import { execFileSync } from 'node:child_process'
+import { getClassesByCategory, parseFrontmatter } from './parser/frontmatter.ts'
 
 /** Where the component pages live inside the DaisyUI repository. */
 export const COMPONENTS_IN_REPO = 'packages/docs/src/routes/(routes)/components'
 
+/** The component documentation of one DaisyUI release, however it is read. */
+export interface ComponentDocs {
+  componentDirs(): string[]
+  page(componentDir: string): string | null
+}
+
 /** The component documentation of one DaisyUI tag. */
-export class DocsAtTag {
+export class DocsAtTag implements ComponentDocs {
   private readonly repo: string
   private readonly tag: string
 
@@ -45,4 +52,28 @@ export class DocsAtTag {
       return null
     }
   }
+}
+
+/** Classes a component's frontmatter declares in one release and not the other. */
+export interface ClassChange {
+  readonly component: string
+  readonly added: readonly string[]
+  readonly removed: readonly string[]
+}
+
+function declaredClasses(markdown: string | null): Set<string> {
+  const classnames = (markdown === null ? null : parseFrontmatter(markdown))?.classnames ?? {}
+  return new Set(Object.keys(classnames).flatMap(category => getClassesByCategory(classnames, category)))
+}
+
+/** Per component documented in both releases, the classes its frontmatter gained and lost. */
+export function classChanges(older: ComponentDocs, newer: ComponentDocs): ClassChange[] {
+  const inBoth = newer.componentDirs().filter(dir => older.componentDirs().includes(dir))
+  return inBoth.flatMap(component => {
+    const before = declaredClasses(older.page(component))
+    const after = declaredClasses(newer.page(component))
+    const added = [...after].filter(cls => !before.has(cls)).sort()
+    const removed = [...before].filter(cls => !after.has(cls)).sort()
+    return added.length + removed.length === 0 ? [] : [{ component, added, removed }]
+  })
 }

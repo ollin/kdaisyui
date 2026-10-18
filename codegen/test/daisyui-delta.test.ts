@@ -5,7 +5,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { COMPONENTS_IN_REPO, DocsAtTag } from '../src/daisyui-delta.ts'
+import { classChanges, COMPONENTS_IN_REPO, DocsAtTag, type ComponentDocs } from '../src/daisyui-delta.ts'
 
 /** A throwaway repository with DaisyUI's layout and two tags. */
 class FixtureRepository {
@@ -61,5 +61,29 @@ describe('DocsAtTag', () => {
 
   it('reads no page where the tag has none', () => {
     assert.equal(new DocsAtTag(repository.dir, 'v1').page('card'), null)
+  })
+})
+
+/** A release held in memory: directory to page markdown. */
+function release(pages: Record<string, string>): ComponentDocs {
+  return { componentDirs: () => Object.keys(pages).sort(), page: dir => pages[dir] ?? null }
+}
+
+function frontmatter(...classes: string[]): string {
+  return `---\ntitle: X\nclassnames:\n  component:\n${classes.map(cls => `  - class: ${cls}\n    desc: d`).join('\n')}\n---\n`
+}
+
+describe('classChanges', () => {
+  it('names the classes a component gained and lost', () => {
+    const older = release({ mask: frontmatter('mask', 'mask-square', 'mask-circle') })
+    const newer = release({ mask: frontmatter('mask', 'mask-circle', 'mask-star') })
+
+    assert.deepEqual(classChanges(older, newer), [{ component: 'mask', added: ['mask-star'], removed: ['mask-square'] }])
+  })
+
+  it('says nothing about a component whose classes did not change', () => {
+    const page = release({ btn: frontmatter('btn') })
+
+    assert.deepEqual(classChanges(page, page), [])
   })
 })

@@ -7,6 +7,11 @@
       "name": "CarouselSnap",
       "label": "Snap variants",
       "classes": ["carousel-start", "carousel-center", "carousel-end"]
+    },
+    {
+      "name": "CarouselDirection",
+      "label": "Direction variants",
+      "classes": ["carousel-horizontal", "carousel-vertical"]
     }
   ],
   "functions": [
@@ -19,8 +24,7 @@
       "text": false,
       "parameters": [
         { "kind": "enum", "name": "snap", "enum": "CarouselSnap", "doc": "Snap variant" },
-        { "kind": "toggle", "name": "horizontal", "class": "carousel-horizontal" },
-        { "kind": "toggle", "name": "vertical", "class": "carousel-vertical" }
+        { "kind": "enum", "name": "direction", "enum": "CarouselDirection", "doc": "Direction variant" }
       ]
     },
     {

@@ -212,7 +212,8 @@ Slideshow of images or content — renders `<div>`.
 
 ```kotlin
 enum class CarouselSnap { Start, Center, End }
-fun FlowContent.daisyCarousel(id: HtmlId? = null, snap: ClassValues<CarouselSnap>? = null, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class CarouselDirection { Horizontal, Vertical }
+fun FlowContent.daisyCarousel(id: HtmlId? = null, snap: ClassValues<CarouselSnap>? = null, direction: ClassValues<CarouselDirection>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyCarouselItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 

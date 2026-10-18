@@ -54,7 +54,7 @@ class CarouselTest {
     @Test
     fun vertical_carousel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(vertical = true) {
+            daisyCarousel(direction = CarouselDirection.Vertical) {
             }
         }
         val expectedClasses = "carousel carousel-vertical"

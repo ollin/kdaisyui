@@ -24,13 +24,23 @@ enum class CarouselSnap(internal val className: String) : ClassValues<CarouselSn
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Direction variants for this component (CSS prefix: `carousel-`) */
+enum class CarouselDirection(internal val className: String) : ClassValues<CarouselDirection> {
+    /** CSS: `carousel-horizontal` — Horizontal layout (default) */
+    Horizontal("carousel-horizontal"),
+    /** CSS: `carousel-vertical` — Vertical layout */
+    Vertical("carousel-vertical"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Carousel show images or content in a scrollable area. Renders `<div class="carousel ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param snap — Snap variant
- * @param horizontal — Horizontal layout (default)
- * @param vertical — Vertical layout
+ * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -38,8 +48,7 @@ enum class CarouselSnap(internal val className: String) : ClassValues<CarouselSn
 fun FlowContent.daisyCarousel(
     id: HtmlId? = null,
     snap: ClassValues<CarouselSnap>? = null,
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
+    direction: ClassValues<CarouselDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -48,8 +57,7 @@ fun FlowContent.daisyCarousel(
         if (id != null) attributes["id"] = id.id
         addClassNames("carousel")
         addClassNames(snap)
-        if (horizontal) addClassNames("carousel-horizontal")
-        if (vertical) addClassNames("carousel-vertical")
+        addClassNames(direction)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

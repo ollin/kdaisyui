@@ -12,11 +12,11 @@ Slideshow of images or content. Renders `<div class="carousel ...">`.
 
 ```kotlin
 // CarouselSnap: Start | Center | End
+// CarouselDirection: Horizontal | Vertical
 fun FlowContent.daisyCarousel(
     id: HtmlId? = null,
     snap: ClassValues<CarouselSnap>? = null,
-    horizontal: Boolean = false,  // Horizontal layout (default)
-    vertical: Boolean = false,  // Vertical layout
+    direction: ClassValues<CarouselDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

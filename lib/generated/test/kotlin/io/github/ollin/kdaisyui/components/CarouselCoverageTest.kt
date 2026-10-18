@@ -39,14 +39,12 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
                 id = htmlId("x-cov-id"),
-                horizontal = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "carousel carousel-horizontal carousel-vertical zz-extra", "Carousel all flags", closes = "</div></div>")
+        assertRendered(html, "carousel zz-extra", "Carousel all flags", closes = "</div></div>")
         assertCommonFlags(html, "Carousel")
     }
 
@@ -81,6 +79,28 @@ class CarouselCoverageTest {
             )
         }
         assertRendered(html, "carousel carousel-end", "Carousel snap End")
+    }
+
+    @Test
+    fun carousel_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarousel(
+                direction = CarouselDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "carousel carousel-horizontal", "Carousel direction Horizontal")
+    }
+
+    @Test
+    fun carousel_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarousel(
+                direction = CarouselDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "carousel carousel-vertical", "Carousel direction Vertical")
     }
 
     @Test

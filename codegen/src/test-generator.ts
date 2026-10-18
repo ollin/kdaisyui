@@ -280,8 +280,8 @@ interface DocumentedContext {
  * One test per expressible documented element of the page, whichever function expresses it,
  * deduplicated across the page, with how many there were and the receivers they wrap.
  */
-function classTests(page: ComponentModel, context: DocumentedContext, mainName: string, testCases): { kotlin: string, testCount: number, receivers: Set<string> } {
-  const models = [page, ...context.models.filter(model => model.component !== page.component)]
+function classTests(page: Pick<ComponentModel, 'component'>, context: DocumentedContext, mainName: string, testCases): { kotlin: string, testCount: number, receivers: Set<string> } {
+  const models = [...context.models.filter(model => model.component === page.component), ...context.models.filter(model => model.component !== page.component)]
   const seen = new Set<string>()
   const usedNames = new Set()
   const tests = testCases.flatMap(tc => markedElements(tc.html)
@@ -326,6 +326,14 @@ import kotlin.test.assertEquals${extraImports}
 class ${className}Test {
 ${tests}}
 `
+}
+
+/** A skipped page has no functions of its own, but its examples are DaisyUI's: test them alone. */
+function generateForSkippedPage(componentName, context: DocumentedContext): number {
+  const testCases = parseTestCases(fs.readFileSync(path.join(DOCS_DIR, componentName, '+page.md'), 'utf8'))
+  const { kotlin, testCount, receivers } = classTests({ component: componentName }, context, '', testCases)
+  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), kotlinTestFile(toClassName(componentName), extraImportLines([], false, receivers), kotlin))
+  return testCount
 }
 
 function generateForComponent(componentName, componentModel: ComponentModel, context: DocumentedContext) {
@@ -963,7 +971,7 @@ function generateAllCoverage() {
 function generateAndReport(componentName, context: DocumentedContext) {
   const model = readModel(componentName)
   if (isSkipped(model)) {
-    console.log(`  ⊘ ${componentName}: Skipped (alias)`)
+    console.log(`  ⊘ ${componentName}: Skipped (alias), ${generateForSkippedPage(componentName, context)} documented-element tests`)
     return false
   }
   const result = generateForComponent(componentName, model, context)

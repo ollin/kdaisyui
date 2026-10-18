@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { documentedCall, expressingFunction, gapFindings, gapKey, gapsIn, pageFirst } from '../src/documented-elements.ts'
+import { claimingGroups, documentedCall, expressingFunction, gapFindings, gapKey, gapsIn, pageFirst } from '../src/documented-elements.ts'
 import { markedElements } from '../src/parser/documented-classes.ts'
 import { component, enumParameter, part, toggle } from './model-fixture.ts'
 
@@ -76,5 +76,30 @@ describe('documentedCall', () => {
 describe('pageFirst', () => {
   it("puts the page's own model first and keeps the others in their order", () => {
     assert.deepEqual(pageFirst([CARD, BUTTON, CARD_WITH_BODY], 'button'), [BUTTON, CARD, CARD_WITH_BODY])
+  })
+})
+
+describe('claimingGroups', () => {
+  const claims = (models, counted) => {
+    const { groups, unclaimed } = claimingGroups(models, counted)
+    return { groups: groups.map(group => `${group.fn.name}: ${group.classes.join(' ')}`), unclaimed }
+  }
+  const MENU_ITEM = { ...component('menu', 'Menu', 'menu'), functions: [{ ...part('daisyMenuItem', 'unused'), class: null, parameters: [toggle('active', 'menu-active')] }] }
+  const SKELETON = { ...component('skeleton', 'Skeleton', 'skeleton'), functions: [...component('skeleton', 'Skeleton', 'skeleton').functions, part('daisySkeletonText', 'skeleton', { always: ['skeleton-text'] })] }
+
+  it("gives each own class's function its share, so two components make two groups", () => {
+    assert.deepEqual(claims([CARD_WITH_BODY, BUTTON], ['card-body', 'btn', 'btn-active']), { groups: ['daisyCardBody: card-body', 'daisyButton: btn btn-active'], unclaimed: [] })
+  })
+
+  it('lets a function with no own class claim what remains whole', () => {
+    assert.deepEqual(claims([MENU_ITEM], ['menu-active']), { groups: ['daisyMenuItem: menu-active'], unclaimed: [] })
+  })
+
+  it('takes, of two functions with one own class, the one offering more', () => {
+    assert.deepEqual(claims([SKELETON], ['skeleton', 'skeleton-text']).groups, ['daisySkeletonText: skeleton skeleton-text'])
+  })
+
+  it('leaves unclaimed what no function offers', () => {
+    assert.deepEqual(claims([BUTTON], ['btn', 'btn-ghost']).unclaimed, ['btn-ghost'])
   })
 })

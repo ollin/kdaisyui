@@ -15,5 +15,8 @@
     }
   ],
   "joinScope": true,
-  "summary": { "summary": "Groups buttons and inputs together" }
+  "summary": { "summary": "Groups buttons and inputs together" },
+  "notExpressed": {
+    "badge indicator-item": "Two components on one element, daisyBadge and daisyIndicatorItem; one call renders one function. Call one and pass the other's classes through extraClasses."
+  }
 }

@@ -48,7 +48,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 ## 3. The gate
 
-- [ ] 3.1 `^ F (internal)` The classifier reports an element no function's class reaches, and one
+- [x] 3.1 `^ F (internal)` The classifier reports an element no function's class reaches, and one
   whose function lacks a counted class, naming page, element and classes.
 - [ ] 3.2 `^ F (internal)` Classes no frontmatter declares and variant-prefixed classes do not
   count (`rounded-box`).

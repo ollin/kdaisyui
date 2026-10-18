@@ -52,7 +52,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
   whose function lacks a counted class, naming page, element and classes.
 - [x] 3.2 `^ F (internal)` Classes no frontmatter declares and variant-prefixed classes do not
   count (`rounded-box`).
-- [ ] 3.3 `^ F (internal)` `notExpressed` in the model type (D2): a declared class set silences its
+- [x] 3.3 `^ F (internal)` `notExpressed` in the model type (D2): a declared class set silences its
   finding; a declaration nothing on its page needs is a finding.
 
 ## 4. Declare the gaps

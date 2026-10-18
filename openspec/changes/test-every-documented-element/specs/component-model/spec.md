@@ -101,9 +101,10 @@ compared with what DaisyUI shows.
 element, as the custom-part tests already do, read from `codegen/model/` on 2026-10-18 (task 1.2):
 the receivers are `FlowContent`, `UL` and `FIELDSET`, each one kotlinx.html builder.
 
-**Assumed** that a function writes nothing on every call that DaisyUI's element omits, so "exactly
-the counted classes" holds. *Wrong if:* the first generation under this rule reports an expressible
-element whose call renders an extra class, which is a defect in the model.
+**Verified** that a function writes nothing on every call that DaisyUI's element omits, so "exactly
+the counted classes" holds, read 2026-10-18 (task 1.3): the one function writing a second class on
+every call, `daisySkeletonText`, expresses only elements that carry both. A generated test that
+renders an extra class would be a defect in the model.
 
 #### Scenario: A part becomes a test
 - **WHEN** an example shows `<div class="$$stat-title">`

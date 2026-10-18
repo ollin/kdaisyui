@@ -22,9 +22,12 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
   supplies refutes it; revise the test requirement before block 5.
   **Checked 2026-10-18, it holds.** The model has three receivers: `FlowContent` (129 functions),
   `UL` (2) and `FIELDSET` (1). `wrapperTagOf` maps each to one builder, `div`, `ul` and `fieldSet`.
-- [ ] 1.3 `. d` **Check "exactly the counted classes"**: for every expressible element, compare the
+- [x] 1.3 `. d` **Check "exactly the counted classes"**: for every expressible element, compare the
   classes its call would write on every call (`class`, `always`) with the counted ones. Each extra
   class is a model defect, listed here and fixed in block 5 before the tests that would fail on it.
+  **Checked 2026-10-18, it holds: no defect.** One function writes a class beside its own on every
+  call, `daisySkeletonText` with `skeleton-text`, and every element it expresses carries both. 5.1
+  has nothing to fix unless block 5's generated tests find what this read missed.
 
 ## 2. Enablers, zero diff
 

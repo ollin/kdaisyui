@@ -168,9 +168,9 @@ Each commit edits the model, regenerates, and migrates every call site in `examp
 - [x] 4.4 `^ F` The `modifier` axes get names: `AvatarPresence`, `CardLayout`, `CarouselSnap`,
   `ListColumn`, `MaskHalf`.
 - [x] 4.5 `^ F` `daisyTooltip`: `side` and `align`.
-- [ ] 4.6 `^ B` The chat bubble colors move from `daisyChat` to `daisyChatBubble`. The generated
+- [x] 4.6 `^ B` The chat bubble colors move from `daisyChat` to `daisyChatBubble`. The generated
   test asserting the class on the bubble is the reproducing test, in the same run.
-- [ ] 4.7 `. d` Nothing left for the step colors: 3.5 moved them. Kept so the numbers above
+- [x] 4.7 `. d` Nothing left for the step colors: 3.5 moved them. Kept so the numbers above
   stay stable; tick it with that note.
 
 ## 5. Declare the axes, trade the tab functions — 4 h

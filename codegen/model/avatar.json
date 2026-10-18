@@ -20,5 +20,8 @@
   "summary": { "summary": "User and entity representations" },
   "notOffered": {
     "avatar-group": "A container that overlaps several avatars. No function renders it yet; reachable through extraClasses."
+  },
+  "notExpressed": {
+    "avatar-group": "No function renders avatar-group, the container of several avatars; it is listed in notOffered. Write the div and its class by hand."
   }
 }

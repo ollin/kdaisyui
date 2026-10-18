@@ -5,7 +5,7 @@
   "enums": [
     { "name": "CardSize", "label": "Size variants", "classes": ["card-xs", "card-sm", "card-md", "card-lg", "card-xl"] },
     { "name": "CardStyle", "label": "Style variants", "classes": ["card-border", "card-dash"] },
-    { "name": "CardModifier", "label": "Modifier variants", "classes": ["card-side", "card-image-full"] }
+    { "name": "CardModifier", "label": "Modifier variants", "classes": ["card-side", "image-full"] }
   ],
   "functions": [
     {

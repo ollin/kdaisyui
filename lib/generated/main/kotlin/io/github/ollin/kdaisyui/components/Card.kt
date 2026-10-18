@@ -45,8 +45,8 @@ enum class CardStyle(internal val className: String) : ClassValues<CardStyle> {
 enum class CardModifier(internal val className: String) : ClassValues<CardModifier> {
     /** CSS: `card-side` — The image in <figure> will be on to the side */
     Side("card-side"),
-    /** CSS: `card-image-full` — The image in <figure> element will be the background */
-    ImageFull("card-image-full"),
+    /** CSS: `image-full` — The image in <figure> element will be the background */
+    ImageFull("image-full"),
     ;
 
     override val classNames: List<String> get() = listOf(className)

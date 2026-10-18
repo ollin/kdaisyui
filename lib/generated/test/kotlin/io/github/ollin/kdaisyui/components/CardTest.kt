@@ -101,7 +101,7 @@ class CardTest {
             daisyCard(modifier = CardModifier.ImageFull) {
             }
         }
-        val expectedClasses = "card card-image-full"
+        val expectedClasses = "card image-full"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with image overlay")
     }

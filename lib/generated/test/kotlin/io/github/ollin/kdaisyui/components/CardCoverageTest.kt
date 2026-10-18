@@ -144,7 +144,7 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "card card-image-full", "Card modifier ImageFull")
+        assertRendered(html, "card image-full", "Card modifier ImageFull")
     }
 
     @Test

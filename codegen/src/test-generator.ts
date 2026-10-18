@@ -175,6 +175,8 @@ interface ClassBinding {
   readonly parameter: string
   /** Kotlin expression, e.g. `true` or `MenuDirection.Horizontal`. */
   readonly argument: string
+  /** The class the call renders, as the model declares it, e.g. `image-full`. */
+  readonly cssClass: string
 }
 
 /**
@@ -204,14 +206,14 @@ function classBindings(model: ComponentModel): Record<string, ClassBinding> {
   for (const parameter of parameters) {
     if (parameter.kind !== 'enum') continue
     for (const cssClass of enums.get(parameter.enum)?.classes ?? []) {
-      bind(cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${toPascalClassName(strippedClass(model.class, cssClass))}` })
+      bind(cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${toPascalClassName(strippedClass(model.class, cssClass))}`, cssClass })
     }
   }
   for (const parameter of parameters) {
-    if (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)) bind(parameter.class, { parameter: parameter.name, argument: 'true' })
+    if (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)) bind(parameter.class, { parameter: parameter.name, argument: 'true', cssClass: parameter.class })
   }
   for (const parameter of parameters) {
-    if (parameter.kind === 'extra') for (const cssClass of parameter.writes ?? []) bind(cssClass, { parameter: parameter.name, argument: 'true' })
+    if (parameter.kind === 'extra') for (const cssClass of parameter.writes ?? []) bind(cssClass, { parameter: parameter.name, argument: 'true', cssClass })
   }
   return bindings
 }
@@ -278,7 +280,7 @@ function emittedVariantClass(model: CallModel, documented: DocumentedClass): str
   return `${documented.variant}:${emittedClass(model.componentClass, documented.className)}`
 }
 
-function argumentFor(model: CallModel, documented: DocumentedClass): string {
+function bindingFor(model: CallModel, documented: DocumentedClass): ClassBinding {
   const binding = model.bindings[strippedClass(model.prefix, documented.className)]
   if (!binding) {
     throw new Error(
@@ -288,6 +290,11 @@ function argumentFor(model: CallModel, documented: DocumentedClass): string {
         `documented markup disagree.`,
     )
   }
+  return binding
+}
+
+function argumentFor(model: CallModel, documented: DocumentedClass): string {
+  const binding = bindingFor(model, documented)
   return `${binding.parameter} = ${binding.argument}`
 }
 
@@ -330,7 +337,7 @@ function componentCallFor(model: CallModel, classes: readonly DocumentedClass[])
 
   const rendered = [
     model.componentClass,
-    ...modifiers.map(documented => emittedClass(model.componentClass, documented.className)),
+    ...modifiers.map(documented => bindingFor(model, documented).cssClass),
     ...variantClasses,
   ]
   return { args: args.join(', '), expectedClasses: [...new Set(rendered)].sort().join(' ') }

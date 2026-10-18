@@ -318,3 +318,15 @@ function withOwnClasses(escapeHatches: readonly ParameterShape[], own: readonly 
   const afterId = escapeHatches.findIndex(parameter => parameter === ID_PARAMETER) + 1
   return [...escapeHatches.slice(0, afterId), ...own, ...escapeHatches.slice(afterId)]
 }
+
+/** The parameters a class sibling takes: the function's classes, with an extra's as a toggle. */
+export function siblingParameters(shape: FunctionShape): ParameterShape[] {
+  return shape.parameters
+    .filter(parameter => parameter.enumName !== undefined || parameter.cssClass !== undefined || parameter.writes !== undefined)
+    .map(parameter => (parameter.writes === undefined ? parameter : { ...parameter, type: 'Boolean', default: 'false' }))
+}
+
+/** Whether a function writes any class, and so has a class sibling. */
+export function hasSibling(shape: FunctionShape): boolean {
+  return shape.cssClass !== null || shape.modifierClasses.length > 0 || siblingParameters(shape).length > 0
+}

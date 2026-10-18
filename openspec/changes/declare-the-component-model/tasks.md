@@ -121,14 +121,18 @@ do not exist and change exactly those.
   `offered-twice.ts` with their tests.
 - [x] 3.11 `. r (internal)` Delete the element heuristic, `element-observation.ts` and
   `element-cross-check.ts` with their tests.
-- [ ] 3.12 `. r (internal)` Delete `class-groups.ts`, `axis-derivation.ts`, `axis-names.ts`,
+- [x] 3.12 `. r (internal)` Delete `class-groups.ts`, `axis-derivation.ts`, `axis-names.ts`,
   `parser/property-table.ts` and the classification parts of `component-shape.ts` with their
-  tests.
+  tests. **Done 2026-10-18, except `parser/property-table.ts`,** which `measurement.ts` still
+  imports; it goes with the measurement in 3.14. The four emitter test files moved to model
+  fixtures first (`codegen/test/model-fixture.ts`), and the three rules that outlive the
+  inference, void elements, content against text, and the builder names, are now pinned on the
+  model reader.
 - [ ] 3.13 `. r (internal)` Delete the join-item derivation from the generation path; keep the
   scope emitter. `classesJoinedWith` stays, because the bump report reads it since 2.4; move it
   beside the report.
 - [ ] 3.14 `. r (internal)` Delete the exclusivity measurement: `exclusivity.json`, the probe
-  modules, `:lib:verifyExclusivity`, its CI step, `just measure-exclusivity` and
+  modules, `measurement.ts`, `parser/property-table.ts` and its integration test, `:lib:verifyExclusivity`, its CI step, `just measure-exclusivity` and
   `just verify-exclusivity`, the `exclusivity` source set in `e2e-tests`. Cite the last commit
   that carried them in the body.
 

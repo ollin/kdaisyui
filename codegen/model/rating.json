@@ -19,13 +19,18 @@
       "text": false,
       "parameters": [
         { "kind": "enum", "name": "size", "enum": "RatingSize", "doc": "Size variant" },
-        { "kind": "toggle", "name": "half", "class": "rating-half" },
-        { "kind": "toggle", "name": "hidden", "class": "rating-hidden" }
+        { "kind": "toggle", "name": "half", "class": "rating-half" }
       ]
+    },
+    {
+      "kind": "classes",
+      "name": "daisyRatingItem",
+      "receiver": "Tag",
+      "element": null,
+      "class": null,
+      "text": false,
+      "parameters": [{ "kind": "toggle", "name": "hidden", "class": "rating-hidden" }]
     }
   ],
-  "summary": { "summary": "Star rating input" },
-  "notExpressed": {
-    "rating-hidden": "#347: DaisyUI puts it on a child no function renders; daisyRating offers it on the <div> itself, where it has no effect."
-  }
+  "summary": { "summary": "Star rating input" }
 }

@@ -40,13 +40,12 @@ class RatingCoverageTest {
             daisyRating(
                 id = htmlId("x-cov-id"),
                 half = true,
-                hidden = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "rating rating-half rating-hidden zz-extra", "Rating all flags", closes = "</div></div>")
+        assertRendered(html, "rating rating-half zz-extra", "Rating all flags", closes = "</div></div>")
         assertCommonFlags(html, "Rating")
     }
 
@@ -118,10 +117,9 @@ class RatingCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRatingClasses(
                 half = true,
-                hidden = true,
             )
         }
-        assertRendered(html, "rating rating-half rating-hidden", "RatingClasses all flags")
+        assertRendered(html, "rating rating-half", "RatingClasses all flags")
     }
 
     @Test
@@ -172,5 +170,23 @@ class RatingCoverageTest {
             )
         }
         assertRendered(html, "rating rating-xl", "RatingClasses size Xl")
+    }
+
+    @Test
+    fun ratingItemClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingItemClasses()
+        }
+        assertTrue(!html.contains("class=\""), "RatingItemClasses defaults emits no class")
+    }
+
+    @Test
+    fun ratingItemClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingItemClasses(
+                hidden = true,
+            )
+        }
+        assertRendered(html, "rating-hidden", "RatingItemClasses all flags")
     }
 }

@@ -353,8 +353,9 @@ fun Tag.daisyRangeClasses(color: ClassValues<RangeColor>? = null, size: ClassVal
 
 # Rating <div>
 enum RatingSize: Xs, Sm, Md, Lg, Xl
-fun FlowContent.daisyRating(id: HtmlId? = null, size: ClassValues<RatingSize>? = null, half: Boolean = false, hidden: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun Tag.daisyRatingClasses(size: ClassValues<RatingSize>? = null, half: Boolean = false, hidden: Boolean = false)
+fun FlowContent.daisyRating(id: HtmlId? = null, size: ClassValues<RatingSize>? = null, half: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun Tag.daisyRatingClasses(size: ClassValues<RatingSize>? = null, half: Boolean = false)
+fun Tag.daisyRatingItemClasses(hidden: Boolean = false)
 
 # Select <select>
 enum SelectColor: Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error

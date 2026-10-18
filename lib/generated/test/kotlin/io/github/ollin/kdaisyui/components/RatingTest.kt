@@ -4,6 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.div
 
 class RatingTest {
 
@@ -101,6 +102,16 @@ class RatingTest {
         val expectedClasses = "rating rating-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+    }
+
+    @Test
+    fun with_rating_hidden_daisyRatingItem() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingItemClasses(hidden = true)
+        }
+        val expectedClasses = "rating-hidden"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for with `rating-hidden`")
     }
 
     @Test

@@ -16,12 +16,16 @@ fun FlowContent.daisyRating(
     id: HtmlId? = null,
     size: ClassValues<RatingSize>? = null,
     half: Boolean = false,  // To shows half of the shapes. Useful for half star ratings
-    hidden: Boolean = false,  // For the first radio to make it hidden so user can clear the rating
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
 
 // The same classes on an element you write yourself, or beside another component's:
-fun Tag.daisyRatingClasses(size: ClassValues<RatingSize>? = null, half: Boolean = false, hidden: Boolean = false)
+fun Tag.daisyRatingClasses(size: ClassValues<RatingSize>? = null, half: Boolean = false)
+```
+
+```kotlin
+// Classes only, for a child DaisyUI gives no class of its own:
+fun Tag.daisyRatingItemClasses(hidden: Boolean = false)
 ```

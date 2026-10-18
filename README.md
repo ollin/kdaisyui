@@ -566,7 +566,7 @@ The booleans that remain are on/off features, such as `zebra`, `active`, `soft` 
 | `daisyAvatar(modifier = AvatarModifier.Online)` | `daisyAvatar(presence = AvatarPresence.Online)` |
 | `daisyCard(modifier = CardModifier.Side)` | `daisyCard(layout = CardLayout.Side)` |
 | `daisyCarousel(modifier = CarouselModifier.Start)` | `daisyCarousel(snap = CarouselSnap.Start)` |
-| `daisyList(modifier = ListModifier.ColWrap)` | `daisyList(column = ListColumn.ColWrap)` |
+| `daisyList(modifier = ListModifier.ColWrap)` | on the row's child: `daisyListCellClasses(colWrap = true)`, see 9 |
 | `daisyMask(modifier = MaskModifier.Half1)` | `daisyMask(half = MaskHalf.Half1)` |
 | `daisyTooltip(sidePlacement = …, alignPlacement = …)` | `daisyTooltip(side = TooltipSide.…, align = TooltipAlign.…)` |
 | `IndicatorHorizontalPlacement`, `IndicatorVerticalPlacement` | `IndicatorItemHorizontalPlacement`, `IndicatorItemVerticalPlacement` |
@@ -598,9 +598,35 @@ daisyButton("Save", style = ButtonStyle.Outline, extraClasses = "btn-ghost")
 ```
 
 **8. `kdaisyui-classes.txt` lists only classes a component can emit.** It drops the two drawer
-variant prefixes and five classes no function renders: `avatar-group`, `floating-label`,
-`list-row`, `react-day-picker`, `vc`. If you write one of those yourself, it is in your own
-sources, where Tailwind finds it.
+variant prefixes and `react-day-picker`, which no function renders. If you write one of those
+yourself, it is in your own sources, where Tailwind finds it.
+
+**9. Classes that sat on the container now sit on the element DaisyUI puts them on.** In 0.7.x
+these parameters wrote their class on the container, where DaisyUI's CSS does nothing (#347):
+
+| 0.7.x | 0.8.0 |
+|---|---|
+| `daisyMenu(active = true)` | on the item: `li { a { daisyMenuItemClasses(active = true) } }` |
+| `daisyMenu(disabled = true)` | on the item: `li { daisyMenuItemClasses(disabled = true) }` |
+| `daisyMenu(dropdownShow = true)` | `daisyMenuDropdown(show = true)` and `daisyMenuDropdownToggle(dropdownShow = true)` |
+| `daisyDock(active = true)` | on the item: `daisyDockItem(active = true) { … }`, a `<button>` |
+| `daisyRating(hidden = true)` | on the first radio: `input { daisyRatingItemClasses(hidden = true) }` |
+| `daisyList(modifier = ListModifier.ColGrow)` | on a child of `daisyListRow`: `daisyListCellClasses(colGrow = true)` |
+
+`ListModifier` has no successor enum. New functions for what had none: `daisyListRow`,
+`daisyFloatingLabel`, `daisyAvatarGroup` and `daisyVc`, Vanilla Calendar Pro's root.
+
+**10. Every function has a class sibling, for two components on one element and for an element
+you write yourself.** `Tag.daisy<Name>Classes(…)` takes the function's class parameters and adds
+the same classes to the element it is called on. Not breaking; it replaces the `extraClasses`
+strings 0.7.x needed for such cases:
+
+```kotlin
+// <ul class="dropdown-content menu menu-sm">
+daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) { … }
+// <a class="btn btn-primary">
+a { daisyButtonClasses(color = ButtonColor.Primary) }
+```
 
 ## Quick start
 

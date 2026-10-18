@@ -196,7 +196,7 @@ Same cadence as block 4.
   4.2. Closes #342.
 - [x] 5.10 `^ F` Tab demo route in `example-app` and an E2E scenario asserting the container and an
   active item.
-- [ ] 5.11 `^ F` `kdaisyui-classes.txt` lists the classes the model offers. Closes #345.
+- [x] 5.11 `^ F` `kdaisyui-classes.txt` lists the classes the model offers. Closes #345.
 
 ## 6. Wrap-up — 2 h
 

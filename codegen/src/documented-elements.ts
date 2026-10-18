@@ -6,7 +6,7 @@
  */
 
 import { entryName, type ComponentModel, type ModelFunction } from './model.ts'
-import { offeredBy } from './model-completeness.ts'
+import { offeredBy, writtenBy } from './model-completeness.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
 import { markedElements, type MarkedElement } from './parser/documented-classes.ts'
 
@@ -97,11 +97,9 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
 
 /** The named argument that makes `fn` write `cls`; the classifier has already found that one does. */
 function argumentFor(model: ComponentModel, fn: ModelFunction, cls: string): string {
-  for (const parameter of fn.parameters) {
-    if (parameter.kind === 'enum' && model.enums.some(declared => declared.name === parameter.enum && declared.classes.includes(cls))) return `${parameter.name} = ${parameter.enum}.${entryName(model, parameter.enum, cls)}`
-    if ((parameter.kind === 'toggle' && parameter.class === cls) || (parameter.kind === 'extra' && (parameter.writes ?? []).includes(cls))) return `${parameter.name} = true`
-  }
-  throw new Error(`${fn.name} offers no parameter writing ${cls}`)
+  const parameter = fn.parameters.find(candidate => writtenBy(model, candidate).includes(cls))
+  if (parameter === undefined) throw new Error(`${fn.name} offers no parameter writing ${cls}`)
+  return `${parameter.name} = ${parameter.kind === 'enum' ? `${parameter.enum}.${entryName(model, parameter.enum, cls)}` : 'true'}`
 }
 
 /** The classes the gate judges an element by: unprefixed, and declared by some component. */

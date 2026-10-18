@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.dialog
 import kotlinx.html.DIALOG
@@ -14,27 +15,37 @@ import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 
+/** VerticalPlacement variants for this component (CSS prefix: `modal-`) */
+enum class ModalVerticalPlacement(internal val className: String) : ClassValues<ModalVerticalPlacement> {
+    /** CSS: `modal-top` — Moves the modal to top */
+    Top("modal-top"),
+    /** CSS: `modal-middle` — Moves the modal to middle */
+    Middle("modal-middle"),
+    /** CSS: `modal-bottom` — Moves the modal to bottom */
+    Bottom("modal-bottom"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Modal is used to show a dialog or a box when you click a button. Renders `<dialog class="modal ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param bottom — Moves the modal to bottom
+ * @param verticalPlacement — VerticalPlacement variant
  * @param end — Moves the modal to end horizontally
- * @param middle — Moves the modal to middle
  * @param open — Keeps the modal open (you can add this class using JS)
  * @param start — Moves the modal to start horizontally
- * @param top — Moves the modal to top
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyModal(
     id: HtmlId? = null,
-    bottom: Boolean = false,
+    verticalPlacement: ClassValues<ModalVerticalPlacement>? = null,
     end: Boolean = false,
-    middle: Boolean = false,
     open: Boolean = false,
     start: Boolean = false,
-    top: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIALOG.() -> Unit)? = null,
     content: (DIALOG.() -> Unit),
@@ -42,12 +53,10 @@ fun FlowContent.daisyModal(
     dialog {
         if (id != null) attributes["id"] = id.id
         addClassNames("modal")
-        if (bottom) addClassNames("modal-bottom")
+        addClassNames(verticalPlacement)
         if (end) addClassNames("modal-end")
-        if (middle) addClassNames("modal-middle")
         if (open) addClassNames("modal-open")
         if (start) addClassNames("modal-start")
-        if (top) addClassNames("modal-top")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

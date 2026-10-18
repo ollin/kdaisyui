@@ -2,7 +2,13 @@
   "component": "modal",
   "name": "Modal",
   "class": "modal",
-  "enums": [],
+  "enums": [
+    {
+      "name": "ModalVerticalPlacement",
+      "label": "VerticalPlacement variants",
+      "classes": ["modal-top", "modal-middle", "modal-bottom"]
+    }
+  ],
   "functions": [
     {
       "kind": "main",
@@ -12,12 +18,15 @@
       "class": "modal",
       "text": false,
       "parameters": [
-        { "kind": "toggle", "name": "bottom", "class": "modal-bottom" },
+        {
+          "kind": "enum",
+          "name": "verticalPlacement",
+          "enum": "ModalVerticalPlacement",
+          "doc": "VerticalPlacement variant"
+        },
         { "kind": "toggle", "name": "end", "class": "modal-end" },
-        { "kind": "toggle", "name": "middle", "class": "modal-middle" },
         { "kind": "toggle", "name": "open", "class": "modal-open" },
-        { "kind": "toggle", "name": "start", "class": "modal-start" },
-        { "kind": "toggle", "name": "top", "class": "modal-top" }
+        { "kind": "toggle", "name": "start", "class": "modal-start" }
       ]
     },
     {

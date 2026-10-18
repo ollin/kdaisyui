@@ -55,7 +55,7 @@ class ModalTest {
     @Test
     fun responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModal(bottom = true, extraClasses = "sm:modal-middle") {
+            daisyModal(verticalPlacement = ModalVerticalPlacement.Bottom, extraClasses = "sm:modal-middle") {
             }
         }
         val expectedClasses = "modal modal-bottom sm:modal-middle"

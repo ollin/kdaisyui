@@ -11,14 +11,13 @@ Regenerate: just generate
 Modal dialogs. Renders `<dialog class="modal ...">`.
 
 ```kotlin
+// ModalVerticalPlacement: Top | Middle | Bottom
 fun FlowContent.daisyModal(
     id: HtmlId? = null,
-    bottom: Boolean = false,  // Moves the modal to bottom
+    verticalPlacement: ClassValues<ModalVerticalPlacement>? = null,
     end: Boolean = false,  // Moves the modal to end horizontally
-    middle: Boolean = false,  // Moves the modal to middle
     open: Boolean = false,  // Keeps the modal open (you can add this class using JS)
     start: Boolean = false,  // Moves the modal to start horizontally
-    top: Boolean = false,  // Moves the modal to top
     extraClasses: String? = null,
     attrs: (DIALOG.() -> Unit)? = null,
     content: (DIALOG.() -> Unit),

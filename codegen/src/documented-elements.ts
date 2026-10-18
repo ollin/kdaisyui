@@ -21,13 +21,42 @@ export function pageFirst(models: readonly ComponentModel[], page: string): Comp
   return [...models.filter(model => model.component === page), ...models.filter(model => model.component !== page)]
 }
 
+/** One function's share of an element's classes. */
+export interface ClaimedGroup extends ModelledFunction {
+  readonly classes: readonly string[]
+}
+
+/** Who claims which of an element's classes, and what nobody claims. */
+export interface Claims {
+  readonly groups: readonly ClaimedGroup[]
+  readonly unclaimed: readonly string[]
+}
+
 /**
- * The first function whose own class the element carries and that offers every other class,
- * searching `models` in the order given: the page's own model first, then the others.
+ * `design.md` D4, searching `models` in the order given, the page's own first: for each own class
+ * the element carries, the function with that own class offering the most of the element's
+ * classes claims what it offers; what remains is claimed whole by a function with no own class,
+ * or by nobody.
  */
-export function expressingFunction(models: readonly ComponentModel[], counted: readonly string[]): ModelledFunction | null {
+export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[]): Claims {
   const candidates = models.flatMap(model => model.functions.map(fn => ({ model, fn })))
-  return candidates.find(({ model, fn }) => fn.class !== null && counted.includes(fn.class) && counted.every(cls => offers(model, fn, cls))) ?? null
+  const owned = counted.flatMap(own => ownerOf(candidates, own, counted)).map(owner => ({ ...owner, classes: counted.filter(cls => offers(owner.model, owner.fn, cls)) }))
+  const rest = counted.filter(cls => !owned.some(group => group.classes.includes(cls)))
+  const free = rest.length === 0 ? undefined : candidates.find(({ model, fn }) => fn.class === null && rest.every(cls => offers(model, fn, cls)))
+  return free === undefined ? { groups: owned, unclaimed: rest } : { groups: [...owned, { ...free, classes: rest }], unclaimed: [] }
+}
+
+/** Of the functions whose own class is `own`, the one offering the most of the element's classes. */
+function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: readonly string[]): ModelledFunction[] {
+  const share = ({ model, fn }: ModelledFunction) => counted.filter(cls => offers(model, fn, cls)).length
+  const owners = candidates.filter(({ fn }) => fn.class === own)
+  return owners.length === 0 ? [] : [owners.reduce((best, next) => (share(next) > share(best) ? next : best))]
+}
+
+/** The one function expressing the element alone, or null; several groups are not accepted yet. */
+export function expressingFunction(models: readonly ComponentModel[], counted: readonly string[]): ModelledFunction | null {
+  const { groups, unclaimed } = claimingGroups(models, counted)
+  return groups.length === 1 && unclaimed.length === 0 ? groups[0] : null
 }
 
 function offers(model: ComponentModel, fn: ModelFunction, cls: string): boolean {

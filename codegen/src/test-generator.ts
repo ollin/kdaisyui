@@ -7,10 +7,6 @@ import {
   toPascalCase,
   type ClassCategory,
 } from './parser/frontmatter.ts'
-// `toPascalCase` is aliased because this file already imports the frontmatter one, which is
-// branded to a ComponentName. An enum member suffix is not a component name, and the classifier's
-// is the generic string form.
-import { toPascalCase as toPascalClassName } from './classifier.ts'
 import { entryName, isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import {
   documentedElementClasses,

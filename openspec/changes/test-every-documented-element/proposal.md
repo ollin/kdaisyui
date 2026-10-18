@@ -18,7 +18,7 @@ generated example tests reach the main-class ones only, and a first count, befor
   marked classes, and that function offers every other marked class as an axis member, a toggle, a
   class an extra writes, a class it always writes, or `join-item` where the join scope marks it.
 - **A gap is closed by the model, nowhere else**: either the model gains what the element needs,
-  or the page's model file declares the element's class set as not expressed, with a reason.
+  or the page's model file declares the gap, by its key, as not expressed, with a reason.
   Generation also fails on a declaration no example needs any more, so the list cannot rot.
 - **Corrected:** the requirement on elements says the model records `badge` and `dropdown` as
   element divergences. It records none, and 322 marked elements in 80 distinct shapes sit on a

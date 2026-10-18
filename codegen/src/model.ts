@@ -12,7 +12,6 @@ import fs from 'fs'
 import path from 'path'
 import {
   functionParameters,
-  type ComponentConfig,
   type ExtraParameter,
   htmlTagNameFor,
   tagBuilderFor,
@@ -207,60 +206,13 @@ export function shapeFromModel(model: ComponentModel, descriptions: Descriptions
   }
 }
 
-/** The parameters every function has, which the model leaves to `functionParameters`. */
-const FRAME = new Set(['text', 'id', 'extraClasses', 'attrs', 'content'])
-
-function modelParameter(parameter: ParameterShape, extras: readonly ExtraParameter[]): ModelParameter {
-  if (parameter.enumName !== undefined) return { kind: 'enum', name: parameter.name, enum: parameter.enumName, doc: parameter.doc ?? '' }
-  if (parameter.cssClass !== undefined) return { kind: 'toggle', name: parameter.name, class: parameter.cssClass }
-  const extra = extras.find(candidate => candidate.name === parameter.name)
-  if (extra === undefined) throw new Error(`${parameter.name}: neither an enum, a toggle nor a configured extra`)
-  const writes = [...extra.apply.matchAll(/addClassNames\("([^"]+)"\)/g)].map(match => match[1])
-  return { kind: 'extra', ...extra, ...(writes.length > 0 ? { writes } : {}) }
-}
-
-function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig, joinItem: boolean): ModelFunction {
-  return {
-    kind: fn.kind,
-    name: fn.name,
-    receiver: fn.receiver,
-    element: fn.element,
-    class: fn.cssClass,
-    text: fn.parameters.some(parameter => parameter.name === 'text'),
-    parameters: fn.parameters
-      .filter(parameter => !FRAME.has(parameter.name))
-      .map(parameter => modelParameter(parameter, componentConfig.extras)),
-    ...(fn.modifierClasses.length > 0 ? { always: [...fn.modifierClasses] } : {}),
-    ...(fn.staticAttributes.length > 0 ? { attributes: Object.fromEntries(fn.staticAttributes) } : {}),
-    ...(joinItem && fn.kind === 'main' ? { joinItem: true as const } : {}),
-    ...(fn.kind === 'main' && componentConfig.role !== null ? { role: componentConfig.role } : {}),
-    ...(fn.kind === 'main' && componentConfig.inputType !== null ? { inputType: componentConfig.inputType } : {}),
-  }
-}
-
-/**
- * The model a shape was built from: the inverse of `shapeFromModel`, used once to write the
- * committed model from today's inferred shapes. The extras' Kotlin fragments are not in the shape,
- * so they come from the component's configuration.
- */
-export function modelFromShape(
-  shape: ComponentShape,
-  componentConfig: ComponentConfig,
-  { joinItem = false, summary }: { readonly joinItem?: boolean, readonly summary?: DocSummary } = {},
-): ComponentModel {
-  return {
-    component: shape.componentDir,
-    name: shape.componentName,
-    class: shape.prefix,
-    enums: shape.enums.map(declared => ({ name: declared.name, label: declared.categoryLabel, classes: declared.entries.map(entry => entry.cssClass) })),
-    functions: shape.functions.map(fn => modelFunction(fn, componentConfig, joinItem)),
-    ...(shape.scope !== undefined ? { joinScope: true as const } : {}),
-    ...(summary !== undefined ? { summary } : {}),
-  }
-}
-
 /** What the main function's body needs beyond its shape: the extras' fragments, text, role, input type. */
-export type MainFunctionConfig = Pick<ComponentConfig, 'extras' | 'hasTextParam' | 'role' | 'inputType'>
+export interface MainFunctionConfig {
+  readonly extras: readonly ExtraParameter[]
+  readonly hasTextParam: boolean
+  readonly role: string | null
+  readonly inputType: string | null
+}
 
 export function mainFunctionConfig(model: ComponentModel): MainFunctionConfig {
   const main = model.functions.find(fn => fn.kind === 'main')

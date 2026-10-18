@@ -1,8 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { mainFunctionConfig, modelFromShape, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
-import type { ComponentConfig } from '../src/component-shape.ts'
+import { mainFunctionConfig, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
 
 /** The smallest real component: one function, one enum, inline text. */
 const KBD: ComponentModel = {
@@ -89,17 +88,6 @@ describe('shapeFromModel', () => {
     assert.deepEqual(descs, ['Keyboard key.', 'A part.', ''])
   })
 
-  test('writes back the model a shape was read from', () => {
-    const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
-    const full: ComponentModel = { ...KBD, functions: [
-      { ...KBD.functions[0], parameters: [...KBD.functions[0].parameters, { kind: 'toggle', name: 'wide', class: 'kbd-wide' }, disabled] },
-      { kind: 'custom', name: 'daisyKbdPopover', receiver: 'FlowContent', element: 'DIV', class: null, text: false, parameters: [], attributes: { popover: '' } },
-    ] }
-    const config = { extras: [{ name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' }], role: null, inputType: null } as unknown as ComponentConfig
-
-    assert.deepEqual(modelFromShape(shapeFromModel(full, DESCRIPTIONS), config), full)
-  })
-
   test('opens the join scope on the component that declares it, with the declared items as members', () => {
     const item: ComponentModel = { ...KBD, functions: [{ ...KBD.functions[0], joinItem: true }] }
     const join: ComponentModel = { component: 'join', name: 'Join', class: 'join', enums: [], joinScope: true, functions: [{ ...KBD.functions[0], name: 'daisyJoin', element: 'DIV', class: 'join', text: false, parameters: [] }] }
@@ -122,14 +110,11 @@ describe('shapeFromModel', () => {
     })
   })
 
-  test('records the classes an extra parameter writes, and keeps them out of the body config', () => {
+  test('keeps the classes an extra parameter writes out of the body config', () => {
     const disabled = { name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) { this.disabled = true; addClassNames("btn-disabled") }' }
-    const shape = shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'extra', ...disabled }] }] }, DESCRIPTIONS)
-    const config = { extras: [disabled], role: null, inputType: null } as unknown as ComponentConfig
+    const button: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'extra', ...disabled, writes: ['btn-disabled'] }] }] }
 
-    const model = modelFromShape(shape, config)
-
-    assert.deepEqual([model.functions[0].parameters[0], mainFunctionConfig(model).extras], [{ kind: 'extra', ...disabled, writes: ['btn-disabled'] }, [disabled]])
+    assert.deepEqual(mainFunctionConfig(button).extras, [disabled])
   })
 
   test('a void element takes no content parameter, even where a text shortcut exists', () => {

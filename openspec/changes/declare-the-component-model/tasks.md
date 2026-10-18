@@ -213,7 +213,7 @@ Same cadence as block 4.
   `:lib:testCodegen`, `:lib:checkComponentApi`, regeneration with no drift, and CodeScene on the
   change set. `codegen/` has no mutation tool; say so in the evaluation.
 - [ ] 6.6 `. d` Write `tmp/declare-the-component-model/EVALUATION-declare-the-component-model.md`.
-- [ ] 6.7 `. d` Bring the hand-written prose to the new API: `README.md` outside the migration
+- [x] 6.7 `. d` Bring the hand-written prose to the new API: `README.md` outside the migration
   note, `docs/how-to.md`, `docs/explanation.md`, both tutorials and `codegen/llms-template.md`.
   Added 2026-10-18 after 4.3: about 58 places there name `variant`, a `…Variant` enum or a
   boolean that became an axis. Nothing compiles these snippets; `verify-doc-snippets` owns

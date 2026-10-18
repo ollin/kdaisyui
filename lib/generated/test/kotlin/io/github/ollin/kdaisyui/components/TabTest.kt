@@ -10,7 +10,7 @@ class TabTest {
     @Test
     fun tabs() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab() {
+            daisyTabs() {
             }
         }
         val expectedClasses = "tabs"
@@ -21,7 +21,7 @@ class TabTest {
     @Test
     fun tabs_border() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(border = true) {
+            daisyTabs(border = true) {
             }
         }
         val expectedClasses = "tabs tabs-border"
@@ -32,7 +32,7 @@ class TabTest {
     @Test
     fun tabs_lift() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true) {
+            daisyTabs(lift = true) {
             }
         }
         val expectedClasses = "tabs tabs-lift"
@@ -43,7 +43,7 @@ class TabTest {
     @Test
     fun tabs_box() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(box = true) {
+            daisyTabs(box = true) {
             }
         }
         val expectedClasses = "tabs tabs-box"
@@ -54,7 +54,7 @@ class TabTest {
     @Test
     fun tabs_box_using_radio_inputs() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(box = true) {
+            daisyTabs(box = true) {
             }
         }
         val expectedClasses = "tabs tabs-box"
@@ -65,7 +65,7 @@ class TabTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true) {
+            daisyTabs(lift = true) {
             }
         }
         val expectedClasses = "tabs tabs-lift"
@@ -76,7 +76,7 @@ class TabTest {
     @Test
     fun radio_tabs_border_tab_content() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(border = true) {
+            daisyTabs(border = true) {
             }
         }
         val expectedClasses = "tabs tabs-border"
@@ -87,7 +87,7 @@ class TabTest {
     @Test
     fun radio_tabs_lift_tab_content() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true) {
+            daisyTabs(lift = true) {
             }
         }
         val expectedClasses = "tabs tabs-lift"
@@ -98,7 +98,7 @@ class TabTest {
     @Test
     fun radio_tabs_lift_with_icons_tab_content() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true) {
+            daisyTabs(lift = true) {
             }
         }
         val expectedClasses = "tabs tabs-lift"
@@ -109,7 +109,7 @@ class TabTest {
     @Test
     fun radio_tabs_lift_tab_content_on_bottom() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true, placement = TabPlacement.Bottom) {
+            daisyTabs(lift = true, placement = TabsPlacement.Bottom) {
             }
         }
         val expectedClasses = "tabs tabs-bottom tabs-lift"
@@ -120,7 +120,7 @@ class TabTest {
     @Test
     fun radio_tabs_box_tab_content() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(box = true) {
+            daisyTabs(box = true) {
             }
         }
         val expectedClasses = "tabs tabs-box"
@@ -131,7 +131,7 @@ class TabTest {
     @Test
     fun tabs_box_with_a_horizontal_scroll_when_there_s_no_space() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true) {
+            daisyTabs(lift = true) {
             }
         }
         val expectedClasses = "tabs tabs-lift"
@@ -142,7 +142,7 @@ class TabTest {
     @Test
     fun tabs_with_custom_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(lift = true) {
+            daisyTabs(lift = true) {
             }
         }
         val expectedClasses = "tabs tabs-lift"

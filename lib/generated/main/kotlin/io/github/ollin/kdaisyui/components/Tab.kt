@@ -16,7 +16,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Size variants for this component (CSS prefix: `tabs-`) */
-enum class TabSize(internal val className: String) : ClassValues<TabSize> {
+enum class TabsSize(internal val className: String) : ClassValues<TabsSize> {
     /** CSS: `tabs-xs` — Extra small size */
     Xs("tabs-xs"),
     /** CSS: `tabs-sm` — Small size */
@@ -33,7 +33,7 @@ enum class TabSize(internal val className: String) : ClassValues<TabSize> {
 }
 
 /** Placement variants for this component (CSS prefix: `tabs-`) */
-enum class TabPlacement(internal val className: String) : ClassValues<TabPlacement> {
+enum class TabsPlacement(internal val className: String) : ClassValues<TabsPlacement> {
     /** CSS: `tabs-top` — Puts tab buttons on top of the tab-content (default) */
     Top("tabs-top"),
     /** CSS: `tabs-bottom` — Puts tabs on under the tab-content */
@@ -56,10 +56,10 @@ enum class TabPlacement(internal val className: String) : ClassValues<TabPlaceme
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
-fun FlowContent.daisyTab(
+fun FlowContent.daisyTabs(
     id: HtmlId? = null,
-    size: ClassValues<TabSize>? = null,
-    placement: ClassValues<TabPlacement>? = null,
+    size: ClassValues<TabsSize>? = null,
+    placement: ClassValues<TabsPlacement>? = null,
     border: Boolean = false,
     box: Boolean = false,
     lift: Boolean = false,
@@ -82,10 +82,10 @@ fun FlowContent.daisyTab(
 }
 
 /** A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ...">`. */
-fun FlowContent.daisyTabTab(
+fun FlowContent.daisyTab(
     id: HtmlId? = null,
-    tabActive: Boolean = false,
-    tabDisabled: Boolean = false,
+    active: Boolean = false,
+    disabled: Boolean = false,
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit),
@@ -93,8 +93,8 @@ fun FlowContent.daisyTabTab(
     a {
         if (id != null) attributes["id"] = id.id
         addClassNames("tab")
-        if (tabActive) addClassNames("tab-active")
-        if (tabDisabled) addClassNames("tab-disabled")
+        if (active) addClassNames("tab-active")
+        if (disabled) addClassNames("tab-disabled")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -102,7 +102,7 @@ fun FlowContent.daisyTabTab(
 }
 
 /** Tab content that comes immediately after a tab Renders `<div class="tab-content ...">`. */
-fun FlowContent.daisyTabTabContent(
+fun FlowContent.daisyTabContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

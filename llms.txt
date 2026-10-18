@@ -686,11 +686,11 @@ fun FlowContent.daisySwapIndeterminate(id: HtmlId? = null, extraClasses: String?
 Tabbed navigation — renders `<button>`.
 
 ```kotlin
-enum class TabSize { Xs, Sm, Md, Lg, Xl }
-enum class TabPlacement { Top, Bottom }
-fun FlowContent.daisyTab(id: HtmlId? = null, size: ClassValues<TabSize>? = null, placement: ClassValues<TabPlacement>? = null, border: Boolean = false, box: Boolean = false, lift: Boolean = false, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
-fun FlowContent.daisyTabTab(id: HtmlId? = null, tabActive: Boolean = false, tabDisabled: Boolean = false, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit))
-fun FlowContent.daisyTabTabContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class TabsSize { Xs, Sm, Md, Lg, Xl }
+enum class TabsPlacement { Top, Bottom }
+fun FlowContent.daisyTabs(id: HtmlId? = null, size: ClassValues<TabsSize>? = null, placement: ClassValues<TabsPlacement>? = null, border: Boolean = false, box: Boolean = false, lift: Boolean = false, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit))
+fun FlowContent.daisyTab(id: HtmlId? = null, active: Boolean = false, disabled: Boolean = false, extraClasses: String? = null, attrs: (A.() -> Unit)? = null, content: (A.() -> Unit))
+fun FlowContent.daisyTabContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Table

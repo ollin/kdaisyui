@@ -3,20 +3,20 @@
   "name": "Tab",
   "class": "tabs",
   "enums": [
-    { "name": "TabSize", "label": "Size variants", "classes": ["tabs-xs", "tabs-sm", "tabs-md", "tabs-lg", "tabs-xl"] },
-    { "name": "TabPlacement", "label": "Placement variants", "classes": ["tabs-top", "tabs-bottom"] }
+    { "name": "TabsSize", "label": "Size variants", "classes": ["tabs-xs", "tabs-sm", "tabs-md", "tabs-lg", "tabs-xl"] },
+    { "name": "TabsPlacement", "label": "Placement variants", "classes": ["tabs-top", "tabs-bottom"] }
   ],
   "functions": [
     {
       "kind": "main",
-      "name": "daisyTab",
+      "name": "daisyTabs",
       "receiver": "FlowContent",
       "element": "BUTTON",
       "class": "tabs",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "size", "enum": "TabSize", "doc": "Size variant" },
-        { "kind": "enum", "name": "placement", "enum": "TabPlacement", "doc": "Placement variant" },
+        { "kind": "enum", "name": "size", "enum": "TabsSize", "doc": "Size variant" },
+        { "kind": "enum", "name": "placement", "enum": "TabsPlacement", "doc": "Placement variant" },
         { "kind": "toggle", "name": "border", "class": "tabs-border" },
         { "kind": "toggle", "name": "box", "class": "tabs-box" },
         { "kind": "toggle", "name": "lift", "class": "tabs-lift" }
@@ -24,19 +24,19 @@
     },
     {
       "kind": "part",
-      "name": "daisyTabTab",
+      "name": "daisyTab",
       "receiver": "FlowContent",
       "element": "A",
       "class": "tab",
       "text": false,
       "parameters": [
-        { "kind": "toggle", "name": "tabActive", "class": "tab-active" },
-        { "kind": "toggle", "name": "tabDisabled", "class": "tab-disabled" }
+        { "kind": "toggle", "name": "active", "class": "tab-active" },
+        { "kind": "toggle", "name": "disabled", "class": "tab-disabled" }
       ]
     },
     {
       "kind": "part",
-      "name": "daisyTabTabContent",
+      "name": "daisyTabContent",
       "receiver": "FlowContent",
       "element": "DIV",
       "class": "tab-content",

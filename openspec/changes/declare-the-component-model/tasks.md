@@ -19,7 +19,7 @@ proof is regeneration with no diff under `lib/generated`, `docs/reference`, `llm
 
 The three Assumed claims this change rests on are checked here, before anything is built on them.
 
-- [ ] 1.1 `. d` **Measure: does the frontmatter list every marked class?** For every component
+- [x] 1.1 `. d` **Measure: does the frontmatter list every marked class?** For every component
   page at the pinned tag, compare the `$$`-marked classes in the fenced examples with the
   frontmatter's classes. Record the difference in this task. A non-empty difference refutes the
   completeness requirement's assumption; revise `specs/component-model` before 1.2.

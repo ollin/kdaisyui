@@ -16,6 +16,7 @@ class StackTest {
         val expectedClasses = "stack"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for 3 divs in a stack")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for 3 divs in a stack")
     }
 
     @Test
@@ -27,6 +28,7 @@ class StackTest {
         val expectedClasses = "card"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for stacked cards")
     }
 
     @Test
@@ -38,6 +40,7 @@ class StackTest {
         val expectedClasses = "card-body"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for stacked cards")
     }
 
     @Test
@@ -49,6 +52,7 @@ class StackTest {
         val expectedClasses = "stack stack-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards (top direction)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for stacked cards (top direction)")
     }
 
     @Test
@@ -60,6 +64,7 @@ class StackTest {
         val expectedClasses = "stack stack-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards (start direction)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for stacked cards (start direction)")
     }
 
     @Test
@@ -71,6 +76,7 @@ class StackTest {
         val expectedClasses = "stack stack-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards (end direction)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for stacked cards (end direction)")
     }
 
     @Test
@@ -82,5 +88,6 @@ class StackTest {
         val expectedClasses = "card-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
+        assertEquals("h2", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for stacked cards")
     }
 }

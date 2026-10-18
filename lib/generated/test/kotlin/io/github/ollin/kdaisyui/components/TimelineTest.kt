@@ -16,6 +16,7 @@ class TimelineTest {
         val expectedClasses = "timeline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with text on both sides and icon")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Timeline with text on both sides and icon")
     }
 
     @Test
@@ -27,6 +28,7 @@ class TimelineTest {
         val expectedClasses = "timeline-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with text on both sides and icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Timeline with text on both sides and icon")
     }
 
     @Test
@@ -38,6 +40,7 @@ class TimelineTest {
         val expectedClasses = "timeline-middle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with text on both sides and icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Timeline with text on both sides and icon")
     }
 
     @Test
@@ -49,6 +52,7 @@ class TimelineTest {
         val expectedClasses = "timeline-box timeline-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with text on both sides and icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Timeline with text on both sides and icon")
     }
 
     @Test
@@ -60,6 +64,7 @@ class TimelineTest {
         val expectedClasses = "timeline-box timeline-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with top side only")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Timeline with top side only")
     }
 
     @Test
@@ -71,6 +76,7 @@ class TimelineTest {
         val expectedClasses = "timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical timeline with text on both sides and icon")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Vertical timeline with text on both sides and icon")
     }
 
     @Test
@@ -82,6 +88,7 @@ class TimelineTest {
         val expectedClasses = "lg:timeline-horizontal timeline timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: vertical by default, horizontal on large screen")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive: vertical by default, horizontal on large screen")
     }
 
     @Test
@@ -93,6 +100,7 @@ class TimelineTest {
         val expectedClasses = "max-md:timeline-compact timeline timeline-snap-icon timeline-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with icon snapped to the start")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Timeline with icon snapped to the start")
     }
 
     @Test
@@ -104,5 +112,6 @@ class TimelineTest {
         val expectedClasses = "timeline-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Timeline with icon snapped to the start")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Timeline with icon snapped to the start")
     }
 }

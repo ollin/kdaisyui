@@ -16,6 +16,7 @@ class StatTest {
         val expectedClasses = "stats"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Stat")
     }
 
     @Test
@@ -27,6 +28,7 @@ class StatTest {
         val expectedClasses = "stat"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Stat")
     }
 
     @Test
@@ -38,6 +40,7 @@ class StatTest {
         val expectedClasses = "stat-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Stat")
     }
 
     @Test
@@ -49,6 +52,7 @@ class StatTest {
         val expectedClasses = "stat-value"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Stat")
     }
 
     @Test
@@ -60,6 +64,7 @@ class StatTest {
         val expectedClasses = "stat-desc"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Stat")
     }
 
     @Test
@@ -71,6 +76,7 @@ class StatTest {
         val expectedClasses = "stat-figure"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat with icons or image")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Stat with icons or image")
     }
 
     @Test
@@ -82,6 +88,7 @@ class StatTest {
         val expectedClasses = "avatar avatar-online"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat with icons or image")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Stat with icons or image")
     }
 
     @Test
@@ -93,6 +100,7 @@ class StatTest {
         val expectedClasses = "stats stats-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Vertical")
     }
 
     @Test
@@ -104,6 +112,7 @@ class StatTest {
         val expectedClasses = "lg:stats-horizontal stats stats-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (vertical on small screen, horizontal on large screen)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive (vertical on small screen, horizontal on large screen)")
     }
 
     @Test
@@ -115,6 +124,7 @@ class StatTest {
         val expectedClasses = "stat-actions"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With custom colors and button")
     }
 
     @Test
@@ -126,6 +136,7 @@ class StatTest {
         val expectedClasses = "btn btn-success btn-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With custom colors and button")
     }
 
     @Test
@@ -137,5 +148,6 @@ class StatTest {
         val expectedClasses = "btn btn-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With custom colors and button")
     }
 }

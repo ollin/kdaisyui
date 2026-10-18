@@ -16,6 +16,7 @@ class TableTest {
         val expectedClasses = "table"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table")
+        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table")
     }
 
     @Test
@@ -27,6 +28,7 @@ class TableTest {
         val expectedClasses = "table table-zebra"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Zebra")
+        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Zebra")
     }
 
     @Test
@@ -37,6 +39,7 @@ class TableTest {
         val expectedClasses = "checkbox"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
     }
 
     @Test
@@ -48,16 +51,18 @@ class TableTest {
         val expectedClasses = "avatar"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
     }
 
     @Test
     fun table_with_visual_elements_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Squircle)
+            div { daisyMaskClasses(style = MaskStyle.Squircle) }
         }
         val expectedClasses = "mask mask-squircle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
     }
 
     @Test
@@ -69,6 +74,7 @@ class TableTest {
         val expectedClasses = "badge badge-ghost badge-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
     }
 
     @Test
@@ -80,6 +86,7 @@ class TableTest {
         val expectedClasses = "btn btn-ghost btn-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
     }
 
     @Test
@@ -91,6 +98,7 @@ class TableTest {
         val expectedClasses = "table table-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table xs")
+        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table xs")
     }
 
     @Test
@@ -102,6 +110,7 @@ class TableTest {
         val expectedClasses = "table table-pin-rows"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with pinned-rows")
+        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with pinned-rows")
     }
 
     @Test
@@ -113,5 +122,6 @@ class TableTest {
         val expectedClasses = "table table-pin-cols table-pin-rows table-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with pinned-rows and pinned-cols")
+        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with pinned-rows and pinned-cols")
     }
 }

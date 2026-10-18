@@ -4,7 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.html.div
+import kotlinx.html.p
 import kotlinx.html.ul
 
 class ListTest {
@@ -18,6 +18,7 @@ class ListTest {
         val expectedClasses = "list"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for List (second column grows - default)")
     }
 
     @Test
@@ -29,6 +30,7 @@ class ListTest {
         val expectedClasses = "list-row"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for List (second column grows - default)")
     }
 
     @Test
@@ -40,25 +42,28 @@ class ListTest {
         val expectedClasses = "btn btn-ghost btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for List (second column grows - default)")
     }
 
     @Test
     fun list_third_column_grows_daisyListCell() {
         val html = createHTML(prettyPrint = false).div {
-            daisyListCellClasses(colGrow = true)
+            div { daisyListCellClasses(colGrow = true) }
         }
         val expectedClasses = "list-col-grow"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column grows)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for List (third column grows)")
     }
 
     @Test
     fun list_third_column_wraps_to_next_row_daisyListCell() {
         val html = createHTML(prettyPrint = false).div {
-            daisyListCellClasses(colWrap = true)
+            p { daisyListCellClasses(colWrap = true) }
         }
         val expectedClasses = "list-col-wrap"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column wraps to next row)")
+        assertEquals("p", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for List (third column wraps to next row)")
     }
 }

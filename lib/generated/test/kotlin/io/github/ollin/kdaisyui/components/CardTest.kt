@@ -16,6 +16,7 @@ class CardTest {
         val expectedClasses = "card"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card")
     }
 
     @Test
@@ -27,6 +28,7 @@ class CardTest {
         val expectedClasses = "card-body"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card")
     }
 
     @Test
@@ -38,6 +40,7 @@ class CardTest {
         val expectedClasses = "card-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+        assertEquals("h2", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card")
     }
 
     @Test
@@ -49,6 +52,7 @@ class CardTest {
         val expectedClasses = "card-actions"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card")
     }
 
     @Test
@@ -60,6 +64,7 @@ class CardTest {
         val expectedClasses = "btn btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card")
     }
 
     @Test
@@ -71,6 +76,7 @@ class CardTest {
         val expectedClasses = "badge badge-warning badge-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Pricing Card")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Pricing Card")
     }
 
     @Test
@@ -82,6 +88,7 @@ class CardTest {
         val expectedClasses = "btn btn-block btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Pricing Card")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Pricing Card")
     }
 
     @Test
@@ -93,6 +100,7 @@ class CardTest {
         val expectedClasses = "card card-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card sizes")
     }
 
     @Test
@@ -104,6 +112,7 @@ class CardTest {
         val expectedClasses = "card card-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card sizes")
     }
 
     @Test
@@ -115,6 +124,7 @@ class CardTest {
         val expectedClasses = "card card-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card sizes")
     }
 
     @Test
@@ -126,6 +136,7 @@ class CardTest {
         val expectedClasses = "card card-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card sizes")
     }
 
     @Test
@@ -137,6 +148,7 @@ class CardTest {
         val expectedClasses = "card card-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card sizes")
     }
 
     @Test
@@ -148,6 +160,7 @@ class CardTest {
         val expectedClasses = "card card-border"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with a card-border")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with a card-border")
     }
 
     @Test
@@ -159,28 +172,29 @@ class CardTest {
         val expectedClasses = "card card-dash"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with a dash border")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with a dash border")
     }
 
     @Test
     fun card_with_badge_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(color = BadgeColor.Secondary) {
-            }
+            div { daisyBadgeClasses(color = BadgeColor.Secondary) }
         }
         val expectedClasses = "badge badge-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with badge")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with badge")
     }
 
     @Test
     fun card_with_badge_daisyBadge_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(outlineStyle = BadgeOutlineStyle.Outline) {
-            }
+            div { daisyBadgeClasses(outlineStyle = BadgeOutlineStyle.Outline) }
         }
         val expectedClasses = "badge badge-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with badge")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with badge")
     }
 
     @Test
@@ -192,6 +206,7 @@ class CardTest {
         val expectedClasses = "card image-full"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with image overlay")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with image overlay")
     }
 
     @Test
@@ -203,6 +218,7 @@ class CardTest {
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with custom color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with custom color")
     }
 
     @Test
@@ -214,6 +230,7 @@ class CardTest {
         val expectedClasses = "btn btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered card with neutral color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Centered card with neutral color")
     }
 
     @Test
@@ -225,6 +242,7 @@ class CardTest {
         val expectedClasses = "btn btn-sm btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with action on top")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with action on top")
     }
 
     @Test
@@ -236,6 +254,7 @@ class CardTest {
         val expectedClasses = "card card-side"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with image on side")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Card with image on side")
     }
 
     @Test
@@ -247,6 +266,7 @@ class CardTest {
         val expectedClasses = "card lg:card-side"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive card (vertical on small screen, horizontal on large screen)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive card (vertical on small screen, horizontal on large screen)")
     }
 
     @Test
@@ -258,5 +278,6 @@ class CardTest {
         val expectedClasses = "join"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Selectable cards")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Selectable cards")
     }
 }

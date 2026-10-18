@@ -5,6 +5,7 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.form
 
 class ModalTest {
 
@@ -17,6 +18,7 @@ class ModalTest {
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
     }
 
     @Test
@@ -28,6 +30,7 @@ class ModalTest {
         val expectedClasses = "modal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
+        assertEquals("dialog", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
     }
 
     @Test
@@ -39,6 +42,7 @@ class ModalTest {
         val expectedClasses = "modal-box"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
     }
 
     @Test
@@ -50,17 +54,18 @@ class ModalTest {
         val expectedClasses = "modal-action"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
     }
 
     @Test
     fun dialog_modal_closes_when_clicked_outside_daisyModalBackdrop() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModalBackdrop() {
-            }
+            form { daisyModalBackdropClasses() }
         }
         val expectedClasses = "modal-backdrop"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal, closes when clicked outside")
+        assertEquals("form", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal, closes when clicked outside")
     }
 
     @Test
@@ -72,6 +77,7 @@ class ModalTest {
         val expectedClasses = "btn btn-circle btn-ghost btn-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal with a close button at corner")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal with a close button at corner")
     }
 
     @Test
@@ -83,6 +89,7 @@ class ModalTest {
         val expectedClasses = "modal modal-bottom sm:modal-middle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive")
+        assertEquals("dialog", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive")
     }
 
     @Test
@@ -94,6 +101,7 @@ class ModalTest {
         val expectedClasses = "modal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Popover modal")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Popover modal")
     }
 
     @Test
@@ -104,6 +112,7 @@ class ModalTest {
         val expectedClasses = "modal-toggle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Modal using checkbox")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Modal using checkbox")
     }
 
     @Test

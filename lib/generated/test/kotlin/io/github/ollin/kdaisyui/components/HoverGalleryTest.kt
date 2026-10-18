@@ -16,6 +16,7 @@ class HoverGalleryTest {
         val expectedClasses = "hover-gallery"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery")
+        assertEquals("figure", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery")
     }
 
     @Test
@@ -27,6 +28,7 @@ class HoverGalleryTest {
         val expectedClasses = "card card-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery in a card")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery in a card")
     }
 
     @Test
@@ -38,6 +40,7 @@ class HoverGalleryTest {
         val expectedClasses = "card-body"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery in a card")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery in a card")
     }
 
     @Test
@@ -49,5 +52,6 @@ class HoverGalleryTest {
         val expectedClasses = "card-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery in a card")
+        assertEquals("h2", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery in a card")
     }
 }

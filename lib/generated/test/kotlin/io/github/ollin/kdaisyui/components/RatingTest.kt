@@ -4,7 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.html.div
+import kotlinx.html.input
 
 class RatingTest {
 
@@ -17,36 +17,40 @@ class RatingTest {
         val expectedClasses = "rating"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Rating")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Rating")
     }
 
     @Test
     fun rating_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star)
+            input { daisyMaskClasses(style = MaskStyle.Star) }
         }
         val expectedClasses = "mask mask-star"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Rating")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Rating")
     }
 
     @Test
     fun mask_star_2_with_warning_color_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star2)
+            input { daisyMaskClasses(style = MaskStyle.Star2) }
         }
         val expectedClasses = "mask mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for mask-star-2 with warning color")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for mask-star-2 with warning color")
     }
 
     @Test
     fun mask_heart_with_multiple_colors_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Heart)
+            input { daisyMaskClasses(style = MaskStyle.Heart) }
         }
         val expectedClasses = "mask mask-heart"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for mask-heart with multiple colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for mask-heart with multiple colors")
     }
 
     @Test
@@ -58,6 +62,7 @@ class RatingTest {
         val expectedClasses = "rating rating-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -69,6 +74,7 @@ class RatingTest {
         val expectedClasses = "rating rating-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -80,6 +86,7 @@ class RatingTest {
         val expectedClasses = "rating rating-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -91,6 +98,7 @@ class RatingTest {
         val expectedClasses = "rating rating-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -102,16 +110,18 @@ class RatingTest {
         val expectedClasses = "rating rating-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
     fun with_rating_hidden_daisyRatingItem() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRatingItemClasses(hidden = true)
+            input { daisyRatingItemClasses(hidden = true) }
         }
         val expectedClasses = "rating-hidden"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for with `rating-hidden`")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for with `rating-hidden`")
     }
 
     @Test
@@ -123,25 +133,28 @@ class RatingTest {
         val expectedClasses = "rating rating-half rating-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for half stars")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for half stars")
     }
 
     @Test
     fun half_stars_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star2, half = MaskHalf.Half1)
+            input { daisyMaskClasses(style = MaskStyle.Star2, half = MaskHalf.Half1) }
         }
         val expectedClasses = "mask mask-half-1 mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for half stars")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for half stars")
     }
 
     @Test
     fun half_stars_daisyMask_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star2, half = MaskHalf.Half2)
+            input { daisyMaskClasses(style = MaskStyle.Star2, half = MaskHalf.Half2) }
         }
         val expectedClasses = "mask mask-half-2 mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for half stars")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for half stars")
     }
 }

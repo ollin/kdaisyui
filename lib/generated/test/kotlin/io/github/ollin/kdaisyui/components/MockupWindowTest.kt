@@ -16,5 +16,6 @@ class MockupWindowTest {
         val expectedClasses = "mockup-window"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for window mockup with border")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for window mockup with border")
     }
 }

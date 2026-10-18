@@ -5,6 +5,9 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.a
+import kotlinx.html.li
+import kotlinx.html.ul
 
 class MegamenuTest {
 
@@ -17,6 +20,7 @@ class MegamenuTest {
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive megamenu with small vertical menus")
     }
 
     @Test
@@ -28,6 +32,7 @@ class MegamenuTest {
         val expectedClasses = "max-sm:megamenu-vertical megamenu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive megamenu with small vertical menus")
     }
 
     @Test
@@ -39,6 +44,7 @@ class MegamenuTest {
         val expectedClasses = "megamenu-active"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive megamenu with small vertical menus")
     }
 
     @Test
@@ -50,6 +56,7 @@ class MegamenuTest {
         val expectedClasses = "menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive megamenu with small vertical menus")
     }
 
     @Test
@@ -61,6 +68,7 @@ class MegamenuTest {
         val expectedClasses = "max-sm:megamenu-vertical megamenu megamenu-wide"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu with wide popovers and horizontal menus")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu with wide popovers and horizontal menus")
     }
 
     @Test
@@ -72,6 +80,7 @@ class MegamenuTest {
         val expectedClasses = "menu menu-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu with wide popovers and horizontal menus")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu with wide popovers and horizontal menus")
     }
 
     @Test
@@ -83,17 +92,18 @@ class MegamenuTest {
         val expectedClasses = "md:menu-horizontal menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu with a menus and lots of links")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu with a menus and lots of links")
     }
 
     @Test
     fun megamenu_with_a_menus_and_lots_of_links_daisyMenuTitle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuTitle() {
-            }
+        val html = createHTML(prettyPrint = false).ul {
+            li { daisyMenuTitleClasses() }
         }
         val expectedClasses = "menu-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu with a menus and lots of links")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu with a menus and lots of links")
     }
 
     @Test
@@ -105,6 +115,7 @@ class MegamenuTest {
         val expectedClasses = "navbar"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in a navbar")
     }
 
     @Test
@@ -116,17 +127,18 @@ class MegamenuTest {
         val expectedClasses = "navbar-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in a navbar")
     }
 
     @Test
     fun megamenu_in_a_navbar_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost) {
-            }
+            a { daisyButtonClasses(style = ButtonStyle.Ghost) }
         }
         val expectedClasses = "btn btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in a navbar")
     }
 
     @Test
@@ -138,6 +150,7 @@ class MegamenuTest {
         val expectedClasses = "navbar-center"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in a navbar")
     }
 
     @Test
@@ -149,6 +162,7 @@ class MegamenuTest {
         val expectedClasses = "max-sm:megamenu-vertical megamenu megamenu-full"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in a navbar")
     }
 
     @Test
@@ -160,6 +174,7 @@ class MegamenuTest {
         val expectedClasses = "navbar-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in a navbar")
     }
 
     @Test
@@ -171,6 +186,7 @@ class MegamenuTest {
         val expectedClasses = "megamenu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for megamenu without arrows")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for megamenu without arrows")
     }
 
     @Test
@@ -182,6 +198,7 @@ class MegamenuTest {
         val expectedClasses = "megamenu megamenu-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in different sizes")
     }
 
     @Test
@@ -193,6 +210,7 @@ class MegamenuTest {
         val expectedClasses = "megamenu megamenu-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in different sizes")
     }
 
     @Test
@@ -204,6 +222,7 @@ class MegamenuTest {
         val expectedClasses = "megamenu megamenu-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in different sizes")
     }
 
     @Test
@@ -215,6 +234,7 @@ class MegamenuTest {
         val expectedClasses = "megamenu megamenu-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in different sizes")
     }
 
     @Test
@@ -226,6 +246,7 @@ class MegamenuTest {
         val expectedClasses = "megamenu megamenu-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Megamenu in different sizes")
     }
 
     @Test

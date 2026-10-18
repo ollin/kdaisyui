@@ -16,6 +16,7 @@ class MockupBrowserTest {
         val expectedClasses = "mockup-browser"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for browser mockup with border")
     }
 
     @Test
@@ -27,15 +28,17 @@ class MockupBrowserTest {
         val expectedClasses = "mockup-browser-toolbar"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for browser mockup with border")
     }
 
     @Test
     fun browser_mockup_with_border_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput()
+            div { daisyInputClasses() }
         }
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for browser mockup with border")
     }
 }

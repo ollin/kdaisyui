@@ -17,6 +17,7 @@ class SkeletonTest {
         val expectedClasses = "skeleton"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Skeleton")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Skeleton")
     }
 
     @Test
@@ -28,6 +29,7 @@ class SkeletonTest {
         val expectedClasses = "skeleton skeleton-text"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for skeleton-text - animated gradient text")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for skeleton-text - animated gradient text")
     }
 
     @Test

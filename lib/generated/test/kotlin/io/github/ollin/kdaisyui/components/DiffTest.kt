@@ -16,6 +16,7 @@ class DiffTest {
         val expectedClasses = "diff"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
+        assertEquals("figure", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
     }
 
     @Test
@@ -27,6 +28,7 @@ class DiffTest {
         val expectedClasses = "diff-item-1"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
     }
 
     @Test
@@ -38,6 +40,7 @@ class DiffTest {
         val expectedClasses = "diff-item-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
     }
 
     @Test
@@ -49,5 +52,6 @@ class DiffTest {
         val expectedClasses = "diff-resizer"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
     }
 }

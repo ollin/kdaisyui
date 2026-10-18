@@ -120,10 +120,12 @@ edited by hand.
 The report compares DaisyUI with itself, not with the model, so a deliberate divergence such as
 `daisyBadge` rendering `<span>` (#356) needs no exception: it does not change between releases.
 
-**Assumed** that these four kinds of delta name everything the deleted guards caught on real bumps.
-*Wrong if:* replaying the 5.7.17 to 5.7.42 bump does not name `mask-square` as removed, or a later
-bump surfaces a defect the deleted element cross-check would have caught and the report did not
-name.
+**Verified** in part, 2026-10-18 (task 2.6): replaying the 5.7.17 to 5.7.42 bump reports exactly one
+change, `mask-square` removed from `mask`, which is the documentation defect that bump carried.
+
+**Assumed** that these four kinds of delta keep naming what the deleted guards would have caught.
+*Wrong if:* a later bump surfaces a defect the deleted element cross-check would have caught and the
+report did not name.
 
 #### Scenario: A class is removed upstream
 

@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { classFindings } from '../src/model-completeness.ts'
+import { classFindings, directoryFindings } from '../src/model-completeness.ts'
 import type { ComponentModel } from '../src/model.ts'
 
 const MASK: ComponentModel = {
@@ -34,5 +34,14 @@ describe('classFindings', () => {
     const twice: ComponentModel = { ...MASK, functions: [{ ...MASK.functions[0], parameters: [...MASK.functions[0].parameters, { kind: 'toggle', name: 'circle', class: 'mask-circle' }] }] }
 
     assert.deepEqual(classFindings(twice, ['mask', 'mask-circle', 'mask-square', 'mask-half']), ['mask: daisyMask offers mask-circle twice'])
+  })
+})
+
+describe('directoryFindings', () => {
+  it('names a directory without a model file and a model file without a directory', () => {
+    assert.deepEqual(directoryFindings(['aura', 'button'], ['button', 'calendar']), [
+      'aura: DaisyUI documents it, and it has no model file',
+      'calendar: a model file for a directory DaisyUI does not have',
+    ])
   })
 })

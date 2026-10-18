@@ -43,3 +43,11 @@ export function classFindings(model: ComponentModel, declared: readonly string[]
     ...model.functions.flatMap(fn => offeredBy(model, fn).filter((cls, index, all) => all.indexOf(cls) !== index).map(cls => `${model.component}: ${fn.name} offers ${cls} twice`)),
   ]
 }
+
+/** DaisyUI directories with no model file, and model files naming no DaisyUI directory. */
+export function directoryFindings(componentDirs: readonly string[], modelFiles: readonly string[]): string[] {
+  return [
+    ...componentDirs.filter(dir => !modelFiles.includes(dir)).map(dir => `${dir}: DaisyUI documents it, and it has no model file`),
+    ...modelFiles.filter(file => !componentDirs.includes(file)).map(file => `${file}: a model file for a directory DaisyUI does not have`),
+  ]
+}

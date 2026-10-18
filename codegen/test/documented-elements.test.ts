@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { documentedCall, expressingFunction, gapFindings, gapKey, gapsIn } from '../src/documented-elements.ts'
+import { documentedCall, expressingFunction, gapFindings, gapKey, gapsIn, pageFirst } from '../src/documented-elements.ts'
 import { markedElements } from '../src/parser/documented-classes.ts'
 import { component, enumParameter, part, toggle } from './model-fixture.ts'
 
@@ -70,5 +70,11 @@ describe('documentedCall', () => {
 
   it('makes no call for a gap', () => {
     assert.equal(callFor('<li class="$$list-row">x</li>'), null)
+  })
+})
+
+describe('pageFirst', () => {
+  it("puts the page's own model first and keeps the others in their order", () => {
+    assert.deepEqual(pageFirst([CARD, BUTTON, CARD_WITH_BODY], 'button'), [BUTTON, CARD, CARD_WITH_BODY])
   })
 })

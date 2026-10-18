@@ -816,18 +816,11 @@ function mainFunctionShape(
   const { hasTextParam } = componentConfig
 
   // Declaration order, which the generated signatures and their doc comments both follow.
-  const parameters: ParameterShape[] = [
-    ...(hasTextParam ? [TEXT_PARAMETER] : []),
-    ID_PARAMETER,
+  const parameters = functionParameters(element, hasTextParam, [
     ...enumParameters(classified, plan),
     ...booleanParameters(classified, componentConfig, plan),
     ...extraParameters(componentConfig.extras),
-    EXTRA_CLASSES_PARAMETER,
-    attrsParameter(element),
-    // Derived from the element, not configured: an element the HTML specification calls void
-    // cannot hold children, so offering a lambda that writes some is offering a lie.
-    ...(isVoidElement(element) ? [] : [contentParameter(element, hasTextParam)]),
-  ]
+  ])
 
   return {
     kind: 'main',
@@ -873,8 +866,17 @@ function partFunctionShape(
     // (`card-title`), so this lookup has never resolved. Correcting it would add a sentence to
     // every part's doc comment — a change in output, which belongs in its own commit.
     desc: classified.descs?.[partClass] ?? '',
-    parameters: withOwnClasses(escapeHatchParameters(element, hasTextParam), own),
+    parameters: functionParameters(element, hasTextParam, own),
   }
+}
+
+/**
+ * Every generated function's parameter list: `text` where it takes one, `id`, the function's own
+ * parameters, then the escape hatches. Main functions and parts share the frame; a custom part
+ * has no own parameters.
+ */
+export function functionParameters(element: TagClass, hasTextParam: boolean, own: readonly ParameterShape[]): ParameterShape[] {
+  return withOwnClasses(escapeHatchParameters(element, hasTextParam), own)
 }
 
 /** A part's own parameters go after `id`, where the main function puts the same two kinds. */

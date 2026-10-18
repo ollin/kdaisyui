@@ -28,14 +28,24 @@ enum class ModalVerticalPlacement(internal val className: String) : ClassValues<
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** HorizontalPlacement variants for this component (CSS prefix: `modal-`) */
+enum class ModalHorizontalPlacement(internal val className: String) : ClassValues<ModalHorizontalPlacement> {
+    /** CSS: `modal-start` — Moves the modal to start horizontally */
+    Start("modal-start"),
+    /** CSS: `modal-end` — Moves the modal to end horizontally */
+    End("modal-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Modal is used to show a dialog or a box when you click a button. Renders `<dialog class="modal ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param verticalPlacement — VerticalPlacement variant
- * @param end — Moves the modal to end horizontally
+ * @param horizontalPlacement — HorizontalPlacement variant
  * @param open — Keeps the modal open (you can add this class using JS)
- * @param start — Moves the modal to start horizontally
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -43,9 +53,8 @@ enum class ModalVerticalPlacement(internal val className: String) : ClassValues<
 fun FlowContent.daisyModal(
     id: HtmlId? = null,
     verticalPlacement: ClassValues<ModalVerticalPlacement>? = null,
-    end: Boolean = false,
+    horizontalPlacement: ClassValues<ModalHorizontalPlacement>? = null,
     open: Boolean = false,
-    start: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIALOG.() -> Unit)? = null,
     content: (DIALOG.() -> Unit),
@@ -54,9 +63,8 @@ fun FlowContent.daisyModal(
         if (id != null) attributes["id"] = id.id
         addClassNames("modal")
         addClassNames(verticalPlacement)
-        if (end) addClassNames("modal-end")
+        addClassNames(horizontalPlacement)
         if (open) addClassNames("modal-open")
-        if (start) addClassNames("modal-start")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

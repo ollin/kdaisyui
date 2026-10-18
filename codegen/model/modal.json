@@ -7,6 +7,11 @@
       "name": "ModalVerticalPlacement",
       "label": "VerticalPlacement variants",
       "classes": ["modal-top", "modal-middle", "modal-bottom"]
+    },
+    {
+      "name": "ModalHorizontalPlacement",
+      "label": "HorizontalPlacement variants",
+      "classes": ["modal-start", "modal-end"]
     }
   ],
   "functions": [
@@ -24,9 +29,13 @@
           "enum": "ModalVerticalPlacement",
           "doc": "VerticalPlacement variant"
         },
-        { "kind": "toggle", "name": "end", "class": "modal-end" },
-        { "kind": "toggle", "name": "open", "class": "modal-open" },
-        { "kind": "toggle", "name": "start", "class": "modal-start" }
+        {
+          "kind": "enum",
+          "name": "horizontalPlacement",
+          "enum": "ModalHorizontalPlacement",
+          "doc": "HorizontalPlacement variant"
+        },
+        { "kind": "toggle", "name": "open", "class": "modal-open" }
       ]
     },
     {

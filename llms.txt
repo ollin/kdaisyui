@@ -542,7 +542,8 @@ Modal dialogs — renders `<dialog>`.
 
 ```kotlin
 enum class ModalVerticalPlacement { Top, Middle, Bottom }
-fun FlowContent.daisyModal(id: HtmlId? = null, verticalPlacement: ClassValues<ModalVerticalPlacement>? = null, end: Boolean = false, open: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIALOG.() -> Unit)? = null, content: (DIALOG.() -> Unit))
+enum class ModalHorizontalPlacement { Start, End }
+fun FlowContent.daisyModal(id: HtmlId? = null, verticalPlacement: ClassValues<ModalVerticalPlacement>? = null, horizontalPlacement: ClassValues<ModalHorizontalPlacement>? = null, open: Boolean = false, extraClasses: String? = null, attrs: (DIALOG.() -> Unit)? = null, content: (DIALOG.() -> Unit))
 fun FlowContent.daisyModalBox(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalAction(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyModalBackdrop(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))

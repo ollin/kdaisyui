@@ -12,12 +12,12 @@ Modal dialogs. Renders `<dialog class="modal ...">`.
 
 ```kotlin
 // ModalVerticalPlacement: Top | Middle | Bottom
+// ModalHorizontalPlacement: Start | End
 fun FlowContent.daisyModal(
     id: HtmlId? = null,
     verticalPlacement: ClassValues<ModalVerticalPlacement>? = null,
-    end: Boolean = false,  // Moves the modal to end horizontally
+    horizontalPlacement: ClassValues<ModalHorizontalPlacement>? = null,
     open: Boolean = false,  // Keeps the modal open (you can add this class using JS)
-    start: Boolean = false,  // Moves the modal to start horizontally
     extraClasses: String? = null,
     attrs: (DIALOG.() -> Unit)? = null,
     content: (DIALOG.() -> Unit),

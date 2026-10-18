@@ -39,15 +39,13 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModal(
                 id = htmlId("x-cov-id"),
-                end = true,
                 open = true,
-                start = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal modal-end modal-open modal-start zz-extra", "Modal all flags", closes = "</dialog></div>")
+        assertRendered(html, "modal modal-open zz-extra", "Modal all flags", closes = "</dialog></div>")
         assertCommonFlags(html, "Modal")
     }
 
@@ -82,6 +80,28 @@ class ModalCoverageTest {
             )
         }
         assertRendered(html, "modal modal-bottom", "Modal verticalPlacement Bottom")
+    }
+
+    @Test
+    fun modal_horizontalPlacement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModal(
+                horizontalPlacement = ModalHorizontalPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "modal modal-start", "Modal horizontalPlacement Start")
+    }
+
+    @Test
+    fun modal_horizontalPlacement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModal(
+                horizontalPlacement = ModalHorizontalPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "modal modal-end", "Modal horizontalPlacement End")
     }
 
     @Test

@@ -106,7 +106,7 @@ do not exist and change exactly those.
 - [x] 3.7 `^ F (internal)` Completeness gate: generation fails when a component's frontmatter
   classes and the classes its model places differ, naming component and class. Tests: an unplaced
   class, a stale class.
-- [ ] 3.8 `^ F (internal)` Completeness gate: one function offering one class twice fails, naming
+- [x] 3.8 `^ F (internal)` Completeness gate: one function offering one class twice fails, naming
   the function and the class. Corrected 2026-10-18 from "a class placed twice": measured before
   the gate existed, `modal`, `skeleton` and `timeline-box` are each correctly placed on several
   functions.

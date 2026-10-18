@@ -50,12 +50,37 @@ const TAG_BUILDER_EXCEPTIONS: Record<string, string> = {
   TEXTAREA: 'textArea',
 }
 
+/**
+ * Elements kotlinx.html has no class for, which the library defines in core: the tag class, its
+ * builder, and the element's HTML name. A web component DaisyUI styles is the reason to add one.
+ */
+const LIBRARY_ELEMENTS: Readonly<Record<string, { readonly builder: string, readonly html: string }>> = {}
+
+/** The HTML elements kotlinx.html 0.12.0 builds, by their HTML name: the standard set. */
+const KOTLINX_HTML_ELEMENTS: ReadonlySet<string> = new Set(`
+  a abbr address area article aside audio b base bdi bdo blockquote body br button canvas caption cite
+  code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure
+  footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd label legend li link
+  main map mark menu meta meter nav noscript object ol optgroup option output p param picture pre progress
+  q rp rt ruby s samp script section select slot small source span strong style sub summary sup svg table
+  tbody td template textarea tfoot th thead time title tr track u ul var video wbr`.trim().split(/\s+/))
+
 export function tagBuilderFor(element: TagClass): TagBuilder {
-  return (TAG_BUILDER_EXCEPTIONS[element] ?? element.toLowerCase()) as TagBuilder
+  return (LIBRARY_ELEMENTS[element]?.builder ?? TAG_BUILDER_EXCEPTIONS[element] ?? element.toLowerCase()) as TagBuilder
 }
 
 export function htmlTagNameFor(element: TagClass): HtmlTagName {
-  return element.toLowerCase() as HtmlTagName
+  return (LIBRARY_ELEMENTS[element]?.html ?? element.toLowerCase()) as HtmlTagName
+}
+
+/** Where an element's tag class and builder live: kotlinx.html, or core for the library's own. */
+export function elementPackage(element: TagClass): string {
+  return element in LIBRARY_ELEMENTS ? 'io.github.ollin.kdaisyui.core' : 'kotlinx.html'
+}
+
+/** Whether a documented tag can be written at all: kotlinx.html builds it, or the library does. */
+export function hasBuilder(htmlTag: string): boolean {
+  return KOTLINX_HTML_ELEMENTS.has(htmlTag) || Object.values(LIBRARY_ELEMENTS).some(element => element.html === htmlTag)
 }
 
 /**

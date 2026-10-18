@@ -31,6 +31,12 @@ The three Assumed claims this change rests on are checked here, before anything 
 - [ ] 1.2 `. r (internal)` Model reader: read one `codegen/model/<dir>.json` into the types
   `component-shape.ts` already uses, with a test on a hand-written fixture. Settle the field
   names from `design.md` D2 here and record them in this task.
+  **Settled 2026-10-18** in `codegen/src/model.ts`: a component has `component` (directory),
+  `name` (stem), `class`, `enums` and `functions`. An enum has `name`, `label`, `classes`. A
+  function has `kind`, `name`, `receiver`, `element`, `class`, `text` and `parameters`, the
+  parameters being only its own, between `id` and the escape hatches. A parameter carries a
+  `kind`; `enum` is the first. Task 1.4 adds the kinds and fields the equality test asks for, and
+  records them here. Descriptions stay in the frontmatter and are passed in.
 - [ ] 1.3 `. r (internal)` Export script: write every component's current inferred shape, its
   config entries and its editorial summary as `codegen/model/<dir>.json`, including the two
   skipped components as skip entries. Commit the script and its 68 output files together.

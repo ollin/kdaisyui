@@ -114,14 +114,18 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   const [primary, ...others] = [...groups].sort((left, right) => rank(models, left) - rank(models, right))
   if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
+  const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
+  return { fn: primary.fn, args: callArguments(primary, others, variants).join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+}
+
+/** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */
+function callArguments(primary: ClaimedGroup, others: readonly ClaimedGroup[], variants: readonly string[]): string[] {
   const siblings = others.map(group => `${group.fn.name}Classes(${groupArguments(group).join(', ')})`)
-  const args = [
+  return [
     ...groupArguments(primary),
     ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : []),
     ...(siblings.length > 0 ? [`attrs = { ${siblings.join('; ')} }`] : []),
   ]
-  const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
-  return { fn: primary.fn, args: args.join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
 }
 
 /** A rendering function's group before any class-only one, then the page's own model first. */

@@ -59,11 +59,15 @@ export function directoryFindings(componentDirs: readonly string[], modelFiles: 
   ]
 }
 
-/** Main functions and parts named otherwise than `daisy` and their stem, the class's PascalCase. */
+/** Main functions, parts and their enums named otherwise than the naming rule says. */
 export function namingFindings(model: ComponentModel): string[] {
   return model.functions
     .filter(fn => fn.kind !== 'custom' && fn.class !== null)
-    .map(fn => ({ fn, expected: `daisy${fn.stem ?? toPascalCase(fn.class ?? '')}` }))
-    .filter(({ fn, expected }) => fn.name !== expected)
-    .map(({ fn, expected }) => `${model.component}: ${fn.name} should be called ${expected}`)
+    .flatMap(fn => {
+      const stem = fn.stem ?? toPascalCase(fn.class ?? '')
+      const enums = fn.parameters.flatMap(parameter => (parameter.kind === 'enum' ? [{ name: parameter.enum, expected: `${stem}${toPascalCase(parameter.name)}` }] : []))
+      return [{ name: fn.name, expected: `daisy${stem}` }, ...enums]
+    })
+    .filter(({ name, expected }) => name !== expected)
+    .map(({ name, expected }) => `${model.component}: ${name} should be called ${expected}`)
 }

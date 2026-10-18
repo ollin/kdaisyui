@@ -49,10 +49,16 @@ describe('directoryFindings', () => {
 describe('namingFindings', () => {
   it('names a part called otherwise than its class, and accepts a declared stem', () => {
     const stats: ComponentModel = { ...MASK, component: 'stat', functions: [
-      { ...MASK.functions[0], name: 'daisyStatistics', class: 'stats', stem: 'Statistics' },
+      { ...MASK.functions[0], name: 'daisyStatistics', class: 'stats', stem: 'Statistics', parameters: [] },
       { ...MASK.functions[0], kind: 'part', name: 'daisyStatStat', class: 'stat', parameters: [] },
     ] }
 
     assert.deepEqual(namingFindings(stats), ['stat: daisyStatStat should be called daisyStat'])
+  })
+
+  it("names an enum called otherwise than its function's stem and its axis", () => {
+    const mask: ComponentModel = { ...MASK, functions: [{ ...MASK.functions[0], parameters: [{ kind: 'enum', name: 'style', enum: 'MaskShape', doc: '' }] }] }
+
+    assert.deepEqual(namingFindings(mask), ['mask: MaskShape should be called MaskStyle'])
   })
 })

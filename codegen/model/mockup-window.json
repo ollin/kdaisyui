@@ -1,0 +1,18 @@
+{
+  "component": "mockup-window",
+  "name": "MockupWindow",
+  "class": "mockup-window",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyMockupWindow",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "mockup-window",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Desktop window mockup frame" }
+}

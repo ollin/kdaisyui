@@ -1,0 +1,36 @@
+{
+  "component": "mockup-phone",
+  "name": "MockupPhone",
+  "class": "mockup-phone",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyMockupPhone",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "mockup-phone",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyMockupPhoneCamera",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "mockup-phone-camera",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyMockupPhoneDisplay",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "mockup-phone-display",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Phone mockup frame" }
+}

@@ -1,0 +1,18 @@
+{
+  "component": "text-rotate",
+  "name": "TextRotate",
+  "class": "text-rotate",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyTextRotate",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "text-rotate",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Rotated text display" }
+}

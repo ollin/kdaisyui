@@ -1,0 +1,56 @@
+{
+  "component": "tooltip",
+  "name": "Tooltip",
+  "class": "tooltip",
+  "enums": [
+    {
+      "name": "TooltipVariant",
+      "label": "Color variants",
+      "classes": [
+        "tooltip-primary",
+        "tooltip-secondary",
+        "tooltip-accent",
+        "tooltip-info",
+        "tooltip-success",
+        "tooltip-warning",
+        "tooltip-error"
+      ]
+    },
+    {
+      "name": "TooltipSidePlacement",
+      "label": "SidePlacement variants",
+      "classes": ["tooltip-top", "tooltip-bottom", "tooltip-left", "tooltip-right"]
+    },
+    {
+      "name": "TooltipAlignPlacement",
+      "label": "AlignPlacement variants",
+      "classes": ["tooltip-start", "tooltip-center", "tooltip-end"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyTooltip",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "tooltip",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "TooltipVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "sidePlacement", "enum": "TooltipSidePlacement", "doc": "SidePlacement variant" },
+        { "kind": "enum", "name": "alignPlacement", "enum": "TooltipAlignPlacement", "doc": "AlignPlacement variant" },
+        { "kind": "toggle", "name": "open", "class": "tooltip-open" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyTooltipContent",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "tooltip-content",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Hover tooltip on elements" }
+}

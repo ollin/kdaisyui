@@ -1,0 +1,42 @@
+{
+  "component": "file-input",
+  "name": "FileInput",
+  "class": "file-input",
+  "enums": [
+    {
+      "name": "FileInputVariant",
+      "label": "Color variants",
+      "classes": [
+        "file-input-neutral",
+        "file-input-primary",
+        "file-input-secondary",
+        "file-input-accent",
+        "file-input-info",
+        "file-input-success",
+        "file-input-warning",
+        "file-input-error"
+      ]
+    },
+    {
+      "name": "FileInputSize",
+      "label": "Size variants",
+      "classes": ["file-input-xs", "file-input-sm", "file-input-md", "file-input-lg", "file-input-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyFileInput",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "file-input",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "FileInputVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "FileInputSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "ghost", "class": "file-input-ghost" }
+      ]
+    }
+  ],
+  "summary": { "summary": "File upload input field" }
+}

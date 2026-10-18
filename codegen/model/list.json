@@ -1,0 +1,18 @@
+{
+  "component": "list",
+  "name": "List",
+  "class": "list",
+  "enums": [{ "name": "ListModifier", "label": "Modifier variants", "classes": ["list-col-wrap", "list-col-grow"] }],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyList",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": "list",
+      "text": false,
+      "parameters": [{ "kind": "enum", "name": "modifier", "enum": "ListModifier", "doc": "Modifier variant" }]
+    }
+  ],
+  "summary": { "summary": "Styled list layout" }
+}

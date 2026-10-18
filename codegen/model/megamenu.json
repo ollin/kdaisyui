@@ -1,0 +1,52 @@
+{
+  "component": "megamenu",
+  "name": "Megamenu",
+  "class": "megamenu",
+  "enums": [
+    {
+      "name": "MegamenuSize",
+      "label": "Size variants",
+      "classes": ["megamenu-xs", "megamenu-sm", "megamenu-md", "megamenu-lg", "megamenu-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyMegamenu",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "megamenu",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "MegamenuSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "full", "class": "megamenu-full" },
+        { "kind": "toggle", "name": "vertical", "class": "megamenu-vertical" },
+        { "kind": "toggle", "name": "wide", "class": "megamenu-wide" }
+      ],
+      "attributes": { "popover": "" }
+    },
+    {
+      "kind": "part",
+      "name": "daisyMegamenuActive",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "megamenu-active",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "custom",
+      "name": "daisyMegamenuPanel",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": null,
+      "text": false,
+      "parameters": [],
+      "attributes": { "popover": "" }
+    }
+  ],
+  "summary": {
+    "summary": "Horizontal menu with popover navigation blocks",
+    "description": "Large horizontal menu where each item opens a popover holding a block of navigation links. Intended to be used once, at the top of the page, and on large screens only — on small screens hide it and use a dropdown or drawer instead"
+  }
+}

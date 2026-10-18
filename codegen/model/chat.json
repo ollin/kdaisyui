@@ -1,0 +1,73 @@
+{
+  "component": "chat",
+  "name": "Chat",
+  "class": "chat",
+  "enums": [
+    {
+      "name": "ChatVariant",
+      "label": "Color variants",
+      "classes": [
+        "chat-bubble-neutral",
+        "chat-bubble-primary",
+        "chat-bubble-secondary",
+        "chat-bubble-accent",
+        "chat-bubble-info",
+        "chat-bubble-success",
+        "chat-bubble-warning",
+        "chat-bubble-error"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyChat",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "chat",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "ChatVariant", "doc": "Color variant" },
+        { "kind": "toggle", "name": "end", "class": "chat-end" },
+        { "kind": "toggle", "name": "start", "class": "chat-start" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyChatImage",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "chat-image",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyChatHeader",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "chat-header",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyChatFooter",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "chat-footer",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyChatBubble",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "chat-bubble",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Chat bubble layout for conversations" }
+}

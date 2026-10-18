@@ -1,0 +1,32 @@
+{
+  "component": "dock",
+  "name": "Dock",
+  "class": "dock",
+  "enums": [
+    { "name": "DockSize", "label": "Size variants", "classes": ["dock-xs", "dock-sm", "dock-md", "dock-lg", "dock-xl"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyDock",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "dock",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "DockSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "active", "class": "dock-active" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyDockLabel",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "dock-label",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "macOS-style dock navigation" }
+}

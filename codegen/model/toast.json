@@ -1,0 +1,42 @@
+{
+  "component": "toast",
+  "name": "Toast",
+  "class": "toast",
+  "enums": [
+    {
+      "name": "ToastHorizontalPlacement",
+      "label": "HorizontalPlacement variants",
+      "classes": ["toast-start", "toast-center", "toast-end"]
+    },
+    {
+      "name": "ToastVerticalPlacement",
+      "label": "VerticalPlacement variants",
+      "classes": ["toast-top", "toast-middle", "toast-bottom"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyToast",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "toast",
+      "text": false,
+      "parameters": [
+        {
+          "kind": "enum",
+          "name": "horizontalPlacement",
+          "enum": "ToastHorizontalPlacement",
+          "doc": "HorizontalPlacement variant"
+        },
+        {
+          "kind": "enum",
+          "name": "verticalPlacement",
+          "enum": "ToastVerticalPlacement",
+          "doc": "VerticalPlacement variant"
+        }
+      ]
+    }
+  ],
+  "summary": { "summary": "Toast notification container" }
+}

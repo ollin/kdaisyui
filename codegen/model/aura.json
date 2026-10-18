@@ -1,0 +1,31 @@
+{
+  "component": "aura",
+  "name": "Aura",
+  "class": "aura",
+  "enums": [
+    { "name": "AuraSize", "label": "Size variants", "classes": ["aura-xs", "aura-sm", "aura-md", "aura-lg", "aura-xl"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyAura",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "aura",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "AuraSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "dual", "class": "aura-dual" },
+        { "kind": "toggle", "name": "glow", "class": "aura-glow" },
+        { "kind": "toggle", "name": "gold", "class": "aura-gold" },
+        { "kind": "toggle", "name": "holo", "class": "aura-holo" },
+        { "kind": "toggle", "name": "rainbow", "class": "aura-rainbow" },
+        { "kind": "toggle", "name": "silver", "class": "aura-silver" }
+      ]
+    }
+  ],
+  "summary": {
+    "summary": "Border light effect wrapping a component",
+    "description": "Border light effect that wraps around any component, for highlighting a single important button, card or container"
+  }
+}

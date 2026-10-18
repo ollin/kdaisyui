@@ -1,0 +1,18 @@
+{
+  "component": "calendar",
+  "name": "Calendar",
+  "class": "cally",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCalendar",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "cally",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Calendar date picker widget" }
+}

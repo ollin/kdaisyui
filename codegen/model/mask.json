@@ -1,0 +1,43 @@
+{
+  "component": "mask",
+  "name": "Mask",
+  "class": "mask",
+  "enums": [
+    {
+      "name": "MaskStyle",
+      "label": "Style variants",
+      "classes": [
+        "mask-squircle",
+        "mask-heart",
+        "mask-hexagon",
+        "mask-hexagon-2",
+        "mask-decagon",
+        "mask-pentagon",
+        "mask-diamond",
+        "mask-circle",
+        "mask-star",
+        "mask-star-2",
+        "mask-triangle",
+        "mask-triangle-2",
+        "mask-triangle-3",
+        "mask-triangle-4"
+      ]
+    },
+    { "name": "MaskModifier", "label": "Modifier variants", "classes": ["mask-half-1", "mask-half-2"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyMask",
+      "receiver": "FlowContent",
+      "element": "IMG",
+      "class": "mask",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "style", "enum": "MaskStyle", "doc": "Style variant" },
+        { "kind": "enum", "name": "modifier", "enum": "MaskModifier", "doc": "Modifier variant" }
+      ]
+    }
+  ],
+  "summary": { "summary": "CSS masks for cropping images to shapes" }
+}

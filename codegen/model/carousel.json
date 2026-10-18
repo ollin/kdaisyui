@@ -1,0 +1,37 @@
+{
+  "component": "carousel",
+  "name": "Carousel",
+  "class": "carousel",
+  "enums": [
+    {
+      "name": "CarouselModifier",
+      "label": "Modifier variants",
+      "classes": ["carousel-start", "carousel-center", "carousel-end"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCarousel",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "carousel",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "modifier", "enum": "CarouselModifier", "doc": "Modifier variant" },
+        { "kind": "toggle", "name": "horizontal", "class": "carousel-horizontal" },
+        { "kind": "toggle", "name": "vertical", "class": "carousel-vertical" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyCarouselItem",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "carousel-item",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Slideshow of images or content" }
+}

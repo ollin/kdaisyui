@@ -1,0 +1,28 @@
+{
+  "component": "rating",
+  "name": "Rating",
+  "class": "rating",
+  "enums": [
+    {
+      "name": "RatingSize",
+      "label": "Size variants",
+      "classes": ["rating-xs", "rating-sm", "rating-md", "rating-lg", "rating-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyRating",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "rating",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "RatingSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "half", "class": "rating-half" },
+        { "kind": "toggle", "name": "hidden", "class": "rating-hidden" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Star rating input" }
+}

@@ -1,0 +1,31 @@
+{
+  "component": "footer",
+  "name": "Footer",
+  "class": "footer",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyFooter",
+      "receiver": "FlowContent",
+      "element": "FOOTER",
+      "class": "footer",
+      "text": false,
+      "parameters": [
+        { "kind": "toggle", "name": "center", "class": "footer-center" },
+        { "kind": "toggle", "name": "horizontal", "class": "footer-horizontal" },
+        { "kind": "toggle", "name": "vertical", "class": "footer-vertical" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyFooterTitle",
+      "receiver": "FlowContent",
+      "element": "H6",
+      "class": "footer-title",
+      "text": true,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Page footer layout" }
+}

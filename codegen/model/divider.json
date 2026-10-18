@@ -1,0 +1,39 @@
+{
+  "component": "divider",
+  "name": "Divider",
+  "class": "divider",
+  "enums": [
+    {
+      "name": "DividerVariant",
+      "label": "Color variants",
+      "classes": [
+        "divider-neutral",
+        "divider-primary",
+        "divider-secondary",
+        "divider-accent",
+        "divider-success",
+        "divider-warning",
+        "divider-info",
+        "divider-error"
+      ]
+    },
+    { "name": "DividerDirection", "label": "Direction variants", "classes": ["divider-vertical", "divider-horizontal"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyDivider",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "divider",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "DividerVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "direction", "enum": "DividerDirection", "doc": "Direction variant" },
+        { "kind": "toggle", "name": "end", "class": "divider-end" },
+        { "kind": "toggle", "name": "start", "class": "divider-start" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Visual separator between sections" }
+}

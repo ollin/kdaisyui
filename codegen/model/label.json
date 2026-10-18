@@ -1,0 +1,18 @@
+{
+  "component": "label",
+  "name": "Label",
+  "class": "label",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyLabel",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "label",
+      "text": true,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Field labels and helper text" }
+}

@@ -1,0 +1,23 @@
+{
+  "component": "stack",
+  "name": "Stack",
+  "class": "stack",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyStack",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stack",
+      "text": false,
+      "parameters": [
+        { "kind": "toggle", "name": "bottom", "class": "stack-bottom" },
+        { "kind": "toggle", "name": "end", "class": "stack-end" },
+        { "kind": "toggle", "name": "start", "class": "stack-start" },
+        { "kind": "toggle", "name": "top", "class": "stack-top" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Stack overlapping elements" }
+}

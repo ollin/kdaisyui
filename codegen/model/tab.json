@@ -1,0 +1,47 @@
+{
+  "component": "tab",
+  "name": "Tab",
+  "class": "tabs",
+  "enums": [
+    { "name": "TabSize", "label": "Size variants", "classes": ["tabs-xs", "tabs-sm", "tabs-md", "tabs-lg", "tabs-xl"] },
+    { "name": "TabPlacement", "label": "Placement variants", "classes": ["tabs-top", "tabs-bottom"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyTab",
+      "receiver": "FlowContent",
+      "element": "BUTTON",
+      "class": "tabs",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "TabSize", "doc": "Size variant" },
+        { "kind": "enum", "name": "placement", "enum": "TabPlacement", "doc": "Placement variant" },
+        { "kind": "toggle", "name": "border", "class": "tabs-border" },
+        { "kind": "toggle", "name": "box", "class": "tabs-box" },
+        { "kind": "toggle", "name": "lift", "class": "tabs-lift" },
+        { "kind": "toggle", "name": "tabActive", "class": "tabs-tab-active" },
+        { "kind": "toggle", "name": "tabDisabled", "class": "tabs-tab-disabled" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyTabTab",
+      "receiver": "FlowContent",
+      "element": "A",
+      "class": "tab",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyTabTabContent",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "tab-content",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Tabbed navigation" }
+}

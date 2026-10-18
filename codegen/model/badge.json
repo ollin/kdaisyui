@@ -1,0 +1,45 @@
+{
+  "component": "badge",
+  "name": "Badge",
+  "class": "badge",
+  "enums": [
+    {
+      "name": "BadgeVariant",
+      "label": "Color variants",
+      "classes": [
+        "badge-neutral",
+        "badge-primary",
+        "badge-secondary",
+        "badge-accent",
+        "badge-info",
+        "badge-success",
+        "badge-warning",
+        "badge-error"
+      ]
+    },
+    {
+      "name": "BadgeSize",
+      "label": "Size variants",
+      "classes": ["badge-xs", "badge-sm", "badge-md", "badge-lg", "badge-xl"]
+    },
+    { "name": "BadgeOutlineStyle", "label": "OutlineStyle variants", "classes": ["badge-outline", "badge-dash"] },
+    { "name": "BadgeFillStyle", "label": "FillStyle variants", "classes": ["badge-soft", "badge-ghost"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyBadge",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "badge",
+      "text": true,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "BadgeVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "BadgeSize", "doc": "Size variant" },
+        { "kind": "enum", "name": "outlineStyle", "enum": "BadgeOutlineStyle", "doc": "OutlineStyle variant" },
+        { "kind": "enum", "name": "fillStyle", "enum": "BadgeFillStyle", "doc": "FillStyle variant" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Labels, counts, and status tags" }
+}

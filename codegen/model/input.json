@@ -1,0 +1,73 @@
+{
+  "component": "input",
+  "name": "Input",
+  "class": "input",
+  "enums": [
+    {
+      "name": "InputVariant",
+      "label": "Color variants",
+      "classes": [
+        "input-neutral",
+        "input-primary",
+        "input-secondary",
+        "input-accent",
+        "input-info",
+        "input-success",
+        "input-warning",
+        "input-error"
+      ]
+    },
+    {
+      "name": "InputSize",
+      "label": "Size variants",
+      "classes": ["input-xs", "input-sm", "input-md", "input-lg", "input-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyInput",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "input",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "InputVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "InputSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "ghost", "class": "input-ghost" },
+        {
+          "kind": "extra",
+          "name": "type",
+          "type": "InputType",
+          "default": "InputType.text",
+          "apply": "this.type = type",
+          "imports": ["kotlinx.html.InputType"],
+          "position": "before_classes"
+        },
+        {
+          "kind": "extra",
+          "name": "placeholder",
+          "type": "String?",
+          "default": "null",
+          "apply": "if (placeholder != null) this.placeholder = placeholder"
+        },
+        {
+          "kind": "extra",
+          "name": "value",
+          "type": "String?",
+          "default": "null",
+          "apply": "if (value != null) this.value = value"
+        },
+        {
+          "kind": "extra",
+          "name": "disabled",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (disabled) this.disabled = true"
+        }
+      ],
+      "joinItem": true
+    }
+  ],
+  "summary": { "summary": "Text entry fields" }
+}

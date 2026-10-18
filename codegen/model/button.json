@@ -1,0 +1,63 @@
+{
+  "component": "button",
+  "name": "Button",
+  "class": "btn",
+  "enums": [
+    {
+      "name": "ButtonVariant",
+      "label": "Color variants",
+      "classes": [
+        "btn-neutral",
+        "btn-primary",
+        "btn-secondary",
+        "btn-accent",
+        "btn-info",
+        "btn-success",
+        "btn-warning",
+        "btn-error"
+      ]
+    },
+    { "name": "ButtonSize", "label": "Size variants", "classes": ["btn-xs", "btn-sm", "btn-md", "btn-lg", "btn-xl"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyButton",
+      "receiver": "FlowContent",
+      "element": "BUTTON",
+      "class": "btn",
+      "text": true,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "ButtonVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "ButtonSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "active", "class": "btn-active" },
+        { "kind": "toggle", "name": "block", "class": "btn-block" },
+        { "kind": "toggle", "name": "circle", "class": "btn-circle" },
+        { "kind": "toggle", "name": "dash", "class": "btn-dash" },
+        { "kind": "toggle", "name": "ghost", "class": "btn-ghost" },
+        { "kind": "toggle", "name": "link", "class": "btn-link" },
+        { "kind": "toggle", "name": "outline", "class": "btn-outline" },
+        { "kind": "toggle", "name": "soft", "class": "btn-soft" },
+        { "kind": "toggle", "name": "square", "class": "btn-square" },
+        { "kind": "toggle", "name": "wide", "class": "btn-wide" },
+        {
+          "kind": "extra",
+          "name": "disabled",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (disabled) { this.disabled = true; addClassNames(\"btn-disabled\") }"
+        },
+        {
+          "kind": "extra",
+          "name": "type",
+          "type": "ButtonType?",
+          "default": "null",
+          "apply": "if (type != null) this.type = type",
+          "imports": ["kotlinx.html.ButtonType"]
+        }
+      ],
+      "joinItem": true
+    }
+  ],
+  "summary": { "summary": "Actions and triggers" }
+}

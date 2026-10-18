@@ -1,0 +1,27 @@
+{
+  "component": "mockup-browser",
+  "name": "MockupBrowser",
+  "class": "mockup-browser",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyMockupBrowser",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "mockup-browser",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyMockupBrowserToolbar",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "mockup-browser-toolbar",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Browser window mockup frame" }
+}

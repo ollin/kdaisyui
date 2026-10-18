@@ -1,0 +1,36 @@
+{
+  "component": "hero",
+  "name": "Hero",
+  "class": "hero",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyHero",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "hero",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyHeroContent",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "hero-content",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyHeroOverlay",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "hero-overlay",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Hero banner with overlay" }
+}

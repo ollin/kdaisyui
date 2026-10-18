@@ -1,0 +1,50 @@
+{
+  "component": "select",
+  "name": "Select",
+  "class": "select",
+  "enums": [
+    {
+      "name": "SelectVariant",
+      "label": "Color variants",
+      "classes": [
+        "select-neutral",
+        "select-primary",
+        "select-secondary",
+        "select-accent",
+        "select-info",
+        "select-success",
+        "select-warning",
+        "select-error"
+      ]
+    },
+    {
+      "name": "SelectSize",
+      "label": "Size variants",
+      "classes": ["select-xs", "select-sm", "select-md", "select-lg", "select-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisySelect",
+      "receiver": "FlowContent",
+      "element": "SELECT",
+      "class": "select",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "SelectVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "SelectSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "ghost", "class": "select-ghost" },
+        {
+          "kind": "extra",
+          "name": "disabled",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (disabled) this.disabled = true"
+        }
+      ],
+      "joinItem": true
+    }
+  ],
+  "summary": { "summary": "Dropdown option pickers" }
+}

@@ -1,0 +1,18 @@
+{
+  "component": "radial-progress",
+  "name": "RadialProgress",
+  "class": "radial-progress",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyRadialProgress",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "radial-progress",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Circular progress indicator" }
+}

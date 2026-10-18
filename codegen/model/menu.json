@@ -1,0 +1,56 @@
+{
+  "component": "menu",
+  "name": "Menu",
+  "class": "menu",
+  "enums": [
+    { "name": "MenuSize", "label": "Size variants", "classes": ["menu-xs", "menu-sm", "menu-md", "menu-lg", "menu-xl"] },
+    { "name": "MenuDirection", "label": "Direction variants", "classes": ["menu-vertical", "menu-horizontal"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyMenu",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": "menu",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "MenuSize", "doc": "Size variant" },
+        { "kind": "enum", "name": "direction", "enum": "MenuDirection", "doc": "Direction variant" },
+        { "kind": "toggle", "name": "active", "class": "menu-active" },
+        { "kind": "toggle", "name": "disabled", "class": "menu-disabled" },
+        { "kind": "toggle", "name": "dropdownShow", "class": "menu-dropdown-show" },
+        { "kind": "toggle", "name": "focus", "class": "menu-focus" },
+        { "kind": "toggle", "name": "paged", "class": "menu-paged" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyMenuTitle",
+      "receiver": "FlowContent",
+      "element": "H2",
+      "class": "menu-title",
+      "text": true,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyMenuDropdown",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": "menu-dropdown",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyMenuDropdownToggle",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "menu-dropdown-toggle",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Navigation lists with submenus" }
+}

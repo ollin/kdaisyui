@@ -1,0 +1,32 @@
+{
+  "component": "loading",
+  "name": "Loading",
+  "class": "loading",
+  "enums": [
+    {
+      "name": "LoadingSize",
+      "label": "Size variants",
+      "classes": ["loading-xs", "loading-sm", "loading-md", "loading-lg", "loading-xl"]
+    },
+    {
+      "name": "LoadingStyle",
+      "label": "Style variants",
+      "classes": ["loading-spinner", "loading-dots", "loading-ring", "loading-ball", "loading-bars", "loading-infinity"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyLoading",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "loading",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "LoadingSize", "doc": "Size variant" },
+        { "kind": "enum", "name": "style", "enum": "LoadingStyle", "doc": "Style variant" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Loading spinners and indicators" }
+}

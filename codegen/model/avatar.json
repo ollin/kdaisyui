@@ -1,0 +1,21 @@
+{
+  "component": "avatar",
+  "name": "Avatar",
+  "class": "avatar",
+  "enums": [{ "name": "AvatarModifier", "label": "Modifier variants", "classes": ["avatar-online", "avatar-offline"] }],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyAvatar",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "avatar",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "modifier", "enum": "AvatarModifier", "doc": "Modifier variant" },
+        { "kind": "toggle", "name": "placeholder", "class": "avatar-placeholder" }
+      ]
+    }
+  ],
+  "summary": { "summary": "User and entity representations" }
+}

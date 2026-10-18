@@ -1,0 +1,20 @@
+{
+  "component": "kbd",
+  "name": "Kbd",
+  "class": "kbd",
+  "enums": [
+    { "name": "KbdSize", "label": "Size variants", "classes": ["kbd-xs", "kbd-sm", "kbd-md", "kbd-lg", "kbd-xl"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyKbd",
+      "receiver": "FlowContent",
+      "element": "KBD",
+      "class": "kbd",
+      "text": true,
+      "parameters": [{ "kind": "enum", "name": "size", "enum": "KbdSize", "doc": "Size variant" }]
+    }
+  ],
+  "summary": { "summary": "Keyboard key display" }
+}

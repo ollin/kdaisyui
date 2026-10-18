@@ -1,0 +1,36 @@
+{
+  "component": "link",
+  "name": "Link",
+  "class": "link",
+  "enums": [
+    {
+      "name": "LinkVariant",
+      "label": "Color variants",
+      "classes": [
+        "link-neutral",
+        "link-primary",
+        "link-secondary",
+        "link-accent",
+        "link-success",
+        "link-info",
+        "link-warning",
+        "link-error"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyLink",
+      "receiver": "FlowContent",
+      "element": "A",
+      "class": "link",
+      "text": true,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "LinkVariant", "doc": "Color variant" },
+        { "kind": "toggle", "name": "hover", "class": "link-hover" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Styled anchor elements" }
+}

@@ -1,0 +1,63 @@
+{
+  "component": "radio",
+  "name": "Radio",
+  "class": "radio",
+  "enums": [
+    {
+      "name": "RadioVariant",
+      "label": "Color variants",
+      "classes": [
+        "radio-neutral",
+        "radio-primary",
+        "radio-secondary",
+        "radio-accent",
+        "radio-success",
+        "radio-warning",
+        "radio-info",
+        "radio-error"
+      ]
+    },
+    {
+      "name": "RadioSize",
+      "label": "Size variants",
+      "classes": ["radio-xs", "radio-sm", "radio-md", "radio-lg", "radio-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyRadio",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "radio",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "RadioVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "RadioSize", "doc": "Size variant" },
+        {
+          "kind": "extra",
+          "name": "name",
+          "type": "String?",
+          "default": "null",
+          "apply": "if (name != null) this.name = name"
+        },
+        {
+          "kind": "extra",
+          "name": "checked",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (checked) this.checked = true"
+        },
+        {
+          "kind": "extra",
+          "name": "disabled",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (disabled) this.disabled = true"
+        }
+      ],
+      "inputType": "radio"
+    }
+  ],
+  "summary": { "summary": "Single-choice option groups" }
+}

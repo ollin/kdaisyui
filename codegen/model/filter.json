@@ -1,0 +1,27 @@
+{
+  "component": "filter",
+  "name": "Filter",
+  "class": "filter",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyFilter",
+      "receiver": "FlowContent",
+      "element": "FORM",
+      "class": "filter",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyFilterReset",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "filter-reset",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Filter reset for search and forms" }
+}

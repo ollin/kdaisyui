@@ -1,0 +1,78 @@
+{
+  "component": "range",
+  "name": "Range",
+  "class": "range",
+  "enums": [
+    {
+      "name": "RangeVariant",
+      "label": "Color variants",
+      "classes": [
+        "range-neutral",
+        "range-primary",
+        "range-secondary",
+        "range-accent",
+        "range-success",
+        "range-warning",
+        "range-info",
+        "range-error"
+      ]
+    },
+    {
+      "name": "RangeSize",
+      "label": "Size variants",
+      "classes": ["range-xs", "range-sm", "range-md", "range-lg", "range-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyRange",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "range",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "variant", "enum": "RangeVariant", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "RangeSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "vertical", "class": "range-vertical" },
+        {
+          "kind": "extra",
+          "name": "min",
+          "type": "String?",
+          "default": "null",
+          "apply": "if (min != null) this.min = min"
+        },
+        {
+          "kind": "extra",
+          "name": "max",
+          "type": "String?",
+          "default": "null",
+          "apply": "if (max != null) this.max = max"
+        },
+        {
+          "kind": "extra",
+          "name": "value",
+          "type": "String?",
+          "default": "null",
+          "apply": "if (value != null) this.value = value"
+        },
+        {
+          "kind": "extra",
+          "name": "step",
+          "type": "String?",
+          "default": "null",
+          "apply": "if (step != null) this.step = step"
+        },
+        {
+          "kind": "extra",
+          "name": "disabled",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (disabled) this.disabled = true"
+        }
+      ],
+      "inputType": "range"
+    }
+  ],
+  "summary": { "summary": "Slider for numeric ranges" }
+}

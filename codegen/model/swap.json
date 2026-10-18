@@ -44,8 +44,5 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Toggle between two states" },
-  "notExpressed": {
-    "btn swap": "Two components on one element, daisyButton and daisySwap; one call renders one function. Call one and pass the other's classes through extraClasses."
-  }
+  "summary": { "summary": "Toggle between two states" }
 }

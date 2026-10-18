@@ -66,8 +66,5 @@
   "notOffered": {
     "is-drawer-open:": "A Tailwind variant, not a class (#345).",
     "is-drawer-close:": "A Tailwind variant, not a class (#345)."
-  },
-  "notExpressed": {
-    "btn drawer-button": "Two components on one element, daisyButton and daisyDrawerButton; one call renders one function. Call one and pass the other's classes through extraClasses."
   }
 }

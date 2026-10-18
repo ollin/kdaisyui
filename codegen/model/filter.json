@@ -23,8 +23,5 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Filter reset for search and forms" },
-  "notExpressed": {
-    "btn filter-reset": "Two components on one element, daisyButton and daisyFilterReset; one call renders one function. Call one and pass the other's classes through extraClasses."
-  }
+  "summary": { "summary": "Filter reset for search and forms" }
 }

@@ -86,7 +86,7 @@ export interface DocumentedGap {
 export function gapsIn(html: string, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): DocumentedGap[] {
   return markedElements(html)
     .map(element => ({ tag: element.tag, counted: countedClasses(element, componentClasses) }))
-    .filter(({ counted }) => counted.length > 0 && expressingFunction(models, counted) === null)
+    .filter(({ counted }) => counted.length > 0 && claimingGroups(models, counted).unclaimed.length > 0)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }
 

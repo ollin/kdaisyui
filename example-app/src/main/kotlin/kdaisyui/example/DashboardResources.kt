@@ -17,6 +17,9 @@ class TailwindVariantCheck
 @Resource("/disabled-state")
 class DisabledStateCheck
 
+@Resource("/tabs")
+class TabsDemo
+
 @Resource("/fragments")
 class Fragments {
     @Resource("/stats")

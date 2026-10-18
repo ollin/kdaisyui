@@ -72,8 +72,11 @@ regenerating.
 - [x] 5.2 `^ F` `daisyFloatingLabel`, the same way.
 - [x] 5.3 `^ F` `daisyAvatarGroup`, the same way.
 - [x] 5.4 `^ F` `daisyVc`, the same way.
-- [ ] 5.5 `. d` Confirm no `notExpressed` declaration is left in `codegen/model/`, and record it
+- [x] 5.5 `. d` Confirm no `notExpressed` declaration is left in `codegen/model/`, and record it
   against the spec's Assumed.
+  **Counted 2026-10-18 after 5.4:** no model file declares `notExpressed`; generation passes; of
+  2,571 marked elements 2,564 are expressible (117 as compositions), 7 count no class, 0 gaps.
+  Exactly 1.1's simulation.
 
 ## 6. Documentation and the gate
 

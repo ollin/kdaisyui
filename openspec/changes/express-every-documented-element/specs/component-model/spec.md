@@ -98,7 +98,8 @@ the axis rule gives up nothing DaisyUI documents.
 four new functions of `express-every-documented-element`, no declaration remains, simulated
 2026-10-18 with those model edits applied in memory (task 1.1): 2,564 of 2,571 marked elements
 expressible, 117 of them as compositions, no gap, and no two own classes on one element offering
-the same modifier. The other seven count no class. Re-checked for real by task 5.5.
+the same modifier. The other seven count no class. Re-counted against the real model after block 5
+the same day (task 5.5): the same numbers, and no `notExpressed` declaration left in `codegen/model/`.
 
 #### Scenario: A part's element is expressible
 - **WHEN** an example shows `<div class="$$card-body">` and `daisyCardBody` offers `card-body`

@@ -53,4 +53,4 @@ does not compile, because the tag form needs a builder. With `daisyCalendar` ren
 - [x] 5.2 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
   `:lib:testCodegen`, `:lib:checkComponentApi`, regeneration drift, CodeScene. No mutation tool for
   the TypeScript codegen; say so.
-- [ ] 5.3 `. d` Write `tmp/test-every-documented-tag/EVALUATION-test-every-documented-tag.md`.
+- [x] 5.3 `. d` Write `tmp/test-every-documented-tag/EVALUATION-test-every-documented-tag.md`.

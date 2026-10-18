@@ -22,4 +22,7 @@ fun FlowContent.daisyOtp(
     attrs: (LABEL.() -> Unit)? = null,
     content: (LABEL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyOtpClasses(color: ClassValues<OtpColor>? = null, size: ClassValues<OtpSize>? = null, joined: Boolean = false)
 ```

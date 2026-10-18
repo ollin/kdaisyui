@@ -20,6 +20,9 @@ fun FlowContent.daisyDock(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDockClasses(size: ClassValues<DockSize>? = null, active: Boolean = false)
 ```
 
 ```kotlin
@@ -29,4 +32,7 @@ fun FlowContent.daisyDockLabel(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDockLabelClasses()
 ```

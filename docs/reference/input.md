@@ -25,4 +25,7 @@ fun FlowContent.daisyInput(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyInputClasses(color: ClassValues<InputColor>? = null, size: ClassValues<InputSize>? = null, ghost: Boolean = false)
 ```

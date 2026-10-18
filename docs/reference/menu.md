@@ -26,6 +26,9 @@ fun FlowContent.daisyMenu(
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMenuClasses(size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focus: Boolean = false, paged: Boolean = false)
 ```
 
 ```kotlin
@@ -36,6 +39,9 @@ fun FlowContent.daisyMenuTitle(
     attrs: (H2.() -> Unit)? = null,
     content: (H2.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMenuTitleClasses()
 ```
 
 ```kotlin
@@ -45,6 +51,9 @@ fun FlowContent.daisyMenuDropdown(
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMenuDropdownClasses()
 ```
 
 ```kotlin
@@ -54,4 +63,7 @@ fun FlowContent.daisyMenuDropdownToggle(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMenuDropdownToggleClasses()
 ```

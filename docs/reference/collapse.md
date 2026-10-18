@@ -21,6 +21,9 @@ fun FlowContent.daisyCollapse(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCollapseClasses(icon: ClassValues<CollapseIcon>? = null, state: ClassValues<CollapseState>? = null)
 ```
 
 ```kotlin
@@ -31,6 +34,9 @@ fun FlowContent.daisyCollapseTitle(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCollapseTitleClasses()
 ```
 
 ```kotlin
@@ -40,4 +46,7 @@ fun FlowContent.daisyCollapseContent(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCollapseContentClasses()
 ```

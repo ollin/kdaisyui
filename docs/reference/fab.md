@@ -18,6 +18,9 @@ fun FlowContent.daisyFab(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFabClasses(flower: Boolean = false)
 ```
 
 ```kotlin
@@ -27,6 +30,9 @@ fun FlowContent.daisyFabClose(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFabCloseClasses()
 ```
 
 ```kotlin
@@ -36,4 +42,7 @@ fun FlowContent.daisyFabMainAction(
     attrs: (BUTTON.() -> Unit)? = null,
     content: (BUTTON.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFabMainActionClasses()
 ```

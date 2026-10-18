@@ -19,6 +19,9 @@ fun FlowContent.daisyStats(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStatsClasses(direction: ClassValues<StatsDirection>? = null)
 ```
 
 ```kotlin
@@ -28,6 +31,9 @@ fun FlowContent.daisyStat(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStatClasses()
 ```
 
 ```kotlin
@@ -38,6 +44,9 @@ fun FlowContent.daisyStatTitle(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStatTitleClasses()
 ```
 
 ```kotlin
@@ -48,6 +57,9 @@ fun FlowContent.daisyStatValue(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStatValueClasses()
 ```
 
 ```kotlin
@@ -58,6 +70,9 @@ fun FlowContent.daisyStatDesc(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStatDescClasses()
 ```
 
 ```kotlin
@@ -67,6 +82,9 @@ fun FlowContent.daisyStatFigure(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStatFigureClasses()
 ```
 
 ```kotlin
@@ -76,4 +94,7 @@ fun FlowContent.daisyStatActions(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStatActionsClasses()
 ```

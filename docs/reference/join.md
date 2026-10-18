@@ -19,6 +19,9 @@ fun FlowContent.daisyJoin(
     attrs: (DIV.() -> Unit)? = null,
     content: (JoinScope.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyJoinClasses(direction: ClassValues<JoinDirection>? = null)
 ```
 
 ## `join-item`

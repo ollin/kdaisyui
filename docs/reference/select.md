@@ -23,4 +23,7 @@ fun FlowContent.daisySelect(
     attrs: (SELECT.() -> Unit)? = null,
     content: (SELECT.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisySelectClasses(color: ClassValues<SelectColor>? = null, size: ClassValues<SelectSize>? = null, ghost: Boolean = false)
 ```

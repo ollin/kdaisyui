@@ -17,6 +17,9 @@ fun FlowContent.daisyMockupBrowser(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMockupBrowserClasses()
 ```
 
 ```kotlin
@@ -26,4 +29,7 @@ fun FlowContent.daisyMockupBrowserToolbar(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMockupBrowserToolbarClasses()
 ```

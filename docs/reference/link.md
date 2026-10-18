@@ -21,4 +21,7 @@ fun FlowContent.daisyLink(
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyLinkClasses(color: ClassValues<LinkColor>? = null, hover: Boolean = false)
 ```

@@ -19,4 +19,7 @@ fun FlowContent.daisyStack(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStackClasses(placement: ClassValues<StackPlacement>? = null)
 ```

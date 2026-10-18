@@ -19,4 +19,7 @@ fun FlowContent.daisyList(
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyListClasses(column: ClassValues<ListColumn>? = null)
 ```

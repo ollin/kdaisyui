@@ -18,4 +18,7 @@ fun FlowContent.daisyLabel(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyLabelClasses()
 ```

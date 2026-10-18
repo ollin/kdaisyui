@@ -21,6 +21,9 @@ fun FlowContent.daisyTimeline(
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTimelineClasses(direction: ClassValues<TimelineDirection>? = null, compact: Boolean = false, snapIcon: Boolean = false)
 ```
 
 ```kotlin
@@ -31,6 +34,9 @@ fun FlowContent.daisyTimelineStart(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTimelineStartClasses(box: Boolean = false)
 ```
 
 ```kotlin
@@ -41,6 +47,9 @@ fun FlowContent.daisyTimelineMiddle(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTimelineMiddleClasses(box: Boolean = false)
 ```
 
 ```kotlin
@@ -51,4 +60,7 @@ fun FlowContent.daisyTimelineEnd(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTimelineEndClasses(box: Boolean = false)
 ```

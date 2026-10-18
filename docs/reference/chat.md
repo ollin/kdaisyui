@@ -20,6 +20,9 @@ fun FlowContent.daisyChat(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyChatClasses(placement: ClassValues<ChatPlacement>? = null)
 ```
 
 ```kotlin
@@ -29,6 +32,9 @@ fun FlowContent.daisyChatImage(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyChatImageClasses()
 ```
 
 ```kotlin
@@ -38,6 +44,9 @@ fun FlowContent.daisyChatHeader(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyChatHeaderClasses()
 ```
 
 ```kotlin
@@ -47,6 +56,9 @@ fun FlowContent.daisyChatFooter(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyChatFooterClasses()
 ```
 
 ```kotlin
@@ -57,4 +69,7 @@ fun FlowContent.daisyChatBubble(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyChatBubbleClasses(color: ClassValues<ChatBubbleColor>? = null)
 ```

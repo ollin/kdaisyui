@@ -19,4 +19,7 @@ fun FlowContent.daisyProgress(
     attrs: (PROGRESS.() -> Unit)? = null,
     content: (PROGRESS.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyProgressClasses(color: ClassValues<ProgressColor>? = null)
 ```

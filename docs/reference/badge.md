@@ -26,4 +26,7 @@ fun FlowContent.daisyBadge(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyBadgeClasses(color: ClassValues<BadgeColor>? = null, size: ClassValues<BadgeSize>? = null, outlineStyle: ClassValues<BadgeOutlineStyle>? = null, fillStyle: ClassValues<BadgeFillStyle>? = null)
 ```

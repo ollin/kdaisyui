@@ -23,6 +23,9 @@ fun FlowContent.daisyTabs(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTabsClasses(size: ClassValues<TabsSize>? = null, placement: ClassValues<TabsPlacement>? = null, style: ClassValues<TabsStyle>? = null)
 ```
 
 ```kotlin
@@ -34,6 +37,9 @@ fun FlowContent.daisyTab(
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTabClasses(active: Boolean = false, disabled: Boolean = false)
 ```
 
 ```kotlin
@@ -44,6 +50,9 @@ fun FlowContent.daisyTabRadio(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTabRadioClasses(active: Boolean = false, disabled: Boolean = false)
 ```
 
 ```kotlin
@@ -53,4 +62,7 @@ fun FlowContent.daisyTabContent(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTabContentClasses()
 ```

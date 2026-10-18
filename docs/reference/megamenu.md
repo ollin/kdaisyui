@@ -22,6 +22,9 @@ fun FlowContent.daisyMegamenu(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMegamenuClasses(size: ClassValues<MegamenuSize>? = null, width: ClassValues<MegamenuWidth>? = null, vertical: Boolean = false)
 ```
 
 ```kotlin
@@ -31,6 +34,9 @@ fun FlowContent.daisyMegamenuActive(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMegamenuActiveClasses()
 ```
 
 ```kotlin

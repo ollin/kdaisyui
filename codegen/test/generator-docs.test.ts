@@ -88,6 +88,9 @@ fun FlowContent.daisyCard(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardClasses(size: ClassValues<CardSize>? = null, border: Boolean = false, dash: Boolean = false, imageFull: Boolean = false, side: Boolean = false)
 \`\`\`
 
 \`\`\`kotlin
@@ -98,6 +101,9 @@ fun FlowContent.daisyCardTitle(
     attrs: (H2.() -> Unit)? = null,
     content: (H2.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardTitleClasses()
 \`\`\`
 
 \`\`\`kotlin
@@ -107,6 +113,9 @@ fun FlowContent.daisyCardBody(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardBodyClasses()
 \`\`\`
 
 \`\`\`kotlin
@@ -116,6 +125,9 @@ fun FlowContent.daisyCardActions(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardActionsClasses()
 \`\`\`
 `
 
@@ -304,5 +316,13 @@ describe('a component whose content runs in a scope', () => {
 
     assert.ok(!plain.includes('join-item'))
     assert.ok(!plain.includes('## Join items'))
+  })
+})
+
+describe('the class sibling on a reference page', () => {
+  test('follows its function in the same block', () => {
+    const page = generateComponentPage(shapeOf(component('kbd', 'Kbd', 'kbd')), undefined)
+
+    assert.ok(page.includes(")\n\n// The same classes on an element you write yourself, or beside another component's:\nfun Tag.daisyKbdClasses()\n```"))
   })
 })

@@ -23,4 +23,7 @@ fun FlowContent.daisyRadio(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyRadioClasses(color: ClassValues<RadioColor>? = null, size: ClassValues<RadioSize>? = null)
 ```

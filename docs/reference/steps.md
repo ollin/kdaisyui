@@ -15,7 +15,6 @@ Step-by-step progress indicator. Renders `<ul class="steps ...">`.
 // StepsDirection: Vertical | Horizontal
 fun FlowContent.daisySteps(
     id: HtmlId? = null,
-    variant: ClassValues<StepsVariant>? = null,
     direction: ClassValues<StepsDirection>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
@@ -26,6 +25,7 @@ fun FlowContent.daisySteps(
 ```kotlin
 fun UL.daisyStepsStep(
     id: HtmlId? = null,
+    variant: ClassValues<StepsVariant>? = null,
     extraClasses: String? = null,
     attrs: (LI.() -> Unit)? = null,
     content: (LI.() -> Unit),

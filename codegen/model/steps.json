@@ -7,14 +7,14 @@
       "name": "StepsVariant",
       "label": "Color variants",
       "classes": [
-        "steps-step-neutral",
-        "steps-step-primary",
-        "steps-step-secondary",
-        "steps-step-accent",
-        "steps-step-info",
-        "steps-step-success",
-        "steps-step-warning",
-        "steps-step-error"
+        "step-neutral",
+        "step-primary",
+        "step-secondary",
+        "step-accent",
+        "step-info",
+        "step-success",
+        "step-warning",
+        "step-error"
       ]
     },
     { "name": "StepsDirection", "label": "Direction variants", "classes": ["steps-vertical", "steps-horizontal"] }
@@ -28,7 +28,6 @@
       "class": "steps",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "variant", "enum": "StepsVariant", "doc": "Color variant" },
         { "kind": "enum", "name": "direction", "enum": "StepsDirection", "doc": "Direction variant" }
       ]
     },
@@ -39,7 +38,7 @@
       "element": "LI",
       "class": "step",
       "text": false,
-      "parameters": []
+      "parameters": [{ "kind": "enum", "name": "variant", "enum": "StepsVariant", "doc": "Color variant" }]
     },
     {
       "kind": "part",

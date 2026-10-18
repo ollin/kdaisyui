@@ -113,10 +113,10 @@ class DashboardTest {
     }
 
     private fun SECTION.stat(title: String, value: String, desc: String) {
-        daisyStatStat {
-            daisyStatStatTitle(title)
-            daisyStatStatValue(value)
-            daisyStatStatDesc(desc)
+        daisyStat {
+            daisyStatTitle(title)
+            daisyStatValue(value)
+            daisyStatDesc(desc)
         }
     }
 

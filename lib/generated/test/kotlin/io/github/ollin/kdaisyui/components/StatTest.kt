@@ -10,7 +10,7 @@ class StatTest {
     @Test
     fun stat() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat() {
+            daisyStats() {
             }
         }
         val expectedClasses = "stats"
@@ -21,7 +21,7 @@ class StatTest {
     @Test
     fun stat_with_icons_or_image() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat() {
+            daisyStats() {
             }
         }
         val expectedClasses = "stats"
@@ -32,7 +32,7 @@ class StatTest {
     @Test
     fun stat_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat() {
+            daisyStats() {
             }
         }
         val expectedClasses = "stats"
@@ -43,7 +43,7 @@ class StatTest {
     @Test
     fun centered_items() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat() {
+            daisyStats() {
             }
         }
         val expectedClasses = "stats"
@@ -54,7 +54,7 @@ class StatTest {
     @Test
     fun vertical() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat(direction = StatDirection.Vertical) {
+            daisyStats(direction = StatsDirection.Vertical) {
             }
         }
         val expectedClasses = "stats stats-vertical"
@@ -65,7 +65,7 @@ class StatTest {
     @Test
     fun responsive_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat(direction = StatDirection.Vertical, extraClasses = "lg:stats-horizontal") {
+            daisyStats(direction = StatsDirection.Vertical, extraClasses = "lg:stats-horizontal") {
             }
         }
         val expectedClasses = "lg:stats-horizontal stats stats-vertical"
@@ -76,7 +76,7 @@ class StatTest {
     @Test
     fun with_custom_colors_and_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat() {
+            daisyStats() {
             }
         }
         val expectedClasses = "stats"

@@ -11,10 +11,19 @@ Regenerate: just generate
 Key metrics and numbers. Renders `<div class="stats ...">`.
 
 ```kotlin
-// StatDirection: Horizontal | Vertical
+// StatsDirection: Horizontal | Vertical
+fun FlowContent.daisyStats(
+    id: HtmlId? = null,
+    direction: ClassValues<StatsDirection>? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+)
+```
+
+```kotlin
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
-    direction: ClassValues<StatDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -22,16 +31,7 @@ fun FlowContent.daisyStat(
 ```
 
 ```kotlin
-fun FlowContent.daisyStatStat(
-    id: HtmlId? = null,
-    extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
-)
-```
-
-```kotlin
-fun FlowContent.daisyStatStatTitle(
+fun FlowContent.daisyStatTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -41,7 +41,7 @@ fun FlowContent.daisyStatStatTitle(
 ```
 
 ```kotlin
-fun FlowContent.daisyStatStatValue(
+fun FlowContent.daisyStatValue(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -51,7 +51,7 @@ fun FlowContent.daisyStatStatValue(
 ```
 
 ```kotlin
-fun FlowContent.daisyStatStatDesc(
+fun FlowContent.daisyStatDesc(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -61,7 +61,7 @@ fun FlowContent.daisyStatStatDesc(
 ```
 
 ```kotlin
-fun FlowContent.daisyStatStatFigure(
+fun FlowContent.daisyStatFigure(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -70,7 +70,7 @@ fun FlowContent.daisyStatStatFigure(
 ```
 
 ```kotlin
-fun FlowContent.daisyStatStatActions(
+fun FlowContent.daisyStatActions(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

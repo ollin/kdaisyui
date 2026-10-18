@@ -638,14 +638,14 @@ fun FlowContent.daisyStack(id: HtmlId? = null, bottom: Boolean = false, end: Boo
 Key metrics and numbers — renders `<div>`.
 
 ```kotlin
-enum class StatDirection { Horizontal, Vertical }
-fun FlowContent.daisyStat(id: HtmlId? = null, direction: ClassValues<StatDirection>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyStatStat(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyStatStatTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
-fun FlowContent.daisyStatStatValue(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
-fun FlowContent.daisyStatStatDesc(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
-fun FlowContent.daisyStatStatFigure(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
-fun FlowContent.daisyStatStatActions(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class StatsDirection { Horizontal, Vertical }
+fun FlowContent.daisyStats(id: HtmlId? = null, direction: ClassValues<StatsDirection>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStat(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStatTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
+fun FlowContent.daisyStatValue(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
+fun FlowContent.daisyStatDesc(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
+fun FlowContent.daisyStatFigure(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyStatActions(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Status

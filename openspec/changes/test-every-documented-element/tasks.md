@@ -7,7 +7,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 ## 1. Check the assumptions first
 
-- [ ] 1.1 `. d` **Count the gap under exactly the spec's rule**: counted classes only, `join-item`
+- [x] 1.1 `. d` **Count the gap under exactly the spec's rule**: counted classes only, `join-item`
   only where the join scope marks the function, every model's functions as candidates. Record the
   number of distinct class sets here. Above sixty refutes the Assumed in "Every documented element
   is expressible…": stop and revise the rule with Oliver before block 2.

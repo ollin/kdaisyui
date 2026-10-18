@@ -1,0 +1,53 @@
+import { test, describe } from 'node:test'
+import assert from 'node:assert/strict'
+
+import { shapeFromModel, type ComponentModel, type Descriptions } from '../src/model.ts'
+
+/** The smallest real component: one function, one enum, inline text. */
+const KBD: ComponentModel = {
+  component: 'kbd',
+  name: 'Kbd',
+  class: 'kbd',
+  enums: [{ name: 'KbdSize', label: 'Size variants', classes: ['kbd-sm', 'kbd-lg'] }],
+  functions: [{
+    kind: 'main',
+    name: 'daisyKbd',
+    receiver: 'FlowContent',
+    element: 'KBD',
+    class: 'kbd',
+    text: true,
+    parameters: [{ kind: 'enum', name: 'size', enum: 'KbdSize', doc: 'Size variant' }],
+  }],
+}
+
+const DESCRIPTIONS: Descriptions = { desc: 'Keyboard key.', classes: { sm: 'Small size' } }
+
+describe('shapeFromModel', () => {
+  test('frames the declared parameters with text, id and the escape hatches', () => {
+    const [kbd] = shapeFromModel(KBD, DESCRIPTIONS).functions
+
+    assert.deepEqual(kbd.parameters.map(parameter => parameter.name), ['text', 'id', 'size', 'extraClasses', 'attrs', 'content'])
+  })
+
+  test('types an enum parameter as the ClassValues of its enum', () => {
+    const size = shapeFromModel(KBD, DESCRIPTIONS).functions[0].parameters[2]
+
+    assert.deepEqual(size, { name: 'size', type: 'ClassValues<KbdSize>?', default: 'null', doc: 'Size variant', enumName: 'KbdSize' })
+  })
+
+  test('derives the builder and the prose tag from the declared element', () => {
+    const [kbd] = shapeFromModel(KBD, DESCRIPTIONS).functions
+
+    assert.equal(kbd.tagBuilder, 'kbd')
+    assert.equal(kbd.htmlTag, 'kbd')
+  })
+
+  test('names each enum entry after its class and describes it from the frontmatter', () => {
+    const [size] = shapeFromModel(KBD, DESCRIPTIONS).enums
+
+    assert.deepEqual(size.entries, [
+      { name: 'Sm', cssClass: 'kbd-sm', desc: 'Small size' },
+      { name: 'Lg', cssClass: 'kbd-lg', desc: null },
+    ])
+  })
+})

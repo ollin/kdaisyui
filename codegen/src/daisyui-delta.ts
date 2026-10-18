@@ -10,6 +10,7 @@
 import { execFileSync } from 'node:child_process'
 import { getClassesByCategory, parseFrontmatter } from './parser/frontmatter.ts'
 import { documentedElementSetsIn, fencedHtmlBlocks } from './parser/documented-element.ts'
+import { classesJoinedWith } from './join-scope.ts'
 
 /** Where the component pages live inside the DaisyUI repository. */
 export const COMPONENTS_IN_REPO = 'packages/docs/src/routes/(routes)/components'
@@ -121,4 +122,13 @@ export function elementChanges(older: ComponentDocs, newer: ComponentDocs): Elem
 /** The component directories one release documents and the other does not. */
 export function componentChanges(older: ComponentDocs, newer: ComponentDocs): SetChange {
   return setChange(older.componentDirs(), newer.componentDirs())
+}
+
+function joinItemCompanions(docs: ComponentDocs): string[] {
+  return docs.componentDirs().flatMap(dir => [...classesJoinedWith(fencedHtmlBlocks(docs.page(dir) ?? ''))])
+}
+
+/** The component classes DaisyUI documents beside `join-item` in one release and not the other. */
+export function joinItemChanges(older: ComponentDocs, newer: ComponentDocs): SetChange {
+  return setChange(joinItemCompanions(older), joinItemCompanions(newer))
 }

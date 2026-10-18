@@ -5,7 +5,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { classChanges, componentChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, type ComponentDocs } from '../src/daisyui-delta.ts'
+import { classChanges, componentChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, joinItemChanges, type ComponentDocs } from '../src/daisyui-delta.ts'
 
 /** A throwaway repository with DaisyUI's layout and two tags. */
 class FixtureRepository {
@@ -113,5 +113,14 @@ describe('componentChanges', () => {
     const newer = release({ btn: frontmatter('btn'), aura: frontmatter('aura') })
 
     assert.deepEqual(componentChanges(older, newer), { added: ['aura'], removed: ['pagination'] })
+  })
+})
+
+describe('joinItemChanges', () => {
+  it('names a component class newly or no longer documented beside join-item', () => {
+    const older = release({ join: example('<div class="$$join"><button class="$$btn $$join-item"></button></div>') })
+    const newer = release({ join: example('<div class="$$join"><input class="$$input $$join-item"></div>') })
+
+    assert.deepEqual(joinItemChanges(older, newer), { added: ['input'], removed: ['btn'] })
   })
 })

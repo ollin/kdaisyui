@@ -216,8 +216,9 @@ The component model SHALL name every function, axis, enum and entry by these rul
   `btn-primary`, `StepColor.Primary` for `step-primary` on the step,
   `IndicatorItemHorizontalPlacement.Start` for `indicator-start` on the indicator item.
 
-A test SHALL fail when a main function or a part is named otherwise and the model declares no
-stem for it.
+Generation SHALL fail when a main function, a part or an enum one of them chooses from is named
+otherwise. The check covered functions only until 2026-10-18, and the one rename that slipped
+through, the indicator item's two placement enums, is why it covers enums too.
 
 **Verified** that two declared stems suffice, run over the model on 2026-10-18 (task 4.1): the rule
 renames 13 functions, and the only rename that would be wrong is `daisyCalendar` to

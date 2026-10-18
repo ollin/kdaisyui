@@ -87,8 +87,16 @@ two components as expressible through `extraClasses`.
 
 For every element the gate above finds expressible, the generated tests SHALL contain a test that
 calls the function expressing it, passes each other counted class through its typed parameter, and
-asserts that the rendered element carries exactly the counted classes. Elements that yield the same
-call SHALL yield one test. The test SHALL NOT assert the element's tag.
+asserts that the rendered element carries exactly the counted classes, with two adjustments. The
+element's variant-prefixed classes that some component declares, such as `lg:$$menu-horizontal`,
+are passed through `extraClasses` and expected as written. `join-item` is neither passed nor
+expected: only a join's content adds it, and the test calls the function on its own. Elements that
+yield the same call SHALL yield one test. The test SHALL NOT assert the element's tag.
+
+**Verified** both adjustments against what the tests did before this change, read 2026-10-18 in
+`componentCallFor`: a prefixed class went to `extraClasses` and was expected, because `at()` is
+parked; `join-item`, being no class of the page's own frontmatter, was dropped. Without the
+adjustments the new tests would lose the variant coverage and expect a class no lone call renders.
 
 This replaces the example tests that addressed the main function only.
 

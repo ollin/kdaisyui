@@ -8,16 +8,18 @@ import kotlinx.html.ul
 
 class StepsTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun horizontal() {
         val html = createHTML(prettyPrint = false).div {
             daisySteps() {
             }
         }
-        val expectedClasses = "steps"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Horizontal")
-        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Horizontal")
+        assertDocumented(html, "ul", "steps", "Horizontal")
     }
 
     @Test
@@ -26,10 +28,7 @@ class StepsTest {
             daisyStep(color = StepColor.Primary) {
             }
         }
-        val expectedClasses = "step step-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Horizontal")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Horizontal")
+        assertDocumented(html, "li", "step step-primary", "Horizontal")
     }
 
     @Test
@@ -38,10 +37,7 @@ class StepsTest {
             daisyStep() {
             }
         }
-        val expectedClasses = "step"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Horizontal")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Horizontal")
+        assertDocumented(html, "li", "step", "Horizontal")
     }
 
     @Test
@@ -50,10 +46,7 @@ class StepsTest {
             daisySteps(direction = StepsDirection.Vertical) {
             }
         }
-        val expectedClasses = "steps steps-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical")
-        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Vertical")
+        assertDocumented(html, "ul", "steps steps-vertical", "Vertical")
     }
 
     @Test
@@ -62,10 +55,7 @@ class StepsTest {
             daisySteps(direction = StepsDirection.Vertical, extraClasses = "lg:steps-horizontal") {
             }
         }
-        val expectedClasses = "lg:steps-horizontal steps steps-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for responsive (vertical on small screen, horizontal on large screen)")
-        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for responsive (vertical on small screen, horizontal on large screen)")
+        assertDocumented(html, "ul", "lg:steps-horizontal steps steps-vertical", "responsive (vertical on small screen, horizontal on large screen)")
     }
 
     @Test
@@ -74,10 +64,7 @@ class StepsTest {
             daisyStep(color = StepColor.Neutral) {
             }
         }
-        val expectedClasses = "step step-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom content in step-icon")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With custom content in step-icon")
+        assertDocumented(html, "li", "step step-neutral", "With custom content in step-icon")
     }
 
     @Test
@@ -86,10 +73,7 @@ class StepsTest {
             daisyStepIcon() {
             }
         }
-        val expectedClasses = "step-icon"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom content in step-icon")
-        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With custom content in step-icon")
+        assertDocumented(html, "span", "step-icon", "With custom content in step-icon")
     }
 
     @Test
@@ -98,10 +82,7 @@ class StepsTest {
             daisyStep(color = StepColor.Info) {
             }
         }
-        val expectedClasses = "step step-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom colors")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Custom colors")
+        assertDocumented(html, "li", "step step-info", "Custom colors")
     }
 
     @Test
@@ -110,10 +91,7 @@ class StepsTest {
             daisyStep(color = StepColor.Error) {
             }
         }
-        val expectedClasses = "step step-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom colors")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Custom colors")
+        assertDocumented(html, "li", "step step-error", "Custom colors")
     }
 
     @Test
@@ -122,10 +100,7 @@ class StepsTest {
             daisyStep(color = StepColor.Secondary) {
             }
         }
-        val expectedClasses = "step step-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With scrollable wrapper")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With scrollable wrapper")
+        assertDocumented(html, "li", "step step-secondary", "With scrollable wrapper")
     }
 
     @Test
@@ -134,10 +109,7 @@ class StepsTest {
             daisyStep(color = StepColor.Accent) {
             }
         }
-        val expectedClasses = "step step-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With scrollable wrapper")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With scrollable wrapper")
+        assertDocumented(html, "li", "step step-accent", "With scrollable wrapper")
     }
 
     @Test
@@ -146,9 +118,6 @@ class StepsTest {
             daisyStep(color = StepColor.Warning) {
             }
         }
-        val expectedClasses = "step step-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With scrollable wrapper")
-        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With scrollable wrapper")
+        assertDocumented(html, "li", "step step-warning", "With scrollable wrapper")
     }
 }

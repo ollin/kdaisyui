@@ -7,15 +7,17 @@ import kotlin.test.assertEquals
 
 class MockupCodeTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun mockup_code_with_line_prefix() {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupCode() {
             }
         }
-        val expectedClasses = "mockup-code"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for mockup code with line prefix")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for mockup code with line prefix")
+        assertDocumented(html, "div", "mockup-code", "mockup code with line prefix")
     }
 }

@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class ProgressTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun progress() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress() {
             }
         }
-        val expectedClasses = "progress"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Progress")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Progress")
+        assertDocumented(html, "progress", "progress", "Progress")
     }
 
     @Test
@@ -25,10 +27,7 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Primary) {
             }
         }
-        val expectedClasses = "progress progress-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "progress", "progress progress-primary", "Primary color")
     }
 
     @Test
@@ -37,10 +36,7 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Secondary) {
             }
         }
-        val expectedClasses = "progress progress-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Secondary color")
+        assertDocumented(html, "progress", "progress progress-secondary", "Secondary color")
     }
 
     @Test
@@ -49,10 +45,7 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Accent) {
             }
         }
-        val expectedClasses = "progress progress-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accent color")
+        assertDocumented(html, "progress", "progress progress-accent", "Accent color")
     }
 
     @Test
@@ -61,10 +54,7 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Neutral) {
             }
         }
-        val expectedClasses = "progress progress-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Neutral color")
+        assertDocumented(html, "progress", "progress progress-neutral", "Neutral color")
     }
 
     @Test
@@ -73,10 +63,7 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Info) {
             }
         }
-        val expectedClasses = "progress progress-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
+        assertDocumented(html, "progress", "progress progress-info", "Info color")
     }
 
     @Test
@@ -85,10 +72,7 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Success) {
             }
         }
-        val expectedClasses = "progress progress-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
+        assertDocumented(html, "progress", "progress progress-success", "Success color")
     }
 
     @Test
@@ -97,10 +81,7 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Warning) {
             }
         }
-        val expectedClasses = "progress progress-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
+        assertDocumented(html, "progress", "progress progress-warning", "Warning color")
     }
 
     @Test
@@ -109,9 +90,6 @@ class ProgressTest {
             daisyProgress(color = ProgressColor.Error) {
             }
         }
-        val expectedClasses = "progress progress-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
-        assertEquals("progress", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
+        assertDocumented(html, "progress", "progress progress-error", "Error color")
     }
 }

@@ -9,16 +9,18 @@ import kotlinx.html.ul
 
 class BreadcrumbsTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun breadcrumbs() {
         val html = createHTML(prettyPrint = false).div {
             daisyBreadcrumbs() {
             }
         }
-        val expectedClasses = "breadcrumbs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Breadcrumbs")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Breadcrumbs")
+        assertDocumented(html, "div", "breadcrumbs", "Breadcrumbs")
     }
 
     @Test

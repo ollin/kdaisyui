@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class AlertTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun alert() {
         val html = createHTML(prettyPrint = false).div {
             daisyAlert() {
             }
         }
-        val expectedClasses = "alert"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert")
+        assertDocumented(html, "div", "alert", "Alert")
     }
 
     @Test
@@ -25,10 +27,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Info) {
             }
         }
-        val expectedClasses = "alert alert-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
+        assertDocumented(html, "div", "alert alert-info", "Info color")
     }
 
     @Test
@@ -37,10 +36,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Success) {
             }
         }
-        val expectedClasses = "alert alert-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
+        assertDocumented(html, "div", "alert alert-success", "Success color")
     }
 
     @Test
@@ -49,10 +45,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Warning) {
             }
         }
-        val expectedClasses = "alert alert-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
+        assertDocumented(html, "div", "alert alert-warning", "Warning color")
     }
 
     @Test
@@ -61,10 +54,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Error) {
             }
         }
-        val expectedClasses = "alert alert-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
+        assertDocumented(html, "div", "alert alert-error", "Error color")
     }
 
     @Test
@@ -73,10 +63,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Info, soft = true) {
             }
         }
-        val expectedClasses = "alert alert-info alert-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
+        assertDocumented(html, "div", "alert alert-info alert-soft", "Alert soft style")
     }
 
     @Test
@@ -85,10 +72,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Success, soft = true) {
             }
         }
-        val expectedClasses = "alert alert-soft alert-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
+        assertDocumented(html, "div", "alert alert-soft alert-success", "Alert soft style")
     }
 
     @Test
@@ -97,10 +81,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Warning, soft = true) {
             }
         }
-        val expectedClasses = "alert alert-soft alert-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
+        assertDocumented(html, "div", "alert alert-soft alert-warning", "Alert soft style")
     }
 
     @Test
@@ -109,10 +90,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Error, soft = true) {
             }
         }
-        val expectedClasses = "alert alert-error alert-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
+        assertDocumented(html, "div", "alert alert-error alert-soft", "Alert soft style")
     }
 
     @Test
@@ -121,10 +99,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Info, style = AlertStyle.Outline) {
             }
         }
-        val expectedClasses = "alert alert-info alert-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
+        assertDocumented(html, "div", "alert alert-info alert-outline", "Alert outline style")
     }
 
     @Test
@@ -133,10 +108,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Success, style = AlertStyle.Outline) {
             }
         }
-        val expectedClasses = "alert alert-outline alert-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
+        assertDocumented(html, "div", "alert alert-outline alert-success", "Alert outline style")
     }
 
     @Test
@@ -145,10 +117,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Warning, style = AlertStyle.Outline) {
             }
         }
-        val expectedClasses = "alert alert-outline alert-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
+        assertDocumented(html, "div", "alert alert-outline alert-warning", "Alert outline style")
     }
 
     @Test
@@ -157,10 +126,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Error, style = AlertStyle.Outline) {
             }
         }
-        val expectedClasses = "alert alert-error alert-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
+        assertDocumented(html, "div", "alert alert-error alert-outline", "Alert outline style")
     }
 
     @Test
@@ -169,10 +135,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Info, style = AlertStyle.Dash) {
             }
         }
-        val expectedClasses = "alert alert-dash alert-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
+        assertDocumented(html, "div", "alert alert-dash alert-info", "Alert dash style")
     }
 
     @Test
@@ -181,10 +144,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Success, style = AlertStyle.Dash) {
             }
         }
-        val expectedClasses = "alert alert-dash alert-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
+        assertDocumented(html, "div", "alert alert-dash alert-success", "Alert dash style")
     }
 
     @Test
@@ -193,10 +153,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Warning, style = AlertStyle.Dash) {
             }
         }
-        val expectedClasses = "alert alert-dash alert-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
+        assertDocumented(html, "div", "alert alert-dash alert-warning", "Alert dash style")
     }
 
     @Test
@@ -205,10 +162,7 @@ class AlertTest {
             daisyAlert(color = AlertColor.Error, style = AlertStyle.Dash) {
             }
         }
-        val expectedClasses = "alert alert-dash alert-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
+        assertDocumented(html, "div", "alert alert-dash alert-error", "Alert dash style")
     }
 
     @Test
@@ -217,10 +171,7 @@ class AlertTest {
             daisyAlert(direction = AlertDirection.Vertical, extraClasses = "sm:alert-horizontal") {
             }
         }
-        val expectedClasses = "alert alert-vertical sm:alert-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with buttons + responsive")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert with buttons + responsive")
+        assertDocumented(html, "div", "alert alert-vertical sm:alert-horizontal", "Alert with buttons + responsive")
     }
 
     @Test
@@ -229,10 +180,7 @@ class AlertTest {
             daisyButton(size = ButtonSize.Sm) {
             }
         }
-        val expectedClasses = "btn btn-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with buttons + responsive")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert with buttons + responsive")
+        assertDocumented(html, "button", "btn btn-sm", "Alert with buttons + responsive")
     }
 
     @Test
@@ -241,9 +189,6 @@ class AlertTest {
             daisyButton(size = ButtonSize.Sm, color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-primary btn-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with buttons + responsive")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert with buttons + responsive")
+        assertDocumented(html, "button", "btn btn-primary btn-sm", "Alert with buttons + responsive")
     }
 }

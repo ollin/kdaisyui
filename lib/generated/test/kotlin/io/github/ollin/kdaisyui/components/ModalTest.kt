@@ -9,16 +9,18 @@ import kotlinx.html.form
 
 class ModalTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun dialog_modal_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton() {
             }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
+        assertDocumented(html, "button", "btn", "Dialog modal")
     }
 
     @Test
@@ -27,10 +29,7 @@ class ModalTest {
             daisyModal() {
             }
         }
-        val expectedClasses = "modal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
-        assertEquals("dialog", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
+        assertDocumented(html, "dialog", "modal", "Dialog modal")
     }
 
     @Test
@@ -39,10 +38,7 @@ class ModalTest {
             daisyModalBox() {
             }
         }
-        val expectedClasses = "modal-box"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
+        assertDocumented(html, "div", "modal-box", "Dialog modal")
     }
 
     @Test
@@ -51,10 +47,7 @@ class ModalTest {
             daisyModalAction() {
             }
         }
-        val expectedClasses = "modal-action"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal")
+        assertDocumented(html, "div", "modal-action", "Dialog modal")
     }
 
     @Test
@@ -62,10 +55,7 @@ class ModalTest {
         val html = createHTML(prettyPrint = false).div {
             form { daisyModalBackdropClasses() }
         }
-        val expectedClasses = "modal-backdrop"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal, closes when clicked outside")
-        assertEquals("form", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal, closes when clicked outside")
+        assertDocumented(html, "form", "modal-backdrop", "Dialog modal, closes when clicked outside")
     }
 
     @Test
@@ -74,10 +64,7 @@ class ModalTest {
             daisyButton(size = ButtonSize.Sm, shape = ButtonShape.Circle, style = ButtonStyle.Ghost) {
             }
         }
-        val expectedClasses = "btn btn-circle btn-ghost btn-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dialog modal with a close button at corner")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dialog modal with a close button at corner")
+        assertDocumented(html, "button", "btn btn-circle btn-ghost btn-sm", "Dialog modal with a close button at corner")
     }
 
     @Test
@@ -86,10 +73,7 @@ class ModalTest {
             daisyModal(verticalPlacement = ModalVerticalPlacement.Bottom, extraClasses = "sm:modal-middle") {
             }
         }
-        val expectedClasses = "modal modal-bottom sm:modal-middle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive")
-        assertEquals("dialog", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive")
+        assertDocumented(html, "dialog", "modal modal-bottom sm:modal-middle", "Responsive")
     }
 
     @Test
@@ -98,10 +82,7 @@ class ModalTest {
             daisyModalPopover() {
             }
         }
-        val expectedClasses = "modal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Popover modal")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Popover modal")
+        assertDocumented(html, "div", "modal", "Popover modal")
     }
 
     @Test
@@ -109,10 +90,7 @@ class ModalTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalToggle()
         }
-        val expectedClasses = "modal-toggle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Modal using checkbox")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Modal using checkbox")
+        assertDocumented(html, "input", "modal-toggle", "Modal using checkbox")
     }
 
     @Test

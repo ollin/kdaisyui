@@ -8,16 +8,18 @@ import kotlinx.html.label
 
 class HeroTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun centered_hero() {
         val html = createHTML(prettyPrint = false).div {
             daisyHero() {
             }
         }
-        val expectedClasses = "hero"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered hero")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Centered hero")
+        assertDocumented(html, "div", "hero", "Centered hero")
     }
 
     @Test
@@ -26,10 +28,7 @@ class HeroTest {
             daisyHeroContent() {
             }
         }
-        val expectedClasses = "hero-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered hero")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Centered hero")
+        assertDocumented(html, "div", "hero-content", "Centered hero")
     }
 
     @Test
@@ -38,10 +37,7 @@ class HeroTest {
             daisyButton(color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered hero")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Centered hero")
+        assertDocumented(html, "button", "btn btn-primary", "Centered hero")
     }
 
     @Test
@@ -50,10 +46,7 @@ class HeroTest {
             daisyCard() {
             }
         }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with form")
+        assertDocumented(html, "div", "card", "Hero with form")
     }
 
     @Test
@@ -62,10 +55,7 @@ class HeroTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with form")
+        assertDocumented(html, "div", "card-body", "Hero with form")
     }
 
     @Test
@@ -74,10 +64,7 @@ class HeroTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
-        assertEquals("fieldset", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with form")
+        assertDocumented(html, "fieldset", "fieldset", "Hero with form")
     }
 
     @Test
@@ -85,10 +72,7 @@ class HeroTest {
         val html = createHTML(prettyPrint = false).div {
             label { daisyLabelClasses() }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
-        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with form")
+        assertDocumented(html, "label", "label", "Hero with form")
     }
 
     @Test
@@ -96,10 +80,7 @@ class HeroTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with form")
+        assertDocumented(html, "input", "input", "Hero with form")
     }
 
     @Test
@@ -108,10 +89,7 @@ class HeroTest {
             daisyLink(hover = true) {
             }
         }
-        val expectedClasses = "link link-hover"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
-        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with form")
+        assertDocumented(html, "a", "link link-hover", "Hero with form")
     }
 
     @Test
@@ -120,10 +98,7 @@ class HeroTest {
             daisyButton(color = ButtonColor.Neutral) {
             }
         }
-        val expectedClasses = "btn btn-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with form")
+        assertDocumented(html, "button", "btn btn-neutral", "Hero with form")
     }
 
     @Test
@@ -132,9 +107,6 @@ class HeroTest {
             daisyHeroOverlay() {
             }
         }
-        val expectedClasses = "hero-overlay"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with overlay image")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hero with overlay image")
+        assertDocumented(html, "div", "hero-overlay", "Hero with overlay image")
     }
 }

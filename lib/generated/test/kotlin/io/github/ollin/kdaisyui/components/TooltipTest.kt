@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class TooltipTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun tooltip() {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltip() {
             }
         }
-        val expectedClasses = "tooltip"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Tooltip")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Tooltip")
+        assertDocumented(html, "div", "tooltip", "Tooltip")
     }
 
     @Test
@@ -25,10 +27,7 @@ class TooltipTest {
             daisyButton() {
             }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Tooltip")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Tooltip")
+        assertDocumented(html, "button", "btn", "Tooltip")
     }
 
     @Test
@@ -37,10 +36,7 @@ class TooltipTest {
             daisyTooltipContent() {
             }
         }
-        val expectedClasses = "tooltip-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Tooltip with tooltip-content")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Tooltip with tooltip-content")
+        assertDocumented(html, "div", "tooltip-content", "Tooltip with tooltip-content")
     }
 
     @Test
@@ -49,10 +45,7 @@ class TooltipTest {
             daisyTooltip(open = true) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Force open")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Force open")
+        assertDocumented(html, "div", "tooltip tooltip-open", "Force open")
     }
 
     @Test
@@ -61,10 +54,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.Start) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-start tooltip-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Top")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Top")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-start tooltip-top", "Top")
     }
 
     @Test
@@ -73,10 +63,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Top) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Top")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Top")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-top", "Top")
     }
 
     @Test
@@ -85,10 +72,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.End) {
             }
         }
-        val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Top")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Top")
+        assertDocumented(html, "div", "tooltip tooltip-end tooltip-open tooltip-top", "Top")
     }
 
     @Test
@@ -97,10 +81,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.Start) {
             }
         }
-        val expectedClasses = "tooltip tooltip-bottom tooltip-open tooltip-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Bottom")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Bottom")
+        assertDocumented(html, "div", "tooltip tooltip-bottom tooltip-open tooltip-start", "Bottom")
     }
 
     @Test
@@ -109,10 +90,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Bottom) {
             }
         }
-        val expectedClasses = "tooltip tooltip-bottom tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Bottom")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Bottom")
+        assertDocumented(html, "div", "tooltip tooltip-bottom tooltip-open", "Bottom")
     }
 
     @Test
@@ -121,10 +99,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.End) {
             }
         }
-        val expectedClasses = "tooltip tooltip-bottom tooltip-end tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Bottom")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Bottom")
+        assertDocumented(html, "div", "tooltip tooltip-bottom tooltip-end tooltip-open", "Bottom")
     }
 
     @Test
@@ -133,10 +108,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.Start) {
             }
         }
-        val expectedClasses = "tooltip tooltip-left tooltip-open tooltip-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Left")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Left")
+        assertDocumented(html, "div", "tooltip tooltip-left tooltip-open tooltip-start", "Left")
     }
 
     @Test
@@ -145,10 +117,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Left) {
             }
         }
-        val expectedClasses = "tooltip tooltip-left tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Left")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Left")
+        assertDocumented(html, "div", "tooltip tooltip-left tooltip-open", "Left")
     }
 
     @Test
@@ -157,10 +126,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.End) {
             }
         }
-        val expectedClasses = "tooltip tooltip-end tooltip-left tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Left")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Left")
+        assertDocumented(html, "div", "tooltip tooltip-end tooltip-left tooltip-open", "Left")
     }
 
     @Test
@@ -169,10 +135,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.Start) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-right tooltip-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Right")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Right")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-right tooltip-start", "Right")
     }
 
     @Test
@@ -181,10 +144,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Right) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-right"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Right")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Right")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-right", "Right")
     }
 
     @Test
@@ -193,10 +153,7 @@ class TooltipTest {
             daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.End) {
             }
         }
-        val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-right"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Right")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Right")
+        assertDocumented(html, "div", "tooltip tooltip-end tooltip-open tooltip-right", "Right")
     }
 
     @Test
@@ -205,10 +162,7 @@ class TooltipTest {
             daisyTooltip(open = true, color = TooltipColor.Primary) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-primary", "Primary color")
     }
 
     @Test
@@ -217,10 +171,7 @@ class TooltipTest {
             daisyButton(color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "button", "btn btn-primary", "Primary color")
     }
 
     @Test
@@ -229,10 +180,7 @@ class TooltipTest {
             daisyTooltip(open = true, color = TooltipColor.Secondary) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Secondary color")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-secondary", "Secondary color")
     }
 
     @Test
@@ -241,10 +189,7 @@ class TooltipTest {
             daisyButton(color = ButtonColor.Secondary) {
             }
         }
-        val expectedClasses = "btn btn-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Secondary color")
+        assertDocumented(html, "button", "btn btn-secondary", "Secondary color")
     }
 
     @Test
@@ -253,10 +198,7 @@ class TooltipTest {
             daisyTooltip(open = true, color = TooltipColor.Accent) {
             }
         }
-        val expectedClasses = "tooltip tooltip-accent tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accent color")
+        assertDocumented(html, "div", "tooltip tooltip-accent tooltip-open", "Accent color")
     }
 
     @Test
@@ -265,10 +207,7 @@ class TooltipTest {
             daisyButton(color = ButtonColor.Accent) {
             }
         }
-        val expectedClasses = "btn btn-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accent color")
+        assertDocumented(html, "button", "btn btn-accent", "Accent color")
     }
 
     @Test
@@ -277,10 +216,7 @@ class TooltipTest {
             daisyTooltip(open = true, color = TooltipColor.Info) {
             }
         }
-        val expectedClasses = "tooltip tooltip-info tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
+        assertDocumented(html, "div", "tooltip tooltip-info tooltip-open", "Info color")
     }
 
     @Test
@@ -289,10 +225,7 @@ class TooltipTest {
             daisyButton(color = ButtonColor.Info) {
             }
         }
-        val expectedClasses = "btn btn-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
+        assertDocumented(html, "button", "btn btn-info", "Info color")
     }
 
     @Test
@@ -301,10 +234,7 @@ class TooltipTest {
             daisyTooltip(open = true, color = TooltipColor.Success) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-success", "Success color")
     }
 
     @Test
@@ -313,10 +243,7 @@ class TooltipTest {
             daisyButton(color = ButtonColor.Success) {
             }
         }
-        val expectedClasses = "btn btn-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
+        assertDocumented(html, "button", "btn btn-success", "Success color")
     }
 
     @Test
@@ -325,10 +252,7 @@ class TooltipTest {
             daisyTooltip(open = true, color = TooltipColor.Warning) {
             }
         }
-        val expectedClasses = "tooltip tooltip-open tooltip-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
+        assertDocumented(html, "div", "tooltip tooltip-open tooltip-warning", "Warning color")
     }
 
     @Test
@@ -337,10 +261,7 @@ class TooltipTest {
             daisyButton(color = ButtonColor.Warning) {
             }
         }
-        val expectedClasses = "btn btn-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
+        assertDocumented(html, "button", "btn btn-warning", "Warning color")
     }
 
     @Test
@@ -349,10 +270,7 @@ class TooltipTest {
             daisyTooltip(open = true, color = TooltipColor.Error) {
             }
         }
-        val expectedClasses = "tooltip tooltip-error tooltip-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
+        assertDocumented(html, "div", "tooltip tooltip-error tooltip-open", "Error color")
     }
 
     @Test
@@ -361,10 +279,7 @@ class TooltipTest {
             daisyButton(color = ButtonColor.Error) {
             }
         }
-        val expectedClasses = "btn btn-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
+        assertDocumented(html, "button", "btn btn-error", "Error color")
     }
 
     @Test
@@ -373,9 +288,6 @@ class TooltipTest {
             daisyTooltip(align = TooltipAlign.Start, extraClasses = "md:tooltip-right md:tooltip-center") {
             }
         }
-        val expectedClasses = "md:tooltip-center md:tooltip-right tooltip tooltip-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive tooltip position")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive tooltip position")
+        assertDocumented(html, "div", "md:tooltip-center md:tooltip-right tooltip tooltip-start", "Responsive tooltip position")
     }
 }

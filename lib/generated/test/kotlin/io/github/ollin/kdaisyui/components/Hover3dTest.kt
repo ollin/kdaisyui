@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class Hover3dTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun test_3d_image_hover_effect() {
         val html = createHTML(prettyPrint = false).div {
             daisyHover3d() {
             }
         }
-        val expectedClasses = "hover-3d"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for 3D image hover effect")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for 3D image hover effect")
+        assertDocumented(html, "div", "hover-3d", "3D image hover effect")
     }
 
     @Test
@@ -25,10 +27,7 @@ class Hover3dTest {
             daisyCard() {
             }
         }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for 3D card hover effect")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for 3D card hover effect")
+        assertDocumented(html, "div", "card", "3D card hover effect")
     }
 
     @Test
@@ -37,9 +36,6 @@ class Hover3dTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for 3D card hover effect")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for 3D card hover effect")
+        assertDocumented(html, "div", "card-body", "3D card hover effect")
     }
 }

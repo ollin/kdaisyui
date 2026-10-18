@@ -131,7 +131,7 @@ do not exist and change exactly those.
 - [x] 3.13 `. r (internal)` Delete the join-item derivation from the generation path; keep the
   scope emitter. `classesJoinedWith` stays, because the bump report reads it since 2.4; move it
   beside the report.
-- [ ] 3.14 `. r (internal)` Delete the exclusivity measurement: `exclusivity.json`, the probe
+- [x] 3.14 `. r (internal)` Delete the exclusivity measurement: `exclusivity.json`, the probe
   modules, `measurement.ts`, `parser/property-table.ts` and its integration test, `:lib:verifyExclusivity`, its CI step, `just measure-exclusivity` and
   `just verify-exclusivity`, the `exclusivity` source set in `e2e-tests`. Cite the last commit
   that carried them in the body.

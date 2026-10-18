@@ -15,7 +15,8 @@ element no function renders: `daisyMenu(attrs = { daisyDropdownContentClasses() 
 
 **Verified** that the names are free, read 2026-10-18 from `lib/generated/main`: no generated
 function ends in `Classes`, and the 132 rendering functions have 131 distinct names (`daisyDiffItem`
-is two overloads for two receivers), so 132 siblings.
+is two overloads for two receivers). Generated 2026-10-18 (task 2.2): 129 siblings, because three
+structural wrappers write no class and get none.
 
 **Verified** that one extra parameter writes a class, read from `codegen/model/` the same day:
 `daisyButton`'s `disabled`, which sets `disabled` and writes `btn-disabled`. Every other extra sets

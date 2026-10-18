@@ -177,7 +177,7 @@ Each commit edits the model, regenerates, and migrates every call site in `examp
 
 Same cadence as block 4.
 
-- [ ] 5.1 `^ F` `daisyButton`: `style`, `shape`, `width` axes; `active` stays a toggle.
+- [x] 5.1 `^ F` `daisyButton`: `style`, `shape`, `width` axes; `active` stays a toggle.
 - [ ] 5.2 `^ F` `daisyAura`, `daisySwap`: `style` axes.
 - [ ] 5.3 `^ F` `daisyCarousel`, `daisyFooter`, `daisyTimeline`: `direction` axes.
 - [ ] 5.4 `^ F` `daisyChat`, `daisyDivider`, `daisyStack`: `placement` axes.

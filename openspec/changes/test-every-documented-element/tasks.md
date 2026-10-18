@@ -70,7 +70,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
   Nothing to fix: 1.3 listed none, and 5.2's generated tests, all green, found none either.
 - [x] 5.2 `^ F` The test generator emits a test for every expressible element of a page, parts and
   nested components included, wrapped by receiver (D5); identical calls once.
-- [ ] 5.3 `^ r (internal)` Delete the main-only path, `componentCallsIn` and its stale comments
+- [x] 5.3 `^ r (internal)` Delete the main-only path, `componentCallsIn` and its stale comments
   (D6). Zero diff under regeneration.
 - [ ] 5.4 `^ F` The two skipped pages, `accordion` and `pagination`, are gated and tested like the
   rest. Added 2026-10-18 after 5.2: both models are `skip` aliases, so the generation loop and the

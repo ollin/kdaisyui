@@ -357,7 +357,8 @@ fun FlowContent.daisyFilterReset(id: HtmlId? = null, extraClasses: String? = nul
 Page footer layout — renders `<footer>`.
 
 ```kotlin
-fun FlowContent.daisyFooter(id: HtmlId? = null, center: Boolean = false, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (FOOTER.() -> Unit)? = null, content: (FOOTER.() -> Unit))
+enum class FooterDirection { Horizontal, Vertical }
+fun FlowContent.daisyFooter(id: HtmlId? = null, direction: ClassValues<FooterDirection>? = null, center: Boolean = false, extraClasses: String? = null, attrs: (FOOTER.() -> Unit)? = null, content: (FOOTER.() -> Unit))
 fun FlowContent.daisyFooterTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H6.() -> Unit)? = null, content: (H6.() -> Unit)? = null)
 ```
 

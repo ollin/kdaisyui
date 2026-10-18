@@ -2,7 +2,9 @@
   "component": "footer",
   "name": "Footer",
   "class": "footer",
-  "enums": [],
+  "enums": [
+    { "name": "FooterDirection", "label": "Direction variants", "classes": ["footer-horizontal", "footer-vertical"] }
+  ],
   "functions": [
     {
       "kind": "main",
@@ -12,9 +14,8 @@
       "class": "footer",
       "text": false,
       "parameters": [
-        { "kind": "toggle", "name": "center", "class": "footer-center" },
-        { "kind": "toggle", "name": "horizontal", "class": "footer-horizontal" },
-        { "kind": "toggle", "name": "vertical", "class": "footer-vertical" }
+        { "kind": "enum", "name": "direction", "enum": "FooterDirection", "doc": "Direction variant" },
+        { "kind": "toggle", "name": "center", "class": "footer-center" }
       ]
     },
     {

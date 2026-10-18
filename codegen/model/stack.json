@@ -2,7 +2,13 @@
   "component": "stack",
   "name": "Stack",
   "class": "stack",
-  "enums": [],
+  "enums": [
+    {
+      "name": "StackPlacement",
+      "label": "Placement variants",
+      "classes": ["stack-top", "stack-bottom", "stack-start", "stack-end"]
+    }
+  ],
   "functions": [
     {
       "kind": "main",
@@ -11,12 +17,7 @@
       "element": "DIV",
       "class": "stack",
       "text": false,
-      "parameters": [
-        { "kind": "toggle", "name": "bottom", "class": "stack-bottom" },
-        { "kind": "toggle", "name": "end", "class": "stack-end" },
-        { "kind": "toggle", "name": "start", "class": "stack-start" },
-        { "kind": "toggle", "name": "top", "class": "stack-top" }
-      ]
+      "parameters": [{ "kind": "enum", "name": "placement", "enum": "StackPlacement", "doc": "Placement variant" }]
     }
   ],
   "summary": { "summary": "Stack overlapping elements" }

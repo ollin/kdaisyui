@@ -43,7 +43,7 @@ class StackTest {
     @Test
     fun stacked_cards_top_direction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack(top = true) {
+            daisyStack(placement = StackPlacement.Top) {
             }
         }
         val expectedClasses = "stack stack-top"
@@ -54,7 +54,7 @@ class StackTest {
     @Test
     fun stacked_cards_start_direction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack(start = true) {
+            daisyStack(placement = StackPlacement.Start) {
             }
         }
         val expectedClasses = "stack stack-start"
@@ -65,7 +65,7 @@ class StackTest {
     @Test
     fun stacked_cards_end_direction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack(end = true) {
+            daisyStack(placement = StackPlacement.End) {
             }
         }
         val expectedClasses = "stack stack-end"

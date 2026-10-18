@@ -638,7 +638,8 @@ fun FlowContent.daisySkeletonText(id: HtmlId? = null, extraClasses: String? = nu
 Stack overlapping elements — renders `<div>`.
 
 ```kotlin
-fun FlowContent.daisyStack(id: HtmlId? = null, bottom: Boolean = false, end: Boolean = false, start: Boolean = false, top: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class StackPlacement { Top, Bottom, Start, End }
+fun FlowContent.daisyStack(id: HtmlId? = null, placement: ClassValues<StackPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Stat

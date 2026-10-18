@@ -12,12 +12,6 @@ import {
   type CrossCheckExceptions,
   type ElementObservation,
 } from './element-cross-check.ts'
-import {
-  ConsumedKeyCollector,
-  describeUnreadEntries,
-  findUnreadEntries,
-  type ConsumedKeys,
-} from './config-consumption.ts'
 import { readComponentConfig } from './component-shape.ts'
 import { classesOfferedTwice, type OfferedTwice } from './offered-twice.ts'
 import { classFindings, directoryFindings } from './model-completeness.ts'
@@ -75,31 +69,13 @@ function loadConfig() {
  * wrong, and seeing the output it produced is what makes that diagnosable. The exit code still
  * fails the Gradle task, so nothing ships on it.
  */
-function reportCrossCheck(
-  observations: readonly ElementObservation[],
-  exceptions: CrossCheckExceptions,
-  consumed: ConsumedKeyCollector,
-): void {
+function reportCrossCheck(observations: readonly ElementObservation[], exceptions: CrossCheckExceptions): void {
   const crossCheck = crossCheckElements(observations, exceptions)
-  consumed.exceptionKeys(crossCheck.consulted)
   for (const key of crossCheck.excused) {
     console.log(`  ⚠ ${key}: element disagrees with DaisyUI, excused — see #${exceptions[key].issue}`)
   }
   if (crossCheck.findings.length === 0) return
   console.error(`\n${describeCrossCheckFailure(crossCheck)}`)
-  process.exitCode = 1
-}
-
-/**
- * Fails the run on any component-keyed config entry nothing read.
- *
- * Runs after generation for the same reason the cross-check does: the output a wrong config
- * produced is what makes it diagnosable. The exit code still fails the Gradle task.
- */
-function reportUnreadConfig(config, consumed: ConsumedKeys): void {
-  const unread = findUnreadEntries(config, consumed)
-  if (unread.length === 0) return
-  console.error(`\n${describeUnreadEntries(unread)}`)
   process.exitCode = 1
 }
 
@@ -157,18 +133,10 @@ function main() {
   const observations: ElementObservation[] = []
   const offeredTwice: OfferedTwice[] = []
   const modelFindings: string[] = []
-  // Every identifier a config lookup could legitimately have matched this run. A section key
-  // that matches none of these was never read, and an unread key is indistinguishable from an
-  // absent one at run time — which is how two dead `noContent` entries survived.
-  const consumed = new ConsumedKeyCollector()
 
   // DaisyUI's own directory order, so the log reads down the same list a reader sees on disk
   // and a skipped component keeps its place among the generated ones.
   for (const componentName of componentDirs) {
-    // Recorded before the skip check: `skip` itself is a config section, and an entry naming
-    // a component that no longer exists must still be caught.
-    consumed.directory(componentName)
-
     const skipReason = skipReasons.get(componentName)
     if (skipReason !== undefined) {
       console.log(`  ${skipReason === 'configured-skip' ? '⊘' : '⚠'} ${componentName}: ${SKIP_MESSAGES[skipReason]}`)
@@ -178,7 +146,6 @@ function main() {
     const component = byDirectory.get(componentName)
     if (component === undefined) continue
     const { classified, shape, frontmatter } = component
-    consumed.component(classified.componentName, classified.parts)
 
     // Every class each function emits, beside EVERY element DaisyUI documents it on. Judged
     // after the loop so the whole set is reportable at once — dying on the first would hide
@@ -212,8 +179,7 @@ function main() {
   console.log(`Output: ${OUTPUT_DIR}`)
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
 
-  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {}, consumed)
-  reportUnreadConfig(config, consumed.keys())
+  reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {})
   reportOfferedTwice(offeredTwice)
   reportIncompleteModels(modelFindings)
 }

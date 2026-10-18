@@ -71,6 +71,11 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
   nested components included, wrapped by receiver (D5); identical calls once.
 - [ ] 5.3 `^ r (internal)` Delete the main-only path, `componentCallsIn` and its stale comments
   (D6). Zero diff under regeneration.
+- [ ] 5.4 `^ F` The two skipped pages, `accordion` and `pagination`, are gated and tested like the
+  rest. Added 2026-10-18 after 5.2: both models are `skip` aliases, so the generation loop and the
+  test generator passed over their examples, although the spec says every component page. Measured
+  then: no gap on either, 22 distinct calls (6 and 16). A skipped model may declare `notExpressed`,
+  so a future gap there has a home.
 
 ## 6. Documentation and the gate
 

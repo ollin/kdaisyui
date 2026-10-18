@@ -45,14 +45,24 @@ enum class DividerDirection(internal val className: String) : ClassValues<Divide
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Placement variants for this component (CSS prefix: `divider-`) */
+enum class DividerPlacement(internal val className: String) : ClassValues<DividerPlacement> {
+    /** CSS: `divider-start` — Pushes the divider text to the start */
+    Start("divider-start"),
+    /** CSS: `divider-end` — Pushes the divider text to the end */
+    End("divider-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Divider will be used to separate content vertically or horizontally. Renders `<div class="divider ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param direction — Direction variant
- * @param end — Pushes the divider text to the end
- * @param start — Pushes the divider text to the start
+ * @param placement — Placement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -61,8 +71,7 @@ fun FlowContent.daisyDivider(
     id: HtmlId? = null,
     color: ClassValues<DividerColor>? = null,
     direction: ClassValues<DividerDirection>? = null,
-    end: Boolean = false,
-    start: Boolean = false,
+    placement: ClassValues<DividerPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -72,8 +81,7 @@ fun FlowContent.daisyDivider(
         addClassNames("divider")
         addClassNames(color)
         addClassNames(direction)
-        if (end) addClassNames("divider-end")
-        if (start) addClassNames("divider-start")
+        addClassNames(placement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

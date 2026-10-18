@@ -277,7 +277,8 @@ Visual separator between sections — renders `<div>`.
 ```kotlin
 enum class DividerColor { Neutral, Primary, Secondary, Accent, Success, Warning, Info, Error }
 enum class DividerDirection { Vertical, Horizontal }
-fun FlowContent.daisyDivider(id: HtmlId? = null, color: ClassValues<DividerColor>? = null, direction: ClassValues<DividerDirection>? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class DividerPlacement { Start, End }
+fun FlowContent.daisyDivider(id: HtmlId? = null, color: ClassValues<DividerColor>? = null, direction: ClassValues<DividerDirection>? = null, placement: ClassValues<DividerPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Dock

@@ -65,7 +65,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(start = true) {
+            daisyDivider(placement = DividerPlacement.Start) {
             }
         }
         val expectedClasses = "divider divider-start"
@@ -87,7 +87,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(end = true) {
+            daisyDivider(placement = DividerPlacement.End) {
             }
         }
         val expectedClasses = "divider divider-end"
@@ -98,7 +98,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(direction = DividerDirection.Horizontal, start = true) {
+            daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.Start) {
             }
         }
         val expectedClasses = "divider divider-horizontal divider-start"
@@ -120,7 +120,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions_horizontal_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(direction = DividerDirection.Horizontal, end = true) {
+            daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.End) {
             }
         }
         val expectedClasses = "divider divider-end divider-horizontal"

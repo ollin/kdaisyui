@@ -89,7 +89,7 @@ Built before block 3 deletes the cross-check, because it is what replaces it on 
 Enablers, each regenerating with no diff, except 3.4 to 3.6, which repair the eleven classes that
 do not exist and change exactly those.
 
-- [ ] 3.1 `. r (internal)` `component-set.ts` builds each shape from the model instead of
+- [x] 3.1 `. r (internal)` `component-set.ts` builds each shape from the model instead of
   classifying. Covers the Kotlin, the reference pages, `llms.txt` and the API dump.
 - [ ] 3.2 `. r (internal)` `test-generator.ts` takes its parameter bindings from the model,
   ending its second classification loop. It keeps reading DaisyUI's examples as test input; that

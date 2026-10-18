@@ -96,7 +96,7 @@ do not exist and change exactly those.
   was corrected into the spec on 2026-10-18, before task 1.2.
 - [x] 3.3 `. r (internal)` Delete the export script and the shape-equality test; the model is now
   the input, and the inferred side no longer exists to compare against.
-- [ ] 3.4 `^ B` `CardModifier.ImageFull` emits `image-full`, the class DaisyUI defines, not
+- [x] 3.4 `^ B` `CardModifier.ImageFull` emits `image-full`, the class DaisyUI defines, not
   `card-image-full`. The regenerated component test for DaisyUI's `image-full` example is the
   reproducing test, in the same run.
 - [ ] 3.5 `^ B` The step colors move from `daisySteps` to `daisyStepsStep` and emit `step-*`, not

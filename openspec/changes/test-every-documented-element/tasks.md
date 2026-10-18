@@ -36,8 +36,13 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 - [ ] 2.2 `^ F (internal)` The classifier `documented-elements.ts` (D1, D3), with unit tests from
   fixtures: an element is expressed by the first function whose class it carries and that offers
   the rest, with typed arguments.
-- [ ] 2.3 `^ r (internal)` The test generator takes its main-function calls from the classifier,
-  restricted to the page's main function. Zero diff under regeneration.
+- [x] 2.3 ~~`^ r (internal)` The test generator takes its main-function calls from the classifier,
+  restricted to the page's main function. Zero diff under regeneration.~~
+  **Dropped 2026-10-18 before starting it: it cannot be zero diff.** Today's tests keep only the
+  classes of the page's own frontmatter, so `btn join-item` on the button page expects `btn`; the
+  classifier counts `join-item`. A routing that reproduced today's output would carry that filter
+  into the new path only for 5.3 to delete it. 5.2 builds the new path beside the old, 5.3 deletes
+  the old.
 
 ## 3. The gate
 

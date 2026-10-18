@@ -50,7 +50,7 @@ describe('documentedCall', () => {
   const callFor = (html: string) => documentedCall([sized], markedElements(html)[0], classes)
 
   it('passes each class through its typed parameter, and a prefixed one through extraClasses', () => {
-    assert.deepEqual(callFor('<button class="$$btn $$btn-active md:$$btn-lg">x</button>'), { fn: sized.functions[0], args: 'active = true, extraClasses = "md:btn-lg"', expectedClasses: 'btn btn-active md:btn-lg' })
+    assert.deepEqual(callFor('<button class="$$btn $$btn-active md:$$btn-lg">x</button>'), { fn: sized.functions[0], args: 'active = true, extraClasses = "md:btn-lg"', expectedClasses: 'btn btn-active md:btn-lg', tag: 'button', rendersTag: false })
   })
 
   it('neither passes nor expects join-item, and names an enum entry', () => {
@@ -72,6 +72,13 @@ describe('documentedCall', () => {
 
     assert.deepEqual([both?.fn.name, both?.args], ['daisyButton', 'attrs = { daisyMenuItemClasses(active = true) }'])
     assert.deepEqual([alone?.fn.kind, alone?.args, alone?.expectedClasses], ['classes', 'active = true', 'menu-active'])
+  })
+
+  it('says whether its function renders the documented tag', () => {
+    const onButton = documentedCall([sized], markedElements('<div class="$$btn">x</div>')[0], classes)
+    const onLink = documentedCall([sized], markedElements('<a class="$$btn">x</a>')[0], classes)
+
+    assert.deepEqual([onButton?.rendersTag, onLink?.rendersTag, onLink?.tag], [true, false, 'a'])
   })
 
   it('makes no call for a gap', () => {

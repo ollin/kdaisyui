@@ -2,7 +2,7 @@
   "component": "list",
   "name": "List",
   "class": "list",
-  "enums": [{ "name": "ListColumn", "label": "Column variants", "classes": ["list-col-wrap", "list-col-grow"] }],
+  "enums": [],
   "functions": [
     {
       "kind": "main",
@@ -11,16 +11,24 @@
       "element": "UL",
       "class": "list",
       "text": false,
-      "parameters": [{ "kind": "enum", "name": "column", "enum": "ListColumn", "doc": "Column variant" }]
+      "parameters": []
+    },
+    {
+      "kind": "classes",
+      "name": "daisyListCell",
+      "receiver": "Tag",
+      "element": null,
+      "class": null,
+      "text": false,
+      "parameters": [
+        { "kind": "toggle", "name": "colGrow", "class": "list-col-grow" },
+        { "kind": "toggle", "name": "colWrap", "class": "list-col-wrap" }
+      ]
     }
   ],
   "summary": { "summary": "Styled list layout" },
   "notOffered": {
     "list-row": "A row of a list. No function renders it yet, which is also why list-col-wrap and list-col-grow have no element to sit on (#347)."
   },
-  "notExpressed": {
-    "list-col-grow": "#347: DaisyUI puts it on a child no function renders; daisyList offers it on the <ul> itself, where it has no effect.",
-    "list-col-wrap": "#347: DaisyUI puts it on a child no function renders; daisyList offers it on the <ul> itself, where it has no effect.",
-    "list-row": "No function renders list-row, a row of a list; it is listed in notOffered (#347)."
-  }
+  "notExpressed": { "list-row": "No function renders list-row, a row of a list; it is listed in notOffered (#347)." }
 }

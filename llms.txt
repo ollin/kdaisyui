@@ -516,9 +516,9 @@ fun Tag.daisyLinkClasses(color: ClassValues<LinkColor>? = null, hover: Boolean =
 Styled list layout — renders `<ul>`.
 
 ```kotlin
-enum class ListColumn { ColWrap, ColGrow }
-fun FlowContent.daisyList(id: HtmlId? = null, column: ClassValues<ListColumn>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
-fun Tag.daisyListClasses(column: ClassValues<ListColumn>? = null)
+fun FlowContent.daisyList(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun Tag.daisyListClasses()
+fun Tag.daisyListCellClasses(colGrow: Boolean = false, colWrap: Boolean = false)
 ```
 
 ### Loading

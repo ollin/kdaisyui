@@ -11,15 +11,18 @@ Regenerate: just generate
 Styled list layout. Renders `<ul class="list ...">`.
 
 ```kotlin
-// ListColumn: ColWrap | ColGrow
 fun FlowContent.daisyList(
     id: HtmlId? = null,
-    column: ClassValues<ListColumn>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
 
 // The same classes on an element you write yourself, or beside another component's:
-fun Tag.daisyListClasses(column: ClassValues<ListColumn>? = null)
+fun Tag.daisyListClasses()
+```
+
+```kotlin
+// Classes only, for a child DaisyUI gives no class of its own:
+fun Tag.daisyListCellClasses(colGrow: Boolean = false, colWrap: Boolean = false)
 ```

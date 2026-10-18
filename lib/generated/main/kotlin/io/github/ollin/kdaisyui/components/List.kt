@@ -5,36 +5,21 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
-import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
-/** Column variants for this component (CSS prefix: `list-`) */
-enum class ListColumn(internal val className: String) : ClassValues<ListColumn> {
-    /** CSS: `list-col-wrap` — For one of direct children of list-row to push it to the next line */
-    ColWrap("list-col-wrap"),
-    /** CSS: `list-col-grow` — For one of direct children of list-row to make it fill the remaining space */
-    ColGrow("list-col-grow"),
-    ;
-
-    override val classNames: List<String> get() = listOf(className)
-}
-
-
 /**
  * List is a vertical layout to display information in rows. Renders `<ul class="list ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param column — Column variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyList(
     id: HtmlId? = null,
-    column: ClassValues<ListColumn>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -42,7 +27,6 @@ fun FlowContent.daisyList(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("list")
-        addClassNames(column)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -50,9 +34,15 @@ fun FlowContent.daisyList(
 }
 
 /** The classes `daisyList` writes, on the element this is called on. */
-fun Tag.daisyListClasses(
-    column: ClassValues<ListColumn>? = null,
-) {
+fun Tag.daisyListClasses() {
     addClassNames("list")
-    addClassNames(column)
+}
+
+/** The classes `daisyListCell` writes, on the element this is called on. */
+fun Tag.daisyListCellClasses(
+    colGrow: Boolean = false,
+    colWrap: Boolean = false,
+) {
+    if (colGrow) addClassNames("list-col-grow")
+    if (colWrap) addClassNames("list-col-wrap")
 }

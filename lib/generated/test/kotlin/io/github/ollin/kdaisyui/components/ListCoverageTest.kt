@@ -49,28 +49,6 @@ class ListCoverageTest {
     }
 
     @Test
-    fun list_column_colwrap() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyList(
-                column = ListColumn.ColWrap,
-                content = { },
-            )
-        }
-        assertRendered(html, "list list-col-wrap", "List column ColWrap")
-    }
-
-    @Test
-    fun list_column_colgrow() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyList(
-                column = ListColumn.ColGrow,
-                content = { },
-            )
-        }
-        assertRendered(html, "list list-col-grow", "List column ColGrow")
-    }
-
-    @Test
     fun listClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyListClasses()
@@ -87,22 +65,21 @@ class ListCoverageTest {
     }
 
     @Test
-    fun listClasses_column_colwrap() {
+    fun listCellClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyListClasses(
-                column = ListColumn.ColWrap,
-            )
+            daisyListCellClasses()
         }
-        assertRendered(html, "list list-col-wrap", "ListClasses column ColWrap")
+        assertTrue(!html.contains("class=\""), "ListCellClasses defaults emits no class")
     }
 
     @Test
-    fun listClasses_column_colgrow() {
+    fun listCellClasses_all_flags() {
         val html = createHTML(prettyPrint = false).div {
-            daisyListClasses(
-                column = ListColumn.ColGrow,
+            daisyListCellClasses(
+                colGrow = true,
+                colWrap = true,
             )
         }
-        assertRendered(html, "list list-col-grow", "ListClasses column ColGrow")
+        assertRendered(html, "list-col-grow list-col-wrap", "ListCellClasses all flags")
     }
 }

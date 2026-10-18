@@ -799,20 +799,12 @@ public final class io/github/ollin/kdaisyui/components/LinkKt {
 	public static synthetic fun daisyLinkClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ZILjava/lang/Object;)V
 }
 
-public final class io/github/ollin/kdaisyui/components/ListColumn : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
-	public static final field ColGrow Lio/github/ollin/kdaisyui/components/ListColumn;
-	public static final field ColWrap Lio/github/ollin/kdaisyui/components/ListColumn;
-	public fun getClassNames ()Ljava/util/List;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/ListColumn;
-	public static fun values ()[Lio/github/ollin/kdaisyui/components/ListColumn;
-}
-
 public final class io/github/ollin/kdaisyui/components/ListKt {
-	public static final fun daisyList (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyList$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyListClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
-	public static synthetic fun daisyListClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
+	public static final fun daisyList (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyList$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyListCellClasses (Lkotlinx/html/Tag;ZZ)V
+	public static synthetic fun daisyListCellClasses$default (Lkotlinx/html/Tag;ZZILjava/lang/Object;)V
+	public static final fun daisyListClasses (Lkotlinx/html/Tag;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/LoadingKt {

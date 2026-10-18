@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'fs'
 import path from 'path'
 
-import { readComponentSet } from '../src/component-set.ts'
+import { readInferredComponentSet } from '../src/component-set.ts'
 import { readComponentConfig } from '../src/component-shape.ts'
 import { isSkipped, mainFunctionConfig, readModel, shapeFromModel, withDeclaredScopes, type ComponentModel } from '../src/model.ts'
 
@@ -13,7 +13,7 @@ import { isSkipped, mainFunctionConfig, readModel, shapeFromModel, withDeclaredS
  * integration tests. Deleted by task 3.3, when the inferred side it compares against is gone.
  */
 const config = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../codegen-config.json'), 'utf8'))
-const { generated, skipped } = readComponentSet(config)
+const { generated, skipped } = readInferredComponentSet(config)
 const models = generated.map(component => readModel(component.componentDir) as ComponentModel)
 
 describe('the committed model against the inferred shapes', () => {

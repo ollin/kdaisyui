@@ -132,7 +132,7 @@ function main() {
   // classification loop, and a second copy is how the reference pages and the Kotlin come to
   // describe different sets. It is also what the join scope needs: its members are other
   // components' functions, so a loop that knows one component at a time cannot build it.
-  const componentSet = readComponentSet(config)
+  const componentSet = readComponentSet()
   const byDirectory = new Map(componentSet.generated.map(component => [component.componentDir, component]))
   const skipReasons = new Map(componentSet.skipped.map(component => [component.componentDir, component.reason]))
 

@@ -22,6 +22,7 @@ import { classifyGroups, type GroupClassification } from './class-groups.ts'
 import { loadEvidence, type Evidence } from './measurement.ts'
 import { documentedElementTalliesFor, documentedParentsFor } from './parser/documented-element.ts'
 import { declaresJoinItem, documentedJoinItemCompanions, isJoinItemComponent, joinScopeMembers, withJoinScope } from './join-scope.ts'
+import { isSkipped, readModel, shapeFromModel, withDeclaredScopes, type ComponentModel } from './model.ts'
 
 /** Why a component produces no output. Reported rather than swallowed, so a caller can log it. */
 export type SkipReason = 'configured-skip' | 'no-frontmatter' | 'no-component-class'
@@ -32,6 +33,10 @@ export interface GeneratedComponent {
   readonly shape: ComponentShape
   /** The raw frontmatter, for the callers that need its class names. */
   readonly frontmatter
+}
+
+/** A component as the generator used to infer it, with what it was inferred from. */
+export interface InferredComponent extends GeneratedComponent {
   /**
    * What the shape was built FROM, carried so a caller can render without rebuilding it.
    *
@@ -55,6 +60,11 @@ export interface ComponentSet {
   readonly skipped: readonly SkippedComponent[]
 }
 
+export interface InferredComponentSet {
+  readonly generated: readonly InferredComponent[]
+  readonly skipped: readonly SkippedComponent[]
+}
+
 /**
  * The element the component renders: a `componentElements` override, else the heuristic over
  * DaisyUI's syntax blocks.
@@ -73,7 +83,7 @@ function classify(
   config,
   elementRules,
   evidence: Evidence,
-): GeneratedComponent | SkipReason {
+): InferredComponent | SkipReason {
   if (config.skip?.includes(componentDir)) return 'configured-skip'
 
   const frontmatter = readComponentFrontmatter(componentDir)
@@ -116,10 +126,10 @@ function classify(
  * alone would leave the reference page and the API baseline describing a different signature.
  */
 function withScopes(
-  generated: readonly GeneratedComponent[],
+  generated: readonly InferredComponent[],
   componentDirs: readonly ComponentName[],
   config,
-): GeneratedComponent[] {
+): InferredComponent[] {
   const companions = documentedJoinItemCompanions(componentDirs)
   const members = joinScopeMembers(generated.map(component => component.shape), companions)
   const imports = generated
@@ -133,13 +143,45 @@ function withScopes(
   )
 }
 
-/** Every component that produces output, and every one that does not, with the reason. */
-export function readComponentSet(config): ComponentSet {
+/**
+ * Every component as the committed model declares it, and every one it skips, with the reason.
+ *
+ * The frontmatter still supplies the descriptions, which `classified` carries, and the class list
+ * some callers need.
+ */
+export function readComponentSet(): ComponentSet {
+  const declared: { model: ComponentModel, component: Omit<GeneratedComponent, 'shape'> }[] = []
+  const skipped: SkippedComponent[] = []
+
+  for (const componentDir of getAllComponentDirs() as ComponentName[]) {
+    const model = readModel(componentDir)
+    if (isSkipped(model)) {
+      skipped.push({ componentDir, reason: model.skip as SkipReason })
+      continue
+    }
+    const frontmatter = readComponentFrontmatter(componentDir)
+    declared.push({ model, component: { componentDir, frontmatter, classified: classifyFromFrontmatter(frontmatter, componentDir) } })
+  }
+
+  const shapes = withDeclaredScopes(declared.map(({ model, component }) => ({
+    model,
+    shape: shapeFromModel(model, { desc: component.classified.desc ?? '', classes: component.classified.descs ?? {} }),
+  })))
+  return { generated: declared.map(({ component }, index) => ({ ...component, shape: shapes[index] })), skipped }
+}
+
+/**
+ * Every component as the generator used to infer it from DaisyUI's documentation.
+ *
+ * Kept only for the equality test and the one-off export, and deleted with them in task 3.3 of
+ * `declare-the-component-model`.
+ */
+export function readInferredComponentSet(config): InferredComponentSet {
   const elementRules = parseLlmsTxt()
   // Read once for the whole run: it is one file describing every component, and re-reading it
   // per component would make a 66-way loop do 66 times the I/O for the same answer.
   const evidence = loadEvidence()
-  const generated: GeneratedComponent[] = []
+  const generated: InferredComponent[] = []
   const skipped: SkippedComponent[] = []
 
   const componentDirs = getAllComponentDirs() as ComponentName[]

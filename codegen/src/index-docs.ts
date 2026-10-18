@@ -43,7 +43,7 @@ interface Written {
 function writeComponentPages(config, docSummaries: Readonly<Record<string, DocSummary>>): Written {
   // One shared definition of which components get generated — a page must exist for precisely
   // the components that have a generated Kotlin file, or the index links at nothing.
-  const { generated: documented, skipped } = readComponentSet(config)
+  const { generated: documented, skipped } = readComponentSet()
 
   const fileNames = new Set<string>()
   const withoutSummary: string[] = []

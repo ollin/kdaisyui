@@ -51,7 +51,7 @@ function firstDifference(expected: string, actual: string): string {
 function main() {
   // The same component set the Kotlin and Markdown generators use, from one implementation —
   // a baseline covering a different set would report changes nobody made.
-  const dump = generateComponentApiDump(readComponentSet(loadConfig()).generated.map(c => c.shape))
+  const dump = generateComponentApiDump(readComponentSet().generated.map(c => c.shape))
 
   if (!CHECK_ONLY) {
     fs.mkdirSync(path.dirname(BASELINE), { recursive: true })

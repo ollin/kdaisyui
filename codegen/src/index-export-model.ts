@@ -9,7 +9,7 @@
 
 import fs from 'fs'
 import path from 'path'
-import { readComponentSet } from './component-set.ts'
+import { readInferredComponentSet } from './component-set.ts'
 import { readComponentConfig } from './component-shape.ts'
 import { documentedJoinItemCompanions, isJoinItemComponent } from './join-scope.ts'
 import { getAllComponentDirs, type ComponentName } from './parser/frontmatter.ts'
@@ -51,7 +51,7 @@ function write(componentDir: string, content: object): void {
 
 function main(): void {
   const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
-  const { generated, skipped } = readComponentSet(config)
+  const { generated, skipped } = readInferredComponentSet(config)
   const companions = documentedJoinItemCompanions(getAllComponentDirs() as ComponentName[])
   fs.mkdirSync(MODEL_DIR, { recursive: true })
 

@@ -49,8 +49,8 @@ enum ButtonWidth: Wide, Block
 fun FlowContent.daisyButton(text: String? = null, id: HtmlId? = null, color: ClassValues<ButtonColor>? = null, size: ClassValues<ButtonSize>? = null, style: ClassValues<ButtonStyle>? = null, shape: ClassValues<ButtonShape>? = null, width: ClassValues<ButtonWidth>? = null, active: Boolean = false, disabled: Boolean = false, type: ButtonType? = null, extraClasses: String? = null, attrs: (BUTTON.() -> Unit)? = null, content: (BUTTON.() -> Unit)? = null)
 fun Tag.daisyButtonClasses(color: ClassValues<ButtonColor>? = null, size: ClassValues<ButtonSize>? = null, style: ClassValues<ButtonStyle>? = null, shape: ClassValues<ButtonShape>? = null, width: ClassValues<ButtonWidth>? = null, active: Boolean = false, disabled: Boolean = false)
 
-# Calendar <div>
-fun FlowContent.daisyCalendar(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+# Calendar <calendar-date>
+fun FlowContent.daisyCalendar(id: HtmlId? = null, extraClasses: String? = null, attrs: (CALENDAR_DATE.() -> Unit)? = null, content: (CALENDAR_DATE.() -> Unit))
 fun Tag.daisyCalendarClasses()
 fun FlowContent.daisyVc(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun Tag.daisyVcClasses()

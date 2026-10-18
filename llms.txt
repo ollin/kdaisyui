@@ -200,10 +200,10 @@ fun Tag.daisyButtonClasses(color: ClassValues<ButtonColor>? = null, size: ClassV
 
 ### Calendar
 
-Calendar date picker widget — renders `<div>`.
+Calendar date picker widget — renders `<calendar-date>`.
 
 ```kotlin
-fun FlowContent.daisyCalendar(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+fun FlowContent.daisyCalendar(id: HtmlId? = null, extraClasses: String? = null, attrs: (CALENDAR_DATE.() -> Unit)? = null, content: (CALENDAR_DATE.() -> Unit))
 fun Tag.daisyCalendarClasses()
 fun FlowContent.daisyVc(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun Tag.daisyVcClasses()

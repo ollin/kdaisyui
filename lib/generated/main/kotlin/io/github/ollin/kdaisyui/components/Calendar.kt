@@ -5,6 +5,8 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.CALENDAR_DATE
+import io.github.ollin.kdaisyui.core.calendarDate
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -12,7 +14,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.Tag
 
 /**
- * Calendar includes styles for different calendar libraries. Renders `<div class="cally ...">`.
+ * Calendar includes styles for different calendar libraries. Renders `<calendar-date class="cally ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -21,10 +23,10 @@ import kotlinx.html.Tag
 fun FlowContent.daisyCalendar(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (CALENDAR_DATE.() -> Unit)? = null,
+    content: (CALENDAR_DATE.() -> Unit),
 ) {
-    div {
+    calendarDate {
         if (id != null) attributes["id"] = id.id
         addClassNames("cally")
         addClassNames(extraClasses)

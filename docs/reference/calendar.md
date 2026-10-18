@@ -8,14 +8,14 @@ Regenerate: just generate
 
 [DaisyUI documentation →](https://daisyui.com/components/calendar/)
 
-Calendar date picker widget. Renders `<div class="cally ...">`.
+Calendar date picker widget. Renders `<calendar-date class="cally ...">`.
 
 ```kotlin
 fun FlowContent.daisyCalendar(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    attrs: (CALENDAR_DATE.() -> Unit)? = null,
+    content: (CALENDAR_DATE.() -> Unit),
 )
 
 // The same classes on an element you write yourself, or beside another component's:

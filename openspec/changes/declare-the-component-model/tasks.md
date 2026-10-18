@@ -194,7 +194,7 @@ Same cadence as block 4.
   the container's `style` axis replaces its three booleans, per `design.md` D9. The renames to
   `daisyTabs`, `daisyTab` and `daisyTabContent`, and `active`/`disabled` on the item, landed in
   4.2. Closes #342.
-- [ ] 5.10 `^ F` Tab demo route in `example-app` and an E2E scenario asserting the container and an
+- [x] 5.10 `^ F` Tab demo route in `example-app` and an E2E scenario asserting the container and an
   active item.
 - [ ] 5.11 `^ F` `kdaisyui-classes.txt` lists the classes the model offers. Closes #345.
 

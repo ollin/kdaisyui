@@ -74,7 +74,7 @@ Built before block 3 deletes the cross-check, because it is what replaces it on 
   checkout. Test against a fixture repository with two tags.
 - [x] 2.2 `^ F (internal)` Report classes added and removed per component between two tags.
 - [x] 2.3 `^ F (internal)` Report per class the set of documented elements, where it changed.
-- [ ] 2.4 `^ F (internal)` Report the `join-item` companion set and components added or removed.
+- [x] 2.4 `^ F (internal)` Report the `join-item` companion set and components added or removed.
 - [ ] 2.5 `. F (internal)` `just daisyui-delta <old> <new>`, exit code 0 whatever it finds.
 - [ ] 2.6 `. d` **Positive control:** run it for `v5.7.17` to `v5.7.42`. It must name
   `mask-square` as removed. Record the output in this task. If it does not, the delta
@@ -112,8 +112,9 @@ do not exist and change exactly those.
 - [ ] 3.12 `. r (internal)` Delete `class-groups.ts`, `axis-derivation.ts`, `axis-names.ts`,
   `parser/property-table.ts` and the classification parts of `component-shape.ts` with their
   tests.
-- [ ] 3.13 `. r (internal)` Delete the join-item derivation from `join-scope.ts`; keep the scope
-  emitter.
+- [ ] 3.13 `. r (internal)` Delete the join-item derivation from the generation path; keep the
+  scope emitter. `classesJoinedWith` stays, because the bump report reads it since 2.4; move it
+  beside the report.
 - [ ] 3.14 `. r (internal)` Delete the exclusivity measurement: `exclusivity.json`, the probe
   modules, `:lib:verifyExclusivity`, its CI step, `just measure-exclusivity` and
   `just verify-exclusivity`, the `exclusivity` source set in `e2e-tests`. Cite the last commit

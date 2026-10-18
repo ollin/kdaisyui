@@ -184,8 +184,12 @@ Same cadence as block 4.
 - [x] 5.5 `^ F` `daisyCollapse`: `icon` and `state` axes.
 - [x] 5.6 `^ F` `daisyModal`: two placement axes. `daisyMegamenu`: `width` axis.
 - [x] 5.7 `^ F` `daisyDropdown`: `side`, `align` and `state` axes; `hover` stays a toggle.
-- [ ] 5.8 `. d` **Check the tab item assumption:** list the tab constructions `fwb-ssr` and
+- [x] 5.8 `. d` **Check the tab item assumption:** list the tab constructions `fwb-ssr` and
   `example-app` use. A `<label>` construction refutes it; revise the tab requirement before 5.9.
+  **Checked 2026-10-18, it holds.** `example-app` renders no tabs. fwb-ssr's client detail page
+  builds its tab bar by hand, `<div role="tablist" class="tabs tabs-lift">` with
+  `<a role="tab" class="tab tab-active">` items, because `daisyTab` was inverted; that is exactly
+  the `<a>` item. No `<label>` construction anywhere.
 - [ ] 5.9 `^ F` Tab: the container renders `<div role="tablist">`, `daisyTabRadio` is added, and
   the container's `style` axis replaces its three booleans, per `design.md` D9. The renames to
   `daisyTabs`, `daisyTab` and `daisyTabContent`, and `active`/`disabled` on the item, landed in

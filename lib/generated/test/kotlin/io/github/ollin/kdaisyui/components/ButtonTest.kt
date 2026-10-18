@@ -186,7 +186,7 @@ class ButtonTest {
     @Test
     fun square_button_and_circle_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(square = true) {
+            daisyButton(shape = ButtonShape.Square) {
             }
         }
         val expectedClasses = "btn btn-square"
@@ -197,7 +197,7 @@ class ButtonTest {
     @Test
     fun square_button_and_circle_button_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(circle = true) {
+            daisyButton(shape = ButtonShape.Circle) {
             }
         }
         val expectedClasses = "btn btn-circle"
@@ -230,7 +230,7 @@ class ButtonTest {
     @Test
     fun button_with_loading_spinner() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(square = true) {
+            daisyButton(shape = ButtonShape.Square) {
             }
         }
         val expectedClasses = "btn btn-square"

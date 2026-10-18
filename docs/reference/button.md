@@ -14,16 +14,16 @@ Actions and triggers. Renders `<button class="btn ...">`.
 // ButtonColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // ButtonSize: Xs | Sm | Md | Lg | Xl
 // ButtonStyle: Outline | Dash | Soft | Ghost | Link
+// ButtonShape: Square | Circle
 fun FlowContent.daisyButton(
     text: String? = null,
     id: HtmlId? = null,
     color: ClassValues<ButtonColor>? = null,
     size: ClassValues<ButtonSize>? = null,
     style: ClassValues<ButtonStyle>? = null,
+    shape: ClassValues<ButtonShape>? = null,
     active: Boolean = false,  // looks active
     block: Boolean = false,  // Full width
-    circle: Boolean = false,  // 1:1 ratio with rounded corners
-    square: Boolean = false,  // 1:1 ratio
     wide: Boolean = false,  // more horizontal padding
     disabled: Boolean = false,
     type: ButtonType? = null,

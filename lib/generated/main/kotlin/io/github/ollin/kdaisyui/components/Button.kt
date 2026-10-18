@@ -69,6 +69,17 @@ enum class ButtonStyle(internal val className: String) : ClassValues<ButtonStyle
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Shape variants for this component (CSS prefix: `btn-`) */
+enum class ButtonShape(internal val className: String) : ClassValues<ButtonShape> {
+    /** CSS: `btn-square` — 1:1 ratio */
+    Square("btn-square"),
+    /** CSS: `btn-circle` — 1:1 ratio with rounded corners */
+    Circle("btn-circle"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
@@ -77,10 +88,9 @@ enum class ButtonStyle(internal val className: String) : ClassValues<ButtonStyle
  * @param color — Color variant
  * @param size — Size variant
  * @param style — Style variant
+ * @param shape — Shape variant
  * @param active — looks active
  * @param block — Full width
- * @param circle — 1:1 ratio with rounded corners
- * @param square — 1:1 ratio
  * @param wide — more horizontal padding
  * @param disabled
  * @param type
@@ -94,10 +104,9 @@ fun FlowContent.daisyButton(
     color: ClassValues<ButtonColor>? = null,
     size: ClassValues<ButtonSize>? = null,
     style: ClassValues<ButtonStyle>? = null,
+    shape: ClassValues<ButtonShape>? = null,
     active: Boolean = false,
     block: Boolean = false,
-    circle: Boolean = false,
-    square: Boolean = false,
     wide: Boolean = false,
     disabled: Boolean = false,
     type: ButtonType? = null,
@@ -111,10 +120,9 @@ fun FlowContent.daisyButton(
         addClassNames(color)
         addClassNames(size)
         addClassNames(style)
+        addClassNames(shape)
         if (active) addClassNames("btn-active")
         if (block) addClassNames("btn-block")
-        if (circle) addClassNames("btn-circle")
-        if (square) addClassNames("btn-square")
         if (wide) addClassNames("btn-wide")
         if (disabled) { this.disabled = true; addClassNames("btn-disabled") }
         if (type != null) this.type = type

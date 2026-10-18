@@ -40,8 +40,6 @@ class ButtonCoverageTest {
                 id = htmlId("x-cov-id"),
                 active = true,
                 block = true,
-                circle = true,
-                square = true,
                 wide = true,
                 disabled = true,
                 type = ButtonType.button,
@@ -50,7 +48,7 @@ class ButtonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "btn btn-active btn-block btn-circle btn-disabled btn-square btn-wide zz-extra", "Button all flags", closes = "</button></div>")
+        assertRendered(html, "btn btn-active btn-block btn-disabled btn-wide zz-extra", "Button all flags", closes = "</button></div>")
         assertCommonFlags(html, "Button")
         assertTrue(html.contains("disabled=\""), "Button sets disabled")
         assertTrue(html.contains("type=\""), "Button sets type")
@@ -234,6 +232,26 @@ class ButtonCoverageTest {
             )
         }
         assertRendered(html, "btn btn-link", "Button style Link")
+    }
+
+    @Test
+    fun button_shape_square() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                shape = ButtonShape.Square,
+            )
+        }
+        assertRendered(html, "btn btn-square", "Button shape Square")
+    }
+
+    @Test
+    fun button_shape_circle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(
+                shape = ButtonShape.Circle,
+            )
+        }
+        assertRendered(html, "btn btn-circle", "Button shape Circle")
     }
 
     @Test

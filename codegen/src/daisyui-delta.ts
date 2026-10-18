@@ -30,7 +30,7 @@ export class DocsAtTag implements ComponentDocs {
   }
 
   private git(...args: string[]): string {
-    return execFileSync('git', ['-C', this.repo, ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+    return execFileSync('git', ['-C', this.repo, ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] })
   }
 
   /** Every directory with a `+page.md`, sorted. */

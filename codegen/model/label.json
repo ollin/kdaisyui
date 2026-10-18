@@ -14,5 +14,8 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Field labels and helper text" }
+  "summary": { "summary": "Field labels and helper text" },
+  "notOffered": {
+    "floating-label": "A label that floats above its input. No function renders it yet; reachable through extraClasses."
+  }
 }

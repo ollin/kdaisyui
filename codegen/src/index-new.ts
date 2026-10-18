@@ -20,6 +20,8 @@ import {
 } from './config-consumption.ts'
 import { readComponentConfig } from './component-shape.ts'
 import { classesOfferedTwice, type OfferedTwice } from './offered-twice.ts'
+import { classFindings } from './model-completeness.ts'
+import { readModel, type ComponentModel } from './model.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -112,6 +114,16 @@ function reportOfferedTwice(offered: readonly OfferedTwice[]): void {
   process.exitCode = 1
 }
 
+/**
+ * Fails the run when a component's model and the classes DaisyUI declares for it disagree.
+ * Runs after generation like the checks above, so the output a wrong model produced is on disk.
+ */
+function reportIncompleteModels(findings: readonly string[]): void {
+  if (findings.length === 0) return
+  console.error(`\nThe model and DaisyUI's classes disagree:\n${findings.map(finding => `  ${finding}`).join('\n')}`)
+  process.exitCode = 1
+}
+
 /** What each skip reason reads as on the console, so the run says why a component is absent. */
 const SKIP_MESSAGES: Readonly<Record<SkipReason, string>> = {
   'configured-skip': 'Skipped (alias)',
@@ -139,6 +151,7 @@ function main() {
   const allClasses = []
   const observations: ElementObservation[] = []
   const offeredTwice: OfferedTwice[] = []
+  const modelFindings: string[] = []
   // Every identifier a config lookup could legitimately have matched this run. A section key
   // that matches none of these was never read, and an unread key is indistinguishable from an
   // absent one at run time — which is how two dead `noContent` entries survived.
@@ -184,6 +197,7 @@ function main() {
     // Only generated components contribute: a skipped one emits nothing, so listing its
     // classes would put CSS in a consumer's bundle that this library can never produce.
     allClasses.push(...collectClasses(frontmatter.classnames))
+    modelFindings.push(...classFindings(readModel(componentName) as ComponentModel, collectClasses(frontmatter.classnames)))
     console.log(`  ✓ ${classified.componentName}.kt (${shape.functions[0].element})`)
   }
 
@@ -196,6 +210,7 @@ function main() {
   reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {}, consumed)
   reportUnreadConfig(config, consumed.keys())
   reportOfferedTwice(offeredTwice)
+  reportIncompleteModels(modelFindings)
 }
 
 main()

@@ -62,5 +62,9 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Sidebar layout with toggle" }
+  "summary": { "summary": "Sidebar layout with toggle" },
+  "notOffered": {
+    "is-drawer-open:": "A Tailwind variant, not a class (#345).",
+    "is-drawer-close:": "A Tailwind variant, not a class (#345)."
+  }
 }

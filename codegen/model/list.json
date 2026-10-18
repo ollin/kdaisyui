@@ -14,5 +14,8 @@
       "parameters": [{ "kind": "enum", "name": "modifier", "enum": "ListModifier", "doc": "Modifier variant" }]
     }
   ],
-  "summary": { "summary": "Styled list layout" }
+  "summary": { "summary": "Styled list layout" },
+  "notOffered": {
+    "list-row": "A row of a list. No function renders it yet, which is also why list-col-wrap and list-col-grow have no element to sit on (#347)."
+  }
 }

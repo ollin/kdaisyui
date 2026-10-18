@@ -17,5 +17,8 @@
       ]
     }
   ],
-  "summary": { "summary": "User and entity representations" }
+  "summary": { "summary": "User and entity representations" },
+  "notOffered": {
+    "avatar-group": "A container that overlaps several avatars. No function renders it yet; reachable through extraClasses."
+  }
 }

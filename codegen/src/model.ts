@@ -96,6 +96,8 @@ export interface ComponentModel {
   readonly joinScope?: true
   /** The hand-written line for the reference index, and the optional longer opening. */
   readonly summary?: DocSummary
+  /** Classes DaisyUI declares that no function offers, each with the reason. */
+  readonly notOffered?: Readonly<Record<string, string>>
 }
 
 /** A DaisyUI directory the library deliberately generates nothing for, and why. */

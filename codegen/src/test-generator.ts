@@ -175,8 +175,6 @@ interface ClassBinding {
   readonly parameter: string
   /** Kotlin expression, e.g. `true` or `MenuDirection.Horizontal`. */
   readonly argument: string
-  /** The class the call renders, as the model declares it, e.g. `image-full`. */
-  readonly cssClass: string
 }
 
 /**
@@ -206,14 +204,14 @@ function classBindings(model: ComponentModel): Record<string, ClassBinding> {
   for (const parameter of parameters) {
     if (parameter.kind !== 'enum') continue
     for (const cssClass of enums.get(parameter.enum)?.classes ?? []) {
-      bind(cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${toPascalClassName(strippedClass(model.class, cssClass))}`, cssClass })
+      bind(cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${toPascalClassName(strippedClass(model.class, cssClass))}` })
     }
   }
   for (const parameter of parameters) {
-    if (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)) bind(parameter.class, { parameter: parameter.name, argument: 'true', cssClass: parameter.class })
+    if (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)) bind(parameter.class, { parameter: parameter.name, argument: 'true' })
   }
   for (const parameter of parameters) {
-    if (parameter.kind === 'extra') for (const cssClass of parameter.writes ?? []) bind(cssClass, { parameter: parameter.name, argument: 'true', cssClass })
+    if (parameter.kind === 'extra') for (const cssClass of parameter.writes ?? []) bind(cssClass, { parameter: parameter.name, argument: 'true' })
   }
   return bindings
 }
@@ -265,22 +263,17 @@ interface ComponentCall {
 }
 
 /**
- * The class the generator actually emits for a documented one.
+ * A prefixed class as it reaches the page: `lg:menu-horizontal`.
  *
- * DaisyUI files a few classes under a component without the component's prefix — `glass` under
- * `button` — and the generator prefixes them on the way out, so the documented name and the
- * rendered name differ.
+ * Expected as DaisyUI writes it, never as the model declares it: a test that expects what the
+ * model says cannot notice the model being wrong. That is how `card-image-full` shipped while
+ * DaisyUI's example said `image-full`.
  */
-function emittedClass(componentClass: string, className: string): string {
-  return className.startsWith(`${componentClass}-`) ? className : `${componentClass}-${className}`
+function emittedVariantClass(documented: DocumentedClass): string {
+  return `${documented.variant}:${documented.className}`
 }
 
-/** A prefixed class as it reaches the page: `lg:menu-horizontal`. */
-function emittedVariantClass(model: CallModel, documented: DocumentedClass): string {
-  return `${documented.variant}:${emittedClass(model.componentClass, documented.className)}`
-}
-
-function bindingFor(model: CallModel, documented: DocumentedClass): ClassBinding {
+function argumentFor(model: CallModel, documented: DocumentedClass): string {
   const binding = model.bindings[strippedClass(model.prefix, documented.className)]
   if (!binding) {
     throw new Error(
@@ -290,11 +283,6 @@ function bindingFor(model: CallModel, documented: DocumentedClass): ClassBinding
         `documented markup disagree.`,
     )
   }
-  return binding
-}
-
-function argumentFor(model: CallModel, documented: DocumentedClass): string {
-  const binding = bindingFor(model, documented)
   return `${binding.parameter} = ${binding.argument}`
 }
 
@@ -330,14 +318,14 @@ function componentCallFor(model: CallModel, classes: readonly DocumentedClass[])
     documented => !documented.isPrefixed && documented.className !== model.componentClass,
   )
 
-  const variantClasses = variants.map(documented => emittedVariantClass(model, documented))
+  const variantClasses = variants.map(emittedVariantClass)
   const args = modifiers.map(documented => argumentFor(model, documented))
   rejectRepeatedParameters(model, args)
   if (variantClasses.length > 0) args.push(`extraClasses = "${variantClasses.join(' ')}"`)
 
   const rendered = [
     model.componentClass,
-    ...modifiers.map(documented => bindingFor(model, documented).cssClass),
+    ...modifiers.map(documented => documented.className),
     ...variantClasses,
   ]
   return { args: args.join(', '), expectedClasses: [...new Set(rendered)].sort().join(' ') }

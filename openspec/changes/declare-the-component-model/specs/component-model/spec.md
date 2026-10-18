@@ -12,8 +12,14 @@ Every structural fact the generators emit SHALL come from a committed model with
 DaisyUI component: the functions and their names, each function's element and receiver, the
 classes it always writes, its axes and their members, its toggles, its static attributes, its
 extra parameters, whether it takes inline text, whether it is a join item, and the component's
-editorial summary. From DaisyUI, generation SHALL read only the frontmatter: the class names and
-their descriptions. It SHALL NOT read the fenced HTML examples.
+editorial summary. From DaisyUI, the generators of the library code, the reference pages,
+`llms.txt` and the API dump SHALL read only the frontmatter: the class names and their
+descriptions. They SHALL NOT read the fenced HTML examples.
+
+The component-test generator is the one reader of the examples that stays. It turns each
+documented example into a call against the declared API and asserts the classes rendered, which
+makes the examples test input for the model rather than a source of it. It SHALL take every
+parameter binding from the model, never from its own classification.
 
 Whether a function takes content stays derived from its declared element by the HTML
 specification's void-element list. That is a rule of HTML, not an inference about DaisyUI.
@@ -25,9 +31,15 @@ or `lib/api/`.
 
 #### Scenario: Generating without reading example markup
 
-- **WHEN** the generators run
+- **WHEN** the generators of the library code, the reference pages, `llms.txt` and the API dump run
 - **THEN** they read the model and the frontmatter
 - **AND** no fenced HTML example from DaisyUI's documentation is read
+
+#### Scenario: A documented example becomes a test against the model
+
+- **WHEN** the component-test generator reads a documented example
+- **THEN** it builds the call from the model's parameters
+- **AND** a class the model does not offer on that function is not silently dropped from the test
 
 #### Scenario: A structural fact changes only by a model edit
 

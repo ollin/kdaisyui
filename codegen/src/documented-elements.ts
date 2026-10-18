@@ -103,6 +103,10 @@ export interface DocumentedCall {
   readonly fn: ModelFunction
   readonly args: string
   readonly expectedClasses: string
+  /** DaisyUI's tag for the element, e.g. `a`. */
+  readonly tag: string
+  /** Whether `fn` renders that tag, so the test can call it; otherwise it writes the tag itself. */
+  readonly rendersTag: boolean
 }
 
 /**
@@ -118,7 +122,13 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
-  return { fn: primary.fn, args: callArguments(primary, others, variants).join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+  return {
+    fn: primary.fn,
+    args: callArguments(primary, others, variants).join(', '),
+    expectedClasses: [...new Set(expected)].sort().join(' '),
+    tag: element.tag,
+    rendersTag: primary.fn.kind !== 'classes' && primary.fn.element.toLowerCase() === element.tag,
+  }
 }
 
 /** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */

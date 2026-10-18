@@ -163,7 +163,7 @@ fun FlowContent.shellSidebar() {
             li {
                 a {
                     +"Messages"
-                    daisyBadge("5", variant = BadgeVariant.Info, size = BadgeSize.Sm)
+                    daisyBadge("5", color = BadgeColor.Info, size = BadgeSize.Sm)
                 }
             }
             li {
@@ -207,18 +207,18 @@ Before introducing htmx, let's render stats directly in the shell to make sure t
 ```kotlin
 // Inside the grid div, after shellHeader()
 section("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full shadow-xs") {
-    daisyStatStat {
-        daisyStatStatTitle("Page Views")
-        daisyStatStatValue("89,400")
-        daisyStatStatDesc("21% more than last month")
+    daisyStat {
+        daisyStatTitle("Page Views")
+        daisyStatValue("89,400")
+        daisyStatDesc("21% more than last month")
     }
-    daisyStatStat {
-        daisyStatStatTitle("Users")
-        daisyStatStatValue("1,200")
-        daisyStatStatDesc("12% increase")
+    daisyStat {
+        daisyStatTitle("Users")
+        daisyStatValue("1,200")
+        daisyStatDesc("12% increase")
     }
 }
-    daisyStat {
+    daisyStats {
         daisyStatTitle("Users")
         daisyStatValue("1,200")
         daisyStatDesc("12% increase")
@@ -254,18 +254,18 @@ fun Route.dashboardRoutes() {
         call.respondHtmlFragment {
 section {
     addClassNames("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full shadow-xs")
-    daisyStatStat {
-        daisyStatStatTitle("Page Views")
-        daisyStatStatValue("89,400")
-        daisyStatStatDesc("21% more than last month")
+    daisyStat {
+        daisyStatTitle("Page Views")
+        daisyStatValue("89,400")
+        daisyStatDesc("21% more than last month")
     }
-    daisyStatStat {
-        daisyStatStatTitle("Users")
-        daisyStatStatValue("1,200")
-        daisyStatStatDesc("12% increase")
+    daisyStat {
+        daisyStatTitle("Users")
+        daisyStatValue("1,200")
+        daisyStatDesc("12% increase")
     }
 }
-                daisyStat {
+                daisyStats {
                     daisyStatTitle("Users")
                     daisyStatValue("1,200")
                     daisyStatDesc("12% increase")

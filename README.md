@@ -13,13 +13,13 @@ createHTML().div {
     daisyCard(extraClasses = "bg-base-100 shadow-xs") {
         daisyCardBody {
             daisyCardTitle("Revenue")
-            daisyStat(horizontal = true) {
-                daisyStatStat {
-                    daisyStatStatValue("21,500 USD")
-                    daisyStatStatDesc("21% more than last month")
+            daisyStats(direction = StatsDirection.Horizontal) {
+                daisyStat {
+                    daisyStatValue("21,500 USD")
+                    daisyStatDesc("21% more than last month")
                 }
             }
-            daisyButton("View report", variant = ButtonVariant.Primary)
+            daisyButton("View report", color = ButtonColor.Primary)
         }
     }
 }
@@ -641,7 +641,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 val html = createHTML().div {
-    daisyButton("Click me", variant = ButtonVariant.Primary, size = ButtonSize.Lg)
+    daisyButton("Click me", color = ButtonColor.Primary, size = ButtonSize.Lg)
 }
 // → <div><button class="btn btn-primary btn-lg">Click me</button></div>
 ```
@@ -655,7 +655,7 @@ application's job, and there is one detail you cannot guess.
 #### The detail: your Tailwind cannot see these class names
 
 Tailwind scans your source files for class names. `btn-primary` is assembled at runtime from
-`ButtonVariant.Primary`, so it appears in **none** of your files — and the published jar contains
+`ButtonColor.Primary`, so it appears in **none** of your files — and the published jar contains
 compiled classes, not Kotlin sources. A scan of your project finds nothing, Tailwind emits no rule,
 and your button renders unstyled with no error anywhere.
 

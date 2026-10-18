@@ -54,7 +54,7 @@ import kotlinx.html.stream.createHTML
 
 fun main() {
     val html = createHTML(prettyPrint = false).div {
-        daisyButton("Click me", variant = ButtonVariant.Primary)
+        daisyButton("Click me", color = ButtonColor.Primary)
     }
     println(html)
 }
@@ -80,9 +80,9 @@ Let's add a few more buttons to see the DSL in action:
 
 ```kotlin
 val html = createHTML(prettyPrint = false).div {
-    daisyButton("Primary", variant = ButtonVariant.Primary, size = ButtonSize.Lg)
-    daisyButton("Outline", outline = true)
-    daisyButton("Ghost", variant = ButtonVariant.Ghost, size = ButtonSize.Sm)
+    daisyButton("Primary", color = ButtonColor.Primary, size = ButtonSize.Lg)
+    daisyButton("Outline", style = ButtonStyle.Outline)
+    daisyButton("Ghost", style = ButtonStyle.Ghost, size = ButtonSize.Sm)
 }
 ```
 
@@ -108,10 +108,10 @@ val html = createHTML(prettyPrint = false).div {
         daisyCardBody {
             daisyCardTitle {
                 +"Orders"
-                daisyBadge("3", variant = BadgeVariant.Success, size = BadgeSize.Sm)
+                daisyBadge("3", color = BadgeColor.Success, size = BadgeSize.Sm)
             }
             p { +"You have 3 new orders today." }
-            daisyButton("View all", variant = ButtonVariant.Primary)
+            daisyButton("View all", color = ButtonColor.Primary)
         }
     }
 }
@@ -139,19 +139,19 @@ Stats are a DaisyUI component that shows key metrics:
 
 ```kotlin
 val html = createHTML(prettyPrint = false).div {
-daisyStat(horizontal = true, extraClasses = "bg-base-100 shadow-xs w-full") {
-    daisyStatStat {
-        daisyStatStatTitle("Users")
-        daisyStatStatValue("1,200")
-        daisyStatStatDesc("12% increase")
+daisyStats(direction = StatsDirection.Horizontal, extraClasses = "bg-base-100 shadow-xs w-full") {
+    daisyStat {
+        daisyStatTitle("Users")
+        daisyStatValue("1,200")
+        daisyStatDesc("12% increase")
     }
-    daisyStatStat {
-        daisyStatStatTitle("Revenue")
-        daisyStatStatValue("$34,000")
-        daisyStatStatDesc("8% increase")
+    daisyStat {
+        daisyStatTitle("Revenue")
+        daisyStatValue("$34,000")
+        daisyStatDesc("8% increase")
     }
 }
-        daisyStat {
+        daisyStats {
             daisyStatTitle("Revenue")
             daisyStatValue("$34,000")
             daisyStatDesc("8% increase")
@@ -186,7 +186,7 @@ val html = createHTML(prettyPrint = false).div {
             span("label-text") { +"Send me notifications" }
         }
     }
-    daisyButton("Save", variant = ButtonVariant.Primary, extraClasses = "w-full")
+    daisyButton("Save", color = ButtonColor.Primary, extraClasses = "w-full")
 }
 ```
 
@@ -197,7 +197,7 @@ Notice the pattern: `daisyFieldset` wraps each field, `daisyLabel` adds the labe
 Let's add a success alert above the form:
 
 ```kotlin
-daisyAlert(variant = AlertVariant.Success) {
+daisyAlert(color = AlertColor.Success) {
     span { +"Your changes have been saved." }
 }
 ```

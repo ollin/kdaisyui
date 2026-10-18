@@ -40,7 +40,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 val html = createHTML().div {
-    daisyButton("Deploy", variant = ButtonVariant.Primary, size = ButtonSize.Lg)
+    daisyButton("Deploy", color = ButtonColor.Primary, size = ButtonSize.Lg)
 }
 // → <div><button class="btn btn-primary btn-lg">Deploy</button></div>
 ```
@@ -58,11 +58,12 @@ shipped with.
 
 - **Enum parameters are typed `ClassValues<E>?`.** Pass the enum constant: `size = ButtonSize.Lg`.
   Every generated enum *is* a `ClassValues` of itself, so nothing needs wrapping.
-- **An enum parameter is a choice.** Its constants are DaisyUI classes a browser measured as
-  mutually exclusive, so exactly one can apply. Classes that can be combined are separate
-  `Boolean` parameters instead.
+- **An enum parameter is a choice.** Its constants are one group of DaisyUI classes, of which a
+  component wears one: a color, a size, a style. Passing two would mean passing the parameter
+  twice, which does not compile; combine two members through `extraClasses` where you need to.
+  On/off features are `Boolean` parameters instead.
 - **A `Boolean` parameter is named after its DaisyUI class**: `soft = true` emits `alert-soft`.
-- **CSS class to Kotlin**: `btn-primary` → `ButtonVariant.Primary`, `btn-lg` → `ButtonSize.Lg`.
+- **CSS class to Kotlin**: `btn-primary` → `ButtonColor.Primary`, `btn-lg` → `ButtonSize.Lg`.
 - **Always use named arguments.** Parameter order is generated and changes between releases.
 - **The lambda receiver is the element the function renders** — `daisyDropdownContent` renders
   `<ul>`, so its `content` lambda runs on `UL`.

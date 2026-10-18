@@ -1,0 +1,72 @@
+## Estimate
+
+Frozen 2026-10-18 before the first commit, raw, ledger run
+`2026-10-18-kdaisyui-express-every-documented-element`: **375 min**. Block 1 checks 30, block 2
+siblings 90, block 3 composition rule 60, block 4 class-only functions and the #347 moves 90,
+block 5 the four new parts 45, block 6 docs and gate 60. Known ratios for kdaisyui codegen work,
+not folded in: 0.06, 0.12, 0.21, 0.26.
+
+Every fix of a gap starts by deleting its `notExpressed` declaration, so the gate fails first;
+the model change then makes it pass. Each behaviour is one TCR run at the repository root, after
+regenerating.
+
+## 1. Check the assumptions first
+
+- [ ] 1.1 `. d` **Count what remains** under the composition rule of `design.md` D4, with D3's
+  model edits applied in memory: the spec assumes no declaration remains. Check on the way that no
+  two own classes on one element offer the same modifier, which D4's single pass relies on. Any
+  remaining gap refutes the Assumed; revise the plan with Oliver before block 2.
+- [ ] 1.2 `. d` **Check the receiver assumption**: every receiver the generated functions give
+  their `attrs` and `content` lambdas is a kotlinx.html `Tag`, read from the kotlinx.html sources.
+
+## 2. A class sibling for every function
+
+- [ ] 2.1 `^ r (internal)` The shape carries each function's class-bearing parameters as a list
+  the sibling can be emitted from. Zero diff.
+- [ ] 2.2 `^ F` Emit `Tag.daisy<Name>Classes` after every function that writes a class (D1), its
+  generator unit test first, and its coverage tests (D5) in the same step so `koverVerify` holds.
+- [ ] 2.3 `^ F` Reference pages and `llms.txt` list each sibling under its function.
+- [ ] 2.4 `. d` Re-dump both API baselines and read the diff: siblings only.
+
+## 3. Two components on one element
+
+- [ ] 3.1 `^ r (internal)` The classifier returns the claiming groups of D4, still accepting only
+  a single group. Zero diff.
+- [ ] 3.2 `^ F (internal)` Accept several groups: the composition rule. Regeneration then fails on
+  the 27 composition declarations as stale, which is this task's red.
+- [ ] 3.3 `^ F` Generate a composition's test as the call plus its siblings in `attrs`, and delete
+  the 27 declarations, one commit per page, each after its tests pass.
+
+## 4. Classes where DaisyUI puts them (#347)
+
+- [ ] 4.1 `^ F (internal)` `kind: "classes"` (D2): generates only the sibling, its test first.
+- [ ] 4.2 `! F` Menu: delete the four menu declarations (red), then `daisyMenuItem(active,
+  disabled)` and the `show`/`dropdownShow` toggles on the dropdown parts; `daisyMenu` loses
+  `active`, `disabled`, `dropdownShow`. Example app and README migration in the same step.
+- [ ] 4.3 `! F` Dock: delete its declaration, then part `daisyDockItem`; `daisyDock` loses `active`.
+- [ ] 4.4 `! F` Rating: delete its declaration, then `daisyRatingItem(hidden)`; `daisyRating` loses
+  `hidden`.
+- [ ] 4.5 `! F` List: delete the two column declarations, then `daisyListCell(colGrow, colWrap)`;
+  `daisyList` loses `column` and `ListColumn` goes.
+
+## 5. The four classes no function renders
+
+- [ ] 5.1 `^ F` `daisyListRow`: delete its declaration, then the part; `list-row` leaves
+  `notOffered`.
+- [ ] 5.2 `^ F` `daisyFloatingLabel`, the same way.
+- [ ] 5.3 `^ F` `daisyAvatarGroup`, the same way.
+- [ ] 5.4 `^ F` `daisyVc`, the same way.
+- [ ] 5.5 `. d` Confirm no `notExpressed` declaration is left in `codegen/model/`, and record it
+  against the spec's Assumed.
+
+## 6. Documentation and the gate
+
+- [ ] 6.1 `. d` README "How to migrate from 0.8.x": one row per moved parameter, and the sibling.
+- [ ] 6.2 `. d` Skills: `kdaisyui-codegen` (sibling, `kind: "classes"`, the rule), the testing and
+  upgrade skills where they name the gate. Prose in `README.md`, `docs/` and the llms template
+  that uses a moved parameter.
+- [ ] 6.3 `. d` Re-dump both API baselines after block 5 and read the diff.
+- [ ] 6.4 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
+  `:lib:testCodegen`, `:lib:checkComponentApi`, regeneration drift, CodeScene. No mutation tool for
+  the TypeScript codegen; say so.
+- [ ] 6.5 `. d` Write `tmp/express-every-documented-element/EVALUATION-express-every-documented-element.md`.

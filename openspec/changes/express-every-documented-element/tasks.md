@@ -81,10 +81,12 @@ regenerating.
 ## 6. Documentation and the gate
 
 - [x] 6.1 `. d` README "How to migrate from 0.8.x": one row per moved parameter, and the sibling.
-- [ ] 6.2 `. d` Skills: `kdaisyui-codegen` (sibling, `kind: "classes"`, the rule), the testing and
+- [x] 6.2 `. d` Skills: `kdaisyui-codegen` (sibling, `kind: "classes"`, the rule), the testing and
   upgrade skills where they name the gate. Prose in `README.md`, `docs/` and the llms template
   that uses a moved parameter.
-- [ ] 6.3 `. d` Re-dump both API baselines after block 5 and read the diff.
+- [x] 6.3 `. d` Re-dump both API baselines after block 5 and read the diff.
+  Done in every step that changed a signature, since `./gradlew build` checks `lib.api` (2.4);
+  each commit body names its diff. Nothing left to re-dump after block 5.
 - [ ] 6.4 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
   `:lib:testCodegen`, `:lib:checkComponentApi`, regeneration drift, CodeScene. No mutation tool for
   the TypeScript codegen; say so.

@@ -33,9 +33,11 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 - [x] 2.1 `^ r (internal)` Bind classes per function, not across the whole model (`design.md` D4).
   Zero diff under regeneration.
-- [ ] 2.2 `^ F (internal)` The classifier `documented-elements.ts` (D1, D3), with unit tests from
+- [x] 2.2 `^ F (internal)` The classifier `documented-elements.ts` (D1, D3), with unit tests from
   fixtures: an element is expressed by the first function whose class it carries and that offers
   the rest, with typed arguments.
+  Committed as `^ r (internal)`: new code with no caller changes no behaviour yet. Typed arguments
+  come with 5.2, which is their first reader.
 - [x] 2.3 ~~`^ r (internal)` The test generator takes its main-function calls from the classifier,
   restricted to the page's main function. Zero diff under regeneration.~~
   **Dropped 2026-10-18 before starting it: it cannot be zero diff.** Today's tests keep only the

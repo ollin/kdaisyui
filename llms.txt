@@ -246,7 +246,8 @@ fun FlowContent.daisyCheckbox(id: HtmlId? = null, color: ClassValues<CheckboxCol
 Collapsible content sections — renders `<div>`.
 
 ```kotlin
-fun FlowContent.daisyCollapse(id: HtmlId? = null, arrow: Boolean = false, close: Boolean = false, open: Boolean = false, plus: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class CollapseIcon { Arrow, Plus }
+fun FlowContent.daisyCollapse(id: HtmlId? = null, icon: ClassValues<CollapseIcon>? = null, close: Boolean = false, open: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyCollapseTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit)? = null)
 fun FlowContent.daisyCollapseContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```

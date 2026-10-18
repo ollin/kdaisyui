@@ -11,12 +11,12 @@ Regenerate: just generate
 Collapsible content sections. Renders `<div class="collapse ...">`.
 
 ```kotlin
+// CollapseIcon: Arrow | Plus
 fun FlowContent.daisyCollapse(
     id: HtmlId? = null,
-    arrow: Boolean = false,
+    icon: ClassValues<CollapseIcon>? = null,
     close: Boolean = false,
     open: Boolean = false,
-    plus: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

@@ -5,28 +5,38 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+enum class CollapseIcon(internal val className: String) : ClassValues<CollapseIcon> {
+    /** CSS: `collapse-arrow` */
+    Arrow("collapse-arrow"),
+    /** CSS: `collapse-plus` */
+    Plus("collapse-plus"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Collapse is used for showing and hiding content. Renders `<div class="collapse ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param arrow
+ * @param icon — Icon variant
  * @param close
  * @param open
- * @param plus
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyCollapse(
     id: HtmlId? = null,
-    arrow: Boolean = false,
+    icon: ClassValues<CollapseIcon>? = null,
     close: Boolean = false,
     open: Boolean = false,
-    plus: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -34,10 +44,9 @@ fun FlowContent.daisyCollapse(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("collapse")
-        if (arrow) addClassNames("collapse-arrow")
+        addClassNames(icon)
         if (close) addClassNames("collapse-close")
         if (open) addClassNames("collapse-open")
-        if (plus) addClassNames("collapse-plus")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

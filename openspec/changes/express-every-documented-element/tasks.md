@@ -80,7 +80,7 @@ regenerating.
 
 ## 6. Documentation and the gate
 
-- [ ] 6.1 `. d` README "How to migrate from 0.8.x": one row per moved parameter, and the sibling.
+- [x] 6.1 `. d` README "How to migrate from 0.8.x": one row per moved parameter, and the sibling.
 - [ ] 6.2 `. d` Skills: `kdaisyui-codegen` (sibling, `kind: "classes"`, the rule), the testing and
   upgrade skills where they name the gate. Prose in `README.md`, `docs/` and the llms template
   that uses a moved parameter.

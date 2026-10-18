@@ -8,7 +8,7 @@
 import type { ComponentModel, ModelFunction } from './model.ts'
 import { offeredBy } from './model-completeness.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
-import { markedElements } from './parser/documented-classes.ts'
+import { markedElements, type MarkedElement } from './parser/documented-classes.ts'
 
 /** A function and the component model that declares it. */
 export interface ModelledFunction {
@@ -51,7 +51,7 @@ export interface DocumentedGap {
  */
 export function gapsIn(html: string, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): DocumentedGap[] {
   return markedElements(html)
-    .map(element => ({ tag: element.tag, counted: element.classes.filter(cls => !cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.className) }))
+    .map(element => ({ tag: element.tag, counted: countedClasses(element, componentClasses) }))
     .filter(({ counted }) => counted.length > 0 && expressingFunction(models, counted) === null)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }
@@ -64,4 +64,9 @@ export function gapFindings(model: ComponentModel, gaps: readonly DocumentedGap[
     ...gaps.filter(gap => !(gap.key in declared)).map(gap => `${model.component}: <${gap.tag}> ${gap.key} is documented, and no function expresses it`),
     ...Object.keys(declared).filter(key => !keys.has(key)).map(key => `${model.component}: ${key} is declared not expressed, and no element on the page needs it`),
   ])]
+}
+
+/** The classes the gate judges an element by: unprefixed, and declared by some component. */
+function countedClasses(element: MarkedElement, componentClasses: ReadonlySet<string>): string[] {
+  return element.classes.filter(cls => !cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.className)
 }

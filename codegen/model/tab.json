@@ -19,9 +19,7 @@
         { "kind": "enum", "name": "placement", "enum": "TabPlacement", "doc": "Placement variant" },
         { "kind": "toggle", "name": "border", "class": "tabs-border" },
         { "kind": "toggle", "name": "box", "class": "tabs-box" },
-        { "kind": "toggle", "name": "lift", "class": "tabs-lift" },
-        { "kind": "toggle", "name": "tabActive", "class": "tabs-tab-active" },
-        { "kind": "toggle", "name": "tabDisabled", "class": "tabs-tab-disabled" }
+        { "kind": "toggle", "name": "lift", "class": "tabs-lift" }
       ]
     },
     {
@@ -31,7 +29,10 @@
       "element": "A",
       "class": "tab",
       "text": false,
-      "parameters": []
+      "parameters": [
+        { "kind": "toggle", "name": "tabActive", "class": "tab-active" },
+        { "kind": "toggle", "name": "tabDisabled", "class": "tab-disabled" }
+      ]
     },
     {
       "kind": "part",

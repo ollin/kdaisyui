@@ -20,8 +20,6 @@ fun FlowContent.daisyTab(
     border: Boolean = false,  // bottom border style
     box: Boolean = false,  // box style
     lift: Boolean = false,  // lift style
-    tabActive: Boolean = false,  // Makes a single tab look active
-    tabDisabled: Boolean = false,  // Makes a single tab look disabled
     extraClasses: String? = null,
     attrs: (BUTTON.() -> Unit)? = null,
     content: (BUTTON.() -> Unit),
@@ -31,6 +29,8 @@ fun FlowContent.daisyTab(
 ```kotlin
 fun FlowContent.daisyTabTab(
     id: HtmlId? = null,
+    tabActive: Boolean = false,  // Makes a single tab look active
+    tabDisabled: Boolean = false,  // Makes a single tab look disabled
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit),

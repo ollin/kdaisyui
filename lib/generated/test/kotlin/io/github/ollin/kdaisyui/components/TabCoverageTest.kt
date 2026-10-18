@@ -42,14 +42,12 @@ class TabCoverageTest {
                 border = true,
                 box = true,
                 lift = true,
-                tabActive = true,
-                tabDisabled = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tabs tabs-border tabs-box tabs-lift tabs-tab-active tabs-tab-disabled zz-extra", "Tab all flags", closes = "</button></div>")
+        assertRendered(html, "tabs tabs-border tabs-box tabs-lift zz-extra", "Tab all flags", closes = "</button></div>")
         assertCommonFlags(html, "Tab")
     }
 
@@ -145,12 +143,14 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabTab(
                 id = htmlId("x-cov-id"),
+                tabActive = true,
+                tabDisabled = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tab zz-extra", "TabTab all flags", closes = "</a></div>")
+        assertRendered(html, "tab tab-active tab-disabled zz-extra", "TabTab all flags", closes = "</a></div>")
         assertCommonFlags(html, "TabTab")
     }
 

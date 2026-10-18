@@ -52,8 +52,6 @@ enum class TabPlacement(internal val className: String) : ClassValues<TabPlaceme
  * @param border — bottom border style
  * @param box — box style
  * @param lift — lift style
- * @param tabActive — Makes a single tab look active
- * @param tabDisabled — Makes a single tab look disabled
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -65,8 +63,6 @@ fun FlowContent.daisyTab(
     border: Boolean = false,
     box: Boolean = false,
     lift: Boolean = false,
-    tabActive: Boolean = false,
-    tabDisabled: Boolean = false,
     extraClasses: String? = null,
     attrs: (BUTTON.() -> Unit)? = null,
     content: (BUTTON.() -> Unit),
@@ -79,8 +75,6 @@ fun FlowContent.daisyTab(
         if (border) addClassNames("tabs-border")
         if (box) addClassNames("tabs-box")
         if (lift) addClassNames("tabs-lift")
-        if (tabActive) addClassNames("tabs-tab-active")
-        if (tabDisabled) addClassNames("tabs-tab-disabled")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -90,6 +84,8 @@ fun FlowContent.daisyTab(
 /** A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ...">`. */
 fun FlowContent.daisyTabTab(
     id: HtmlId? = null,
+    tabActive: Boolean = false,
+    tabDisabled: Boolean = false,
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit),
@@ -97,6 +93,8 @@ fun FlowContent.daisyTabTab(
     a {
         if (id != null) attributes["id"] = id.id
         addClassNames("tab")
+        if (tabActive) addClassNames("tab-active")
+        if (tabDisabled) addClassNames("tab-disabled")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

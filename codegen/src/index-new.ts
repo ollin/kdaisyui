@@ -6,7 +6,7 @@ import { gapFindings, gapsIn } from './documented-elements.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
 import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
-import { mainFunctionConfig, modelFileNames, type ComponentModel } from './model.ts'
+import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -33,9 +33,10 @@ function collectClasses(classnames) {
 }
 
 /** The page's documented elements no function expresses and its model does not declare, and stale declarations. */
-function documentedGapFindings(model: ComponentModel, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): string[] {
-  const html = fencedHtmlBlocks(readComponentPage(model.component as ComponentName) ?? '')
-  return gapFindings(model, gapsIn(html, [model, ...models.filter(other => other !== model)], componentClasses))
+function documentedGapFindings(page: Pick<ComponentModel, 'component' | 'notExpressed'>, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): string[] {
+  const html = fencedHtmlBlocks(readComponentPage(page.component as ComponentName) ?? '')
+  const pageFirst = [...models.filter(model => model.component === page.component), ...models.filter(model => model.component !== page.component)]
+  return gapFindings(page, gapsIn(html, pageFirst, componentClasses))
 }
 
 function writeClassList(classes) {
@@ -102,6 +103,8 @@ function main() {
     const skipReason = skipReasons.get(componentName)
     if (skipReason !== undefined) {
       console.log(`  ${skipReason === 'configured-skip' ? '⊘' : '⚠'} ${componentName}: ${SKIP_MESSAGES[skipReason]}`)
+      // Skipped or not, the page's examples are DaisyUI's, and the gate covers them.
+      modelFindings.push(...documentedGapFindings(readModel(componentName), models, componentClasses))
       continue
     }
 

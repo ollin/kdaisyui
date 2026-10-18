@@ -107,6 +107,8 @@ export interface ComponentModel {
 export interface SkippedModel {
   readonly component: string
   readonly skip: string
+  /** As on a generated component: its page's documented gaps, by key, each with the reason. */
+  readonly notExpressed?: Readonly<Record<string, string>>
 }
 
 /** Where the committed model lives: one file per DaisyUI directory. */

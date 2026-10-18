@@ -57,7 +57,7 @@ export function gapsIn(html: string, models: readonly ComponentModel[], componen
 }
 
 /** What the gate reports for one page: gaps nothing declares, and declarations no gap needs. */
-export function gapFindings(model: ComponentModel, gaps: readonly DocumentedGap[]): string[] {
+export function gapFindings(model: Pick<ComponentModel, 'component' | 'notExpressed'>, gaps: readonly DocumentedGap[]): string[] {
   const declared = model.notExpressed ?? {}
   const keys = new Set(gaps.map(gap => gap.key))
   return [...new Set([

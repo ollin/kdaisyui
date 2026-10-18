@@ -10,8 +10,10 @@ import {
 import { entryName, isSkipped, readModel, type ComponentModel, type ModelFunction, type ModelParameter } from './model.ts'
 import {
   documentedElementClasses,
+  markedElements,
   type DocumentedClass,
 } from './parser/documented-classes.ts'
+import { documentedCall, type DocumentedCall } from './documented-elements.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
@@ -435,13 +437,13 @@ function uniqueTestName(usedNames, funcName) {
   return name
 }
 
-/** Asserts the component emits exactly the classes the doc example shows. */
-function generateClassTest(functionName, { testName, args, expectedClasses, caseName }) {
+/** Asserts the function emits exactly the classes the doc example shows, inside the builder its receiver needs. */
+function generateClassTest(fn: ModelFunction, { testName, args, expectedClasses, caseName }) {
   return `
     @Test
     fun ${testName}() {
-        val html = createHTML(prettyPrint = false).div {
-            ${functionName}(${args}) {
+        val html = createHTML(prettyPrint = false).${htmlTagFnFor(wrapperTagOf(fn.receiver))} {
+            ${fn.name}(${args}) {
             }
         }
         val expectedClasses = "${expectedClasses}"
@@ -490,8 +492,11 @@ function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
 }
 
 /** The imports a test file needs beyond the four every one of them has. */
-function extraImportLines(customParts, hasAttributeTest: boolean): string {
+function extraImportLines(customParts, hasAttributeTest: boolean, receivers: ReadonlySet<string>): string {
   const imports = new Set<string>()
+  for (const receiver of receivers) {
+    if (receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(receiver))}`)
+  }
   if (customParts.length > 0 || hasAttributeTest) imports.add('import kotlin.test.assertTrue')
   for (const part of customParts) {
     if (part.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(part.receiver))}`)
@@ -499,36 +504,52 @@ function extraImportLines(customParts, hasAttributeTest: boolean): string {
   return [...imports].sort().map(line => `\n${line}`).join('')
 }
 
-/**
- * One class test per documented element, deduplicated, with how many there were. That is no longer
- * the number of test cases: one heading can document several elements, and one that documents
- * none produces no test at all.
- */
-function classTests(model: CallModel, mainName: string, testCases): { kotlin: string, testCount: number } {
-  const usedNames = new Set()
-  const tests = testCases.flatMap(tc => componentCallsIn(model, tc.html).map(call => generateClassTest(mainName, {
-    testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
-    args: call.args,
-    expectedClasses: call.expectedClasses,
-    caseName: tc.name,
-  })))
-  return { kotlin: tests.join(''), testCount: tests.length }
+/** What every page's tests are generated against: all models, and every class some component declares. */
+interface DocumentedContext {
+  readonly models: readonly ComponentModel[]
+  readonly componentClasses: ReadonlySet<string>
 }
 
-function generateKotlinTest(componentName, testCases, frontmatter, componentModel: ComponentModel) {
+/**
+ * One test per expressible documented element of the page, whichever function expresses it,
+ * deduplicated across the page, with how many there were and the receivers they wrap.
+ */
+function classTests(page: ComponentModel, context: DocumentedContext, mainName: string, testCases): { kotlin: string, testCount: number, receivers: Set<string> } {
+  const models = [page, ...context.models.filter(model => model.component !== page.component)]
+  const seen = new Set<string>()
+  const usedNames = new Set()
+  const tests = testCases.flatMap(tc => markedElements(tc.html)
+    .map(element => documentedCall(models, element, context.componentClasses))
+    .filter((call): call is DocumentedCall => call !== null && firstTime(seen, `${call.fn.name}|${call.args}|${call.expectedClasses}`))
+    .map(call => ({ call, kotlin: generateClassTest(call.fn, {
+      testName: uniqueTestName(usedNames, call.fn.name === mainName ? toTestFunctionName(tc.name) : `${toTestFunctionName(tc.name)}_${call.fn.name}`),
+      args: call.args,
+      expectedClasses: call.expectedClasses,
+      caseName: tc.name,
+    }) })))
+  return { kotlin: tests.map(test => test.kotlin).join(''), testCount: tests.length, receivers: new Set(tests.map(test => test.call.fn.receiver)) }
+}
+
+function firstTime(seen: Set<string>, signature: string): boolean {
+  if (seen.has(signature)) return false
+  seen.add(signature)
+  return true
+}
+
+function generateKotlinTest(componentName, testCases, componentModel: ComponentModel, context: DocumentedContext) {
   const className = toClassName(componentName)
   const main = componentModel.functions.find(fn => fn.kind === 'main')
   const mainName = main?.name ?? `daisy${className}`
   const customParts = customPartsOf(componentModel)
   const attributeTest = generateComponentAttributeTest(mainName, main?.attributes ?? {})
-  const { kotlin: classTestKotlin, testCount } = classTests(buildCallModel(frontmatter, componentModel), mainName, testCases)
+  const { kotlin: classTestKotlin, testCount, receivers } = classTests(componentModel, context, mainName, testCases)
 
   const kotlin = `package io.github.ollin.kdaisyui.components
 
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
-import kotlin.test.assertEquals${extraImportLines(customParts, attributeTest !== '')}
+import kotlin.test.assertEquals${extraImportLines(customParts, attributeTest !== '', receivers)}
 
 class ${className}Test {
 ${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}}
@@ -536,7 +557,7 @@ ${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}}
   return { kotlin, testCount }
 }
 
-function generateForComponent(componentName, componentModel: ComponentModel) {
+function generateForComponent(componentName, componentModel: ComponentModel, context: DocumentedContext) {
   const pageFile = path.join(DOCS_DIR, componentName, '+page.md')
   
   if (!fs.existsSync(pageFile)) {
@@ -555,7 +576,7 @@ function generateForComponent(componentName, componentModel: ComponentModel) {
     return { success: false, error: 'No test cases' }
   }
   
-  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, componentModel)
+  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, componentModel, context)
   const className = toClassName(componentName)
   const outFile = path.join(OUTPUT_DIR, `${className}Test.kt`)
   
@@ -1168,13 +1189,13 @@ function generateAllCoverage() {
  * Generate one component and print its progress line.
  * @returns whether it produced tests — the caller only needs the tally.
  */
-function generateAndReport(componentName) {
+function generateAndReport(componentName, context: DocumentedContext) {
   const model = readModel(componentName)
   if (isSkipped(model)) {
     console.log(`  ⊘ ${componentName}: Skipped (alias)`)
     return false
   }
-  const result = generateForComponent(componentName, model)
+  const result = generateForComponent(componentName, model, context)
   console.log(
     result.success
       ? `  ✓ ${componentName}: ${result.testCount} tests`
@@ -1183,13 +1204,21 @@ function generateAndReport(componentName) {
   return result.success
 }
 
+function documentedContext(): DocumentedContext {
+  const directories = getAllComponentDirs()
+  const models = directories.map(directory => readModel(directory)).filter((model): model is ComponentModel => !isSkipped(model))
+  const componentClasses = new Set(directories.flatMap(directory => Object.values(readComponentFrontmatter(directory)?.classnames ?? {}).flatMap(entries => ((entries as { class: string }[]) ?? []).map(entry => entry.class))))
+  return { models, componentClasses }
+}
+
 function generateAllComponents() {
   console.log('Generating tests for all components...\n')
 
   let generated = 0
   let skipped = 0
+  const context = documentedContext()
   for (const componentName of getAllComponentDirs()) {
-    if (generateAndReport(componentName)) generated++
+    if (generateAndReport(componentName, context)) generated++
     else skipped++
   }
 
@@ -1204,7 +1233,7 @@ function generateSingleComponent(componentName) {
     console.error(`Error: ${componentName} is skipped (alias)`)
     process.exit(1)
   }
-  const result = generateForComponent(componentName, model)
+  const result = generateForComponent(componentName, model, documentedContext())
   if (!result.success) {
     console.error(`Error: ${result.error}`)
     process.exit(1)

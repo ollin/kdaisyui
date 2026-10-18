@@ -9,12 +9,45 @@ import kotlin.test.assertTrue
 class MegamenuTest {
 
     @Test
+    fun responsive_megamenu_with_small_vertical_menus_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton() {
+            }
+        }
+        val expectedClasses = "btn"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
+    }
+
+    @Test
     fun responsive_megamenu_with_small_vertical_menus() {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenu(extraClasses = "max-sm:megamenu-vertical") {
             }
         }
         val expectedClasses = "max-sm:megamenu-vertical megamenu"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
+    }
+
+    @Test
+    fun responsive_megamenu_with_small_vertical_menus_daisyMegamenuActive() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuActive() {
+            }
+        }
+        val expectedClasses = "megamenu-active"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
+    }
+
+    @Test
+    fun responsive_megamenu_with_small_vertical_menus_daisyMenu() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenu() {
+            }
+        }
+        val expectedClasses = "menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive megamenu with small vertical menus")
     }
@@ -31,14 +64,80 @@ class MegamenuTest {
     }
 
     @Test
-    fun megamenu_with_a_menus_and_lots_of_links() {
+    fun megamenu_with_wide_popovers_and_horizontal_menus_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(width = MegamenuWidth.Wide, extraClasses = "max-sm:megamenu-vertical") {
+            daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
-        val expectedClasses = "max-sm:megamenu-vertical megamenu megamenu-wide"
+        val expectedClasses = "menu menu-horizontal"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu with wide popovers and horizontal menus")
+    }
+
+    @Test
+    fun megamenu_with_a_menus_and_lots_of_links_daisyMenu() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenu(extraClasses = "md:menu-horizontal") {
+            }
+        }
+        val expectedClasses = "md:menu-horizontal menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu with a menus and lots of links")
+    }
+
+    @Test
+    fun megamenu_with_a_menus_and_lots_of_links_daisyMenuTitle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuTitle() {
+            }
+        }
+        val expectedClasses = "menu-title"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu with a menus and lots of links")
+    }
+
+    @Test
+    fun megamenu_in_a_navbar_daisyNavbar() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbar() {
+            }
+        }
+        val expectedClasses = "navbar"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+    }
+
+    @Test
+    fun megamenu_in_a_navbar_daisyNavbarStart() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarStart() {
+            }
+        }
+        val expectedClasses = "navbar-start"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+    }
+
+    @Test
+    fun megamenu_in_a_navbar_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(style = ButtonStyle.Ghost) {
+            }
+        }
+        val expectedClasses = "btn btn-ghost"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+    }
+
+    @Test
+    fun megamenu_in_a_navbar_daisyNavbarCenter() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarCenter() {
+            }
+        }
+        val expectedClasses = "navbar-center"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
     }
 
     @Test
@@ -48,6 +147,17 @@ class MegamenuTest {
             }
         }
         val expectedClasses = "max-sm:megamenu-vertical megamenu megamenu-full"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
+    }
+
+    @Test
+    fun megamenu_in_a_navbar_daisyNavbarEnd() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarEnd() {
+            }
+        }
+        val expectedClasses = "navbar-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in a navbar")
     }
@@ -66,10 +176,54 @@ class MegamenuTest {
     @Test
     fun megamenu_in_different_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu() {
+            daisyMegamenu(size = MegamenuSize.Xs) {
             }
         }
-        val expectedClasses = "megamenu"
+        val expectedClasses = "megamenu megamenu-xs"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+    }
+
+    @Test
+    fun megamenu_in_different_sizes_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenu(size = MegamenuSize.Sm) {
+            }
+        }
+        val expectedClasses = "megamenu megamenu-sm"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+    }
+
+    @Test
+    fun megamenu_in_different_sizes_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenu(size = MegamenuSize.Md) {
+            }
+        }
+        val expectedClasses = "megamenu megamenu-md"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+    }
+
+    @Test
+    fun megamenu_in_different_sizes_4() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenu(size = MegamenuSize.Lg) {
+            }
+        }
+        val expectedClasses = "megamenu megamenu-lg"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
+    }
+
+    @Test
+    fun megamenu_in_different_sizes_5() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenu(size = MegamenuSize.Xl) {
+            }
+        }
+        val expectedClasses = "megamenu megamenu-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Megamenu in different sizes")
     }

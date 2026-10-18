@@ -19,6 +19,17 @@ class JoinTest {
     }
 
     @Test
+    fun join_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton() {
+            }
+        }
+        val expectedClasses = "btn"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Join")
+    }
+
+    @Test
     fun group_items_vertically() {
         val html = createHTML(prettyPrint = false).div {
             daisyJoin(direction = JoinDirection.Vertical) {
@@ -41,35 +52,35 @@ class JoinTest {
     }
 
     @Test
-    fun with_extra_elements_in_the_group() {
+    fun with_extra_elements_in_the_group_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin() {
+            daisyInput() {
             }
         }
-        val expectedClasses = "join"
+        val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
     }
 
     @Test
-    fun custom_border_radius() {
+    fun with_extra_elements_in_the_group_daisySelect() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin() {
+            daisySelect() {
             }
         }
-        val expectedClasses = "join"
+        val expectedClasses = "select"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom border radius")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
     }
 
     @Test
-    fun join_radio_inputs_with_btn_style() {
+    fun with_extra_elements_in_the_group_daisyIndicator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin() {
+            daisyIndicator() {
             }
         }
-        val expectedClasses = "join"
+        val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Join radio inputs with btn style")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
     }
 }

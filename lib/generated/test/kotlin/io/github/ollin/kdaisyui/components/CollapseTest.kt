@@ -19,47 +19,25 @@ class CollapseTest {
     }
 
     @Test
-    fun collapse_with_checkbox() {
+    fun collapse_with_focus_daisyCollapseTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse() {
+            daisyCollapseTitle() {
             }
         }
-        val expectedClasses = "collapse"
+        val expectedClasses = "collapse-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse with checkbox")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse with focus")
     }
 
     @Test
-    fun collapse_with_checkbox_and_close_on_click_outside() {
+    fun collapse_with_focus_daisyCollapseContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse() {
+            daisyCollapseContent() {
             }
         }
-        val expectedClasses = "collapse"
+        val expectedClasses = "collapse-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse with checkbox and close on click outside")
-    }
-
-    @Test
-    fun collapse_using_details_and_summary_tag() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse() {
-            }
-        }
-        val expectedClasses = "collapse"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse using details and summary tag")
-    }
-
-    @Test
-    fun without_border_and_background_color() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse() {
-            }
-        }
-        val expectedClasses = "collapse"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Without border and background color")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse with focus")
     }
 
     @Test
@@ -85,17 +63,6 @@ class CollapseTest {
     }
 
     @Test
-    fun moving_collapse_icon_to_the_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(icon = CollapseIcon.Arrow) {
-            }
-        }
-        val expectedClasses = "collapse collapse-arrow"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Moving collapse icon to the start")
-    }
-
-    @Test
     fun force_open() {
         val html = createHTML(prettyPrint = false).div {
             daisyCollapse(state = CollapseState.Open) {
@@ -115,27 +82,5 @@ class CollapseTest {
         val expectedClasses = "collapse collapse-close"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Force close")
-    }
-
-    @Test
-    fun custom_colors_for_collapse_that_works_with_focus() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse() {
-            }
-        }
-        val expectedClasses = "collapse"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom colors for collapse that works with focus")
-    }
-
-    @Test
-    fun custom_colors_for_collapse_that_works_with_checkbox() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse() {
-            }
-        }
-        val expectedClasses = "collapse"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom colors for collapse that works with checkbox")
     }
 }

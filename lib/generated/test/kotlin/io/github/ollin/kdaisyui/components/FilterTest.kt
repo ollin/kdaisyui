@@ -19,24 +19,24 @@ class FilterTest {
     }
 
     @Test
-    fun filter_without_html_form() {
+    fun filter_using_html_form_radio_buttons_and_reset_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFilter() {
+            daisyButton(shape = ButtonShape.Square) {
             }
         }
-        val expectedClasses = "filter"
+        val expectedClasses = "btn btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter without HTML form")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter using HTML form, radio buttons and reset button")
     }
 
     @Test
-    fun filter_using_html_form_checkboxes_and_a_reset_button() {
+    fun filter_using_html_form_radio_buttons_and_reset_button_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFilter() {
+            daisyButton() {
             }
         }
-        val expectedClasses = "filter"
+        val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter using HTML form, checkboxes, and a reset button")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter using HTML form, radio buttons and reset button")
     }
 }

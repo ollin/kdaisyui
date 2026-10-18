@@ -19,23 +19,23 @@ class StackTest {
     }
 
     @Test
-    fun stacked_images() {
+    fun stacked_cards_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack() {
+            daisyCard() {
             }
         }
-        val expectedClasses = "stack"
+        val expectedClasses = "card"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked images")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
     }
 
     @Test
-    fun stacked_cards() {
+    fun stacked_cards_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack() {
+            daisyCardBody() {
             }
         }
-        val expectedClasses = "stack"
+        val expectedClasses = "card-body"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
     }
@@ -74,23 +74,12 @@ class StackTest {
     }
 
     @Test
-    fun stacked_cards_with_shadow() {
+    fun stacked_cards_daisyCardTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack() {
+            daisyCardTitle() {
             }
         }
-        val expectedClasses = "stack"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards with shadow")
-    }
-
-    @Test
-    fun stacked_cards_2() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStack() {
-            }
-        }
-        val expectedClasses = "stack"
+        val expectedClasses = "card-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
     }

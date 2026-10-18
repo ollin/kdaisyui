@@ -19,6 +19,17 @@ class ChatTest {
     }
 
     @Test
+    fun chat_start_and_chat_end_daisyChatBubble() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatBubble() {
+            }
+        }
+        val expectedClasses = "chat-bubble"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for chat-start and chat-end")
+    }
+
+    @Test
     fun chat_start_and_chat_end_2() {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(placement = ChatPlacement.End) {
@@ -30,67 +41,111 @@ class ChatTest {
     }
 
     @Test
-    fun chat_with_image() {
+    fun chat_with_image_header_and_footer_daisyChatHeader() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.Start) {
+            daisyChatHeader() {
             }
         }
-        val expectedClasses = "chat chat-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image")
-    }
-
-    @Test
-    fun chat_with_image_header_and_footer() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.Start) {
-            }
-        }
-        val expectedClasses = "chat chat-start"
+        val expectedClasses = "chat-header"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image, header and footer")
     }
 
     @Test
-    fun chat_with_image_header_and_footer_2() {
+    fun chat_with_image_header_and_footer_daisyChatFooter() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.End) {
+            daisyChatFooter() {
             }
         }
-        val expectedClasses = "chat chat-end"
+        val expectedClasses = "chat-footer"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image, header and footer")
     }
 
     @Test
-    fun chat_with_header_and_footer() {
+    fun chat_bubble_with_colors_daisyChatBubble() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.Start) {
+            daisyChatBubble(color = ChatBubbleColor.Primary) {
             }
         }
-        val expectedClasses = "chat chat-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with header and footer")
-    }
-
-    @Test
-    fun chat_bubble_with_colors() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.Start) {
-            }
-        }
-        val expectedClasses = "chat chat-start"
+        val expectedClasses = "chat-bubble chat-bubble-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
     }
 
     @Test
-    fun chat_bubble_with_colors_2() {
+    fun chat_bubble_with_colors_daisyChatBubble_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.End) {
+            daisyChatBubble(color = ChatBubbleColor.Secondary) {
             }
         }
-        val expectedClasses = "chat chat-end"
+        val expectedClasses = "chat-bubble chat-bubble-secondary"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+    }
+
+    @Test
+    fun chat_bubble_with_colors_daisyChatBubble_3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatBubble(color = ChatBubbleColor.Accent) {
+            }
+        }
+        val expectedClasses = "chat-bubble chat-bubble-accent"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+    }
+
+    @Test
+    fun chat_bubble_with_colors_daisyChatBubble_4() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatBubble(color = ChatBubbleColor.Neutral) {
+            }
+        }
+        val expectedClasses = "chat-bubble chat-bubble-neutral"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+    }
+
+    @Test
+    fun chat_bubble_with_colors_daisyChatBubble_5() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatBubble(color = ChatBubbleColor.Info) {
+            }
+        }
+        val expectedClasses = "chat-bubble chat-bubble-info"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+    }
+
+    @Test
+    fun chat_bubble_with_colors_daisyChatBubble_6() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatBubble(color = ChatBubbleColor.Success) {
+            }
+        }
+        val expectedClasses = "chat-bubble chat-bubble-success"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+    }
+
+    @Test
+    fun chat_bubble_with_colors_daisyChatBubble_7() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatBubble(color = ChatBubbleColor.Warning) {
+            }
+        }
+        val expectedClasses = "chat-bubble chat-bubble-warning"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+    }
+
+    @Test
+    fun chat_bubble_with_colors_daisyChatBubble_8() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChatBubble(color = ChatBubbleColor.Error) {
+            }
+        }
+        val expectedClasses = "chat-bubble chat-bubble-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
     }

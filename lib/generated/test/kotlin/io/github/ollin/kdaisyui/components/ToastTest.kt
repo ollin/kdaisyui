@@ -19,12 +19,34 @@ class ToastTest {
     }
 
     @Test
+    fun toast_with_alert_inside_daisyAlert() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlert(color = AlertColor.Info) {
+            }
+        }
+        val expectedClasses = "alert alert-info"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for toast with alert inside")
+    }
+
+    @Test
     fun toast_top_toast_start() {
         val html = createHTML(prettyPrint = false).div {
             daisyToast(verticalPlacement = ToastVerticalPlacement.Top, horizontalPlacement = ToastHorizontalPlacement.Start) {
             }
         }
         val expectedClasses = "toast toast-start toast-top"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-top toast-start")
+    }
+
+    @Test
+    fun toast_top_toast_start_daisyAlert() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlert(color = AlertColor.Success) {
+            }
+        }
+        val expectedClasses = "alert alert-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-top toast-start")
     }

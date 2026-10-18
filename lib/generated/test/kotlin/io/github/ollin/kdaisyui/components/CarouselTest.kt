@@ -19,6 +19,17 @@ class CarouselTest {
     }
 
     @Test
+    fun snap_to_start_default_daisyCarouselItem() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselItem() {
+            }
+        }
+        val expectedClasses = "carousel-item"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Snap to start (default)")
+    }
+
+    @Test
     fun snap_to_center() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(snap = CarouselSnap.Center) {
@@ -41,17 +52,6 @@ class CarouselTest {
     }
 
     @Test
-    fun carousel_with_full_width_items() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel() {
-            }
-        }
-        val expectedClasses = "carousel"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Carousel with full width items")
-    }
-
-    @Test
     fun vertical_carousel() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(direction = CarouselDirection.Vertical) {
@@ -63,45 +63,23 @@ class CarouselTest {
     }
 
     @Test
-    fun carousel_with_half_width_items() {
+    fun carousel_with_indicator_buttons_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel() {
+            daisyButton(size = ButtonSize.Xs) {
             }
         }
-        val expectedClasses = "carousel"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Carousel with half width items")
-    }
-
-    @Test
-    fun full_bleed_carousel() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(snap = CarouselSnap.Center) {
-            }
-        }
-        val expectedClasses = "carousel carousel-center"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Full-bleed carousel")
-    }
-
-    @Test
-    fun carousel_with_indicator_buttons() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel() {
-            }
-        }
-        val expectedClasses = "carousel"
+        val expectedClasses = "btn btn-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Carousel with indicator buttons")
     }
 
     @Test
-    fun carousel_with_next_prev_buttons() {
+    fun carousel_with_next_prev_buttons_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel() {
+            daisyButton(shape = ButtonShape.Circle) {
             }
         }
-        val expectedClasses = "carousel"
+        val expectedClasses = "btn btn-circle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Carousel with next/prev buttons")
     }

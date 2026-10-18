@@ -19,39 +19,6 @@ class TableTest {
     }
 
     @Test
-    fun table_with_border_and_background() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable() {
-            }
-        }
-        val expectedClasses = "table"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with border and background")
-    }
-
-    @Test
-    fun table_with_an_active_row() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable() {
-            }
-        }
-        val expectedClasses = "table"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with an active row")
-    }
-
-    @Test
-    fun table_with_a_row_that_highlights_on_hover() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable() {
-            }
-        }
-        val expectedClasses = "table"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with a row that highlights on hover")
-    }
-
-    @Test
     fun zebra() {
         val html = createHTML(prettyPrint = false).div {
             daisyTable(zebra = true) {
@@ -63,12 +30,56 @@ class TableTest {
     }
 
     @Test
-    fun table_with_visual_elements() {
+    fun table_with_visual_elements_daisyCheckbox() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable() {
+            daisyCheckbox() {
             }
         }
-        val expectedClasses = "table"
+        val expectedClasses = "checkbox"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+    }
+
+    @Test
+    fun table_with_visual_elements_daisyAvatar() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAvatar() {
+            }
+        }
+        val expectedClasses = "avatar"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+    }
+
+    @Test
+    fun table_with_visual_elements_daisyMask() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMask(style = MaskStyle.Squircle) {
+            }
+        }
+        val expectedClasses = "mask mask-squircle"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+    }
+
+    @Test
+    fun table_with_visual_elements_daisyBadge() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(fillStyle = BadgeFillStyle.Ghost, size = BadgeSize.Sm) {
+            }
+        }
+        val expectedClasses = "badge badge-ghost badge-sm"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
+    }
+
+    @Test
+    fun table_with_visual_elements_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(style = ButtonStyle.Ghost, size = ButtonSize.Xs) {
+            }
+        }
+        val expectedClasses = "btn btn-ghost btn-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
     }
@@ -76,10 +87,10 @@ class TableTest {
     @Test
     fun table_xs() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable() {
+            daisyTable(size = TableSize.Xs) {
             }
         }
-        val expectedClasses = "table"
+        val expectedClasses = "table table-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table xs")
     }
@@ -98,10 +109,10 @@ class TableTest {
     @Test
     fun table_with_pinned_rows_and_pinned_cols() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable(pinRows = true, pinCols = true) {
+            daisyTable(size = TableSize.Xs, pinRows = true, pinCols = true) {
             }
         }
-        val expectedClasses = "table table-pin-cols table-pin-rows"
+        val expectedClasses = "table table-pin-cols table-pin-rows table-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with pinned-rows and pinned-cols")
     }

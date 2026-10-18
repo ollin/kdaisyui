@@ -20,25 +20,14 @@ class SkeletonTest {
     }
 
     @Test
-    fun skeleton_circle_with_content() {
+    fun skeleton_text_animated_gradient_text_daisySkeletonText() {
         val html = createHTML(prettyPrint = false).div {
-            daisySkeleton() {
+            daisySkeletonText() {
             }
         }
-        val expectedClasses = "skeleton"
+        val expectedClasses = "skeleton skeleton-text"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Skeleton - circle with content")
-    }
-
-    @Test
-    fun skeleton_rectangle_with_content() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySkeleton() {
-            }
-        }
-        val expectedClasses = "skeleton"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Skeleton - rectangle with content")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for skeleton-text - animated gradient text")
     }
 
     @Test

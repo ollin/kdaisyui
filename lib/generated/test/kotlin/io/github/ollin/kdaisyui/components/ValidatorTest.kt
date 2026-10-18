@@ -8,133 +8,67 @@ import kotlin.test.assertEquals
 class ValidatorTest {
 
     @Test
-    fun validator() {
+    fun validator_and_validator_hint_daisyValidatorHint() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
+            daisyValidatorHint() {
             }
         }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Validator")
-    }
-
-    @Test
-    fun validator_and_validator_hint() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
+        val expectedClasses = "validator-hint"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Validator and validator-hint")
     }
 
     @Test
-    fun password_requirement_validator() {
+    fun select_requirement_validator_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
+            daisyButton() {
             }
         }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Password requirement validator")
-    }
-
-    @Test
-    fun username_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Username requirement validator")
-    }
-
-    @Test
-    fun phone_number_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Phone Number requirement validator")
-    }
-
-    @Test
-    fun url_input_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for URL input requirement validator")
-    }
-
-    @Test
-    fun date_input_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Date input requirement validator")
-    }
-
-    @Test
-    fun number_input_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Number input requirement validator")
-    }
-
-    @Test
-    fun checkbox_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Checkbox requirement validator")
-    }
-
-    @Test
-    fun toggle_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Toggle requirement validator")
-    }
-
-    @Test
-    fun select_requirement_validator() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
-            }
-        }
-        val expectedClasses = "validator"
+        val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Select requirement validator")
     }
 
     @Test
-    fun form_requirement_validator() {
+    fun form_requirement_validator_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidator() {
+            daisyFieldset() {
             }
         }
-        val expectedClasses = "validator"
+        val expectedClasses = "fieldset"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Form requirement validator")
+    }
+
+    @Test
+    fun form_requirement_validator_daisyLabel() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabel() {
+            }
+        }
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Form requirement validator")
+    }
+
+    @Test
+    fun form_requirement_validator_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(color = ButtonColor.Neutral) {
+            }
+        }
+        val expectedClasses = "btn btn-neutral"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Form requirement validator")
+    }
+
+    @Test
+    fun form_requirement_validator_daisyButton_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(style = ButtonStyle.Ghost) {
+            }
+        }
+        val expectedClasses = "btn btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Form requirement validator")
     }

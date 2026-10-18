@@ -19,24 +19,13 @@ class ListTest {
     }
 
     @Test
-    fun list_third_column_grows() {
+    fun list_second_column_grows_default_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyList() {
+            daisyButton(shape = ButtonShape.Square, style = ButtonStyle.Ghost) {
             }
         }
-        val expectedClasses = "list"
+        val expectedClasses = "btn btn-ghost btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column grows)")
-    }
-
-    @Test
-    fun list_third_column_wraps_to_next_row() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyList() {
-            }
-        }
-        val expectedClasses = "list"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column wraps to next row)")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
     }
 }

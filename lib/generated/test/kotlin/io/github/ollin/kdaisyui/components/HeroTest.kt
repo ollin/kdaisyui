@@ -19,45 +19,111 @@ class HeroTest {
     }
 
     @Test
-    fun hero_with_figure() {
+    fun centered_hero_daisyHeroContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHero() {
+            daisyHeroContent() {
             }
         }
-        val expectedClasses = "hero"
+        val expectedClasses = "hero-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with figure")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered hero")
     }
 
     @Test
-    fun hero_with_figure_but_reverse_order() {
+    fun centered_hero_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHero() {
+            daisyButton(color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "hero"
+        val expectedClasses = "btn btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with figure but reverse order")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered hero")
     }
 
     @Test
-    fun hero_with_form() {
+    fun hero_with_form_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHero() {
+            daisyCard() {
             }
         }
-        val expectedClasses = "hero"
+        val expectedClasses = "card"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
     }
 
     @Test
-    fun hero_with_overlay_image() {
+    fun hero_with_form_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHero() {
+            daisyCardBody() {
             }
         }
-        val expectedClasses = "hero"
+        val expectedClasses = "card-body"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
+    }
+
+    @Test
+    fun hero_with_form_daisyFieldset() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFieldset() {
+            }
+        }
+        val expectedClasses = "fieldset"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
+    }
+
+    @Test
+    fun hero_with_form_daisyLabel() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabel() {
+            }
+        }
+        val expectedClasses = "label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
+    }
+
+    @Test
+    fun hero_with_form_daisyInput() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyInput() {
+            }
+        }
+        val expectedClasses = "input"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
+    }
+
+    @Test
+    fun hero_with_form_daisyLink() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLink(hover = true) {
+            }
+        }
+        val expectedClasses = "link link-hover"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
+    }
+
+    @Test
+    fun hero_with_form_daisyButton() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButton(color = ButtonColor.Neutral) {
+            }
+        }
+        val expectedClasses = "btn btn-neutral"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with form")
+    }
+
+    @Test
+    fun hero_with_overlay_image_daisyHeroOverlay() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHeroOverlay() {
+            }
+        }
+        val expectedClasses = "hero-overlay"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hero with overlay image")
     }

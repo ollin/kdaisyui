@@ -19,13 +19,35 @@ class DiffTest {
     }
 
     @Test
-    fun diff_text() {
+    fun diff_daisyDiffItem1() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiff() {
+            daisyDiffItem1() {
             }
         }
-        val expectedClasses = "diff"
+        val expectedClasses = "diff-item-1"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff text")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
+    }
+
+    @Test
+    fun diff_daisyDiffItem2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffItem2() {
+            }
+        }
+        val expectedClasses = "diff-item-2"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
+    }
+
+    @Test
+    fun diff_daisyDiffResizer() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDiffResizer() {
+            }
+        }
+        val expectedClasses = "diff-resizer"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
     }
 }

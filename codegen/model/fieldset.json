@@ -24,7 +24,5 @@
     }
   ],
   "summary": { "summary": "Groups related form controls" },
-  "notOffered": {
-    "label": "The label component, offered by daisyLabel."
-  }
+  "notOffered": { "label": "The label component, offered by daisyLabel." }
 }

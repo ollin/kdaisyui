@@ -21,11 +21,7 @@
       "label": "Side variants",
       "classes": ["tooltip-top", "tooltip-bottom", "tooltip-left", "tooltip-right"]
     },
-    {
-      "name": "TooltipAlign",
-      "label": "Align variants",
-      "classes": ["tooltip-start", "tooltip-center", "tooltip-end"]
-    }
+    { "name": "TooltipAlign", "label": "Align variants", "classes": ["tooltip-start", "tooltip-center", "tooltip-end"] }
   ],
   "functions": [
     {

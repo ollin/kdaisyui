@@ -27,9 +27,7 @@
       "element": "UL",
       "class": "steps",
       "text": false,
-      "parameters": [
-        { "kind": "enum", "name": "direction", "enum": "StepsDirection", "doc": "Direction variant" }
-      ]
+      "parameters": [{ "kind": "enum", "name": "direction", "enum": "StepsDirection", "doc": "Direction variant" }]
     },
     {
       "kind": "part",

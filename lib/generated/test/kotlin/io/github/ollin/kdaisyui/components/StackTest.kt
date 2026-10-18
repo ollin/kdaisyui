@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class StackTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun test_3_divs_in_a_stack() {
         val html = createHTML(prettyPrint = false).div {
             daisyStack() {
             }
         }
-        val expectedClasses = "stack"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for 3 divs in a stack")
+        assertDocumented(html, "div", "stack", "3 divs in a stack")
     }
 
     @Test
@@ -24,9 +27,7 @@ class StackTest {
             daisyCard() {
             }
         }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
+        assertDocumented(html, "div", "card", "stacked cards")
     }
 
     @Test
@@ -35,9 +36,7 @@ class StackTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
+        assertDocumented(html, "div", "card-body", "stacked cards")
     }
 
     @Test
@@ -46,9 +45,7 @@ class StackTest {
             daisyStack(placement = StackPlacement.Top) {
             }
         }
-        val expectedClasses = "stack stack-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards (top direction)")
+        assertDocumented(html, "div", "stack stack-top", "stacked cards (top direction)")
     }
 
     @Test
@@ -57,9 +54,7 @@ class StackTest {
             daisyStack(placement = StackPlacement.Start) {
             }
         }
-        val expectedClasses = "stack stack-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards (start direction)")
+        assertDocumented(html, "div", "stack stack-start", "stacked cards (start direction)")
     }
 
     @Test
@@ -68,9 +63,7 @@ class StackTest {
             daisyStack(placement = StackPlacement.End) {
             }
         }
-        val expectedClasses = "stack stack-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards (end direction)")
+        assertDocumented(html, "div", "stack stack-end", "stacked cards (end direction)")
     }
 
     @Test
@@ -79,8 +72,6 @@ class StackTest {
             daisyCardTitle() {
             }
         }
-        val expectedClasses = "card-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for stacked cards")
+        assertDocumented(html, "h2", "card-title", "stacked cards")
     }
 }

@@ -5,17 +5,21 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.html.fieldSet
+import kotlinx.html.label
 
 class CheckboxTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun checkbox() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox()
         }
-        val expectedClasses = "checkbox"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Checkbox")
+        assertDocumented(html, "input", "checkbox", "Checkbox")
     }
 
     @Test
@@ -24,9 +28,7 @@ class CheckboxTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertDocumented(html, "fieldset", "fieldset", "With fieldset and label")
     }
 
     @Test
@@ -35,20 +37,15 @@ class CheckboxTest {
             daisyFieldsetLegend() {
             }
         }
-        val expectedClasses = "fieldset-legend"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertDocumented(html, "legend", "fieldset-legend", "With fieldset and label")
     }
 
     @Test
     fun with_fieldset_and_label_daisyLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            label { daisyLabelClasses() }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertDocumented(html, "label", "label", "With fieldset and label")
     }
 
     @Test
@@ -56,9 +53,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(size = CheckboxSize.Xs)
         }
-        val expectedClasses = "checkbox checkbox-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "checkbox checkbox-xs", "Sizes")
     }
 
     @Test
@@ -66,9 +61,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(size = CheckboxSize.Sm)
         }
-        val expectedClasses = "checkbox checkbox-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "checkbox checkbox-sm", "Sizes")
     }
 
     @Test
@@ -76,9 +69,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(size = CheckboxSize.Md)
         }
-        val expectedClasses = "checkbox checkbox-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "checkbox checkbox-md", "Sizes")
     }
 
     @Test
@@ -86,9 +77,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(size = CheckboxSize.Lg)
         }
-        val expectedClasses = "checkbox checkbox-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "checkbox checkbox-lg", "Sizes")
     }
 
     @Test
@@ -96,9 +85,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(size = CheckboxSize.Xl)
         }
-        val expectedClasses = "checkbox checkbox-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "checkbox checkbox-xl", "Sizes")
     }
 
     @Test
@@ -106,9 +93,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Primary)
         }
-        val expectedClasses = "checkbox checkbox-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-primary", "Colors")
     }
 
     @Test
@@ -116,9 +101,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Secondary)
         }
-        val expectedClasses = "checkbox checkbox-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-secondary", "Colors")
     }
 
     @Test
@@ -126,9 +109,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Accent)
         }
-        val expectedClasses = "checkbox checkbox-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-accent", "Colors")
     }
 
     @Test
@@ -136,9 +117,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Neutral)
         }
-        val expectedClasses = "checkbox checkbox-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-neutral", "Colors")
     }
 
     @Test
@@ -146,9 +125,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Info)
         }
-        val expectedClasses = "checkbox checkbox-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-info", "Colors")
     }
 
     @Test
@@ -156,9 +133,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Success)
         }
-        val expectedClasses = "checkbox checkbox-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-success", "Colors")
     }
 
     @Test
@@ -166,9 +141,7 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Warning)
         }
-        val expectedClasses = "checkbox checkbox-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-warning", "Colors")
     }
 
     @Test
@@ -176,8 +149,6 @@ class CheckboxTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(color = CheckboxColor.Error)
         }
-        val expectedClasses = "checkbox checkbox-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "checkbox checkbox-error", "Colors")
     }
 }

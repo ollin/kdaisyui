@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class ButtonTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun button() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton() {
             }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button")
+        assertDocumented(html, "button", "btn", "Button")
     }
 
     @Test
@@ -24,9 +27,7 @@ class ButtonTest {
             daisyButton(size = ButtonSize.Xs) {
             }
         }
-        val expectedClasses = "btn btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertDocumented(html, "button", "btn btn-xs", "Button sizes")
     }
 
     @Test
@@ -35,9 +36,7 @@ class ButtonTest {
             daisyButton(size = ButtonSize.Sm) {
             }
         }
-        val expectedClasses = "btn btn-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertDocumented(html, "button", "btn btn-sm", "Button sizes")
     }
 
     @Test
@@ -46,9 +45,7 @@ class ButtonTest {
             daisyButton(size = ButtonSize.Lg) {
             }
         }
-        val expectedClasses = "btn btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertDocumented(html, "button", "btn btn-lg", "Button sizes")
     }
 
     @Test
@@ -57,9 +54,7 @@ class ButtonTest {
             daisyButton(size = ButtonSize.Xl) {
             }
         }
-        val expectedClasses = "btn btn-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertDocumented(html, "button", "btn btn-xl", "Button sizes")
     }
 
     @Test
@@ -68,9 +63,7 @@ class ButtonTest {
             daisyButton(size = ButtonSize.Xs, extraClasses = "sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl") {
             }
         }
-        val expectedClasses = "btn btn-xs lg:btn-lg md:btn-md sm:btn-sm xl:btn-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive button")
+        assertDocumented(html, "button", "btn btn-xs lg:btn-lg md:btn-md sm:btn-sm xl:btn-xl", "Responsive button")
     }
 
     @Test
@@ -79,9 +72,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Neutral) {
             }
         }
-        val expectedClasses = "btn btn-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-neutral", "Buttons colors")
     }
 
     @Test
@@ -90,9 +81,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-primary", "Buttons colors")
     }
 
     @Test
@@ -101,9 +90,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Secondary) {
             }
         }
-        val expectedClasses = "btn btn-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-secondary", "Buttons colors")
     }
 
     @Test
@@ -112,9 +99,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Accent) {
             }
         }
-        val expectedClasses = "btn btn-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-accent", "Buttons colors")
     }
 
     @Test
@@ -123,9 +108,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Info) {
             }
         }
-        val expectedClasses = "btn btn-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-info", "Buttons colors")
     }
 
     @Test
@@ -134,9 +117,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Success) {
             }
         }
-        val expectedClasses = "btn btn-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-success", "Buttons colors")
     }
 
     @Test
@@ -145,9 +126,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Warning) {
             }
         }
-        val expectedClasses = "btn btn-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-warning", "Buttons colors")
     }
 
     @Test
@@ -156,9 +135,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Error) {
             }
         }
-        val expectedClasses = "btn btn-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertDocumented(html, "button", "btn btn-error", "Buttons colors")
     }
 
     @Test
@@ -167,9 +144,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft) {
             }
         }
-        val expectedClasses = "btn btn-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-soft", "Soft buttons")
     }
 
     @Test
@@ -178,9 +153,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft, color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-primary btn-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-primary btn-soft", "Soft buttons")
     }
 
     @Test
@@ -189,9 +162,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft, color = ButtonColor.Secondary) {
             }
         }
-        val expectedClasses = "btn btn-secondary btn-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-secondary btn-soft", "Soft buttons")
     }
 
     @Test
@@ -200,9 +171,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft, color = ButtonColor.Accent) {
             }
         }
-        val expectedClasses = "btn btn-accent btn-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-accent btn-soft", "Soft buttons")
     }
 
     @Test
@@ -211,9 +180,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft, color = ButtonColor.Info) {
             }
         }
-        val expectedClasses = "btn btn-info btn-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-info btn-soft", "Soft buttons")
     }
 
     @Test
@@ -222,9 +189,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft, color = ButtonColor.Success) {
             }
         }
-        val expectedClasses = "btn btn-soft btn-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-soft btn-success", "Soft buttons")
     }
 
     @Test
@@ -233,9 +198,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft, color = ButtonColor.Warning) {
             }
         }
-        val expectedClasses = "btn btn-soft btn-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-soft btn-warning", "Soft buttons")
     }
 
     @Test
@@ -244,9 +207,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Soft, color = ButtonColor.Error) {
             }
         }
-        val expectedClasses = "btn btn-error btn-soft"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertDocumented(html, "button", "btn btn-error btn-soft", "Soft buttons")
     }
 
     @Test
@@ -255,9 +216,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline) {
             }
         }
-        val expectedClasses = "btn btn-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-outline", "Outline buttons")
     }
 
     @Test
@@ -266,9 +225,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline, color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-outline btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-outline btn-primary", "Outline buttons")
     }
 
     @Test
@@ -277,9 +234,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline, color = ButtonColor.Secondary) {
             }
         }
-        val expectedClasses = "btn btn-outline btn-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-outline btn-secondary", "Outline buttons")
     }
 
     @Test
@@ -288,9 +243,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline, color = ButtonColor.Accent) {
             }
         }
-        val expectedClasses = "btn btn-accent btn-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-accent btn-outline", "Outline buttons")
     }
 
     @Test
@@ -299,9 +252,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline, color = ButtonColor.Info) {
             }
         }
-        val expectedClasses = "btn btn-info btn-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-info btn-outline", "Outline buttons")
     }
 
     @Test
@@ -310,9 +261,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline, color = ButtonColor.Success) {
             }
         }
-        val expectedClasses = "btn btn-outline btn-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-outline btn-success", "Outline buttons")
     }
 
     @Test
@@ -321,9 +270,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline, color = ButtonColor.Warning) {
             }
         }
-        val expectedClasses = "btn btn-outline btn-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-outline btn-warning", "Outline buttons")
     }
 
     @Test
@@ -332,9 +279,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Outline, color = ButtonColor.Error) {
             }
         }
-        val expectedClasses = "btn btn-error btn-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertDocumented(html, "button", "btn btn-error btn-outline", "Outline buttons")
     }
 
     @Test
@@ -343,9 +288,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash) {
             }
         }
-        val expectedClasses = "btn btn-dash"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-dash", "Dash buttons")
     }
 
     @Test
@@ -354,9 +297,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash, color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-dash btn-primary", "Dash buttons")
     }
 
     @Test
@@ -365,9 +306,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash, color = ButtonColor.Secondary) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-dash btn-secondary", "Dash buttons")
     }
 
     @Test
@@ -376,9 +315,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash, color = ButtonColor.Accent) {
             }
         }
-        val expectedClasses = "btn btn-accent btn-dash"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-accent btn-dash", "Dash buttons")
     }
 
     @Test
@@ -387,9 +324,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash, color = ButtonColor.Info) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-dash btn-info", "Dash buttons")
     }
 
     @Test
@@ -398,9 +333,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash, color = ButtonColor.Success) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-dash btn-success", "Dash buttons")
     }
 
     @Test
@@ -409,9 +342,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash, color = ButtonColor.Warning) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-dash btn-warning", "Dash buttons")
     }
 
     @Test
@@ -420,9 +351,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Dash, color = ButtonColor.Error) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertDocumented(html, "button", "btn btn-dash btn-error", "Dash buttons")
     }
 
     @Test
@@ -431,9 +360,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Neutral, style = ButtonStyle.Outline) {
             }
         }
-        val expectedClasses = "btn btn-neutral btn-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral button with outline or dash style")
+        assertDocumented(html, "button", "btn btn-neutral btn-outline", "neutral button with outline or dash style")
     }
 
     @Test
@@ -442,9 +369,7 @@ class ButtonTest {
             daisyButton(color = ButtonColor.Neutral, style = ButtonStyle.Dash) {
             }
         }
-        val expectedClasses = "btn btn-dash btn-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral button with outline or dash style")
+        assertDocumented(html, "button", "btn btn-dash btn-neutral", "neutral button with outline or dash style")
     }
 
     @Test
@@ -453,9 +378,7 @@ class ButtonTest {
             daisyButton(active = true) {
             }
         }
-        val expectedClasses = "btn btn-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-active", "Active buttons")
     }
 
     @Test
@@ -464,9 +387,7 @@ class ButtonTest {
             daisyButton(active = true, color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-active btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-active btn-primary", "Active buttons")
     }
 
     @Test
@@ -475,9 +396,7 @@ class ButtonTest {
             daisyButton(active = true, color = ButtonColor.Secondary) {
             }
         }
-        val expectedClasses = "btn btn-active btn-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-active btn-secondary", "Active buttons")
     }
 
     @Test
@@ -486,9 +405,7 @@ class ButtonTest {
             daisyButton(active = true, color = ButtonColor.Accent) {
             }
         }
-        val expectedClasses = "btn btn-accent btn-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-accent btn-active", "Active buttons")
     }
 
     @Test
@@ -497,9 +414,7 @@ class ButtonTest {
             daisyButton(active = true, color = ButtonColor.Info) {
             }
         }
-        val expectedClasses = "btn btn-active btn-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-active btn-info", "Active buttons")
     }
 
     @Test
@@ -508,9 +423,7 @@ class ButtonTest {
             daisyButton(active = true, color = ButtonColor.Success) {
             }
         }
-        val expectedClasses = "btn btn-active btn-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-active btn-success", "Active buttons")
     }
 
     @Test
@@ -519,9 +432,7 @@ class ButtonTest {
             daisyButton(active = true, color = ButtonColor.Warning) {
             }
         }
-        val expectedClasses = "btn btn-active btn-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-active btn-warning", "Active buttons")
     }
 
     @Test
@@ -530,9 +441,7 @@ class ButtonTest {
             daisyButton(active = true, color = ButtonColor.Error) {
             }
         }
-        val expectedClasses = "btn btn-active btn-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertDocumented(html, "button", "btn btn-active btn-error", "Active buttons")
     }
 
     @Test
@@ -541,9 +450,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Ghost) {
             }
         }
-        val expectedClasses = "btn btn-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons ghost and button link")
+        assertDocumented(html, "button", "btn btn-ghost", "Buttons ghost and button link")
     }
 
     @Test
@@ -552,9 +459,7 @@ class ButtonTest {
             daisyButton(style = ButtonStyle.Link) {
             }
         }
-        val expectedClasses = "btn btn-link"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons ghost and button link")
+        assertDocumented(html, "button", "btn btn-link", "Buttons ghost and button link")
     }
 
     @Test
@@ -563,9 +468,7 @@ class ButtonTest {
             daisyButton(width = ButtonWidth.Wide) {
             }
         }
-        val expectedClasses = "btn btn-wide"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Wide button")
+        assertDocumented(html, "button", "btn btn-wide", "Wide button")
     }
 
     @Test
@@ -574,9 +477,7 @@ class ButtonTest {
             daisyButton(disabled = true) {
             }
         }
-        val expectedClasses = "btn btn-disabled"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Disabled buttons")
+        assertDocumented(html, "button", "btn btn-disabled", "Disabled buttons")
     }
 
     @Test
@@ -585,9 +486,7 @@ class ButtonTest {
             daisyButton(shape = ButtonShape.Square) {
             }
         }
-        val expectedClasses = "btn btn-square"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Square button and circle button")
+        assertDocumented(html, "button", "btn btn-square", "Square button and circle button")
     }
 
     @Test
@@ -596,9 +495,7 @@ class ButtonTest {
             daisyButton(shape = ButtonShape.Circle) {
             }
         }
-        val expectedClasses = "btn btn-circle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Square button and circle button")
+        assertDocumented(html, "button", "btn btn-circle", "Square button and circle button")
     }
 
     @Test
@@ -607,9 +504,7 @@ class ButtonTest {
             daisyButton(width = ButtonWidth.Block) {
             }
         }
-        val expectedClasses = "btn btn-block"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button block")
+        assertDocumented(html, "button", "btn btn-block", "Button block")
     }
 
     @Test
@@ -618,8 +513,6 @@ class ButtonTest {
             daisyLoading(style = LoadingStyle.Spinner) {
             }
         }
-        val expectedClasses = "loading loading-spinner"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Button with loading spinner")
+        assertDocumented(html, "span", "loading loading-spinner", "Button with loading spinner")
     }
 }

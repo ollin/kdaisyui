@@ -5,17 +5,21 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.html.fieldSet
+import kotlinx.html.label
 
 class ToggleTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun toggle_switch() {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle()
         }
-        val expectedClasses = "toggle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Toggle (switch)")
+        assertDocumented(html, "input", "toggle", "Toggle (switch)")
     }
 
     @Test
@@ -24,9 +28,7 @@ class ToggleTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertDocumented(html, "fieldset", "fieldset", "With fieldset and label")
     }
 
     @Test
@@ -35,20 +37,15 @@ class ToggleTest {
             daisyFieldsetLegend() {
             }
         }
-        val expectedClasses = "fieldset-legend"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertDocumented(html, "legend", "fieldset-legend", "With fieldset and label")
     }
 
     @Test
     fun with_fieldset_and_label_daisyLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            label { daisyLabelClasses() }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertDocumented(html, "label", "label", "With fieldset and label")
     }
 
     @Test
@@ -56,9 +53,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(size = ToggleSize.Xs)
         }
-        val expectedClasses = "toggle toggle-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "toggle toggle-xs", "Sizes")
     }
 
     @Test
@@ -66,9 +61,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(size = ToggleSize.Sm)
         }
-        val expectedClasses = "toggle toggle-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "toggle toggle-sm", "Sizes")
     }
 
     @Test
@@ -76,9 +69,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(size = ToggleSize.Md)
         }
-        val expectedClasses = "toggle toggle-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "toggle toggle-md", "Sizes")
     }
 
     @Test
@@ -86,9 +77,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(size = ToggleSize.Lg)
         }
-        val expectedClasses = "toggle toggle-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "toggle toggle-lg", "Sizes")
     }
 
     @Test
@@ -96,9 +85,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(size = ToggleSize.Xl)
         }
-        val expectedClasses = "toggle toggle-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "toggle toggle-xl", "Sizes")
     }
 
     @Test
@@ -106,9 +93,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Primary)
         }
-        val expectedClasses = "toggle toggle-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-primary", "Colors")
     }
 
     @Test
@@ -116,9 +101,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Secondary)
         }
-        val expectedClasses = "toggle toggle-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-secondary", "Colors")
     }
 
     @Test
@@ -126,9 +109,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Accent)
         }
-        val expectedClasses = "toggle toggle-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-accent", "Colors")
     }
 
     @Test
@@ -136,9 +117,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Neutral)
         }
-        val expectedClasses = "toggle toggle-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-neutral", "Colors")
     }
 
     @Test
@@ -146,9 +125,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Info)
         }
-        val expectedClasses = "toggle toggle-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-info", "Colors")
     }
 
     @Test
@@ -156,9 +133,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Success)
         }
-        val expectedClasses = "toggle toggle-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-success", "Colors")
     }
 
     @Test
@@ -166,9 +141,7 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Warning)
         }
-        val expectedClasses = "toggle toggle-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-warning", "Colors")
     }
 
     @Test
@@ -176,8 +149,6 @@ class ToggleTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle(color = ToggleColor.Error)
         }
-        val expectedClasses = "toggle toggle-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertDocumented(html, "input", "toggle toggle-error", "Colors")
     }
 }

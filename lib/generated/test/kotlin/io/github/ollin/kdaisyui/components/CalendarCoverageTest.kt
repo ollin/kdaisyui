@@ -31,7 +31,7 @@ class CalendarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "cally", "Calendar defaults", closes = "</div></div>")
+        assertRendered(html, "cally", "Calendar defaults")
     }
 
     @Test
@@ -44,7 +44,7 @@ class CalendarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "cally zz-extra", "Calendar all flags", closes = "</div></div>")
+        assertRendered(html, "cally zz-extra", "Calendar all flags")
         assertCommonFlags(html, "Calendar")
     }
 

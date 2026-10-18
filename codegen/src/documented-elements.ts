@@ -9,6 +9,7 @@ import { entryName, type ComponentModel, type ModelFunction } from './model.ts'
 import { offeredBy, writtenBy } from './model-completeness.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
 import { markedElements, type MarkedElement } from './parser/documented-classes.ts'
+import { hasBuilder, htmlTagNameFor, type TagClass } from './component-shape.ts'
 
 /** A function and the component model that declares it. */
 export interface ModelledFunction {
@@ -38,19 +39,22 @@ export interface Claims {
  * classes claims what it offers; what remains is claimed whole by a function with no own class,
  * or by nobody.
  */
-export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[]): Claims {
+export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[], tag = ''): Claims {
   const candidates = models.flatMap(model => model.functions.map(fn => ({ model, fn })))
-  const owned = counted.flatMap(own => ownerOf(candidates, own, counted)).map(owner => ({ ...owner, classes: counted.filter(cls => offers(owner.model, owner.fn, cls)) }))
+  const owned = counted.flatMap(own => ownerOf(candidates, own, counted, tag)).map(owner => ({ ...owner, classes: counted.filter(cls => offers(owner.model, owner.fn, cls)) }))
   const rest = counted.filter(cls => !owned.some(group => group.classes.includes(cls)))
   const free = rest.length === 0 ? undefined : candidates.find(({ model, fn }) => fn.class === null && rest.every(cls => offers(model, fn, cls)))
   return free === undefined ? { groups: owned, unclaimed: rest } : { groups: [...owned, { ...free, classes: rest }], unclaimed: [] }
 }
 
-/** Of the functions whose own class is `own`, the one offering the most of the element's classes. */
-function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: readonly string[]): ModelledFunction[] {
-  const share = ({ model, fn }: ModelledFunction) => counted.filter(cls => offers(model, fn, cls)).length
+/**
+ * Of the functions whose own class is `own`, the one offering the most of the element's classes,
+ * and of those offering equally much, the one rendering the documented tag.
+ */
+function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: readonly string[], tag: string): ModelledFunction[] {
+  const score = ({ model, fn }: ModelledFunction) => 2 * counted.filter(cls => offers(model, fn, cls)).length + (rendersTag(fn, tag) ? 1 : 0)
   const owners = candidates.filter(({ fn }) => fn.class === own)
-  return owners.length === 0 ? [] : [owners.reduce((best, next) => (share(next) > share(best) ? next : best))]
+  return owners.length === 0 ? [] : [owners.reduce((best, next) => (score(next) > score(best) ? next : best))]
 }
 
 
@@ -81,7 +85,7 @@ export interface DocumentedGap {
 export function gapsIn(html: string, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): DocumentedGap[] {
   return markedElements(html)
     .map(element => ({ tag: element.tag, counted: countedClasses(element, componentClasses) }))
-    .filter(({ counted }) => counted.length > 0 && claimingGroups(models, counted).unclaimed.length > 0)
+    .filter(({ tag, counted }) => counted.length > 0 && claimingGroups(models, counted, tag).unclaimed.length > 0)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }
 
@@ -100,6 +104,12 @@ export interface DocumentedCall {
   readonly fn: ModelFunction
   readonly args: string
   readonly expectedClasses: string
+  /** DaisyUI's tag for the element, e.g. `a`. */
+  readonly tag: string
+  /** Whether `fn` renders that tag, so the test can call it; otherwise it writes the tag itself. */
+  readonly rendersTag: boolean
+  /** What goes inside the tag when the test writes it: every group's sibling, and the variant classes. */
+  readonly onTag: string
 }
 
 /**
@@ -109,18 +119,35 @@ export interface DocumentedCall {
  */
 export function documentedCall(models: readonly ComponentModel[], element: MarkedElement, componentClasses: ReadonlySet<string>): DocumentedCall | null {
   const counted = countedClasses(element, componentClasses)
-  const { groups, unclaimed } = claimingGroups(models, counted)
+  const { groups, unclaimed } = claimingGroups(models, counted, element.tag)
   if (groups.length === 0 || unclaimed.length > 0) return null
   const [primary, ...others] = [...groups].sort((left, right) => rank(models, left) - rank(models, right))
   if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
-  return { fn: primary.fn, args: callArguments(primary, others, variants).join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+  return {
+    fn: primary.fn,
+    args: callArguments(primary, others, variants).join(', '),
+    expectedClasses: [...new Set(expected)].sort().join(' '),
+    tag: element.tag,
+    rendersTag: primary.fn.kind !== 'classes' && rendersTag(primary.fn, element.tag),
+    onTag: tagStatements([primary, ...others], variants),
+  }
+}
+
+/** What a test writes inside DaisyUI's tag: every group's sibling, then the variant classes. */
+function tagStatements(groups: readonly ClaimedGroup[], variants: readonly string[]): string {
+  return [...groups.map(siblingCall), ...(variants.length > 0 ? [`addClassNames("${variants.join(' ')}")`] : [])].join('; ')
+}
+
+/** A group's classes as its function's class sibling writes them. */
+function siblingCall(group: ClaimedGroup): string {
+  return `${group.fn.name}Classes(${groupArguments(group).join(', ')})`
 }
 
 /** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */
 function callArguments(primary: ClaimedGroup, others: readonly ClaimedGroup[], variants: readonly string[]): string[] {
-  const siblings = others.map(group => `${group.fn.name}Classes(${groupArguments(group).join(', ')})`)
+  const siblings = others.map(siblingCall)
   return [
     ...groupArguments(primary),
     ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : []),
@@ -148,4 +175,15 @@ function argumentFor(model: ComponentModel, fn: ModelFunction, cls: string): str
 /** The classes the gate judges an element by: unprefixed, and declared by some component. */
 function countedClasses(element: MarkedElement, componentClasses: ReadonlySet<string>): string[] {
   return element.classes.filter(cls => !cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.className)
+}
+
+/** Every tag a page's examples document that no builder writes, so no test and no caller can. */
+export function tagFindings(page: string, html: string): string[] {
+  return [...new Set(markedElements(html).map(element => element.tag).filter(tag => !hasBuilder(tag)))]
+    .map(tag => `${page}: <${tag}> is documented, and nothing writes that tag: kotlinx.html has no builder and the library defines none`)
+}
+
+/** Whether a function renders an HTML tag, by the tag's HTML name: `calendar-date` for `CALENDAR_DATE`. */
+function rendersTag(fn: ModelFunction, tag: string): boolean {
+  return fn.element !== null && htmlTagNameFor(fn.element as TagClass) === tag
 }

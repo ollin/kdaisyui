@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class AccordionTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun accordion_using_radio_inputs_daisyCollapse() {
         val html = createHTML(prettyPrint = false).div {
             daisyCollapse() {
             }
         }
-        val expectedClasses = "collapse"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion using radio inputs")
+        assertDocumented(html, "div", "collapse", "Accordion using radio inputs")
     }
 
     @Test
@@ -24,9 +27,7 @@ class AccordionTest {
             daisyCollapseTitle() {
             }
         }
-        val expectedClasses = "collapse-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion using radio inputs")
+        assertDocumented(html, "div", "collapse-title", "Accordion using radio inputs")
     }
 
     @Test
@@ -35,9 +36,7 @@ class AccordionTest {
             daisyCollapseContent() {
             }
         }
-        val expectedClasses = "collapse-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion using radio inputs")
+        assertDocumented(html, "div", "collapse-content", "Accordion using radio inputs")
     }
 
     @Test
@@ -46,9 +45,7 @@ class AccordionTest {
             daisyCollapse(icon = CollapseIcon.Arrow) {
             }
         }
-        val expectedClasses = "collapse collapse-arrow"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion with arrow icon")
+        assertDocumented(html, "div", "collapse collapse-arrow", "Accordion with arrow icon")
     }
 
     @Test
@@ -57,9 +54,7 @@ class AccordionTest {
             daisyCollapse(icon = CollapseIcon.Plus) {
             }
         }
-        val expectedClasses = "collapse collapse-plus"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion with plus/minus icon")
+        assertDocumented(html, "div", "collapse collapse-plus", "Accordion with plus/minus icon")
     }
 
     @Test
@@ -68,8 +63,6 @@ class AccordionTest {
             daisyJoin(direction = JoinDirection.Vertical) {
             }
         }
-        val expectedClasses = "join join-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Using Accordion and Join together")
+        assertDocumented(html, "div", "join join-vertical", "Using Accordion and Join together")
     }
 }

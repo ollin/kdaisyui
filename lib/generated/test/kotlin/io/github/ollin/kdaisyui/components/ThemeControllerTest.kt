@@ -4,17 +4,22 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.label
+import kotlinx.html.svg
 
 class ThemeControllerTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun theme_controller_using_a_toggle() {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeController(attrs = { daisyToggleClasses() })
         }
-        val expectedClasses = "theme-controller toggle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a toggle")
+        assertDocumented(html, "input", "theme-controller toggle", "Theme Controller using a toggle")
     }
 
     @Test
@@ -22,9 +27,7 @@ class ThemeControllerTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeController(attrs = { daisyCheckboxClasses() })
         }
-        val expectedClasses = "checkbox theme-controller"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a checkbox")
+        assertDocumented(html, "input", "checkbox theme-controller", "Theme Controller using a checkbox")
     }
 
     @Test
@@ -33,9 +36,7 @@ class ThemeControllerTest {
             daisySwap(style = SwapStyle.Rotate) {
             }
         }
-        val expectedClasses = "swap swap-rotate"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a swap")
+        assertDocumented(html, "label", "swap swap-rotate", "Theme Controller using a swap")
     }
 
     @Test
@@ -43,41 +44,31 @@ class ThemeControllerTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeController()
         }
-        val expectedClasses = "theme-controller"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a swap")
+        assertDocumented(html, "input", "theme-controller", "Theme Controller using a swap")
     }
 
     @Test
     fun theme_controller_using_a_swap_daisySwapOff() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwapOff() {
-            }
+            svg { daisySwapOffClasses() }
         }
-        val expectedClasses = "swap-off"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a swap")
+        assertDocumented(html, "svg", "swap-off", "Theme Controller using a swap")
     }
 
     @Test
     fun theme_controller_using_a_swap_daisySwapOn() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwapOn() {
-            }
+            svg { daisySwapOnClasses() }
         }
-        val expectedClasses = "swap-on"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a swap")
+        assertDocumented(html, "svg", "swap-on", "Theme Controller using a swap")
     }
 
     @Test
     fun theme_controller_using_a_toggle_with_icons_inside_daisyToggle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyToggle()
+            label { daisyToggleClasses() }
         }
-        val expectedClasses = "toggle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a toggle with icons inside")
+        assertDocumented(html, "label", "toggle", "Theme Controller using a toggle with icons inside")
     }
 
     @Test
@@ -86,9 +77,7 @@ class ThemeControllerTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a radio input")
+        assertDocumented(html, "fieldset", "fieldset", "Theme Controller using a radio input")
     }
 
     @Test
@@ -96,9 +85,7 @@ class ThemeControllerTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeController(attrs = { daisyRadioClasses(size = RadioSize.Sm) })
         }
-        val expectedClasses = "radio radio-sm theme-controller"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a radio input")
+        assertDocumented(html, "input", "radio radio-sm theme-controller", "Theme Controller using a radio input")
     }
 
     @Test
@@ -107,9 +94,7 @@ class ThemeControllerTest {
             daisyJoin(direction = JoinDirection.Vertical) {
             }
         }
-        val expectedClasses = "join join-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a radio button")
+        assertDocumented(html, "div", "join join-vertical", "Theme Controller using a radio button")
     }
 
     @Test
@@ -117,31 +102,23 @@ class ThemeControllerTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeController(attrs = { daisyButtonClasses() })
         }
-        val expectedClasses = "btn theme-controller"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a radio button")
+        assertDocumented(html, "input", "btn theme-controller", "Theme Controller using a radio button")
     }
 
     @Test
     fun theme_controller_using_a_dropdown_daisyDropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown() {
-            }
+            div { daisyDropdownClasses() }
         }
-        val expectedClasses = "dropdown"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a dropdown")
+        assertDocumented(html, "div", "dropdown", "Theme Controller using a dropdown")
     }
 
     @Test
     fun theme_controller_using_a_dropdown_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            div { daisyButtonClasses() }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a dropdown")
+        assertDocumented(html, "div", "btn", "Theme Controller using a dropdown")
     }
 
     @Test
@@ -150,9 +127,7 @@ class ThemeControllerTest {
             daisyDropdownContent() {
             }
         }
-        val expectedClasses = "dropdown-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a dropdown")
+        assertDocumented(html, "ul", "dropdown-content", "Theme Controller using a dropdown")
     }
 
     @Test
@@ -160,8 +135,6 @@ class ThemeControllerTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeController(attrs = { daisyButtonClasses(size = ButtonSize.Sm, width = ButtonWidth.Block, style = ButtonStyle.Ghost) })
         }
-        val expectedClasses = "btn btn-block btn-ghost btn-sm theme-controller"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Theme Controller using a dropdown")
+        assertDocumented(html, "input", "btn btn-block btn-ghost btn-sm theme-controller", "Theme Controller using a dropdown")
     }
 }

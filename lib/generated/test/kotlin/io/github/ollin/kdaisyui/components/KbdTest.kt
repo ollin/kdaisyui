@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class KbdTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun kbd() {
         val html = createHTML(prettyPrint = false).div {
             daisyKbd() {
             }
         }
-        val expectedClasses = "kbd"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd")
+        assertDocumented(html, "kbd", "kbd", "Kbd")
     }
 
     @Test
@@ -24,9 +27,7 @@ class KbdTest {
             daisyKbd(size = KbdSize.Xs) {
             }
         }
-        val expectedClasses = "kbd kbd-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertDocumented(html, "kbd", "kbd kbd-xs", "Kbd sizes")
     }
 
     @Test
@@ -35,9 +36,7 @@ class KbdTest {
             daisyKbd(size = KbdSize.Sm) {
             }
         }
-        val expectedClasses = "kbd kbd-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertDocumented(html, "kbd", "kbd kbd-sm", "Kbd sizes")
     }
 
     @Test
@@ -46,9 +45,7 @@ class KbdTest {
             daisyKbd(size = KbdSize.Md) {
             }
         }
-        val expectedClasses = "kbd kbd-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertDocumented(html, "kbd", "kbd kbd-md", "Kbd sizes")
     }
 
     @Test
@@ -57,9 +54,7 @@ class KbdTest {
             daisyKbd(size = KbdSize.Lg) {
             }
         }
-        val expectedClasses = "kbd kbd-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertDocumented(html, "kbd", "kbd kbd-lg", "Kbd sizes")
     }
 
     @Test
@@ -68,8 +63,6 @@ class KbdTest {
             daisyKbd(size = KbdSize.Xl) {
             }
         }
-        val expectedClasses = "kbd kbd-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertDocumented(html, "kbd", "kbd kbd-xl", "Kbd sizes")
     }
 }

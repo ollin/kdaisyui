@@ -8,15 +8,18 @@ import kotlinx.html.fieldSet
 
 class TextareaTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun textarea() {
         val html = createHTML(prettyPrint = false).div {
             daisyTextarea() {
             }
         }
-        val expectedClasses = "textarea"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea")
+        assertDocumented(html, "textarea", "textarea", "Textarea")
     }
 
     @Test
@@ -25,9 +28,7 @@ class TextareaTest {
             daisyTextarea(ghost = true) {
             }
         }
-        val expectedClasses = "textarea textarea-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Ghost (no background)")
+        assertDocumented(html, "textarea", "textarea textarea-ghost", "Ghost (no background)")
     }
 
     @Test
@@ -36,9 +37,7 @@ class TextareaTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With form control and labels")
+        assertDocumented(html, "fieldset", "fieldset", "With form control and labels")
     }
 
     @Test
@@ -47,20 +46,15 @@ class TextareaTest {
             daisyFieldsetLegend() {
             }
         }
-        val expectedClasses = "fieldset-legend"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With form control and labels")
+        assertDocumented(html, "legend", "fieldset-legend", "With form control and labels")
     }
 
     @Test
     fun with_form_control_and_labels_daisyLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            div { daisyLabelClasses() }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With form control and labels")
+        assertDocumented(html, "div", "label", "With form control and labels")
     }
 
     @Test
@@ -69,9 +63,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Primary) {
             }
         }
-        val expectedClasses = "textarea textarea-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-primary", "Textarea colors")
     }
 
     @Test
@@ -80,9 +72,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Secondary) {
             }
         }
-        val expectedClasses = "textarea textarea-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-secondary", "Textarea colors")
     }
 
     @Test
@@ -91,9 +81,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Accent) {
             }
         }
-        val expectedClasses = "textarea textarea-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-accent", "Textarea colors")
     }
 
     @Test
@@ -102,9 +90,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Neutral) {
             }
         }
-        val expectedClasses = "textarea textarea-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-neutral", "Textarea colors")
     }
 
     @Test
@@ -113,9 +99,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Info) {
             }
         }
-        val expectedClasses = "textarea textarea-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-info", "Textarea colors")
     }
 
     @Test
@@ -124,9 +108,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Success) {
             }
         }
-        val expectedClasses = "textarea textarea-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-success", "Textarea colors")
     }
 
     @Test
@@ -135,9 +117,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Warning) {
             }
         }
-        val expectedClasses = "textarea textarea-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-warning", "Textarea colors")
     }
 
     @Test
@@ -146,9 +126,7 @@ class TextareaTest {
             daisyTextarea(color = TextareaColor.Error) {
             }
         }
-        val expectedClasses = "textarea textarea-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Textarea colors")
+        assertDocumented(html, "textarea", "textarea textarea-error", "Textarea colors")
     }
 
     @Test
@@ -157,9 +135,7 @@ class TextareaTest {
             daisyTextarea(size = TextareaSize.Xs) {
             }
         }
-        val expectedClasses = "textarea textarea-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "textarea", "textarea textarea-xs", "Sizes")
     }
 
     @Test
@@ -168,9 +144,7 @@ class TextareaTest {
             daisyTextarea(size = TextareaSize.Sm) {
             }
         }
-        val expectedClasses = "textarea textarea-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "textarea", "textarea textarea-sm", "Sizes")
     }
 
     @Test
@@ -179,9 +153,7 @@ class TextareaTest {
             daisyTextarea(size = TextareaSize.Md) {
             }
         }
-        val expectedClasses = "textarea textarea-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "textarea", "textarea textarea-md", "Sizes")
     }
 
     @Test
@@ -190,9 +162,7 @@ class TextareaTest {
             daisyTextarea(size = TextareaSize.Lg) {
             }
         }
-        val expectedClasses = "textarea textarea-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "textarea", "textarea textarea-lg", "Sizes")
     }
 
     @Test
@@ -201,8 +171,6 @@ class TextareaTest {
             daisyTextarea(size = TextareaSize.Xl) {
             }
         }
-        val expectedClasses = "textarea textarea-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "textarea", "textarea textarea-xl", "Sizes")
     }
 }

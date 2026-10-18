@@ -4,8 +4,14 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.a
 
 class NavbarTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun navbar_with_title_only() {
@@ -13,20 +19,15 @@ class NavbarTest {
             daisyNavbar() {
             }
         }
-        val expectedClasses = "navbar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with title only")
+        assertDocumented(html, "div", "navbar", "Navbar with title only")
     }
 
     @Test
     fun navbar_with_title_only_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost) {
-            }
+            a { daisyButtonClasses(style = ButtonStyle.Ghost) }
         }
-        val expectedClasses = "btn btn-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with title only")
+        assertDocumented(html, "a", "btn btn-ghost", "Navbar with title only")
     }
 
     @Test
@@ -35,9 +36,7 @@ class NavbarTest {
             daisyButton(shape = ButtonShape.Square, style = ButtonStyle.Ghost) {
             }
         }
-        val expectedClasses = "btn btn-ghost btn-square"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with title and icon")
+        assertDocumented(html, "button", "btn btn-ghost btn-square", "Navbar with title and icon")
     }
 
     @Test
@@ -46,9 +45,7 @@ class NavbarTest {
             daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
-        val expectedClasses = "menu menu-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with menu and submenu")
+        assertDocumented(html, "ul", "menu menu-horizontal", "Navbar with menu and submenu")
     }
 
     @Test
@@ -56,20 +53,15 @@ class NavbarTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertDocumented(html, "input", "input", "Navbar with search input and dropdown")
     }
 
     @Test
     fun navbar_with_search_input_and_dropdown_daisyDropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(align = DropdownAlign.End) {
-            }
+            div { daisyDropdownClasses(align = DropdownAlign.End) }
         }
-        val expectedClasses = "dropdown dropdown-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertDocumented(html, "div", "dropdown dropdown-end", "Navbar with search input and dropdown")
     }
 
     @Test
@@ -78,9 +70,7 @@ class NavbarTest {
             daisyAvatar(attrs = { daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) }) {
             }
         }
-        val expectedClasses = "avatar btn btn-circle btn-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertDocumented(html, "div", "avatar btn btn-circle btn-ghost", "Navbar with search input and dropdown")
     }
 
     @Test
@@ -89,9 +79,7 @@ class NavbarTest {
             daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) {
             }
         }
-        val expectedClasses = "dropdown-content menu menu-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertDocumented(html, "ul", "dropdown-content menu menu-sm", "Navbar with search input and dropdown")
     }
 
     @Test
@@ -100,20 +88,15 @@ class NavbarTest {
             daisyBadge() {
             }
         }
-        val expectedClasses = "badge"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertDocumented(html, "span", "badge", "Navbar with search input and dropdown")
     }
 
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) {
-            }
+            div { daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) }
         }
-        val expectedClasses = "btn btn-circle btn-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertDocumented(html, "div", "btn btn-circle btn-ghost", "Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -122,9 +105,7 @@ class NavbarTest {
             daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertDocumented(html, "div", "indicator", "Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -133,9 +114,7 @@ class NavbarTest {
             daisyBadge(size = BadgeSize.Sm, attrs = { daisyIndicatorItemClasses() }) {
             }
         }
-        val expectedClasses = "badge badge-sm indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertDocumented(html, "span", "badge badge-sm indicator-item", "Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -144,9 +123,7 @@ class NavbarTest {
             daisyCard(size = CardSize.Sm, attrs = { daisyDropdownContentClasses() }) {
             }
         }
-        val expectedClasses = "card card-sm dropdown-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertDocumented(html, "div", "card card-sm dropdown-content", "Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -155,9 +132,7 @@ class NavbarTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertDocumented(html, "div", "card-body", "Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -166,9 +141,7 @@ class NavbarTest {
             daisyCardActions() {
             }
         }
-        val expectedClasses = "card-actions"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertDocumented(html, "div", "card-actions", "Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -177,9 +150,7 @@ class NavbarTest {
             daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block) {
             }
         }
-        val expectedClasses = "btn btn-block btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertDocumented(html, "button", "btn btn-block btn-primary", "Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -188,20 +159,15 @@ class NavbarTest {
             daisyNavbarStart() {
             }
         }
-        val expectedClasses = "navbar-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertDocumented(html, "div", "navbar-start", "Navbar with dropdown, center logo and icon")
     }
 
     @Test
     fun navbar_with_dropdown_center_logo_and_icon_daisyDropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown() {
-            }
+            div { daisyDropdownClasses() }
         }
-        val expectedClasses = "dropdown"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertDocumented(html, "div", "dropdown", "Navbar with dropdown, center logo and icon")
     }
 
     @Test
@@ -210,9 +176,7 @@ class NavbarTest {
             daisyNavbarCenter() {
             }
         }
-        val expectedClasses = "navbar-center"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertDocumented(html, "div", "navbar-center", "Navbar with dropdown, center logo and icon")
     }
 
     @Test
@@ -221,9 +185,7 @@ class NavbarTest {
             daisyNavbarEnd() {
             }
         }
-        val expectedClasses = "navbar-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertDocumented(html, "div", "navbar-end", "Navbar with dropdown, center logo and icon")
     }
 
     @Test
@@ -232,20 +194,15 @@ class NavbarTest {
             daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Primary, attrs = { daisyIndicatorItemClasses() }) {
             }
         }
-        val expectedClasses = "badge badge-primary badge-xs indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertDocumented(html, "span", "badge badge-primary badge-xs indicator-item", "Navbar with dropdown, center logo and icon")
     }
 
     @Test
     fun responsive_dropdown_menu_on_small_screen_center_menu_on_large_screen_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            a { daisyButtonClasses() }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (dropdown menu on small screen, center menu on large screen)")
+        assertDocumented(html, "a", "btn", "Responsive (dropdown menu on small screen, center menu on large screen)")
     }
 
     @Test
@@ -254,9 +211,7 @@ class NavbarTest {
             daisyNavbar(attrs = { daisyCollapseTitleClasses() }) {
             }
         }
-        val expectedClasses = "collapse-title navbar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (collapse on small screen, full content on large screen)")
+        assertDocumented(html, "div", "collapse-title navbar", "Responsive (collapse on small screen, full content on large screen)")
     }
 
     @Test
@@ -265,9 +220,7 @@ class NavbarTest {
             daisyCollapseContent() {
             }
         }
-        val expectedClasses = "collapse-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (collapse on small screen, full content on large screen)")
+        assertDocumented(html, "div", "collapse-content", "Responsive (collapse on small screen, full content on large screen)")
     }
 
     @Test
@@ -276,8 +229,6 @@ class NavbarTest {
             daisyMenu() {
             }
         }
-        val expectedClasses = "menu"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (collapse on small screen, full content on large screen)")
+        assertDocumented(html, "ul", "menu", "Responsive (collapse on small screen, full content on large screen)")
     }
 }

@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class SwapTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun swap_text() {
         val html = createHTML(prettyPrint = false).div {
             daisySwap() {
             }
         }
-        val expectedClasses = "swap"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
+        assertDocumented(html, "label", "swap", "Swap text")
     }
 
     @Test
@@ -24,9 +27,7 @@ class SwapTest {
             daisySwapOn() {
             }
         }
-        val expectedClasses = "swap-on"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
+        assertDocumented(html, "div", "swap-on", "Swap text")
     }
 
     @Test
@@ -35,9 +36,7 @@ class SwapTest {
             daisySwapOff() {
             }
         }
-        val expectedClasses = "swap-off"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
+        assertDocumented(html, "div", "swap-off", "Swap text")
     }
 
     @Test
@@ -46,9 +45,7 @@ class SwapTest {
             daisySwap(style = SwapStyle.Rotate) {
             }
         }
-        val expectedClasses = "swap swap-rotate"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap icons with rotate effect")
+        assertDocumented(html, "label", "swap swap-rotate", "Swap icons with rotate effect")
     }
 
     @Test
@@ -57,9 +54,7 @@ class SwapTest {
             daisySwap(style = SwapStyle.Rotate, attrs = { daisyButtonClasses(shape = ButtonShape.Circle) }) {
             }
         }
-        val expectedClasses = "btn btn-circle swap swap-rotate"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hamburger button")
+        assertDocumented(html, "label", "btn btn-circle swap swap-rotate", "Hamburger button")
     }
 
     @Test
@@ -68,9 +63,7 @@ class SwapTest {
             daisySwap(style = SwapStyle.Flip) {
             }
         }
-        val expectedClasses = "swap swap-flip"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap icons with flip effect")
+        assertDocumented(html, "label", "swap swap-flip", "Swap icons with flip effect")
     }
 
     @Test
@@ -79,8 +72,6 @@ class SwapTest {
             daisySwap(active = true) {
             }
         }
-        val expectedClasses = "swap swap-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Activate using class name instead of checkbox")
+        assertDocumented(html, "label", "swap swap-active", "Activate using class name instead of checkbox")
     }
 }

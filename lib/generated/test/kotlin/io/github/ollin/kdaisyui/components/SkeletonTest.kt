@@ -8,15 +8,18 @@ import kotlin.test.assertTrue
 
 class SkeletonTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun skeleton() {
         val html = createHTML(prettyPrint = false).div {
             daisySkeleton() {
             }
         }
-        val expectedClasses = "skeleton"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Skeleton")
+        assertDocumented(html, "div", "skeleton", "Skeleton")
     }
 
     @Test
@@ -25,9 +28,7 @@ class SkeletonTest {
             daisySkeletonText() {
             }
         }
-        val expectedClasses = "skeleton skeleton-text"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for skeleton-text - animated gradient text")
+        assertDocumented(html, "span", "skeleton skeleton-text", "skeleton-text - animated gradient text")
     }
 
     @Test

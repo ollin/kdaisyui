@@ -7,14 +7,17 @@ import kotlin.test.assertEquals
 
 class CountdownTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun countdown() {
         val html = createHTML(prettyPrint = false).div {
             daisyCountdown() {
             }
         }
-        val expectedClasses = "countdown"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Countdown")
+        assertDocumented(html, "span", "countdown", "Countdown")
     }
 }

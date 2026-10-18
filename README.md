@@ -628,6 +628,11 @@ daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) { … }
 a { daisyButtonClasses(color = ButtonColor.Primary) }
 ```
 
+**11. `daisyCalendar` renders `<calendar-date class="cally">`, not a `<div>`.** DaisyUI's `cally`
+styles the [cally](https://github.com/WickyNilliams/cally) web component, so a `<div class="cally">`
+rendered nothing to look at. The lambda receiver is now `CALENDAR_DATE`, from
+`io.github.ollin.kdaisyui.core`; load cally's script as DaisyUI's documentation says.
+
 ## Quick start
 
 ### 1. Add the dependency

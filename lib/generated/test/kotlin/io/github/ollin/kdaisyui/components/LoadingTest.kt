@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class LoadingTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun loading_spinner() {
         val html = createHTML(prettyPrint = false).div {
             daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Xs) {
             }
         }
-        val expectedClasses = "loading loading-spinner loading-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertDocumented(html, "span", "loading loading-spinner loading-xs", "Loading spinner")
     }
 
     @Test
@@ -24,9 +27,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Sm) {
             }
         }
-        val expectedClasses = "loading loading-sm loading-spinner"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertDocumented(html, "span", "loading loading-sm loading-spinner", "Loading spinner")
     }
 
     @Test
@@ -35,9 +36,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Md) {
             }
         }
-        val expectedClasses = "loading loading-md loading-spinner"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertDocumented(html, "span", "loading loading-md loading-spinner", "Loading spinner")
     }
 
     @Test
@@ -46,9 +45,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Lg) {
             }
         }
-        val expectedClasses = "loading loading-lg loading-spinner"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertDocumented(html, "span", "loading loading-lg loading-spinner", "Loading spinner")
     }
 
     @Test
@@ -57,9 +54,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Xl) {
             }
         }
-        val expectedClasses = "loading loading-spinner loading-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertDocumented(html, "span", "loading loading-spinner loading-xl", "Loading spinner")
     }
 
     @Test
@@ -68,9 +63,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Xs) {
             }
         }
-        val expectedClasses = "loading loading-dots loading-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertDocumented(html, "span", "loading loading-dots loading-xs", "Loading dots")
     }
 
     @Test
@@ -79,9 +72,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Sm) {
             }
         }
-        val expectedClasses = "loading loading-dots loading-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertDocumented(html, "span", "loading loading-dots loading-sm", "Loading dots")
     }
 
     @Test
@@ -90,9 +81,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Md) {
             }
         }
-        val expectedClasses = "loading loading-dots loading-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertDocumented(html, "span", "loading loading-dots loading-md", "Loading dots")
     }
 
     @Test
@@ -101,9 +90,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Lg) {
             }
         }
-        val expectedClasses = "loading loading-dots loading-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertDocumented(html, "span", "loading loading-dots loading-lg", "Loading dots")
     }
 
     @Test
@@ -112,9 +99,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Xl) {
             }
         }
-        val expectedClasses = "loading loading-dots loading-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertDocumented(html, "span", "loading loading-dots loading-xl", "Loading dots")
     }
 
     @Test
@@ -123,9 +108,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Xs) {
             }
         }
-        val expectedClasses = "loading loading-ring loading-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertDocumented(html, "span", "loading loading-ring loading-xs", "Loading ring")
     }
 
     @Test
@@ -134,9 +117,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Sm) {
             }
         }
-        val expectedClasses = "loading loading-ring loading-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertDocumented(html, "span", "loading loading-ring loading-sm", "Loading ring")
     }
 
     @Test
@@ -145,9 +126,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Md) {
             }
         }
-        val expectedClasses = "loading loading-md loading-ring"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertDocumented(html, "span", "loading loading-md loading-ring", "Loading ring")
     }
 
     @Test
@@ -156,9 +135,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Lg) {
             }
         }
-        val expectedClasses = "loading loading-lg loading-ring"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertDocumented(html, "span", "loading loading-lg loading-ring", "Loading ring")
     }
 
     @Test
@@ -167,9 +144,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Xl) {
             }
         }
-        val expectedClasses = "loading loading-ring loading-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertDocumented(html, "span", "loading loading-ring loading-xl", "Loading ring")
     }
 
     @Test
@@ -178,9 +153,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Xs) {
             }
         }
-        val expectedClasses = "loading loading-ball loading-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertDocumented(html, "span", "loading loading-ball loading-xs", "Loading ball")
     }
 
     @Test
@@ -189,9 +162,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Sm) {
             }
         }
-        val expectedClasses = "loading loading-ball loading-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertDocumented(html, "span", "loading loading-ball loading-sm", "Loading ball")
     }
 
     @Test
@@ -200,9 +171,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Md) {
             }
         }
-        val expectedClasses = "loading loading-ball loading-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertDocumented(html, "span", "loading loading-ball loading-md", "Loading ball")
     }
 
     @Test
@@ -211,9 +180,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Lg) {
             }
         }
-        val expectedClasses = "loading loading-ball loading-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertDocumented(html, "span", "loading loading-ball loading-lg", "Loading ball")
     }
 
     @Test
@@ -222,9 +189,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Xl) {
             }
         }
-        val expectedClasses = "loading loading-ball loading-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertDocumented(html, "span", "loading loading-ball loading-xl", "Loading ball")
     }
 
     @Test
@@ -233,9 +198,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Xs) {
             }
         }
-        val expectedClasses = "loading loading-bars loading-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertDocumented(html, "span", "loading loading-bars loading-xs", "Loading bars")
     }
 
     @Test
@@ -244,9 +207,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Sm) {
             }
         }
-        val expectedClasses = "loading loading-bars loading-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertDocumented(html, "span", "loading loading-bars loading-sm", "Loading bars")
     }
 
     @Test
@@ -255,9 +216,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Md) {
             }
         }
-        val expectedClasses = "loading loading-bars loading-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertDocumented(html, "span", "loading loading-bars loading-md", "Loading bars")
     }
 
     @Test
@@ -266,9 +225,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Lg) {
             }
         }
-        val expectedClasses = "loading loading-bars loading-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertDocumented(html, "span", "loading loading-bars loading-lg", "Loading bars")
     }
 
     @Test
@@ -277,9 +234,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Xl) {
             }
         }
-        val expectedClasses = "loading loading-bars loading-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertDocumented(html, "span", "loading loading-bars loading-xl", "Loading bars")
     }
 
     @Test
@@ -288,9 +243,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Xs) {
             }
         }
-        val expectedClasses = "loading loading-infinity loading-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertDocumented(html, "span", "loading loading-infinity loading-xs", "Loading infinity")
     }
 
     @Test
@@ -299,9 +252,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Sm) {
             }
         }
-        val expectedClasses = "loading loading-infinity loading-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertDocumented(html, "span", "loading loading-infinity loading-sm", "Loading infinity")
     }
 
     @Test
@@ -310,9 +261,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Md) {
             }
         }
-        val expectedClasses = "loading loading-infinity loading-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertDocumented(html, "span", "loading loading-infinity loading-md", "Loading infinity")
     }
 
     @Test
@@ -321,9 +270,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Lg) {
             }
         }
-        val expectedClasses = "loading loading-infinity loading-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertDocumented(html, "span", "loading loading-infinity loading-lg", "Loading infinity")
     }
 
     @Test
@@ -332,9 +279,7 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Xl) {
             }
         }
-        val expectedClasses = "loading loading-infinity loading-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertDocumented(html, "span", "loading loading-infinity loading-xl", "Loading infinity")
     }
 
     @Test
@@ -343,8 +288,6 @@ class LoadingTest {
             daisyLoading(style = LoadingStyle.Spinner) {
             }
         }
-        val expectedClasses = "loading loading-spinner"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading with colors")
+        assertDocumented(html, "span", "loading loading-spinner", "Loading with colors")
     }
 }

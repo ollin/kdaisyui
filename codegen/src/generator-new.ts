@@ -12,6 +12,7 @@
 import type { MainFunctionConfig } from './model.ts'
 import { toCamelCase } from './classifier.ts'
 import {
+  elementPackage,
   hasSibling,
   siblingParameters,
   staticAttributeDoc,
@@ -312,10 +313,10 @@ function renderBody(
 /** What one function's own signature and body name: its element, its builder, its receiver. */
 function functionImports(fn: FunctionShape): string[] {
   return [
-    `kotlinx.html.${fn.element}`,
+    `${elementPackage(fn.element)}.${fn.element}`,
     // A scoped function constructs its tag rather than calling the builder, so importing the
     // builder would leave the generated file with an import nothing uses.
-    ...(fn.contentScope === undefined ? [`kotlinx.html.${fn.tagBuilder}`] : []),
+    ...(fn.contentScope === undefined ? [`${elementPackage(fn.element)}.${fn.tagBuilder}`] : []),
     ...(fn.receiver !== 'FlowContent' ? [`kotlinx.html.${fn.receiver}`] : []),
   ]
 }

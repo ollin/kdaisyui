@@ -4,8 +4,14 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.button
 
 class CalendarTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun cally_calendar_example() {
@@ -13,29 +19,22 @@ class CalendarTest {
             daisyCalendar() {
             }
         }
-        val expectedClasses = "cally"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally calendar example")
+        assertDocumented(html, "calendar-date", "cally", "Cally calendar example")
     }
 
     @Test
     fun cally_date_picker_example_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput()
+            button { daisyInputClasses() }
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally date picker example")
+        assertDocumented(html, "button", "input", "Cally date picker example")
     }
 
     @Test
     fun cally_date_picker_example_daisyDropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown() {
-            }
+            div { daisyDropdownClasses() }
         }
-        val expectedClasses = "dropdown"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally date picker example")
+        assertDocumented(html, "div", "dropdown", "Cally date picker example")
     }
 }

@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class CollapseTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun collapse_with_focus() {
         val html = createHTML(prettyPrint = false).div {
             daisyCollapse() {
             }
         }
-        val expectedClasses = "collapse"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse with focus")
+        assertDocumented(html, "div", "collapse", "Collapse with focus")
     }
 
     @Test
@@ -24,9 +27,7 @@ class CollapseTest {
             daisyCollapseTitle() {
             }
         }
-        val expectedClasses = "collapse-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse with focus")
+        assertDocumented(html, "div", "collapse-title", "Collapse with focus")
     }
 
     @Test
@@ -35,9 +36,7 @@ class CollapseTest {
             daisyCollapseContent() {
             }
         }
-        val expectedClasses = "collapse-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapse with focus")
+        assertDocumented(html, "div", "collapse-content", "Collapse with focus")
     }
 
     @Test
@@ -46,9 +45,7 @@ class CollapseTest {
             daisyCollapse(icon = CollapseIcon.Arrow) {
             }
         }
-        val expectedClasses = "collapse collapse-arrow"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With arrow icon")
+        assertDocumented(html, "div", "collapse collapse-arrow", "With arrow icon")
     }
 
     @Test
@@ -57,9 +54,7 @@ class CollapseTest {
             daisyCollapse(icon = CollapseIcon.Plus) {
             }
         }
-        val expectedClasses = "collapse collapse-plus"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With arrow plus/minus icon")
+        assertDocumented(html, "div", "collapse collapse-plus", "With arrow plus/minus icon")
     }
 
     @Test
@@ -68,9 +63,7 @@ class CollapseTest {
             daisyCollapse(state = CollapseState.Open) {
             }
         }
-        val expectedClasses = "collapse collapse-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Force open")
+        assertDocumented(html, "div", "collapse collapse-open", "Force open")
     }
 
     @Test
@@ -79,8 +72,6 @@ class CollapseTest {
             daisyCollapse(state = CollapseState.Close) {
             }
         }
-        val expectedClasses = "collapse collapse-close"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Force close")
+        assertDocumented(html, "div", "collapse collapse-close", "Force close")
     }
 }

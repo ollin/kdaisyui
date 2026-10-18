@@ -1663,6 +1663,10 @@ public abstract class io/github/ollin/kdaisyui/core/AnnotatedIdBase : io/github/
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/ollin/kdaisyui/core/CALENDAR_DATE : kotlinx/html/HTMLTag, kotlinx/html/HtmlBlockTag {
+	public fun <init> (Lkotlinx/html/TagConsumer;)V
+}
+
 public final class io/github/ollin/kdaisyui/core/ClassNamesKt {
 	public static final fun addClassNames (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;)V
 	public static final fun addClassNames (Lkotlinx/html/Tag;Ljava/lang/String;)V
@@ -1671,6 +1675,10 @@ public final class io/github/ollin/kdaisyui/core/ClassNamesKt {
 
 public abstract interface class io/github/ollin/kdaisyui/core/ClassValues {
 	public abstract fun getClassNames ()Ljava/util/List;
+}
+
+public final class io/github/ollin/kdaisyui/core/CustomElementsKt {
+	public static final fun calendarDate (Lkotlinx/html/FlowContent;Lkotlin/jvm/functions/Function1;)V
 }
 
 public abstract interface class io/github/ollin/kdaisyui/core/HtmlId {

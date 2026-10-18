@@ -5,17 +5,22 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.html.fieldSet
+import kotlinx.html.label
+import kotlinx.html.p
 
 class InputTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun text_input() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Text input")
+        assertDocumented(html, "input", "input", "Text input")
     }
 
     @Test
@@ -24,9 +29,7 @@ class InputTest {
             daisyKbd(size = KbdSize.Sm) {
             }
         }
-        val expectedClasses = "kbd kbd-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Text input with text label inside")
+        assertDocumented(html, "kbd", "kbd kbd-sm", "Text input with text label inside")
     }
 
     @Test
@@ -35,9 +38,7 @@ class InputTest {
             daisyBadge(color = BadgeColor.Neutral, size = BadgeSize.Xs) {
             }
         }
-        val expectedClasses = "badge badge-neutral badge-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Text input with text label inside")
+        assertDocumented(html, "span", "badge badge-neutral badge-xs", "Text input with text label inside")
     }
 
     @Test
@@ -45,9 +46,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(ghost = true)
         }
-        val expectedClasses = "input input-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Ghost style")
+        assertDocumented(html, "input", "input input-ghost", "Ghost style")
     }
 
     @Test
@@ -56,9 +55,7 @@ class InputTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and fieldset-legend")
+        assertDocumented(html, "fieldset", "fieldset", "With fieldset and fieldset-legend")
     }
 
     @Test
@@ -67,20 +64,15 @@ class InputTest {
             daisyFieldsetLegend() {
             }
         }
-        val expectedClasses = "fieldset-legend"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and fieldset-legend")
+        assertDocumented(html, "legend", "fieldset-legend", "With fieldset and fieldset-legend")
     }
 
     @Test
     fun with_fieldset_and_fieldset_legend_daisyLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            p { daisyLabelClasses() }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and fieldset-legend")
+        assertDocumented(html, "p", "label", "With fieldset and fieldset-legend")
     }
 
     @Test
@@ -88,9 +80,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Neutral)
         }
-        val expectedClasses = "input input-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-neutral", "Input colors")
     }
 
     @Test
@@ -98,9 +88,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Primary)
         }
-        val expectedClasses = "input input-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-primary", "Input colors")
     }
 
     @Test
@@ -108,9 +96,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Secondary)
         }
-        val expectedClasses = "input input-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-secondary", "Input colors")
     }
 
     @Test
@@ -118,9 +104,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Accent)
         }
-        val expectedClasses = "input input-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-accent", "Input colors")
     }
 
     @Test
@@ -128,9 +112,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Info)
         }
-        val expectedClasses = "input input-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-info", "Input colors")
     }
 
     @Test
@@ -138,9 +120,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Success)
         }
-        val expectedClasses = "input input-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-success", "Input colors")
     }
 
     @Test
@@ -148,9 +128,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Warning)
         }
-        val expectedClasses = "input input-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-warning", "Input colors")
     }
 
     @Test
@@ -158,9 +136,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(color = InputColor.Error)
         }
-        val expectedClasses = "input input-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertDocumented(html, "input", "input input-error", "Input colors")
     }
 
     @Test
@@ -168,9 +144,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(size = InputSize.Xs)
         }
-        val expectedClasses = "input input-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "input input-xs", "Sizes")
     }
 
     @Test
@@ -178,9 +152,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(size = InputSize.Sm)
         }
-        val expectedClasses = "input input-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "input input-sm", "Sizes")
     }
 
     @Test
@@ -188,9 +160,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(size = InputSize.Md)
         }
-        val expectedClasses = "input input-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "input input-md", "Sizes")
     }
 
     @Test
@@ -198,9 +168,7 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(size = InputSize.Lg)
         }
-        val expectedClasses = "input input-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "input input-lg", "Sizes")
     }
 
     @Test
@@ -208,19 +176,15 @@ class InputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(size = InputSize.Xl)
         }
-        val expectedClasses = "input input-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "input", "input input-xl", "Sizes")
     }
 
     @Test
     fun username_text_input_with_icon_and_validator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(attrs = { daisyValidatorClasses() })
+            label { daisyInputClasses(); daisyValidatorClasses() }
         }
-        val expectedClasses = "input validator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Username text input with icon and validator")
+        assertDocumented(html, "label", "input validator", "Username text input with icon and validator")
     }
 
     @Test
@@ -229,9 +193,7 @@ class InputTest {
             daisyValidatorHint() {
             }
         }
-        val expectedClasses = "validator-hint"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Username text input with icon and validator")
+        assertDocumented(html, "p", "validator-hint", "Username text input with icon and validator")
     }
 
     @Test
@@ -240,9 +202,7 @@ class InputTest {
             daisyJoin() {
             }
         }
-        val expectedClasses = "join"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Email input with icon, validator, button, join")
+        assertDocumented(html, "div", "join", "Email input with icon, validator, button, join")
     }
 
     @Test
@@ -251,8 +211,6 @@ class InputTest {
             daisyButton(color = ButtonColor.Neutral) {
             }
         }
-        val expectedClasses = "btn btn-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Email input with icon, validator, button, join")
+        assertDocumented(html, "button", "btn btn-neutral", "Email input with icon, validator, button, join")
     }
 }

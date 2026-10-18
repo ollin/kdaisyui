@@ -4,8 +4,14 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.span
 
 class FabTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun fab_and_speed_dial_vertical() {
@@ -13,20 +19,15 @@ class FabTest {
             daisyFab() {
             }
         }
-        val expectedClasses = "fab"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial (vertical)")
+        assertDocumented(html, "div", "fab", "FAB and Speed Dial (vertical)")
     }
 
     @Test
     fun fab_and_speed_dial_vertical_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Primary) {
-            }
+            div { daisyButtonClasses(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Primary) }
         }
-        val expectedClasses = "btn btn-circle btn-lg btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial (vertical)")
+        assertDocumented(html, "div", "btn btn-circle btn-lg btn-primary", "FAB and Speed Dial (vertical)")
     }
 
     @Test
@@ -35,31 +36,23 @@ class FabTest {
             daisyButton(size = ButtonSize.Lg, shape = ButtonShape.Circle) {
             }
         }
-        val expectedClasses = "btn btn-circle btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial (vertical)")
+        assertDocumented(html, "button", "btn btn-circle btn-lg", "FAB and Speed Dial (vertical)")
     }
 
     @Test
     fun fab_and_speed_dial_with_svg_icons_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Secondary) {
-            }
+            div { daisyButtonClasses(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Secondary) }
         }
-        val expectedClasses = "btn btn-circle btn-lg btn-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with SVG icons")
+        assertDocumented(html, "div", "btn btn-circle btn-lg btn-secondary", "FAB and Speed Dial with SVG icons")
     }
 
     @Test
     fun fab_and_speed_dial_with_labels_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Success) {
-            }
+            div { daisyButtonClasses(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Success) }
         }
-        val expectedClasses = "btn btn-circle btn-lg btn-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with labels")
+        assertDocumented(html, "div", "btn btn-circle btn-lg btn-success", "FAB and Speed Dial with labels")
     }
 
     @Test
@@ -68,20 +61,15 @@ class FabTest {
             daisyButton(size = ButtonSize.Lg) {
             }
         }
-        val expectedClasses = "btn btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with rectangle buttons")
+        assertDocumented(html, "button", "btn btn-lg", "FAB and Speed Dial with rectangle buttons")
     }
 
     @Test
     fun fab_and_speed_dial_with_labels_and_fab_close_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Info) {
-            }
+            div { daisyButtonClasses(size = ButtonSize.Lg, shape = ButtonShape.Circle, color = ButtonColor.Info) }
         }
-        val expectedClasses = "btn btn-circle btn-info btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with labels and fab-close button")
+        assertDocumented(html, "div", "btn btn-circle btn-info btn-lg", "FAB and Speed Dial with labels and fab-close button")
     }
 
     @Test
@@ -90,31 +78,23 @@ class FabTest {
             daisyFabClose() {
             }
         }
-        val expectedClasses = "fab-close"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with labels and fab-close button")
+        assertDocumented(html, "div", "fab-close", "FAB and Speed Dial with labels and fab-close button")
     }
 
     @Test
     fun fab_and_speed_dial_with_labels_and_fab_close_button_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Error) {
-            }
+            span { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Error) }
         }
-        val expectedClasses = "btn btn-circle btn-error btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with labels and fab-close button")
+        assertDocumented(html, "span", "btn btn-circle btn-error btn-lg", "FAB and Speed Dial with labels and fab-close button")
     }
 
     @Test
     fun fab_and_speed_dial_with_labels_and_fab_main_action_button_daisyFabMainAction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFabMainAction() {
-            }
+            div { daisyFabMainActionClasses() }
         }
-        val expectedClasses = "fab-main-action"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with labels and fab-main-action Button")
+        assertDocumented(html, "div", "fab-main-action", "FAB and Speed Dial with labels and fab-main-action Button")
     }
 
     @Test
@@ -123,9 +103,7 @@ class FabTest {
             daisyButton(shape = ButtonShape.Circle, color = ButtonColor.Secondary, size = ButtonSize.Lg) {
             }
         }
-        val expectedClasses = "btn btn-circle btn-lg btn-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Speed Dial with labels and fab-main-action Button")
+        assertDocumented(html, "button", "btn btn-circle btn-lg btn-secondary", "FAB and Speed Dial with labels and fab-main-action Button")
     }
 
     @Test
@@ -134,9 +112,7 @@ class FabTest {
             daisyFab(flower = true) {
             }
         }
-        val expectedClasses = "fab fab-flower"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB Flower and Speed Dial")
+        assertDocumented(html, "div", "fab fab-flower", "FAB Flower and Speed Dial")
     }
 
     @Test
@@ -145,20 +121,15 @@ class FabTest {
             daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg) }) {
             }
         }
-        val expectedClasses = "btn btn-circle btn-lg fab-main-action"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB Flower and Speed Dial")
+        assertDocumented(html, "button", "btn btn-circle btn-lg fab-main-action", "FAB Flower and Speed Dial")
     }
 
     @Test
     fun fab_and_flower_speed_dial_with_svg_icons_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(shape = ButtonShape.Circle, size = ButtonSize.Lg) {
-            }
+            div { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg) }
         }
-        val expectedClasses = "btn btn-circle btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with SVG icons")
+        assertDocumented(html, "div", "btn btn-circle btn-lg", "FAB and Flower Speed Dial with SVG icons")
     }
 
     @Test
@@ -167,20 +138,15 @@ class FabTest {
             daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Primary) }) {
             }
         }
-        val expectedClasses = "btn btn-circle btn-lg btn-primary fab-main-action"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with SVG icons")
+        assertDocumented(html, "button", "btn btn-circle btn-lg btn-primary fab-main-action", "FAB and Flower Speed Dial with SVG icons")
     }
 
     @Test
     fun fab_and_flower_speed_dial_with_tooltip_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg, color = ButtonColor.Info, shape = ButtonShape.Circle) {
-            }
+            div { daisyButtonClasses(size = ButtonSize.Lg, color = ButtonColor.Info, shape = ButtonShape.Circle) }
         }
-        val expectedClasses = "btn btn-circle btn-info btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with tooltip")
+        assertDocumented(html, "div", "btn btn-circle btn-info btn-lg", "FAB and Flower Speed Dial with tooltip")
     }
 
     @Test
@@ -189,9 +155,7 @@ class FabTest {
             daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Success) }) {
             }
         }
-        val expectedClasses = "btn btn-circle btn-lg btn-success fab-main-action"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with tooltip")
+        assertDocumented(html, "button", "btn btn-circle btn-lg btn-success fab-main-action", "FAB and Flower Speed Dial with tooltip")
     }
 
     @Test
@@ -200,9 +164,7 @@ class FabTest {
             daisyTooltip(side = TooltipSide.Left) {
             }
         }
-        val expectedClasses = "tooltip tooltip-left"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with tooltip")
+        assertDocumented(html, "div", "tooltip tooltip-left", "FAB and Flower Speed Dial with tooltip")
     }
 
     @Test
@@ -211,8 +173,6 @@ class FabTest {
             daisyTooltip() {
             }
         }
-        val expectedClasses = "tooltip"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with tooltip")
+        assertDocumented(html, "div", "tooltip", "FAB and Flower Speed Dial with tooltip")
     }
 }

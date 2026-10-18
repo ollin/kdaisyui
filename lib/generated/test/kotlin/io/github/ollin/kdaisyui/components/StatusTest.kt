@@ -4,18 +4,21 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.span
 
 class StatusTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun status() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStatus() {
-            }
+            span { daisyStatusClasses() }
         }
-        val expectedClasses = "status"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status")
+        assertDocumented(html, "span", "status", "Status")
     }
 
     @Test
@@ -24,9 +27,7 @@ class StatusTest {
             daisyStatus(size = StatusSize.Xs) {
             }
         }
-        val expectedClasses = "status status-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status sizes")
+        assertDocumented(html, "div", "status status-xs", "Status sizes")
     }
 
     @Test
@@ -35,9 +36,7 @@ class StatusTest {
             daisyStatus(size = StatusSize.Sm) {
             }
         }
-        val expectedClasses = "status status-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status sizes")
+        assertDocumented(html, "div", "status status-sm", "Status sizes")
     }
 
     @Test
@@ -46,9 +45,7 @@ class StatusTest {
             daisyStatus(size = StatusSize.Md) {
             }
         }
-        val expectedClasses = "status status-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status sizes")
+        assertDocumented(html, "div", "status status-md", "Status sizes")
     }
 
     @Test
@@ -57,9 +54,7 @@ class StatusTest {
             daisyStatus(size = StatusSize.Lg) {
             }
         }
-        val expectedClasses = "status status-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status sizes")
+        assertDocumented(html, "div", "status status-lg", "Status sizes")
     }
 
     @Test
@@ -68,9 +63,7 @@ class StatusTest {
             daisyStatus(size = StatusSize.Xl) {
             }
         }
-        val expectedClasses = "status status-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status sizes")
+        assertDocumented(html, "div", "status status-xl", "Status sizes")
     }
 
     @Test
@@ -79,9 +72,7 @@ class StatusTest {
             daisyStatus(color = StatusColor.Primary) {
             }
         }
-        val expectedClasses = "status status-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-primary", "Status with colors")
     }
 
     @Test
@@ -90,9 +81,7 @@ class StatusTest {
             daisyStatus(color = StatusColor.Secondary) {
             }
         }
-        val expectedClasses = "status status-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-secondary", "Status with colors")
     }
 
     @Test
@@ -101,9 +90,7 @@ class StatusTest {
             daisyStatus(color = StatusColor.Accent) {
             }
         }
-        val expectedClasses = "status status-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-accent", "Status with colors")
     }
 
     @Test
@@ -112,9 +99,7 @@ class StatusTest {
             daisyStatus(color = StatusColor.Neutral) {
             }
         }
-        val expectedClasses = "status status-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-neutral", "Status with colors")
     }
 
     @Test
@@ -123,9 +108,7 @@ class StatusTest {
             daisyStatus(color = StatusColor.Info) {
             }
         }
-        val expectedClasses = "status status-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-info", "Status with colors")
     }
 
     @Test
@@ -134,9 +117,7 @@ class StatusTest {
             daisyStatus(color = StatusColor.Success) {
             }
         }
-        val expectedClasses = "status status-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-success", "Status with colors")
     }
 
     @Test
@@ -145,9 +126,7 @@ class StatusTest {
             daisyStatus(color = StatusColor.Warning) {
             }
         }
-        val expectedClasses = "status status-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-warning", "Status with colors")
     }
 
     @Test
@@ -156,8 +135,6 @@ class StatusTest {
             daisyStatus(color = StatusColor.Error) {
             }
         }
-        val expectedClasses = "status status-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status with colors")
+        assertDocumented(html, "div", "status status-error", "Status with colors")
     }
 }

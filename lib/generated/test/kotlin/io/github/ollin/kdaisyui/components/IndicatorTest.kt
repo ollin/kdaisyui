@@ -4,8 +4,14 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.a
 
 class IndicatorTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun status_indicator() {
@@ -13,9 +19,7 @@ class IndicatorTest {
             daisyIndicator() {
             }
         }
-        val expectedClasses = "indicator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status Indicator")
+        assertDocumented(html, "div", "indicator", "Status Indicator")
     }
 
     @Test
@@ -24,9 +28,7 @@ class IndicatorTest {
             daisyIndicatorItem(attrs = { daisyStatusClasses(color = StatusColor.Success) }) {
             }
         }
-        val expectedClasses = "indicator-item status status-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Status Indicator")
+        assertDocumented(html, "span", "indicator-item status status-success", "Status Indicator")
     }
 
     @Test
@@ -35,9 +37,7 @@ class IndicatorTest {
             daisyIndicatorItem(attrs = { daisyBadgeClasses(color = BadgeColor.Primary) }) {
             }
         }
-        val expectedClasses = "badge badge-primary indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Badge as indicator")
+        assertDocumented(html, "span", "badge badge-primary indicator-item", "Badge as indicator")
     }
 
     @Test
@@ -46,9 +46,7 @@ class IndicatorTest {
             daisyIndicatorItem(attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for button")
+        assertDocumented(html, "span", "badge badge-secondary indicator-item", "for button")
     }
 
     @Test
@@ -57,9 +55,7 @@ class IndicatorTest {
             daisyButton() {
             }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for button")
+        assertDocumented(html, "button", "btn", "for button")
     }
 
     @Test
@@ -68,9 +64,7 @@ class IndicatorTest {
             daisyTabs(style = TabsStyle.Lift) {
             }
         }
-        val expectedClasses = "tabs tabs-lift"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for tab")
+        assertDocumented(html, "div", "tabs tabs-lift", "for tab")
     }
 
     @Test
@@ -79,20 +73,15 @@ class IndicatorTest {
             daisyTab() {
             }
         }
-        val expectedClasses = "tab"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for tab")
+        assertDocumented(html, "a", "tab", "for tab")
     }
 
     @Test
     fun for_tab() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(attrs = { daisyTabClasses(active = true) }) {
-            }
+            a { daisyIndicatorClasses(); daisyTabClasses(active = true) }
         }
-        val expectedClasses = "indicator tab tab-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for tab")
+        assertDocumented(html, "a", "indicator tab tab-active", "for tab")
     }
 
     @Test
@@ -101,9 +90,7 @@ class IndicatorTest {
             daisyIndicatorItem(attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for tab")
+        assertDocumented(html, "span", "badge indicator-item", "for tab")
     }
 
     @Test
@@ -112,9 +99,7 @@ class IndicatorTest {
             daisyIndicator(attrs = { daisyAvatarClasses() }) {
             }
         }
-        val expectedClasses = "avatar indicator"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for avatar")
+        assertDocumented(html, "div", "avatar indicator", "for avatar")
     }
 
     @Test
@@ -122,20 +107,15 @@ class IndicatorTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for for an input")
+        assertDocumented(html, "input", "input", "for an input")
     }
 
     @Test
     fun a_button_as_an_indicator_for_a_card_daisyIndicatorItem() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Bottom) {
-            }
+            div { daisyIndicatorItemClasses(verticalPlacement = IndicatorItemVerticalPlacement.Bottom) }
         }
-        val expectedClasses = "indicator-bottom indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for A button as an indicator for a card")
+        assertDocumented(html, "div", "indicator-bottom indicator-item", "A button as an indicator for a card")
     }
 
     @Test
@@ -144,9 +124,7 @@ class IndicatorTest {
             daisyButton(color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for A button as an indicator for a card")
+        assertDocumented(html, "button", "btn btn-primary", "A button as an indicator for a card")
     }
 
     @Test
@@ -155,9 +133,7 @@ class IndicatorTest {
             daisyCard() {
             }
         }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for A button as an indicator for a card")
+        assertDocumented(html, "div", "card", "A button as an indicator for a card")
     }
 
     @Test
@@ -166,9 +142,7 @@ class IndicatorTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for A button as an indicator for a card")
+        assertDocumented(html, "div", "card-body", "A button as an indicator for a card")
     }
 
     @Test
@@ -177,9 +151,7 @@ class IndicatorTest {
             daisyCardTitle() {
             }
         }
-        val expectedClasses = "card-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for A button as an indicator for a card")
+        assertDocumented(html, "h2", "card-title", "A button as an indicator for a card")
     }
 
     @Test
@@ -188,9 +160,7 @@ class IndicatorTest {
             daisyIndicatorItem(horizontalPlacement = IndicatorItemHorizontalPlacement.Center, verticalPlacement = IndicatorItemVerticalPlacement.Middle) {
             }
         }
-        val expectedClasses = "indicator-center indicator-item indicator-middle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for in center of an image")
+        assertDocumented(html, "span", "indicator-center indicator-item indicator-middle", "in center of an image")
     }
 
     @Test
@@ -199,9 +169,7 @@ class IndicatorTest {
             daisyIndicatorItem(horizontalPlacement = IndicatorItemHorizontalPlacement.Start, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-item indicator-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-top (default) indicator-start")
+        assertDocumented(html, "span", "badge badge-secondary indicator-item indicator-start", "indicator-top (default) indicator-start")
     }
 
     @Test
@@ -210,9 +178,7 @@ class IndicatorTest {
             daisyIndicatorItem(horizontalPlacement = IndicatorItemHorizontalPlacement.Center, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-center indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-top (default) indicator-center")
+        assertDocumented(html, "span", "badge badge-secondary indicator-center indicator-item", "indicator-top (default) indicator-center")
     }
 
     @Test
@@ -221,9 +187,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Middle, horizontalPlacement = IndicatorItemHorizontalPlacement.Start, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-item indicator-middle indicator-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-middle indicator-start")
+        assertDocumented(html, "span", "badge badge-secondary indicator-item indicator-middle indicator-start", "indicator-middle indicator-start")
     }
 
     @Test
@@ -232,9 +196,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Middle, horizontalPlacement = IndicatorItemHorizontalPlacement.Center, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-center indicator-item indicator-middle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-middle indicator-center")
+        assertDocumented(html, "span", "badge badge-secondary indicator-center indicator-item indicator-middle", "indicator-middle indicator-center")
     }
 
     @Test
@@ -243,9 +205,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Middle, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-item indicator-middle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-middle indicator-end (default)")
+        assertDocumented(html, "span", "badge badge-secondary indicator-item indicator-middle", "indicator-middle indicator-end (default)")
     }
 
     @Test
@@ -254,9 +214,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Bottom, horizontalPlacement = IndicatorItemHorizontalPlacement.Start, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-bottom indicator-item indicator-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-bottom indicator-start")
+        assertDocumented(html, "span", "badge badge-secondary indicator-bottom indicator-item indicator-start", "indicator-bottom indicator-start")
     }
 
     @Test
@@ -265,9 +223,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Bottom, horizontalPlacement = IndicatorItemHorizontalPlacement.Center, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-bottom indicator-center indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-bottom indicator-center")
+        assertDocumented(html, "span", "badge badge-secondary indicator-bottom indicator-center indicator-item", "indicator-bottom indicator-center")
     }
 
     @Test
@@ -276,9 +232,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Bottom, attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-bottom indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for indicator-bottom indicator-end (default)")
+        assertDocumented(html, "span", "badge badge-secondary indicator-bottom indicator-item", "indicator-bottom indicator-end (default)")
     }
 
     @Test
@@ -287,9 +241,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Top, horizontalPlacement = IndicatorItemHorizontalPlacement.Start, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-item indicator-start indicator-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-item indicator-start indicator-top", "multiple indicators")
     }
 
     @Test
@@ -298,9 +250,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Top, horizontalPlacement = IndicatorItemHorizontalPlacement.Center, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-center indicator-item indicator-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-center indicator-item indicator-top", "multiple indicators")
     }
 
     @Test
@@ -309,9 +259,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Top, horizontalPlacement = IndicatorItemHorizontalPlacement.End, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-end indicator-item indicator-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-end indicator-item indicator-top", "multiple indicators")
     }
 
     @Test
@@ -320,9 +268,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Middle, horizontalPlacement = IndicatorItemHorizontalPlacement.Start, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-item indicator-middle indicator-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-item indicator-middle indicator-start", "multiple indicators")
     }
 
     @Test
@@ -331,9 +277,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Middle, horizontalPlacement = IndicatorItemHorizontalPlacement.Center, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-center indicator-item indicator-middle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-center indicator-item indicator-middle", "multiple indicators")
     }
 
     @Test
@@ -342,9 +286,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Middle, horizontalPlacement = IndicatorItemHorizontalPlacement.End, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-end indicator-item indicator-middle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-end indicator-item indicator-middle", "multiple indicators")
     }
 
     @Test
@@ -353,9 +295,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Bottom, horizontalPlacement = IndicatorItemHorizontalPlacement.Start, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-bottom indicator-item indicator-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-bottom indicator-item indicator-start", "multiple indicators")
     }
 
     @Test
@@ -364,9 +304,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Bottom, horizontalPlacement = IndicatorItemHorizontalPlacement.Center, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-bottom indicator-center indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-bottom indicator-center indicator-item", "multiple indicators")
     }
 
     @Test
@@ -375,9 +313,7 @@ class IndicatorTest {
             daisyIndicatorItem(verticalPlacement = IndicatorItemVerticalPlacement.Bottom, horizontalPlacement = IndicatorItemHorizontalPlacement.End, attrs = { daisyBadgeClasses() }) {
             }
         }
-        val expectedClasses = "badge indicator-bottom indicator-end indicator-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for multiple indicators")
+        assertDocumented(html, "span", "badge indicator-bottom indicator-end indicator-item", "multiple indicators")
     }
 
     @Test
@@ -386,8 +322,6 @@ class IndicatorTest {
             daisyIndicatorItem(horizontalPlacement = IndicatorItemHorizontalPlacement.Start, extraClasses = "sm:indicator-middle md:indicator-bottom lg:indicator-center xl:indicator-end", attrs = { daisyBadgeClasses(color = BadgeColor.Secondary) }) {
             }
         }
-        val expectedClasses = "badge badge-secondary indicator-item indicator-start lg:indicator-center md:indicator-bottom sm:indicator-middle xl:indicator-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive")
+        assertDocumented(html, "span", "badge badge-secondary indicator-item indicator-start lg:indicator-center md:indicator-bottom sm:indicator-middle xl:indicator-end", "Responsive")
     }
 }

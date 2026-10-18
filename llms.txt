@@ -136,7 +136,8 @@ Border light effect wrapping a component — renders `<div>`.
 
 ```kotlin
 enum class AuraSize { Xs, Sm, Md, Lg, Xl }
-fun FlowContent.daisyAura(id: HtmlId? = null, size: ClassValues<AuraSize>? = null, dual: Boolean = false, glow: Boolean = false, gold: Boolean = false, holo: Boolean = false, rainbow: Boolean = false, silver: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class AuraStyle { Dual, Rainbow, Holo, Gold, Silver, Glow }
+fun FlowContent.daisyAura(id: HtmlId? = null, size: ClassValues<AuraSize>? = null, style: ClassValues<AuraStyle>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Avatar

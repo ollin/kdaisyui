@@ -39,18 +39,12 @@ class AuraCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAura(
                 id = htmlId("x-cov-id"),
-                dual = true,
-                glow = true,
-                gold = true,
-                holo = true,
-                rainbow = true,
-                silver = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "aura aura-dual aura-glow aura-gold aura-holo aura-rainbow aura-silver zz-extra", "Aura all flags", closes = "</div></div>")
+        assertRendered(html, "aura zz-extra", "Aura all flags", closes = "</div></div>")
         assertCommonFlags(html, "Aura")
     }
 
@@ -107,5 +101,71 @@ class AuraCoverageTest {
             )
         }
         assertRendered(html, "aura aura-xl", "Aura size Xl")
+    }
+
+    @Test
+    fun aura_style_dual() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(
+                style = AuraStyle.Dual,
+                content = { },
+            )
+        }
+        assertRendered(html, "aura aura-dual", "Aura style Dual")
+    }
+
+    @Test
+    fun aura_style_rainbow() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(
+                style = AuraStyle.Rainbow,
+                content = { },
+            )
+        }
+        assertRendered(html, "aura aura-rainbow", "Aura style Rainbow")
+    }
+
+    @Test
+    fun aura_style_holo() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(
+                style = AuraStyle.Holo,
+                content = { },
+            )
+        }
+        assertRendered(html, "aura aura-holo", "Aura style Holo")
+    }
+
+    @Test
+    fun aura_style_gold() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(
+                style = AuraStyle.Gold,
+                content = { },
+            )
+        }
+        assertRendered(html, "aura aura-gold", "Aura style Gold")
+    }
+
+    @Test
+    fun aura_style_silver() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(
+                style = AuraStyle.Silver,
+                content = { },
+            )
+        }
+        assertRendered(html, "aura aura-silver", "Aura style Silver")
+    }
+
+    @Test
+    fun aura_style_glow() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAura(
+                style = AuraStyle.Glow,
+                content = { },
+            )
+        }
+        assertRendered(html, "aura aura-glow", "Aura style Glow")
     }
 }

@@ -32,7 +32,7 @@ class AuraTest {
     @Test
     fun aura_dual() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(dual = true) {
+            daisyAura(style = AuraStyle.Dual) {
             }
         }
         val expectedClasses = "aura aura-dual"
@@ -43,7 +43,7 @@ class AuraTest {
     @Test
     fun aura_rainbow() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(rainbow = true) {
+            daisyAura(style = AuraStyle.Rainbow) {
             }
         }
         val expectedClasses = "aura aura-rainbow"
@@ -54,7 +54,7 @@ class AuraTest {
     @Test
     fun aura_holo() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(holo = true) {
+            daisyAura(style = AuraStyle.Holo) {
             }
         }
         val expectedClasses = "aura aura-holo"
@@ -65,7 +65,7 @@ class AuraTest {
     @Test
     fun aura_glow() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(glow = true) {
+            daisyAura(style = AuraStyle.Glow) {
             }
         }
         val expectedClasses = "aura aura-glow"
@@ -76,7 +76,7 @@ class AuraTest {
     @Test
     fun aura_gold() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(gold = true) {
+            daisyAura(style = AuraStyle.Gold) {
             }
         }
         val expectedClasses = "aura aura-gold"
@@ -87,7 +87,7 @@ class AuraTest {
     @Test
     fun aura_silver() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(silver = true) {
+            daisyAura(style = AuraStyle.Silver) {
             }
         }
         val expectedClasses = "aura aura-silver"
@@ -120,7 +120,7 @@ class AuraTest {
     @Test
     fun aura_rainbow_around_a_pricing_card() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(rainbow = true) {
+            daisyAura(style = AuraStyle.Rainbow) {
             }
         }
         val expectedClasses = "aura aura-rainbow"
@@ -142,7 +142,7 @@ class AuraTest {
     @Test
     fun aura_with_custom_animation_duration() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(rainbow = true) {
+            daisyAura(style = AuraStyle.Rainbow) {
             }
         }
         val expectedClasses = "aura aura-rainbow"

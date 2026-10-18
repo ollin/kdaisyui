@@ -28,17 +28,31 @@ enum class AuraSize(internal val className: String) : ClassValues<AuraSize> {
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Style variants for this component (CSS prefix: `aura-`) */
+enum class AuraStyle(internal val className: String) : ClassValues<AuraStyle> {
+    /** CSS: `aura-dual` — Uses two light effects */
+    Dual("aura-dual"),
+    /** CSS: `aura-rainbow` — Uses rainbow colors for the light effect */
+    Rainbow("aura-rainbow"),
+    /** CSS: `aura-holo` — Uses holographic colors for the light effect */
+    Holo("aura-holo"),
+    /** CSS: `aura-gold` — Uses gold colors for the light effect */
+    Gold("aura-gold"),
+    /** CSS: `aura-silver` — Uses silver colors for the light effect */
+    Silver("aura-silver"),
+    /** CSS: `aura-glow` — Uses a glowing effect for the light instead of a rotating border */
+    Glow("aura-glow"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Aura is a border light effect that can wrap around any component. It is a great way to add a cool, eye-catching visual effect to your components. Aura is useful for the most important button, card, or div that you want to highlight. Renders `<div class="aura ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param dual — Uses two light effects
- * @param glow — Uses a glowing effect for the light instead of a rotating border
- * @param gold — Uses gold colors for the light effect
- * @param holo — Uses holographic colors for the light effect
- * @param rainbow — Uses rainbow colors for the light effect
- * @param silver — Uses silver colors for the light effect
+ * @param style — Style variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -46,12 +60,7 @@ enum class AuraSize(internal val className: String) : ClassValues<AuraSize> {
 fun FlowContent.daisyAura(
     id: HtmlId? = null,
     size: ClassValues<AuraSize>? = null,
-    dual: Boolean = false,
-    glow: Boolean = false,
-    gold: Boolean = false,
-    holo: Boolean = false,
-    rainbow: Boolean = false,
-    silver: Boolean = false,
+    style: ClassValues<AuraStyle>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -60,12 +69,7 @@ fun FlowContent.daisyAura(
         if (id != null) attributes["id"] = id.id
         addClassNames("aura")
         addClassNames(size)
-        if (dual) addClassNames("aura-dual")
-        if (glow) addClassNames("aura-glow")
-        if (gold) addClassNames("aura-gold")
-        if (holo) addClassNames("aura-holo")
-        if (rainbow) addClassNames("aura-rainbow")
-        if (silver) addClassNames("aura-silver")
+        addClassNames(style)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

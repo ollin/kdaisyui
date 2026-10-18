@@ -24,7 +24,7 @@ private fun TagConsumer<*>.auraCard() {
         addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Deploy Status")
-            daisyAura(size = AuraSize.Lg, rainbow = true) {
+            daisyAura(size = AuraSize.Lg, style = AuraStyle.Rainbow) {
                 div("bg-base-200 rounded-box p-6 text-center") {
                     span("text-lg font-semibold") { +"v2.4.1 live" }
                 }

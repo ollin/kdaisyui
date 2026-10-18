@@ -3,7 +3,12 @@
   "name": "Aura",
   "class": "aura",
   "enums": [
-    { "name": "AuraSize", "label": "Size variants", "classes": ["aura-xs", "aura-sm", "aura-md", "aura-lg", "aura-xl"] }
+    { "name": "AuraSize", "label": "Size variants", "classes": ["aura-xs", "aura-sm", "aura-md", "aura-lg", "aura-xl"] },
+    {
+      "name": "AuraStyle",
+      "label": "Style variants",
+      "classes": ["aura-dual", "aura-rainbow", "aura-holo", "aura-gold", "aura-silver", "aura-glow"]
+    }
   ],
   "functions": [
     {
@@ -15,12 +20,7 @@
       "text": false,
       "parameters": [
         { "kind": "enum", "name": "size", "enum": "AuraSize", "doc": "Size variant" },
-        { "kind": "toggle", "name": "dual", "class": "aura-dual" },
-        { "kind": "toggle", "name": "glow", "class": "aura-glow" },
-        { "kind": "toggle", "name": "gold", "class": "aura-gold" },
-        { "kind": "toggle", "name": "holo", "class": "aura-holo" },
-        { "kind": "toggle", "name": "rainbow", "class": "aura-rainbow" },
-        { "kind": "toggle", "name": "silver", "class": "aura-silver" }
+        { "kind": "enum", "name": "style", "enum": "AuraStyle", "doc": "Style variant" }
       ]
     }
   ],

@@ -12,15 +12,11 @@ Border light effect that wraps around any component, for highlighting a single i
 
 ```kotlin
 // AuraSize: Xs | Sm | Md | Lg | Xl
+// AuraStyle: Dual | Rainbow | Holo | Gold | Silver | Glow
 fun FlowContent.daisyAura(
     id: HtmlId? = null,
     size: ClassValues<AuraSize>? = null,
-    dual: Boolean = false,  // Uses two light effects
-    glow: Boolean = false,  // Uses a glowing effect for the light instead of a rotating border
-    gold: Boolean = false,  // Uses gold colors for the light effect
-    holo: Boolean = false,  // Uses holographic colors for the light effect
-    rainbow: Boolean = false,  // Uses rainbow colors for the light effect
-    silver: Boolean = false,  // Uses silver colors for the light effect
+    style: ClassValues<AuraStyle>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

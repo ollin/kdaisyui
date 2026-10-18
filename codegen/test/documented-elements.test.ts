@@ -105,6 +105,10 @@ describe('claimingGroups', () => {
     assert.deepEqual(claims([SKELETON], ['skeleton', 'skeleton-text']).groups, ['daisySkeletonText: skeleton skeleton-text'])
   })
 
+  it('lets a join member claim join-item, with its own modifiers', () => {
+    assert.deepEqual(claims([CARD_WITH_BODY, BUTTON], ['btn', 'btn-active', 'join-item']), { groups: ['daisyButton: btn btn-active join-item'], unclaimed: [] })
+  })
+
   it('leaves unclaimed what no function offers', () => {
     assert.deepEqual(claims([BUTTON], ['btn', 'btn-ghost']).unclaimed, ['btn-ghost'])
   })

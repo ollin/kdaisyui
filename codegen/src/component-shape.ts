@@ -122,6 +122,11 @@ export interface ParameterShape {
    * passes to `addClassNames` unguarded. Absent for every other parameter.
    */
   readonly enumName?: string
+  /**
+   * The classes an extra parameter's fragment writes beside what else it does, e.g.
+   * `btn-disabled`. A class sibling offers them as a plain toggle. Absent for every other one.
+   */
+  readonly writes?: readonly CssClass[]
 }
 
 /**

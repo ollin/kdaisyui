@@ -174,7 +174,7 @@ function toggleShape(model: ComponentModel, toggle: ModelToggleParameter, descri
 
 function parameterShape(model: ComponentModel, parameter: ModelParameter, descriptions: Descriptions): ParameterShape {
   if (parameter.kind === 'toggle') return toggleShape(model, parameter, descriptions)
-  if (parameter.kind === 'extra') return { name: parameter.name, type: parameter.type, default: parameter.default, doc: null }
+  if (parameter.kind === 'extra') return { name: parameter.name, type: parameter.type, default: parameter.default, doc: null, ...(parameter.writes ? { writes: parameter.writes as CssClass[] } : {}) }
   return {
     name: parameter.name,
     type: `ClassValues<${parameter.enum}>?`,

@@ -42,7 +42,7 @@ regenerating.
 
 - [x] 3.1 `^ r (internal)` The classifier returns the claiming groups of D4, still accepting only
   a single group. Zero diff.
-- [ ] 3.2 `^ F` Generate a composition's test as the call plus its siblings in `attrs`, while the
+- [x] 3.2 `^ F` Generate a composition's test as the call plus its siblings in `attrs`, while the
   gate still accepts one group: every composite element DaisyUI documents is rendered and its
   classes asserted before the gate relies on it.
 - [ ] 3.3 `^ F (internal)` Accept several groups in the gate, and delete the 27 composition

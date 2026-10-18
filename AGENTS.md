@@ -167,6 +167,12 @@ list. Scope is `core.*` plus five branch-rich components, named in the build fil
 mutant is not always a missing assertion** — it can be code that cannot matter, and then the
 answer is to delete the code.
 
+## CodeScene
+
+After changing code, run `code_health_review` on the changed files. If Code Health drops, fix the
+issues, run the review again, and use `code_health_score` to confirm the result. Before finishing,
+run `pre_commit_code_health_safeguard` and only stop when it passes.
+
 ## Skills
 
 | Task | Skill |
@@ -238,8 +244,9 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 - Editing `lib/generated/**`, `docs/reference/**` or `llms.txt` — edit `codegen/model/` instead
 - Teaching a generator to infer structure from DaisyUI's prose or markup — declare it in the
   model; the bump report and the test generator are the only readers of DaisyUI's examples
-- Running `mcp_Tcr` on a step that changes generated Kotlin: it runs only the codegen's Bun
-  suite, and from the repository root it runs DaisyUI's own submodule tests
+- Running `mcp_Tcr` on `codegen/` for a step that changes generated Kotlin: there it runs only
+  the Bun suite. Run it at the repository root, where it runs `./gradlew build` and the codegen
+  tests, and regenerate first — neither suite regenerates
 - Hardcoding CSS class strings instead of using the generated enums
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
 - Assuming there is no release automation — there is, see `kdaisyui-release`

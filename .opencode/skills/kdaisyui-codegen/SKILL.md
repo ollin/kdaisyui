@@ -168,6 +168,7 @@ DaisyUI's marked examples with it. A second dependency is a decision, not a habi
 4. `just update-api` when a signature moved; read both diffs; a breaking one needs a
    **How to migrate** entry in `README.md`.
 
-`mcp_Tcr` run on `codegen/` executes the Bun suite only. Run steps 1 and 2 before it, and step 3
-by hand for anything that changes generated Kotlin: from the repository root it runs DaisyUI's
-own submodule tests and reverts on their failures.
+Run `mcp_Tcr` at the repository root: it runs `./gradlew build`, which includes `:lib:test`,
+E2E and `koverVerify`, and `bun test`, which the root `bunfig.toml` confines to `codegen/`.
+Neither suite regenerates, so regenerate before the run whenever the model or a generator
+changed. Run on `codegen/` alone it executes only the Bun suite.

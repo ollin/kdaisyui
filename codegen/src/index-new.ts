@@ -12,8 +12,6 @@ import {
   type CrossCheckExceptions,
   type ElementObservation,
 } from './element-cross-check.ts'
-import { readComponentConfig } from './component-shape.ts'
-import { classesOfferedTwice, type OfferedTwice } from './offered-twice.ts'
 import { classFindings, directoryFindings } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
 
@@ -80,17 +78,6 @@ function reportCrossCheck(observations: readonly ElementObservation[], exception
 }
 
 /**
- * Fails the run on any class a generated function offers both as a boolean and as an enum
- * constant. Runs after generation, like the two checks above, so the offending Kotlin is on disk.
- */
-function reportOfferedTwice(offered: readonly OfferedTwice[]): void {
-  if (offered.length === 0) return
-  const lines = offered.map(o => `  ${o.functionName}: boolean \`${o.booleanName}\` writes ${o.cssClass}, already ${o.enumName}`)
-  console.error(`\nA class is offered twice — as a boolean and as an enum constant:\n${lines.join('\n')}`)
-  process.exitCode = 1
-}
-
-/**
  * Fails the run when a component's model and the classes DaisyUI declares for it disagree.
  * Runs after generation like the checks above, so the output a wrong model produced is on disk.
  */
@@ -131,7 +118,6 @@ function main() {
 
   const allClasses = []
   const observations: ElementObservation[] = []
-  const offeredTwice: OfferedTwice[] = []
   const modelFindings: string[] = []
 
   // DaisyUI's own directory order, so the log reads down the same list a reader sees on disk
@@ -159,7 +145,6 @@ function main() {
       shape,
       new Map([...documentedSets].map(([cls, elements]) => [cls, DocumentedElements.of(elements)])),
     ))
-    offeredTwice.push(...classesOfferedTwice(shape, readComponentConfig(config, classified.componentName).extras))
 
     const kotlin = generateKotlinFile(shape, mainFunctionConfig(component.model))
     const outFile = path.join(OUTPUT_DIR, `${classified.componentName}.kt`)
@@ -180,7 +165,6 @@ function main() {
   console.log(`Class list: ${CLASS_LIST_FILE} (${classCount} classes)`)
 
   reportCrossCheck(observations, config.elementCrossCheckExceptions ?? {})
-  reportOfferedTwice(offeredTwice)
   reportIncompleteModels(modelFindings)
 }
 

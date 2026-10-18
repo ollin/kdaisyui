@@ -57,7 +57,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 ## 4. Declare the gaps
 
-- [ ] 4.1 `. d` Declare every key 1.1 counted in its page's model file, with its reason and,
+- [x] 4.1 `. d` Declare every key 1.1 counted in its page's model file, with its reason and,
   where one exists, its issue (#347 menu, dock and rating children; #343 calendar; #357 dropdown
   popover). One commit per component, so each reason is reviewed with its component.
 - [ ] 4.2 `! F (internal)` Wire the gate into `index-new.ts` beside the completeness gate.

@@ -9,6 +9,7 @@
 
 import { execFileSync } from 'node:child_process'
 import { getClassesByCategory, parseFrontmatter } from './parser/frontmatter.ts'
+import { documentedElementSetsIn, fencedHtmlBlocks } from './parser/documented-element.ts'
 
 /** Where the component pages live inside the DaisyUI repository. */
 export const COMPONENTS_IN_REPO = 'packages/docs/src/routes/(routes)/components'
@@ -75,5 +76,31 @@ export function classChanges(older: ComponentDocs, newer: ComponentDocs): ClassC
     const added = [...after].filter(cls => !before.has(cls)).sort()
     const removed = [...before].filter(cls => !after.has(cls)).sort()
     return added.length + removed.length === 0 ? [] : [{ component, added, removed }]
+  })
+}
+
+/** A class DaisyUI's marked examples put on a different set of elements in the newer release. */
+export interface ElementChange {
+  readonly component: string
+  readonly cssClass: string
+  readonly before: readonly string[]
+  readonly after: readonly string[]
+}
+
+function elementSets(markdown: string | null): ReadonlyMap<string, ReadonlySet<string>> {
+  return documentedElementSetsIn(fencedHtmlBlocks(markdown ?? ''))
+}
+
+/** Per class marked in both releases, where the elements it is documented on changed. */
+export function elementChanges(older: ComponentDocs, newer: ComponentDocs): ElementChange[] {
+  const inBoth = newer.componentDirs().filter(dir => older.componentDirs().includes(dir))
+  return inBoth.flatMap(component => {
+    const before = elementSets(older.page(component))
+    const after = elementSets(newer.page(component))
+    return [...after.keys()].sort().flatMap(cssClass => {
+      const was = [...(before.get(cssClass) ?? [])].sort()
+      const is = [...(after.get(cssClass) ?? [])].sort()
+      return was.length === 0 || was.join() === is.join() ? [] : [{ component, cssClass, before: was, after: is }]
+    })
   })
 }

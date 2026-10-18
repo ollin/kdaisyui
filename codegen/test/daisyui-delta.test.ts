@@ -5,7 +5,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { classChanges, COMPONENTS_IN_REPO, DocsAtTag, type ComponentDocs } from '../src/daisyui-delta.ts'
+import { classChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, type ComponentDocs } from '../src/daisyui-delta.ts'
 
 /** A throwaway repository with DaisyUI's layout and two tags. */
 class FixtureRepository {
@@ -85,5 +85,24 @@ describe('classChanges', () => {
     const page = release({ btn: frontmatter('btn') })
 
     assert.deepEqual(classChanges(page, page), [])
+  })
+})
+
+function example(html: string): string {
+  return `${frontmatter('otp')}\n\`\`\`html\n${html}\n\`\`\`\n`
+}
+
+describe('elementChanges', () => {
+  it('names a class whose documented elements changed, with both sets', () => {
+    const older = release({ otp: example('<div class="$$otp"></div>') })
+    const newer = release({ otp: example('<label class="$$otp"></label>') })
+
+    assert.deepEqual(elementChanges(older, newer), [{ component: 'otp', cssClass: 'otp', before: ['DIV'], after: ['LABEL'] }])
+  })
+
+  it('says nothing about a class documented on the same elements in both', () => {
+    const page = release({ otp: example('<div class="$$otp"></div>') })
+
+    assert.deepEqual(elementChanges(page, page), [])
   })
 })

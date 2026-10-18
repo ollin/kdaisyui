@@ -11,14 +11,14 @@ Regenerate: just generate
 Visual separator between sections. Renders `<div class="divider ...">`.
 
 ```kotlin
-// DividerVariant: Neutral | Primary | Secondary | Accent | Success | Warning | Info | Error
+// DividerColor: Neutral | Primary | Secondary | Accent | Success | Warning | Info | Error
 // DividerDirection: Vertical | Horizontal
+// DividerPlacement: Start | End
 fun FlowContent.daisyDivider(
     id: HtmlId? = null,
-    variant: ClassValues<DividerVariant>? = null,
+    color: ClassValues<DividerColor>? = null,
     direction: ClassValues<DividerDirection>? = null,
-    end: Boolean = false,  // Pushes the divider text to the end
-    start: Boolean = false,  // Pushes the divider text to the start
+    placement: ClassValues<DividerPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

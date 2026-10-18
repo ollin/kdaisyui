@@ -1,0 +1,48 @@
+{
+  "component": "swap",
+  "name": "Swap",
+  "class": "swap",
+  "enums": [{ "name": "SwapStyle", "label": "Style variants", "classes": ["swap-rotate", "swap-flip"] }],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisySwap",
+      "receiver": "FlowContent",
+      "element": "LABEL",
+      "class": "swap",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "style", "enum": "SwapStyle", "doc": "Style variant" },
+        { "kind": "toggle", "name": "active", "class": "swap-active" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisySwapOn",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "swap-on",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisySwapOff",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "swap-off",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisySwapIndeterminate",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "swap-indeterminate",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Toggle between two states" }
+}

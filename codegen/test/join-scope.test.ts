@@ -1,10 +1,9 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { classesJoinedWith, joinScopeMembers, withJoinScope } from '../src/join-scope.ts'
-import { allBooleans, buildComponentShape } from '../src/component-shape.ts'
+import { joinScopeMembers, withJoinScope } from '../src/join-scope.ts'
 import type { ComponentShape, FunctionShape, ParameterShape } from '../src/component-shape.ts'
-import type { ClassifiedComponent } from '../src/classifier.ts'
+import { component, shapeOf } from './model-fixture.ts'
 
 /** A component shape reduced to what the scope reads: its class, and the functions it has. */
 function shape(prefix: string, functions: readonly Partial<FunctionShape>[]): ComponentShape {
@@ -17,78 +16,13 @@ function shape(prefix: string, functions: readonly Partial<FunctionShape>[]): Co
   } as ComponentShape
 }
 
-/** The join component as the generator builds it, before the scope is attached. */
+/** The join component as the model declares it, before the scope is attached. */
 function joinShape(): ComponentShape {
-  const join = {
-    componentName: 'Join',
-    componentClass: 'Join',
-    desc: '',
-    prefix: 'join',
-    colors: [],
-    styles: [],
-    sizes: [],
-    modifiers: [],
-    behaviors: [],
-    parts: [],
-    directions: [],
-    placements: [],
-    defaultSize: null,
-    descs: {},
-  } as ClassifiedComponent
-  return buildComponentShape(join, { componentDir: 'join', element: 'DIV' }, {}, allBooleans(join))
+  return shapeOf(component('join', 'Join', 'join'))
 }
 
 const parameterNamed = (shape: ComponentShape, name: string): ParameterShape | undefined =>
   shape.functions[0].parameters.find(parameter => parameter.name === name)
-
-describe('classesJoinedWith', () => {
-  test('collects a class that shares an element with join-item', () => {
-    const classes = classesJoinedWith('<div class="$$join"><button class="$$btn $$join-item">A</button></div>')
-
-    assert.deepEqual([...classes], ['btn'])
-  })
-
-  test('does not collect join-item itself', () => {
-    const classes = classesJoinedWith('<button class="$$btn $$join-item">A</button>')
-
-    assert.equal(classes.has('join-item'), false)
-  })
-
-  test('does not collect a class on a sibling element', () => {
-    // The rule is about ONE element. A join whose children are a button and a select does not
-    // make `select` a companion of `btn`, and a rule reading the whole example block would say
-    // it did — the defect `documented-classes.ts` exists to prevent.
-    const classes = classesJoinedWith(
-      '<div class="$$join"><button class="$$btn $$join-item">A</button><select class="$$select"></select></div>',
-    )
-
-    assert.deepEqual([...classes], ['btn'])
-  })
-
-  test('does not collect a class a Tailwind variant applies conditionally', () => {
-    // `lg:$$btn` is the button class at one breakpoint and not at others, while the generated
-    // `daisyButton` always emits it. A member built from that element would mark an element
-    // DaisyUI does not document as a join item below `lg`.
-    const classes = classesJoinedWith('<button class="lg:$$btn $$join-item">A</button>')
-
-    assert.deepEqual([...classes], [])
-  })
-
-  test('ignores an element that does not carry join-item at all', () => {
-    const classes = classesJoinedWith('<button class="$$btn">A</button>')
-
-    assert.deepEqual([...classes], [])
-  })
-
-  test('collects every companion when one element carries two component classes', () => {
-    // Measured shape, not invented: DaisyUI documents
-    // `<input class="$$btn $$theme-controller $$join-item">`, which is why the derived set has
-    // seven members and only 72 sightings.
-    const classes = classesJoinedWith('<input class="$$btn $$theme-controller $$join-item" />')
-
-    assert.deepEqual([...classes].sort(), ['btn', 'theme-controller'])
-  })
-})
 
 describe('joinScopeMembers', () => {
   test('takes the main function of every component whose class is a companion', () => {

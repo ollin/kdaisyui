@@ -1,0 +1,5 @@
+# `bun test` from the repository root runs the codegen tests only. Without this it also
+# discovers the DaisyUI submodule's own test suite, whose dependencies are not installed, and
+# the TCR cycle reverts a green step on their failures.
+[test]
+root = "codegen"

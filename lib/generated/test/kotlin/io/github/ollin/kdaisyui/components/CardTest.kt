@@ -98,10 +98,10 @@ class CardTest {
     @Test
     fun card_with_image_overlay() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(modifier = CardModifier.ImageFull) {
+            daisyCard(layout = CardLayout.ImageFull) {
             }
         }
-        val expectedClasses = "card card-image-full"
+        val expectedClasses = "card image-full"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Card with image overlay")
     }
@@ -153,7 +153,7 @@ class CardTest {
     @Test
     fun card_with_image_on_side() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(modifier = CardModifier.Side) {
+            daisyCard(layout = CardLayout.Side) {
             }
         }
         val expectedClasses = "card card-side"

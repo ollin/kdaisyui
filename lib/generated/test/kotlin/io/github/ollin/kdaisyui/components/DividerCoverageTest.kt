@@ -39,103 +39,101 @@ class DividerCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
                 id = htmlId("x-cov-id"),
-                end = true,
-                start = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "divider divider-end divider-start zz-extra", "Divider all flags", closes = "</div></div>")
+        assertRendered(html, "divider zz-extra", "Divider all flags", closes = "</div></div>")
         assertCommonFlags(html, "Divider")
     }
 
     @Test
-    fun divider_variant_neutral() {
+    fun divider_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Neutral,
+                color = DividerColor.Neutral,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-neutral", "Divider variant Neutral")
+        assertRendered(html, "divider divider-neutral", "Divider color Neutral")
     }
 
     @Test
-    fun divider_variant_primary() {
+    fun divider_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Primary,
+                color = DividerColor.Primary,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-primary", "Divider variant Primary")
+        assertRendered(html, "divider divider-primary", "Divider color Primary")
     }
 
     @Test
-    fun divider_variant_secondary() {
+    fun divider_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Secondary,
+                color = DividerColor.Secondary,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-secondary", "Divider variant Secondary")
+        assertRendered(html, "divider divider-secondary", "Divider color Secondary")
     }
 
     @Test
-    fun divider_variant_accent() {
+    fun divider_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Accent,
+                color = DividerColor.Accent,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-accent", "Divider variant Accent")
+        assertRendered(html, "divider divider-accent", "Divider color Accent")
     }
 
     @Test
-    fun divider_variant_success() {
+    fun divider_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Success,
+                color = DividerColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-success", "Divider variant Success")
+        assertRendered(html, "divider divider-success", "Divider color Success")
     }
 
     @Test
-    fun divider_variant_warning() {
+    fun divider_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Warning,
+                color = DividerColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-warning", "Divider variant Warning")
+        assertRendered(html, "divider divider-warning", "Divider color Warning")
     }
 
     @Test
-    fun divider_variant_info() {
+    fun divider_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Info,
+                color = DividerColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-info", "Divider variant Info")
+        assertRendered(html, "divider divider-info", "Divider color Info")
     }
 
     @Test
-    fun divider_variant_error() {
+    fun divider_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyDivider(
-                variant = DividerVariant.Error,
+                color = DividerColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-error", "Divider variant Error")
+        assertRendered(html, "divider divider-error", "Divider color Error")
     }
 
     @Test
@@ -158,5 +156,27 @@ class DividerCoverageTest {
             )
         }
         assertRendered(html, "divider divider-horizontal", "Divider direction Horizontal")
+    }
+
+    @Test
+    fun divider_placement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider(
+                placement = DividerPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "divider divider-start", "Divider placement Start")
+    }
+
+    @Test
+    fun divider_placement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDivider(
+                placement = DividerPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "divider divider-end", "Divider placement End")
     }
 }

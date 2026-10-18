@@ -11,11 +11,11 @@ Regenerate: just generate
 Multi-line text input. Renders `<textarea class="textarea ...">`.
 
 ```kotlin
-// TextareaVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// TextareaColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // TextareaSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyTextarea(
     id: HtmlId? = null,
-    variant: ClassValues<TextareaVariant>? = null,
+    color: ClassValues<TextareaColor>? = null,
     size: ClassValues<TextareaSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,

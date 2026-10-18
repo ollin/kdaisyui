@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -12,23 +13,32 @@ import kotlinx.html.FlowContent
 import kotlinx.html.ul
 import kotlinx.html.UL
 
+enum class TimelineDirection(internal val className: String) : ClassValues<TimelineDirection> {
+    /** CSS: `timeline-horizontal` */
+    Horizontal("timeline-horizontal"),
+    /** CSS: `timeline-vertical` */
+    Vertical("timeline-vertical"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Timeline component shows a list of events in chronological order. Renders `<ul class="timeline ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
+ * @param direction — Direction variant
  * @param compact
- * @param horizontal
  * @param snapIcon
- * @param vertical
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyTimeline(
     id: HtmlId? = null,
+    direction: ClassValues<TimelineDirection>? = null,
     compact: Boolean = false,
-    horizontal: Boolean = false,
     snapIcon: Boolean = false,
-    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -36,10 +46,9 @@ fun FlowContent.daisyTimeline(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline")
+        addClassNames(direction)
         if (compact) addClassNames("timeline-compact")
-        if (horizontal) addClassNames("timeline-horizontal")
         if (snapIcon) addClassNames("timeline-snap-icon")
-        if (vertical) addClassNames("timeline-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

@@ -1,0 +1,41 @@
+{
+  "component": "otp",
+  "name": "Otp",
+  "class": "otp",
+  "enums": [
+    {
+      "name": "OtpColor",
+      "label": "Color variants",
+      "classes": [
+        "otp-neutral",
+        "otp-primary",
+        "otp-secondary",
+        "otp-accent",
+        "otp-success",
+        "otp-info",
+        "otp-warning",
+        "otp-error"
+      ]
+    },
+    { "name": "OtpSize", "label": "Size variants", "classes": ["otp-xs", "otp-sm", "otp-md", "otp-lg", "otp-xl"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyOtp",
+      "receiver": "FlowContent",
+      "element": "LABEL",
+      "class": "otp",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "color", "enum": "OtpColor", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "OtpSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "joined", "class": "otp-joined" }
+      ]
+    }
+  ],
+  "summary": {
+    "summary": "One-time password / verification code input",
+    "description": "One-time password input for verification codes, typically four to six digits, used for two-factor authentication or passwordless login"
+  }
+}

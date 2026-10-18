@@ -1,0 +1,45 @@
+{
+  "component": "navbar",
+  "name": "Navbar",
+  "class": "navbar",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyNavbar",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "navbar",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyNavbarStart",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "navbar-start",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyNavbarCenter",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "navbar-center",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyNavbarEnd",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "navbar-end",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Navigation bar layout" }
+}

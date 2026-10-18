@@ -1,0 +1,18 @@
+{
+  "component": "countdown",
+  "name": "Countdown",
+  "class": "countdown",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCountdown",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "countdown",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Timer countdown display" }
+}

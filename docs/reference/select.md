@@ -11,11 +11,11 @@ Regenerate: just generate
 Dropdown option pickers. Renders `<select class="select ...">`.
 
 ```kotlin
-// SelectVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// SelectColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // SelectSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisySelect(
     id: HtmlId? = null,
-    variant: ClassValues<SelectVariant>? = null,
+    color: ClassValues<SelectColor>? = null,
     size: ClassValues<SelectSize>? = null,
     ghost: Boolean = false,
     disabled: Boolean = false,

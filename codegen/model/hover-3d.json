@@ -1,0 +1,18 @@
+{
+  "component": "hover-3d",
+  "name": "Hover3d",
+  "class": "hover-3d",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyHover3d",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "hover-3d",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "3D hover effect container" }
+}

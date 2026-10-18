@@ -13,19 +13,23 @@ import kotlinx.html.FlowContent
 import kotlinx.html.ul
 import kotlinx.html.UL
 
-/** Modifier variants for this component (CSS prefix: `dropdown-`) */
-enum class DropdownModifier(internal val className: String) : ClassValues<DropdownModifier> {
-    /** CSS: `dropdown-hover` — Opens on hover too */
-    Hover("dropdown-hover"),
-    /** CSS: `dropdown-open` — Force open */
-    Open("dropdown-open"),
+/** Side variants for this component (CSS prefix: `dropdown-`) */
+enum class DropdownSide(internal val className: String) : ClassValues<DropdownSide> {
+    /** CSS: `dropdown-top` — Open from top */
+    Top("dropdown-top"),
+    /** CSS: `dropdown-bottom` — Open from bottom */
+    Bottom("dropdown-bottom"),
+    /** CSS: `dropdown-left` — Open from left */
+    Left("dropdown-left"),
+    /** CSS: `dropdown-right` — Open from right */
+    Right("dropdown-right"),
     ;
 
     override val classNames: List<String> get() = listOf(className)
 }
 
-/** HorizontalPlacement variants for this component (CSS prefix: `dropdown-`) */
-enum class DropdownHorizontalPlacement(internal val className: String) : ClassValues<DropdownHorizontalPlacement> {
+/** Align variants for this component (CSS prefix: `dropdown-`) */
+enum class DropdownAlign(internal val className: String) : ClassValues<DropdownAlign> {
     /** CSS: `dropdown-start` — Align horizontally to start of button */
     Start("dropdown-start"),
     /** CSS: `dropdown-center` — Align horizontally to center of button */
@@ -37,12 +41,12 @@ enum class DropdownHorizontalPlacement(internal val className: String) : ClassVa
     override val classNames: List<String> get() = listOf(className)
 }
 
-/** VerticalPlacement variants for this component (CSS prefix: `dropdown-`) */
-enum class DropdownVerticalPlacement(internal val className: String) : ClassValues<DropdownVerticalPlacement> {
-    /** CSS: `dropdown-top` — Open from top */
-    Top("dropdown-top"),
-    /** CSS: `dropdown-bottom` — Open from bottom */
-    Bottom("dropdown-bottom"),
+/** State variants for this component (CSS prefix: `dropdown-`) */
+enum class DropdownState(internal val className: String) : ClassValues<DropdownState> {
+    /** CSS: `dropdown-open` — Force open */
+    Open("dropdown-open"),
+    /** CSS: `dropdown-close` — Force close */
+    Close("dropdown-close"),
     ;
 
     override val classNames: List<String> get() = listOf(className)
@@ -52,24 +56,20 @@ enum class DropdownVerticalPlacement(internal val className: String) : ClassValu
 /**
  * Dropdown can open a menu or any other element when the button is clicked. Renders `<details class="dropdown ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param modifier — Modifier variant
- * @param horizontalPlacement — HorizontalPlacement variant
- * @param verticalPlacement — VerticalPlacement variant
- * @param close — Force close
- * @param left — Open from left
- * @param right — Open from right
+ * @param side — Side variant
+ * @param align — Align variant
+ * @param state — State variant
+ * @param hover — Opens on hover too
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
-    modifier: ClassValues<DropdownModifier>? = null,
-    horizontalPlacement: ClassValues<DropdownHorizontalPlacement>? = null,
-    verticalPlacement: ClassValues<DropdownVerticalPlacement>? = null,
-    close: Boolean = false,
-    left: Boolean = false,
-    right: Boolean = false,
+    side: ClassValues<DropdownSide>? = null,
+    align: ClassValues<DropdownAlign>? = null,
+    state: ClassValues<DropdownState>? = null,
+    hover: Boolean = false,
     extraClasses: String? = null,
     attrs: (DETAILS.() -> Unit)? = null,
     content: (DETAILS.() -> Unit),
@@ -77,12 +77,10 @@ fun FlowContent.daisyDropdown(
     details {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown")
-        addClassNames(modifier)
-        addClassNames(horizontalPlacement)
-        addClassNames(verticalPlacement)
-        if (close) addClassNames("dropdown-close")
-        if (left) addClassNames("dropdown-left")
-        if (right) addClassNames("dropdown-right")
+        addClassNames(side)
+        addClassNames(align)
+        addClassNames(state)
+        if (hover) addClassNames("dropdown-hover")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

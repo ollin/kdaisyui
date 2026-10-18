@@ -63,83 +63,83 @@ class RangeCoverageTest {
     }
 
     @Test
-    fun range_variant_neutral() {
+    fun range_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Neutral,
+                color = RangeColor.Neutral,
             )
         }
-        assertRendered(html, "range range-neutral", "Range variant Neutral")
+        assertRendered(html, "range range-neutral", "Range color Neutral")
     }
 
     @Test
-    fun range_variant_primary() {
+    fun range_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Primary,
+                color = RangeColor.Primary,
             )
         }
-        assertRendered(html, "range range-primary", "Range variant Primary")
+        assertRendered(html, "range range-primary", "Range color Primary")
     }
 
     @Test
-    fun range_variant_secondary() {
+    fun range_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Secondary,
+                color = RangeColor.Secondary,
             )
         }
-        assertRendered(html, "range range-secondary", "Range variant Secondary")
+        assertRendered(html, "range range-secondary", "Range color Secondary")
     }
 
     @Test
-    fun range_variant_accent() {
+    fun range_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Accent,
+                color = RangeColor.Accent,
             )
         }
-        assertRendered(html, "range range-accent", "Range variant Accent")
+        assertRendered(html, "range range-accent", "Range color Accent")
     }
 
     @Test
-    fun range_variant_success() {
+    fun range_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Success,
+                color = RangeColor.Success,
             )
         }
-        assertRendered(html, "range range-success", "Range variant Success")
+        assertRendered(html, "range range-success", "Range color Success")
     }
 
     @Test
-    fun range_variant_warning() {
+    fun range_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Warning,
+                color = RangeColor.Warning,
             )
         }
-        assertRendered(html, "range range-warning", "Range variant Warning")
+        assertRendered(html, "range range-warning", "Range color Warning")
     }
 
     @Test
-    fun range_variant_info() {
+    fun range_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Info,
+                color = RangeColor.Info,
             )
         }
-        assertRendered(html, "range range-info", "Range variant Info")
+        assertRendered(html, "range range-info", "Range color Info")
     }
 
     @Test
-    fun range_variant_error() {
+    fun range_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(
-                variant = RangeVariant.Error,
+                color = RangeColor.Error,
             )
         }
-        assertRendered(html, "range range-error", "Range variant Error")
+        assertRendered(html, "range range-error", "Range color Error")
     }
 
     @Test

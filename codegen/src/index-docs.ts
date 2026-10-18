@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { readComponentSet } from './component-set.ts'
+import { readComponentSet, type GeneratedComponent } from './component-set.ts'
 import type { ComponentShape } from './component-shape.ts'
 import {
   docFileNameFor,
@@ -13,7 +13,6 @@ import { generateLlmsTxt } from './generator-llms.ts'
 // Committed prose tree, not build output — the same argument as `lib/generated/`: a reader of a
 // fresh clone gets the reference documentation without running anything.
 const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../docs/reference')
-const CONFIG_PATH = path.resolve(import.meta.dirname, '../codegen-config.json')
 
 function parseArg(flag: string, fallback: string): string {
   for (const arg of process.argv) {
@@ -26,11 +25,6 @@ const OUTPUT_DIR = parseArg('--output-dir', DEFAULT_OUTPUT_DIR)
 const LLMS_TXT = parseArg('--llms-txt', path.resolve(import.meta.dirname, '../../llms.txt'))
 const LLMS_TEMPLATE = path.resolve(import.meta.dirname, '../llms-template.md')
 
-function loadConfig() {
-  if (!fs.existsSync(CONFIG_PATH)) return {}
-  return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
-}
-
 interface Written {
   readonly shapes: ComponentShape[]
   /** File names written this run, so the stale ones can be told apart. */
@@ -40,11 +34,16 @@ interface Written {
   readonly withoutSummary: string[]
 }
 
-function writeComponentPages(config, docSummaries: Readonly<Record<string, DocSummary>>): Written {
-  // One shared definition of which components get generated — a page must exist for precisely
-  // the components that have a generated Kotlin file, or the index links at nothing.
-  const { generated: documented, skipped } = readComponentSet(config)
+/** Each component's hand-written summary, from its model file, by DaisyUI directory. */
+function summariesOf(components: readonly GeneratedComponent[]): Record<string, DocSummary> {
+  return Object.fromEntries(components.flatMap(({ componentDir, model }) => (model.summary === undefined ? [] : [[componentDir, model.summary]])))
+}
 
+function writeComponentPages(
+  documented: readonly GeneratedComponent[],
+  skipped: number,
+  docSummaries: Readonly<Record<string, DocSummary>>,
+): Written {
   const fileNames = new Set<string>()
   const withoutSummary: string[] = []
 
@@ -61,7 +60,7 @@ function writeComponentPages(config, docSummaries: Readonly<Record<string, DocSu
   return {
     shapes: documented.map(entry => entry.shape),
     fileNames,
-    skipped: skipped.length,
+    skipped,
     withoutSummary,
   }
 }
@@ -89,20 +88,22 @@ function removeStalePages(kept: ReadonlySet<string>): string[] {
 function reportMissingSummaries(components: readonly string[]): void {
   if (components.length === 0) return
   console.log(
-    `\n⚠ No docSummaries entry for: ${components.join(', ')}` +
+    `\n⚠ No summary for: ${components.join(', ')}` +
       `\n  Each fell back to the first sentence of its DaisyUI description.` +
-      `\n  Add a summary in codegen/codegen-config.json → docSummaries.`,
+      `\n  Add one in codegen/model/<directory>.json → summary.`,
   )
 }
 
 function main() {
   console.log('Generating kdaisyui component reference from DaisyUI source...\n')
 
-  const config = loadConfig()
-  const docSummaries: Record<string, DocSummary> = config.docSummaries ?? {}
+  // One shared definition of which components get generated — a page must exist for precisely
+  // the components that have a generated Kotlin file, or the index links at nothing.
+  const { generated, skipped } = readComponentSet()
+  const docSummaries = summariesOf(generated)
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true })
-  const written = writeComponentPages(config, docSummaries)
+  const written = writeComponentPages(generated, skipped.length, docSummaries)
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.md'), generateIndexPage(written.shapes, docSummaries))
   const removed = removeStalePages(written.fileNames)
   // Same shapes, same summaries, same run: llms.txt cannot describe a different API than the pages.

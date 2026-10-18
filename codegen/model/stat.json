@@ -1,0 +1,74 @@
+{
+  "component": "stat",
+  "name": "Stat",
+  "class": "stats",
+  "enums": [
+    { "name": "StatsDirection", "label": "Direction variants", "classes": ["stats-horizontal", "stats-vertical"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyStats",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stats",
+      "text": false,
+      "parameters": [{ "kind": "enum", "name": "direction", "enum": "StatsDirection", "doc": "Direction variant" }]
+    },
+    {
+      "kind": "part",
+      "name": "daisyStat",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stat",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyStatTitle",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stat-title",
+      "text": true,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyStatValue",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stat-value",
+      "text": true,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyStatDesc",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stat-desc",
+      "text": true,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyStatFigure",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stat-figure",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyStatActions",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stat-actions",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Key metrics and numbers" }
+}

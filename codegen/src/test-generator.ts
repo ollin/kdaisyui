@@ -7,14 +7,7 @@ import {
   toPascalCase,
   type ClassCategory,
 } from './parser/frontmatter.ts'
-// `toPascalCase` is aliased because this file already imports the frontmatter one, which is
-// branded to a ComponentName. An enum member suffix is not a component name, and the classifier's
-// is the generic string form.
-import { classifyFromFrontmatter, toPascalCase as toPascalClassName } from './classifier.ts'
-import { classifyGroups } from './class-groups.ts'
-import { loadEvidence } from './measurement.ts'
-import type { Evidence } from './measurement.ts'
-import { booleanParameterName, escapeKotlinKeyword, readComponentConfig } from './component-shape.ts'
+import { entryName, isSkipped, readModel, type ComponentModel, type ModelFunction, type ModelParameter } from './model.ts'
 import {
   documentedElementClasses,
   type DocumentedClass,
@@ -53,14 +46,6 @@ function parseArg(flag, fallback) {
 }
 
 const OUTPUT_DIR = parseArg('output-dir', DEFAULT_OUTPUT_DIR)
-const CONFIG_PATH = path.resolve(import.meta.dirname, '../codegen-config.json')
-
-function loadConfig() {
-  if (!fs.existsSync(CONFIG_PATH)) {
-    return { skip: [] }
-  }
-  return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
-}
 
 // A doc page is scanned line by line, and until now the position in that scan lived in four
 // mutable locals threaded through one loop. Collecting them into one object is what lets each
@@ -179,22 +164,13 @@ function buildClassMappings(frontmatter) {
 }
 
 /**
- * How one documented class reaches the generated function.
- *
- * Both halves are needed and neither is derivable from the class alone. The PARAMETER is
- * `direction` for `menu-horizontal` and `focused` for `menu-focus`, because the measurement made
- * one an enum and the config renamed the other. The ARGUMENT is `MenuDirection.Horizontal` or
- * `true` for the same reason.
+ * How one documented class reaches the generated function: the PARAMETER, `direction` for
+ * `menu-horizontal`, and the ARGUMENT, `MenuDirection.Horizontal`, both as the model declares them.
  */
 interface ClassBinding {
   readonly parameter: string
   /** Kotlin expression, e.g. `true` or `MenuDirection.Horizontal`. */
   readonly argument: string
-}
-
-/** `text` under prefix `skeleton` is the class `skeleton-text`; an unprefixed class is itself. */
-function qualifiedClass(prefix: string | null, cls: string): string {
-  return prefix === null || cls.startsWith(`${prefix}-`) ? cls : `${prefix}-${cls}`
 }
 
 /**
@@ -207,41 +183,55 @@ function strippedClass(prefix: string | null, cssClass: string): string {
 }
 
 /**
- * What each of a component's classes becomes at a call site — read from the SAME model the
- * component generator emits from, rather than re-derived here.
+ * What each of a component's classes becomes at a call site, read from the component model the
+ * Kotlin is generated from, keyed by the class with the component prefix stripped.
  *
- * That sharing is the point. This file used to build its own `class -> camelCase parameter` map,
- * which was right only while every parameter was a boolean called exactly `toCamelCase(class)`.
- * It now has to agree with a decision it cannot see: which groups the exclusivity measurement
- * turned into enums. Deriving that twice is how the two copies drift.
+ * Enum entries first, then toggles, then the classes an extra parameter writes; the first binding
+ * of a class wins. A class a construction always writes is left out: the main function has no
+ * parameter for it, and the construction has its own test.
  */
-function classBindings(classified, componentConfig, groups): Record<string, ClassBinding> {
+function classBindings(model: ComponentModel): Record<string, ClassBinding> {
   const bindings: Record<string, ClassBinding> = {}
-
-  for (const group of groups.enums) {
-    for (const member of group.members) {
-      bindings[member] = {
-        // Escaped exactly as `component-shape.ts` declares it: a group named `object` would
-        // otherwise be called with a Kotlin keyword and fail to compile.
-        parameter: escapeKotlinKeyword(group.parameterName),
-        argument: `${group.enumName}.${toPascalClassName(member)}`,
-      }
-    }
+  const parameters = model.functions.flatMap(fn => fn.parameters)
+  for (const [cssClass, binding] of [...enumBindings(model, parameters), ...toggleBindings(model, parameters), ...writtenBindings(parameters)]) {
+    bindings[strippedClass(model.class, cssClass)] ??= binding
   }
-
-  // Everything the measurement left as a flag. Enums are written first and not overwritten: a
-  // class cannot be both, and if it somehow were, the enum is the one that reaches the CSS.
-  // Minus the classes a custom part writes on every call: those have no boolean on the main
-  // function, so no call to it can produce them. An `extras`-covered class is NOT subtracted —
-  // it has no boolean either, but it does have a parameter, the `extras` entry's own, under
-  // the same name.
-  const writtenByCustomPart = new Set(componentConfig.customParts.flatMap(part => part.modifierClasses ?? []))
-  for (const cls of groups.booleans) {
-    if (writtenByCustomPart.has(qualifiedClass(classified.prefix, cls))) continue
-    bindings[cls] ??= { parameter: booleanParameterName(cls), argument: 'true' }
-  }
-
   return bindings
+}
+
+type BoundClass = readonly [cssClass: string, binding: ClassBinding]
+
+function enumBindings(model: ComponentModel, parameters: readonly ModelParameter[]): BoundClass[] {
+  const enums = new Map(model.enums.map(declared => [declared.name, declared.classes]))
+  return parameters.flatMap(parameter => (parameter.kind !== 'enum' ? [] : (enums.get(parameter.enum) ?? []).map(
+    (cssClass): BoundClass => [cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${entryName(model, parameter.enum, cssClass)}` }],
+  )))
+}
+
+function toggleBindings(model: ComponentModel, parameters: readonly ModelParameter[]): BoundClass[] {
+  const writtenByConstruction = new Set(model.functions.flatMap(fn => fn.always ?? []))
+  return parameters.flatMap(parameter => (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)
+    ? [[parameter.class, { parameter: parameter.name, argument: 'true' }] as BoundClass]
+    : []))
+}
+
+function writtenBindings(parameters: readonly ModelParameter[]): BoundClass[] {
+  return parameters.flatMap(parameter => (parameter.kind !== 'extra' ? [] : (parameter.writes ?? []).map(
+    (cssClass): BoundClass => [cssClass, { parameter: parameter.name, argument: 'true' }],
+  )))
+}
+
+/** A construction method as the custom-part tests address it: its suffix and what it writes. */
+function customPartsOf(model: ComponentModel) {
+  return model.functions.filter(fn => fn.kind === 'custom').map((fn: ModelFunction) => ({
+    name: fn.name.slice(`daisy${model.name}`.length),
+    functionName: fn.name,
+    element: fn.element,
+    cssClass: fn.class,
+    modifierClasses: fn.always ?? [],
+    receiver: fn.receiver,
+    staticAttributes: fn.attributes ?? {},
+  }))
 }
 
 function toTestFunctionName(name) {
@@ -279,19 +269,14 @@ interface ComponentCall {
 }
 
 /**
- * The class the generator actually emits for a documented one.
+ * A prefixed class as it reaches the page: `lg:menu-horizontal`.
  *
- * DaisyUI files a few classes under a component without the component's prefix — `glass` under
- * `button` — and the generator prefixes them on the way out, so the documented name and the
- * rendered name differ.
+ * Expected as DaisyUI writes it, never as the model declares it: a test that expects what the
+ * model says cannot notice the model being wrong. That is how `card-image-full` shipped while
+ * DaisyUI's example said `image-full`.
  */
-function emittedClass(componentClass: string, className: string): string {
-  return className.startsWith(`${componentClass}-`) ? className : `${componentClass}-${className}`
-}
-
-/** A prefixed class as it reaches the page: `lg:menu-horizontal`. */
-function emittedVariantClass(model: CallModel, documented: DocumentedClass): string {
-  return `${documented.variant}:${emittedClass(model.componentClass, documented.className)}`
+function emittedVariantClass(documented: DocumentedClass): string {
+  return `${documented.variant}:${documented.className}`
 }
 
 function argumentFor(model: CallModel, documented: DocumentedClass): string {
@@ -339,14 +324,14 @@ function componentCallFor(model: CallModel, classes: readonly DocumentedClass[])
     documented => !documented.isPrefixed && documented.className !== model.componentClass,
   )
 
-  const variantClasses = variants.map(documented => emittedVariantClass(model, documented))
+  const variantClasses = variants.map(emittedVariantClass)
   const args = modifiers.map(documented => argumentFor(model, documented))
   rejectRepeatedParameters(model, args)
   if (variantClasses.length > 0) args.push(`extraClasses = "${variantClasses.join(' ')}"`)
 
   const rendered = [
     model.componentClass,
-    ...modifiers.map(documented => emittedClass(model.componentClass, documented.className)),
+    ...modifiers.map(documented => documented.className),
     ...variantClasses,
   ]
   return { args: args.join(', '), expectedClasses: [...new Set(rendered)].sort().join(' ') }
@@ -376,7 +361,7 @@ function customPartAssertions(part, tag) {
  * compare only the class attribute, so an attribute that carries no CSS class would
  * otherwise be invisible to both the generated tests and generated-sources-drift.
  */
-function generateComponentAttributeTest(className, componentAttributes) {
+function generateComponentAttributeTest(functionName, componentAttributes) {
   const assertions = staticAttributeAssertions(componentAttributes)
   if (assertions.length === 0) return ''
 
@@ -384,7 +369,7 @@ function generateComponentAttributeTest(className, componentAttributes) {
     @Test
     fun renders_static_attributes() {
         val html = createHTML(prettyPrint = false).div {
-            daisy${className} {
+            ${functionName} {
             }
         }
 ${assertions.join('\n')}
@@ -392,7 +377,7 @@ ${assertions.join('\n')}
 `
 }
 
-function generateCustomPartTests(className, customParts) {
+function generateCustomPartTests(customParts) {
   if (!customParts || customParts.length === 0) return ''
 
   let kotlin = ''
@@ -409,7 +394,7 @@ function generateCustomPartTests(className, customParts) {
     @Test
     fun ${funcName}() {
         val html = createHTML(prettyPrint = false).${wrapperFn} {
-            daisy${className}${part.name} {
+            ${part.functionName} {
             }
         }
 ${customPartAssertions(part, tag)}
@@ -438,11 +423,6 @@ function htmlTagFnFor(tag: TagName): BuilderName {
   return exceptions[tag] ?? tag
 }
 
-/** Reads a component-keyed config section, e.g. `customParts.modal`. */
-function configSection(config, section, componentName, fallback) {
-  return config?.[section]?.[componentName] ?? fallback
-}
-
 /** Suffixes `_2`, `_3`, … until the name is free, and records it as taken. */
 function uniqueTestName(usedNames, funcName) {
   let name = funcName
@@ -456,12 +436,12 @@ function uniqueTestName(usedNames, funcName) {
 }
 
 /** Asserts the component emits exactly the classes the doc example shows. */
-function generateClassTest(className, { testName, args, expectedClasses, caseName }) {
+function generateClassTest(functionName, { testName, args, expectedClasses, caseName }) {
   return `
     @Test
     fun ${testName}() {
         val html = createHTML(prettyPrint = false).div {
-            daisy${className}(${args}) {
+            ${functionName}(${args}) {
             }
         }
         val expectedClasses = "${expectedClasses}"
@@ -478,18 +458,14 @@ function generateClassTest(className, { testName, args, expectedClasses, caseNam
  * tests are generated against the signature the components were generated with rather than
  * against a second guess at it.
  */
-function buildCallModel(componentName, frontmatter, config, evidence: Evidence): CallModel {
+function buildCallModel(frontmatter, model: ComponentModel): CallModel {
   const { allowedClasses, componentClass } = buildClassMappings(frontmatter)
-  const classified = classifyFromFrontmatter(frontmatter, componentName)
-  const groups = classifyGroups(classified, componentName, config.enumNames ?? {}, evidence)
   return {
     componentClass,
-    prefix: classified.prefix,
+    prefix: model.class,
     allowedClasses,
-    bindings: classBindings(classified, readComponentConfig(config, classified.componentName), groups),
-    writtenByCustomPart: new Set(
-      configSection(config, 'customParts', componentName, []).flatMap(part => part.modifierClasses ?? []),
-    ),
+    bindings: classBindings(model),
+    writtenByCustomPart: new Set(model.functions.flatMap(fn => fn.always ?? [])),
   }
 }
 
@@ -513,61 +489,54 @@ function componentCallsIn(model: CallModel, html: string): ComponentCall[] {
   })
 }
 
-function generateKotlinTest(componentName, testCases, frontmatter, config, evidence: Evidence) {
-  const className = toClassName(componentName)
-  const model = buildCallModel(componentName, frontmatter, config, evidence)
-  const customParts = configSection(config, 'customParts', componentName, [])
-  const attributeTest = generateComponentAttributeTest(className, configSection(config, 'componentAttributes', componentName, {}))
-  
-  const extraImports = new Set()
-  if (customParts.length > 0 || attributeTest) {
-    extraImports.add('import kotlin.test.assertTrue')
-  }
+/** The imports a test file needs beyond the four every one of them has. */
+function extraImportLines(customParts, hasAttributeTest: boolean): string {
+  const imports = new Set<string>()
+  if (customParts.length > 0 || hasAttributeTest) imports.add('import kotlin.test.assertTrue')
   for (const part of customParts) {
-    const receiver = part.receiver || 'FlowContent'
-    if (receiver !== 'FlowContent') {
-      extraImports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(receiver))}`)
-    }
+    if (part.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(part.receiver))}`)
   }
-  const extraImportLines = [...extraImports].sort().join('\n')
-  
-  let kotlin = `package io.github.ollin.kdaisyui.components
+  return [...imports].sort().map(line => `\n${line}`).join('')
+}
+
+/**
+ * One class test per documented element, deduplicated, with how many there were. That is no longer
+ * the number of test cases: one heading can document several elements, and one that documents
+ * none produces no test at all.
+ */
+function classTests(model: CallModel, mainName: string, testCases): { kotlin: string, testCount: number } {
+  const usedNames = new Set()
+  const tests = testCases.flatMap(tc => componentCallsIn(model, tc.html).map(call => generateClassTest(mainName, {
+    testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
+    args: call.args,
+    expectedClasses: call.expectedClasses,
+    caseName: tc.name,
+  })))
+  return { kotlin: tests.join(''), testCount: tests.length }
+}
+
+function generateKotlinTest(componentName, testCases, frontmatter, componentModel: ComponentModel) {
+  const className = toClassName(componentName)
+  const main = componentModel.functions.find(fn => fn.kind === 'main')
+  const mainName = main?.name ?? `daisy${className}`
+  const customParts = customPartsOf(componentModel)
+  const attributeTest = generateComponentAttributeTest(mainName, main?.attributes ?? {})
+  const { kotlin: classTestKotlin, testCount } = classTests(buildCallModel(frontmatter, componentModel), mainName, testCases)
+
+  const kotlin = `package io.github.ollin.kdaisyui.components
 
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
-import kotlin.test.assertEquals${extraImportLines ? '\n' + extraImportLines : ''}
+import kotlin.test.assertEquals${extraImportLines(customParts, attributeTest !== '')}
 
 class ${className}Test {
+${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}}
 `
-  
-  const usedNames = new Set()
-  // The number of TESTS, which is no longer the number of test cases: one heading can document
-  // several elements, and one that documents none produces no test at all.
-  let testCount = 0
-  
-  for (const tc of testCases) {
-    for (const call of componentCallsIn(model, tc.html)) {
-      testCount++
-      kotlin += generateClassTest(className, {
-        testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
-        args: call.args,
-        expectedClasses: call.expectedClasses,
-        caseName: tc.name,
-      })
-    }
-  }
-  
-  kotlin += attributeTest
-  kotlin += generateCustomPartTests(className, customParts)
-  
-  kotlin += `}
-`
-  
   return { kotlin, testCount }
 }
 
-function generateForComponent(componentName, config, evidence: Evidence) {
+function generateForComponent(componentName, componentModel: ComponentModel) {
   const pageFile = path.join(DOCS_DIR, componentName, '+page.md')
   
   if (!fs.existsSync(pageFile)) {
@@ -586,7 +555,7 @@ function generateForComponent(componentName, config, evidence: Evidence) {
     return { success: false, error: 'No test cases' }
   }
   
-  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, config, evidence)
+  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, frontmatter, componentModel)
   const className = toClassName(componentName)
   const outFile = path.join(OUTPUT_DIR, `${className}Test.kt`)
   
@@ -1199,12 +1168,13 @@ function generateAllCoverage() {
  * Generate one component and print its progress line.
  * @returns whether it produced tests — the caller only needs the tally.
  */
-function generateAndReport(componentName, config, evidence: Evidence) {
-  if (config.skip?.includes(componentName)) {
+function generateAndReport(componentName) {
+  const model = readModel(componentName)
+  if (isSkipped(model)) {
     console.log(`  ⊘ ${componentName}: Skipped (alias)`)
     return false
   }
-  const result = generateForComponent(componentName, config, evidence)
+  const result = generateForComponent(componentName, model)
   console.log(
     result.success
       ? `  ✓ ${componentName}: ${result.testCount} tests`
@@ -1213,13 +1183,13 @@ function generateAndReport(componentName, config, evidence: Evidence) {
   return result.success
 }
 
-function generateAllComponents(config, evidence: Evidence) {
+function generateAllComponents() {
   console.log('Generating tests for all components...\n')
 
   let generated = 0
   let skipped = 0
   for (const componentName of getAllComponentDirs()) {
-    if (generateAndReport(componentName, config, evidence)) generated++
+    if (generateAndReport(componentName)) generated++
     else skipped++
   }
 
@@ -1228,12 +1198,13 @@ function generateAllComponents(config, evidence: Evidence) {
 }
 
 /** Single-component mode. Unlike the bulk mode, a failure here is fatal: it was asked for. */
-function generateSingleComponent(componentName, config, evidence: Evidence) {
-  if (config.skip?.includes(componentName)) {
+function generateSingleComponent(componentName) {
+  const model = readModel(componentName)
+  if (isSkipped(model)) {
     console.error(`Error: ${componentName} is skipped (alias)`)
     process.exit(1)
   }
-  const result = generateForComponent(componentName, config, evidence)
+  const result = generateForComponent(componentName, model)
   if (!result.success) {
     console.error(`Error: ${result.error}`)
     process.exit(1)
@@ -1251,13 +1222,9 @@ function printUsageAndExit() {
 
 function main() {
   const [mode] = process.argv.slice(2)
-  const config = loadConfig()
-  // One file describing every component, read once rather than 66 times — the same call
-  // `index-new.ts` makes, so both generators decide from the identical measurement.
-  const evidence = loadEvidence()
 
-  if (mode === 'all') return generateAllComponents(config, evidence)
-  if (mode) return generateSingleComponent(mode, config, evidence)
+  if (mode === 'all') return generateAllComponents()
+  if (mode) return generateSingleComponent(mode)
   printUsageAndExit()
 }
 

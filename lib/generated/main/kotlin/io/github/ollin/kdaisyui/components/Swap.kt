@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
@@ -12,21 +13,31 @@ import kotlinx.html.FlowContent
 import kotlinx.html.label
 import kotlinx.html.LABEL
 
+/** Style variants for this component (CSS prefix: `swap-`) */
+enum class SwapStyle(internal val className: String) : ClassValues<SwapStyle> {
+    /** CSS: `swap-rotate` — Adds rotate effect to swap */
+    Rotate("swap-rotate"),
+    /** CSS: `swap-flip` — Adds flip effect to swap */
+    Flip("swap-flip"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Swap allows you to toggle the visibility of two elements using a checkbox or a class name. Renders `<label class="swap ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
+ * @param style — Style variant
  * @param active — Activates the swap (no need for checkbox)
- * @param flip — Adds flip effect to swap
- * @param rotate — Adds rotate effect to swap
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisySwap(
     id: HtmlId? = null,
+    style: ClassValues<SwapStyle>? = null,
     active: Boolean = false,
-    flip: Boolean = false,
-    rotate: Boolean = false,
     extraClasses: String? = null,
     attrs: (LABEL.() -> Unit)? = null,
     content: (LABEL.() -> Unit),
@@ -34,9 +45,8 @@ fun FlowContent.daisySwap(
     label {
         if (id != null) attributes["id"] = id.id
         addClassNames("swap")
+        addClassNames(style)
         if (active) addClassNames("swap-active")
-        if (flip) addClassNames("swap-flip")
-        if (rotate) addClassNames("swap-rotate")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

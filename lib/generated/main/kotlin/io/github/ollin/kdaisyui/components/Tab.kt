@@ -9,14 +9,14 @@ import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.a
 import kotlinx.html.A
-import kotlinx.html.button
-import kotlinx.html.BUTTON
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.input
+import kotlinx.html.INPUT
 
 /** Size variants for this component (CSS prefix: `tabs-`) */
-enum class TabSize(internal val className: String) : ClassValues<TabSize> {
+enum class TabsSize(internal val className: String) : ClassValues<TabsSize> {
     /** CSS: `tabs-xs` — Extra small size */
     Xs("tabs-xs"),
     /** CSS: `tabs-sm` — Small size */
@@ -33,7 +33,7 @@ enum class TabSize(internal val className: String) : ClassValues<TabSize> {
 }
 
 /** Placement variants for this component (CSS prefix: `tabs-`) */
-enum class TabPlacement(internal val className: String) : ClassValues<TabPlacement> {
+enum class TabsPlacement(internal val className: String) : ClassValues<TabsPlacement> {
     /** CSS: `tabs-top` — Puts tab buttons on top of the tab-content (default) */
     Top("tabs-top"),
     /** CSS: `tabs-bottom` — Puts tabs on under the tab-content */
@@ -43,68 +43,95 @@ enum class TabPlacement(internal val className: String) : ClassValues<TabPlaceme
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Style variants for this component (CSS prefix: `tabs-`) */
+enum class TabsStyle(internal val className: String) : ClassValues<TabsStyle> {
+    /** CSS: `tabs-box` — box style */
+    Box("tabs-box"),
+    /** CSS: `tabs-border` — bottom border style */
+    Border("tabs-border"),
+    /** CSS: `tabs-lift` — lift style */
+    Lift("tabs-lift"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
- * Tabs can be used to show a list of links in a tabbed format. Renders `<button class="tabs ...">`.
+ * Tabs can be used to show a list of links in a tabbed format. Renders `<div class="tabs ..." role="tablist">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param placement — Placement variant
- * @param border — bottom border style
- * @param box — box style
- * @param lift — lift style
- * @param tabActive — Makes a single tab look active
- * @param tabDisabled — Makes a single tab look disabled
+ * @param style — Style variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
-fun FlowContent.daisyTab(
+fun FlowContent.daisyTabs(
     id: HtmlId? = null,
-    size: ClassValues<TabSize>? = null,
-    placement: ClassValues<TabPlacement>? = null,
-    border: Boolean = false,
-    box: Boolean = false,
-    lift: Boolean = false,
-    tabActive: Boolean = false,
-    tabDisabled: Boolean = false,
+    size: ClassValues<TabsSize>? = null,
+    placement: ClassValues<TabsPlacement>? = null,
+    style: ClassValues<TabsStyle>? = null,
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 ) {
-    button {
+    div {
         if (id != null) attributes["id"] = id.id
+        attributes["role"] = "tablist"
         addClassNames("tabs")
         addClassNames(size)
         addClassNames(placement)
-        if (border) addClassNames("tabs-border")
-        if (box) addClassNames("tabs-box")
-        if (lift) addClassNames("tabs-lift")
-        if (tabActive) addClassNames("tabs-tab-active")
-        if (tabDisabled) addClassNames("tabs-tab-disabled")
+        addClassNames(style)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
 }
 
-/** A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ...">`. */
-fun FlowContent.daisyTabTab(
+/** A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ..." role="tab">`. */
+fun FlowContent.daisyTab(
     id: HtmlId? = null,
+    active: Boolean = false,
+    disabled: Boolean = false,
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit),
 ) {
     a {
         if (id != null) attributes["id"] = id.id
+        attributes["role"] = "tab"
         addClassNames("tab")
+        if (active) addClassNames("tab-active")
+        if (disabled) addClassNames("tab-disabled")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
 }
 
+/** Renders `<input class="tab ..." type="radio" role="tab">`. */
+fun FlowContent.daisyTabRadio(
+    id: HtmlId? = null,
+    active: Boolean = false,
+    disabled: Boolean = false,
+    extraClasses: String? = null,
+    attrs: (INPUT.() -> Unit)? = null,
+) {
+    input {
+        if (id != null) attributes["id"] = id.id
+        attributes["type"] = "radio"
+        attributes["role"] = "tab"
+        addClassNames("tab")
+        if (active) addClassNames("tab-active")
+        if (disabled) addClassNames("tab-disabled")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+    }
+}
+
 /** Tab content that comes immediately after a tab Renders `<div class="tab-content ...">`. */
-fun FlowContent.daisyTabTabContent(
+fun FlowContent.daisyTabContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

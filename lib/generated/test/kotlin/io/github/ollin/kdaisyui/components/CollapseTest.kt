@@ -65,7 +65,7 @@ class CollapseTest {
     @Test
     fun with_arrow_icon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(arrow = true) {
+            daisyCollapse(icon = CollapseIcon.Arrow) {
             }
         }
         val expectedClasses = "collapse collapse-arrow"
@@ -76,7 +76,7 @@ class CollapseTest {
     @Test
     fun with_arrow_plus_minus_icon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(plus = true) {
+            daisyCollapse(icon = CollapseIcon.Plus) {
             }
         }
         val expectedClasses = "collapse collapse-plus"
@@ -87,7 +87,7 @@ class CollapseTest {
     @Test
     fun moving_collapse_icon_to_the_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(arrow = true) {
+            daisyCollapse(icon = CollapseIcon.Arrow) {
             }
         }
         val expectedClasses = "collapse collapse-arrow"
@@ -98,7 +98,7 @@ class CollapseTest {
     @Test
     fun force_open() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(open = true) {
+            daisyCollapse(state = CollapseState.Open) {
             }
         }
         val expectedClasses = "collapse collapse-open"
@@ -109,7 +109,7 @@ class CollapseTest {
     @Test
     fun force_close() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(close = true) {
+            daisyCollapse(state = CollapseState.Close) {
             }
         }
         val expectedClasses = "collapse collapse-close"

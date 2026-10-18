@@ -12,7 +12,7 @@ import kotlinx.html.span
 import kotlinx.html.SPAN
 
 /** Color variants for this component (CSS prefix: `badge-`) */
-enum class BadgeVariant(internal val className: String) : ClassValues<BadgeVariant> {
+enum class BadgeColor(internal val className: String) : ClassValues<BadgeColor> {
     /** CSS: `badge-neutral` — neutral color */
     Neutral("badge-neutral"),
     /** CSS: `badge-primary` — primary color */
@@ -78,7 +78,7 @@ enum class BadgeFillStyle(internal val className: String) : ClassValues<BadgeFil
  * Badges are used to inform the user of the status of specific data. Renders `<span class="badge ...">`.
  * @param text — Shortcut for inline text content (mutually exclusive with [content])
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param outlineStyle — OutlineStyle variant
  * @param fillStyle — FillStyle variant
@@ -89,7 +89,7 @@ enum class BadgeFillStyle(internal val className: String) : ClassValues<BadgeFil
 fun FlowContent.daisyBadge(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ClassValues<BadgeVariant>? = null,
+    color: ClassValues<BadgeColor>? = null,
     size: ClassValues<BadgeSize>? = null,
     outlineStyle: ClassValues<BadgeOutlineStyle>? = null,
     fillStyle: ClassValues<BadgeFillStyle>? = null,
@@ -100,7 +100,7 @@ fun FlowContent.daisyBadge(
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("badge")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         addClassNames(outlineStyle)
         addClassNames(fillStyle)

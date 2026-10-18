@@ -11,7 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.select
 import kotlinx.html.SELECT
 
-enum class SelectVariant(internal val className: String) : ClassValues<SelectVariant> {
+enum class SelectColor(internal val className: String) : ClassValues<SelectColor> {
     /** CSS: `select-neutral` */
     Neutral("select-neutral"),
     /** CSS: `select-primary` */
@@ -53,7 +53,7 @@ enum class SelectSize(internal val className: String) : ClassValues<SelectSize> 
 /**
  * Select is used to pick a value from a list of options. Renders `<select class="select ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param ghost
  * @param disabled
@@ -63,7 +63,7 @@ enum class SelectSize(internal val className: String) : ClassValues<SelectSize> 
  */
 fun FlowContent.daisySelect(
     id: HtmlId? = null,
-    variant: ClassValues<SelectVariant>? = null,
+    color: ClassValues<SelectColor>? = null,
     size: ClassValues<SelectSize>? = null,
     ghost: Boolean = false,
     disabled: Boolean = false,
@@ -74,7 +74,7 @@ fun FlowContent.daisySelect(
     select {
         if (id != null) attributes["id"] = id.id
         addClassNames("select")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (ghost) addClassNames("select-ghost")
         if (disabled) this.disabled = true

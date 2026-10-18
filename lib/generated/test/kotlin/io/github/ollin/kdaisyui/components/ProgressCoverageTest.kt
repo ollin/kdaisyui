@@ -49,90 +49,90 @@ class ProgressCoverageTest {
     }
 
     @Test
-    fun progress_variant_neutral() {
+    fun progress_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Neutral,
+                color = ProgressColor.Neutral,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-neutral", "Progress variant Neutral")
+        assertRendered(html, "progress progress-neutral", "Progress color Neutral")
     }
 
     @Test
-    fun progress_variant_primary() {
+    fun progress_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Primary,
+                color = ProgressColor.Primary,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-primary", "Progress variant Primary")
+        assertRendered(html, "progress progress-primary", "Progress color Primary")
     }
 
     @Test
-    fun progress_variant_secondary() {
+    fun progress_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Secondary,
+                color = ProgressColor.Secondary,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-secondary", "Progress variant Secondary")
+        assertRendered(html, "progress progress-secondary", "Progress color Secondary")
     }
 
     @Test
-    fun progress_variant_accent() {
+    fun progress_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Accent,
+                color = ProgressColor.Accent,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-accent", "Progress variant Accent")
+        assertRendered(html, "progress progress-accent", "Progress color Accent")
     }
 
     @Test
-    fun progress_variant_info() {
+    fun progress_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Info,
+                color = ProgressColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-info", "Progress variant Info")
+        assertRendered(html, "progress progress-info", "Progress color Info")
     }
 
     @Test
-    fun progress_variant_success() {
+    fun progress_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Success,
+                color = ProgressColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-success", "Progress variant Success")
+        assertRendered(html, "progress progress-success", "Progress color Success")
     }
 
     @Test
-    fun progress_variant_warning() {
+    fun progress_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Warning,
+                color = ProgressColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-warning", "Progress variant Warning")
+        assertRendered(html, "progress progress-warning", "Progress color Warning")
     }
 
     @Test
-    fun progress_variant_error() {
+    fun progress_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyProgress(
-                variant = ProgressVariant.Error,
+                color = ProgressColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-error", "Progress variant Error")
+        assertRendered(html, "progress progress-error", "Progress color Error")
     }
 }

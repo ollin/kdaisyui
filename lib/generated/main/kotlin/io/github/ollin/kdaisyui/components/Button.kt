@@ -13,7 +13,7 @@ import kotlinx.html.ButtonType
 import kotlinx.html.FlowContent
 
 /** Color variants for this component (CSS prefix: `btn-`) */
-enum class ButtonVariant(internal val className: String) : ClassValues<ButtonVariant> {
+enum class ButtonColor(internal val className: String) : ClassValues<ButtonColor> {
     /** CSS: `btn-neutral` — neutral color */
     Neutral("btn-neutral"),
     /** CSS: `btn-primary` — primary color */
@@ -52,23 +52,56 @@ enum class ButtonSize(internal val className: String) : ClassValues<ButtonSize> 
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Style variants for this component (CSS prefix: `btn-`) */
+enum class ButtonStyle(internal val className: String) : ClassValues<ButtonStyle> {
+    /** CSS: `btn-outline` — outline style */
+    Outline("btn-outline"),
+    /** CSS: `btn-dash` — dash style */
+    Dash("btn-dash"),
+    /** CSS: `btn-soft` — soft style */
+    Soft("btn-soft"),
+    /** CSS: `btn-ghost` — ghost style */
+    Ghost("btn-ghost"),
+    /** CSS: `btn-link` — looks like a link */
+    Link("btn-link"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+/** Shape variants for this component (CSS prefix: `btn-`) */
+enum class ButtonShape(internal val className: String) : ClassValues<ButtonShape> {
+    /** CSS: `btn-square` — 1:1 ratio */
+    Square("btn-square"),
+    /** CSS: `btn-circle` — 1:1 ratio with rounded corners */
+    Circle("btn-circle"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+/** Width variants for this component (CSS prefix: `btn-`) */
+enum class ButtonWidth(internal val className: String) : ClassValues<ButtonWidth> {
+    /** CSS: `btn-wide` — more horizontal padding */
+    Wide("btn-wide"),
+    /** CSS: `btn-block` — Full width */
+    Block("btn-block"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
  * @param text — Shortcut for inline text content (mutually exclusive with [content])
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
+ * @param style — Style variant
+ * @param shape — Shape variant
+ * @param width — Width variant
  * @param active — looks active
- * @param block — Full width
- * @param circle — 1:1 ratio with rounded corners
- * @param dash — dash style
- * @param ghost — ghost style
- * @param link — looks like a link
- * @param outline — outline style
- * @param soft — soft style
- * @param square — 1:1 ratio
- * @param wide — more horizontal padding
  * @param disabled
  * @param type
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -78,18 +111,12 @@ enum class ButtonSize(internal val className: String) : ClassValues<ButtonSize> 
 fun FlowContent.daisyButton(
     text: String? = null,
     id: HtmlId? = null,
-    variant: ClassValues<ButtonVariant>? = null,
+    color: ClassValues<ButtonColor>? = null,
     size: ClassValues<ButtonSize>? = null,
+    style: ClassValues<ButtonStyle>? = null,
+    shape: ClassValues<ButtonShape>? = null,
+    width: ClassValues<ButtonWidth>? = null,
     active: Boolean = false,
-    block: Boolean = false,
-    circle: Boolean = false,
-    dash: Boolean = false,
-    ghost: Boolean = false,
-    link: Boolean = false,
-    outline: Boolean = false,
-    soft: Boolean = false,
-    square: Boolean = false,
-    wide: Boolean = false,
     disabled: Boolean = false,
     type: ButtonType? = null,
     extraClasses: String? = null,
@@ -99,18 +126,12 @@ fun FlowContent.daisyButton(
     button {
         if (id != null) attributes["id"] = id.id
         addClassNames("btn")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
+        addClassNames(style)
+        addClassNames(shape)
+        addClassNames(width)
         if (active) addClassNames("btn-active")
-        if (block) addClassNames("btn-block")
-        if (circle) addClassNames("btn-circle")
-        if (dash) addClassNames("btn-dash")
-        if (ghost) addClassNames("btn-ghost")
-        if (link) addClassNames("btn-link")
-        if (outline) addClassNames("btn-outline")
-        if (soft) addClassNames("btn-soft")
-        if (square) addClassNames("btn-square")
-        if (wide) addClassNames("btn-wide")
         if (disabled) { this.disabled = true; addClassNames("btn-disabled") }
         if (type != null) this.type = type
         addClassNames(extraClasses)

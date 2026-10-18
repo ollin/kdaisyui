@@ -70,7 +70,7 @@ Every component is a `FlowContent` extension function. Call it inside any kotlin
 
 ```kotlin
 createHTML().div {
-    daisyButton("Save", variant = ButtonVariant.Primary)
+    daisyButton("Save", color = ButtonColor.Primary)
 }
 ```
 
@@ -81,7 +81,7 @@ Components work inside `div`, `section`, `main`, `form`, `td`, `li` — anywhere
 Use the `extraClasses` parameter. Classes are merged safely — no duplicates, no broken whitespace:
 
 ```kotlin
-daisyButton("Wide", variant = ButtonVariant.Primary, extraClasses = "w-full mt-4")
+daisyButton("Wide", color = ButtonColor.Primary, extraClasses = "w-full mt-4")
 // → class="btn btn-primary w-full mt-4"
 ```
 
@@ -119,7 +119,7 @@ daisyCard(extraClasses = "bg-base-100 shadow-xs") {
     daisyCardBody {
         daisyCardTitle {
             +"Orders"
-            daisyBadge("3", variant = BadgeVariant.Success, size = BadgeSize.Sm)
+            daisyBadge("3", color = BadgeColor.Success, size = BadgeSize.Sm)
         }
         daisyTable(zebra = true) {
             tbody {
@@ -127,7 +127,7 @@ daisyCard(extraClasses = "bg-base-100 shadow-xs") {
                 tr { td { +"Order #1002" }; td { +"$180" } }
             }
         }
-        daisyButton("View all", variant = ButtonVariant.Primary)
+        daisyButton("View all", color = ButtonColor.Primary)
     }
 }
 ```
@@ -169,7 +169,7 @@ form {
         daisyLabel("Priority")
         daisyRange(size = RangeSize.Xs, min = "0", max = "100", value = "50", step = "25")
     }
-    daisyButton("Submit", variant = ButtonVariant.Primary, extraClasses = "w-full")
+    daisyButton("Submit", color = ButtonColor.Primary, extraClasses = "w-full")
 }
 ```
 
@@ -252,9 +252,9 @@ get("/fragments/stats") {
     call.respondHtmlFragment {
         section {
             addClassNames("stats bg-base-100 col-span-12 w-full shadow-xs")
-            daisyStatStat {
-                daisyStatStatTitle("Page Views")
-                daisyStatStatValue("89,400")
+            daisyStat {
+                daisyStatTitle("Page Views")
+                daisyStatValue("89,400")
             }
         }
     }
@@ -277,12 +277,12 @@ Use `"load"` for above-the-fold content, `"revealed"` for below-the-fold section
 Combine dropdown, indicator, badge, and avatar:
 
 ```kotlin
-daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.End, extraClasses = "z-10") {
+daisyDropdown(align = DropdownAlign.End, extraClasses = "z-10") {
     div {
         attributes["tabindex"] = "0"
         classes = setOf("btn", "btn-circle", "btn-ghost")
         daisyIndicator {
-            daisyBadge(variant = BadgeVariant.Error, size = BadgeSize.Xs, extraClasses = "indicator-item")
+            daisyBadge(color = BadgeColor.Error, size = BadgeSize.Xs, extraClasses = "indicator-item")
             +"🔔"
         }
     }
@@ -307,11 +307,11 @@ The `tabindex="0"` on both the trigger and the content is required for DaisyUI's
 Use alerts for form-level messages and DaisyUI's built-in input states:
 
 ```kotlin
-daisyAlert(variant = AlertVariant.Success) {
+daisyAlert(color = AlertColor.Success) {
     span { +"Your payment was successful" }
 }
 
-daisyAlert(variant = AlertVariant.Error) {
+daisyAlert(color = AlertColor.Error) {
     span { +"Please fix the errors below" }
 }
 ```

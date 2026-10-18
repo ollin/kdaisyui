@@ -43,7 +43,7 @@ fun FlowContent.teamInviteButton() {
             daisyButton(
                 "Send invitation",
                 id = Dashboard.Team.Invite.Form.Submit(),
-                variant = ButtonVariant.Primary,
+                color = ButtonColor.Primary,
                 extraClasses = "grow",
             )
         }

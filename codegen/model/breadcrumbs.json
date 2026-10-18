@@ -1,0 +1,36 @@
+{
+  "component": "breadcrumbs",
+  "name": "Breadcrumbs",
+  "class": "breadcrumbs",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyBreadcrumbs",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "breadcrumbs",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "custom",
+      "name": "daisyBreadcrumbsItems",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": null,
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "custom",
+      "name": "daisyBreadcrumbsItem",
+      "receiver": "UL",
+      "element": "LI",
+      "class": null,
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Navigation trail showing current location" }
+}

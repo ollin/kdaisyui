@@ -39,19 +39,69 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModal(
                 id = htmlId("x-cov-id"),
-                bottom = true,
-                end = true,
-                middle = true,
                 open = true,
-                start = true,
-                top = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal modal-bottom modal-end modal-middle modal-open modal-start modal-top zz-extra", "Modal all flags", closes = "</dialog></div>")
+        assertRendered(html, "modal modal-open zz-extra", "Modal all flags", closes = "</dialog></div>")
         assertCommonFlags(html, "Modal")
+    }
+
+    @Test
+    fun modal_verticalPlacement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModal(
+                verticalPlacement = ModalVerticalPlacement.Top,
+                content = { },
+            )
+        }
+        assertRendered(html, "modal modal-top", "Modal verticalPlacement Top")
+    }
+
+    @Test
+    fun modal_verticalPlacement_middle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModal(
+                verticalPlacement = ModalVerticalPlacement.Middle,
+                content = { },
+            )
+        }
+        assertRendered(html, "modal modal-middle", "Modal verticalPlacement Middle")
+    }
+
+    @Test
+    fun modal_verticalPlacement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModal(
+                verticalPlacement = ModalVerticalPlacement.Bottom,
+                content = { },
+            )
+        }
+        assertRendered(html, "modal modal-bottom", "Modal verticalPlacement Bottom")
+    }
+
+    @Test
+    fun modal_horizontalPlacement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModal(
+                horizontalPlacement = ModalHorizontalPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "modal modal-start", "Modal horizontalPlacement Start")
+    }
+
+    @Test
+    fun modal_horizontalPlacement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModal(
+                horizontalPlacement = ModalHorizontalPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "modal modal-end", "Modal horizontalPlacement End")
     }
 
     @Test

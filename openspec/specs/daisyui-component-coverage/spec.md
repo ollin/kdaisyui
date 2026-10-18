@@ -67,18 +67,25 @@ The library SHALL expose a generated, type-safe `FlowContent.daisyXxx()` DSL fun
 - **AND** no hand-written wrapper for these components exists in the non-generated source tree
 
 ### Requirement: New modifiers on existing components are exposed
-Regeneration against the pinned DaisyUI release SHALL surface the new modifiers added to existing components — at minimum `range-vertical` and `tooltip-start` / `tooltip-center` / `tooltip-end` — as new enum entries or parameters on the corresponding existing wrappers, with backward-compatible defaults.
+Regeneration against the pinned DaisyUI release SHALL surface every class DaisyUI adds to an existing component's frontmatter, by failing generation until the component model places it: as an axis member, which becomes an enum entry, as a toggle, which becomes a boolean, or as a class not offered with a stated reason. Call sites that do not use the new class SHALL compile unchanged.
 
 A *modifier* is a CSS class toggled on a component's existing element. An alternative *construction method*, which renders a different element, is not a modifier and cannot be expressed as a parameter; those are governed by the popover-modal requirement below.
 
 **Corrected 2026-09-04:** this requirement previously also named "the `modal` popover attribute" among the modifiers to be surfaced. That was unbuildable: DaisyUI's popover modal is `<div class="modal" popover>`, a different root element from the `<dialog>` the wrapper emits, so no parameter on that wrapper could ever satisfy it. The clause was archived as satisfied while nothing implemented it, because no test and no drift check can detect a construction method that introduces no new class name.
 
-**Verified:** before this change `lib/generated/…/components/Modal.kt` held one wrapper only, `daisyModal`, emitting `dialog { }` with no `popover` reference anywhere in the file; `daisyui/packages/docs/src/routes/(routes)/components/modal/+page.md:310` shows the popover method as `<div class="modal" id="…" popover>`. The file now also holds `daisyModalPopover`, which is what satisfies the requirement added below — `daisyModal` itself is unchanged.
+**Corrected by `declare-the-component-model`:** a new class used to reach the API by classification, as a boolean unless a measurement made it an enum member. It now fails generation until a human places it in the model, because a class placed by omission is how the 0.6.0 dropdown shipped its placements twice.
+
+**Assumed** that failing the generation run is the right strength for a new class. *Wrong if:* a routine DaisyUI patch release adds classes often enough that bumps stall on model edits nobody wanted to make.
 
 #### Scenario: New modifier becomes available
 - **WHEN** a DaisyUI modifier class is declared in an existing component's frontmatter
+- **AND** the model places it
 - **THEN** the regenerated wrapper exposes it as a new enum entry or parameter
 - **AND** existing call sites that omit it compile unchanged
+
+#### Scenario: A new class nobody placed
+- **WHEN** a DaisyUI release adds a class the model does not place
+- **THEN** generation fails naming the component and the class
 
 #### Scenario: A new construction method is not mistaken for a modifier
 - **WHEN** an upstream release adds a way to build a component from a different root element
@@ -256,225 +263,6 @@ entry, rather than restating HTML.
 - **WHEN** a new component's element is a void element
 - **THEN** its generated function takes no `content` parameter without anyone configuring it
 
-### Requirement: The generated element matches the one DaisyUI documents
-
-The codegen SHALL compare the element it chose for each component against the element DaisyUI's
-own documentation shows, and SHALL fail when they disagree without a recorded exception.
-
-The authority is the fenced ```html example in the component's
-`packages/docs/src/routes/(routes)/components/<name>/+page.md`, in which daisyUI class names carry
-a `$$` marker. The tag bearing `$$<componentClass>` is the documented root element. The marker is
-what makes this a statement rather than a heuristic: it separates daisyUI classes from Tailwind
-utilities without inference.
-
-**Verified** that this route is complete where the previously-used one is not. Measured on
-2026-09-12 over all 66 non-skipped components: the docs route answers **66**; the
-`skills/daisyui/components/*.md` `#### Syntax` block answers 57 and is absent for `calendar`,
-`dropdown`, `fab`, `filter`, `label`, `menu`, `modal`, `swap` and `tab`.
-
-**Verified** that it disagreed with the generator exactly three times when introduced, and that
-all three were defects rather than false positives. `otp` rendered `<div>` where the docs show
-`<label>`, so a click did not focus the wrapped input — **fixed**, and the cross-check now agrees.
-Two remain, each carrying a recorded exception with a reason and a tracking issue: `tab` renders
-`<button>` carrying the container class `tabs` where the docs show `<div>` (#342), and `calendar`
-renders `<div>` where the docs show Cally's custom element `<calendar-date>`, which kotlinx.html
-has no tag class for (#343).
-
-*Wrong if:* DaisyUI stops marking class names with `$$`, or the first documented example ceases to
-be the canonical construction. Either makes the cross-check fail rather than answer wrongly.
-
-#### Scenario: The chosen element matches the documentation
-
-- **WHEN** the codegen runs and every component's element matches its documented one
-- **THEN** generation succeeds
-
-#### Scenario: The chosen element contradicts the documentation
-
-- **WHEN** a component's chosen element differs from the one DaisyUI documents
-- **AND** no exception is recorded for that component
-- **THEN** generation fails, naming the component, the chosen element and the documented one
-
-#### Scenario: A disagreement that is recorded and tracked
-
-- **WHEN** a component's element disagrees and an exception records a reason and a tracking issue
-- **THEN** generation succeeds
-
-#### Scenario: An exception that is no longer needed
-
-- **WHEN** a component with a recorded exception stops disagreeing
-- **THEN** generation fails, so the stale exception is removed rather than accumulating
-
-### Requirement: A mutually exclusive class group is one typed choice
-
-Where a browser confirms that every pair of classes in a DaisyUI class group is mutually
-exclusive, the generated wrapper SHALL expose that group as ONE parameter taking a Kotlin enum,
-rather than as one boolean per class. Where it does not, the classes SHALL remain individual
-booleans.
-
-The decision SHALL be a recorded measurement, not a category rule. The measurement SHALL
-distinguish four outcomes for a pair or a member: `exclusive`, `compose`, `same` (the probe could
-not tell) and `inert` (the class alone changes nothing against the baseline). The axes of a group
-SHALL be derived from the measurement as the connected components of its exclusive graph over
-non-inert members; an inert member SHALL join the axis whose members declare the CSS properties
-it declares. A single-axis group SHALL be named by its component and DaisyUI's category word.
-The axes of a multi-axis group SHALL be named from DaisyUI's reference table of CSS custom
-properties where that table describes every property the axis's members declare with one
-direction word — "vertical" or "horizontal" — and the two axes with different words. Only where
-that derivation yields nothing SHALL the axis names be configured, and a configured name for an
-axis the derivation can name SHALL fail the build. The build SHALL also fail when a derived axis
-is not a clique, or when a multi-axis group has an axis that is neither derived nor configured.
-
-**Verified** that the measurement is the only route to the answer. Six attempts derived
-exclusivity from the CSS or from the shape of the class names, and all six were wrong. The
-recorded measurement is `codegen/exclusivity.json`: 310 pairwise verdicts over 44 groups (193
-`exclusive`, 103 `compose`, 14 `same`), written wholesale by `just measure-exclusivity` and
-guarded by `:lib:verifyExclusivity`.
-
-**Verified** that a category rule would have been wrong in both directions. The rule this replaces
-made `styles`, `directions` and `placements` enums by virtue of their DaisyUI frontmatter
-category; the measurement says `chat.placements` and `carousel.directions` **compose**, while
-`card.modifiers` and `list.modifiers` — the category that rule distrusted — are exclusive.
-
-**Verified** the asymmetric cost that makes `same` fall to boolean rather than to enum: a wrong
-enum makes a combination DaisyUI permits **inexpressible**, which defeats the library's purpose;
-a wrong boolean merely permits a combination that does nothing, which `extraClasses` permits
-anyway. This is a decision, not a measurement, and it is recorded as one — **confirmed
-2026-09-15 (Oliver): boolean, because it takes nothing away.** The rule is code, not
-configuration, so no entry can silently promote a `same` pair to an enum.
-
-**Verified** where `same` occurs and that half of it is this change's own defect, read
-2026-09-15 from `codegen/exclusivity.json`: 14 pairs — `footer.directions` 1,
-`menu.modifiers` 6, `stack.modifiers` 6, `tab.modifiers` 1. The 7 under `menu` and `tab` are
-not genuine: the probe puts the class on the component element while DaisyUI puts `menu-active`
-and `tab-active` on a child, so no case renders differently. After the parameters move to the
-element that wears them, those 7 re-measure as `exclusive` or `compose`; the decision above
-applies to whatever `same` remains.
-
-*Wrong if:* a `same` pair appears in DaisyUI's documentation with both classes on one element —
-it then composes measurably and the verdict, not the rule, was wrong.
-
-*Tested 2026-09-19 and it did not fire.* All 14 `same` pairs — still exactly `footer.directions`
-1, `menu.modifiers` 6, `stack.modifiers` 6, `tab.modifiers` 1 — were checked against every
-`$$`-marked element on all 68 pages, and no element wears both members of any of them. The
-browser measurement and the documentation agree, from two independent directions.
-
-**Verified** that the apparent non-transitivity under `tooltip.placements` was an instrument
-artefact, not a property of the classes. `tooltip-top` declares exactly what `.tooltip` already
-sets (`tooltip.css:20-21` against `:76-77`), so it changes nothing; the probe calls a pair
-`exclusive` when "together equals one alone", and a class that changes nothing equals everything
-alone. Its six `exclusive` verdicts against the other members are that artefact. With inert
-members removed, the exclusive graphs of `indicator`, `toast` and `tooltip` each fall into
-exactly two connected components with all 3×3 cross-pairs composing, and `dropdown` into
-`{start, center, end}`, `{top, bottom}` and two singletons — `top|bottom` having measured
-`exclusive` since the measurement was first committed, while the configuration declared both as
-booleans.
-
-**Verified** that single-axis names carry no information beyond the category: 13 of the 14
-configured single-axis names were the component plus DaisyUI's category word, and the fourteenth
-(`MaskShape`) was the one invented name.
-
-**Verified** that DaisyUI documents the axis word for three of the four multi-axis groups, read
-2026-09-15: `docs/utilities/+page.md:152-268` is a table of CSS custom properties with a
-description each — `--anchor-v` "vertical position of the anchor", `--anchor-h` "horizontal
-position of the anchor", `--indicator-y` / `--indicator-x`, `--toast-y` / `--toast-x` likewise —
-and in `indicator.css`, `toast.css`, `dropdown.css` every member of one axis sets only the `-y`/`-v`
-property and every member of the other only `-x`/`-h`. The tooltip's properties (`--tt-trans`,
-`--tt-inset`) are described as "transform offset" and "inset position" with no direction word,
-and correctly so: they feed `translateX`/`inset-inline` under `tooltip-top` and
-`translateY`/`inset-block` under `tooltip-left` (`tooltip.css:76,113` against `:171,174`), so the
-alignment axis is relative to the side. The tooltip's two names are the only ones a human writes.
-
-*Wrong if:* the utilities table drops a row or changes a description, or a DaisyUI release adds a
-multi-axis group whose properties the table describes with a word other than vertical or
-horizontal. Both fail generation until a name is configured or the derivation is extended.
-
-**Verified** by re-measuring on 2026-09-15 (task 8.2), which **refuted** the earlier assumption
-that only `tooltip-top` would read inert: 25 members in 17 groups did, and not one of the 310
-pair verdicts changed. An inert member is a default (`loading-spinner`, `mask-square`,
-`alert-horizontal`) or a class the probe cannot see on the container (`menu-active`,
-`tab-active`, `rating-hidden`). Both are honest, so the derivation places every inert member
-rather than treating it as rare: with the clique it is exclusive with every member of, then by
-declared properties, then it fails.
-
-**Verified** that the derivation, computed over all 44 groups, reproduces every enum 0.6.0
-declared and adds four: `dropdown.placements` gains `{top, bottom}`, and `alert.styles`,
-`avatar.modifiers` and `badge.styles` — the same shape, a clique beside members that compose
-with everything — gain theirs. Decided (Oliver, 2026-09-15): one rule for every group; no
-measurement separates those three from dropdown.
-
-*Wrong if:* a member reads inert in one DaisyUI release and not the next without its CSS
-changing — the baseline would then be measuring the example rather than the class.
-
-*Wrong if:* a group every pair of which measures exclusive nevertheless has a documented call site
-wearing two of its members at once. The measurement would then be describing the probe's markup
-rather than the CSS, and the failing case is the correction.
-
-#### Scenario: An exclusive group becomes one parameter
-
-- **WHEN** every pair in a group measures `exclusive`
-- **THEN** the generated wrapper takes one enum-typed parameter for the whole group
-- **AND** naming two members of it at once is a compile error rather than a silent no-op
-
-#### Scenario: A composing group stays boolean
-
-- **WHEN** any pair in a group measures `compose` or `same`
-- **THEN** each class stays an individual boolean parameter
-- **AND** the combination DaisyUI permits remains expressible
-
-#### Scenario: A single-axis enum is named without configuration
-
-- **WHEN** a group's non-inert members form one clique
-- **THEN** the enum is named by the component and DaisyUI's category word — `LoadingStyle`,
-  `MaskStyle`, `AlertDirection` — with no configured entry
-
-#### Scenario: A group with two independent axes
-
-- **WHEN** a group's exclusive graph over non-inert members has more than one component of two or
-  more members, as `indicator`, `toast`, `tooltip` and `dropdown` do
-- **THEN** each such component becomes one enum and a singleton component stays boolean
-
-#### Scenario: An axis is named from DaisyUI's property table
-
-- **WHEN** every CSS custom property an axis's members declare is described in DaisyUI's
-  utilities table with the same direction word, and the group's other axis with a different one
-- **THEN** the enum is named by that word — `IndicatorVerticalPlacement`,
-  `ToastHorizontalPlacement`, `DropdownVerticalPlacement` — with no configured entry
-- **AND** a configured name for such an axis fails the build
-
-#### Scenario: A measurement nobody named
-
-- **WHEN** the measurement derives more than one axis for a group, the property table yields no
-  direction word for them, and no name is configured
-- **THEN** generation fails naming the group and each axis's members, because only a human can
-  say what each axis is called — as for `tooltip`, whose alignment is relative to its side
-
-#### Scenario: An inert member has a home
-
-- **WHEN** a member measures `inert` in a multi-axis group
-- **THEN** it joins the axis whose members declare the CSS properties it declares, as
-  `tooltip-top` joins the side axis
-- **AND** an inert member matching neither axis, or both, fails the build
-
-#### Scenario: A connected component that is not a clique stays boolean
-
-- **WHEN** a connected component of the exclusive graph holds a pair that does not measure
-  `exclusive`, as `button.styles` does
-- **THEN** every member of that component stays a boolean, because the group is not
-  established as a choice — the same rule as for a composing group
-
-#### Scenario: A clique beside composing members is an enum
-
-- **WHEN** a group holds a clique of two or more beside members that compose with everything,
-  as `dropdown.placements`, `alert.styles`, `avatar.modifiers` and `badge.styles` do
-- **THEN** the clique becomes one enum and the other members stay boolean
-- **AND** the rule is the same for every group; no group is exempt by being unlisted
-
-#### Scenario: A new DaisyUI class does not become a boolean by omission
-
-- **WHEN** an upstream release adds a class to a measured group
-- **THEN** the build fails until the measurement is re-run, so the class is placed by the browser
-  rather than by omission
-
 ### Requirement: A typed class can be applied at a Tailwind variant
 
 > **SCOPE, 2026-09-13: BUILT AND PARKED, NOT SHIPPED.** Everything this requirement describes
@@ -605,210 +393,165 @@ set on exactly this reasoning and appears in no DaisyUI example.
 > reason other than the one it names. The other two were a substring grep where `max-lg:btn-lg`
 > satisfied `lg:btn-lg`, and a KDoc comment keeping `lg:btn-lg` alive as a Tailwind candidate.
 
-### Requirement: A class is declared on the function whose element wears it
-
-Every DaisyUI class a generated function emits SHALL land on an element DaisyUI's own
-documentation puts it on. The codegen SHALL compare, for every documented class, the element the
-function declaring it renders against **every** element carrying that class in the documented
-markup, and SHALL fail generation on a disagreement that has no recorded exception. A class a
-function writes on every call SHALL NOT also be offered as a parameter of another function.
-
-An exception SHALL name a reason and a tracking issue, SHALL state the condition under which the
-disagreement would go away, and SHALL fail generation the moment it does. The condition is what
-separates an exception deferring a defect from one recording a deliberate divergence; without it
-the two are one list and the second kind quietly outlives its reason.
-
-The authority is the same as for the component element: the fenced ```html examples of
-`packages/docs/src/routes/(routes)/components/<name>/+page.md`, in which every daisyUI class is
-marked `$$`. The marker is what makes the element of any class readable without inference.
-
-**Verified** the defect exists and its extent, measured 2026-09-14 over all 68 component pages by
-parsing the markup rather than reading frontmatter categories: 414 marked classes, 80 never on the
-element carrying the component class, and of those **13 across 5 components are parameters on
-the container** while DaisyUI puts them on a child — `dock-active`; the six `indicator-*`
-placements; `list-col-grow`, `list-col-wrap`; `menu-active`, `menu-disabled`,
-`menu-dropdown-show`; `tab-content`. A further 18 sit on a child and are reachable from no
-function at all. The defect had been found by hand three times (#342, #347, the deferred block 6
-of `apply-classes-at-variants`) and each time only because someone looked.
-
-**Verified** that the category-to-function rule this replaces cannot be repaired by reading: a
-frontmatter category says what a class *means*, not which element wears it, and `indicator` and
-`toast` carry the identical two-axis category shape with the class on different elements.
-
-**Verified, and it corrected this requirement** — measured 2026-09-19: DaisyUI documents many
-classes on SEVERAL elements, choosing by the surrounding HTML content model rather than
-arbitrarily. `badge` is a `<div>` 47 times and a `<span>` 7, and all seven `<span>`s sit inside an
-`<h1>`–`<h5>` or a `<p>`, where a `<div>` is invalid HTML. `dropdown` is documented on `<div>`,
-`<details>` and `<ul>`; `skeleton` on `<div>` and `<span>`. This requirement first said "**the**
-element", singular, and on that reading 47 disagreements were all defects. Against the set, 19 of
-them were never disagreements at all.
-
-**Verified** that one generated function cannot follow DaisyUI here, tested 2026-09-19 in the
-Kotlin REPL: `createHTML().h1 { div { } }` compiles and renders, because kotlinx.html makes `H1`,
-`P` and `BUTTON` themselves `FlowContent` — the DSL does not model content categories. An overload
-pair on `FlowContent` and `PhrasingContent` is ambiguous inside any tag that is both, which is all
-of them. So where a component's documented set has more than one member, the generator picks one
-and the classes documented only on the others diverge permanently.
-
-*Wrong if:* DaisyUI stops marking classes with `$$`, or documents the same class on the container
-in one example and on a child in another with no wrapper in between. The first makes the check
-fail rather than answer; the second would need a per-example rule the check does not have, and
-the failing component is the correction.
-
-*This falsifier fired on 2026-09-19, and not in either shape it predicted.* What actually happened
-is the paragraph above: the same class on several elements of the same example, chosen by context.
-The prediction was about a container and a child disagreeing; the reality was one element wearing
-the class in two valid ways. A falsifier that fires in an unforeseen shape is the requirement
-being corrected, which is what it is for.
-
-#### Scenario: Every class sits where DaisyUI puts it
-
-- **WHEN** the codegen runs and every emitted class lands on the element DaisyUI documents for it
-- **THEN** generation succeeds
-
-#### Scenario: A parameter would emit a class onto the wrong element
-
-- **WHEN** a function's parameter emits a class that DaisyUI documents on a different element
-- **AND** no exception is recorded for that class
-- **THEN** generation fails, naming the class, the declaring function's element and the documented
-  one
-
-#### Scenario: A misplaced parameter moves to the element that wears the class
-
-- **WHEN** DaisyUI documents a class on a child the library already generates a function for
-- **THEN** the parameter is declared on that function and removed from the container's
-
-#### Scenario: DaisyUI documents the class on several elements
-
-- **WHEN** DaisyUI shows a class on more than one element
-- **AND** the declaring function renders one of them
-- **THEN** generation succeeds, because DaisyUI itself offers that element for the class
-
-#### Scenario: The component's element excludes a class documented only elsewhere
-
-- **WHEN** a component renders one of the several elements DaisyUI documents it on
-- **AND** one of its modifier classes is documented only on the others
-- **THEN** generation fails without an exception, and the exception that resolves it records the
-  measurement and the condition under which the divergence would end — not a date by which it
-  will be fixed, because one function renders one element
-
-#### Scenario: A construction writes a class, so no parameter offers it
-
-- **WHEN** a generated function writes a class on every call
-- **THEN** no other function offers that class as a parameter, so the class cannot be asked for on
-  an element DaisyUI does not show it on
-
-#### Scenario: A misplaced parameter has no function to move to
-
-- **WHEN** DaisyUI documents a class on a child the library generates no function for
-- **THEN** the class gets the function it needs, or an exception with a reason and a tracking
-  issue, and is not left on the container
-
 ### Requirement: A generated parameter is named after the DaisyUI class it emits
 
-A boolean parameter SHALL be named by the DaisyUI class suffix it emits, converted to camelCase
-and nothing else: `hidden` for `rating-hidden`, `hover` for `dropdown-hover`. The codegen SHALL
-carry no configured mapping from a DaisyUI class to a differently named parameter. The
-parameter's documentation SHALL be DaisyUI's own description of the class.
+A toggle SHALL be named by the DaisyUI class suffix it emits, converted to camelCase and nothing
+else: `hidden` for `rating-hidden`, `zebra` for `table-zebra`. An axis member SHALL be an enum
+entry named by its class suffix in PascalCase: `ButtonStyle.Ghost` for `btn-ghost`. The axis
+parameter and its enum are named by the rule in `component-model`, "Every generated name follows
+one naming rule". The codegen SHALL
+carry no mapping from a single class to a differently named parameter. The documentation of a
+toggle or an enum entry SHALL be DaisyUI's own description of the class.
 
-**Verified** the cost of the alternative, read 2026-09-15: after `apply-classes-at-variants`
-renamed five booleans, the generated documentation for `clearOption` in
-`lib/generated/main/kotlin/io/github/ollin/kdaisyui/components/Rating.kt:37` never named
-`rating-hidden` — only the function body did — so a reader holding DaisyUI's documentation had
-nothing to search for. The five renames were 0.6.0 API and 0.6.0 is untagged, so withdrawing
-them changes nothing that shipped.
+**Verified** the cost of renaming a class, read 2026-09-15: after `apply-classes-at-variants`
+renamed five booleans, the generated documentation for `clearOption` never named `rating-hidden`,
+so a reader holding DaisyUI's documentation had nothing to search for.
 
 **Verified** that DaisyUI's description already explains the cases a rename was meant to fix:
 `rating-hidden`'s `desc` reads "For the first radio to make it hidden so user can clear the
-rating" (`rating/+page.md:14`), and that text is what the generator emits as the parameter's
-documentation.
+rating" (`rating/+page.md:14`).
 
-*Wrong if:* a DaisyUI class suffix camelCases to a Kotlin keyword or to a name that collides with
-another parameter of the same function. Keywords are already escaped; a collision would fail
-compilation of the generated sources, which is the correction.
+**Verified** as a decision, Oliver, 2026-10-18: the axis name is a declared design choice. It
+names a group of classes, such as `style`, `shape` or `width`, and is never a renamed class.
 
-*Checked 2026-09-19 and this requirement holds in the shipped output:* `codegen-config.json`
-carries no `parameterNames` section and no code reads one, and `Rating.kt` declares `hidden` with
-DaisyUI's own sentence as its documentation. This is the one requirement of the four that the
-day's measurements confirmed rather than corrected.
+*Wrong if:* a DaisyUI class suffix camelCases to a Kotlin keyword or collides with another
+parameter of the same function. Keywords are escaped; a collision fails compilation of the
+generated sources, which is the correction.
 
 #### Scenario: A boolean carries its class's name
-
-- **WHEN** a component declares a boolean for a DaisyUI class
+- **WHEN** a component declares a toggle for a DaisyUI class
 - **THEN** the parameter is the class suffix in camelCase, and its documentation is DaisyUI's
   description of that class
 
-#### Scenario: No parameter is renamed by configuration
+#### Scenario: An axis member carries its class's name
+- **WHEN** a component declares an axis containing `btn-ghost`
+- **THEN** the enum has an entry `Ghost` documented with DaisyUI's description of `btn-ghost`
 
-- **WHEN** the codegen configuration is read
-- **THEN** it contains no section mapping a DaisyUI class to a parameter name
+#### Scenario: No parameter is renamed by configuration
+- **WHEN** the component model is read
+- **THEN** it contains no mapping from a DaisyUI class to a parameter or entry name
 
 ### Requirement: A join marks its items by the call, not by a parameter
 
-Inside the content of `daisyJoin`, calling a component function that DaisyUI documents as a join
-item SHALL emit that component with `join-item`, with nothing further to write. Outside
+Inside the content of `daisyJoin`, calling a component function that the component model declares
+as a join item SHALL emit that component with `join-item`, with nothing further to write. Outside
 `daisyJoin`, and inside any lambda nested within a join's content, the same call SHALL emit no
-`join-item`, and there SHALL be no typed way to write `join-item` there. The set of component
-functions that behave this way SHALL be derived from DaisyUI's markup — every component class
-that co-occurs with `join-item` on one element — and not configured.
+`join-item`, and there SHALL be no typed way to write `join-item` there.
+
+The set of join items is declared in the model. It is bootstrapped from DaisyUI's markup, where
+it was derived until `declare-the-component-model`, and a DaisyUI release that changes it shows up
+in the bump's documentation delta.
 
 **Verified** what `join-item` does, from `packages/daisyui/src/utilities/join.css`: `.join`
-writes four corner-radius variables onto its direct children and `.join-item` reads them and
-collapses shared borders. Without an enclosing `.join` the variables are unset and the class
-strips the element's own corners — so `join-item` outside a join is harmful, not inert, and a
-parameter writable anywhere would let a caller do that silently.
+writes four corner-radius variables onto its direct children and `.join-item` reads them. Without
+an enclosing `.join` the class strips the element's own corners, so `join-item` outside a join is
+harmful, not inert.
 
-**Verified** the derived set and its completeness, **re-measured 2026-09-19 at v5.7.17, and the
-first reading was wrong**. The component classes co-occurring with `join-item` are `btn` (60),
-`input` (5), `theme-controller` (5), `collapse` (3), `card` (3), `select` (1), `validator` (1) —
-**seven**, not the five read on 2026-09-15, which missed `theme-controller` and `validator` and
-counted `btn` at 52. Both are components this library generates, so the earlier list would have
-shipped a scope short of two of its members, with a test pinning the same wrong number.
-
-This is the argument for deriving the set rather than configuring it, arriving before the code:
-a hand-read list cannot reach the output, and the test pins what DaisyUI says today.
-
+**Verified** the set, re-measured 2026-09-19 at v5.7.17: the component classes co-occurring with
+`join-item` are `btn`, `input`, `theme-controller`, `collapse`, `card`, `select` and `validator`.
 Of 72 direct children of a `.join`, 69 carry `join-item`; the 3 that do not are wrappers whose
-grandchild carries it — two bare `<div>`s and one `<div class="indicator">`. (The 2026-09-15
-reading said 74 and 71; the count moved, the shape did not.) A rule marking every DOM child would
-therefore be wrong in 3 of 72 cases; a rule marking every component call in the join's own scope,
-and nothing nested, is wrong in none.
+grandchild carries it.
 
-**Verified 2026-09-19 in the Kotlin REPL against the real `:lib` classpath** — previously Assumed
-from Kotlin's documented resolution rules, and the assumption was load-bearing enough that none
-of 3.3–3.5 should have been written on it unrun. A member function on the scope type does take
-precedence over the top-level extension; `@HtmlTagMarker`, which is a `@DslMarker`, does hide the
-scope inside a nested lambda, so the nested call reaches the extension and is not marked; and
-`this@daisyJoin.` still reaches the member. A fourth fact this requirement leaned on without
-stating it also holds: the element lands inside the wrapper rather than at join level, because
-kotlinx.html writes positionally into one shared consumer — which is the `div > div >
-input.join-item` DaisyUI documents.
+**Verified 2026-09-19 in the Kotlin REPL against the real `:lib` classpath:** a member function on
+the scope type takes precedence over the top-level extension; `@HtmlTagMarker` hides the scope
+inside a nested lambda; `this@daisyJoin.` still reaches the member.
 
 *Wrong if:* a nested `daisyButton` inside a join's content emits `join-item`, or `daisyButton`
 inside a join resolves ambiguously; the test pinning both is the correction.
 
-*Wrong if:* DaisyUI documents `join-item` on an element inside a join whose component is not in
-the derived set and that a caller cannot reach with `extraClasses`. The known limit — an element
-DaisyUI does not document as a join item stays on `extraClasses` — is accepted, not hidden.
-
 #### Scenario: A component call inside a join is a join item
-
 - **WHEN** `daisyButton("A")` is called directly in the content of `daisyJoin`
 - **THEN** the rendered button carries `btn join-item`
 
 #### Scenario: A nested call is not a join item
-
 - **WHEN** `daisyInput()` is called inside a `div { }` nested in the content of `daisyJoin`
 - **THEN** the rendered input carries no `join-item`
 - **AND** `this@daisyJoin.daisyInput()` at the same place renders it with `join-item`
 
 #### Scenario: A join item cannot be written outside a join
-
 - **WHEN** code outside `daisyJoin` tries to obtain a join-marking component call
 - **THEN** it does not compile
 
 #### Scenario: The item set follows DaisyUI
+- **WHEN** a DaisyUI release documents `join-item` beside a component class it did not before
+- **THEN** the bump's documentation delta names it
+- **AND** that component marks itself inside a join once the model declares it
 
-- **WHEN** a DaisyUI release documents `join-item` on a component it did not before
-- **THEN** that component's function marks itself inside a join after regeneration, with no
-  configuration edit
+### Requirement: The model places each class on an element DaisyUI documents it on
+
+Every DaisyUI class a generated function emits SHALL land on an element DaisyUI's own
+documentation puts it on, except where the component model records a deliberate divergence with
+its reason. A class a function writes on every call SHALL NOT also be offered as a parameter of
+another function.
+
+Placement is declared in the component model and is no longer cross-checked during generation.
+It is checked once, when the model is bootstrapped, by the cross-check that the requirement "A
+class is declared on the function whose element wears it" ran on every generation. After that, a DaisyUI release that moves a class shows up in the bump's
+documentation delta, and the model is edited.
+
+The authority stays the fenced ```html examples of
+`packages/docs/src/routes/(routes)/components/<name>/+page.md`, in which every daisyUI class is
+marked `$$`.
+
+**Verified** the defect this requirement was written against, measured 2026-09-14 over all 68
+component pages: 13 classes across 5 components were parameters on the container while DaisyUI
+puts them on a child. That was fixed by `a-class-belongs-to-the-element-that-wears-it`.
+
+**Verified** that DaisyUI documents many classes on several elements, choosing by the surrounding
+HTML content model, measured 2026-09-19: `badge` is a `<div>` 47 times and a `<span>` 7 times, all
+seven inside an `<h1>`–`<h5>` or a `<p>`. kotlinx.html cannot pick an element by context, so one
+function renders one element, and the classes documented only on the others diverge. The model
+records `badge` (#356) and `dropdown` (#357) as such divergences.
+
+**Assumed** that the cross-check passes against the bootstrapped model with only the divergences
+that today carry exceptions. *Wrong if:* the bootstrap check reports a disagreement that no
+current exception covers.
+
+#### Scenario: The bootstrapped model places every class where DaisyUI puts it
+- **WHEN** the model is bootstrapped and checked once against DaisyUI's marked examples
+- **THEN** every disagreement is one the model records as a deliberate divergence with a reason
+
+#### Scenario: A DaisyUI release moves a class to another element
+- **WHEN** the newer tag documents a class on a different set of elements
+- **THEN** the bump's documentation delta names the class and both element sets
+- **AND** the placement changes only by an edit to the model
+
+#### Scenario: A construction writes a class, so no parameter offers it
+- **WHEN** a generated function writes a class on every call
+- **THEN** no other function offers that class as a parameter, because the model places each class
+  exactly once
+
+#### Scenario: A misplaced parameter has no function to move to
+- **WHEN** DaisyUI documents a class on a child the library generates no function for
+- **THEN** the class gets the function it needs, or stays where it is under a tracking issue, and
+  the model says which
+
+### Requirement: `tab`'s container and item are the elements DaisyUI names
+
+The tab container function SHALL render the `<div role="tablist">` carrying `tabs`. Separate item
+functions SHALL render the focusable element carrying `tab`, with `tab-active` and `tab-disabled`
+declared on the items as toggles.
+
+Folded in from `tab-container-and-item-trade-places` (#342). The generator picked `tab` for the
+container from DaisyUI's first example, so the container wore the item's class and no item
+function existed.
+
+**Verified** the documented elements, counted 2026-10-18 at the pinned tag in
+`components/tab/+page.md`: `tabs` sits on `<div>` 17 times; `tab` on `<a>` 30 times, on
+`<input type="radio">` 19 times and on `<label>` 3 times. The radio form is the one DaisyUI's
+`tab-content` panels need without JavaScript.
+
+**Verified** 2026-10-18 that two item functions, one rendering `<a role="tab">` and one rendering
+`<input type="radio" role="tab">`, cover what callers need: the example app renders no tabs before
+this change, and fwb-ssr's client detail page builds `<div role="tablist" class="tabs tabs-lift">`
+with `<a role="tab" class="tab tab-active">` items by hand. Neither uses the `<label>` form, which
+wraps a radio together with an icon; a caller that needs it is what would reopen this.
+
+#### Scenario: The container and items trade places
+- **WHEN** a tab bar is built with the container function and two item functions
+- **THEN** the container renders `<div role="tablist" class="tabs">`
+- **AND** each item renders an element carrying `tab`
+
+#### Scenario: An active item
+- **WHEN** an item function is called with `active = true`
+- **THEN** that item carries `tab tab-active`, and the container carries neither class

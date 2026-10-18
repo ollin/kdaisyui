@@ -73,7 +73,7 @@ kdaisyui solves all four:
 
 ```kotlin
 // With kdaisyui — typed, composable, correct
-daisyButton("Save", variant = ButtonVariant.Primary, size = ButtonSize.Lg)
+daisyButton("Save", color = ButtonColor.Primary, size = ButtonSize.Lg)
 ```
 
 The variant is an enum — the compiler rejects invalid values. The IDE autocompletes options. The generated class string is always correct.
@@ -88,7 +88,7 @@ The core utility function `addClassNames` (in `io.github.ollin.kdaisyui.core`) m
 4. Handles null, blank, and whitespace-only inputs
 5. Uses `LinkedHashSet` to preserve insertion order
 
-When you write `daisyButton(variant = ButtonVariant.Primary, extraClasses = "w-full mt-4")`, the function builds the class attribute step by step:
+When you write `daisyButton(color = ButtonColor.Primary, extraClasses = "w-full mt-4")`, the function builds the class attribute step by step:
 
 ```
 "btn"                     ← base class (always present)
@@ -150,7 +150,7 @@ Every component follows the same parameter pattern:
 ```kotlin
 fun FlowContent.daisyComponent(
     // Typed DaisyUI parameters
-    variant: ComponentVariant? = null,
+    color: ComponentColor? = null,
     size: ComponentSize? = null,
     // Boolean modifiers
     outline: Boolean = false,

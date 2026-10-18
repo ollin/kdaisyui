@@ -249,42 +249,6 @@ built from something other than the directory the component was read from.
 - **THEN** its doc comment names the HTML element
 - **AND** the emitted code still calls the kotlinx.html builder
 
-### Requirement: Configuration that is never read is an error
-
-The codegen SHALL fail when `codegen-config.json` holds a component-keyed entry that no lookup
-consumed during a generation run.
-
-A mis-keyed entry is indistinguishable from an absent one at runtime: the lookup returns
-`undefined`, the caller's fallback swallows it, and the component is generated as though nothing
-had been configured. Nothing fails, and the class-based safety net cannot help — a knob that
-changes no CSS class is invisible to both the generated tests and the drift job.
-
-**Verified** that this is the mechanism behind a shipped defect: `noContent` held `file-input` and
-`theme-controller` while the lookup asked for `fileinput` and `themecontroller`, so
-`daisyFileInput` and `daisyThemeController` demanded a content lambda on a void `<input>` for as
-long as the entries existed.
-
-**Verified** that the guard starts green: measured across all seven component-keyed sections on
-2026-09-12, exactly two entries were unreachable, both in `noContent`, which is deleted. The other
-six sections are clean, so a future failure is a new finding rather than inherited debt.
-
-A key-**existence** check would not have caught it: `file-input` is a real DaisyUI directory. The
-entry is not a typo, it is unread, and only consumption distinguishes the two.
-
-*Wrong if:* the guard fires on an entry that is legitimately unread in some runs but not others,
-which would mean consumption depends on run-time conditions rather than the component set.
-
-#### Scenario: A config entry no lookup can reach
-
-- **WHEN** a generation run completes with a component-keyed config entry that nothing read
-- **THEN** the generator fails
-- **AND** it names the section and the key
-
-#### Scenario: A clean configuration
-
-- **WHEN** every component-keyed config entry was consumed during the run
-- **THEN** the generator succeeds
-
 ### Requirement: The Kotlin-level API surface is a committed, explicitly-updated artefact
 
 The generated components' Kotlin signatures SHALL be dumped to a committed baseline covering

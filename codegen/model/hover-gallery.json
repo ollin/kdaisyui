@@ -1,0 +1,18 @@
+{
+  "component": "hover-gallery",
+  "name": "HoverGallery",
+  "class": "hover-gallery",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyHoverGallery",
+      "receiver": "FlowContent",
+      "element": "FIGURE",
+      "class": "hover-gallery",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Gallery with hover effects" }
+}

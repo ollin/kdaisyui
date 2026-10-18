@@ -1,0 +1,52 @@
+{
+  "component": "steps",
+  "name": "Steps",
+  "class": "steps",
+  "enums": [
+    {
+      "name": "StepColor",
+      "label": "Color variants",
+      "classes": [
+        "step-neutral",
+        "step-primary",
+        "step-secondary",
+        "step-accent",
+        "step-info",
+        "step-success",
+        "step-warning",
+        "step-error"
+      ]
+    },
+    { "name": "StepsDirection", "label": "Direction variants", "classes": ["steps-vertical", "steps-horizontal"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisySteps",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": "steps",
+      "text": false,
+      "parameters": [{ "kind": "enum", "name": "direction", "enum": "StepsDirection", "doc": "Direction variant" }]
+    },
+    {
+      "kind": "part",
+      "name": "daisyStep",
+      "receiver": "UL",
+      "element": "LI",
+      "class": "step",
+      "text": false,
+      "parameters": [{ "kind": "enum", "name": "color", "enum": "StepColor", "doc": "Color variant" }]
+    },
+    {
+      "kind": "part",
+      "name": "daisyStepIcon",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "step-icon",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Step-by-step progress indicator" }
+}

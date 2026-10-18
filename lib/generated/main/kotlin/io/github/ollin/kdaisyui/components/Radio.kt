@@ -13,7 +13,7 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
 /** Color variants for this component (CSS prefix: `radio-`) */
-enum class RadioVariant(internal val className: String) : ClassValues<RadioVariant> {
+enum class RadioColor(internal val className: String) : ClassValues<RadioColor> {
     /** CSS: `radio-neutral` — neutral color */
     Neutral("radio-neutral"),
     /** CSS: `radio-primary` — primary color */
@@ -56,7 +56,7 @@ enum class RadioSize(internal val className: String) : ClassValues<RadioSize> {
 /**
  * Radio buttons allow the user to select one option from a set. Renders `<input class="radio ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param name
  * @param checked
@@ -66,7 +66,7 @@ enum class RadioSize(internal val className: String) : ClassValues<RadioSize> {
  */
 fun FlowContent.daisyRadio(
     id: HtmlId? = null,
-    variant: ClassValues<RadioVariant>? = null,
+    color: ClassValues<RadioColor>? = null,
     size: ClassValues<RadioSize>? = null,
     name: String? = null,
     checked: Boolean = false,
@@ -78,7 +78,7 @@ fun FlowContent.daisyRadio(
         if (id != null) attributes["id"] = id.id
         type = InputType.radio
         addClassNames("radio")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (name != null) this.name = name
         if (checked) this.checked = true

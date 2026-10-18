@@ -12,7 +12,7 @@ import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 
-enum class CheckboxVariant(internal val className: String) : ClassValues<CheckboxVariant> {
+enum class CheckboxColor(internal val className: String) : ClassValues<CheckboxColor> {
     /** CSS: `checkbox-primary` */
     Primary("checkbox-primary"),
     /** CSS: `checkbox-secondary` */
@@ -54,7 +54,7 @@ enum class CheckboxSize(internal val className: String) : ClassValues<CheckboxSi
 /**
  * Checkboxes are used to select or deselect a value. Renders `<input class="checkbox ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param checked
  * @param disabled
@@ -63,7 +63,7 @@ enum class CheckboxSize(internal val className: String) : ClassValues<CheckboxSi
  */
 fun FlowContent.daisyCheckbox(
     id: HtmlId? = null,
-    variant: ClassValues<CheckboxVariant>? = null,
+    color: ClassValues<CheckboxColor>? = null,
     size: ClassValues<CheckboxSize>? = null,
     checked: Boolean = false,
     disabled: Boolean = false,
@@ -74,7 +74,7 @@ fun FlowContent.daisyCheckbox(
         if (id != null) attributes["id"] = id.id
         type = InputType.checkBox
         addClassNames("checkbox")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (checked) this.checked = true
         if (disabled) this.disabled = true

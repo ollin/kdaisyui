@@ -1,0 +1,43 @@
+{
+  "component": "collapse",
+  "name": "Collapse",
+  "class": "collapse",
+  "enums": [
+    { "name": "CollapseIcon", "label": "Icon variants", "classes": ["collapse-arrow", "collapse-plus"] },
+    { "name": "CollapseState", "label": "State variants", "classes": ["collapse-open", "collapse-close"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCollapse",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "collapse",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "icon", "enum": "CollapseIcon", "doc": "Icon variant" },
+        { "kind": "enum", "name": "state", "enum": "CollapseState", "doc": "State variant" }
+      ],
+      "joinItem": true
+    },
+    {
+      "kind": "part",
+      "name": "daisyCollapseTitle",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "collapse-title",
+      "text": true,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyCollapseContent",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "collapse-content",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Collapsible content sections" }
+}

@@ -1,0 +1,19 @@
+{
+  "component": "join",
+  "name": "Join",
+  "class": "join",
+  "enums": [{ "name": "JoinDirection", "label": "Direction variants", "classes": ["join-vertical", "join-horizontal"] }],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyJoin",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "join",
+      "text": false,
+      "parameters": [{ "kind": "enum", "name": "direction", "enum": "JoinDirection", "doc": "Direction variant" }]
+    }
+  ],
+  "joinScope": true,
+  "summary": { "summary": "Groups buttons and inputs together" }
+}

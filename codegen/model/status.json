@@ -1,0 +1,42 @@
+{
+  "component": "status",
+  "name": "Status",
+  "class": "status",
+  "enums": [
+    {
+      "name": "StatusColor",
+      "label": "Color variants",
+      "classes": [
+        "status-neutral",
+        "status-primary",
+        "status-secondary",
+        "status-accent",
+        "status-info",
+        "status-success",
+        "status-warning",
+        "status-error"
+      ]
+    },
+    {
+      "name": "StatusSize",
+      "label": "Size variants",
+      "classes": ["status-xs", "status-sm", "status-md", "status-lg", "status-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyStatus",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "status",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "color", "enum": "StatusColor", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "StatusSize", "doc": "Size variant" }
+      ],
+      "role": "status"
+    }
+  ],
+  "summary": { "summary": "Small status indicator dot" }
+}

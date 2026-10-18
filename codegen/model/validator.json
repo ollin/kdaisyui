@@ -1,0 +1,28 @@
+{
+  "component": "validator",
+  "name": "Validator",
+  "class": "validator",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyValidator",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "validator",
+      "text": false,
+      "parameters": [],
+      "joinItem": true
+    },
+    {
+      "kind": "part",
+      "name": "daisyValidatorHint",
+      "receiver": "FlowContent",
+      "element": "P",
+      "class": "validator-hint",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Form validation wrapper" }
+}

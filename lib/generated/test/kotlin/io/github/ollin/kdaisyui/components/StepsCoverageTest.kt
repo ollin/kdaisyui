@@ -50,94 +50,6 @@ class StepsCoverageTest {
     }
 
     @Test
-    fun steps_variant_stepneutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepNeutral,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-neutral", "Steps variant StepNeutral")
-    }
-
-    @Test
-    fun steps_variant_stepprimary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepPrimary,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-primary", "Steps variant StepPrimary")
-    }
-
-    @Test
-    fun steps_variant_stepsecondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepSecondary,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-secondary", "Steps variant StepSecondary")
-    }
-
-    @Test
-    fun steps_variant_stepaccent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepAccent,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-accent", "Steps variant StepAccent")
-    }
-
-    @Test
-    fun steps_variant_stepinfo() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepInfo,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-info", "Steps variant StepInfo")
-    }
-
-    @Test
-    fun steps_variant_stepsuccess() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepSuccess,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-success", "Steps variant StepSuccess")
-    }
-
-    @Test
-    fun steps_variant_stepwarning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepWarning,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-warning", "Steps variant StepWarning")
-    }
-
-    @Test
-    fun steps_variant_steperror() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySteps(
-                variant = StepsVariant.StepError,
-                content = { },
-            )
-        }
-        assertRendered(html, "steps steps-step-error", "Steps variant StepError")
-    }
-
-    @Test
     fun steps_direction_vertical() {
         val html = createHTML(prettyPrint = false).div {
             daisySteps(
@@ -160,50 +72,138 @@ class StepsCoverageTest {
     }
 
     @Test
-    fun stepsStep_defaults() {
+    fun step_defaults() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStepsStep(
+            daisyStep(
                 content = { },
             )
         }
-        assertRendered(html, "step", "StepsStep defaults", closes = "</li></ul>")
+        assertRendered(html, "step", "Step defaults", closes = "</li></ul>")
     }
 
     @Test
-    fun stepsStep_all_flags() {
+    fun step_all_flags() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStepsStep(
+            daisyStep(
                 id = htmlId("x-cov-id"),
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "step zz-extra", "StepsStep all flags", closes = "</li></ul>")
-        assertCommonFlags(html, "StepsStep")
+        assertRendered(html, "step zz-extra", "Step all flags", closes = "</li></ul>")
+        assertCommonFlags(html, "Step")
     }
 
     @Test
-    fun stepsStepIcon_defaults() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStepsStepIcon(
+    fun step_color_neutral() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Neutral,
                 content = { },
             )
         }
-        assertRendered(html, "step-icon", "StepsStepIcon defaults", closes = "</span></div>")
+        assertRendered(html, "step step-neutral", "Step color Neutral")
     }
 
     @Test
-    fun stepsStepIcon_all_flags() {
+    fun step_color_primary() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Primary,
+                content = { },
+            )
+        }
+        assertRendered(html, "step step-primary", "Step color Primary")
+    }
+
+    @Test
+    fun step_color_secondary() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Secondary,
+                content = { },
+            )
+        }
+        assertRendered(html, "step step-secondary", "Step color Secondary")
+    }
+
+    @Test
+    fun step_color_accent() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Accent,
+                content = { },
+            )
+        }
+        assertRendered(html, "step step-accent", "Step color Accent")
+    }
+
+    @Test
+    fun step_color_info() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Info,
+                content = { },
+            )
+        }
+        assertRendered(html, "step step-info", "Step color Info")
+    }
+
+    @Test
+    fun step_color_success() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Success,
+                content = { },
+            )
+        }
+        assertRendered(html, "step step-success", "Step color Success")
+    }
+
+    @Test
+    fun step_color_warning() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Warning,
+                content = { },
+            )
+        }
+        assertRendered(html, "step step-warning", "Step color Warning")
+    }
+
+    @Test
+    fun step_color_error() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyStep(
+                color = StepColor.Error,
+                content = { },
+            )
+        }
+        assertRendered(html, "step step-error", "Step color Error")
+    }
+
+    @Test
+    fun stepIcon_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStepsStepIcon(
+            daisyStepIcon(
+                content = { },
+            )
+        }
+        assertRendered(html, "step-icon", "StepIcon defaults", closes = "</span></div>")
+    }
+
+    @Test
+    fun stepIcon_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStepIcon(
                 id = htmlId("x-cov-id"),
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "step-icon zz-extra", "StepsStepIcon all flags", closes = "</span></div>")
-        assertCommonFlags(html, "StepsStepIcon")
+        assertRendered(html, "step-icon zz-extra", "StepIcon all flags", closes = "</span></div>")
+        assertCommonFlags(html, "StepIcon")
     }
 }

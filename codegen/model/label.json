@@ -1,0 +1,21 @@
+{
+  "component": "label",
+  "name": "Label",
+  "class": "label",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyLabel",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "label",
+      "text": true,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Field labels and helper text" },
+  "notOffered": {
+    "floating-label": "A label that floats above its input. No function renders it yet; reachable through extraClasses."
+  }
+}

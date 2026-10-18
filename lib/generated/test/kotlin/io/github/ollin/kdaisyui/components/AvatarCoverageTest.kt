@@ -50,24 +50,24 @@ class AvatarCoverageTest {
     }
 
     @Test
-    fun avatar_modifier_online() {
+    fun avatar_presence_online() {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatar(
-                modifier = AvatarModifier.Online,
+                presence = AvatarPresence.Online,
                 content = { },
             )
         }
-        assertRendered(html, "avatar avatar-online", "Avatar modifier Online")
+        assertRendered(html, "avatar avatar-online", "Avatar presence Online")
     }
 
     @Test
-    fun avatar_modifier_offline() {
+    fun avatar_presence_offline() {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatar(
-                modifier = AvatarModifier.Offline,
+                presence = AvatarPresence.Offline,
                 content = { },
             )
         }
-        assertRendered(html, "avatar avatar-offline", "Avatar modifier Offline")
+        assertRendered(html, "avatar avatar-offline", "Avatar presence Offline")
     }
 }

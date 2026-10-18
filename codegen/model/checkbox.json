@@ -1,0 +1,56 @@
+{
+  "component": "checkbox",
+  "name": "Checkbox",
+  "class": "checkbox",
+  "enums": [
+    {
+      "name": "CheckboxColor",
+      "label": "Color variants",
+      "classes": [
+        "checkbox-primary",
+        "checkbox-secondary",
+        "checkbox-accent",
+        "checkbox-neutral",
+        "checkbox-success",
+        "checkbox-warning",
+        "checkbox-info",
+        "checkbox-error"
+      ]
+    },
+    {
+      "name": "CheckboxSize",
+      "label": "Size variants",
+      "classes": ["checkbox-xs", "checkbox-sm", "checkbox-md", "checkbox-lg", "checkbox-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCheckbox",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "checkbox",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "color", "enum": "CheckboxColor", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "CheckboxSize", "doc": "Size variant" },
+        {
+          "kind": "extra",
+          "name": "checked",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (checked) this.checked = true"
+        },
+        {
+          "kind": "extra",
+          "name": "disabled",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (disabled) this.disabled = true"
+        }
+      ],
+      "inputType": "checkBox"
+    }
+  ],
+  "summary": { "summary": "Boolean toggles for forms" }
+}

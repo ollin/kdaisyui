@@ -11,11 +11,11 @@ Regenerate: just generate
 Text entry fields. Renders `<input class="input ...">`.
 
 ```kotlin
-// InputVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// InputColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // InputSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyInput(
     id: HtmlId? = null,
-    variant: ClassValues<InputVariant>? = null,
+    color: ClassValues<InputColor>? = null,
     size: ClassValues<InputSize>? = null,
     ghost: Boolean = false,
     type: InputType = InputType.text,

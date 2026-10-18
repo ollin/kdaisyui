@@ -1,0 +1,41 @@
+{
+  "component": "carousel",
+  "name": "Carousel",
+  "class": "carousel",
+  "enums": [
+    {
+      "name": "CarouselSnap",
+      "label": "Snap variants",
+      "classes": ["carousel-start", "carousel-center", "carousel-end"]
+    },
+    {
+      "name": "CarouselDirection",
+      "label": "Direction variants",
+      "classes": ["carousel-horizontal", "carousel-vertical"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCarousel",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "carousel",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "snap", "enum": "CarouselSnap", "doc": "Snap variant" },
+        { "kind": "enum", "name": "direction", "enum": "CarouselDirection", "doc": "Direction variant" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyCarouselItem",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "carousel-item",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Slideshow of images or content" }
+}

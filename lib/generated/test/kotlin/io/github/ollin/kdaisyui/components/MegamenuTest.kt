@@ -22,7 +22,7 @@ class MegamenuTest {
     @Test
     fun megamenu_with_wide_popovers_and_horizontal_menus() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(wide = true, extraClasses = "max-sm:megamenu-vertical") {
+            daisyMegamenu(width = MegamenuWidth.Wide, extraClasses = "max-sm:megamenu-vertical") {
             }
         }
         val expectedClasses = "max-sm:megamenu-vertical megamenu megamenu-wide"
@@ -33,7 +33,7 @@ class MegamenuTest {
     @Test
     fun megamenu_with_a_menus_and_lots_of_links() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(wide = true, extraClasses = "max-sm:megamenu-vertical") {
+            daisyMegamenu(width = MegamenuWidth.Wide, extraClasses = "max-sm:megamenu-vertical") {
             }
         }
         val expectedClasses = "max-sm:megamenu-vertical megamenu megamenu-wide"
@@ -44,7 +44,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_a_navbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(full = true, extraClasses = "max-sm:megamenu-vertical") {
+            daisyMegamenu(width = MegamenuWidth.Full, extraClasses = "max-sm:megamenu-vertical") {
             }
         }
         val expectedClasses = "max-sm:megamenu-vertical megamenu megamenu-full"

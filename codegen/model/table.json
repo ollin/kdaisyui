@@ -1,0 +1,29 @@
+{
+  "component": "table",
+  "name": "Table",
+  "class": "table",
+  "enums": [
+    {
+      "name": "TableSize",
+      "label": "Size variants",
+      "classes": ["table-xs", "table-sm", "table-md", "table-lg", "table-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyTable",
+      "receiver": "FlowContent",
+      "element": "TABLE",
+      "class": "table",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "TableSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "pinCols", "class": "table-pin-cols" },
+        { "kind": "toggle", "name": "pinRows", "class": "table-pin-rows" },
+        { "kind": "toggle", "name": "zebra", "class": "table-zebra" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Structured data in rows and columns" }
+}

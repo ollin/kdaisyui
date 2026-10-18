@@ -1,7 +1,7 @@
 package io.github.ollin.kdaisyui
 
 import io.github.ollin.kdaisyui.components.ButtonSize
-import io.github.ollin.kdaisyui.components.ButtonVariant
+import io.github.ollin.kdaisyui.components.ButtonColor
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertNotNull
@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
  *
  * This is the only route by which a consuming application's CSS build can learn the class
  * names this library emits. `btn-primary` is assembled at runtime from
- * `ButtonVariant.Primary`, so it appears in no file a Tailwind content scan would read, and
+ * `ButtonColor.Primary`, so it appears in no file a Tailwind content scan would read, and
  * the published jar contains compiled classes and no Kotlin sources.
  *
  * A file that silently stops being packaged is exactly the failure this library keeps
@@ -43,7 +43,7 @@ class TailwindClassListTest {
     /** The case that motivates the file: a class no consumer's own sources ever contain. */
     @Test
     fun it_carries_classes_assembled_from_enum_values() {
-        assertContains(entries, ButtonVariant.Primary.className)
+        assertContains(entries, ButtonColor.Primary.className)
         assertContains(entries, ButtonSize.Lg.className)
     }
 
@@ -55,6 +55,12 @@ class TailwindClassListTest {
     @Test
     fun it_explains_itself_to_whoever_opens_it() {
         assertTrue(classList.startsWith("#"), "expected a comment header, got: ${classList.take(40)}")
+    }
+
+    /** #345: DaisyUI's drawer variants are Tailwind variants, not classes; nothing emits them. */
+    @Test
+    fun it_lists_only_classes_a_component_can_emit() {
+        assertTrue("is-drawer-open:" !in entries && "is-drawer-close:" !in entries, "variant prefixes listed as classes")
     }
 
     @Test

@@ -39,48 +39,68 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
                 id = htmlId("x-cov-id"),
-                horizontal = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "carousel carousel-horizontal carousel-vertical zz-extra", "Carousel all flags", closes = "</div></div>")
+        assertRendered(html, "carousel zz-extra", "Carousel all flags", closes = "</div></div>")
         assertCommonFlags(html, "Carousel")
     }
 
     @Test
-    fun carousel_modifier_start() {
+    fun carousel_snap_start() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
-                modifier = CarouselModifier.Start,
+                snap = CarouselSnap.Start,
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-start", "Carousel modifier Start")
+        assertRendered(html, "carousel carousel-start", "Carousel snap Start")
     }
 
     @Test
-    fun carousel_modifier_center() {
+    fun carousel_snap_center() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
-                modifier = CarouselModifier.Center,
+                snap = CarouselSnap.Center,
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-center", "Carousel modifier Center")
+        assertRendered(html, "carousel carousel-center", "Carousel snap Center")
     }
 
     @Test
-    fun carousel_modifier_end() {
+    fun carousel_snap_end() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
-                modifier = CarouselModifier.End,
+                snap = CarouselSnap.End,
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-end", "Carousel modifier End")
+        assertRendered(html, "carousel carousel-end", "Carousel snap End")
+    }
+
+    @Test
+    fun carousel_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarousel(
+                direction = CarouselDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "carousel carousel-horizontal", "Carousel direction Horizontal")
+    }
+
+    @Test
+    fun carousel_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarousel(
+                direction = CarouselDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "carousel carousel-vertical", "Carousel direction Vertical")
     }
 
     @Test

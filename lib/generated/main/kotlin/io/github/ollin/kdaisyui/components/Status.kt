@@ -13,7 +13,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.role
 
 /** Color variants for this component (CSS prefix: `status-`) */
-enum class StatusVariant(internal val className: String) : ClassValues<StatusVariant> {
+enum class StatusColor(internal val className: String) : ClassValues<StatusColor> {
     /** CSS: `status-neutral` — neutral color */
     Neutral("status-neutral"),
     /** CSS: `status-primary` — primary color */
@@ -56,7 +56,7 @@ enum class StatusSize(internal val className: String) : ClassValues<StatusSize> 
 /**
  * Status is a really small icon to visually show the current status of an element, like online, offline, error, etc. Renders `<div class="status ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -64,7 +64,7 @@ enum class StatusSize(internal val className: String) : ClassValues<StatusSize> 
  */
 fun FlowContent.daisyStatus(
     id: HtmlId? = null,
-    variant: ClassValues<StatusVariant>? = null,
+    color: ClassValues<StatusColor>? = null,
     size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -74,7 +74,7 @@ fun FlowContent.daisyStatus(
         if (id != null) attributes["id"] = id.id
         role = "status"
         addClassNames("status")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         addClassNames(extraClasses)
         if (attrs != null) attrs()

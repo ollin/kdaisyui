@@ -1,0 +1,70 @@
+{
+  "component": "drawer",
+  "name": "Drawer",
+  "class": "drawer",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyDrawer",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "drawer",
+      "text": false,
+      "parameters": [
+        { "kind": "toggle", "name": "end", "class": "drawer-end" },
+        { "kind": "toggle", "name": "open", "class": "drawer-open" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyDrawerToggle",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "drawer-toggle",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyDrawerContent",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "drawer-content",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyDrawerSide",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "drawer-side",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyDrawerOverlay",
+      "receiver": "FlowContent",
+      "element": "LABEL",
+      "class": "drawer-overlay",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyDrawerButton",
+      "receiver": "FlowContent",
+      "element": "LABEL",
+      "class": "drawer-button",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Sidebar layout with toggle" },
+  "notOffered": {
+    "is-drawer-open:": "A Tailwind variant, not a class (#345).",
+    "is-drawer-close:": "A Tailwind variant, not a class (#345)."
+  }
+}

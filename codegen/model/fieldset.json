@@ -1,0 +1,28 @@
+{
+  "component": "fieldset",
+  "name": "Fieldset",
+  "class": "fieldset",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyFieldset",
+      "receiver": "FlowContent",
+      "element": "FIELDSET",
+      "class": "fieldset",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyFieldsetLegend",
+      "receiver": "FIELDSET",
+      "element": "LEGEND",
+      "class": "fieldset-legend",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Groups related form controls" },
+  "notOffered": { "label": "The label component, offered by daisyLabel." }
+}

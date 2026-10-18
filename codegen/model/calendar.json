@@ -1,0 +1,23 @@
+{
+  "component": "calendar",
+  "name": "Calendar",
+  "class": "cally",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCalendar",
+      "stem": "Calendar",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "cally",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Calendar date picker widget" },
+  "notOffered": {
+    "react-day-picker": "Styles the react-day-picker library, which this library does not wrap.",
+    "vc": "Styles the Vanilla Calendar Pro library, which this library does not wrap."
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "component": "card",
+  "name": "Card",
+  "class": "card",
+  "enums": [
+    { "name": "CardSize", "label": "Size variants", "classes": ["card-xs", "card-sm", "card-md", "card-lg", "card-xl"] },
+    { "name": "CardStyle", "label": "Style variants", "classes": ["card-border", "card-dash"] },
+    { "name": "CardLayout", "label": "Layout variants", "classes": ["card-side", "image-full"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyCard",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "card",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "CardSize", "doc": "Size variant" },
+        { "kind": "enum", "name": "style", "enum": "CardStyle", "doc": "Style variant" },
+        { "kind": "enum", "name": "layout", "enum": "CardLayout", "doc": "Layout variant" }
+      ],
+      "joinItem": true
+    },
+    {
+      "kind": "part",
+      "name": "daisyCardTitle",
+      "receiver": "FlowContent",
+      "element": "H2",
+      "class": "card-title",
+      "text": true,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyCardBody",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "card-body",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyCardActions",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "card-actions",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Content containers with body and title" }
+}

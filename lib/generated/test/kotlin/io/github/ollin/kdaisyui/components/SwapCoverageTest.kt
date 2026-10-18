@@ -40,15 +40,35 @@ class SwapCoverageTest {
             daisySwap(
                 id = htmlId("x-cov-id"),
                 active = true,
-                flip = true,
-                rotate = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "swap swap-active swap-flip swap-rotate zz-extra", "Swap all flags", closes = "</label></div>")
+        assertRendered(html, "swap swap-active zz-extra", "Swap all flags", closes = "</label></div>")
         assertCommonFlags(html, "Swap")
+    }
+
+    @Test
+    fun swap_style_rotate() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwap(
+                style = SwapStyle.Rotate,
+                content = { },
+            )
+        }
+        assertRendered(html, "swap swap-rotate", "Swap style Rotate")
+    }
+
+    @Test
+    fun swap_style_flip() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwap(
+                style = SwapStyle.Flip,
+                content = { },
+            )
+        }
+        assertRendered(html, "swap swap-flip", "Swap style Flip")
     }
 
     @Test

@@ -16,23 +16,23 @@ import kotlinx.html.ul
 import kotlinx.html.UL
 
 /** Color variants for this component (CSS prefix: `steps-`) */
-enum class StepsVariant(internal val className: String) : ClassValues<StepsVariant> {
-    /** CSS: `steps-step-neutral` — neutral color */
-    StepNeutral("steps-step-neutral"),
-    /** CSS: `steps-step-primary` — primary color */
-    StepPrimary("steps-step-primary"),
-    /** CSS: `steps-step-secondary` — secondary color */
-    StepSecondary("steps-step-secondary"),
-    /** CSS: `steps-step-accent` — accent color */
-    StepAccent("steps-step-accent"),
-    /** CSS: `steps-step-info` — info color */
-    StepInfo("steps-step-info"),
-    /** CSS: `steps-step-success` — success color */
-    StepSuccess("steps-step-success"),
-    /** CSS: `steps-step-warning` — warning color */
-    StepWarning("steps-step-warning"),
-    /** CSS: `steps-step-error` — error color */
-    StepError("steps-step-error"),
+enum class StepColor(internal val className: String) : ClassValues<StepColor> {
+    /** CSS: `step-neutral` — neutral color */
+    Neutral("step-neutral"),
+    /** CSS: `step-primary` — primary color */
+    Primary("step-primary"),
+    /** CSS: `step-secondary` — secondary color */
+    Secondary("step-secondary"),
+    /** CSS: `step-accent` — accent color */
+    Accent("step-accent"),
+    /** CSS: `step-info` — info color */
+    Info("step-info"),
+    /** CSS: `step-success` — success color */
+    Success("step-success"),
+    /** CSS: `step-warning` — warning color */
+    Warning("step-warning"),
+    /** CSS: `step-error` — error color */
+    Error("step-error"),
     ;
 
     override val classNames: List<String> get() = listOf(className)
@@ -53,7 +53,6 @@ enum class StepsDirection(internal val className: String) : ClassValues<StepsDir
 /**
  * Steps can be used to show a list of steps in a process. Renders `<ul class="steps ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
  * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -61,7 +60,6 @@ enum class StepsDirection(internal val className: String) : ClassValues<StepsDir
  */
 fun FlowContent.daisySteps(
     id: HtmlId? = null,
-    variant: ClassValues<StepsVariant>? = null,
     direction: ClassValues<StepsDirection>? = null,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
@@ -70,7 +68,6 @@ fun FlowContent.daisySteps(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("steps")
-        addClassNames(variant)
         addClassNames(direction)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
@@ -79,8 +76,9 @@ fun FlowContent.daisySteps(
 }
 
 /** A single step node Renders `<li class="step ...">`. */
-fun UL.daisyStepsStep(
+fun UL.daisyStep(
     id: HtmlId? = null,
+    color: ClassValues<StepColor>? = null,
     extraClasses: String? = null,
     attrs: (LI.() -> Unit)? = null,
     content: (LI.() -> Unit),
@@ -88,6 +86,7 @@ fun UL.daisyStepsStep(
     li {
         if (id != null) attributes["id"] = id.id
         addClassNames("step")
+        addClassNames(color)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
@@ -95,7 +94,7 @@ fun UL.daisyStepsStep(
 }
 
 /** For custom icon inside step Renders `<span class="step-icon ...">`. */
-fun FlowContent.daisyStepsStepIcon(
+fun FlowContent.daisyStepIcon(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,

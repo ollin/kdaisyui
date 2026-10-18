@@ -1,0 +1,51 @@
+{
+  "component": "indicator",
+  "name": "Indicator",
+  "class": "indicator",
+  "enums": [
+    {
+      "name": "IndicatorItemHorizontalPlacement",
+      "label": "HorizontalPlacement variants",
+      "classes": ["indicator-start", "indicator-center", "indicator-end"]
+    },
+    {
+      "name": "IndicatorItemVerticalPlacement",
+      "label": "VerticalPlacement variants",
+      "classes": ["indicator-top", "indicator-middle", "indicator-bottom"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyIndicator",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "indicator",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyIndicatorItem",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "indicator-item",
+      "text": false,
+      "parameters": [
+        {
+          "kind": "enum",
+          "name": "horizontalPlacement",
+          "enum": "IndicatorItemHorizontalPlacement",
+          "doc": "HorizontalPlacement variant"
+        },
+        {
+          "kind": "enum",
+          "name": "verticalPlacement",
+          "enum": "IndicatorItemVerticalPlacement",
+          "doc": "VerticalPlacement variant"
+        }
+      ]
+    }
+  ],
+  "summary": { "summary": "Overlays badges on elements" }
+}

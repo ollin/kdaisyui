@@ -11,11 +11,11 @@ Regenerate: just generate
 Page footer layout. Renders `<footer class="footer ...">`.
 
 ```kotlin
+// FooterDirection: Horizontal | Vertical
 fun FlowContent.daisyFooter(
     id: HtmlId? = null,
+    direction: ClassValues<FooterDirection>? = null,
     center: Boolean = false,  // Aligns footer content to center
-    horizontal: Boolean = false,  // Puts footer columns next to each other horizontally
-    vertical: Boolean = false,  // Puts footer columns under each other vertically
     extraClasses: String? = null,
     attrs: (FOOTER.() -> Unit)? = null,
     content: (FOOTER.() -> Unit),

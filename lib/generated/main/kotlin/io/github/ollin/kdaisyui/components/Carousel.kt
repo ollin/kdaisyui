@@ -11,8 +11,8 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-/** Modifier variants for this component (CSS prefix: `carousel-`) */
-enum class CarouselModifier(internal val className: String) : ClassValues<CarouselModifier> {
+/** Snap variants for this component (CSS prefix: `carousel-`) */
+enum class CarouselSnap(internal val className: String) : ClassValues<CarouselSnap> {
     /** CSS: `carousel-start` — Snap elements to start */
     Start("carousel-start"),
     /** CSS: `carousel-center` — Snap elements to center */
@@ -24,22 +24,31 @@ enum class CarouselModifier(internal val className: String) : ClassValues<Carous
     override val classNames: List<String> get() = listOf(className)
 }
 
+/** Direction variants for this component (CSS prefix: `carousel-`) */
+enum class CarouselDirection(internal val className: String) : ClassValues<CarouselDirection> {
+    /** CSS: `carousel-horizontal` — Horizontal layout (default) */
+    Horizontal("carousel-horizontal"),
+    /** CSS: `carousel-vertical` — Vertical layout */
+    Vertical("carousel-vertical"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Carousel show images or content in a scrollable area. Renders `<div class="carousel ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param modifier — Modifier variant
- * @param horizontal — Horizontal layout (default)
- * @param vertical — Vertical layout
+ * @param snap — Snap variant
+ * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyCarousel(
     id: HtmlId? = null,
-    modifier: ClassValues<CarouselModifier>? = null,
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
+    snap: ClassValues<CarouselSnap>? = null,
+    direction: ClassValues<CarouselDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -47,9 +56,8 @@ fun FlowContent.daisyCarousel(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("carousel")
-        addClassNames(modifier)
-        if (horizontal) addClassNames("carousel-horizontal")
-        if (vertical) addClassNames("carousel-vertical")
+        addClassNames(snap)
+        addClassNames(direction)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

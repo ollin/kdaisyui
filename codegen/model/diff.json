@@ -1,0 +1,45 @@
+{
+  "component": "diff",
+  "name": "Diff",
+  "class": "diff",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyDiff",
+      "receiver": "FlowContent",
+      "element": "FIGURE",
+      "class": "diff",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyDiffItem1",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "diff-item-1",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyDiffItem2",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "diff-item-2",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyDiffResizer",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "diff-resizer",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Side-by-side diff viewer" }
+}

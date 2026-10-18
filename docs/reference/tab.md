@@ -8,29 +8,28 @@ Regenerate: just generate
 
 [DaisyUI documentation →](https://daisyui.com/components/tab/)
 
-Tabbed navigation. Renders `<button class="tabs ...">`.
+Tabbed navigation. Renders `<div class="tabs ..." role="tablist">`.
 
 ```kotlin
-// TabSize: Xs | Sm | Md | Lg | Xl
-// TabPlacement: Top | Bottom
-fun FlowContent.daisyTab(
+// TabsSize: Xs | Sm | Md | Lg | Xl
+// TabsPlacement: Top | Bottom
+// TabsStyle: Box | Border | Lift
+fun FlowContent.daisyTabs(
     id: HtmlId? = null,
-    size: ClassValues<TabSize>? = null,
-    placement: ClassValues<TabPlacement>? = null,
-    border: Boolean = false,  // bottom border style
-    box: Boolean = false,  // box style
-    lift: Boolean = false,  // lift style
-    tabActive: Boolean = false,  // Makes a single tab look active
-    tabDisabled: Boolean = false,  // Makes a single tab look disabled
+    size: ClassValues<TabsSize>? = null,
+    placement: ClassValues<TabsPlacement>? = null,
+    style: ClassValues<TabsStyle>? = null,
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit),
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
 )
 ```
 
 ```kotlin
-fun FlowContent.daisyTabTab(
+fun FlowContent.daisyTab(
     id: HtmlId? = null,
+    active: Boolean = false,  // Makes a single tab look active
+    disabled: Boolean = false,  // Makes a single tab look disabled
     extraClasses: String? = null,
     attrs: (A.() -> Unit)? = null,
     content: (A.() -> Unit),
@@ -38,7 +37,17 @@ fun FlowContent.daisyTabTab(
 ```
 
 ```kotlin
-fun FlowContent.daisyTabTabContent(
+fun FlowContent.daisyTabRadio(
+    id: HtmlId? = null,
+    active: Boolean = false,  // Makes a single tab look active
+    disabled: Boolean = false,  // Makes a single tab look disabled
+    extraClasses: String? = null,
+    attrs: (INPUT.() -> Unit)? = null,
+)
+```
+
+```kotlin
+fun FlowContent.daisyTabContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

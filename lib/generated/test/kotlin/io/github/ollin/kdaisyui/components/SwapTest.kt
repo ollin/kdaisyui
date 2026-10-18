@@ -32,7 +32,7 @@ class SwapTest {
     @Test
     fun swap_icons_with_rotate_effect() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(rotate = true) {
+            daisySwap(style = SwapStyle.Rotate) {
             }
         }
         val expectedClasses = "swap swap-rotate"
@@ -43,7 +43,7 @@ class SwapTest {
     @Test
     fun hamburger_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(rotate = true) {
+            daisySwap(style = SwapStyle.Rotate) {
             }
         }
         val expectedClasses = "swap swap-rotate"
@@ -54,7 +54,7 @@ class SwapTest {
     @Test
     fun swap_icons_with_flip_effect() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(flip = true) {
+            daisySwap(style = SwapStyle.Flip) {
             }
         }
         val expectedClasses = "swap swap-flip"

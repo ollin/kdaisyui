@@ -1,0 +1,24 @@
+{
+  "component": "stack",
+  "name": "Stack",
+  "class": "stack",
+  "enums": [
+    {
+      "name": "StackPlacement",
+      "label": "Placement variants",
+      "classes": ["stack-top", "stack-bottom", "stack-start", "stack-end"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyStack",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "stack",
+      "text": false,
+      "parameters": [{ "kind": "enum", "name": "placement", "enum": "StackPlacement", "doc": "Placement variant" }]
+    }
+  ],
+  "summary": { "summary": "Stack overlapping elements" }
+}

@@ -1,0 +1,62 @@
+{
+  "component": "tab",
+  "name": "Tab",
+  "class": "tabs",
+  "enums": [
+    { "name": "TabsSize", "label": "Size variants", "classes": ["tabs-xs", "tabs-sm", "tabs-md", "tabs-lg", "tabs-xl"] },
+    { "name": "TabsPlacement", "label": "Placement variants", "classes": ["tabs-top", "tabs-bottom"] },
+    { "name": "TabsStyle", "label": "Style variants", "classes": ["tabs-box", "tabs-border", "tabs-lift"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyTabs",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "tabs",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "size", "enum": "TabsSize", "doc": "Size variant" },
+        { "kind": "enum", "name": "placement", "enum": "TabsPlacement", "doc": "Placement variant" },
+        { "kind": "enum", "name": "style", "enum": "TabsStyle", "doc": "Style variant" }
+      ],
+      "attributes": { "role": "tablist" }
+    },
+    {
+      "kind": "part",
+      "name": "daisyTab",
+      "receiver": "FlowContent",
+      "element": "A",
+      "class": "tab",
+      "text": false,
+      "parameters": [
+        { "kind": "toggle", "name": "active", "class": "tab-active" },
+        { "kind": "toggle", "name": "disabled", "class": "tab-disabled" }
+      ],
+      "attributes": { "role": "tab" }
+    },
+    {
+      "kind": "custom",
+      "name": "daisyTabRadio",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "tab",
+      "text": false,
+      "parameters": [
+        { "kind": "toggle", "name": "active", "class": "tab-active" },
+        { "kind": "toggle", "name": "disabled", "class": "tab-disabled" }
+      ],
+      "attributes": { "type": "radio", "role": "tab" }
+    },
+    {
+      "kind": "part",
+      "name": "daisyTabContent",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "tab-content",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Tabbed navigation" }
+}

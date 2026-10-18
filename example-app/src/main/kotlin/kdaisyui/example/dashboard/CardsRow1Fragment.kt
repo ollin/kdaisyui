@@ -46,11 +46,11 @@ private fun TBODY.pipelineRow(repository: String, branch: String, status: String
         td { +branch }
         td {
             val (variant, text) = when (status) {
-                "Success" -> BadgeVariant.Success to "Success"
-                "Failed" -> BadgeVariant.Error to "Failed"
-                else -> BadgeVariant.Info to "Running"
+                "Success" -> BadgeColor.Success to "Success"
+                "Failed" -> BadgeColor.Error to "Failed"
+                else -> BadgeColor.Info to "Running"
             }
-            daisyBadge(text, variant = variant, size = BadgeSize.Sm)
+            daisyBadge(text, color = variant, size = BadgeSize.Sm)
         }
         td { +duration }
         td { +trigger }
@@ -64,19 +64,19 @@ private fun TagConsumer<*>.openIssuesCard() {
         daisyCardBody {
             daisyCardTitle("Open Issues")
             ul("space-y-2") {
-                issueLabel("Bug", "234", BadgeVariant.Error)
-                issueLabel("Enhancement", "891", BadgeVariant.Info)
-                issueLabel("Documentation", "156", BadgeVariant.Success)
-                issueLabel("Question", "89", BadgeVariant.Warning)
-                issueLabel("Good First Issue", "477", BadgeVariant.Primary)
+                issueLabel("Bug", "234", BadgeColor.Error)
+                issueLabel("Enhancement", "891", BadgeColor.Info)
+                issueLabel("Documentation", "156", BadgeColor.Success)
+                issueLabel("Question", "89", BadgeColor.Warning)
+                issueLabel("Good First Issue", "477", BadgeColor.Primary)
             }
         }
     }
 }
 
-private fun UL.issueLabel(label: String, count: String, variant: BadgeVariant) {
+private fun UL.issueLabel(label: String, count: String, variant: BadgeColor) {
     li("flex items-center justify-between") {
         span { +label }
-        daisyBadge(count, variant = variant)
+        daisyBadge(count, color = variant)
     }
 }

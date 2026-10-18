@@ -52,83 +52,83 @@ class CheckboxCoverageTest {
     }
 
     @Test
-    fun checkbox_variant_primary() {
+    fun checkbox_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Primary,
+                color = CheckboxColor.Primary,
             )
         }
-        assertRendered(html, "checkbox checkbox-primary", "Checkbox variant Primary")
+        assertRendered(html, "checkbox checkbox-primary", "Checkbox color Primary")
     }
 
     @Test
-    fun checkbox_variant_secondary() {
+    fun checkbox_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Secondary,
+                color = CheckboxColor.Secondary,
             )
         }
-        assertRendered(html, "checkbox checkbox-secondary", "Checkbox variant Secondary")
+        assertRendered(html, "checkbox checkbox-secondary", "Checkbox color Secondary")
     }
 
     @Test
-    fun checkbox_variant_accent() {
+    fun checkbox_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Accent,
+                color = CheckboxColor.Accent,
             )
         }
-        assertRendered(html, "checkbox checkbox-accent", "Checkbox variant Accent")
+        assertRendered(html, "checkbox checkbox-accent", "Checkbox color Accent")
     }
 
     @Test
-    fun checkbox_variant_neutral() {
+    fun checkbox_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Neutral,
+                color = CheckboxColor.Neutral,
             )
         }
-        assertRendered(html, "checkbox checkbox-neutral", "Checkbox variant Neutral")
+        assertRendered(html, "checkbox checkbox-neutral", "Checkbox color Neutral")
     }
 
     @Test
-    fun checkbox_variant_success() {
+    fun checkbox_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Success,
+                color = CheckboxColor.Success,
             )
         }
-        assertRendered(html, "checkbox checkbox-success", "Checkbox variant Success")
+        assertRendered(html, "checkbox checkbox-success", "Checkbox color Success")
     }
 
     @Test
-    fun checkbox_variant_warning() {
+    fun checkbox_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Warning,
+                color = CheckboxColor.Warning,
             )
         }
-        assertRendered(html, "checkbox checkbox-warning", "Checkbox variant Warning")
+        assertRendered(html, "checkbox checkbox-warning", "Checkbox color Warning")
     }
 
     @Test
-    fun checkbox_variant_info() {
+    fun checkbox_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Info,
+                color = CheckboxColor.Info,
             )
         }
-        assertRendered(html, "checkbox checkbox-info", "Checkbox variant Info")
+        assertRendered(html, "checkbox checkbox-info", "Checkbox color Info")
     }
 
     @Test
-    fun checkbox_variant_error() {
+    fun checkbox_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox(
-                variant = CheckboxVariant.Error,
+                color = CheckboxColor.Error,
             )
         }
-        assertRendered(html, "checkbox checkbox-error", "Checkbox variant Error")
+        assertRendered(html, "checkbox checkbox-error", "Checkbox color Error")
     }
 
     @Test

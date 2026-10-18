@@ -1,0 +1,44 @@
+{
+  "component": "dropdown",
+  "name": "Dropdown",
+  "class": "dropdown",
+  "enums": [
+    {
+      "name": "DropdownSide",
+      "label": "Side variants",
+      "classes": ["dropdown-top", "dropdown-bottom", "dropdown-left", "dropdown-right"]
+    },
+    {
+      "name": "DropdownAlign",
+      "label": "Align variants",
+      "classes": ["dropdown-start", "dropdown-center", "dropdown-end"]
+    },
+    { "name": "DropdownState", "label": "State variants", "classes": ["dropdown-open", "dropdown-close"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyDropdown",
+      "receiver": "FlowContent",
+      "element": "DETAILS",
+      "class": "dropdown",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "side", "enum": "DropdownSide", "doc": "Side variant" },
+        { "kind": "enum", "name": "align", "enum": "DropdownAlign", "doc": "Align variant" },
+        { "kind": "enum", "name": "state", "enum": "DropdownState", "doc": "State variant" },
+        { "kind": "toggle", "name": "hover", "class": "dropdown-hover" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyDropdownContent",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": "dropdown-content",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Context menus and action lists" }
+}

@@ -11,7 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.textArea
 import kotlinx.html.TEXTAREA
 
-enum class TextareaVariant(internal val className: String) : ClassValues<TextareaVariant> {
+enum class TextareaColor(internal val className: String) : ClassValues<TextareaColor> {
     /** CSS: `textarea-neutral` */
     Neutral("textarea-neutral"),
     /** CSS: `textarea-primary` */
@@ -53,7 +53,7 @@ enum class TextareaSize(internal val className: String) : ClassValues<TextareaSi
 /**
  * Textarea allows users to enter text in multiple lines. Renders `<textarea class="textarea ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param variant — Color variant
+ * @param color — Color variant
  * @param size — Size variant
  * @param ghost
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -62,7 +62,7 @@ enum class TextareaSize(internal val className: String) : ClassValues<TextareaSi
  */
 fun FlowContent.daisyTextarea(
     id: HtmlId? = null,
-    variant: ClassValues<TextareaVariant>? = null,
+    color: ClassValues<TextareaColor>? = null,
     size: ClassValues<TextareaSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
@@ -72,7 +72,7 @@ fun FlowContent.daisyTextarea(
     textArea {
         if (id != null) attributes["id"] = id.id
         addClassNames("textarea")
-        addClassNames(variant)
+        addClassNames(color)
         addClassNames(size)
         if (ghost) addClassNames("textarea-ghost")
         addClassNames(extraClasses)

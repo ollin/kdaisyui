@@ -1,0 +1,89 @@
+{
+  "component": "modal",
+  "name": "Modal",
+  "class": "modal",
+  "enums": [
+    {
+      "name": "ModalVerticalPlacement",
+      "label": "VerticalPlacement variants",
+      "classes": ["modal-top", "modal-middle", "modal-bottom"]
+    },
+    {
+      "name": "ModalHorizontalPlacement",
+      "label": "HorizontalPlacement variants",
+      "classes": ["modal-start", "modal-end"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyModal",
+      "receiver": "FlowContent",
+      "element": "DIALOG",
+      "class": "modal",
+      "text": false,
+      "parameters": [
+        {
+          "kind": "enum",
+          "name": "verticalPlacement",
+          "enum": "ModalVerticalPlacement",
+          "doc": "VerticalPlacement variant"
+        },
+        {
+          "kind": "enum",
+          "name": "horizontalPlacement",
+          "enum": "ModalHorizontalPlacement",
+          "doc": "HorizontalPlacement variant"
+        },
+        { "kind": "toggle", "name": "open", "class": "modal-open" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyModalBox",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "modal-box",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyModalAction",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "modal-action",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyModalBackdrop",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "modal-backdrop",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyModalToggle",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "modal-toggle",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "custom",
+      "name": "daisyModalPopover",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "modal",
+      "text": false,
+      "parameters": [],
+      "attributes": { "popover": "" }
+    }
+  ],
+  "summary": { "summary": "Modal dialogs" }
+}

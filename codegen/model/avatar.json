@@ -1,0 +1,24 @@
+{
+  "component": "avatar",
+  "name": "Avatar",
+  "class": "avatar",
+  "enums": [{ "name": "AvatarPresence", "label": "Presence variants", "classes": ["avatar-online", "avatar-offline"] }],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyAvatar",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "avatar",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "presence", "enum": "AvatarPresence", "doc": "Presence variant" },
+        { "kind": "toggle", "name": "placeholder", "class": "avatar-placeholder" }
+      ]
+    }
+  ],
+  "summary": { "summary": "User and entity representations" },
+  "notOffered": {
+    "avatar-group": "A container that overlaps several avatars. No function renders it yet; reachable through extraClasses."
+  }
+}

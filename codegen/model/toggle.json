@@ -1,0 +1,56 @@
+{
+  "component": "toggle",
+  "name": "Toggle",
+  "class": "toggle",
+  "enums": [
+    {
+      "name": "ToggleColor",
+      "label": "Color variants",
+      "classes": [
+        "toggle-primary",
+        "toggle-secondary",
+        "toggle-accent",
+        "toggle-neutral",
+        "toggle-success",
+        "toggle-warning",
+        "toggle-info",
+        "toggle-error"
+      ]
+    },
+    {
+      "name": "ToggleSize",
+      "label": "Size variants",
+      "classes": ["toggle-xs", "toggle-sm", "toggle-md", "toggle-lg", "toggle-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyToggle",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "toggle",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "color", "enum": "ToggleColor", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "ToggleSize", "doc": "Size variant" },
+        {
+          "kind": "extra",
+          "name": "checked",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (checked) this.checked = true"
+        },
+        {
+          "kind": "extra",
+          "name": "disabled",
+          "type": "Boolean",
+          "default": "false",
+          "apply": "if (disabled) this.disabled = true"
+        }
+      ],
+      "inputType": "checkBox"
+    }
+  ],
+  "summary": { "summary": "Switch-style boolean input" }
+}

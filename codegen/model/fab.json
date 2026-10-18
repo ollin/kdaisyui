@@ -1,0 +1,36 @@
+{
+  "component": "fab",
+  "name": "Fab",
+  "class": "fab",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyFab",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "fab",
+      "text": false,
+      "parameters": [{ "kind": "toggle", "name": "flower", "class": "fab-flower" }]
+    },
+    {
+      "kind": "part",
+      "name": "daisyFabClose",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "fab-close",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyFabMainAction",
+      "receiver": "FlowContent",
+      "element": "BUTTON",
+      "class": "fab-main-action",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Floating action button with expandable actions" }
+}

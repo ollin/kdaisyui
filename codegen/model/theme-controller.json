@@ -1,0 +1,19 @@
+{
+  "component": "theme-controller",
+  "name": "ThemeController",
+  "class": "theme-controller",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyThemeController",
+      "receiver": "FlowContent",
+      "element": "INPUT",
+      "class": "theme-controller",
+      "text": false,
+      "parameters": [],
+      "joinItem": true
+    }
+  ],
+  "summary": { "summary": "DaisyUI theme controller toggle" }
+}

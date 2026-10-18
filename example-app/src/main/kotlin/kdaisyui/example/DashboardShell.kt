@@ -101,7 +101,7 @@ private fun FlowContent.shellHeader() {
                 li {
                     a {
                         +"Inbox"
-                        daisyBadge("12", variant = BadgeVariant.Success)
+                        daisyBadge("12", color = BadgeColor.Success)
                     }
                 }
                 li { a { +"Settings" } }

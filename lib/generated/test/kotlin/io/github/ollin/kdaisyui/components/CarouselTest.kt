@@ -21,7 +21,7 @@ class CarouselTest {
     @Test
     fun snap_to_center() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(modifier = CarouselModifier.Center) {
+            daisyCarousel(snap = CarouselSnap.Center) {
             }
         }
         val expectedClasses = "carousel carousel-center"
@@ -32,7 +32,7 @@ class CarouselTest {
     @Test
     fun snap_to_end() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(modifier = CarouselModifier.End) {
+            daisyCarousel(snap = CarouselSnap.End) {
             }
         }
         val expectedClasses = "carousel carousel-end"
@@ -54,7 +54,7 @@ class CarouselTest {
     @Test
     fun vertical_carousel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(vertical = true) {
+            daisyCarousel(direction = CarouselDirection.Vertical) {
             }
         }
         val expectedClasses = "carousel carousel-vertical"
@@ -76,7 +76,7 @@ class CarouselTest {
     @Test
     fun full_bleed_carousel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(modifier = CarouselModifier.Center) {
+            daisyCarousel(snap = CarouselSnap.Center) {
             }
         }
         val expectedClasses = "carousel carousel-center"

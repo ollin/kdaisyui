@@ -11,11 +11,11 @@ Regenerate: just generate
 Slider for numeric ranges. Renders `<input class="range ...">`.
 
 ```kotlin
-// RangeVariant: Neutral | Primary | Secondary | Accent | Success | Warning | Info | Error
+// RangeColor: Neutral | Primary | Secondary | Accent | Success | Warning | Info | Error
 // RangeSize: Xs | Sm | Md | Lg | Xl
 fun FlowContent.daisyRange(
     id: HtmlId? = null,
-    variant: ClassValues<RangeVariant>? = null,
+    color: ClassValues<RangeColor>? = null,
     size: ClassValues<RangeSize>? = null,
     vertical: Boolean = false,  // Vertical slider
     min: String? = null,

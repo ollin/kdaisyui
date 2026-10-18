@@ -11,12 +11,10 @@ Regenerate: just generate
 Stack overlapping elements. Renders `<div class="stack ...">`.
 
 ```kotlin
+// StackPlacement: Top | Bottom | Start | End
 fun FlowContent.daisyStack(
     id: HtmlId? = null,
-    bottom: Boolean = false,  // Aligns the children elements to the bottom
-    end: Boolean = false,  // Aligns the children elements to the end (horizontally)
-    start: Boolean = false,  // Aligns the children elements to the start (horizontally)
-    top: Boolean = false,  // Aligns the children elements to the top
+    placement: ClassValues<StackPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

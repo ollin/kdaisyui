@@ -40,15 +40,35 @@ class FooterCoverageTest {
             daisyFooter(
                 id = htmlId("x-cov-id"),
                 center = true,
-                horizontal = true,
-                vertical = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "footer footer-center footer-horizontal footer-vertical zz-extra", "Footer all flags", closes = "</footer></div>")
+        assertRendered(html, "footer footer-center zz-extra", "Footer all flags", closes = "</footer></div>")
         assertCommonFlags(html, "Footer")
+    }
+
+    @Test
+    fun footer_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooter(
+                direction = FooterDirection.Horizontal,
+                content = { },
+            )
+        }
+        assertRendered(html, "footer footer-horizontal", "Footer direction Horizontal")
+    }
+
+    @Test
+    fun footer_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFooter(
+                direction = FooterDirection.Vertical,
+                content = { },
+            )
+        }
+        assertRendered(html, "footer footer-vertical", "Footer direction Vertical")
     }
 
     @Test

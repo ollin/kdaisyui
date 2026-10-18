@@ -52,47 +52,47 @@ class AlertCoverageTest {
     }
 
     @Test
-    fun alert_variant_info() {
+    fun alert_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyAlert(
-                variant = AlertVariant.Info,
+                color = AlertColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-info", "Alert variant Info")
+        assertRendered(html, "alert alert-info", "Alert color Info")
     }
 
     @Test
-    fun alert_variant_success() {
+    fun alert_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyAlert(
-                variant = AlertVariant.Success,
+                color = AlertColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-success", "Alert variant Success")
+        assertRendered(html, "alert alert-success", "Alert color Success")
     }
 
     @Test
-    fun alert_variant_warning() {
+    fun alert_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyAlert(
-                variant = AlertVariant.Warning,
+                color = AlertColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-warning", "Alert variant Warning")
+        assertRendered(html, "alert alert-warning", "Alert color Warning")
     }
 
     @Test
-    fun alert_variant_error() {
+    fun alert_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyAlert(
-                variant = AlertVariant.Error,
+                color = AlertColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-error", "Alert variant Error")
+        assertRendered(html, "alert alert-error", "Alert color Error")
     }
 
     @Test

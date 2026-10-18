@@ -1,0 +1,42 @@
+{
+  "component": "textarea",
+  "name": "Textarea",
+  "class": "textarea",
+  "enums": [
+    {
+      "name": "TextareaColor",
+      "label": "Color variants",
+      "classes": [
+        "textarea-neutral",
+        "textarea-primary",
+        "textarea-secondary",
+        "textarea-accent",
+        "textarea-info",
+        "textarea-success",
+        "textarea-warning",
+        "textarea-error"
+      ]
+    },
+    {
+      "name": "TextareaSize",
+      "label": "Size variants",
+      "classes": ["textarea-xs", "textarea-sm", "textarea-md", "textarea-lg", "textarea-xl"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyTextarea",
+      "receiver": "FlowContent",
+      "element": "TEXTAREA",
+      "class": "textarea",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "color", "enum": "TextareaColor", "doc": "Color variant" },
+        { "kind": "enum", "name": "size", "enum": "TextareaSize", "doc": "Size variant" },
+        { "kind": "toggle", "name": "ghost", "class": "textarea-ghost" }
+      ]
+    }
+  ],
+  "summary": { "summary": "Multi-line text input" }
+}

@@ -43,7 +43,7 @@ class TooltipTest {
     @Test
     fun top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Top, alignPlacement = TooltipAlignPlacement.Start) {
+            daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.Start) {
             }
         }
         val expectedClasses = "tooltip tooltip-open tooltip-start tooltip-top"
@@ -54,7 +54,7 @@ class TooltipTest {
     @Test
     fun top_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Top) {
+            daisyTooltip(open = true, side = TooltipSide.Top) {
             }
         }
         val expectedClasses = "tooltip tooltip-open tooltip-top"
@@ -65,7 +65,7 @@ class TooltipTest {
     @Test
     fun top_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Top, alignPlacement = TooltipAlignPlacement.End) {
+            daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.End) {
             }
         }
         val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-top"
@@ -76,7 +76,7 @@ class TooltipTest {
     @Test
     fun bottom() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Bottom, alignPlacement = TooltipAlignPlacement.Start) {
+            daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.Start) {
             }
         }
         val expectedClasses = "tooltip tooltip-bottom tooltip-open tooltip-start"
@@ -87,7 +87,7 @@ class TooltipTest {
     @Test
     fun bottom_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Bottom) {
+            daisyTooltip(open = true, side = TooltipSide.Bottom) {
             }
         }
         val expectedClasses = "tooltip tooltip-bottom tooltip-open"
@@ -98,7 +98,7 @@ class TooltipTest {
     @Test
     fun bottom_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Bottom, alignPlacement = TooltipAlignPlacement.End) {
+            daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.End) {
             }
         }
         val expectedClasses = "tooltip tooltip-bottom tooltip-end tooltip-open"
@@ -109,7 +109,7 @@ class TooltipTest {
     @Test
     fun left() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Left, alignPlacement = TooltipAlignPlacement.Start) {
+            daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.Start) {
             }
         }
         val expectedClasses = "tooltip tooltip-left tooltip-open tooltip-start"
@@ -120,7 +120,7 @@ class TooltipTest {
     @Test
     fun left_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Left) {
+            daisyTooltip(open = true, side = TooltipSide.Left) {
             }
         }
         val expectedClasses = "tooltip tooltip-left tooltip-open"
@@ -131,7 +131,7 @@ class TooltipTest {
     @Test
     fun left_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Left, alignPlacement = TooltipAlignPlacement.End) {
+            daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.End) {
             }
         }
         val expectedClasses = "tooltip tooltip-end tooltip-left tooltip-open"
@@ -142,7 +142,7 @@ class TooltipTest {
     @Test
     fun right() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Right, alignPlacement = TooltipAlignPlacement.Start) {
+            daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.Start) {
             }
         }
         val expectedClasses = "tooltip tooltip-open tooltip-right tooltip-start"
@@ -153,7 +153,7 @@ class TooltipTest {
     @Test
     fun right_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Right) {
+            daisyTooltip(open = true, side = TooltipSide.Right) {
             }
         }
         val expectedClasses = "tooltip tooltip-open tooltip-right"
@@ -164,7 +164,7 @@ class TooltipTest {
     @Test
     fun right_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, sidePlacement = TooltipSidePlacement.Right, alignPlacement = TooltipAlignPlacement.End) {
+            daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.End) {
             }
         }
         val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-right"
@@ -252,7 +252,7 @@ class TooltipTest {
     @Test
     fun responsive_tooltip_position() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(alignPlacement = TooltipAlignPlacement.Start, extraClasses = "md:tooltip-right md:tooltip-center") {
+            daisyTooltip(align = TooltipAlign.Start, extraClasses = "md:tooltip-right md:tooltip-center") {
             }
         }
         val expectedClasses = "md:tooltip-center md:tooltip-right tooltip tooltip-start"

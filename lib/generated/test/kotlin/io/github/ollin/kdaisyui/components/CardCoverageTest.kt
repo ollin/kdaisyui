@@ -126,25 +126,25 @@ class CardCoverageTest {
     }
 
     @Test
-    fun card_modifier_side() {
+    fun card_layout_side() {
         val html = createHTML(prettyPrint = false).div {
             daisyCard(
-                modifier = CardModifier.Side,
+                layout = CardLayout.Side,
                 content = { },
             )
         }
-        assertRendered(html, "card card-side", "Card modifier Side")
+        assertRendered(html, "card card-side", "Card layout Side")
     }
 
     @Test
-    fun card_modifier_imagefull() {
+    fun card_layout_imagefull() {
         val html = createHTML(prettyPrint = false).div {
             daisyCard(
-                modifier = CardModifier.ImageFull,
+                layout = CardLayout.ImageFull,
                 content = { },
             )
         }
-        assertRendered(html, "card card-image-full", "Card modifier ImageFull")
+        assertRendered(html, "card image-full", "Card layout ImageFull")
     }
 
     @Test

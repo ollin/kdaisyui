@@ -98,7 +98,7 @@ class FooterTest {
     @Test
     fun centered_footer_with_logo_and_social_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true, center = true) {
+            daisyFooter(direction = FooterDirection.Horizontal, center = true) {
             }
         }
         val expectedClasses = "footer footer-center footer-horizontal"
@@ -109,7 +109,7 @@ class FooterTest {
     @Test
     fun centered_footer_with_social_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(horizontal = true, center = true) {
+            daisyFooter(direction = FooterDirection.Horizontal, center = true) {
             }
         }
         val expectedClasses = "footer footer-center footer-horizontal"

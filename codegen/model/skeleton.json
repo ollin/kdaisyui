@@ -1,0 +1,28 @@
+{
+  "component": "skeleton",
+  "name": "Skeleton",
+  "class": "skeleton",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisySkeleton",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "skeleton",
+      "text": false,
+      "parameters": []
+    },
+    {
+      "kind": "custom",
+      "name": "daisySkeletonText",
+      "receiver": "FlowContent",
+      "element": "SPAN",
+      "class": "skeleton",
+      "text": false,
+      "parameters": [],
+      "always": ["skeleton-text"]
+    }
+  ],
+  "summary": { "summary": "Content placeholder loading indicator" }
+}

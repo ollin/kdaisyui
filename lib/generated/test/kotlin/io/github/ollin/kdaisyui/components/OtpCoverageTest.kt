@@ -50,91 +50,91 @@ class OtpCoverageTest {
     }
 
     @Test
-    fun otp_variant_neutral() {
+    fun otp_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Neutral,
+                color = OtpColor.Neutral,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-neutral", "Otp variant Neutral")
+        assertRendered(html, "otp otp-neutral", "Otp color Neutral")
     }
 
     @Test
-    fun otp_variant_primary() {
+    fun otp_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Primary,
+                color = OtpColor.Primary,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-primary", "Otp variant Primary")
+        assertRendered(html, "otp otp-primary", "Otp color Primary")
     }
 
     @Test
-    fun otp_variant_secondary() {
+    fun otp_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Secondary,
+                color = OtpColor.Secondary,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-secondary", "Otp variant Secondary")
+        assertRendered(html, "otp otp-secondary", "Otp color Secondary")
     }
 
     @Test
-    fun otp_variant_accent() {
+    fun otp_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Accent,
+                color = OtpColor.Accent,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-accent", "Otp variant Accent")
+        assertRendered(html, "otp otp-accent", "Otp color Accent")
     }
 
     @Test
-    fun otp_variant_success() {
+    fun otp_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Success,
+                color = OtpColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-success", "Otp variant Success")
+        assertRendered(html, "otp otp-success", "Otp color Success")
     }
 
     @Test
-    fun otp_variant_info() {
+    fun otp_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Info,
+                color = OtpColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-info", "Otp variant Info")
+        assertRendered(html, "otp otp-info", "Otp color Info")
     }
 
     @Test
-    fun otp_variant_warning() {
+    fun otp_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Warning,
+                color = OtpColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-warning", "Otp variant Warning")
+        assertRendered(html, "otp otp-warning", "Otp color Warning")
     }
 
     @Test
-    fun otp_variant_error() {
+    fun otp_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp(
-                variant = OtpVariant.Error,
+                color = OtpColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-error", "Otp variant Error")
+        assertRendered(html, "otp otp-error", "Otp color Error")
     }
 
     @Test

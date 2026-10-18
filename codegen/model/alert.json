@@ -1,0 +1,32 @@
+{
+  "component": "alert",
+  "name": "Alert",
+  "class": "alert",
+  "enums": [
+    {
+      "name": "AlertColor",
+      "label": "Color variants",
+      "classes": ["alert-info", "alert-success", "alert-warning", "alert-error"]
+    },
+    { "name": "AlertStyle", "label": "Style variants", "classes": ["alert-outline", "alert-dash"] },
+    { "name": "AlertDirection", "label": "Direction variants", "classes": ["alert-vertical", "alert-horizontal"] }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyAlert",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "alert",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "color", "enum": "AlertColor", "doc": "Color variant" },
+        { "kind": "enum", "name": "style", "enum": "AlertStyle", "doc": "Style variant" },
+        { "kind": "enum", "name": "direction", "enum": "AlertDirection", "doc": "Direction variant" },
+        { "kind": "toggle", "name": "soft", "class": "alert-soft" }
+      ],
+      "role": "alert"
+    }
+  ],
+  "summary": { "summary": "Status messages and notifications" }
+}

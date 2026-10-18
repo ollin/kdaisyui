@@ -11,10 +11,10 @@ Regenerate: just generate
 Progress bar indicator. Renders `<progress class="progress ...">`.
 
 ```kotlin
-// ProgressVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// ProgressColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 fun FlowContent.daisyProgress(
     id: HtmlId? = null,
-    variant: ClassValues<ProgressVariant>? = null,
+    color: ClassValues<ProgressColor>? = null,
     extraClasses: String? = null,
     attrs: (PROGRESS.() -> Unit)? = null,
     content: (PROGRESS.() -> Unit),

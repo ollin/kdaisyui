@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.footer
@@ -12,21 +13,31 @@ import kotlinx.html.FOOTER
 import kotlinx.html.h6
 import kotlinx.html.H6
 
+/** Direction variants for this component (CSS prefix: `footer-`) */
+enum class FooterDirection(internal val className: String) : ClassValues<FooterDirection> {
+    /** CSS: `footer-horizontal` — Puts footer columns next to each other horizontally */
+    Horizontal("footer-horizontal"),
+    /** CSS: `footer-vertical` — Puts footer columns under each other vertically */
+    Vertical("footer-vertical"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
+
 /**
  * Footer can contain logo, copyright notice, and links to other pages. Renders `<footer class="footer ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
+ * @param direction — Direction variant
  * @param center — Aligns footer content to center
- * @param horizontal — Puts footer columns next to each other horizontally
- * @param vertical — Puts footer columns under each other vertically
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyFooter(
     id: HtmlId? = null,
+    direction: ClassValues<FooterDirection>? = null,
     center: Boolean = false,
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
     extraClasses: String? = null,
     attrs: (FOOTER.() -> Unit)? = null,
     content: (FOOTER.() -> Unit),
@@ -34,9 +45,8 @@ fun FlowContent.daisyFooter(
     footer {
         if (id != null) attributes["id"] = id.id
         addClassNames("footer")
+        addClassNames(direction)
         if (center) addClassNames("footer-center")
-        if (horizontal) addClassNames("footer-horizontal")
-        if (vertical) addClassNames("footer-vertical")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

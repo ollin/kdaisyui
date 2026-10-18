@@ -39,93 +39,113 @@ class DropdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
                 id = htmlId("x-cov-id"),
-                close = true,
-                left = true,
-                right = true,
+                hover = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dropdown dropdown-close dropdown-left dropdown-right zz-extra", "Dropdown all flags", closes = "</details></div>")
+        assertRendered(html, "dropdown dropdown-hover zz-extra", "Dropdown all flags", closes = "</details></div>")
         assertCommonFlags(html, "Dropdown")
     }
 
     @Test
-    fun dropdown_modifier_hover() {
+    fun dropdown_side_top() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
-                modifier = DropdownModifier.Hover,
+                side = DropdownSide.Top,
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-hover", "Dropdown modifier Hover")
+        assertRendered(html, "dropdown dropdown-top", "Dropdown side Top")
     }
 
     @Test
-    fun dropdown_modifier_open() {
+    fun dropdown_side_bottom() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
-                modifier = DropdownModifier.Open,
+                side = DropdownSide.Bottom,
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-open", "Dropdown modifier Open")
+        assertRendered(html, "dropdown dropdown-bottom", "Dropdown side Bottom")
     }
 
     @Test
-    fun dropdown_horizontalPlacement_start() {
+    fun dropdown_side_left() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
-                horizontalPlacement = DropdownHorizontalPlacement.Start,
+                side = DropdownSide.Left,
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-start", "Dropdown horizontalPlacement Start")
+        assertRendered(html, "dropdown dropdown-left", "Dropdown side Left")
     }
 
     @Test
-    fun dropdown_horizontalPlacement_center() {
+    fun dropdown_side_right() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
-                horizontalPlacement = DropdownHorizontalPlacement.Center,
+                side = DropdownSide.Right,
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-center", "Dropdown horizontalPlacement Center")
+        assertRendered(html, "dropdown dropdown-right", "Dropdown side Right")
     }
 
     @Test
-    fun dropdown_horizontalPlacement_end() {
+    fun dropdown_align_start() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
-                horizontalPlacement = DropdownHorizontalPlacement.End,
+                align = DropdownAlign.Start,
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-end", "Dropdown horizontalPlacement End")
+        assertRendered(html, "dropdown dropdown-start", "Dropdown align Start")
     }
 
     @Test
-    fun dropdown_verticalPlacement_top() {
+    fun dropdown_align_center() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
-                verticalPlacement = DropdownVerticalPlacement.Top,
+                align = DropdownAlign.Center,
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-top", "Dropdown verticalPlacement Top")
+        assertRendered(html, "dropdown dropdown-center", "Dropdown align Center")
     }
 
     @Test
-    fun dropdown_verticalPlacement_bottom() {
+    fun dropdown_align_end() {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdown(
-                verticalPlacement = DropdownVerticalPlacement.Bottom,
+                align = DropdownAlign.End,
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-bottom", "Dropdown verticalPlacement Bottom")
+        assertRendered(html, "dropdown dropdown-end", "Dropdown align End")
+    }
+
+    @Test
+    fun dropdown_state_open() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdown(
+                state = DropdownState.Open,
+                content = { },
+            )
+        }
+        assertRendered(html, "dropdown dropdown-open", "Dropdown state Open")
+    }
+
+    @Test
+    fun dropdown_state_close() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdown(
+                state = DropdownState.Close,
+                content = { },
+            )
+        }
+        assertRendered(html, "dropdown dropdown-close", "Dropdown state Close")
     }
 
     @Test

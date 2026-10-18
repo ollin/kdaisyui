@@ -13,13 +13,13 @@ createHTML().div {
     daisyCard(extraClasses = "bg-base-100 shadow-xs") {
         daisyCardBody {
             daisyCardTitle("Revenue")
-            daisyStat(horizontal = true) {
-                daisyStatStat {
-                    daisyStatStatValue("21,500 USD")
-                    daisyStatStatDesc("21% more than last month")
+            daisyStats(direction = StatsDirection.Horizontal) {
+                daisyStat {
+                    daisyStatValue("21,500 USD")
+                    daisyStatDesc("21% more than last month")
                 }
             }
-            daisyButton("View report", variant = ButtonVariant.Primary)
+            daisyButton("View report", color = ButtonColor.Primary)
         }
     }
 }
@@ -489,6 +489,119 @@ where it takes a `UL`, and no `id` parameter anywhere. Code an assistant wrote f
 have compiled against 0.6.0. The file is now generated from the same model as the library and
 `docs/reference/`, and CI fails when it drifts, so it is exact for the release it ships with.
 
+### How to migrate from 0.7.x
+
+0.8.0 renames most of the API on purpose. Compatibility with 0.7.x was not a goal: every name now
+follows one rule, and class groups that were booleans are now one parameter each. Almost every
+change is a compile error at the call site. **One is not** — read the tab section first.
+
+**1. Tabs: `daisyTab` now means the item, not the bar.** A 0.7.x call `daisyTab { }` with no
+arguments still compiles and now renders one tab instead of a tab bar.
+
+| 0.7.x | 0.8.0 | Renders |
+|---|---|---|
+| `daisyTab(...)` | `daisyTabs(...)` | `<div role="tablist" class="tabs">`, no longer a `<button>` |
+| `daisyTabTab` | `daisyTab` | `<a role="tab" class="tab">` |
+| — | `daisyTabRadio` | `<input type="radio" role="tab" class="tab">`, for DaisyUI's JavaScript-free tab panels |
+| `daisyTabTabContent` | `daisyTabContent` | `<div class="tab-content">` |
+| `daisyTab(tabActive = true)` | `daisyTab(active = true)` | on the item, emitting `tab-active` |
+| `daisyTab(box = true)` | `daisyTabs(style = TabsStyle.Box)` | also `Border`, `Lift` |
+| `TabSize`, `TabPlacement` | `TabsSize`, `TabsPlacement` | |
+
+`tabActive` and `tabDisabled` emitted `tabs-tab-active` and `tabs-tab-disabled` in 0.7.x, classes
+DaisyUI does not have, so an active tab never looked active.
+
+**2. Every `variant` is now `color`, and its enum `<Name>Color`.**
+
+```kotlin
+// before
+daisyButton("Save", variant = ButtonVariant.Primary)
+// after
+daisyButton("Save", color = ButtonColor.Primary)
+```
+
+That covers `Alert`, `Badge`, `Button`, `Checkbox`, `Divider`, `FileInput`, `Input`, `Link`, `Otp`,
+`Progress`, `Radio`, `Range`, `Select`, `Status`, `Textarea`, `Toggle` and `Tooltip`. Two moved as
+well, because DaisyUI puts their classes on a part: `ChatVariant` on `daisyChat` is now
+`ChatBubbleColor` on `daisyChatBubble`, and `StepsVariant` on `daisySteps` is now `StepColor` on
+`daisyStep`. Their entries lost the doubled prefix: `ChatVariant.BubblePrimary` is
+`ChatBubbleColor.Primary`, `StepsVariant.StepPrimary` is `StepColor.Primary`. The step colors also
+emitted `steps-step-*` in 0.7.x, which DaisyUI does not have.
+
+**3. Functions are named after the class their element carries.**
+
+| 0.7.x | 0.8.0 |
+|---|---|
+| `daisyStat` | `daisyStats` |
+| `daisyStatStat`, `daisyStatStatTitle`, `…Value`, `…Desc`, `…Figure`, `…Actions` | `daisyStat`, `daisyStatTitle`, `daisyStatValue`, `daisyStatDesc`, `daisyStatFigure`, `daisyStatActions` |
+| `StatDirection` | `StatsDirection` |
+| `daisyStepsStep`, `daisyStepsStepIcon` | `daisyStep`, `daisyStepIcon` |
+
+**4. Booleans that belonged to a group are now one parameter.** Passing a parameter twice does not
+compile, so two members of one group cannot be asked for at once by accident.
+
+| Function | 0.7.x booleans | 0.8.0 parameter |
+|---|---|---|
+| `daisyButton` | `outline`, `dash`, `soft`, `ghost`, `link` | `style = ButtonStyle.Outline` … |
+| `daisyButton` | `square`, `circle` | `shape = ButtonShape.Square` … |
+| `daisyButton` | `wide`, `block` | `width = ButtonWidth.Wide` … |
+| `daisyAura` | `dual`, `rainbow`, `holo`, `gold`, `silver`, `glow` | `style = AuraStyle.Dual` … |
+| `daisySwap` | `rotate`, `flip` | `style = SwapStyle.Rotate` … |
+| `daisyCarousel`, `daisyFooter`, `daisyTimeline` | `horizontal`, `vertical` | `direction = CarouselDirection.Horizontal` … |
+| `daisyChat`, `daisyDivider` | `start`, `end` | `placement = ChatPlacement.Start` … |
+| `daisyStack` | `top`, `bottom`, `start`, `end` | `placement = StackPlacement.Top` … |
+| `daisyCollapse` | `arrow`, `plus` | `icon = CollapseIcon.Arrow` … |
+| `daisyCollapse` | `open`, `close` | `state = CollapseState.Open` … |
+| `daisyModal` | `top`, `middle`, `bottom` | `verticalPlacement = ModalVerticalPlacement.Top` … |
+| `daisyModal` | `start`, `end` | `horizontalPlacement = ModalHorizontalPlacement.Start` … |
+| `daisyMegamenu` | `wide`, `full` | `width = MegamenuWidth.Wide` … |
+
+The booleans that remain are on/off features, such as `zebra`, `active`, `soft` on the alert, or
+`hover` on the dropdown.
+
+**5. Axes are named after what they choose.**
+
+| 0.7.x | 0.8.0 |
+|---|---|
+| `daisyAvatar(modifier = AvatarModifier.Online)` | `daisyAvatar(presence = AvatarPresence.Online)` |
+| `daisyCard(modifier = CardModifier.Side)` | `daisyCard(layout = CardLayout.Side)` |
+| `daisyCarousel(modifier = CarouselModifier.Start)` | `daisyCarousel(snap = CarouselSnap.Start)` |
+| `daisyList(modifier = ListModifier.ColWrap)` | `daisyList(column = ListColumn.ColWrap)` |
+| `daisyMask(modifier = MaskModifier.Half1)` | `daisyMask(half = MaskHalf.Half1)` |
+| `daisyTooltip(sidePlacement = …, alignPlacement = …)` | `daisyTooltip(side = TooltipSide.…, align = TooltipAlign.…)` |
+| `IndicatorHorizontalPlacement`, `IndicatorVerticalPlacement` | `IndicatorItemHorizontalPlacement`, `IndicatorItemVerticalPlacement` |
+
+`CardLayout.ImageFull` now emits `image-full`, the class DaisyUI defines; 0.7.x emitted
+`card-image-full`, which matches no rule.
+
+**6. The dropdown takes the tooltip's shape.** DaisyUI's examples combine one side with at most
+one alignment, so that is what the parameters say:
+
+```kotlin
+// before
+daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Top, horizontalPlacement = DropdownHorizontalPlacement.End, left = false)
+// after
+daisyDropdown(side = DropdownSide.Top, align = DropdownAlign.End)
+```
+
+`left` and `right` are `DropdownSide.Left` and `.Right`. `DropdownModifier.Open` and the `close`
+boolean are `state = DropdownState.Open` and `.Close`; `DropdownModifier.Hover` is the boolean
+`hover`.
+
+**7. Twelve combinations lose their typed spelling.** Two members of one axis cannot be passed
+together, so these go through `extraClasses`: button `outline` or `dash` with `ghost` or `link`,
+and `soft` with `link`; aura `holo` with `dual`, `gold` or `silver`; swap `rotate` with `flip`; and
+any two of the tab bar's `box`, `border`, `lift`.
+
+```kotlin
+daisyButton("Save", style = ButtonStyle.Outline, extraClasses = "btn-ghost")
+```
+
+**8. `kdaisyui-classes.txt` lists only classes a component can emit.** It drops the two drawer
+variant prefixes and five classes no function renders: `avatar-group`, `floating-label`,
+`list-row`, `react-day-picker`, `vc`. If you write one of those yourself, it is in your own
+sources, where Tailwind finds it.
+
 ## Quick start
 
 ### 1. Add the dependency
@@ -528,7 +641,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 val html = createHTML().div {
-    daisyButton("Click me", variant = ButtonVariant.Primary, size = ButtonSize.Lg)
+    daisyButton("Click me", color = ButtonColor.Primary, size = ButtonSize.Lg)
 }
 // → <div><button class="btn btn-primary btn-lg">Click me</button></div>
 ```
@@ -542,7 +655,7 @@ application's job, and there is one detail you cannot guess.
 #### The detail: your Tailwind cannot see these class names
 
 Tailwind scans your source files for class names. `btn-primary` is assembled at runtime from
-`ButtonVariant.Primary`, so it appears in **none** of your files — and the published jar contains
+`ButtonColor.Primary`, so it appears in **none** of your files — and the published jar contains
 compiled classes, not Kotlin sources. A scan of your project finds nothing, Tailwind emits no rule,
 and your button renders unstyled with no error anywhere.
 

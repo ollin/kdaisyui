@@ -51,91 +51,91 @@ class StatusCoverageTest {
     }
 
     @Test
-    fun status_variant_neutral() {
+    fun status_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Neutral,
+                color = StatusColor.Neutral,
                 content = { },
             )
         }
-        assertRendered(html, "status status-neutral", "Status variant Neutral")
+        assertRendered(html, "status status-neutral", "Status color Neutral")
     }
 
     @Test
-    fun status_variant_primary() {
+    fun status_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Primary,
+                color = StatusColor.Primary,
                 content = { },
             )
         }
-        assertRendered(html, "status status-primary", "Status variant Primary")
+        assertRendered(html, "status status-primary", "Status color Primary")
     }
 
     @Test
-    fun status_variant_secondary() {
+    fun status_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Secondary,
+                color = StatusColor.Secondary,
                 content = { },
             )
         }
-        assertRendered(html, "status status-secondary", "Status variant Secondary")
+        assertRendered(html, "status status-secondary", "Status color Secondary")
     }
 
     @Test
-    fun status_variant_accent() {
+    fun status_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Accent,
+                color = StatusColor.Accent,
                 content = { },
             )
         }
-        assertRendered(html, "status status-accent", "Status variant Accent")
+        assertRendered(html, "status status-accent", "Status color Accent")
     }
 
     @Test
-    fun status_variant_info() {
+    fun status_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Info,
+                color = StatusColor.Info,
                 content = { },
             )
         }
-        assertRendered(html, "status status-info", "Status variant Info")
+        assertRendered(html, "status status-info", "Status color Info")
     }
 
     @Test
-    fun status_variant_success() {
+    fun status_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Success,
+                color = StatusColor.Success,
                 content = { },
             )
         }
-        assertRendered(html, "status status-success", "Status variant Success")
+        assertRendered(html, "status status-success", "Status color Success")
     }
 
     @Test
-    fun status_variant_warning() {
+    fun status_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Warning,
+                color = StatusColor.Warning,
                 content = { },
             )
         }
-        assertRendered(html, "status status-warning", "Status variant Warning")
+        assertRendered(html, "status status-warning", "Status color Warning")
     }
 
     @Test
-    fun status_variant_error() {
+    fun status_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatus(
-                variant = StatusVariant.Error,
+                color = StatusColor.Error,
                 content = { },
             )
         }
-        assertRendered(html, "status status-error", "Status variant Error")
+        assertRendered(html, "status status-error", "Status color Error")
     }
 
     @Test

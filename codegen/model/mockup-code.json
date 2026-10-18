@@ -1,0 +1,18 @@
+{
+  "component": "mockup-code",
+  "name": "MockupCode",
+  "class": "mockup-code",
+  "enums": [],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyMockupCode",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "mockup-code",
+      "text": false,
+      "parameters": []
+    }
+  ],
+  "summary": { "summary": "Code block mockup frame" }
+}

@@ -24,7 +24,7 @@ private fun TagConsumer<*>.auraCard() {
         addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Deploy Status")
-            daisyAura(size = AuraSize.Lg, rainbow = true) {
+            daisyAura(size = AuraSize.Lg, style = AuraStyle.Rainbow) {
                 div("bg-base-200 rounded-box p-6 text-center") {
                     span("text-lg font-semibold") { +"v2.4.1 live" }
                 }
@@ -52,7 +52,7 @@ private fun TagConsumer<*>.otpCard() {
             // the spans-only form is also why the characters sat high and right, since otp.css
             // paints them from the `> input` layer with the letter-spacing that centres one
             // character per box.
-            daisyOtp(id = Dashboard.WhatsNew.Otp(), variant = OtpVariant.Primary, joined = true) {
+            daisyOtp(id = Dashboard.WhatsNew.Otp(), color = OtpColor.Primary, joined = true) {
                 repeat(OTP_DIGITS) { span { } }
                 input {
                     type = InputType.text
@@ -72,7 +72,7 @@ private fun TagConsumer<*>.megamenuCard() {
         addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Navigation Preview")
-            daisyMegamenu(id = Dashboard.WhatsNew.Megamenu(), wide = true) {
+            daisyMegamenu(id = Dashboard.WhatsNew.Megamenu(), width = MegamenuWidth.Wide) {
                 daisyMegamenuActive { }
                 button { attributes["popovertarget"] = Dashboard.WhatsNew.Megamenu.Panel().id; +"Browse" }
                 daisyMegamenuPanel(id = Dashboard.WhatsNew.Megamenu.Panel()) {

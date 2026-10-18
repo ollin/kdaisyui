@@ -11,7 +11,7 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-enum class StatDirection(internal val className: String) : ClassValues<StatDirection> {
+enum class StatsDirection(internal val className: String) : ClassValues<StatsDirection> {
     /** CSS: `stats-horizontal` */
     Horizontal("stats-horizontal"),
     /** CSS: `stats-vertical` */
@@ -30,9 +30,9 @@ enum class StatDirection(internal val className: String) : ClassValues<StatDirec
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
-fun FlowContent.daisyStat(
+fun FlowContent.daisyStats(
     id: HtmlId? = null,
-    direction: ClassValues<StatDirection>? = null,
+    direction: ClassValues<StatsDirection>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -48,7 +48,7 @@ fun FlowContent.daisyStat(
 }
 
 /** Renders `<div class="stat ...">`. */
-fun FlowContent.daisyStatStat(
+fun FlowContent.daisyStat(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -64,7 +64,7 @@ fun FlowContent.daisyStatStat(
 }
 
 /** Renders `<div class="stat-title ...">`. */
-fun FlowContent.daisyStatStatTitle(
+fun FlowContent.daisyStatTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -84,7 +84,7 @@ fun FlowContent.daisyStatStatTitle(
 }
 
 /** Renders `<div class="stat-value ...">`. */
-fun FlowContent.daisyStatStatValue(
+fun FlowContent.daisyStatValue(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -104,7 +104,7 @@ fun FlowContent.daisyStatStatValue(
 }
 
 /** Renders `<div class="stat-desc ...">`. */
-fun FlowContent.daisyStatStatDesc(
+fun FlowContent.daisyStatDesc(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -124,7 +124,7 @@ fun FlowContent.daisyStatStatDesc(
 }
 
 /** Renders `<div class="stat-figure ...">`. */
-fun FlowContent.daisyStatStatFigure(
+fun FlowContent.daisyStatFigure(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -140,7 +140,7 @@ fun FlowContent.daisyStatStatFigure(
 }
 
 /** Renders `<div class="stat-actions ...">`. */
-fun FlowContent.daisyStatStatActions(
+fun FlowContent.daisyStatActions(
     id: HtmlId? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,

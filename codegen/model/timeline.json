@@ -1,0 +1,55 @@
+{
+  "component": "timeline",
+  "name": "Timeline",
+  "class": "timeline",
+  "enums": [
+    {
+      "name": "TimelineDirection",
+      "label": "Direction variants",
+      "classes": ["timeline-horizontal", "timeline-vertical"]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyTimeline",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": "timeline",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "direction", "enum": "TimelineDirection", "doc": "Direction variant" },
+        { "kind": "toggle", "name": "compact", "class": "timeline-compact" },
+        { "kind": "toggle", "name": "snapIcon", "class": "timeline-snap-icon" }
+      ]
+    },
+    {
+      "kind": "part",
+      "name": "daisyTimelineStart",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "timeline-start",
+      "text": false,
+      "parameters": [{ "kind": "toggle", "name": "box", "class": "timeline-box" }]
+    },
+    {
+      "kind": "part",
+      "name": "daisyTimelineMiddle",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "timeline-middle",
+      "text": false,
+      "parameters": [{ "kind": "toggle", "name": "box", "class": "timeline-box" }]
+    },
+    {
+      "kind": "part",
+      "name": "daisyTimelineEnd",
+      "receiver": "FlowContent",
+      "element": "DIV",
+      "class": "timeline-end",
+      "text": false,
+      "parameters": [{ "kind": "toggle", "name": "box", "class": "timeline-box" }]
+    }
+  ],
+  "summary": { "summary": "Vertical or horizontal timeline" }
+}

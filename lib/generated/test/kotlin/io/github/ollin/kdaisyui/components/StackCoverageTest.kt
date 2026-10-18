@@ -39,16 +39,56 @@ class StackCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStack(
                 id = htmlId("x-cov-id"),
-                bottom = true,
-                end = true,
-                start = true,
-                top = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "stack stack-bottom stack-end stack-start stack-top zz-extra", "Stack all flags", closes = "</div></div>")
+        assertRendered(html, "stack zz-extra", "Stack all flags", closes = "</div></div>")
         assertCommonFlags(html, "Stack")
+    }
+
+    @Test
+    fun stack_placement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStack(
+                placement = StackPlacement.Top,
+                content = { },
+            )
+        }
+        assertRendered(html, "stack stack-top", "Stack placement Top")
+    }
+
+    @Test
+    fun stack_placement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStack(
+                placement = StackPlacement.Bottom,
+                content = { },
+            )
+        }
+        assertRendered(html, "stack stack-bottom", "Stack placement Bottom")
+    }
+
+    @Test
+    fun stack_placement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStack(
+                placement = StackPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "stack stack-start", "Stack placement Start")
+    }
+
+    @Test
+    fun stack_placement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyStack(
+                placement = StackPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "stack stack-end", "Stack placement End")
     }
 }

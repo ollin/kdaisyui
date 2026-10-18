@@ -47,83 +47,83 @@ class FileInputCoverageTest {
     }
 
     @Test
-    fun fileInput_variant_neutral() {
+    fun fileInput_color_neutral() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Neutral,
+                color = FileInputColor.Neutral,
             )
         }
-        assertRendered(html, "file-input file-input-neutral", "FileInput variant Neutral")
+        assertRendered(html, "file-input file-input-neutral", "FileInput color Neutral")
     }
 
     @Test
-    fun fileInput_variant_primary() {
+    fun fileInput_color_primary() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Primary,
+                color = FileInputColor.Primary,
             )
         }
-        assertRendered(html, "file-input file-input-primary", "FileInput variant Primary")
+        assertRendered(html, "file-input file-input-primary", "FileInput color Primary")
     }
 
     @Test
-    fun fileInput_variant_secondary() {
+    fun fileInput_color_secondary() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Secondary,
+                color = FileInputColor.Secondary,
             )
         }
-        assertRendered(html, "file-input file-input-secondary", "FileInput variant Secondary")
+        assertRendered(html, "file-input file-input-secondary", "FileInput color Secondary")
     }
 
     @Test
-    fun fileInput_variant_accent() {
+    fun fileInput_color_accent() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Accent,
+                color = FileInputColor.Accent,
             )
         }
-        assertRendered(html, "file-input file-input-accent", "FileInput variant Accent")
+        assertRendered(html, "file-input file-input-accent", "FileInput color Accent")
     }
 
     @Test
-    fun fileInput_variant_info() {
+    fun fileInput_color_info() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Info,
+                color = FileInputColor.Info,
             )
         }
-        assertRendered(html, "file-input file-input-info", "FileInput variant Info")
+        assertRendered(html, "file-input file-input-info", "FileInput color Info")
     }
 
     @Test
-    fun fileInput_variant_success() {
+    fun fileInput_color_success() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Success,
+                color = FileInputColor.Success,
             )
         }
-        assertRendered(html, "file-input file-input-success", "FileInput variant Success")
+        assertRendered(html, "file-input file-input-success", "FileInput color Success")
     }
 
     @Test
-    fun fileInput_variant_warning() {
+    fun fileInput_color_warning() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Warning,
+                color = FileInputColor.Warning,
             )
         }
-        assertRendered(html, "file-input file-input-warning", "FileInput variant Warning")
+        assertRendered(html, "file-input file-input-warning", "FileInput color Warning")
     }
 
     @Test
-    fun fileInput_variant_error() {
+    fun fileInput_color_error() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(
-                variant = FileInputVariant.Error,
+                color = FileInputColor.Error,
             )
         }
-        assertRendered(html, "file-input file-input-error", "FileInput variant Error")
+        assertRendered(html, "file-input file-input-error", "FileInput color Error")
     }
 
     @Test

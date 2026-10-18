@@ -1,0 +1,33 @@
+{
+  "component": "progress",
+  "name": "Progress",
+  "class": "progress",
+  "enums": [
+    {
+      "name": "ProgressColor",
+      "label": "Color variants",
+      "classes": [
+        "progress-neutral",
+        "progress-primary",
+        "progress-secondary",
+        "progress-accent",
+        "progress-info",
+        "progress-success",
+        "progress-warning",
+        "progress-error"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "kind": "main",
+      "name": "daisyProgress",
+      "receiver": "FlowContent",
+      "element": "PROGRESS",
+      "class": "progress",
+      "text": false,
+      "parameters": [{ "kind": "enum", "name": "color", "enum": "ProgressColor", "doc": "Color variant" }]
+    }
+  ],
+  "summary": { "summary": "Progress bar indicator" }
+}

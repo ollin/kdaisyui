@@ -63,18 +63,18 @@ class DashboardTest {
             }
             div("grow") { h1("lg:text-2xl lg:font-light") { +"Overview" } }
             daisyInput(size = InputSize.Sm, placeholder = "Search", extraClasses = "rounded-full max-sm:w-24")
-            daisySwap(rotate = true) {
+            daisySwap(style = SwapStyle.Rotate) {
                 attributes["data-toggle-theme"] = "dark"
                 attributes["data-act-class"] = "swap-active"
                 span("swap-off") { +"☀\uFE0F" }
                 span("swap-on") { +"🌙" }
             }
-            daisyDropdown(horizontalPlacement = DropdownHorizontalPlacement.End, extraClasses = "z-10") {
+            daisyDropdown(align = DropdownAlign.End, extraClasses = "z-10") {
                 div {
                     attributes["tabindex"] = "0"
                     classes = setOf("btn", "btn-circle", "btn-ghost")
                     daisyIndicator {
-                        daisyBadge("3", variant = BadgeVariant.Warning, size = BadgeSize.Xs, extraClasses = "indicator-item")
+                        daisyBadge("3", color = BadgeColor.Warning, size = BadgeSize.Xs, extraClasses = "indicator-item")
                         +"🔔"
                     }
                 }
@@ -113,10 +113,10 @@ class DashboardTest {
     }
 
     private fun SECTION.stat(title: String, value: String, desc: String) {
-        daisyStatStat {
-            daisyStatStatTitle(title)
-            daisyStatStatValue(value)
-            daisyStatStatDesc(desc)
+        daisyStat {
+            daisyStatTitle(title)
+            daisyStatValue(value)
+            daisyStatDesc(desc)
         }
     }
 
@@ -152,11 +152,11 @@ class DashboardTest {
             td { +branch }
             td {
                 val variant = when (status) {
-                    "Success" -> BadgeVariant.Success
-                    "Failed" -> BadgeVariant.Error
-                    else -> BadgeVariant.Info
+                    "Success" -> BadgeColor.Success
+                    "Failed" -> BadgeColor.Error
+                    else -> BadgeColor.Info
                 }
-                daisyBadge(status, variant = variant, size = BadgeSize.Sm)
+                daisyBadge(status, color = variant, size = BadgeSize.Sm)
             }
             td { +duration }
             td { +trigger }
@@ -168,20 +168,20 @@ class DashboardTest {
             daisyCardBody {
                 daisyCardTitle("Open Issues")
                 ul("space-y-2") {
-                    issue("Bug", "234", BadgeVariant.Error)
-                    issue("Enhancement", "891", BadgeVariant.Info)
-                    issue("Documentation", "156", BadgeVariant.Success)
-                    issue("Question", "89", BadgeVariant.Warning)
-                    issue("Good First Issue", "477", BadgeVariant.Primary)
+                    issue("Bug", "234", BadgeColor.Error)
+                    issue("Enhancement", "891", BadgeColor.Info)
+                    issue("Documentation", "156", BadgeColor.Success)
+                    issue("Question", "89", BadgeColor.Warning)
+                    issue("Good First Issue", "477", BadgeColor.Primary)
                 }
             }
         }
     }
 
-    private fun UL.issue(label: String, count: String, variant: BadgeVariant) {
+    private fun UL.issue(label: String, count: String, variant: BadgeColor) {
         li("flex items-center justify-between") {
             span { +label }
-            daisyBadge(count, variant = variant)
+            daisyBadge(count, color = variant)
         }
     }
 
@@ -359,7 +359,7 @@ class DashboardTest {
                 div("font-medium") { +name }
                 div("text-base-content/60 text-xs") { +role }
             }
-            daisyButton("Remove", size = ButtonSize.Xs, variant = ButtonVariant.Error, outline = true)
+            daisyButton("Remove", size = ButtonSize.Xs, color = ButtonColor.Error, style = ButtonStyle.Outline)
         }
     }
 
@@ -398,7 +398,7 @@ class DashboardTest {
                         settingToggle("Auto-delete branches", false)
                         settingToggle("Allow force push", false)
                     }
-                    daisyButton("Save settings", variant = ButtonVariant.Primary)
+                    daisyButton("Save settings", color = ButtonColor.Primary)
                 }
             }
         }
@@ -414,7 +414,7 @@ class DashboardTest {
         section("card bg-base-100 col-span-12 xl:col-span-5") {
             form(classes = "card-body") {
                 action = ""
-                daisyAlert(variant = AlertVariant.Success) { span { +"Invitation sent successfully" } }
+                daisyAlert(color = AlertColor.Success) { span { +"Invitation sent successfully" } }
                 daisyFieldset {
                     daisyLabel("Email")
                     daisyInput(placeholder = "new.member@devtrack.io", extraClasses = "w-full")
@@ -437,7 +437,7 @@ class DashboardTest {
                 }
                 daisyFieldset {
                     div("flex items-end py-4") {
-                        daisyButton("Send invitation", variant = ButtonVariant.Primary, extraClasses = "grow")
+                        daisyButton("Send invitation", color = ButtonColor.Primary, extraClasses = "grow")
                     }
                 }
             }
@@ -522,12 +522,12 @@ class DashboardTest {
             }
             td {
                 val variant = when (role) {
-                    "Owner" -> BadgeVariant.Primary
-                    "Maintainer" -> BadgeVariant.Info
-                    "Developer" -> BadgeVariant.Success
-                    else -> BadgeVariant.Warning
+                    "Owner" -> BadgeColor.Primary
+                    "Maintainer" -> BadgeColor.Info
+                    "Developer" -> BadgeColor.Success
+                    else -> BadgeColor.Warning
                 }
-                daisyBadge(role, variant = variant, size = BadgeSize.Sm)
+                daisyBadge(role, color = variant, size = BadgeSize.Sm)
             }
             td { +repositories }
             td { +lastActive }

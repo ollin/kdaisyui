@@ -18,10 +18,10 @@ fun TagConsumer<*>.statsFragment() {
             Triple("Pipeline Success Rate", "94.2%", "Last 30 days"),
         )
         for ((title, value, desc) in stats) {
-            daisyStatStat {
-                daisyStatStatTitle(title)
-                daisyStatStatValue(value)
-                daisyStatStatDesc(desc)
+            daisyStat {
+                daisyStatTitle(title)
+                daisyStatValue(value)
+                daisyStatDesc(desc)
             }
         }
     }

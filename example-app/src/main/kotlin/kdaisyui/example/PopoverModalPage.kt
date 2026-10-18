@@ -25,7 +25,7 @@ fun HTML.popoverModalPage() {
         val modalId = Dashboard.PopoverModal()
         daisyButton(
             text = "Open modal",
-            variant = ButtonVariant.Primary,
+            color = ButtonColor.Primary,
             attrs = { attributes["popovertarget"] = modalId.id },
         )
         daisyModalPopover(id = modalId) {

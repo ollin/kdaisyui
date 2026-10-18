@@ -5,7 +5,7 @@
 Generation SHALL fail, naming the documentation page, the element and its classes, for every
 element in the fenced ```html examples of a component's `+page.md` that carries `$$`-marked
 classes no generated function can express, unless that page's model file declares the element's
-class set as not expressed, with a reason.
+gap as not expressed, with a reason.
 
 The classes that count are the element's marked classes without a variant prefix that some
 component's frontmatter declares. A marked class no frontmatter declares is not a component class
@@ -19,8 +19,14 @@ join scope marks. The function may belong to any component, because DaisyUI's ex
 components. The element's tag is not compared; see "Each generated function renders the one element
 its model declares".
 
-Generation SHALL also fail on a declaration that no example of its page needs: one whose class set
-no element on the page carries any more, or that has become expressible. Without that, a gap closed
+A gap is declared by its key. Where the counted classes include the own classes of two or more
+functions, two components on one element, the key is those own classes, sorted:
+`badge badge-secondary indicator-item indicator-start` and `badge indicator-item` share the key
+`badge indicator-item`, because whichever modifiers ride along, the gap is the same. Otherwise the
+key is all the counted classes, sorted.
+
+Generation SHALL also fail on a declaration that no example of its page needs: one whose key no
+element on the page has any more, or whose elements have become expressible. Without that, a gap closed
 by a later model edit would stay listed as open.
 
 **Verified** the size of the gap, measured 2026-10-18 at the pinned tag before this requirement
@@ -33,10 +39,13 @@ components on one element: `dropdown-content menu`, `btn theme-controller`, `bad
 **Verified** that no example puts two members of one axis on one element, measured the same day:
 the axis rule gives up nothing DaisyUI documents.
 
-**Assumed** that the declarations stay a short list a reviewer reads, about forty class sets.
-*Wrong if:* the count under exactly this rule exceeds sixty, which would mean the rule is stricter
-than "can kdaisyui generate it" and two components on one element should count as expressible
-through `extraClasses`.
+**Verified** that the declarations stay a short list a reviewer reads, counted under exactly this
+rule on 2026-10-18 (task 1.1): 39 keys. Twelve are a class no function offers (`list-row`,
+`floating-label`, `dock-active`, `menu-active`, `menu-disabled`, `rating-hidden`, `avatar-group`,
+`vc`, `list-col-grow`, `list-col-wrap`, and `menu-dropdown-show` on two parts); 27 are two
+components on one element. Keyed by the whole class set instead, the same gaps were 65, 27 of them
+the indicator's placements alone; Oliver chose the key by own classes the same day, over counting
+two components as expressible through `extraClasses`.
 
 #### Scenario: A part's element is expressible
 - **WHEN** an example shows `<div class="$$card-body">` and `daisyCardBody` offers `card-body`
@@ -46,10 +55,21 @@ through `extraClasses`.
 - **WHEN** an example shows `<li class="$$list-row">` and no function's own class is `list-row`
 - **THEN** generation fails naming the page `list`, the element `<li>` and the class `list-row`
 
+#### Scenario: Two components on one element
+- **WHEN** an example shows `<ul class="$$dropdown-content $$menu">`, the own classes of
+  `daisyDropdownContent` and `daisyMenu`
+- **THEN** generation fails naming the page, the element and the key `dropdown-content menu`
+
 #### Scenario: One function lacks a class the element carries
-- **WHEN** an example shows `<ul class="$$dropdown-content $$menu">` and `daisyDropdownContent`
-  does not offer `menu`
-- **THEN** generation fails naming the page, the element and both classes
+- **WHEN** an example shows `<ul class="$$menu-dropdown $$menu-dropdown-show">` and
+  `daisyMenuDropdown` does not offer `menu-dropdown-show`
+- **THEN** generation fails naming the page, the element and the key
+  `menu-dropdown menu-dropdown-show`
+
+#### Scenario: Modifiers do not change a composition's key
+- **WHEN** the indicator page shows `badge badge-secondary indicator-item indicator-start` and the
+  page's model declares `badge indicator-item`
+- **THEN** that element's gap is declared
 
 #### Scenario: A declared gap
 - **WHEN** the page's model file declares `dropdown-content menu` as not expressed, with a reason

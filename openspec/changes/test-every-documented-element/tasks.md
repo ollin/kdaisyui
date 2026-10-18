@@ -11,6 +11,12 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
   only where the join scope marks the function, every model's functions as candidates. Record the
   number of distinct class sets here. Above sixty refutes the Assumed in "Every documented element
   is expressible…": stop and revise the rule with Oliver before block 2.
+  **Counted 2026-10-18: 65, refuted.** 159 elements: 40 carry no function's class, 119 a class
+  their function does not offer. 27 of the 65 sets were the indicator's placements on one
+  `badge indicator-item` gap. Oliver chose to key a composition by the own classes of the
+  functions involved: **39 keys**, 12 missing classes and 27 compositions. Spec and D2 revised.
+  Expressible by class: 2,083 elements (1,336 main, 722 part, 25 custom); 322 of them on another
+  element than the function renders, out of scope.
 - [ ] 1.2 `. d` **Check the receiver assumption**: list every part's receiver and whether a single
   kotlinx.html builder supplies it, as `wrapperTagOf` does for the custom parts. A receiver none
   supplies refutes it; revise the test requirement before block 5.
@@ -39,7 +45,7 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 
 ## 4. Declare the gaps
 
-- [ ] 4.1 `. d` Declare every class set 1.1 counted in its page's model file, with its reason and,
+- [ ] 4.1 `. d` Declare every key 1.1 counted in its page's model file, with its reason and,
   where one exists, its issue (#347 menu, dock and rating children; #343 calendar; #357 dropdown
   popover). One commit per component, so each reason is reviewed with its component.
 - [ ] 4.2 `! F (internal)` Wire the gate into `index-new.ts` beside the completeness gate.

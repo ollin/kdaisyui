@@ -38,16 +38,25 @@ says nothing about the model.
 *Rejected:* extending `componentCallsIn` in place. It is built around one function per page;
 every function across every model is a different shape of input.
 
-### D2. A gap is declared per page, by its class set
+### D2. A gap is declared per page, by its key
 
 ```json
 "notExpressed": {
-  "dropdown-content menu": "Two components on one element; kotlinx.html calls one function per element. Write the ul and its classes by hand, or daisyDropdownContent(extraClasses = \"menu\")."
+  "dropdown-content menu": "Two components on one element; one call renders one function. Write the ul with daisyDropdownContent(extraClasses = \"menu\")."
 }
 ```
 
-The key is the element's counted classes, sorted, space-separated. It lives in the model file of
-the **page** whose example shows the element, because staleness is judged per page.
+The key is the own classes of the functions involved when two components share the element,
+otherwise the element's counted classes, sorted and space-separated (spec). It lives in the model
+file of the **page** whose example shows the element, because staleness is judged per page.
+
+*Rejected:* the whole class set as the key. Counted 2026-10-18 (task 1.1): 65 keys instead of 39,
+27 of them the indicator's placements, and every new DaisyUI modifier would add declarations for
+a gap that did not change. Oliver chose the own-class key.
+
+*Rejected:* counting two components on one element as expressible through `extraClasses`. Twelve
+keys would remain, but the gate would accept any class of another component passed as a string,
+so it would no longer say what the typed API can express. Oliver chose the declared key over it.
 
 *Rejected:* a key per class, like `notOffered`. `menu` is expressible on its own; only the
 combination is not, and a per-class key would excuse every `menu` element on the page.
@@ -95,8 +104,7 @@ measurement", deleted in 0.8.0) are removed once the new tests replace them.
 
 ## Risks / Trade-offs
 
-- [The declaration list is long and nobody reads it] → the count is checked first (task 1.2)
-  against the spec's falsifier of sixty; above it, the rule is revised before anything is built.
+- [The declaration list is long and nobody reads it] → counted first (task 1.1): 39 keys.
 - [`:lib:test` grows by about a thousand tests and slows] → measured at the gate; the generated
   tests are single-call renders, today 1,679 tests run in seconds.
 - [A test name collides across many elements of one page] → `uniqueTestName`, as today.

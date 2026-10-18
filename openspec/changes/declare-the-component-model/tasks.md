@@ -190,7 +190,7 @@ Same cadence as block 4.
   builds its tab bar by hand, `<div role="tablist" class="tabs tabs-lift">` with
   `<a role="tab" class="tab tab-active">` items, because `daisyTab` was inverted; that is exactly
   the `<a>` item. No `<label>` construction anywhere.
-- [ ] 5.9 `^ F` Tab: the container renders `<div role="tablist">`, `daisyTabRadio` is added, and
+- [x] 5.9 `^ F` Tab: the container renders `<div role="tablist">`, `daisyTabRadio` is added, and
   the container's `style` axis replaces its three booleans, per `design.md` D9. The renames to
   `daisyTabs`, `daisyTab` and `daisyTabContent`, and `active`/`disabled` on the item, landed in
   4.2. Closes #342.

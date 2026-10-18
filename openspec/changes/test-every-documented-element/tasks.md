@@ -86,5 +86,5 @@ codegen work, not folded in: 0.06, 0.21, 0.26.
 - [x] 6.2 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
   `:lib:testCodegen`, `:lib:checkComponentApi` unchanged, regeneration drift, CodeScene
   `analyze_change_set`. No mutation tool for the TypeScript codegen yet; say so.
-- [ ] 6.3 `. d` Write `tmp/test-every-documented-element/EVALUATION-test-every-documented-element.md`,
+- [x] 6.3 `. d` Write `tmp/test-every-documented-element/EVALUATION-test-every-documented-element.md`,
   listing every declared gap so Oliver can choose which deserve an API.

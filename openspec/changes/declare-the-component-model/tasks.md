@@ -117,7 +117,7 @@ do not exist and change exactly those.
   is offered by `daisyLabel`.
 - [x] 3.9 `^ F (internal)` Completeness gate: a directory with no model file and no skip entry
   fails, and a model file naming no directory fails.
-- [ ] 3.10 `. r (internal)` Delete `codegen-config.json`, `config-consumption.ts` and
+- [x] 3.10 `. r (internal)` Delete `codegen-config.json`, `config-consumption.ts` and
   `offered-twice.ts` with their tests.
 - [x] 3.11 `. r (internal)` Delete the element heuristic, `element-observation.ts` and
   `element-cross-check.ts` with their tests.

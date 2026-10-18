@@ -51,36 +51,36 @@ class CarouselCoverageTest {
     }
 
     @Test
-    fun carousel_modifier_start() {
+    fun carousel_snap_start() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
-                modifier = CarouselModifier.Start,
+                snap = CarouselSnap.Start,
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-start", "Carousel modifier Start")
+        assertRendered(html, "carousel carousel-start", "Carousel snap Start")
     }
 
     @Test
-    fun carousel_modifier_center() {
+    fun carousel_snap_center() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
-                modifier = CarouselModifier.Center,
+                snap = CarouselSnap.Center,
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-center", "Carousel modifier Center")
+        assertRendered(html, "carousel carousel-center", "Carousel snap Center")
     }
 
     @Test
-    fun carousel_modifier_end() {
+    fun carousel_snap_end() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel(
-                modifier = CarouselModifier.End,
+                snap = CarouselSnap.End,
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-end", "Carousel modifier End")
+        assertRendered(html, "carousel carousel-end", "Carousel snap End")
     }
 
     @Test

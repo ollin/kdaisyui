@@ -5,7 +5,7 @@
   "enums": [
     { "name": "CardSize", "label": "Size variants", "classes": ["card-xs", "card-sm", "card-md", "card-lg", "card-xl"] },
     { "name": "CardStyle", "label": "Style variants", "classes": ["card-border", "card-dash"] },
-    { "name": "CardModifier", "label": "Modifier variants", "classes": ["card-side", "image-full"] }
+    { "name": "CardLayout", "label": "Modifier variants", "classes": ["card-side", "image-full"] }
   ],
   "functions": [
     {
@@ -18,7 +18,7 @@
       "parameters": [
         { "kind": "enum", "name": "size", "enum": "CardSize", "doc": "Size variant" },
         { "kind": "enum", "name": "style", "enum": "CardStyle", "doc": "Style variant" },
-        { "kind": "enum", "name": "modifier", "enum": "CardModifier", "doc": "Modifier variant" }
+        { "kind": "enum", "name": "layout", "enum": "CardLayout", "doc": "Modifier variant" }
       ],
       "joinItem": true
     },

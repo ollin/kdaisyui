@@ -23,7 +23,7 @@
         "mask-triangle-4"
       ]
     },
-    { "name": "MaskModifier", "label": "Modifier variants", "classes": ["mask-half-1", "mask-half-2"] }
+    { "name": "MaskHalf", "label": "Modifier variants", "classes": ["mask-half-1", "mask-half-2"] }
   ],
   "functions": [
     {
@@ -35,7 +35,7 @@
       "text": false,
       "parameters": [
         { "kind": "enum", "name": "style", "enum": "MaskStyle", "doc": "Style variant" },
-        { "kind": "enum", "name": "modifier", "enum": "MaskModifier", "doc": "Modifier variant" }
+        { "kind": "enum", "name": "half", "enum": "MaskHalf", "doc": "Modifier variant" }
       ]
     }
   ],

@@ -11,7 +11,7 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-enum class AvatarModifier(internal val className: String) : ClassValues<AvatarModifier> {
+enum class AvatarPresence(internal val className: String) : ClassValues<AvatarPresence> {
     /** CSS: `avatar-online` */
     Online("avatar-online"),
     /** CSS: `avatar-offline` */
@@ -25,7 +25,7 @@ enum class AvatarModifier(internal val className: String) : ClassValues<AvatarMo
 /**
  * Avatars are used to show a thumbnail representation of an individual or business in the interface. Renders `<div class="avatar ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param modifier — Modifier variant
+ * @param presence — Modifier variant
  * @param placeholder
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
@@ -33,7 +33,7 @@ enum class AvatarModifier(internal val className: String) : ClassValues<AvatarMo
  */
 fun FlowContent.daisyAvatar(
     id: HtmlId? = null,
-    modifier: ClassValues<AvatarModifier>? = null,
+    presence: ClassValues<AvatarPresence>? = null,
     placeholder: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
@@ -42,7 +42,7 @@ fun FlowContent.daisyAvatar(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("avatar")
-        addClassNames(modifier)
+        addClassNames(presence)
         if (placeholder) addClassNames("avatar-placeholder")
         addClassNames(extraClasses)
         if (attrs != null) attrs()

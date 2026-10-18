@@ -144,8 +144,8 @@ fun FlowContent.daisyAura(id: HtmlId? = null, size: ClassValues<AuraSize>? = nul
 User and entity representations — renders `<div>`.
 
 ```kotlin
-enum class AvatarModifier { Online, Offline }
-fun FlowContent.daisyAvatar(id: HtmlId? = null, modifier: ClassValues<AvatarModifier>? = null, placeholder: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class AvatarPresence { Online, Offline }
+fun FlowContent.daisyAvatar(id: HtmlId? = null, presence: ClassValues<AvatarPresence>? = null, placeholder: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
 ### Badge
@@ -195,8 +195,8 @@ Content containers with body and title — renders `<div>`.
 ```kotlin
 enum class CardSize { Xs, Sm, Md, Lg, Xl }
 enum class CardStyle { Border, Dash }
-enum class CardModifier { Side, ImageFull }
-fun FlowContent.daisyCard(id: HtmlId? = null, size: ClassValues<CardSize>? = null, style: ClassValues<CardStyle>? = null, modifier: ClassValues<CardModifier>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class CardLayout { Side, ImageFull }
+fun FlowContent.daisyCard(id: HtmlId? = null, size: ClassValues<CardSize>? = null, style: ClassValues<CardStyle>? = null, layout: ClassValues<CardLayout>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyCardTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
 fun FlowContent.daisyCardBody(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyCardActions(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
@@ -207,8 +207,8 @@ fun FlowContent.daisyCardActions(id: HtmlId? = null, extraClasses: String? = nul
 Slideshow of images or content — renders `<div>`.
 
 ```kotlin
-enum class CarouselModifier { Start, Center, End }
-fun FlowContent.daisyCarousel(id: HtmlId? = null, modifier: ClassValues<CarouselModifier>? = null, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class CarouselSnap { Start, Center, End }
+fun FlowContent.daisyCarousel(id: HtmlId? = null, snap: ClassValues<CarouselSnap>? = null, horizontal: Boolean = false, vertical: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyCarouselItem(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 ```
 
@@ -443,8 +443,8 @@ fun FlowContent.daisyLink(text: String? = null, id: HtmlId? = null, color: Class
 Styled list layout — renders `<ul>`.
 
 ```kotlin
-enum class ListModifier { ColWrap, ColGrow }
-fun FlowContent.daisyList(id: HtmlId? = null, modifier: ClassValues<ListModifier>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+enum class ListColumn { ColWrap, ColGrow }
+fun FlowContent.daisyList(id: HtmlId? = null, column: ClassValues<ListColumn>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 ```
 
 ### Loading
@@ -463,8 +463,8 @@ CSS masks for cropping images to shapes — renders `<img>`.
 
 ```kotlin
 enum class MaskStyle { Squircle, Heart, Hexagon, Hexagon2, Decagon, Pentagon, Diamond, Circle, Star, Star2, Triangle, Triangle2, Triangle3, Triangle4 }
-enum class MaskModifier { Half1, Half2 }
-fun FlowContent.daisyMask(id: HtmlId? = null, style: ClassValues<MaskStyle>? = null, modifier: ClassValues<MaskModifier>? = null, extraClasses: String? = null, attrs: (IMG.() -> Unit)? = null)
+enum class MaskHalf { Half1, Half2 }
+fun FlowContent.daisyMask(id: HtmlId? = null, style: ClassValues<MaskStyle>? = null, half: ClassValues<MaskHalf>? = null, extraClasses: String? = null, attrs: (IMG.() -> Unit)? = null)
 ```
 
 ### Megamenu

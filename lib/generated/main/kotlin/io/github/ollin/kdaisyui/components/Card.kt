@@ -42,7 +42,7 @@ enum class CardStyle(internal val className: String) : ClassValues<CardStyle> {
 }
 
 /** Modifier variants for this component (CSS prefix: `card-`) */
-enum class CardModifier(internal val className: String) : ClassValues<CardModifier> {
+enum class CardLayout(internal val className: String) : ClassValues<CardLayout> {
     /** CSS: `card-side` — The image in <figure> will be on to the side */
     Side("card-side"),
     /** CSS: `image-full` — The image in <figure> element will be the background */
@@ -58,7 +58,7 @@ enum class CardModifier(internal val className: String) : ClassValues<CardModifi
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param style — Style variant
- * @param modifier — Modifier variant
+ * @param layout — Modifier variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -67,7 +67,7 @@ fun FlowContent.daisyCard(
     id: HtmlId? = null,
     size: ClassValues<CardSize>? = null,
     style: ClassValues<CardStyle>? = null,
-    modifier: ClassValues<CardModifier>? = null,
+    layout: ClassValues<CardLayout>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -77,7 +77,7 @@ fun FlowContent.daisyCard(
         addClassNames("card")
         addClassNames(size)
         addClassNames(style)
-        addClassNames(modifier)
+        addClassNames(layout)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

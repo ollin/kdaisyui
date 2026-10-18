@@ -47,7 +47,7 @@ enum class MaskStyle(internal val className: String) : ClassValues<MaskStyle> {
 }
 
 /** Modifier variants for this component (CSS prefix: `mask-`) */
-enum class MaskModifier(internal val className: String) : ClassValues<MaskModifier> {
+enum class MaskHalf(internal val className: String) : ClassValues<MaskHalf> {
     /** CSS: `mask-half-1` — Crops only the first half of mask */
     Half1("mask-half-1"),
     /** CSS: `mask-half-2` — Crops only the second half of mask */
@@ -62,14 +62,14 @@ enum class MaskModifier(internal val className: String) : ClassValues<MaskModifi
  * Mask crops the content of the element to common shapes. Renders `<img class="mask ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param style — Style variant
- * @param modifier — Modifier variant
+ * @param half — Modifier variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  */
 fun FlowContent.daisyMask(
     id: HtmlId? = null,
     style: ClassValues<MaskStyle>? = null,
-    modifier: ClassValues<MaskModifier>? = null,
+    half: ClassValues<MaskHalf>? = null,
     extraClasses: String? = null,
     attrs: (IMG.() -> Unit)? = null,
 ) {
@@ -77,7 +77,7 @@ fun FlowContent.daisyMask(
         if (id != null) attributes["id"] = id.id
         addClassNames("mask")
         addClassNames(style)
-        addClassNames(modifier)
+        addClassNames(half)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }

@@ -4,7 +4,7 @@
   "class": "carousel",
   "enums": [
     {
-      "name": "CarouselModifier",
+      "name": "CarouselSnap",
       "label": "Modifier variants",
       "classes": ["carousel-start", "carousel-center", "carousel-end"]
     }
@@ -18,7 +18,7 @@
       "class": "carousel",
       "text": false,
       "parameters": [
-        { "kind": "enum", "name": "modifier", "enum": "CarouselModifier", "doc": "Modifier variant" },
+        { "kind": "enum", "name": "snap", "enum": "CarouselSnap", "doc": "Modifier variant" },
         { "kind": "toggle", "name": "horizontal", "class": "carousel-horizontal" },
         { "kind": "toggle", "name": "vertical", "class": "carousel-vertical" }
       ]

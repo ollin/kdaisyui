@@ -186,22 +186,22 @@ class MaskCoverageTest {
     }
 
     @Test
-    fun mask_modifier_half1() {
+    fun mask_half_half1() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                modifier = MaskModifier.Half1,
+                half = MaskHalf.Half1,
             )
         }
-        assertRendered(html, "mask mask-half-1", "Mask modifier Half1")
+        assertRendered(html, "mask mask-half-1", "Mask half Half1")
     }
 
     @Test
-    fun mask_modifier_half2() {
+    fun mask_half_half2() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(
-                modifier = MaskModifier.Half2,
+                half = MaskHalf.Half2,
             )
         }
-        assertRendered(html, "mask mask-half-2", "Mask modifier Half2")
+        assertRendered(html, "mask mask-half-2", "Mask half Half2")
     }
 }

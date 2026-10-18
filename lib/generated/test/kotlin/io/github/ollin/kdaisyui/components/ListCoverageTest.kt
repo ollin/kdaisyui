@@ -49,24 +49,24 @@ class ListCoverageTest {
     }
 
     @Test
-    fun list_modifier_colwrap() {
+    fun list_column_colwrap() {
         val html = createHTML(prettyPrint = false).div {
             daisyList(
-                modifier = ListModifier.ColWrap,
+                column = ListColumn.ColWrap,
                 content = { },
             )
         }
-        assertRendered(html, "list list-col-wrap", "List modifier ColWrap")
+        assertRendered(html, "list list-col-wrap", "List column ColWrap")
     }
 
     @Test
-    fun list_modifier_colgrow() {
+    fun list_column_colgrow() {
         val html = createHTML(prettyPrint = false).div {
             daisyList(
-                modifier = ListModifier.ColGrow,
+                column = ListColumn.ColGrow,
                 content = { },
             )
         }
-        assertRendered(html, "list list-col-grow", "List modifier ColGrow")
+        assertRendered(html, "list list-col-grow", "List column ColGrow")
     }
 }

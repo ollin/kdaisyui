@@ -98,7 +98,7 @@ class AvatarTest {
     @Test
     fun avatar_with_presence_indicator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(modifier = AvatarModifier.Online) {
+            daisyAvatar(presence = AvatarPresence.Online) {
             }
         }
         val expectedClasses = "avatar avatar-online"
@@ -109,7 +109,7 @@ class AvatarTest {
     @Test
     fun avatar_with_presence_indicator_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(modifier = AvatarModifier.Offline) {
+            daisyAvatar(presence = AvatarPresence.Offline) {
             }
         }
         val expectedClasses = "avatar avatar-offline"
@@ -131,7 +131,7 @@ class AvatarTest {
     @Test
     fun avatar_placeholder_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(modifier = AvatarModifier.Online, placeholder = true) {
+            daisyAvatar(presence = AvatarPresence.Online, placeholder = true) {
             }
         }
         val expectedClasses = "avatar avatar-online avatar-placeholder"

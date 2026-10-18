@@ -12,7 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 /** Modifier variants for this component (CSS prefix: `carousel-`) */
-enum class CarouselModifier(internal val className: String) : ClassValues<CarouselModifier> {
+enum class CarouselSnap(internal val className: String) : ClassValues<CarouselSnap> {
     /** CSS: `carousel-start` — Snap elements to start */
     Start("carousel-start"),
     /** CSS: `carousel-center` — Snap elements to center */
@@ -28,7 +28,7 @@ enum class CarouselModifier(internal val className: String) : ClassValues<Carous
 /**
  * Carousel show images or content in a scrollable area. Renders `<div class="carousel ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param modifier — Modifier variant
+ * @param snap — Modifier variant
  * @param horizontal — Horizontal layout (default)
  * @param vertical — Vertical layout
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -37,7 +37,7 @@ enum class CarouselModifier(internal val className: String) : ClassValues<Carous
  */
 fun FlowContent.daisyCarousel(
     id: HtmlId? = null,
-    modifier: ClassValues<CarouselModifier>? = null,
+    snap: ClassValues<CarouselSnap>? = null,
     horizontal: Boolean = false,
     vertical: Boolean = false,
     extraClasses: String? = null,
@@ -47,7 +47,7 @@ fun FlowContent.daisyCarousel(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("carousel")
-        addClassNames(modifier)
+        addClassNames(snap)
         if (horizontal) addClassNames("carousel-horizontal")
         if (vertical) addClassNames("carousel-vertical")
         addClassNames(extraClasses)

@@ -56,4 +56,60 @@ class LabelCoverageTest {
         assertRendered(html, "label", "Label text")
         assertTrue(html.contains("txtmark"), "Label text content")
     }
+
+    @Test
+    fun labelClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabelClasses()
+        }
+        assertRendered(html, "label", "LabelClasses defaults")
+    }
+
+    @Test
+    fun labelClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyLabelClasses()
+        }
+        assertRendered(html, "label", "LabelClasses all flags")
+    }
+
+    @Test
+    fun floatingLabel_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFloatingLabel(
+                content = { },
+            )
+        }
+        assertRendered(html, "floating-label", "FloatingLabel defaults", closes = "</label></div>")
+    }
+
+    @Test
+    fun floatingLabel_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFloatingLabel(
+                id = htmlId("x-cov-id"),
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+                content = { attributes["data-content"] = "yes" },
+            )
+        }
+        assertRendered(html, "floating-label zz-extra", "FloatingLabel all flags", closes = "</label></div>")
+        assertCommonFlags(html, "FloatingLabel")
+    }
+
+    @Test
+    fun floatingLabelClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFloatingLabelClasses()
+        }
+        assertRendered(html, "floating-label", "FloatingLabelClasses defaults")
+    }
+
+    @Test
+    fun floatingLabelClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFloatingLabelClasses()
+        }
+        assertRendered(html, "floating-label", "FloatingLabelClasses all flags")
+    }
 }

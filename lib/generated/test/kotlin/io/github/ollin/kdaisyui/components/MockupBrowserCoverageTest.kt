@@ -49,6 +49,22 @@ class MockupBrowserCoverageTest {
     }
 
     @Test
+    fun mockupBrowserClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupBrowserClasses()
+        }
+        assertRendered(html, "mockup-browser", "MockupBrowserClasses defaults")
+    }
+
+    @Test
+    fun mockupBrowserClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupBrowserClasses()
+        }
+        assertRendered(html, "mockup-browser", "MockupBrowserClasses all flags")
+    }
+
+    @Test
     fun mockupBrowserToolbar_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupBrowserToolbar(
@@ -70,5 +86,21 @@ class MockupBrowserCoverageTest {
         }
         assertRendered(html, "mockup-browser-toolbar zz-extra", "MockupBrowserToolbar all flags", closes = "</div></div>")
         assertCommonFlags(html, "MockupBrowserToolbar")
+    }
+
+    @Test
+    fun mockupBrowserToolbarClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupBrowserToolbarClasses()
+        }
+        assertRendered(html, "mockup-browser-toolbar", "MockupBrowserToolbarClasses defaults")
+    }
+
+    @Test
+    fun mockupBrowserToolbarClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupBrowserToolbarClasses()
+        }
+        assertRendered(html, "mockup-browser-toolbar", "MockupBrowserToolbarClasses all flags")
     }
 }

@@ -17,6 +17,9 @@ fun FlowContent.daisySkeleton(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisySkeletonClasses()
 ```
 
 ```kotlin
@@ -26,4 +29,7 @@ fun FlowContent.daisySkeletonText(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisySkeletonTextClasses()
 ```

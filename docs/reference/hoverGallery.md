@@ -17,4 +17,7 @@ fun FlowContent.daisyHoverGallery(
     attrs: (FIGURE.() -> Unit)? = null,
     content: (FIGURE.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyHoverGalleryClasses()
 ```

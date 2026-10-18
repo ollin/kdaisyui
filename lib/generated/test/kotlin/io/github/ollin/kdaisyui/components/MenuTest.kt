@@ -4,6 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.div
 
 class MenuTest {
 
@@ -129,6 +130,16 @@ class MenuTest {
     }
 
     @Test
+    fun menu_with_disabled_items_daisyMenuItem() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuItemClasses(disabled = true)
+        }
+        val expectedClasses = "menu-disabled"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with disabled items")
+    }
+
+    @Test
     fun menu_with_icons_and_badge_responsive() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenu(extraClasses = "lg:menu-horizontal") {
@@ -203,6 +214,38 @@ class MenuTest {
         val expectedClasses = "menu-dropdown"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
+    }
+
+    @Test
+    fun collapsible_submenu_that_works_with_class_names_daisyMenuDropdownToggle_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuDropdownToggle(dropdownShow = true) {
+            }
+        }
+        val expectedClasses = "menu-dropdown-show menu-dropdown-toggle"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
+    }
+
+    @Test
+    fun collapsible_submenu_that_works_with_class_names_daisyMenuDropdown_2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuDropdown(show = true) {
+            }
+        }
+        val expectedClasses = "menu-dropdown menu-dropdown-show"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
+    }
+
+    @Test
+    fun menu_with_active_item_daisyMenuItem() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuItemClasses(active = true)
+        }
+        val expectedClasses = "menu-active"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with active item")
     }
 
     @Test

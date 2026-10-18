@@ -23,6 +23,9 @@ fun FlowContent.daisyCard(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardClasses(size: ClassValues<CardSize>? = null, style: ClassValues<CardStyle>? = null, layout: ClassValues<CardLayout>? = null)
 ```
 
 ```kotlin
@@ -33,6 +36,9 @@ fun FlowContent.daisyCardTitle(
     attrs: (H2.() -> Unit)? = null,
     content: (H2.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardTitleClasses()
 ```
 
 ```kotlin
@@ -42,6 +48,9 @@ fun FlowContent.daisyCardBody(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardBodyClasses()
 ```
 
 ```kotlin
@@ -51,4 +60,7 @@ fun FlowContent.daisyCardActions(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCardActionsClasses()
 ```

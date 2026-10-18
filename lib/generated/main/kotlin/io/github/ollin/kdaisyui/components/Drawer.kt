@@ -13,6 +13,7 @@ import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.label
 import kotlinx.html.LABEL
+import kotlinx.html.Tag
 
 /**
  * Drawer is a grid layout that can show/hide a sidebar on the left or right side of the page. Renders `<div class="drawer ...">`.
@@ -42,6 +43,16 @@ fun FlowContent.daisyDrawer(
     }
 }
 
+/** The classes `daisyDrawer` writes, on the element this is called on. */
+fun Tag.daisyDrawerClasses(
+    end: Boolean = false,
+    open: Boolean = false,
+) {
+    addClassNames("drawer")
+    if (end) addClassNames("drawer-end")
+    if (open) addClassNames("drawer-open")
+}
+
 /** Renders `<input class="drawer-toggle ...">`. */
 fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
@@ -54,6 +65,11 @@ fun FlowContent.daisyDrawerToggle(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyDrawerToggle` writes, on the element this is called on. */
+fun Tag.daisyDrawerToggleClasses() {
+    addClassNames("drawer-toggle")
 }
 
 /** Renders `<div class="drawer-content ...">`. */
@@ -72,6 +88,11 @@ fun FlowContent.daisyDrawerContent(
     }
 }
 
+/** The classes `daisyDrawerContent` writes, on the element this is called on. */
+fun Tag.daisyDrawerContentClasses() {
+    addClassNames("drawer-content")
+}
+
 /** Renders `<div class="drawer-side ...">`. */
 fun FlowContent.daisyDrawerSide(
     id: HtmlId? = null,
@@ -86,6 +107,11 @@ fun FlowContent.daisyDrawerSide(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDrawerSide` writes, on the element this is called on. */
+fun Tag.daisyDrawerSideClasses() {
+    addClassNames("drawer-side")
 }
 
 /** Renders `<label class="drawer-overlay ...">`. */
@@ -104,6 +130,11 @@ fun FlowContent.daisyDrawerOverlay(
     }
 }
 
+/** The classes `daisyDrawerOverlay` writes, on the element this is called on. */
+fun Tag.daisyDrawerOverlayClasses() {
+    addClassNames("drawer-overlay")
+}
+
 /** Renders `<label class="drawer-button ...">`. */
 fun FlowContent.daisyDrawerButton(
     id: HtmlId? = null,
@@ -118,4 +149,9 @@ fun FlowContent.daisyDrawerButton(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDrawerButton` writes, on the element this is called on. */
+fun Tag.daisyDrawerButtonClasses() {
+    addClassNames("drawer-button")
 }

@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Phone mockup shows a mockup of an iPhone. Renders `<div class="mockup-phone ...">`.
@@ -32,6 +33,11 @@ fun FlowContent.daisyMockupPhone(
     }
 }
 
+/** The classes `daisyMockupPhone` writes, on the element this is called on. */
+fun Tag.daisyMockupPhoneClasses() {
+    addClassNames("mockup-phone")
+}
+
 /** Renders `<div class="mockup-phone-camera ...">`. */
 fun FlowContent.daisyMockupPhoneCamera(
     id: HtmlId? = null,
@@ -48,6 +54,11 @@ fun FlowContent.daisyMockupPhoneCamera(
     }
 }
 
+/** The classes `daisyMockupPhoneCamera` writes, on the element this is called on. */
+fun Tag.daisyMockupPhoneCameraClasses() {
+    addClassNames("mockup-phone-camera")
+}
+
 /** Renders `<div class="mockup-phone-display ...">`. */
 fun FlowContent.daisyMockupPhoneDisplay(
     id: HtmlId? = null,
@@ -62,4 +73,9 @@ fun FlowContent.daisyMockupPhoneDisplay(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMockupPhoneDisplay` writes, on the element this is called on. */
+fun Tag.daisyMockupPhoneDisplayClasses() {
+    addClassNames("mockup-phone-display")
 }

@@ -10,7 +10,7 @@
  */
 import type { ComponentShape } from './component-shape.ts'
 import { summaryLine, type DocSummary } from './generator-docs.ts'
-import { renderFunction } from './component-api-dump.ts'
+import { componentSignatures } from './component-api-dump.ts'
 
 /** Where the template takes the component API. */
 const PLACEHOLDER = '{{COMPONENTS}}'
@@ -38,5 +38,5 @@ export function generateLlmsTxt(
 function componentSection(shape: ComponentShape, docSummary: DocSummary | undefined): string {
   const enums = shape.enums.map(e => `enum class ${e.name} { ${e.entries.map(entry => entry.name).join(', ')} }`)
   const lead = `${summaryLine(shape, docSummary)} — renders \`<${shape.functions[0].htmlTag}>\`.`
-  return [`### ${shape.componentName}`, '', lead, '', '```kotlin', ...enums, ...shape.functions.map(renderFunction), '```', ''].join('\n')
+  return [`### ${shape.componentName}`, '', lead, '', '```kotlin', ...enums, ...componentSignatures(shape), '```', ''].join('\n')
 }

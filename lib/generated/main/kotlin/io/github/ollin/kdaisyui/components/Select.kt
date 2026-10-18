@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.select
 import kotlinx.html.SELECT
+import kotlinx.html.Tag
 
 enum class SelectColor(internal val className: String) : ClassValues<SelectColor> {
     /** CSS: `select-neutral` */
@@ -82,4 +83,16 @@ fun FlowContent.daisySelect(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisySelect` writes, on the element this is called on. */
+fun Tag.daisySelectClasses(
+    color: ClassValues<SelectColor>? = null,
+    size: ClassValues<SelectSize>? = null,
+    ghost: Boolean = false,
+) {
+    addClassNames("select")
+    addClassNames(color)
+    addClassNames(size)
+    if (ghost) addClassNames("select-ghost")
 }

@@ -191,4 +191,152 @@ class OtpCoverageTest {
         }
         assertRendered(html, "otp otp-xl", "Otp size Xl")
     }
+
+    @Test
+    fun otpClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses()
+        }
+        assertRendered(html, "otp", "OtpClasses defaults")
+    }
+
+    @Test
+    fun otpClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                joined = true,
+            )
+        }
+        assertRendered(html, "otp otp-joined", "OtpClasses all flags")
+    }
+
+    @Test
+    fun otpClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Neutral,
+            )
+        }
+        assertRendered(html, "otp otp-neutral", "OtpClasses color Neutral")
+    }
+
+    @Test
+    fun otpClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Primary,
+            )
+        }
+        assertRendered(html, "otp otp-primary", "OtpClasses color Primary")
+    }
+
+    @Test
+    fun otpClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Secondary,
+            )
+        }
+        assertRendered(html, "otp otp-secondary", "OtpClasses color Secondary")
+    }
+
+    @Test
+    fun otpClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Accent,
+            )
+        }
+        assertRendered(html, "otp otp-accent", "OtpClasses color Accent")
+    }
+
+    @Test
+    fun otpClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Success,
+            )
+        }
+        assertRendered(html, "otp otp-success", "OtpClasses color Success")
+    }
+
+    @Test
+    fun otpClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Info,
+            )
+        }
+        assertRendered(html, "otp otp-info", "OtpClasses color Info")
+    }
+
+    @Test
+    fun otpClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Warning,
+            )
+        }
+        assertRendered(html, "otp otp-warning", "OtpClasses color Warning")
+    }
+
+    @Test
+    fun otpClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                color = OtpColor.Error,
+            )
+        }
+        assertRendered(html, "otp otp-error", "OtpClasses color Error")
+    }
+
+    @Test
+    fun otpClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                size = OtpSize.Xs,
+            )
+        }
+        assertRendered(html, "otp otp-xs", "OtpClasses size Xs")
+    }
+
+    @Test
+    fun otpClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                size = OtpSize.Sm,
+            )
+        }
+        assertRendered(html, "otp otp-sm", "OtpClasses size Sm")
+    }
+
+    @Test
+    fun otpClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                size = OtpSize.Md,
+            )
+        }
+        assertRendered(html, "otp otp-md", "OtpClasses size Md")
+    }
+
+    @Test
+    fun otpClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                size = OtpSize.Lg,
+            )
+        }
+        assertRendered(html, "otp otp-lg", "OtpClasses size Lg")
+    }
+
+    @Test
+    fun otpClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyOtpClasses(
+                size = OtpSize.Xl,
+            )
+        }
+        assertRendered(html, "otp otp-xl", "OtpClasses size Xl")
+    }
 }

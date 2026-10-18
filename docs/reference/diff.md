@@ -17,6 +17,9 @@ fun FlowContent.daisyDiff(
     attrs: (FIGURE.() -> Unit)? = null,
     content: (FIGURE.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDiffClasses()
 ```
 
 ```kotlin
@@ -26,6 +29,9 @@ fun FlowContent.daisyDiffItem1(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDiffItem1Classes()
 ```
 
 ```kotlin
@@ -35,6 +41,9 @@ fun FlowContent.daisyDiffItem2(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDiffItem2Classes()
 ```
 
 ```kotlin
@@ -44,4 +53,7 @@ fun FlowContent.daisyDiffResizer(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDiffResizerClasses()
 ```

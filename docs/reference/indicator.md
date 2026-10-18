@@ -19,6 +19,9 @@ fun FlowContent.daisyIndicator(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyIndicatorClasses()
 ```
 
 ```kotlin
@@ -30,4 +33,7 @@ fun FlowContent.daisyIndicatorItem(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyIndicatorItemClasses(horizontalPlacement: ClassValues<IndicatorItemHorizontalPlacement>? = null, verticalPlacement: ClassValues<IndicatorItemVerticalPlacement>? = null)
 ```

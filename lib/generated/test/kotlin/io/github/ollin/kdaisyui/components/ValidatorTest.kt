@@ -8,6 +8,16 @@ import kotlin.test.assertEquals
 class ValidatorTest {
 
     @Test
+    fun validator() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidator(attrs = { daisyInputClasses() })
+        }
+        val expectedClasses = "input validator"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Validator")
+    }
+
+    @Test
     fun validator_and_validator_hint_daisyValidatorHint() {
         val html = createHTML(prettyPrint = false).div {
             daisyValidatorHint() {
@@ -16,6 +26,36 @@ class ValidatorTest {
         val expectedClasses = "validator-hint"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Validator and validator-hint")
+    }
+
+    @Test
+    fun checkbox_requirement_validator() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidator(attrs = { daisyCheckboxClasses() })
+        }
+        val expectedClasses = "checkbox validator"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Checkbox requirement validator")
+    }
+
+    @Test
+    fun toggle_requirement_validator() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidator(attrs = { daisyToggleClasses() })
+        }
+        val expectedClasses = "toggle validator"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Toggle requirement validator")
+    }
+
+    @Test
+    fun select_requirement_validator() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyValidator(attrs = { daisySelectClasses() })
+        }
+        val expectedClasses = "select validator"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Select requirement validator")
     }
 
     @Test

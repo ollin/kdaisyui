@@ -49,6 +49,22 @@ class SkeletonCoverageTest {
     }
 
     @Test
+    fun skeletonClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySkeletonClasses()
+        }
+        assertRendered(html, "skeleton", "SkeletonClasses defaults")
+    }
+
+    @Test
+    fun skeletonClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySkeletonClasses()
+        }
+        assertRendered(html, "skeleton", "SkeletonClasses all flags")
+    }
+
+    @Test
     fun skeletonText_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisySkeletonText(
@@ -70,5 +86,21 @@ class SkeletonCoverageTest {
         }
         assertRendered(html, "skeleton skeleton-text zz-extra", "SkeletonText all flags", closes = "</span></div>")
         assertCommonFlags(html, "SkeletonText")
+    }
+
+    @Test
+    fun skeletonTextClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySkeletonTextClasses()
+        }
+        assertRendered(html, "skeleton skeleton-text", "SkeletonTextClasses defaults")
+    }
+
+    @Test
+    fun skeletonTextClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySkeletonTextClasses()
+        }
+        assertRendered(html, "skeleton skeleton-text", "SkeletonTextClasses all flags")
     }
 }

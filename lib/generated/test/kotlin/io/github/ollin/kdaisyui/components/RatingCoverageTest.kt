@@ -40,13 +40,12 @@ class RatingCoverageTest {
             daisyRating(
                 id = htmlId("x-cov-id"),
                 half = true,
-                hidden = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "rating rating-half rating-hidden zz-extra", "Rating all flags", closes = "</div></div>")
+        assertRendered(html, "rating rating-half zz-extra", "Rating all flags", closes = "</div></div>")
         assertCommonFlags(html, "Rating")
     }
 
@@ -103,5 +102,91 @@ class RatingCoverageTest {
             )
         }
         assertRendered(html, "rating rating-xl", "Rating size Xl")
+    }
+
+    @Test
+    fun ratingClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses()
+        }
+        assertRendered(html, "rating", "RatingClasses defaults")
+    }
+
+    @Test
+    fun ratingClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                half = true,
+            )
+        }
+        assertRendered(html, "rating rating-half", "RatingClasses all flags")
+    }
+
+    @Test
+    fun ratingClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Xs,
+            )
+        }
+        assertRendered(html, "rating rating-xs", "RatingClasses size Xs")
+    }
+
+    @Test
+    fun ratingClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Sm,
+            )
+        }
+        assertRendered(html, "rating rating-sm", "RatingClasses size Sm")
+    }
+
+    @Test
+    fun ratingClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Md,
+            )
+        }
+        assertRendered(html, "rating rating-md", "RatingClasses size Md")
+    }
+
+    @Test
+    fun ratingClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Lg,
+            )
+        }
+        assertRendered(html, "rating rating-lg", "RatingClasses size Lg")
+    }
+
+    @Test
+    fun ratingClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingClasses(
+                size = RatingSize.Xl,
+            )
+        }
+        assertRendered(html, "rating rating-xl", "RatingClasses size Xl")
+    }
+
+    @Test
+    fun ratingItemClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingItemClasses()
+        }
+        assertTrue(!html.contains("class=\""), "RatingItemClasses defaults emits no class")
+    }
+
+    @Test
+    fun ratingItemClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyRatingItemClasses(
+                hidden = true,
+            )
+        }
+        assertRendered(html, "rating-hidden", "RatingItemClasses all flags")
     }
 }

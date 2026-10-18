@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Calendar includes styles for different calendar libraries. Renders `<div class="cally ...">`.
@@ -30,4 +31,30 @@ fun FlowContent.daisyCalendar(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyCalendar` writes, on the element this is called on. */
+fun Tag.daisyCalendarClasses() {
+    addClassNames("cally")
+}
+
+/** Renders `<div class="vc ...">`. */
+fun FlowContent.daisyVc(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        if (id != null) attributes["id"] = id.id
+        addClassNames("vc")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyVc` writes, on the element this is called on. */
+fun Tag.daisyVcClasses() {
+    addClassNames("vc")
 }

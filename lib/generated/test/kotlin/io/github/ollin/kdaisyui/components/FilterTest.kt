@@ -39,4 +39,14 @@ class FilterTest {
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter using HTML form, radio buttons and reset button")
     }
+
+    @Test
+    fun filter_without_html_form_daisyFilterReset() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFilterReset(attrs = { daisyButtonClasses() })
+        }
+        val expectedClasses = "btn filter-reset"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter without HTML form")
+    }
 }

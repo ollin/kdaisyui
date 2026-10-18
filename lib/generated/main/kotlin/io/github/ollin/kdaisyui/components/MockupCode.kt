@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Code mockup is used to show a block of code in a box that looks like a code editor. Renders `<div class="mockup-code ...">`.
@@ -30,4 +31,9 @@ fun FlowContent.daisyMockupCode(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMockupCode` writes, on the element this is called on. */
+fun Tag.daisyMockupCodeClasses() {
+    addClassNames("mockup-code")
 }

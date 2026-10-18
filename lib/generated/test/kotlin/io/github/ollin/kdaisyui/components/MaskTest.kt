@@ -10,8 +10,7 @@ class MaskTest {
     @Test
     fun squircle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Squircle) {
-            }
+            daisyMask(style = MaskStyle.Squircle)
         }
         val expectedClasses = "mask mask-squircle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -21,8 +20,7 @@ class MaskTest {
     @Test
     fun heart() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Heart) {
-            }
+            daisyMask(style = MaskStyle.Heart)
         }
         val expectedClasses = "mask mask-heart"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -32,8 +30,7 @@ class MaskTest {
     @Test
     fun hexagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Hexagon) {
-            }
+            daisyMask(style = MaskStyle.Hexagon)
         }
         val expectedClasses = "mask mask-hexagon"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -43,8 +40,7 @@ class MaskTest {
     @Test
     fun hexagon_2_horizontal_hexagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Hexagon2) {
-            }
+            daisyMask(style = MaskStyle.Hexagon2)
         }
         val expectedClasses = "mask mask-hexagon-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -54,8 +50,7 @@ class MaskTest {
     @Test
     fun decagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Decagon) {
-            }
+            daisyMask(style = MaskStyle.Decagon)
         }
         val expectedClasses = "mask mask-decagon"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -65,8 +60,7 @@ class MaskTest {
     @Test
     fun pentagon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Pentagon) {
-            }
+            daisyMask(style = MaskStyle.Pentagon)
         }
         val expectedClasses = "mask mask-pentagon"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -76,8 +70,7 @@ class MaskTest {
     @Test
     fun diamond() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Diamond) {
-            }
+            daisyMask(style = MaskStyle.Diamond)
         }
         val expectedClasses = "mask mask-diamond"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -87,8 +80,7 @@ class MaskTest {
     @Test
     fun circle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Circle) {
-            }
+            daisyMask(style = MaskStyle.Circle)
         }
         val expectedClasses = "mask mask-circle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -98,8 +90,7 @@ class MaskTest {
     @Test
     fun star() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star) {
-            }
+            daisyMask(style = MaskStyle.Star)
         }
         val expectedClasses = "mask mask-star"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -109,8 +100,7 @@ class MaskTest {
     @Test
     fun star_2_bold_star() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Star2) {
-            }
+            daisyMask(style = MaskStyle.Star2)
         }
         val expectedClasses = "mask mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -120,8 +110,7 @@ class MaskTest {
     @Test
     fun triangle_pointing_top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Triangle) {
-            }
+            daisyMask(style = MaskStyle.Triangle)
         }
         val expectedClasses = "mask mask-triangle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -131,8 +120,7 @@ class MaskTest {
     @Test
     fun triangle_2_pointing_down() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Triangle2) {
-            }
+            daisyMask(style = MaskStyle.Triangle2)
         }
         val expectedClasses = "mask mask-triangle-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -142,8 +130,7 @@ class MaskTest {
     @Test
     fun triangle_3_pointing_left() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Triangle3) {
-            }
+            daisyMask(style = MaskStyle.Triangle3)
         }
         val expectedClasses = "mask mask-triangle-3"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -153,8 +140,7 @@ class MaskTest {
     @Test
     fun triangle_4_pointing_right() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Triangle4) {
-            }
+            daisyMask(style = MaskStyle.Triangle4)
         }
         val expectedClasses = "mask mask-triangle-4"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

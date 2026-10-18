@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 enum class ChatBubbleColor(internal val className: String) : ClassValues<ChatBubbleColor> {
     /** CSS: `chat-bubble-neutral` */
@@ -69,6 +70,14 @@ fun FlowContent.daisyChat(
     }
 }
 
+/** The classes `daisyChat` writes, on the element this is called on. */
+fun Tag.daisyChatClasses(
+    placement: ClassValues<ChatPlacement>? = null,
+) {
+    addClassNames("chat")
+    addClassNames(placement)
+}
+
 /** Renders `<div class="chat-image ...">`. */
 fun FlowContent.daisyChatImage(
     id: HtmlId? = null,
@@ -83,6 +92,11 @@ fun FlowContent.daisyChatImage(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyChatImage` writes, on the element this is called on. */
+fun Tag.daisyChatImageClasses() {
+    addClassNames("chat-image")
 }
 
 /** Renders `<div class="chat-header ...">`. */
@@ -101,6 +115,11 @@ fun FlowContent.daisyChatHeader(
     }
 }
 
+/** The classes `daisyChatHeader` writes, on the element this is called on. */
+fun Tag.daisyChatHeaderClasses() {
+    addClassNames("chat-header")
+}
+
 /** Renders `<div class="chat-footer ...">`. */
 fun FlowContent.daisyChatFooter(
     id: HtmlId? = null,
@@ -115,6 +134,11 @@ fun FlowContent.daisyChatFooter(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyChatFooter` writes, on the element this is called on. */
+fun Tag.daisyChatFooterClasses() {
+    addClassNames("chat-footer")
 }
 
 /** Renders `<div class="chat-bubble ...">`. */
@@ -133,4 +157,12 @@ fun FlowContent.daisyChatBubble(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyChatBubble` writes, on the element this is called on. */
+fun Tag.daisyChatBubbleClasses(
+    color: ClassValues<ChatBubbleColor>? = null,
+) {
+    addClassNames("chat-bubble")
+    addClassNames(color)
 }

@@ -21,4 +21,7 @@ fun FlowContent.daisyLoading(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyLoadingClasses(size: ClassValues<LoadingSize>? = null, style: ClassValues<LoadingStyle>? = null)
 ```

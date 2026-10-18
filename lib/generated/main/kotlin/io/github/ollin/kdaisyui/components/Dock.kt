@@ -7,11 +7,14 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
+import kotlinx.html.button
+import kotlinx.html.BUTTON
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `dock-`) */
 enum class DockSize(internal val className: String) : ClassValues<DockSize> {
@@ -35,7 +38,6 @@ enum class DockSize(internal val className: String) : ClassValues<DockSize> {
  * Dock (also know as Bottom navigation or Bottom bar) is a UI element that provides navigation options to the user. Dock sticks to the bottom of the screen. Renders `<div class="dock ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
- * @param active — Makes the Dock Item look active
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -43,7 +45,6 @@ enum class DockSize(internal val className: String) : ClassValues<DockSize> {
 fun FlowContent.daisyDock(
     id: HtmlId? = null,
     size: ClassValues<DockSize>? = null,
-    active: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -52,11 +53,42 @@ fun FlowContent.daisyDock(
         if (id != null) attributes["id"] = id.id
         addClassNames("dock")
         addClassNames(size)
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyDock` writes, on the element this is called on. */
+fun Tag.daisyDockClasses(
+    size: ClassValues<DockSize>? = null,
+) {
+    addClassNames("dock")
+    addClassNames(size)
+}
+
+/** Structural wrapper. Renders `<button>`. */
+fun FlowContent.daisyDockItem(
+    id: HtmlId? = null,
+    active: Boolean = false,
+    extraClasses: String? = null,
+    attrs: (BUTTON.() -> Unit)? = null,
+    content: (BUTTON.() -> Unit),
+) {
+    button {
+        if (id != null) attributes["id"] = id.id
         if (active) addClassNames("dock-active")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDockItem` writes, on the element this is called on. */
+fun Tag.daisyDockItemClasses(
+    active: Boolean = false,
+) {
+    if (active) addClassNames("dock-active")
 }
 
 /** Renders `<span class="dock-label ...">`. */
@@ -73,4 +105,9 @@ fun FlowContent.daisyDockLabel(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyDockLabel` writes, on the element this is called on. */
+fun Tag.daisyDockLabelClasses() {
+    addClassNames("dock-label")
 }

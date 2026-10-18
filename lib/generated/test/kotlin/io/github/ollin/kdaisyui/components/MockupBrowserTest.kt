@@ -32,8 +32,7 @@ class MockupBrowserTest {
     @Test
     fun browser_mockup_with_border_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput() {
-            }
+            daisyInput()
         }
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

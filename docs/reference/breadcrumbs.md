@@ -17,6 +17,9 @@ fun FlowContent.daisyBreadcrumbs(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyBreadcrumbsClasses()
 ```
 
 ```kotlin

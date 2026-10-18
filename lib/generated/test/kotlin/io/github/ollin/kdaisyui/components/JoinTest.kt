@@ -54,8 +54,7 @@ class JoinTest {
     @Test
     fun with_extra_elements_in_the_group_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput() {
-            }
+            daisyInput()
         }
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -80,6 +79,17 @@ class JoinTest {
             }
         }
         val expectedClasses = "indicator"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
+    }
+
+    @Test
+    fun with_extra_elements_in_the_group_daisyBadge() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBadge(color = BadgeColor.Secondary, attrs = { daisyIndicatorItemClasses() }) {
+            }
+        }
+        val expectedClasses = "badge badge-secondary indicator-item"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
     }

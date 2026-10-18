@@ -17,6 +17,9 @@ fun FlowContent.daisyFieldset(
     attrs: (FIELDSET.() -> Unit)? = null,
     content: (FIELDSET.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFieldsetClasses()
 ```
 
 ```kotlin
@@ -26,4 +29,7 @@ fun FIELDSET.daisyFieldsetLegend(
     attrs: (LEGEND.() -> Unit)? = null,
     content: (LEGEND.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFieldsetLegendClasses()
 ```

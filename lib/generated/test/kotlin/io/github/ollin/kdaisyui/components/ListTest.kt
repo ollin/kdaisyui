@@ -4,6 +4,8 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.div
+import kotlinx.html.ul
 
 class ListTest {
 
@@ -19,6 +21,17 @@ class ListTest {
     }
 
     @Test
+    fun list_second_column_grows_default_daisyListRow() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyListRow() {
+            }
+        }
+        val expectedClasses = "list-row"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
+    }
+
+    @Test
     fun list_second_column_grows_default_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(shape = ButtonShape.Square, style = ButtonStyle.Ghost) {
@@ -27,5 +40,25 @@ class ListTest {
         val expectedClasses = "btn btn-ghost btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for List (second column grows - default)")
+    }
+
+    @Test
+    fun list_third_column_grows_daisyListCell() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListCellClasses(colGrow = true)
+        }
+        val expectedClasses = "list-col-grow"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column grows)")
+    }
+
+    @Test
+    fun list_third_column_wraps_to_next_row_daisyListCell() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListCellClasses(colWrap = true)
+        }
+        val expectedClasses = "list-col-wrap"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for List (third column wraps to next row)")
     }
 }

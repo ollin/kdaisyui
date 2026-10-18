@@ -11,6 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
+import kotlinx.html.Tag
 
 enum class CheckboxColor(internal val className: String) : ClassValues<CheckboxColor> {
     /** CSS: `checkbox-primary` */
@@ -81,4 +82,14 @@ fun FlowContent.daisyCheckbox(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyCheckbox` writes, on the element this is called on. */
+fun Tag.daisyCheckboxClasses(
+    color: ClassValues<CheckboxColor>? = null,
+    size: ClassValues<CheckboxSize>? = null,
+) {
+    addClassNames("checkbox")
+    addClassNames(color)
+    addClassNames(size)
 }

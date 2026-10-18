@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.a
 import kotlinx.html.A
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `link-`) */
 enum class LinkColor(internal val className: String) : ClassValues<LinkColor> {
@@ -66,4 +67,14 @@ fun FlowContent.daisyLink(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyLink` writes, on the element this is called on. */
+fun Tag.daisyLinkClasses(
+    color: ClassValues<LinkColor>? = null,
+    hover: Boolean = false,
+) {
+    addClassNames("link")
+    addClassNames(color)
+    if (hover) addClassNames("link-hover")
 }

@@ -8,6 +8,7 @@ import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.textArea
 import kotlinx.html.TEXTAREA
 
@@ -79,4 +80,16 @@ fun FlowContent.daisyTextarea(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTextarea` writes, on the element this is called on. */
+fun Tag.daisyTextareaClasses(
+    color: ClassValues<TextareaColor>? = null,
+    size: ClassValues<TextareaSize>? = null,
+    ghost: Boolean = false,
+) {
+    addClassNames("textarea")
+    addClassNames(color)
+    addClassNames(size)
+    if (ghost) addClassNames("textarea-ghost")
 }

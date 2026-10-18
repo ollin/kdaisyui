@@ -49,6 +49,22 @@ class NavbarCoverageTest {
     }
 
     @Test
+    fun navbarClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarClasses()
+        }
+        assertRendered(html, "navbar", "NavbarClasses defaults")
+    }
+
+    @Test
+    fun navbarClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarClasses()
+        }
+        assertRendered(html, "navbar", "NavbarClasses all flags")
+    }
+
+    @Test
     fun navbarStart_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarStart(
@@ -70,6 +86,22 @@ class NavbarCoverageTest {
         }
         assertRendered(html, "navbar-start zz-extra", "NavbarStart all flags", closes = "</div></div>")
         assertCommonFlags(html, "NavbarStart")
+    }
+
+    @Test
+    fun navbarStartClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarStartClasses()
+        }
+        assertRendered(html, "navbar-start", "NavbarStartClasses defaults")
+    }
+
+    @Test
+    fun navbarStartClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarStartClasses()
+        }
+        assertRendered(html, "navbar-start", "NavbarStartClasses all flags")
     }
 
     @Test
@@ -97,6 +129,22 @@ class NavbarCoverageTest {
     }
 
     @Test
+    fun navbarCenterClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarCenterClasses()
+        }
+        assertRendered(html, "navbar-center", "NavbarCenterClasses defaults")
+    }
+
+    @Test
+    fun navbarCenterClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarCenterClasses()
+        }
+        assertRendered(html, "navbar-center", "NavbarCenterClasses all flags")
+    }
+
+    @Test
     fun navbarEnd_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarEnd(
@@ -118,5 +166,21 @@ class NavbarCoverageTest {
         }
         assertRendered(html, "navbar-end zz-extra", "NavbarEnd all flags", closes = "</div></div>")
         assertCommonFlags(html, "NavbarEnd")
+    }
+
+    @Test
+    fun navbarEndClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarEndClasses()
+        }
+        assertRendered(html, "navbar-end", "NavbarEndClasses defaults")
+    }
+
+    @Test
+    fun navbarEndClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyNavbarEndClasses()
+        }
+        assertRendered(html, "navbar-end", "NavbarEndClasses all flags")
     }
 }

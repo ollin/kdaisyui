@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.table
 import kotlinx.html.TABLE
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `table-`) */
 enum class TableSize(internal val className: String) : ClassValues<TableSize> {
@@ -61,4 +62,18 @@ fun FlowContent.daisyTable(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyTable` writes, on the element this is called on. */
+fun Tag.daisyTableClasses(
+    size: ClassValues<TableSize>? = null,
+    pinCols: Boolean = false,
+    pinRows: Boolean = false,
+    zebra: Boolean = false,
+) {
+    addClassNames("table")
+    addClassNames(size)
+    if (pinCols) addClassNames("table-pin-cols")
+    if (pinRows) addClassNames("table-pin-rows")
+    if (zebra) addClassNames("table-zebra")
 }

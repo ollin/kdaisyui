@@ -104,6 +104,72 @@ class CarouselCoverageTest {
     }
 
     @Test
+    fun carouselClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselClasses()
+        }
+        assertRendered(html, "carousel", "CarouselClasses defaults")
+    }
+
+    @Test
+    fun carouselClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselClasses()
+        }
+        assertRendered(html, "carousel", "CarouselClasses all flags")
+    }
+
+    @Test
+    fun carouselClasses_snap_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselClasses(
+                snap = CarouselSnap.Start,
+            )
+        }
+        assertRendered(html, "carousel carousel-start", "CarouselClasses snap Start")
+    }
+
+    @Test
+    fun carouselClasses_snap_center() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselClasses(
+                snap = CarouselSnap.Center,
+            )
+        }
+        assertRendered(html, "carousel carousel-center", "CarouselClasses snap Center")
+    }
+
+    @Test
+    fun carouselClasses_snap_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselClasses(
+                snap = CarouselSnap.End,
+            )
+        }
+        assertRendered(html, "carousel carousel-end", "CarouselClasses snap End")
+    }
+
+    @Test
+    fun carouselClasses_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselClasses(
+                direction = CarouselDirection.Horizontal,
+            )
+        }
+        assertRendered(html, "carousel carousel-horizontal", "CarouselClasses direction Horizontal")
+    }
+
+    @Test
+    fun carouselClasses_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselClasses(
+                direction = CarouselDirection.Vertical,
+            )
+        }
+        assertRendered(html, "carousel carousel-vertical", "CarouselClasses direction Vertical")
+    }
+
+    @Test
     fun carouselItem_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarouselItem(
@@ -125,5 +191,21 @@ class CarouselCoverageTest {
         }
         assertRendered(html, "carousel-item zz-extra", "CarouselItem all flags", closes = "</div></div>")
         assertCommonFlags(html, "CarouselItem")
+    }
+
+    @Test
+    fun carouselItemClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselItemClasses()
+        }
+        assertRendered(html, "carousel-item", "CarouselItemClasses defaults")
+    }
+
+    @Test
+    fun carouselItemClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCarouselItemClasses()
+        }
+        assertRendered(html, "carousel-item", "CarouselItemClasses all flags")
     }
 }

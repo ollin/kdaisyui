@@ -19,6 +19,9 @@ fun FlowContent.daisyDrawer(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDrawerClasses(end: Boolean = false, open: Boolean = false)
 ```
 
 ```kotlin
@@ -27,6 +30,9 @@ fun FlowContent.daisyDrawerToggle(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDrawerToggleClasses()
 ```
 
 ```kotlin
@@ -36,6 +42,9 @@ fun FlowContent.daisyDrawerContent(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDrawerContentClasses()
 ```
 
 ```kotlin
@@ -45,6 +54,9 @@ fun FlowContent.daisyDrawerSide(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDrawerSideClasses()
 ```
 
 ```kotlin
@@ -54,6 +66,9 @@ fun FlowContent.daisyDrawerOverlay(
     attrs: (LABEL.() -> Unit)? = null,
     content: (LABEL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDrawerOverlayClasses()
 ```
 
 ```kotlin
@@ -63,4 +78,7 @@ fun FlowContent.daisyDrawerButton(
     attrs: (LABEL.() -> Unit)? = null,
     content: (LABEL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDrawerButtonClasses()
 ```

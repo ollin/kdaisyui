@@ -7,8 +7,11 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
+import kotlinx.html.label
+import kotlinx.html.LABEL
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /**
  * Label is used to provide a name or title for an input field. Label can be placed before or after the field. Renders `<span class="label ...">`.
@@ -35,4 +38,30 @@ fun FlowContent.daisyLabel(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyLabel` writes, on the element this is called on. */
+fun Tag.daisyLabelClasses() {
+    addClassNames("label")
+}
+
+/** For the parent of an input field (or select) and a span that floats above the input field when the field is focused Renders `<label class="floating-label ...">`. */
+fun FlowContent.daisyFloatingLabel(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (LABEL.() -> Unit)? = null,
+    content: (LABEL.() -> Unit),
+) {
+    label {
+        if (id != null) attributes["id"] = id.id
+        addClassNames("floating-label")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyFloatingLabel` writes, on the element this is called on. */
+fun Tag.daisyFloatingLabelClasses() {
+    addClassNames("floating-label")
 }

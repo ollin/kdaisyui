@@ -20,6 +20,9 @@ fun FlowContent.daisyFooter(
     attrs: (FOOTER.() -> Unit)? = null,
     content: (FOOTER.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFooterClasses(direction: ClassValues<FooterDirection>? = null, center: Boolean = false)
 ```
 
 ```kotlin
@@ -30,4 +33,7 @@ fun FlowContent.daisyFooterTitle(
     attrs: (H6.() -> Unit)? = null,
     content: (H6.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFooterTitleClasses()
 ```

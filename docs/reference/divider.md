@@ -23,4 +23,7 @@ fun FlowContent.daisyDivider(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDividerClasses(color: ClassValues<DividerColor>? = null, direction: ClassValues<DividerDirection>? = null, placement: ClassValues<DividerPlacement>? = null)
 ```

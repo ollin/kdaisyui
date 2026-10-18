@@ -140,6 +140,17 @@ class FabTest {
     }
 
     @Test
+    fun fab_flower_and_speed_dial_daisyFabMainAction() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg) }) {
+            }
+        }
+        val expectedClasses = "btn btn-circle btn-lg fab-main-action"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB Flower and Speed Dial")
+    }
+
+    @Test
     fun fab_and_flower_speed_dial_with_svg_icons_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(shape = ButtonShape.Circle, size = ButtonSize.Lg) {
@@ -151,12 +162,34 @@ class FabTest {
     }
 
     @Test
+    fun fab_and_flower_speed_dial_with_svg_icons_daisyFabMainAction() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Primary) }) {
+            }
+        }
+        val expectedClasses = "btn btn-circle btn-lg btn-primary fab-main-action"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with SVG icons")
+    }
+
+    @Test
     fun fab_and_flower_speed_dial_with_tooltip_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
             daisyButton(size = ButtonSize.Lg, color = ButtonColor.Info, shape = ButtonShape.Circle) {
             }
         }
         val expectedClasses = "btn btn-circle btn-info btn-lg"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with tooltip")
+    }
+
+    @Test
+    fun fab_and_flower_speed_dial_with_tooltip_daisyFabMainAction() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Success) }) {
+            }
+        }
+        val expectedClasses = "btn btn-circle btn-lg btn-success fab-main-action"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for FAB and Flower Speed Dial with tooltip")
     }

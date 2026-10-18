@@ -106,4 +106,70 @@ class KbdCoverageTest {
         assertRendered(html, "kbd", "Kbd text")
         assertTrue(html.contains("txtmark"), "Kbd text content")
     }
+
+    @Test
+    fun kbdClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyKbdClasses()
+        }
+        assertRendered(html, "kbd", "KbdClasses defaults")
+    }
+
+    @Test
+    fun kbdClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyKbdClasses()
+        }
+        assertRendered(html, "kbd", "KbdClasses all flags")
+    }
+
+    @Test
+    fun kbdClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyKbdClasses(
+                size = KbdSize.Xs,
+            )
+        }
+        assertRendered(html, "kbd kbd-xs", "KbdClasses size Xs")
+    }
+
+    @Test
+    fun kbdClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyKbdClasses(
+                size = KbdSize.Sm,
+            )
+        }
+        assertRendered(html, "kbd kbd-sm", "KbdClasses size Sm")
+    }
+
+    @Test
+    fun kbdClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyKbdClasses(
+                size = KbdSize.Md,
+            )
+        }
+        assertRendered(html, "kbd kbd-md", "KbdClasses size Md")
+    }
+
+    @Test
+    fun kbdClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyKbdClasses(
+                size = KbdSize.Lg,
+            )
+        }
+        assertRendered(html, "kbd kbd-lg", "KbdClasses size Lg")
+    }
+
+    @Test
+    fun kbdClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyKbdClasses(
+                size = KbdSize.Xl,
+            )
+        }
+        assertRendered(html, "kbd kbd-xl", "KbdClasses size Xl")
+    }
 }

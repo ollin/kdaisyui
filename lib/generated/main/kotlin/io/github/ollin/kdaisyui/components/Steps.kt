@@ -12,6 +12,7 @@ import kotlinx.html.li
 import kotlinx.html.LI
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -75,6 +76,14 @@ fun FlowContent.daisySteps(
     }
 }
 
+/** The classes `daisySteps` writes, on the element this is called on. */
+fun Tag.daisyStepsClasses(
+    direction: ClassValues<StepsDirection>? = null,
+) {
+    addClassNames("steps")
+    addClassNames(direction)
+}
+
 /** A single step node Renders `<li class="step ...">`. */
 fun UL.daisyStep(
     id: HtmlId? = null,
@@ -93,6 +102,14 @@ fun UL.daisyStep(
     }
 }
 
+/** The classes `daisyStep` writes, on the element this is called on. */
+fun Tag.daisyStepClasses(
+    color: ClassValues<StepColor>? = null,
+) {
+    addClassNames("step")
+    addClassNames(color)
+}
+
 /** For custom icon inside step Renders `<span class="step-icon ...">`. */
 fun FlowContent.daisyStepIcon(
     id: HtmlId? = null,
@@ -107,4 +124,9 @@ fun FlowContent.daisyStepIcon(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyStepIcon` writes, on the element this is called on. */
+fun Tag.daisyStepIconClasses() {
+    addClassNames("step-icon")
 }

@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `rating-`) */
 enum class RatingSize(internal val className: String) : ClassValues<RatingSize> {
@@ -34,7 +35,6 @@ enum class RatingSize(internal val className: String) : ClassValues<RatingSize> 
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param half — To shows half of the shapes. Useful for half star ratings
- * @param hidden — For the first radio to make it hidden so user can clear the rating
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -43,7 +43,6 @@ fun FlowContent.daisyRating(
     id: HtmlId? = null,
     size: ClassValues<RatingSize>? = null,
     half: Boolean = false,
-    hidden: Boolean = false,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -53,9 +52,25 @@ fun FlowContent.daisyRating(
         addClassNames("rating")
         addClassNames(size)
         if (half) addClassNames("rating-half")
-        if (hidden) addClassNames("rating-hidden")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyRating` writes, on the element this is called on. */
+fun Tag.daisyRatingClasses(
+    size: ClassValues<RatingSize>? = null,
+    half: Boolean = false,
+) {
+    addClassNames("rating")
+    addClassNames(size)
+    if (half) addClassNames("rating-half")
+}
+
+/** The classes `daisyRatingItem` writes, on the element this is called on. */
+fun Tag.daisyRatingItemClasses(
+    hidden: Boolean = false,
+) {
+    if (hidden) addClassNames("rating-hidden")
 }

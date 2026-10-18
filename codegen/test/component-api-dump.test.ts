@@ -83,7 +83,7 @@ describe('generateComponentApiDump', () => {
     const parts = [part('daisyCardTitle', 'card-title', { element: 'H2' }), part('daisyCardBody', 'card-body')]
     const dump = generateComponentApiDump([shapeOf({ ...component('card', 'Card', 'card'), functions: [component('card', 'Card', 'card').functions[0], ...parts] })])
 
-    const functions = dump.split('\n').filter(line => line.startsWith('fun '))
+    const functions = dump.split('\n').filter(line => line.startsWith('fun ') && !line.startsWith('fun Tag.'))
     assert.equal(functions.length, 3)
     assert.match(functions[0], /^fun FlowContent\.daisyCard\(id: HtmlId\? = null, /)
   })
@@ -106,5 +106,24 @@ describe('generateComponentApiDump', () => {
 
     assert.match(dump, /^# GENERATED — DO NOT EDIT$/m)
     assert.match(dump, /:lib:updateComponentApi/)
+  })
+})
+
+describe('the class siblings', () => {
+  test("follow their function, with the function's class parameters only", () => {
+    const button = component('button', 'Button', 'btn', { enums: [{ name: 'ButtonSize', label: 'Size variants', classes: ['btn-sm'] }] }, { parameters: [enumParameter('size', 'ButtonSize', ''), toggle('active', 'btn-active')] })
+    const lines = generateComponentApiDump([shapeOf(button)]).split('\n')
+    const function_ = lines.findIndex(line => line.startsWith('fun FlowContent.daisyButton('))
+
+    assert.equal(lines[function_ + 1], 'fun Tag.daisyButtonClasses(size: ClassValues<ButtonSize>? = null, active: Boolean = false)')
+  })
+})
+
+describe('a class-only function', () => {
+  test('is dumped as its sibling, after the functions', () => {
+    const menu = { ...component('menu', 'Menu', 'menu'), functions: [...component('menu', 'Menu', 'menu').functions, { kind: 'classes' as const, name: 'daisyMenuItem', receiver: 'Tag', element: null as unknown as string, class: null, text: false, parameters: [toggle('active', 'menu-active')] }] }
+    const lines = generateComponentApiDump([shapeOf(menu)]).split('\n')
+
+    assert.equal(lines[lines.findIndex(line => line.startsWith('fun Tag.daisyMenuClasses(')) + 1], 'fun Tag.daisyMenuItemClasses(active: Boolean = false)')
   })
 })

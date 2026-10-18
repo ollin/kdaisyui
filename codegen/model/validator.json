@@ -24,11 +24,5 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Form validation wrapper" },
-  "notExpressed": {
-    "checkbox validator": "Two components on one element, daisyCheckbox and daisyValidator; one call renders one function. Call one and pass the other's classes through extraClasses.",
-    "input validator": "Two components on one element, daisyInput and daisyValidator; one call renders one function. Call one and pass the other's classes through extraClasses.",
-    "select validator": "Two components on one element, daisySelect and daisyValidator; one call renders one function. Call one and pass the other's classes through extraClasses.",
-    "toggle validator": "Two components on one element, daisyToggle and daisyValidator; one call renders one function. Call one and pass the other's classes through extraClasses."
-  }
+  "summary": { "summary": "Form validation wrapper" }
 }

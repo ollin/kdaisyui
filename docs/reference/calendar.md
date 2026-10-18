@@ -17,4 +17,19 @@ fun FlowContent.daisyCalendar(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCalendarClasses()
+```
+
+```kotlin
+fun FlowContent.daisyVc(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+)
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyVcClasses()
 ```

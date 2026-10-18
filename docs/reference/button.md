@@ -31,4 +31,7 @@ fun FlowContent.daisyButton(
     attrs: (BUTTON.() -> Unit)? = null,
     content: (BUTTON.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyButtonClasses(color: ClassValues<ButtonColor>? = null, size: ClassValues<ButtonSize>? = null, style: ClassValues<ButtonStyle>? = null, shape: ClassValues<ButtonShape>? = null, width: ClassValues<ButtonWidth>? = null, active: Boolean = false, disabled: Boolean = false)
 ```

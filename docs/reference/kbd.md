@@ -20,4 +20,7 @@ fun FlowContent.daisyKbd(
     attrs: (KBD.() -> Unit)? = null,
     content: (KBD.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyKbdClasses(size: ClassValues<KbdSize>? = null)
 ```

@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Navbar is used to show a navigation bar on the top of the page. Renders `<div class="navbar ...">`.
@@ -32,6 +33,11 @@ fun FlowContent.daisyNavbar(
     }
 }
 
+/** The classes `daisyNavbar` writes, on the element this is called on. */
+fun Tag.daisyNavbarClasses() {
+    addClassNames("navbar")
+}
+
 /** Renders `<div class="navbar-start ...">`. */
 fun FlowContent.daisyNavbarStart(
     id: HtmlId? = null,
@@ -46,6 +52,11 @@ fun FlowContent.daisyNavbarStart(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyNavbarStart` writes, on the element this is called on. */
+fun Tag.daisyNavbarStartClasses() {
+    addClassNames("navbar-start")
 }
 
 /** Renders `<div class="navbar-center ...">`. */
@@ -64,6 +75,11 @@ fun FlowContent.daisyNavbarCenter(
     }
 }
 
+/** The classes `daisyNavbarCenter` writes, on the element this is called on. */
+fun Tag.daisyNavbarCenterClasses() {
+    addClassNames("navbar-center")
+}
+
 /** Renders `<div class="navbar-end ...">`. */
 fun FlowContent.daisyNavbarEnd(
     id: HtmlId? = null,
@@ -78,4 +94,9 @@ fun FlowContent.daisyNavbarEnd(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyNavbarEnd` writes, on the element this is called on. */
+fun Tag.daisyNavbarEndClasses() {
+    addClassNames("navbar-end")
 }

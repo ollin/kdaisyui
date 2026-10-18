@@ -12,6 +12,8 @@
 import type { MainFunctionConfig } from './model.ts'
 import { toCamelCase } from './classifier.ts'
 import {
+  hasSibling,
+  siblingParameters,
   staticAttributeDoc,
   type ComponentShape,
   type CssClass,
@@ -20,6 +22,7 @@ import {
   type FunctionShape,
   type ParameterShape,
   type ScopeShape,
+  type SiblingShape,
   type StaticAttribute,
 } from './component-shape.ts'
 
@@ -245,7 +248,7 @@ function mainFunctionBody(
  * used to be emitted here, once per parameter, and every copy of it was a branch the coverage
  * and mutation gates had to drive separately to establish the same fact.
  */
-function classValuesLines(shape: FunctionShape): string[] {
+function classValuesLines(shape: SiblingShape): string[] {
   return shape.parameters
     .filter(parameter => parameter.enumName !== undefined)
     .map(parameter => `        addClassNames(${parameter.name})`)
@@ -256,10 +259,27 @@ function classValuesLines(shape: FunctionShape): string[] {
  * rather than re-deriving which booleans exist: a boolean the shape moved to a part is emitted
  * by that part and by nothing else, and the two can never disagree.
  */
-function booleanLines(shape: FunctionShape): string[] {
+function booleanLines(shape: SiblingShape): string[] {
   return shape.parameters
     .filter(parameter => parameter.cssClass !== undefined)
     .map(parameter => `        if (${parameter.name}) addClassNames("${parameter.cssClass}")`)
+}
+
+/**
+ * `Tag.<name>Classes`: the function's classes, from the same typed parameters, added to the
+ * element it is called on. It is how one element wears two components, and how a component's
+ * classes reach an element its function does not render.
+ */
+function renderSibling(shape: SiblingShape): string {
+  const parameters = siblingParameters(shape)
+  const signature = parameters.length === 0 ? '()' : `(\n${parameters.map(renderParameter).join('\n')}\n)`
+  const lines = [
+    ...[shape.cssClass, ...shape.modifierClasses].filter(cls => cls !== null).map(cls => `addClassNames("${cls}")`),
+    ...classValuesLines(shape).map(line => line.trim()),
+    ...booleanLines(shape).map(line => line.trim()),
+    ...parameters.flatMap(parameter => (parameter.writes ?? []).map(cls => `if (${parameter.name}) addClassNames("${cls}")`)),
+  ]
+  return `/** The classes \`${shape.name}\` writes, on the element this is called on. */\nfun Tag.${shape.name}Classes${signature} {\n${lines.map(line => `    ${line}`).join('\n')}\n}`
 }
 
 /** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
@@ -332,6 +352,7 @@ function collectImports(shape: ComponentShape, componentConfig: MainFunctionConf
     ...shape.functions.flatMap(functionImports),
     ...(shape.scope === undefined ? [] : scopeImports(shape.scope)),
     ...configImports(componentConfig),
+    ...(shape.functions.some(hasSibling) || (shape.siblingsOnly ?? []).length > 0 ? ['kotlinx.html.Tag'] : []),
   ])
 
   // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
@@ -363,11 +384,13 @@ export function generateKotlinFile(shape: ComponentShape, componentConfig: MainF
   ].join('\n')
 
   const enums = shape.enums.map(renderEnum).join('\n')
-  const functions = shape.functions.map(fn =>
+  const functions = shape.functions.map(fn => [
     renderFunction(fn, renderBody(fn, shape.prefix ?? '', componentConfig)),
-  )
+    ...(hasSibling(fn) ? [renderSibling(fn)] : []),
+  ].join('\n\n'))
   const scope = shape.scope === undefined ? '' : renderScope(shape.scope, shape.functions[0].element)
-  const body = [enums, ...functions, scope].filter(Boolean).join('\n\n')
+  const siblingsOnly = (shape.siblingsOnly ?? []).map(renderSibling)
+  const body = [enums, ...functions, ...siblingsOnly, scope].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`
 }

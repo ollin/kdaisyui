@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /**
  * Browser mockup shows a box that looks like a browser window. Renders `<div class="mockup-browser ...">`.
@@ -32,6 +33,11 @@ fun FlowContent.daisyMockupBrowser(
     }
 }
 
+/** The classes `daisyMockupBrowser` writes, on the element this is called on. */
+fun Tag.daisyMockupBrowserClasses() {
+    addClassNames("mockup-browser")
+}
+
 /** Renders `<div class="mockup-browser-toolbar ...">`. */
 fun FlowContent.daisyMockupBrowserToolbar(
     id: HtmlId? = null,
@@ -46,4 +52,9 @@ fun FlowContent.daisyMockupBrowserToolbar(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMockupBrowserToolbar` writes, on the element this is called on. */
+fun Tag.daisyMockupBrowserToolbarClasses() {
+    addClassNames("mockup-browser-toolbar")
 }

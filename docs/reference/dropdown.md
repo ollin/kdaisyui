@@ -24,6 +24,9 @@ fun FlowContent.daisyDropdown(
     attrs: (DETAILS.() -> Unit)? = null,
     content: (DETAILS.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDropdownClasses(side: ClassValues<DropdownSide>? = null, align: ClassValues<DropdownAlign>? = null, state: ClassValues<DropdownState>? = null, hover: Boolean = false)
 ```
 
 ```kotlin
@@ -33,4 +36,7 @@ fun FlowContent.daisyDropdownContent(
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDropdownContentClasses()
 ```

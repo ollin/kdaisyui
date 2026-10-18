@@ -17,6 +17,9 @@ fun FlowContent.daisyHero(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyHeroClasses()
 ```
 
 ```kotlin
@@ -26,6 +29,9 @@ fun FlowContent.daisyHeroContent(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyHeroContentClasses()
 ```
 
 ```kotlin
@@ -35,4 +41,7 @@ fun FlowContent.daisyHeroOverlay(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyHeroOverlayClasses()
 ```

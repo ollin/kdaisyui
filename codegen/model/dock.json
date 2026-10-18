@@ -13,10 +13,16 @@
       "element": "DIV",
       "class": "dock",
       "text": false,
-      "parameters": [
-        { "kind": "enum", "name": "size", "enum": "DockSize", "doc": "Size variant" },
-        { "kind": "toggle", "name": "active", "class": "dock-active" }
-      ]
+      "parameters": [{ "kind": "enum", "name": "size", "enum": "DockSize", "doc": "Size variant" }]
+    },
+    {
+      "kind": "part",
+      "name": "daisyDockItem",
+      "receiver": "FlowContent",
+      "element": "BUTTON",
+      "class": null,
+      "text": false,
+      "parameters": [{ "kind": "toggle", "name": "active", "class": "dock-active" }]
     },
     {
       "kind": "part",
@@ -28,8 +34,5 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "macOS-style dock navigation" },
-  "notExpressed": {
-    "dock-active": "#347: DaisyUI puts it on a child no function renders; daisyDock offers it on the <div> itself, where it has no effect."
-  }
+  "summary": { "summary": "macOS-style dock navigation" }
 }

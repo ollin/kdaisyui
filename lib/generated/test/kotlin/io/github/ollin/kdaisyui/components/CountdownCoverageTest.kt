@@ -47,4 +47,20 @@ class CountdownCoverageTest {
         assertRendered(html, "countdown zz-extra", "Countdown all flags", closes = "</span></div>")
         assertCommonFlags(html, "Countdown")
     }
+
+    @Test
+    fun countdownClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCountdownClasses()
+        }
+        assertRendered(html, "countdown", "CountdownClasses defaults")
+    }
+
+    @Test
+    fun countdownClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCountdownClasses()
+        }
+        assertRendered(html, "countdown", "CountdownClasses all flags")
+    }
 }

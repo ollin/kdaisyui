@@ -12,6 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `megamenu-`) */
 enum class MegamenuSize(internal val className: String) : ClassValues<MegamenuSize> {
@@ -74,6 +75,18 @@ fun FlowContent.daisyMegamenu(
     }
 }
 
+/** The classes `daisyMegamenu` writes, on the element this is called on. */
+fun Tag.daisyMegamenuClasses(
+    size: ClassValues<MegamenuSize>? = null,
+    width: ClassValues<MegamenuWidth>? = null,
+    vertical: Boolean = false,
+) {
+    addClassNames("megamenu")
+    addClassNames(size)
+    addClassNames(width)
+    if (vertical) addClassNames("megamenu-vertical")
+}
+
 /** Renders `<span class="megamenu-active ...">`. */
 fun FlowContent.daisyMegamenuActive(
     id: HtmlId? = null,
@@ -88,6 +101,11 @@ fun FlowContent.daisyMegamenuActive(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMegamenuActive` writes, on the element this is called on. */
+fun Tag.daisyMegamenuActiveClasses() {
+    addClassNames("megamenu-active")
 }
 
 /** Structural wrapper. Renders `<div popover>`. */

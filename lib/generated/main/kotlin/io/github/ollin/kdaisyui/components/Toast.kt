@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** HorizontalPlacement variants for this component (CSS prefix: `toast-`) */
 enum class ToastHorizontalPlacement(internal val className: String) : ClassValues<ToastHorizontalPlacement> {
@@ -64,4 +65,14 @@ fun FlowContent.daisyToast(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyToast` writes, on the element this is called on. */
+fun Tag.daisyToastClasses(
+    horizontalPlacement: ClassValues<ToastHorizontalPlacement>? = null,
+    verticalPlacement: ClassValues<ToastVerticalPlacement>? = null,
+) {
+    addClassNames("toast")
+    addClassNames(horizontalPlacement)
+    addClassNames(verticalPlacement)
 }

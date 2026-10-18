@@ -12,7 +12,9 @@
  * them: the index is a one-cell table column, and some of DaisyUI's descriptions run to 48 words.
  */
 
+import { renderSiblingSignature, renderSignatures } from './component-api-dump.ts'
 import {
+  hasSibling,
   staticAttributeDoc,
   type ComponentShape,
   type FunctionShape,
@@ -127,6 +129,7 @@ function signatureBlock(shape: FunctionShape, leadingComments: readonly string[]
     `fun ${shape.receiver}.${shape.name}(`,
     ...parameters,
     ')',
+    ...(hasSibling(shape) ? ['', `// The same classes on an element you write yourself, or beside another component's:`, renderSignatures(shape)[1]] : []),
     '```',
   ].join('\n')
 }
@@ -266,6 +269,7 @@ export function generateComponentPage(
   const blocks = [
     signatureBlock(main, enumComments(shape)),
     ...rest.map(fn => signatureBlock(fn, [])),
+    ...(shape.siblingsOnly ?? []).map(sibling => ['```kotlin', '// Classes only, for a child DaisyUI gives no class of its own:', renderSiblingSignature(sibling), '```'].join('\n')),
     ...(shape.scope === undefined ? [] : [scopeSection(shape, shape.scope)]),
   ]
 

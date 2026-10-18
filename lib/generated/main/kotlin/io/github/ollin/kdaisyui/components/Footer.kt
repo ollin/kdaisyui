@@ -12,6 +12,7 @@ import kotlinx.html.footer
 import kotlinx.html.FOOTER
 import kotlinx.html.h6
 import kotlinx.html.H6
+import kotlinx.html.Tag
 
 /** Direction variants for this component (CSS prefix: `footer-`) */
 enum class FooterDirection(internal val className: String) : ClassValues<FooterDirection> {
@@ -53,6 +54,16 @@ fun FlowContent.daisyFooter(
     }
 }
 
+/** The classes `daisyFooter` writes, on the element this is called on. */
+fun Tag.daisyFooterClasses(
+    direction: ClassValues<FooterDirection>? = null,
+    center: Boolean = false,
+) {
+    addClassNames("footer")
+    addClassNames(direction)
+    if (center) addClassNames("footer-center")
+}
+
 /** Renders `<h6 class="footer-title ...">`. */
 fun FlowContent.daisyFooterTitle(
     text: String? = null,
@@ -71,4 +82,9 @@ fun FlowContent.daisyFooterTitle(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyFooterTitle` writes, on the element this is called on. */
+fun Tag.daisyFooterTitleClasses() {
+    addClassNames("footer-title")
 }

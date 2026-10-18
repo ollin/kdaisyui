@@ -47,4 +47,20 @@ class MockupCodeCoverageTest {
         assertRendered(html, "mockup-code zz-extra", "MockupCode all flags", closes = "</div></div>")
         assertCommonFlags(html, "MockupCode")
     }
+
+    @Test
+    fun mockupCodeClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupCodeClasses()
+        }
+        assertRendered(html, "mockup-code", "MockupCodeClasses defaults")
+    }
+
+    @Test
+    fun mockupCodeClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupCodeClasses()
+        }
+        assertRendered(html, "mockup-code", "MockupCodeClasses all flags")
+    }
 }

@@ -24,6 +24,9 @@ fun FlowContent.daisyTooltip(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTooltipClasses(color: ClassValues<TooltipColor>? = null, side: ClassValues<TooltipSide>? = null, align: ClassValues<TooltipAlign>? = null, open: Boolean = false)
 ```
 
 ```kotlin
@@ -33,4 +36,7 @@ fun FlowContent.daisyTooltipContent(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTooltipContentClasses()
 ```

@@ -6,6 +6,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
+import kotlinx.html.ul
 
 class ListCoverageTest {
 
@@ -49,24 +50,77 @@ class ListCoverageTest {
     }
 
     @Test
-    fun list_column_colwrap() {
+    fun listClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyList(
-                column = ListColumn.ColWrap,
-                content = { },
-            )
+            daisyListClasses()
         }
-        assertRendered(html, "list list-col-wrap", "List column ColWrap")
+        assertRendered(html, "list", "ListClasses defaults")
     }
 
     @Test
-    fun list_column_colgrow() {
+    fun listClasses_all_flags() {
         val html = createHTML(prettyPrint = false).div {
-            daisyList(
-                column = ListColumn.ColGrow,
+            daisyListClasses()
+        }
+        assertRendered(html, "list", "ListClasses all flags")
+    }
+
+    @Test
+    fun listRow_defaults() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyListRow(
                 content = { },
             )
         }
-        assertRendered(html, "list list-col-grow", "List column ColGrow")
+        assertRendered(html, "list-row", "ListRow defaults", closes = "</li></ul>")
+    }
+
+    @Test
+    fun listRow_all_flags() {
+        val html = createHTML(prettyPrint = false).ul {
+            daisyListRow(
+                id = htmlId("x-cov-id"),
+                extraClasses = "zz-extra",
+                attrs = { attributes["data-attrs"] = "yes" },
+                content = { attributes["data-content"] = "yes" },
+            )
+        }
+        assertRendered(html, "list-row zz-extra", "ListRow all flags", closes = "</li></ul>")
+        assertCommonFlags(html, "ListRow")
+    }
+
+    @Test
+    fun listRowClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListRowClasses()
+        }
+        assertRendered(html, "list-row", "ListRowClasses defaults")
+    }
+
+    @Test
+    fun listRowClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListRowClasses()
+        }
+        assertRendered(html, "list-row", "ListRowClasses all flags")
+    }
+
+    @Test
+    fun listCellClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListCellClasses()
+        }
+        assertTrue(!html.contains("class=\""), "ListCellClasses defaults emits no class")
+    }
+
+    @Test
+    fun listCellClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyListCellClasses(
+                colGrow = true,
+                colWrap = true,
+            )
+        }
+        assertRendered(html, "list-col-grow list-col-wrap", "ListCellClasses all flags")
     }
 }

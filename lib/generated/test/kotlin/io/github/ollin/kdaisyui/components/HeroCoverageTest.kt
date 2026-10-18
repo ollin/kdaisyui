@@ -49,6 +49,22 @@ class HeroCoverageTest {
     }
 
     @Test
+    fun heroClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHeroClasses()
+        }
+        assertRendered(html, "hero", "HeroClasses defaults")
+    }
+
+    @Test
+    fun heroClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHeroClasses()
+        }
+        assertRendered(html, "hero", "HeroClasses all flags")
+    }
+
+    @Test
     fun heroContent_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroContent(
@@ -73,6 +89,22 @@ class HeroCoverageTest {
     }
 
     @Test
+    fun heroContentClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHeroContentClasses()
+        }
+        assertRendered(html, "hero-content", "HeroContentClasses defaults")
+    }
+
+    @Test
+    fun heroContentClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHeroContentClasses()
+        }
+        assertRendered(html, "hero-content", "HeroContentClasses all flags")
+    }
+
+    @Test
     fun heroOverlay_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroOverlay(
@@ -94,5 +126,21 @@ class HeroCoverageTest {
         }
         assertRendered(html, "hero-overlay zz-extra", "HeroOverlay all flags", closes = "</div></div>")
         assertCommonFlags(html, "HeroOverlay")
+    }
+
+    @Test
+    fun heroOverlayClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHeroOverlayClasses()
+        }
+        assertRendered(html, "hero-overlay", "HeroOverlayClasses defaults")
+    }
+
+    @Test
+    fun heroOverlayClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyHeroOverlayClasses()
+        }
+        assertRendered(html, "hero-overlay", "HeroOverlayClasses all flags")
     }
 }

@@ -17,6 +17,9 @@ fun FlowContent.daisyMockupPhone(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMockupPhoneClasses()
 ```
 
 ```kotlin
@@ -26,6 +29,9 @@ fun FlowContent.daisyMockupPhoneCamera(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMockupPhoneCameraClasses()
 ```
 
 ```kotlin
@@ -35,4 +41,7 @@ fun FlowContent.daisyMockupPhoneDisplay(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyMockupPhoneDisplayClasses()
 ```

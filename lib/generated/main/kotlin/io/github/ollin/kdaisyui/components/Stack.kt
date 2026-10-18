@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Placement variants for this component (CSS prefix: `stack-`) */
 enum class StackPlacement(internal val className: String) : ClassValues<StackPlacement> {
@@ -50,4 +51,12 @@ fun FlowContent.daisyStack(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyStack` writes, on the element this is called on. */
+fun Tag.daisyStackClasses(
+    placement: ClassValues<StackPlacement>? = null,
+) {
+    addClassNames("stack")
+    addClassNames(placement)
 }

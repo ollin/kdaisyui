@@ -22,4 +22,7 @@ fun FlowContent.daisyTextarea(
     attrs: (TEXTAREA.() -> Unit)? = null,
     content: (TEXTAREA.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTextareaClasses(color: ClassValues<TextareaColor>? = null, size: ClassValues<TextareaSize>? = null, ghost: Boolean = false)
 ```

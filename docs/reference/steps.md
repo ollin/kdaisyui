@@ -20,6 +20,9 @@ fun FlowContent.daisySteps(
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStepsClasses(direction: ClassValues<StepsDirection>? = null)
 ```
 
 ```kotlin
@@ -30,6 +33,9 @@ fun UL.daisyStep(
     attrs: (LI.() -> Unit)? = null,
     content: (LI.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStepClasses(color: ClassValues<StepColor>? = null)
 ```
 
 ```kotlin
@@ -39,4 +45,7 @@ fun FlowContent.daisyStepIcon(
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyStepIconClasses()
 ```

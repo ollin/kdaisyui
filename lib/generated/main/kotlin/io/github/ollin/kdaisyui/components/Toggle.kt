@@ -11,6 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
+import kotlinx.html.Tag
 
 enum class ToggleColor(internal val className: String) : ClassValues<ToggleColor> {
     /** CSS: `toggle-primary` */
@@ -81,4 +82,14 @@ fun FlowContent.daisyToggle(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyToggle` writes, on the element this is called on. */
+fun Tag.daisyToggleClasses(
+    color: ClassValues<ToggleColor>? = null,
+    size: ClassValues<ToggleSize>? = null,
+) {
+    addClassNames("toggle")
+    addClassNames(color)
+    addClassNames(size)
 }

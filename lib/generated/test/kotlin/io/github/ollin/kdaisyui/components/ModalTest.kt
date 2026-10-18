@@ -88,8 +88,7 @@ class ModalTest {
     @Test
     fun modal_using_checkbox_daisyModalToggle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModalToggle() {
-            }
+            daisyModalToggle()
         }
         val expectedClasses = "modal-toggle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

@@ -127,6 +127,94 @@ class MegamenuCoverageTest {
     }
 
     @Test
+    fun megamenuClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses()
+        }
+        assertRendered(html, "megamenu", "MegamenuClasses defaults")
+    }
+
+    @Test
+    fun megamenuClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                vertical = true,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-vertical", "MegamenuClasses all flags")
+    }
+
+    @Test
+    fun megamenuClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                size = MegamenuSize.Xs,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-xs", "MegamenuClasses size Xs")
+    }
+
+    @Test
+    fun megamenuClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                size = MegamenuSize.Sm,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-sm", "MegamenuClasses size Sm")
+    }
+
+    @Test
+    fun megamenuClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                size = MegamenuSize.Md,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-md", "MegamenuClasses size Md")
+    }
+
+    @Test
+    fun megamenuClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                size = MegamenuSize.Lg,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-lg", "MegamenuClasses size Lg")
+    }
+
+    @Test
+    fun megamenuClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                size = MegamenuSize.Xl,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-xl", "MegamenuClasses size Xl")
+    }
+
+    @Test
+    fun megamenuClasses_width_wide() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                width = MegamenuWidth.Wide,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-wide", "MegamenuClasses width Wide")
+    }
+
+    @Test
+    fun megamenuClasses_width_full() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuClasses(
+                width = MegamenuWidth.Full,
+            )
+        }
+        assertRendered(html, "megamenu megamenu-full", "MegamenuClasses width Full")
+    }
+
+    @Test
     fun megamenuActive_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenuActive(
@@ -148,6 +236,22 @@ class MegamenuCoverageTest {
         }
         assertRendered(html, "megamenu-active zz-extra", "MegamenuActive all flags", closes = "</span></div>")
         assertCommonFlags(html, "MegamenuActive")
+    }
+
+    @Test
+    fun megamenuActiveClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuActiveClasses()
+        }
+        assertRendered(html, "megamenu-active", "MegamenuActiveClasses defaults")
+    }
+
+    @Test
+    fun megamenuActiveClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMegamenuActiveClasses()
+        }
+        assertRendered(html, "megamenu-active", "MegamenuActiveClasses all flags")
     }
 
     @Test

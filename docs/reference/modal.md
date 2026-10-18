@@ -22,6 +22,9 @@ fun FlowContent.daisyModal(
     attrs: (DIALOG.() -> Unit)? = null,
     content: (DIALOG.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyModalClasses(verticalPlacement: ClassValues<ModalVerticalPlacement>? = null, horizontalPlacement: ClassValues<ModalHorizontalPlacement>? = null, open: Boolean = false)
 ```
 
 ```kotlin
@@ -31,6 +34,9 @@ fun FlowContent.daisyModalBox(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyModalBoxClasses()
 ```
 
 ```kotlin
@@ -40,6 +46,9 @@ fun FlowContent.daisyModalAction(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyModalActionClasses()
 ```
 
 ```kotlin
@@ -49,6 +58,9 @@ fun FlowContent.daisyModalBackdrop(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyModalBackdropClasses()
 ```
 
 ```kotlin
@@ -57,6 +69,9 @@ fun FlowContent.daisyModalToggle(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyModalToggleClasses()
 ```
 
 ```kotlin
@@ -66,4 +81,7 @@ fun FlowContent.daisyModalPopover(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyModalPopoverClasses()
 ```

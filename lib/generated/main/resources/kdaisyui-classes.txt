@@ -26,6 +26,7 @@ aura-sm
 aura-xl
 aura-xs
 avatar
+avatar-group
 avatar-offline
 avatar-online
 avatar-placeholder
@@ -198,6 +199,7 @@ file-input-xl
 file-input-xs
 filter
 filter-reset
+floating-label
 footer
 footer-center
 footer-horizontal
@@ -256,6 +258,7 @@ link-warning
 list
 list-col-grow
 list-col-wrap
+list-row
 loading
 loading-ball
 loading-bars
@@ -550,3 +553,4 @@ tooltip-top
 tooltip-warning
 validator
 validator-hint
+vc

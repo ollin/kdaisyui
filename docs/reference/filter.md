@@ -17,6 +17,9 @@ fun FlowContent.daisyFilter(
     attrs: (FORM.() -> Unit)? = null,
     content: (FORM.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFilterClasses()
 ```
 
 ```kotlin
@@ -25,4 +28,7 @@ fun FlowContent.daisyFilterReset(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFilterResetClasses()
 ```

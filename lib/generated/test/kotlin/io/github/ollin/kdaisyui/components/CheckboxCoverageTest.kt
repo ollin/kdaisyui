@@ -180,4 +180,150 @@ class CheckboxCoverageTest {
         }
         assertRendered(html, "checkbox checkbox-xl", "Checkbox size Xl")
     }
+
+    @Test
+    fun checkboxClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses()
+        }
+        assertRendered(html, "checkbox", "CheckboxClasses defaults")
+    }
+
+    @Test
+    fun checkboxClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses()
+        }
+        assertRendered(html, "checkbox", "CheckboxClasses all flags")
+    }
+
+    @Test
+    fun checkboxClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Primary,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-primary", "CheckboxClasses color Primary")
+    }
+
+    @Test
+    fun checkboxClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Secondary,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-secondary", "CheckboxClasses color Secondary")
+    }
+
+    @Test
+    fun checkboxClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Accent,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-accent", "CheckboxClasses color Accent")
+    }
+
+    @Test
+    fun checkboxClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Neutral,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-neutral", "CheckboxClasses color Neutral")
+    }
+
+    @Test
+    fun checkboxClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Success,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-success", "CheckboxClasses color Success")
+    }
+
+    @Test
+    fun checkboxClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Warning,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-warning", "CheckboxClasses color Warning")
+    }
+
+    @Test
+    fun checkboxClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Info,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-info", "CheckboxClasses color Info")
+    }
+
+    @Test
+    fun checkboxClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                color = CheckboxColor.Error,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-error", "CheckboxClasses color Error")
+    }
+
+    @Test
+    fun checkboxClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                size = CheckboxSize.Xs,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-xs", "CheckboxClasses size Xs")
+    }
+
+    @Test
+    fun checkboxClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                size = CheckboxSize.Sm,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-sm", "CheckboxClasses size Sm")
+    }
+
+    @Test
+    fun checkboxClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                size = CheckboxSize.Md,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-md", "CheckboxClasses size Md")
+    }
+
+    @Test
+    fun checkboxClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                size = CheckboxSize.Lg,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-lg", "CheckboxClasses size Lg")
+    }
+
+    @Test
+    fun checkboxClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCheckboxClasses(
+                size = CheckboxSize.Xl,
+            )
+        }
+        assertRendered(html, "checkbox checkbox-xl", "CheckboxClasses size Xl")
+    }
 }

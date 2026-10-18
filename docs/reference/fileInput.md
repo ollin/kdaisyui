@@ -21,4 +21,7 @@ fun FlowContent.daisyFileInput(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFileInputClasses(color: ClassValues<FileInputColor>? = null, size: ClassValues<FileInputSize>? = null, ghost: Boolean = false)
 ```

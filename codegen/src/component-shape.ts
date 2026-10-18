@@ -122,6 +122,11 @@ export interface ParameterShape {
    * passes to `addClassNames` unguarded. Absent for every other parameter.
    */
   readonly enumName?: string
+  /**
+   * The classes an extra parameter's fragment writes beside what else it does, e.g.
+   * `btn-disabled`. A class sibling offers them as a plain toggle. Absent for every other one.
+   */
+  readonly writes?: readonly CssClass[]
 }
 
 /**
@@ -131,7 +136,7 @@ export interface ParameterShape {
  * none, and only the main function carries the component's enums. Both emitters need to know
  * which they are looking at, so the shape says it rather than each of them re-deriving it.
  */
-export type FunctionKind = 'main' | 'part' | 'custom'
+export type FunctionKind = 'main' | 'part' | 'custom' | 'classes'
 
 /** One generated Kotlin function. */
 export interface FunctionShape {
@@ -235,7 +240,16 @@ export interface ComponentShape {
    * scope's members are OTHER components' functions and this shape knows only its own.
    */
   readonly scope?: ScopeShape
+  /**
+   * Class-only functions: classes DaisyUI puts on a child with no class of its own, such as
+   * `menu-active` on the `<a>` inside a `<li>`. Each generates its class sibling and nothing else,
+   * so they are kept out of `functions`, which every emitter reads as rendering an element.
+   */
+  readonly siblingsOnly?: readonly SiblingShape[]
 }
+
+/** What a class sibling is emitted from: a rendering function, or a class-only one. */
+export type SiblingShape = Pick<FunctionShape, 'name' | 'cssClass' | 'modifierClasses' | 'parameters'>
 
 const ID_PARAMETER: ParameterShape = {
   name: 'id',
@@ -312,4 +326,16 @@ export function functionParameters(element: TagClass, hasTextParam: boolean, own
 function withOwnClasses(escapeHatches: readonly ParameterShape[], own: readonly ParameterShape[]): ParameterShape[] {
   const afterId = escapeHatches.findIndex(parameter => parameter === ID_PARAMETER) + 1
   return [...escapeHatches.slice(0, afterId), ...own, ...escapeHatches.slice(afterId)]
+}
+
+/** The parameters a class sibling takes: the function's classes, with an extra's as a toggle. */
+export function siblingParameters(shape: SiblingShape): ParameterShape[] {
+  return shape.parameters
+    .filter(parameter => parameter.enumName !== undefined || parameter.cssClass !== undefined || parameter.writes !== undefined)
+    .map(parameter => (parameter.writes === undefined ? parameter : { ...parameter, type: 'Boolean', default: 'false' }))
+}
+
+/** Whether a function writes any class, and so has a class sibling. */
+export function hasSibling(shape: SiblingShape): boolean {
+  return shape.cssClass !== null || shape.modifierClasses.length > 0 || siblingParameters(shape).length > 0
 }

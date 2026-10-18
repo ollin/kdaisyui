@@ -168,4 +168,130 @@ class AuraCoverageTest {
         }
         assertRendered(html, "aura aura-glow", "Aura style Glow")
     }
+
+    @Test
+    fun auraClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses()
+        }
+        assertRendered(html, "aura", "AuraClasses defaults")
+    }
+
+    @Test
+    fun auraClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses()
+        }
+        assertRendered(html, "aura", "AuraClasses all flags")
+    }
+
+    @Test
+    fun auraClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                size = AuraSize.Xs,
+            )
+        }
+        assertRendered(html, "aura aura-xs", "AuraClasses size Xs")
+    }
+
+    @Test
+    fun auraClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                size = AuraSize.Sm,
+            )
+        }
+        assertRendered(html, "aura aura-sm", "AuraClasses size Sm")
+    }
+
+    @Test
+    fun auraClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                size = AuraSize.Md,
+            )
+        }
+        assertRendered(html, "aura aura-md", "AuraClasses size Md")
+    }
+
+    @Test
+    fun auraClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                size = AuraSize.Lg,
+            )
+        }
+        assertRendered(html, "aura aura-lg", "AuraClasses size Lg")
+    }
+
+    @Test
+    fun auraClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                size = AuraSize.Xl,
+            )
+        }
+        assertRendered(html, "aura aura-xl", "AuraClasses size Xl")
+    }
+
+    @Test
+    fun auraClasses_style_dual() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                style = AuraStyle.Dual,
+            )
+        }
+        assertRendered(html, "aura aura-dual", "AuraClasses style Dual")
+    }
+
+    @Test
+    fun auraClasses_style_rainbow() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                style = AuraStyle.Rainbow,
+            )
+        }
+        assertRendered(html, "aura aura-rainbow", "AuraClasses style Rainbow")
+    }
+
+    @Test
+    fun auraClasses_style_holo() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                style = AuraStyle.Holo,
+            )
+        }
+        assertRendered(html, "aura aura-holo", "AuraClasses style Holo")
+    }
+
+    @Test
+    fun auraClasses_style_gold() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                style = AuraStyle.Gold,
+            )
+        }
+        assertRendered(html, "aura aura-gold", "AuraClasses style Gold")
+    }
+
+    @Test
+    fun auraClasses_style_silver() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                style = AuraStyle.Silver,
+            )
+        }
+        assertRendered(html, "aura aura-silver", "AuraClasses style Silver")
+    }
+
+    @Test
+    fun auraClasses_style_glow() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAuraClasses(
+                style = AuraStyle.Glow,
+            )
+        }
+        assertRendered(html, "aura aura-glow", "AuraClasses style Glow")
+    }
 }

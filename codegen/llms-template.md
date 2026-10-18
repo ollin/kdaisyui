@@ -67,6 +67,11 @@ shipped with.
 - **Always use named arguments.** Parameter order is generated and changes between releases.
 - **The lambda receiver is the element the function renders** — `daisyDropdownContent` renders
   `<ul>`, so its `content` lambda runs on `UL`.
+- **Every function has a class sibling, `Tag.daisy<Name>Classes(…)`,** which adds the same classes
+  to the element it is called on. Use it where DaisyUI puts two components on one element,
+  `daisyDropdownContent(attrs = { daisyMenuClasses() })`, or a component's classes on an element you
+  write yourself, `a { daisyButtonClasses(color = ButtonColor.Primary) }`. Classes DaisyUI puts on a
+  child without a class of its own have a sibling only: `li { a { daisyMenuItemClasses(active = true) } }`.
 
 Every function also takes these:
 

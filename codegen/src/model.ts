@@ -174,7 +174,7 @@ function toggleShape(model: ComponentModel, toggle: ModelToggleParameter, descri
 
 function parameterShape(model: ComponentModel, parameter: ModelParameter, descriptions: Descriptions): ParameterShape {
   if (parameter.kind === 'toggle') return toggleShape(model, parameter, descriptions)
-  if (parameter.kind === 'extra') return { name: parameter.name, type: parameter.type, default: parameter.default, doc: null }
+  if (parameter.kind === 'extra') return { name: parameter.name, type: parameter.type, default: parameter.default, doc: null, ...(parameter.writes ? { writes: parameter.writes as CssClass[] } : {}) }
   return {
     name: parameter.name,
     type: `ClassValues<${parameter.enum}>?`,
@@ -219,7 +219,13 @@ export function shapeFromModel(model: ComponentModel, descriptions: Descriptions
     componentDir: model.component,
     prefix: model.class as CssClass | null,
     enums: model.enums.map(declared => enumShape(model, declared, descriptions)),
-    functions: model.functions.map(declared => functionShape(model, declared, descriptions)),
+    functions: model.functions.filter(declared => declared.kind !== 'classes').map(declared => functionShape(model, declared, descriptions)),
+    siblingsOnly: model.functions.filter(declared => declared.kind === 'classes').map(declared => ({
+      name: declared.name,
+      cssClass: null,
+      modifierClasses: [],
+      parameters: declared.parameters.map(parameter => parameterShape(model, parameter, descriptions)),
+    })),
   }
 }
 

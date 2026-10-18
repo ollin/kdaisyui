@@ -191,4 +191,152 @@ class TextareaCoverageTest {
         }
         assertRendered(html, "textarea textarea-xl", "Textarea size Xl")
     }
+
+    @Test
+    fun textareaClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses()
+        }
+        assertRendered(html, "textarea", "TextareaClasses defaults")
+    }
+
+    @Test
+    fun textareaClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                ghost = true,
+            )
+        }
+        assertRendered(html, "textarea textarea-ghost", "TextareaClasses all flags")
+    }
+
+    @Test
+    fun textareaClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Neutral,
+            )
+        }
+        assertRendered(html, "textarea textarea-neutral", "TextareaClasses color Neutral")
+    }
+
+    @Test
+    fun textareaClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Primary,
+            )
+        }
+        assertRendered(html, "textarea textarea-primary", "TextareaClasses color Primary")
+    }
+
+    @Test
+    fun textareaClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Secondary,
+            )
+        }
+        assertRendered(html, "textarea textarea-secondary", "TextareaClasses color Secondary")
+    }
+
+    @Test
+    fun textareaClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Accent,
+            )
+        }
+        assertRendered(html, "textarea textarea-accent", "TextareaClasses color Accent")
+    }
+
+    @Test
+    fun textareaClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Info,
+            )
+        }
+        assertRendered(html, "textarea textarea-info", "TextareaClasses color Info")
+    }
+
+    @Test
+    fun textareaClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Success,
+            )
+        }
+        assertRendered(html, "textarea textarea-success", "TextareaClasses color Success")
+    }
+
+    @Test
+    fun textareaClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Warning,
+            )
+        }
+        assertRendered(html, "textarea textarea-warning", "TextareaClasses color Warning")
+    }
+
+    @Test
+    fun textareaClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                color = TextareaColor.Error,
+            )
+        }
+        assertRendered(html, "textarea textarea-error", "TextareaClasses color Error")
+    }
+
+    @Test
+    fun textareaClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                size = TextareaSize.Xs,
+            )
+        }
+        assertRendered(html, "textarea textarea-xs", "TextareaClasses size Xs")
+    }
+
+    @Test
+    fun textareaClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                size = TextareaSize.Sm,
+            )
+        }
+        assertRendered(html, "textarea textarea-sm", "TextareaClasses size Sm")
+    }
+
+    @Test
+    fun textareaClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                size = TextareaSize.Md,
+            )
+        }
+        assertRendered(html, "textarea textarea-md", "TextareaClasses size Md")
+    }
+
+    @Test
+    fun textareaClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                size = TextareaSize.Lg,
+            )
+        }
+        assertRendered(html, "textarea textarea-lg", "TextareaClasses size Lg")
+    }
+
+    @Test
+    fun textareaClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTextareaClasses(
+                size = TextareaSize.Xl,
+            )
+        }
+        assertRendered(html, "textarea textarea-xl", "TextareaClasses size Xl")
+    }
 }

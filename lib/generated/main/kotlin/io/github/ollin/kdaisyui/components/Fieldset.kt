@@ -11,6 +11,7 @@ import kotlinx.html.FIELDSET
 import kotlinx.html.FlowContent
 import kotlinx.html.legend
 import kotlinx.html.LEGEND
+import kotlinx.html.Tag
 
 /**
  * Fieldset is a container for grouping related form elements. It includes fieldset-legend as a title and label as a description. Renders `<fieldset class="fieldset ...">`.
@@ -34,6 +35,11 @@ fun FlowContent.daisyFieldset(
     }
 }
 
+/** The classes `daisyFieldset` writes, on the element this is called on. */
+fun Tag.daisyFieldsetClasses() {
+    addClassNames("fieldset")
+}
+
 /** Renders `<legend class="fieldset-legend ...">`. */
 fun FIELDSET.daisyFieldsetLegend(
     id: HtmlId? = null,
@@ -48,4 +54,9 @@ fun FIELDSET.daisyFieldsetLegend(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyFieldsetLegend` writes, on the element this is called on. */
+fun Tag.daisyFieldsetLegendClasses() {
+    addClassNames("fieldset-legend")
 }

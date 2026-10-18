@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.img
 import kotlinx.html.IMG
+import kotlinx.html.Tag
 
 /** Style variants for this component (CSS prefix: `mask-`) */
 enum class MaskStyle(internal val className: String) : ClassValues<MaskStyle> {
@@ -81,4 +82,14 @@ fun FlowContent.daisyMask(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyMask` writes, on the element this is called on. */
+fun Tag.daisyMaskClasses(
+    style: ClassValues<MaskStyle>? = null,
+    half: ClassValues<MaskHalf>? = null,
+) {
+    addClassNames("mask")
+    addClassNames(style)
+    addClassNames(half)
 }

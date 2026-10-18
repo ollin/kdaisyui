@@ -71,6 +71,42 @@ class JoinCoverageTest {
     }
 
     @Test
+    fun joinClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoinClasses()
+        }
+        assertRendered(html, "join", "JoinClasses defaults")
+    }
+
+    @Test
+    fun joinClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoinClasses()
+        }
+        assertRendered(html, "join", "JoinClasses all flags")
+    }
+
+    @Test
+    fun joinClasses_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoinClasses(
+                direction = JoinDirection.Vertical,
+            )
+        }
+        assertRendered(html, "join join-vertical", "JoinClasses direction Vertical")
+    }
+
+    @Test
+    fun joinClasses_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyJoinClasses(
+                direction = JoinDirection.Horizontal,
+            )
+        }
+        assertRendered(html, "join join-horizontal", "JoinClasses direction Horizontal")
+    }
+
+    @Test
     fun scope_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
             daisyJoin {

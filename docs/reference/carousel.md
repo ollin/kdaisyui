@@ -21,6 +21,9 @@ fun FlowContent.daisyCarousel(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCarouselClasses(snap: ClassValues<CarouselSnap>? = null, direction: ClassValues<CarouselDirection>? = null)
 ```
 
 ```kotlin
@@ -30,4 +33,7 @@ fun FlowContent.daisyCarouselItem(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyCarouselItemClasses()
 ```

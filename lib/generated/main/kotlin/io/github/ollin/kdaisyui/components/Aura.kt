@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `aura-`) */
 enum class AuraSize(internal val className: String) : ClassValues<AuraSize> {
@@ -74,4 +75,14 @@ fun FlowContent.daisyAura(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyAura` writes, on the element this is called on. */
+fun Tag.daisyAuraClasses(
+    size: ClassValues<AuraSize>? = null,
+    style: ClassValues<AuraStyle>? = null,
+) {
+    addClassNames("aura")
+    addClassNames(size)
+    addClassNames(style)
 }

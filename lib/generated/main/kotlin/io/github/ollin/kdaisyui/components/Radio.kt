@@ -11,6 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `radio-`) */
 enum class RadioColor(internal val className: String) : ClassValues<RadioColor> {
@@ -86,4 +87,14 @@ fun FlowContent.daisyRadio(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyRadio` writes, on the element this is called on. */
+fun Tag.daisyRadioClasses(
+    color: ClassValues<RadioColor>? = null,
+    size: ClassValues<RadioSize>? = null,
+) {
+    addClassNames("radio")
+    addClassNames(color)
+    addClassNames(size)
 }

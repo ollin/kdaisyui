@@ -32,8 +32,7 @@ class TableTest {
     @Test
     fun table_with_visual_elements_daisyCheckbox() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCheckbox() {
-            }
+            daisyCheckbox()
         }
         val expectedClasses = "checkbox"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
@@ -54,8 +53,7 @@ class TableTest {
     @Test
     fun table_with_visual_elements_daisyMask() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMask(style = MaskStyle.Squircle) {
-            }
+            daisyMask(style = MaskStyle.Squircle)
         }
         val expectedClasses = "mask mask-squircle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")

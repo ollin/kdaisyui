@@ -50,6 +50,24 @@ class FabCoverageTest {
     }
 
     @Test
+    fun fabClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabClasses()
+        }
+        assertRendered(html, "fab", "FabClasses defaults")
+    }
+
+    @Test
+    fun fabClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabClasses(
+                flower = true,
+            )
+        }
+        assertRendered(html, "fab fab-flower", "FabClasses all flags")
+    }
+
+    @Test
     fun fabClose_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyFabClose(
@@ -74,6 +92,22 @@ class FabCoverageTest {
     }
 
     @Test
+    fun fabCloseClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabCloseClasses()
+        }
+        assertRendered(html, "fab-close", "FabCloseClasses defaults")
+    }
+
+    @Test
+    fun fabCloseClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabCloseClasses()
+        }
+        assertRendered(html, "fab-close", "FabCloseClasses all flags")
+    }
+
+    @Test
     fun fabMainAction_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyFabMainAction(
@@ -95,5 +129,21 @@ class FabCoverageTest {
         }
         assertRendered(html, "fab-main-action zz-extra", "FabMainAction all flags", closes = "</button></div>")
         assertCommonFlags(html, "FabMainAction")
+    }
+
+    @Test
+    fun fabMainActionClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabMainActionClasses()
+        }
+        assertRendered(html, "fab-main-action", "FabMainActionClasses defaults")
+    }
+
+    @Test
+    fun fabMainActionClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFabMainActionClasses()
+        }
+        assertRendered(html, "fab-main-action", "FabMainActionClasses all flags")
     }
 }

@@ -17,6 +17,9 @@ fun FlowContent.daisyNavbar(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyNavbarClasses()
 ```
 
 ```kotlin
@@ -26,6 +29,9 @@ fun FlowContent.daisyNavbarStart(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyNavbarStartClasses()
 ```
 
 ```kotlin
@@ -35,6 +41,9 @@ fun FlowContent.daisyNavbarCenter(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyNavbarCenterClasses()
 ```
 
 ```kotlin
@@ -44,4 +53,7 @@ fun FlowContent.daisyNavbarEnd(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyNavbarEndClasses()
 ```

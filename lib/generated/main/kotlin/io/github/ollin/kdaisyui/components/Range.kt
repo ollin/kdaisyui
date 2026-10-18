@@ -11,6 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.input
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `range-`) */
 enum class RangeColor(internal val className: String) : ClassValues<RangeColor> {
@@ -95,4 +96,16 @@ fun FlowContent.daisyRange(
         addClassNames(extraClasses)
         if (attrs != null) attrs()
     }
+}
+
+/** The classes `daisyRange` writes, on the element this is called on. */
+fun Tag.daisyRangeClasses(
+    color: ClassValues<RangeColor>? = null,
+    size: ClassValues<RangeSize>? = null,
+    vertical: Boolean = false,
+) {
+    addClassNames("range")
+    addClassNames(color)
+    addClassNames(size)
+    if (vertical) addClassNames("range-vertical")
 }

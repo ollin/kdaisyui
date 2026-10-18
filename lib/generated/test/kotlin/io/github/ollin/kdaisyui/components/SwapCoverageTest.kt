@@ -72,6 +72,44 @@ class SwapCoverageTest {
     }
 
     @Test
+    fun swapClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapClasses()
+        }
+        assertRendered(html, "swap", "SwapClasses defaults")
+    }
+
+    @Test
+    fun swapClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapClasses(
+                active = true,
+            )
+        }
+        assertRendered(html, "swap swap-active", "SwapClasses all flags")
+    }
+
+    @Test
+    fun swapClasses_style_rotate() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapClasses(
+                style = SwapStyle.Rotate,
+            )
+        }
+        assertRendered(html, "swap swap-rotate", "SwapClasses style Rotate")
+    }
+
+    @Test
+    fun swapClasses_style_flip() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapClasses(
+                style = SwapStyle.Flip,
+            )
+        }
+        assertRendered(html, "swap swap-flip", "SwapClasses style Flip")
+    }
+
+    @Test
     fun swapOn_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisySwapOn(
@@ -93,6 +131,22 @@ class SwapCoverageTest {
         }
         assertRendered(html, "swap-on zz-extra", "SwapOn all flags", closes = "</div></div>")
         assertCommonFlags(html, "SwapOn")
+    }
+
+    @Test
+    fun swapOnClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapOnClasses()
+        }
+        assertRendered(html, "swap-on", "SwapOnClasses defaults")
+    }
+
+    @Test
+    fun swapOnClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapOnClasses()
+        }
+        assertRendered(html, "swap-on", "SwapOnClasses all flags")
     }
 
     @Test
@@ -120,6 +174,22 @@ class SwapCoverageTest {
     }
 
     @Test
+    fun swapOffClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapOffClasses()
+        }
+        assertRendered(html, "swap-off", "SwapOffClasses defaults")
+    }
+
+    @Test
+    fun swapOffClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapOffClasses()
+        }
+        assertRendered(html, "swap-off", "SwapOffClasses all flags")
+    }
+
+    @Test
     fun swapIndeterminate_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisySwapIndeterminate(
@@ -141,5 +211,21 @@ class SwapCoverageTest {
         }
         assertRendered(html, "swap-indeterminate zz-extra", "SwapIndeterminate all flags", closes = "</div></div>")
         assertCommonFlags(html, "SwapIndeterminate")
+    }
+
+    @Test
+    fun swapIndeterminateClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapIndeterminateClasses()
+        }
+        assertRendered(html, "swap-indeterminate", "SwapIndeterminateClasses defaults")
+    }
+
+    @Test
+    fun swapIndeterminateClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisySwapIndeterminateClasses()
+        }
+        assertRendered(html, "swap-indeterminate", "SwapIndeterminateClasses all flags")
     }
 }

@@ -47,4 +47,20 @@ class MockupWindowCoverageTest {
         assertRendered(html, "mockup-window zz-extra", "MockupWindow all flags", closes = "</div></div>")
         assertCommonFlags(html, "MockupWindow")
     }
+
+    @Test
+    fun mockupWindowClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupWindowClasses()
+        }
+        assertRendered(html, "mockup-window", "MockupWindowClasses defaults")
+    }
+
+    @Test
+    fun mockupWindowClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMockupWindowClasses()
+        }
+        assertRendered(html, "mockup-window", "MockupWindowClasses all flags")
+    }
 }

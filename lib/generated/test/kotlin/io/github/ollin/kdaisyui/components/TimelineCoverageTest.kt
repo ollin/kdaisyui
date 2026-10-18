@@ -73,6 +73,45 @@ class TimelineCoverageTest {
     }
 
     @Test
+    fun timelineClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineClasses()
+        }
+        assertRendered(html, "timeline", "TimelineClasses defaults")
+    }
+
+    @Test
+    fun timelineClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineClasses(
+                compact = true,
+                snapIcon = true,
+            )
+        }
+        assertRendered(html, "timeline timeline-compact timeline-snap-icon", "TimelineClasses all flags")
+    }
+
+    @Test
+    fun timelineClasses_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineClasses(
+                direction = TimelineDirection.Horizontal,
+            )
+        }
+        assertRendered(html, "timeline timeline-horizontal", "TimelineClasses direction Horizontal")
+    }
+
+    @Test
+    fun timelineClasses_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineClasses(
+                direction = TimelineDirection.Vertical,
+            )
+        }
+        assertRendered(html, "timeline timeline-vertical", "TimelineClasses direction Vertical")
+    }
+
+    @Test
     fun timelineStart_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyTimelineStart(
@@ -95,6 +134,24 @@ class TimelineCoverageTest {
         }
         assertRendered(html, "timeline-box timeline-start zz-extra", "TimelineStart all flags", closes = "</div></div>")
         assertCommonFlags(html, "TimelineStart")
+    }
+
+    @Test
+    fun timelineStartClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineStartClasses()
+        }
+        assertRendered(html, "timeline-start", "TimelineStartClasses defaults")
+    }
+
+    @Test
+    fun timelineStartClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineStartClasses(
+                box = true,
+            )
+        }
+        assertRendered(html, "timeline-box timeline-start", "TimelineStartClasses all flags")
     }
 
     @Test
@@ -123,6 +180,24 @@ class TimelineCoverageTest {
     }
 
     @Test
+    fun timelineMiddleClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineMiddleClasses()
+        }
+        assertRendered(html, "timeline-middle", "TimelineMiddleClasses defaults")
+    }
+
+    @Test
+    fun timelineMiddleClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineMiddleClasses(
+                box = true,
+            )
+        }
+        assertRendered(html, "timeline-box timeline-middle", "TimelineMiddleClasses all flags")
+    }
+
+    @Test
     fun timelineEnd_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyTimelineEnd(
@@ -145,5 +220,23 @@ class TimelineCoverageTest {
         }
         assertRendered(html, "timeline-box timeline-end zz-extra", "TimelineEnd all flags", closes = "</div></div>")
         assertCommonFlags(html, "TimelineEnd")
+    }
+
+    @Test
+    fun timelineEndClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineEndClasses()
+        }
+        assertRendered(html, "timeline-end", "TimelineEndClasses defaults")
+    }
+
+    @Test
+    fun timelineEndClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTimelineEndClasses(
+                box = true,
+            )
+        }
+        assertRendered(html, "timeline-box timeline-end", "TimelineEndClasses all flags")
     }
 }

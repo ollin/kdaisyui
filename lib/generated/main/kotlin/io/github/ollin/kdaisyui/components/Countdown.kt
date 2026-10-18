@@ -9,6 +9,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 
 /**
  * Countdown gives you a transition effect when you change a number between 0 to 999. Renders `<span class="countdown ...">`.
@@ -30,4 +31,9 @@ fun FlowContent.daisyCountdown(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyCountdown` writes, on the element this is called on. */
+fun Tag.daisyCountdownClasses() {
+    addClassNames("countdown")
 }

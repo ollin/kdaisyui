@@ -41,12 +41,5 @@
       "parameters": []
     }
   ],
-  "summary": { "summary": "Navigation bar layout" },
-  "notExpressed": {
-    "avatar btn": "Two components on one element, daisyAvatar and daisyButton; one call renders one function. Call one and pass the other's classes through extraClasses.",
-    "badge indicator-item": "Two components on one element, daisyBadge and daisyIndicatorItem; one call renders one function. Call one and pass the other's classes through extraClasses.",
-    "card dropdown-content": "Two components on one element, daisyCard and daisyDropdownContent; one call renders one function. Call one and pass the other's classes through extraClasses.",
-    "collapse-title navbar": "Two components on one element, daisyCollapseTitle and daisyNavbar; one call renders one function. Call one and pass the other's classes through extraClasses.",
-    "dropdown-content menu": "Two components on one element, daisyDropdownContent and daisyMenu; one call renders one function. Call one and pass the other's classes through extraClasses."
-  }
+  "summary": { "summary": "Navigation bar layout" }
 }

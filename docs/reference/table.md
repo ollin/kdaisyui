@@ -22,4 +22,7 @@ fun FlowContent.daisyTable(
     attrs: (TABLE.() -> Unit)? = null,
     content: (TABLE.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyTableClasses(size: ClassValues<TableSize>? = null, pinCols: Boolean = false, pinRows: Boolean = false, zebra: Boolean = false)
 ```

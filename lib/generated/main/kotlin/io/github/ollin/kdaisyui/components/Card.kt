@@ -12,6 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.h2
 import kotlinx.html.H2
+import kotlinx.html.Tag
 
 /** Size variants for this component (CSS prefix: `card-`) */
 enum class CardSize(internal val className: String) : ClassValues<CardSize> {
@@ -84,6 +85,18 @@ fun FlowContent.daisyCard(
     }
 }
 
+/** The classes `daisyCard` writes, on the element this is called on. */
+fun Tag.daisyCardClasses(
+    size: ClassValues<CardSize>? = null,
+    style: ClassValues<CardStyle>? = null,
+    layout: ClassValues<CardLayout>? = null,
+) {
+    addClassNames("card")
+    addClassNames(size)
+    addClassNames(style)
+    addClassNames(layout)
+}
+
 /** Renders `<h2 class="card-title ...">`. */
 fun FlowContent.daisyCardTitle(
     text: String? = null,
@@ -104,6 +117,11 @@ fun FlowContent.daisyCardTitle(
     }
 }
 
+/** The classes `daisyCardTitle` writes, on the element this is called on. */
+fun Tag.daisyCardTitleClasses() {
+    addClassNames("card-title")
+}
+
 /** Renders `<div class="card-body ...">`. */
 fun FlowContent.daisyCardBody(
     id: HtmlId? = null,
@@ -120,6 +138,11 @@ fun FlowContent.daisyCardBody(
     }
 }
 
+/** The classes `daisyCardBody` writes, on the element this is called on. */
+fun Tag.daisyCardBodyClasses() {
+    addClassNames("card-body")
+}
+
 /** Renders `<div class="card-actions ...">`. */
 fun FlowContent.daisyCardActions(
     id: HtmlId? = null,
@@ -134,4 +157,9 @@ fun FlowContent.daisyCardActions(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyCardActions` writes, on the element this is called on. */
+fun Tag.daisyCardActionsClasses() {
+    addClassNames("card-actions")
 }

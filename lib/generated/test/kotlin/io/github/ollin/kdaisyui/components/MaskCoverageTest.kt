@@ -204,4 +204,180 @@ class MaskCoverageTest {
         }
         assertRendered(html, "mask mask-half-2", "Mask half Half2")
     }
+
+    @Test
+    fun maskClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses()
+        }
+        assertRendered(html, "mask", "MaskClasses defaults")
+    }
+
+    @Test
+    fun maskClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses()
+        }
+        assertRendered(html, "mask", "MaskClasses all flags")
+    }
+
+    @Test
+    fun maskClasses_style_squircle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Squircle,
+            )
+        }
+        assertRendered(html, "mask mask-squircle", "MaskClasses style Squircle")
+    }
+
+    @Test
+    fun maskClasses_style_heart() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Heart,
+            )
+        }
+        assertRendered(html, "mask mask-heart", "MaskClasses style Heart")
+    }
+
+    @Test
+    fun maskClasses_style_hexagon() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Hexagon,
+            )
+        }
+        assertRendered(html, "mask mask-hexagon", "MaskClasses style Hexagon")
+    }
+
+    @Test
+    fun maskClasses_style_hexagon2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Hexagon2,
+            )
+        }
+        assertRendered(html, "mask mask-hexagon-2", "MaskClasses style Hexagon2")
+    }
+
+    @Test
+    fun maskClasses_style_decagon() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Decagon,
+            )
+        }
+        assertRendered(html, "mask mask-decagon", "MaskClasses style Decagon")
+    }
+
+    @Test
+    fun maskClasses_style_pentagon() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Pentagon,
+            )
+        }
+        assertRendered(html, "mask mask-pentagon", "MaskClasses style Pentagon")
+    }
+
+    @Test
+    fun maskClasses_style_diamond() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Diamond,
+            )
+        }
+        assertRendered(html, "mask mask-diamond", "MaskClasses style Diamond")
+    }
+
+    @Test
+    fun maskClasses_style_circle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Circle,
+            )
+        }
+        assertRendered(html, "mask mask-circle", "MaskClasses style Circle")
+    }
+
+    @Test
+    fun maskClasses_style_star() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Star,
+            )
+        }
+        assertRendered(html, "mask mask-star", "MaskClasses style Star")
+    }
+
+    @Test
+    fun maskClasses_style_star2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Star2,
+            )
+        }
+        assertRendered(html, "mask mask-star-2", "MaskClasses style Star2")
+    }
+
+    @Test
+    fun maskClasses_style_triangle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Triangle,
+            )
+        }
+        assertRendered(html, "mask mask-triangle", "MaskClasses style Triangle")
+    }
+
+    @Test
+    fun maskClasses_style_triangle2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Triangle2,
+            )
+        }
+        assertRendered(html, "mask mask-triangle-2", "MaskClasses style Triangle2")
+    }
+
+    @Test
+    fun maskClasses_style_triangle3() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Triangle3,
+            )
+        }
+        assertRendered(html, "mask mask-triangle-3", "MaskClasses style Triangle3")
+    }
+
+    @Test
+    fun maskClasses_style_triangle4() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                style = MaskStyle.Triangle4,
+            )
+        }
+        assertRendered(html, "mask mask-triangle-4", "MaskClasses style Triangle4")
+    }
+
+    @Test
+    fun maskClasses_half_half1() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                half = MaskHalf.Half1,
+            )
+        }
+        assertRendered(html, "mask mask-half-1", "MaskClasses half Half1")
+    }
+
+    @Test
+    fun maskClasses_half_half2() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMaskClasses(
+                half = MaskHalf.Half2,
+            )
+        }
+        assertRendered(html, "mask mask-half-2", "MaskClasses half Half2")
+    }
 }

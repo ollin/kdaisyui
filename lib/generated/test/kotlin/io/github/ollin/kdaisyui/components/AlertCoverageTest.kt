@@ -138,4 +138,102 @@ class AlertCoverageTest {
         }
         assertRendered(html, "alert alert-horizontal", "Alert direction Horizontal")
     }
+
+    @Test
+    fun alertClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses()
+        }
+        assertRendered(html, "alert", "AlertClasses defaults")
+    }
+
+    @Test
+    fun alertClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                soft = true,
+            )
+        }
+        assertRendered(html, "alert alert-soft", "AlertClasses all flags")
+    }
+
+    @Test
+    fun alertClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                color = AlertColor.Info,
+            )
+        }
+        assertRendered(html, "alert alert-info", "AlertClasses color Info")
+    }
+
+    @Test
+    fun alertClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                color = AlertColor.Success,
+            )
+        }
+        assertRendered(html, "alert alert-success", "AlertClasses color Success")
+    }
+
+    @Test
+    fun alertClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                color = AlertColor.Warning,
+            )
+        }
+        assertRendered(html, "alert alert-warning", "AlertClasses color Warning")
+    }
+
+    @Test
+    fun alertClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                color = AlertColor.Error,
+            )
+        }
+        assertRendered(html, "alert alert-error", "AlertClasses color Error")
+    }
+
+    @Test
+    fun alertClasses_style_outline() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                style = AlertStyle.Outline,
+            )
+        }
+        assertRendered(html, "alert alert-outline", "AlertClasses style Outline")
+    }
+
+    @Test
+    fun alertClasses_style_dash() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                style = AlertStyle.Dash,
+            )
+        }
+        assertRendered(html, "alert alert-dash", "AlertClasses style Dash")
+    }
+
+    @Test
+    fun alertClasses_direction_vertical() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                direction = AlertDirection.Vertical,
+            )
+        }
+        assertRendered(html, "alert alert-vertical", "AlertClasses direction Vertical")
+    }
+
+    @Test
+    fun alertClasses_direction_horizontal() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyAlertClasses(
+                direction = AlertDirection.Horizontal,
+            )
+        }
+        assertRendered(html, "alert alert-horizontal", "AlertClasses direction Horizontal")
+    }
 }

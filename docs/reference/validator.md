@@ -16,6 +16,9 @@ fun FlowContent.daisyValidator(
     extraClasses: String? = null,
     attrs: (INPUT.() -> Unit)? = null,
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyValidatorClasses()
 ```
 
 ```kotlin
@@ -25,4 +28,7 @@ fun FlowContent.daisyValidatorHint(
     attrs: (P.() -> Unit)? = null,
     content: (P.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyValidatorHintClasses()
 ```

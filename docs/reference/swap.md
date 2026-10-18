@@ -20,6 +20,9 @@ fun FlowContent.daisySwap(
     attrs: (LABEL.() -> Unit)? = null,
     content: (LABEL.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisySwapClasses(style: ClassValues<SwapStyle>? = null, active: Boolean = false)
 ```
 
 ```kotlin
@@ -29,6 +32,9 @@ fun FlowContent.daisySwapOn(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisySwapOnClasses()
 ```
 
 ```kotlin
@@ -38,6 +44,9 @@ fun FlowContent.daisySwapOff(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisySwapOffClasses()
 ```
 
 ```kotlin
@@ -47,4 +56,7 @@ fun FlowContent.daisySwapIndeterminate(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisySwapIndeterminateClasses()
 ```

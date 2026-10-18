@@ -11,6 +11,7 @@ import kotlinx.html.button
 import kotlinx.html.BUTTON
 import kotlinx.html.ButtonType
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 /** Color variants for this component (CSS prefix: `btn-`) */
 enum class ButtonColor(internal val className: String) : ClassValues<ButtonColor> {
@@ -141,4 +142,24 @@ fun FlowContent.daisyButton(
             text != null -> +text
         }
     }
+}
+
+/** The classes `daisyButton` writes, on the element this is called on. */
+fun Tag.daisyButtonClasses(
+    color: ClassValues<ButtonColor>? = null,
+    size: ClassValues<ButtonSize>? = null,
+    style: ClassValues<ButtonStyle>? = null,
+    shape: ClassValues<ButtonShape>? = null,
+    width: ClassValues<ButtonWidth>? = null,
+    active: Boolean = false,
+    disabled: Boolean = false,
+) {
+    addClassNames("btn")
+    addClassNames(color)
+    addClassNames(size)
+    addClassNames(style)
+    addClassNames(shape)
+    addClassNames(width)
+    if (active) addClassNames("btn-active")
+    if (disabled) addClassNames("btn-disabled")
 }

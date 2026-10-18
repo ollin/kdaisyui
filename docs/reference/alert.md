@@ -24,4 +24,7 @@ fun FlowContent.daisyAlert(
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
 )
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyAlertClasses(color: ClassValues<AlertColor>? = null, style: ClassValues<AlertStyle>? = null, direction: ClassValues<AlertDirection>? = null, soft: Boolean = false)
 ```

@@ -12,6 +12,7 @@ import kotlinx.html.h2
 import kotlinx.html.H2
 import kotlinx.html.span
 import kotlinx.html.SPAN
+import kotlinx.html.Tag
 import kotlinx.html.ul
 import kotlinx.html.UL
 
@@ -49,9 +50,6 @@ enum class MenuDirection(internal val className: String) : ClassValues<MenuDirec
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param direction — Direction variant
- * @param active — For the element inside <li> to look active
- * @param disabled — For the element inside <li> to look disabled
- * @param dropdownShow — Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
  * @param focus — For the element inside <li> to look focused
  * @param paged — Shows one level at a time and turns the open summary into a back button
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -62,9 +60,6 @@ fun FlowContent.daisyMenu(
     id: HtmlId? = null,
     size: ClassValues<MenuSize>? = null,
     direction: ClassValues<MenuDirection>? = null,
-    active: Boolean = false,
-    disabled: Boolean = false,
-    dropdownShow: Boolean = false,
     focus: Boolean = false,
     paged: Boolean = false,
     extraClasses: String? = null,
@@ -76,15 +71,26 @@ fun FlowContent.daisyMenu(
         addClassNames("menu")
         addClassNames(size)
         addClassNames(direction)
-        if (active) addClassNames("menu-active")
-        if (disabled) addClassNames("menu-disabled")
-        if (dropdownShow) addClassNames("menu-dropdown-show")
         if (focus) addClassNames("menu-focus")
         if (paged) addClassNames("menu-paged")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMenu` writes, on the element this is called on. */
+fun Tag.daisyMenuClasses(
+    size: ClassValues<MenuSize>? = null,
+    direction: ClassValues<MenuDirection>? = null,
+    focus: Boolean = false,
+    paged: Boolean = false,
+) {
+    addClassNames("menu")
+    addClassNames(size)
+    addClassNames(direction)
+    if (focus) addClassNames("menu-focus")
+    if (paged) addClassNames("menu-paged")
 }
 
 /** Renders `<h2 class="menu-title ...">`. */
@@ -107,9 +113,15 @@ fun FlowContent.daisyMenuTitle(
     }
 }
 
+/** The classes `daisyMenuTitle` writes, on the element this is called on. */
+fun Tag.daisyMenuTitleClasses() {
+    addClassNames("menu-title")
+}
+
 /** Renders `<ul class="menu-dropdown ...">`. */
 fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
+    show: Boolean = false,
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
@@ -117,15 +129,25 @@ fun FlowContent.daisyMenuDropdown(
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu-dropdown")
+        if (show) addClassNames("menu-dropdown-show")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
 }
 
+/** The classes `daisyMenuDropdown` writes, on the element this is called on. */
+fun Tag.daisyMenuDropdownClasses(
+    show: Boolean = false,
+) {
+    addClassNames("menu-dropdown")
+    if (show) addClassNames("menu-dropdown-show")
+}
+
 /** Renders `<span class="menu-dropdown-toggle ...">`. */
 fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
+    dropdownShow: Boolean = false,
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
@@ -133,8 +155,26 @@ fun FlowContent.daisyMenuDropdownToggle(
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu-dropdown-toggle")
+        if (dropdownShow) addClassNames("menu-dropdown-show")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyMenuDropdownToggle` writes, on the element this is called on. */
+fun Tag.daisyMenuDropdownToggleClasses(
+    dropdownShow: Boolean = false,
+) {
+    addClassNames("menu-dropdown-toggle")
+    if (dropdownShow) addClassNames("menu-dropdown-show")
+}
+
+/** The classes `daisyMenuItem` writes, on the element this is called on. */
+fun Tag.daisyMenuItemClasses(
+    active: Boolean = false,
+    disabled: Boolean = false,
+) {
+    if (active) addClassNames("menu-active")
+    if (disabled) addClassNames("menu-disabled")
 }

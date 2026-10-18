@@ -10,6 +10,7 @@ import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 
 enum class AvatarPresence(internal val className: String) : ClassValues<AvatarPresence> {
     /** CSS: `avatar-online` */
@@ -48,4 +49,35 @@ fun FlowContent.daisyAvatar(
         if (attrs != null) attrs()
         content()
     }
+}
+
+/** The classes `daisyAvatar` writes, on the element this is called on. */
+fun Tag.daisyAvatarClasses(
+    presence: ClassValues<AvatarPresence>? = null,
+    placeholder: Boolean = false,
+) {
+    addClassNames("avatar")
+    addClassNames(presence)
+    if (placeholder) addClassNames("avatar-placeholder")
+}
+
+/** Renders `<div class="avatar-group ...">`. */
+fun FlowContent.daisyAvatarGroup(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (DIV.() -> Unit)? = null,
+    content: (DIV.() -> Unit),
+) {
+    div {
+        if (id != null) attributes["id"] = id.id
+        addClassNames("avatar-group")
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyAvatarGroup` writes, on the element this is called on. */
+fun Tag.daisyAvatarGroupClasses() {
+    addClassNames("avatar-group")
 }

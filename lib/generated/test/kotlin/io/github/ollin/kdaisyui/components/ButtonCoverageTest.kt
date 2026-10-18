@@ -282,4 +282,243 @@ class ButtonCoverageTest {
         assertRendered(html, "btn", "Button text")
         assertTrue(html.contains("txtmark"), "Button text content")
     }
+
+    @Test
+    fun buttonClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses()
+        }
+        assertRendered(html, "btn", "ButtonClasses defaults")
+    }
+
+    @Test
+    fun buttonClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                active = true,
+                disabled = true,
+            )
+        }
+        assertRendered(html, "btn btn-active btn-disabled", "ButtonClasses all flags")
+    }
+
+    @Test
+    fun buttonClasses_color_neutral() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Neutral,
+            )
+        }
+        assertRendered(html, "btn btn-neutral", "ButtonClasses color Neutral")
+    }
+
+    @Test
+    fun buttonClasses_color_primary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Primary,
+            )
+        }
+        assertRendered(html, "btn btn-primary", "ButtonClasses color Primary")
+    }
+
+    @Test
+    fun buttonClasses_color_secondary() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Secondary,
+            )
+        }
+        assertRendered(html, "btn btn-secondary", "ButtonClasses color Secondary")
+    }
+
+    @Test
+    fun buttonClasses_color_accent() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Accent,
+            )
+        }
+        assertRendered(html, "btn btn-accent", "ButtonClasses color Accent")
+    }
+
+    @Test
+    fun buttonClasses_color_info() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Info,
+            )
+        }
+        assertRendered(html, "btn btn-info", "ButtonClasses color Info")
+    }
+
+    @Test
+    fun buttonClasses_color_success() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Success,
+            )
+        }
+        assertRendered(html, "btn btn-success", "ButtonClasses color Success")
+    }
+
+    @Test
+    fun buttonClasses_color_warning() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Warning,
+            )
+        }
+        assertRendered(html, "btn btn-warning", "ButtonClasses color Warning")
+    }
+
+    @Test
+    fun buttonClasses_color_error() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                color = ButtonColor.Error,
+            )
+        }
+        assertRendered(html, "btn btn-error", "ButtonClasses color Error")
+    }
+
+    @Test
+    fun buttonClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                size = ButtonSize.Xs,
+            )
+        }
+        assertRendered(html, "btn btn-xs", "ButtonClasses size Xs")
+    }
+
+    @Test
+    fun buttonClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                size = ButtonSize.Sm,
+            )
+        }
+        assertRendered(html, "btn btn-sm", "ButtonClasses size Sm")
+    }
+
+    @Test
+    fun buttonClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                size = ButtonSize.Md,
+            )
+        }
+        assertRendered(html, "btn btn-md", "ButtonClasses size Md")
+    }
+
+    @Test
+    fun buttonClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                size = ButtonSize.Lg,
+            )
+        }
+        assertRendered(html, "btn btn-lg", "ButtonClasses size Lg")
+    }
+
+    @Test
+    fun buttonClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                size = ButtonSize.Xl,
+            )
+        }
+        assertRendered(html, "btn btn-xl", "ButtonClasses size Xl")
+    }
+
+    @Test
+    fun buttonClasses_style_outline() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                style = ButtonStyle.Outline,
+            )
+        }
+        assertRendered(html, "btn btn-outline", "ButtonClasses style Outline")
+    }
+
+    @Test
+    fun buttonClasses_style_dash() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                style = ButtonStyle.Dash,
+            )
+        }
+        assertRendered(html, "btn btn-dash", "ButtonClasses style Dash")
+    }
+
+    @Test
+    fun buttonClasses_style_soft() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                style = ButtonStyle.Soft,
+            )
+        }
+        assertRendered(html, "btn btn-soft", "ButtonClasses style Soft")
+    }
+
+    @Test
+    fun buttonClasses_style_ghost() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                style = ButtonStyle.Ghost,
+            )
+        }
+        assertRendered(html, "btn btn-ghost", "ButtonClasses style Ghost")
+    }
+
+    @Test
+    fun buttonClasses_style_link() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                style = ButtonStyle.Link,
+            )
+        }
+        assertRendered(html, "btn btn-link", "ButtonClasses style Link")
+    }
+
+    @Test
+    fun buttonClasses_shape_square() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                shape = ButtonShape.Square,
+            )
+        }
+        assertRendered(html, "btn btn-square", "ButtonClasses shape Square")
+    }
+
+    @Test
+    fun buttonClasses_shape_circle() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                shape = ButtonShape.Circle,
+            )
+        }
+        assertRendered(html, "btn btn-circle", "ButtonClasses shape Circle")
+    }
+
+    @Test
+    fun buttonClasses_width_wide() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                width = ButtonWidth.Wide,
+            )
+        }
+        assertRendered(html, "btn btn-wide", "ButtonClasses width Wide")
+    }
+
+    @Test
+    fun buttonClasses_width_block() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyButtonClasses(
+                width = ButtonWidth.Block,
+            )
+        }
+        assertRendered(html, "btn btn-block", "ButtonClasses width Block")
+    }
 }

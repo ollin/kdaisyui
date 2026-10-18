@@ -159,6 +159,122 @@ class TabCoverageTest {
     }
 
     @Test
+    fun tabsClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses()
+        }
+        assertRendered(html, "tabs", "TabsClasses defaults")
+    }
+
+    @Test
+    fun tabsClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses()
+        }
+        assertRendered(html, "tabs", "TabsClasses all flags")
+    }
+
+    @Test
+    fun tabsClasses_size_xs() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                size = TabsSize.Xs,
+            )
+        }
+        assertRendered(html, "tabs tabs-xs", "TabsClasses size Xs")
+    }
+
+    @Test
+    fun tabsClasses_size_sm() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                size = TabsSize.Sm,
+            )
+        }
+        assertRendered(html, "tabs tabs-sm", "TabsClasses size Sm")
+    }
+
+    @Test
+    fun tabsClasses_size_md() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                size = TabsSize.Md,
+            )
+        }
+        assertRendered(html, "tabs tabs-md", "TabsClasses size Md")
+    }
+
+    @Test
+    fun tabsClasses_size_lg() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                size = TabsSize.Lg,
+            )
+        }
+        assertRendered(html, "tabs tabs-lg", "TabsClasses size Lg")
+    }
+
+    @Test
+    fun tabsClasses_size_xl() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                size = TabsSize.Xl,
+            )
+        }
+        assertRendered(html, "tabs tabs-xl", "TabsClasses size Xl")
+    }
+
+    @Test
+    fun tabsClasses_placement_top() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                placement = TabsPlacement.Top,
+            )
+        }
+        assertRendered(html, "tabs tabs-top", "TabsClasses placement Top")
+    }
+
+    @Test
+    fun tabsClasses_placement_bottom() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                placement = TabsPlacement.Bottom,
+            )
+        }
+        assertRendered(html, "tabs tabs-bottom", "TabsClasses placement Bottom")
+    }
+
+    @Test
+    fun tabsClasses_style_box() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                style = TabsStyle.Box,
+            )
+        }
+        assertRendered(html, "tabs tabs-box", "TabsClasses style Box")
+    }
+
+    @Test
+    fun tabsClasses_style_border() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                style = TabsStyle.Border,
+            )
+        }
+        assertRendered(html, "tabs tabs-border", "TabsClasses style Border")
+    }
+
+    @Test
+    fun tabsClasses_style_lift() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabsClasses(
+                style = TabsStyle.Lift,
+            )
+        }
+        assertRendered(html, "tabs tabs-lift", "TabsClasses style Lift")
+    }
+
+    @Test
     fun tab_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyTab(
@@ -185,6 +301,25 @@ class TabCoverageTest {
     }
 
     @Test
+    fun tabClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabClasses()
+        }
+        assertRendered(html, "tab", "TabClasses defaults")
+    }
+
+    @Test
+    fun tabClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabClasses(
+                active = true,
+                disabled = true,
+            )
+        }
+        assertRendered(html, "tab tab-active tab-disabled", "TabClasses all flags")
+    }
+
+    @Test
     fun tabRadio_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyTabRadio()
@@ -205,6 +340,25 @@ class TabCoverageTest {
         }
         assertRendered(html, "tab tab-active tab-disabled zz-extra", "TabRadio all flags")
         assertCommonFlags(html, "TabRadio", content = false)
+    }
+
+    @Test
+    fun tabRadioClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabRadioClasses()
+        }
+        assertRendered(html, "tab", "TabRadioClasses defaults")
+    }
+
+    @Test
+    fun tabRadioClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabRadioClasses(
+                active = true,
+                disabled = true,
+            )
+        }
+        assertRendered(html, "tab tab-active tab-disabled", "TabRadioClasses all flags")
     }
 
     @Test
@@ -229,5 +383,21 @@ class TabCoverageTest {
         }
         assertRendered(html, "tab-content zz-extra", "TabContent all flags", closes = "</div></div>")
         assertCommonFlags(html, "TabContent")
+    }
+
+    @Test
+    fun tabContentClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabContentClasses()
+        }
+        assertRendered(html, "tab-content", "TabContentClasses defaults")
+    }
+
+    @Test
+    fun tabContentClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyTabContentClasses()
+        }
+        assertRendered(html, "tab-content", "TabContentClasses all flags")
     }
 }

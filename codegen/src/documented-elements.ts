@@ -21,14 +21,38 @@ export function pageFirst(models: readonly ComponentModel[], page: string): Comp
   return [...models.filter(model => model.component === page), ...models.filter(model => model.component !== page)]
 }
 
-/**
- * The first function whose own class the element carries and that offers every other class,
- * searching `models` in the order given: the page's own model first, then the others.
- */
-export function expressingFunction(models: readonly ComponentModel[], counted: readonly string[]): ModelledFunction | null {
-  const candidates = models.flatMap(model => model.functions.map(fn => ({ model, fn })))
-  return candidates.find(({ model, fn }) => fn.class !== null && counted.includes(fn.class) && counted.every(cls => offers(model, fn, cls))) ?? null
+/** One function's share of an element's classes. */
+export interface ClaimedGroup extends ModelledFunction {
+  readonly classes: readonly string[]
 }
+
+/** Who claims which of an element's classes, and what nobody claims. */
+export interface Claims {
+  readonly groups: readonly ClaimedGroup[]
+  readonly unclaimed: readonly string[]
+}
+
+/**
+ * `design.md` D4, searching `models` in the order given, the page's own first: for each own class
+ * the element carries, the function with that own class offering the most of the element's
+ * classes claims what it offers; what remains is claimed whole by a function with no own class,
+ * or by nobody.
+ */
+export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[]): Claims {
+  const candidates = models.flatMap(model => model.functions.map(fn => ({ model, fn })))
+  const owned = counted.flatMap(own => ownerOf(candidates, own, counted)).map(owner => ({ ...owner, classes: counted.filter(cls => offers(owner.model, owner.fn, cls)) }))
+  const rest = counted.filter(cls => !owned.some(group => group.classes.includes(cls)))
+  const free = rest.length === 0 ? undefined : candidates.find(({ model, fn }) => fn.class === null && rest.every(cls => offers(model, fn, cls)))
+  return free === undefined ? { groups: owned, unclaimed: rest } : { groups: [...owned, { ...free, classes: rest }], unclaimed: [] }
+}
+
+/** Of the functions whose own class is `own`, the one offering the most of the element's classes. */
+function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: readonly string[]): ModelledFunction[] {
+  const share = ({ model, fn }: ModelledFunction) => counted.filter(cls => offers(model, fn, cls)).length
+  const owners = candidates.filter(({ fn }) => fn.class === own)
+  return owners.length === 0 ? [] : [owners.reduce((best, next) => (share(next) > share(best) ? next : best))]
+}
+
 
 function offers(model: ComponentModel, fn: ModelFunction, cls: string): boolean {
   return offeredBy(model, fn).includes(cls) || (cls === JOIN_ITEM_CLASS && fn.kind === 'main' && fn.joinItem === true)
@@ -57,7 +81,7 @@ export interface DocumentedGap {
 export function gapsIn(html: string, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): DocumentedGap[] {
   return markedElements(html)
     .map(element => ({ tag: element.tag, counted: countedClasses(element, componentClasses) }))
-    .filter(({ counted }) => counted.length > 0 && expressingFunction(models, counted) === null)
+    .filter(({ counted }) => counted.length > 0 && claimingGroups(models, counted).unclaimed.length > 0)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }
 
@@ -85,14 +109,33 @@ export interface DocumentedCall {
  */
 export function documentedCall(models: readonly ComponentModel[], element: MarkedElement, componentClasses: ReadonlySet<string>): DocumentedCall | null {
   const counted = countedClasses(element, componentClasses)
-  const expressing = counted.length > 0 ? expressingFunction(models, counted) : null
-  if (expressing === null) return null
-  const { model, fn } = expressing
-  const passed = counted.filter(cls => cls !== fn.class && cls !== JOIN_ITEM_CLASS && !(fn.always ?? []).includes(cls))
+  const { groups, unclaimed } = claimingGroups(models, counted)
+  if (groups.length === 0 || unclaimed.length > 0) return null
+  const [primary, ...others] = [...groups].sort((left, right) => rank(models, left) - rank(models, right))
+  if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
-  const args = [...passed.map(cls => argumentFor(model, fn, cls)), ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : [])]
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
-  return { fn, args: args.join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+  return { fn: primary.fn, args: callArguments(primary, others, variants).join(', '), expectedClasses: [...new Set(expected)].sort().join(' ') }
+}
+
+/** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */
+function callArguments(primary: ClaimedGroup, others: readonly ClaimedGroup[], variants: readonly string[]): string[] {
+  const siblings = others.map(group => `${group.fn.name}Classes(${groupArguments(group).join(', ')})`)
+  return [
+    ...groupArguments(primary),
+    ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : []),
+    ...(siblings.length > 0 ? [`attrs = { ${siblings.join('; ')} }`] : []),
+  ]
+}
+
+/** A rendering function's group before any class-only one, then the page's own model first. */
+function rank(models: readonly ComponentModel[], group: ClaimedGroup): number {
+  return (group.fn.kind === 'classes' ? models.length : 0) + models.indexOf(group.model)
+}
+
+/** The named arguments that make a group's function write the group's classes. */
+function groupArguments({ model, fn, classes }: ClaimedGroup): string[] {
+  return classes.filter(cls => cls !== fn.class && cls !== JOIN_ITEM_CLASS && !(fn.always ?? []).includes(cls)).map(cls => argumentFor(model, fn, cls))
 }
 
 /** The named argument that makes `fn` write `cls`; the classifier has already found that one does. */

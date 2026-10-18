@@ -50,6 +50,22 @@ class BreadcrumbsCoverageTest {
     }
 
     @Test
+    fun breadcrumbsClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBreadcrumbsClasses()
+        }
+        assertRendered(html, "breadcrumbs", "BreadcrumbsClasses defaults")
+    }
+
+    @Test
+    fun breadcrumbsClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyBreadcrumbsClasses()
+        }
+        assertRendered(html, "breadcrumbs", "BreadcrumbsClasses all flags")
+    }
+
+    @Test
     fun breadcrumbsItems_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyBreadcrumbsItems(

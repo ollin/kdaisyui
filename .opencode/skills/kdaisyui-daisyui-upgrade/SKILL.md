@@ -78,8 +78,10 @@ fails, naming component and class, when:
 - a DaisyUI directory has no model file, or a model file names no directory;
 - a function or an enum is named against the naming rule (`kdaisyui-codegen` has the rule);
 - a documented element is expressed by no function and its page does not declare it in
-  `notExpressed`, or a declaration no element needs any more. A release that adds an example
-  combining two components, or a modifier on an element no function renders, lands here.
+  `notExpressed`, or a declaration no element needs any more. Two components on one element are
+  expressible through class siblings; what lands here is a class no function offers on the element
+  DaisyUI puts it on. Give it a function, a parameter on the right function, or a `kind: "classes"`
+  function for a child with no class of its own, before reaching for a declaration.
 
 Choosing between an axis and a toggle is a design decision. An axis is one parameter; two of its
 members cannot be passed together except through `extraClasses`. Make a new class an axis member

@@ -35,10 +35,11 @@ daisyui-delta.ts   ← two DaisyUI tags, for `just daisyui-delta`; never on the 
 ```
 
 `documented-elements.ts` is the one reader of DaisyUI's fenced examples during generation. Every
-`$$`-marked element of every page, skipped pages included, is either expressed by a function or a
-gap. An expressed element becomes a test calling that function, of any component, parts and
-constructions included, with typed arguments; the expected classes are the ones DaisyUI wrote, so
-a wrong model fails a test rather than agreeing with itself. Variant-prefixed classes go through
+`$$`-marked element of every page, skipped pages included, is either expressed or a gap. An
+expressed element becomes a test calling the function of the page's own component, with typed
+arguments, and adding any other component's classes through its class sibling in `attrs`; with no
+rendering function, the siblings run on a plain element. The expected classes are the ones DaisyUI
+wrote, so a wrong model fails a test rather than agreeing with itself. Variant-prefixed classes go through
 `extraClasses`; `join-item` is neither passed nor expected, since only a join adds it. Identical
 calls on one page are one test. The element's tag is not compared, by decision.
 
@@ -85,7 +86,11 @@ CI's `generated-sources-drift` fails any commit whose output no longer matches i
 }
 ```
 
-- **`kind`**: `main`, `part`, or `custom` for a construction method such as `daisyModalPopover`.
+- **`kind`**: `main`, `part`, `custom` for a construction method such as `daisyModalPopover`, or
+  `classes` for a child DaisyUI gives no class of its own (`daisyMenuItem`, `"element": null`,
+  `"class": null`): it generates only its class sibling.
+- **Class siblings** are not declared: every function that writes a class gets
+  `Tag.daisy<Name>Classes(…)`, with its class parameters, and an extra's written class as a toggle.
 - **`parameters`** are only the function's own, between `id` and the escape hatches; `text`, `id`,
   `extraClasses`, `attrs` and `content` are added by `functionParameters`. `content` is absent for
   an HTML void element — a rule of HTML, derived, never configured.
@@ -133,9 +138,11 @@ Also run by `index-new.ts`. Generation fails, naming page, element and key, when
 element is expressed by no function and its page's model does not declare the key in
 `notExpressed`, and when a declaration no element on its page needs any more. Counted classes are
 the unprefixed `$$` classes some frontmatter declares, so `rounded-box`, a utility, never counts.
-Expressible means one function's own class is among them and that function offers every other one.
-At the DaisyUI tag pinned on 2026-10-18: 39 declared keys, 12 classes no function offers (most of them #347) and 27 two
-components on one element.
+Expressible means the classes split into groups: for each own class present, the function with that
+own class offering the most of them claims what it offers, and what remains is claimed whole by a
+function with no own class. Two components on one element are therefore expressible. Since
+`express-every-documented-element` no page declares a gap: 2,564 of 2,571 marked elements are
+expressible, 117 of them as compositions, and the other 7 carry no counted class.
 
 To close a gap, give the model what the element needs, and the declaration fails as stale until it
 is deleted. To accept one, declare it with a reason a reviewer can check.

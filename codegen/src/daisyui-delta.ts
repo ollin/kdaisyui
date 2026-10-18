@@ -55,6 +55,11 @@ export class DocsAtTag implements ComponentDocs {
   }
 }
 
+function componentsInBoth(older: ComponentDocs, newer: ComponentDocs): string[] {
+  const before = new Set(older.componentDirs())
+  return newer.componentDirs().filter(dir => before.has(dir))
+}
+
 /** Classes a component's frontmatter declares in one release and not the other. */
 export interface ClassChange {
   readonly component: string
@@ -69,8 +74,7 @@ function declaredClasses(markdown: string | null): Set<string> {
 
 /** Per component documented in both releases, the classes its frontmatter gained and lost. */
 export function classChanges(older: ComponentDocs, newer: ComponentDocs): ClassChange[] {
-  const inBoth = newer.componentDirs().filter(dir => older.componentDirs().includes(dir))
-  return inBoth.flatMap(component => {
+  return componentsInBoth(older, newer).flatMap(component => {
     const before = declaredClasses(older.page(component))
     const after = declaredClasses(newer.page(component))
     const added = [...after].filter(cls => !before.has(cls)).sort()
@@ -93,8 +97,7 @@ function elementSets(markdown: string | null): ReadonlyMap<string, ReadonlySet<s
 
 /** Per class marked in both releases, where the elements it is documented on changed. */
 export function elementChanges(older: ComponentDocs, newer: ComponentDocs): ElementChange[] {
-  const inBoth = newer.componentDirs().filter(dir => older.componentDirs().includes(dir))
-  return inBoth.flatMap(component => {
+  return componentsInBoth(older, newer).flatMap(component => {
     const before = elementSets(older.page(component))
     const after = elementSets(newer.page(component))
     return [...after.keys()].sort().flatMap(cssClass => {

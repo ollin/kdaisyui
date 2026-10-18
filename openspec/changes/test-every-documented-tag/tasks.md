@@ -23,13 +23,17 @@ gate 45. Known ratios for kdaisyui codegen work, not folded in: 0.06, 0.09, 0.12
 
 ## 3. Tests at DaisyUI's tag
 
-- [ ] 3.1 `^ r (internal)` `documentedCall` reports whether its function renders the documented tag.
-  Zero diff.
+- [x] 3.1 `^ F (internal)` `documentedCall` reports whether its function renders the documented tag.
+  Committed as `^ F`, not a zero-diff refactoring: the call gained two fields a test compares.
 - [ ] 3.2 `! F` Every documented-element test renders DaisyUI's tag and asserts it (D1, D2), inside
   the parent `li` and `legend` need. Red first: the tag assertion added before the tag form must
   fail on the 357 elements on another tag, observed and recorded.
 
 ## 4. Tags without a builder
+
+Done before 3.2, reordered 2026-10-18: 3.2's first generation wrote `calendar-date { }`, which
+does not compile, because the tag form needs a builder. With `daisyCalendar` rendering
+`<calendar-date>`, the calendar's test calls the function and needs none.
 
 - [ ] 4.1 `^ r (internal)` The builder table in `html-names.ts` (D4). Zero diff.
 - [ ] 4.2 `^ F (internal)` The gate fails on a documented tag the table does not know. Red: it names

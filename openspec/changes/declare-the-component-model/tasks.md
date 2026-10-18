@@ -40,7 +40,7 @@ The three Assumed claims this change rests on are checked here, before anything 
 - [x] 1.3 `. r (internal)` Export script: write every component's current inferred shape, its
   config entries and its editorial summary as `codegen/model/<dir>.json`, including the two
   skipped components as skip entries. Commit the script and its 68 output files together.
-- [ ] 1.4 `. r (internal)` **Shape equality, the proof for block 3:** a test that builds every
+- [x] 1.4 `. r (internal)` **Shape equality, the proof for block 3:** a test that builds every
   component's shape from its model file and deep-equals it against the inferred shape, for all
   66. A failure names the missing fact; fix the export, never the comparison.
   **Done 2026-10-18,** in `codegen/integration/model-equality.test.ts`. All 66 shapes are equal,

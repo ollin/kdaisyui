@@ -8,6 +8,8 @@
  * file.
  */
 
+import fs from 'fs'
+import path from 'path'
 import {
   functionParameters,
   type ComponentConfig,
@@ -92,6 +94,23 @@ export interface ComponentModel {
   readonly joinScope?: true
   /** The hand-written line for the reference index, and the optional longer opening. */
   readonly summary?: DocSummary
+}
+
+/** A DaisyUI directory the library deliberately generates nothing for, and why. */
+export interface SkippedModel {
+  readonly component: string
+  readonly skip: string
+}
+
+/** Where the committed model lives: one file per DaisyUI directory. */
+export const MODEL_DIR = path.resolve(import.meta.dirname, '../model')
+
+export function readModel(componentDir: string, modelDir = MODEL_DIR): ComponentModel | SkippedModel {
+  return JSON.parse(fs.readFileSync(path.join(modelDir, `${componentDir}.json`), 'utf8'))
+}
+
+export function isSkipped(model: ComponentModel | SkippedModel): model is SkippedModel {
+  return 'skip' in model
 }
 
 /** What the frontmatter supplies: the component's sentence and each class's, by stripped name. */

@@ -9,6 +9,7 @@ import { entryName, type ComponentModel, type ModelFunction } from './model.ts'
 import { offeredBy, writtenBy } from './model-completeness.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
 import { markedElements, type MarkedElement } from './parser/documented-classes.ts'
+import { hasBuilder } from './component-shape.ts'
 
 /** A function and the component model that declares it. */
 export interface ModelledFunction {
@@ -161,4 +162,10 @@ function argumentFor(model: ComponentModel, fn: ModelFunction, cls: string): str
 /** The classes the gate judges an element by: unprefixed, and declared by some component. */
 function countedClasses(element: MarkedElement, componentClasses: ReadonlySet<string>): string[] {
   return element.classes.filter(cls => !cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.className)
+}
+
+/** Every tag a page's examples document that no builder writes, so no test and no caller can. */
+export function tagFindings(page: string, html: string): string[] {
+  return [...new Set(markedElements(html).map(element => element.tag).filter(tag => !hasBuilder(tag)))]
+    .map(tag => `${page}: <${tag}> is documented, and nothing writes that tag: kotlinx.html has no builder and the library defines none`)
 }

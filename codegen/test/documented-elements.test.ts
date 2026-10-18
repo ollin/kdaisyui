@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { claimingGroups, documentedCall, gapFindings, gapKey, gapsIn, pageFirst } from '../src/documented-elements.ts'
+import { claimingGroups, documentedCall, gapFindings, gapKey, gapsIn, pageFirst, tagFindings } from '../src/documented-elements.ts'
 import { markedElements } from '../src/parser/documented-classes.ts'
 import { component, enumParameter, part, toggle } from './model-fixture.ts'
 
@@ -124,5 +124,13 @@ describe('claimingGroups', () => {
 
   it('leaves unclaimed what no function offers', () => {
     assert.deepEqual(claims([BUTTON], ['btn', 'btn-ghost']).unclaimed, ['btn-ghost'])
+  })
+})
+
+describe('tagFindings', () => {
+  it('names a documented tag nothing can write, once, and passes the standard ones', () => {
+    assert.deepEqual(tagFindings('calendar', '<calendar-date class="$$cally"></calendar-date><calendar-date class="$$cally"></calendar-date><div class="$$cally"></div>'), [
+      'calendar: <calendar-date> is documented, and nothing writes that tag: kotlinx.html has no builder and the library defines none',
+    ])
   })
 })

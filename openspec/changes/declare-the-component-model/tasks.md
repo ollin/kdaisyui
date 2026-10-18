@@ -207,8 +207,11 @@ Same cadence as block 4.
   the migration note.
 - [x] 6.3 `. d` Rewrite `kdaisyui-codegen` and `kdaisyui-daisyui-upgrade`, the
   `/daisyui-upgrade` command and `AGENTS.md` for the declared model and the bump report.
-- [ ] 6.4 `. d` Comment on #356 and #357 that their decisions now live in the model, and close
+- [x] 6.4 `. d` Comment on #356 and #357 that their decisions now live in the model, and close
   both.
+  **Done 2026-10-18 with one deviation.** #356 is commented and closed. #357 is commented and
+  left open: its own closing condition, a `daisyDropdownPopover`, is still unmet, and it is now
+  the only record of that missing construction method.
 - [ ] 6.5 Full green per `openspec/config.yaml`: `./gradlew check` including E2E, `:lib:pitest`,
   `:lib:testCodegen`, `:lib:checkComponentApi`, regeneration with no drift, and CodeScene on the
   change set. `codegen/` has no mutation tool; say so in the evaluation.

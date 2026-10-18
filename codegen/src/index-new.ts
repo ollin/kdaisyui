@@ -20,8 +20,8 @@ import {
 } from './config-consumption.ts'
 import { readComponentConfig } from './component-shape.ts'
 import { classesOfferedTwice, type OfferedTwice } from './offered-twice.ts'
-import { classFindings } from './model-completeness.ts'
-import { readModel, type ComponentModel } from './model.ts'
+import { classFindings, directoryFindings } from './model-completeness.ts'
+import { modelFileNames, readModel, type ComponentModel } from './model.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -138,6 +138,11 @@ function main() {
   const componentDirs = getAllComponentDirs()
 
   console.log(`Found ${componentDirs.length} components in DaisyUI docs\n`)
+  const unmatched = directoryFindings(componentDirs, modelFileNames())
+  if (unmatched.length > 0) {
+    console.error(`Every DaisyUI directory needs a model file in codegen/model/:\n${unmatched.map(finding => `  ${finding}`).join('\n')}`)
+    process.exit(1)
+  }
 
   // Which components exist and what each one's API is — read ONCE, here, by the module that
   // owns that question. This run used to decide it a second time with its own copy of the

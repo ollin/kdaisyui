@@ -168,22 +168,13 @@ function buildClassMappings(frontmatter) {
 }
 
 /**
- * How one documented class reaches the generated function.
- *
- * Both halves are needed and neither is derivable from the class alone. The PARAMETER is
- * `direction` for `menu-horizontal` and `focused` for `menu-focus`, because the measurement made
- * one an enum and the config renamed the other. The ARGUMENT is `MenuDirection.Horizontal` or
- * `true` for the same reason.
+ * How one documented class reaches the generated function: the PARAMETER, `direction` for
+ * `menu-horizontal`, and the ARGUMENT, `MenuDirection.Horizontal`, both as the model declares them.
  */
 interface ClassBinding {
   readonly parameter: string
   /** Kotlin expression, e.g. `true` or `MenuDirection.Horizontal`. */
   readonly argument: string
-}
-
-/** `text` under prefix `skeleton` is the class `skeleton-text`; an unprefixed class is itself. */
-function qualifiedClass(prefix: string | null, cls: string): string {
-  return prefix === null || cls.startsWith(`${prefix}-`) ? cls : `${prefix}-${cls}`
 }
 
 /**

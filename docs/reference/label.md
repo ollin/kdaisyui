@@ -22,3 +22,15 @@ fun FlowContent.daisyLabel(
 // The same classes on an element you write yourself, or beside another component's:
 fun Tag.daisyLabelClasses()
 ```
+
+```kotlin
+fun FlowContent.daisyFloatingLabel(
+    id: HtmlId? = null,
+    extraClasses: String? = null,
+    attrs: (LABEL.() -> Unit)? = null,
+    content: (LABEL.() -> Unit),
+)
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyFloatingLabelClasses()
+```

@@ -499,6 +499,8 @@ Field labels and helper text — renders `<span>`.
 ```kotlin
 fun FlowContent.daisyLabel(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
 fun Tag.daisyLabelClasses()
+fun FlowContent.daisyFloatingLabel(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+fun Tag.daisyFloatingLabelClasses()
 ```
 
 ### Link

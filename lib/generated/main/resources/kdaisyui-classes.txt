@@ -198,6 +198,7 @@ file-input-xl
 file-input-xs
 filter
 filter-reset
+floating-label
 footer
 footer-center
 footer-horizontal

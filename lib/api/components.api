@@ -231,6 +231,8 @@ fun Tag.daisyKbdClasses(size: ClassValues<KbdSize>? = null)
 # Label <span>
 fun FlowContent.daisyLabel(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit)? = null)
 fun Tag.daisyLabelClasses()
+fun FlowContent.daisyFloatingLabel(id: HtmlId? = null, extraClasses: String? = null, attrs: (LABEL.() -> Unit)? = null, content: (LABEL.() -> Unit))
+fun Tag.daisyFloatingLabelClasses()
 
 # Link <a>
 enum LinkColor: Neutral, Primary, Secondary, Accent, Success, Info, Warning, Error

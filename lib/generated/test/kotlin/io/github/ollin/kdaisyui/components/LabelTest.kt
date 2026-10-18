@@ -40,6 +40,17 @@ class LabelTest {
     }
 
     @Test
+    fun floating_label_daisyFloatingLabel() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyFloatingLabel() {
+            }
+        }
+        val expectedClasses = "floating-label"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Floating Label")
+    }
+
+    @Test
     fun floating_label_daisyInput() {
         val html = createHTML(prettyPrint = false).div {
             daisyInput(size = InputSize.Md)

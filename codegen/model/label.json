@@ -12,13 +12,16 @@
       "class": "label",
       "text": true,
       "parameters": []
+    },
+    {
+      "kind": "part",
+      "name": "daisyFloatingLabel",
+      "receiver": "FlowContent",
+      "element": "LABEL",
+      "class": "floating-label",
+      "text": false,
+      "parameters": []
     }
   ],
-  "summary": { "summary": "Field labels and helper text" },
-  "notOffered": {
-    "floating-label": "A label that floats above its input. No function renders it yet; reachable through extraClasses."
-  },
-  "notExpressed": {
-    "floating-label": "No function renders floating-label, the label that floats above an input; it is listed in notOffered. Write the label and its class by hand."
-  }
+  "summary": { "summary": "Field labels and helper text" }
 }

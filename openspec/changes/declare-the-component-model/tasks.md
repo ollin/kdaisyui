@@ -200,7 +200,7 @@ Same cadence as block 4.
 
 ## 6. Wrap-up — 2 h
 
-- [ ] 6.1 `. d` **How to migrate from 0.7.x** in `README.md`: the renamed functions and enums,
+- [x] 6.1 `. d` **How to migrate from 0.7.x** in `README.md`: the renamed functions and enums,
   every removed boolean with its replacement, the tab table led by the `daisyTab { }` hazard, and
   the twelve two-look pairs that now need `extraClasses`.
 - [x] 6.2 `. d` Re-dump `lib/api/lib.api` and `lib/api/components.api`; read both diffs against

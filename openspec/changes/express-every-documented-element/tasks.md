@@ -90,4 +90,4 @@ regenerating.
 - [x] 6.4 `. d` The full gate: `./gradlew check` with E2E, `koverVerify`, `:lib:pitest`,
   `:lib:testCodegen`, `:lib:checkComponentApi`, regeneration drift, CodeScene. No mutation tool for
   the TypeScript codegen; say so.
-- [ ] 6.5 `. d` Write `tmp/express-every-documented-element/EVALUATION-express-every-documented-element.md`.
+- [x] 6.5 `. d` Write `tmp/express-every-documented-element/EVALUATION-express-every-documented-element.md`.

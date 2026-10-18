@@ -2,53 +2,56 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { docFileNameFor, generateComponentPage, generateIndexPage } from '../src/generator-docs.ts'
-import { buildComponentShape } from '../src/component-shape.ts'
-import { withJoinScope } from '../src/join-scope.ts'
-import type { ClassifiedComponent } from '../src/classifier.ts'
+import { withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
+import { component, enumParameter, part, shapeOf, toggle } from './model-fixture.ts'
 
 /**
  * The reference page emitter.
  *
  * Written against the four shapes the change's section 1 picked out as the ones most likely to
  * break a template, and the `card` expectation is the one task 3.1 names: a component with
- * several parts and an enum. Fixtures are hand-built, so these run without the submodule.
+ * several parts and an enum. Fixtures are hand-built models, so these run without the submodule.
  */
 
-function classified(overrides: Partial<ClassifiedComponent> = {}): ClassifiedComponent {
-  return {
-    componentName: 'Card',
-    componentClass: 'Card',
-    desc: 'Cards are used to group and display content in a way that is easily readable.',
-    prefix: 'card',
-    colors: [],
-    styles: [],
-    sizes: [],
-    modifiers: [],
-    behaviors: [],
-    parts: [],
-    directions: [],
-    placements: [],
-    defaultSize: null,
-    descs: {},
-    ...overrides,
-  } as ClassifiedComponent
-}
-
-const CARD = classified({
-  sizes: ['xs', 'sm', 'md', 'lg', 'xl'],
-  styles: ['border', 'dash'],
-  modifiers: ['image-full', 'side'],
-  parts: ['card-title', 'card-body', 'card-actions'],
-  descs: {
+const CARD_DESCRIPTIONS: Descriptions = {
+  desc: 'Cards are used to group and display content in a way that is easily readable.',
+  classes: {
     border: 'Adds border to <card>',
     dash: 'dash style',
     'image-full': 'The image in <figure> element will be the background',
     side: 'The image in <figure> will be on to the side',
   },
-})
+}
 
-const page = (component: ClassifiedComponent, dir: string, element: string, summary?, config = {}) =>
-  generateComponentPage(buildComponentShape(component, { componentDir: dir, element }, config), summary)
+const CARD: ComponentModel = {
+  ...component('card', 'Card', 'card'),
+  enums: [{ name: 'CardSize', label: 'Size variants', classes: ['card-xs', 'card-sm', 'card-md', 'card-lg', 'card-xl'] }],
+  functions: [
+    { ...component('card', 'Card', 'card').functions[0], parameters: [
+      enumParameter('size', 'CardSize', 'Size variant'),
+      toggle('border', 'card-border'),
+      toggle('dash', 'card-dash'),
+      toggle('imageFull', 'card-image-full'),
+      toggle('side', 'card-side'),
+    ] },
+    part('daisyCardTitle', 'card-title', { element: 'H2', text: true }),
+    part('daisyCardBody', 'card-body'),
+    part('daisyCardActions', 'card-actions'),
+  ],
+}
+
+const page = (model: ComponentModel, summary?, descriptions: Descriptions = CARD_DESCRIPTIONS) =>
+  generateComponentPage(shapeOf(model, descriptions), summary)
+
+const withParts = (model: ComponentModel, ...parts: ComponentModel['functions']): ComponentModel => ({ ...model, functions: [...model.functions, ...parts] })
+
+const BADGE = (sizes: string[]): ComponentModel => ({
+  ...component('badge', 'Badge', 'badge', {}, { element: 'SPAN', parameters: [enumParameter('variant', 'BadgeVariant', 'Color variant'), enumParameter('size', 'BadgeSize', 'Size variant')] }),
+  enums: [
+    { name: 'BadgeVariant', label: 'Color variants', classes: ['badge-primary', 'badge-secondary'] },
+    { name: 'BadgeSize', label: 'Size variants', classes: sizes.map(size => `badge-${size}`) },
+  ],
+})
 
 describe('docFileNameFor', () => {
   test('camel-cases a kebab directory name, which is how index.md links the file', () => {
@@ -116,17 +119,14 @@ fun FlowContent.daisyCardActions(
 \`\`\`
 `
 
-    assert.equal(page(CARD, 'card', 'DIV', { summary: 'Content containers with body and title' }), expected)
+    assert.equal(page(CARD, { summary: 'Content containers with body and title' }), expected)
   })
 
   test('documents the element a part actually renders, not a guess', () => {
     // The defect that motivated the change: `megamenu.md` said DIV where the code says SPAN.
     const result = page(
-      classified({ componentName: 'Megamenu', prefix: 'megamenu', parts: ['megamenu-active'] }),
-      'megamenu',
-      'DIV',
+      withParts(component('megamenu', 'Megamenu', 'megamenu'), part('daisyMegamenuActive', 'megamenu-active', { element: 'SPAN' })),
       { summary: 'Horizontal menu with popover navigation blocks' },
-      { subComponentElements: { 'megamenu-active': 'SPAN' } },
     )
 
     assert.match(result, /fun FlowContent\.daisyMegamenuActive\(\n {4}id: HtmlId\? = null,\n {4}extraClasses: String\? = null,\n {4}attrs: \(SPAN\.\(\) -> Unit\)\? = null,\n {4}content: \(SPAN\.\(\) -> Unit\),\n\)/)
@@ -134,11 +134,8 @@ fun FlowContent.daisyCardActions(
 
   test('names a static attribute in the renders clause', () => {
     const result = page(
-      classified({ componentName: 'Megamenu', prefix: 'megamenu' }),
-      'megamenu',
-      'DIV',
+      component('megamenu', 'Megamenu', 'megamenu', {}, { attributes: { popover: '' } }),
       { summary: 'Horizontal menu with popover navigation blocks' },
-      { componentAttributes: { megamenu: { popover: '' } } },
     )
 
     assert.match(result, /Renders `<div class="megamenu \.\.\." popover>`\./)
@@ -147,40 +144,27 @@ fun FlowContent.daisyCardActions(
   test('documents a custom part, which a hand-written page can simply forget', () => {
     // `drawer.md` omitted `daisyDrawerButton`; `megamenu.md` omitted `daisyMegamenuPanel`.
     const result = page(
-      classified({ componentName: 'Drawer', prefix: 'drawer' }),
-      'drawer',
-      'DIV',
+      withParts(component('drawer', 'Drawer', 'drawer'), { ...part('daisyDrawerButton', 'drawer-button'), kind: 'custom' }),
       { summary: 'Sidebar layout with toggle' },
-      { customParts: { drawer: [{ name: 'Button', element: 'DIV', cssClass: 'drawer-button' }] } },
     )
 
     assert.match(result, /fun FlowContent\.daisyDrawerButton\(/)
   })
 
   test('a component with no parts emits exactly one block', () => {
-    const result = page(
-      classified({ componentName: 'Badge', prefix: 'badge', colors: ['primary', 'secondary'], sizes: ['xs'] }),
-      'badge',
-      'SPAN',
-      { summary: 'Labels, counts, and status tags' },
-    )
+    const result = page(BADGE(['xs']), { summary: 'Labels, counts, and status tags' })
 
     assert.equal(result.match(/```kotlin/g)?.length, 1)
   })
 
   test('gives each enum its own comment line', () => {
-    const result = page(
-      classified({ componentName: 'Badge', prefix: 'badge', colors: ['primary', 'secondary'], sizes: ['xs', 'sm'] }),
-      'badge',
-      'SPAN',
-      { summary: 'Labels' },
-    )
+    const result = page(BADGE(['xs', 'sm']), { summary: 'Labels' })
 
     assert.match(result, /\/\/ BadgeVariant: Primary \| Secondary\n\/\/ BadgeSize: Xs \| Sm\n/)
   })
 
   test('prefers the longer description where one is committed', () => {
-    const result = page(CARD, 'card', 'DIV', {
+    const result = page(CARD, {
       summary: 'Short one',
       description: 'The longer paragraph, for the three pages that say more than their table row',
     })
@@ -190,19 +174,19 @@ fun FlowContent.daisyCardActions(
   })
 
   test('falls back to the first sentence of the DaisyUI description when none is committed', () => {
-    const result = page(CARD, 'card', 'DIV', undefined)
+    const result = page(CARD, undefined)
 
     assert.match(result, /^Cards are used to group and display content in a way that is easily readable\. Renders/m)
   })
 
   test('emits only the renders clause when there is no description at all', () => {
-    const result = page(classified({ desc: '' }), 'card', 'DIV', undefined)
+    const result = page(component('card', 'Card', 'card'), undefined, { desc: '', classes: {} })
 
     assert.match(result, /^Renders `<div class="card \.\.\.">`\.$/m)
   })
 
   test('does not comment the escape-hatch parameters, only the DaisyUI booleans', () => {
-    const result = page(CARD, 'card', 'DIV', { summary: 'x' })
+    const result = page(CARD, { summary: 'x' })
 
     assert.ok(!result.includes('// Type-safe HTML id'))
     assert.ok(!result.includes('// Additional CSS classes'))
@@ -211,7 +195,7 @@ fun FlowContent.daisyCardActions(
 
   test('names the HTML element, not the kotlinx.html builder', () => {
     // `<fieldSet>` is not an HTML element. The lambda receiver type still is `FIELDSET`.
-    const result = page(classified({ componentName: 'Fieldset', prefix: 'fieldset' }), 'fieldset', 'FIELDSET', {
+    const result = page(component('fieldset', 'Fieldset', 'fieldset', {}, { element: 'FIELDSET' }), {
       summary: 'Groups related form controls',
     })
 
@@ -222,8 +206,7 @@ fun FlowContent.daisyCardActions(
 })
 
 describe('generateIndexPage', () => {
-  const shape = (name: string, dir: string, element: string) =>
-    buildComponentShape(classified({ componentName: name, prefix: dir }), { componentDir: dir, element }, {})
+  const shape = (name: string, dir: string, element: string) => shapeOf(component(dir, name, dir, {}, { element }))
 
   test('emits one row per component, with its summary and rendered element', () => {
     const result = generateIndexPage([shape('Card', 'card', 'DIV')], {
@@ -281,13 +264,10 @@ describe('generateIndexPage', () => {
 
 describe('a component whose content runs in a scope', () => {
   const page = () => {
-    const join = classified({ componentName: 'Join', componentClass: 'Join', prefix: 'join', desc: '' })
-    const button = classified({ componentName: 'Button', componentClass: 'Button', prefix: 'btn', desc: '' })
-    const members = buildComponentShape(button, { componentDir: 'button', element: 'BUTTON' }, {}).functions
-    return generateComponentPage(
-      withJoinScope(buildComponentShape(join, { componentDir: 'join', element: 'DIV' }, {}), members),
-      undefined,
-    )
+    const button = component('button', 'Button', 'btn', {}, { element: 'BUTTON', joinItem: true })
+    const join = component('join', 'Join', 'join', { joinScope: true })
+    const [, joined] = withDeclaredScopes([button, join].map(model => ({ model, shape: shapeOf(model) })))
+    return generateComponentPage(joined, undefined)
   }
 
   test('shows the call that is marked', () => {
@@ -320,10 +300,7 @@ describe('a component whose content runs in a scope', () => {
   })
 
   test('a component without a scope grows no such section', () => {
-    const plain = generateComponentPage(
-      buildComponentShape(classified(), { componentDir: 'card', element: 'DIV' }, {}),
-      undefined,
-    )
+    const plain = generateComponentPage(shapeOf(component('card', 'Card', 'card'), CARD_DESCRIPTIONS), undefined)
 
     assert.ok(!plain.includes('join-item'))
     assert.ok(!plain.includes('## Join items'))

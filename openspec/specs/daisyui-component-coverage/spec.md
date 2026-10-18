@@ -514,11 +514,11 @@ sibling and a class-only function render no element; they add classes to the one
 on. A class a function writes on every call SHALL NOT also be offered as a parameter of another
 function.
 
-DaisyUI documents many classes on several elements, and generation does not check the element:
-the gate "Every documented element is expressible by its classes, or declared not expressed"
-compares classes only, by decision, Oliver, 2026-10-18. A class shown on an element no function
-renders is reachable typed through its function's class sibling on that element, such as
-`a { daisyButtonClasses() }`, since `express-every-documented-element`.
+DaisyUI documents many classes on several elements. A function renders one of them; every other is
+reached typed through the function's class sibling on that element, such as
+`a { daisyButtonClasses() }`, and the generated test for each documented element renders and
+asserts DaisyUI's own tag, since `test-every-documented-tag`. Which tag a function renders by
+default stays a model decision.
 
 The authority stays the fenced ```html examples of
 `packages/docs/src/routes/(routes)/components/<name>/+page.md`, in which every daisyUI class is
@@ -551,7 +551,13 @@ parameter by another, read from `codegen/model/` on 2026-10-18.
 
 #### Scenario: A class on another element than DaisyUI's
 - **WHEN** DaisyUI shows `<a class="$$btn">` and `daisyButton` renders `<button>`
-- **THEN** generation succeeds, and the documented-element test for it asserts the classes only
+- **THEN** generation succeeds, and the documented-element test writes `a { daisyButtonClasses() }`
+  and asserts the `a` and its classes
+
+#### Scenario: The calendar renders its web component
+- **WHEN** `daisyCalendar { }` is rendered
+- **THEN** the output is `<calendar-date class="cally">`, the element the cally web component
+  defines, and not a `<div>`
 
 ### Requirement: No function offers a class for an element it does not render
 

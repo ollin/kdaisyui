@@ -923,16 +923,20 @@ public final class io/github/ollin/kdaisyui/components/MenuDirection : java/lang
 }
 
 public final class io/github/ollin/kdaisyui/components/MenuKt {
-	public static final fun daisyMenu (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyMenu$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyMenuClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZ)V
-	public static synthetic fun daisyMenuClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZZZZILjava/lang/Object;)V
-	public static final fun daisyMenuDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyMenuDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyMenuDropdownClasses (Lkotlinx/html/Tag;)V
-	public static final fun daisyMenuDropdownToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyMenuDropdownToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun daisyMenuDropdownToggleClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyMenu (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyMenu$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMenuClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZ)V
+	public static synthetic fun daisyMenuClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZILjava/lang/Object;)V
+	public static final fun daisyMenuDropdown (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyMenuDropdown$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMenuDropdownClasses (Lkotlinx/html/Tag;Z)V
+	public static synthetic fun daisyMenuDropdownClasses$default (Lkotlinx/html/Tag;ZILjava/lang/Object;)V
+	public static final fun daisyMenuDropdownToggle (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyMenuDropdownToggle$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyMenuDropdownToggleClasses (Lkotlinx/html/Tag;Z)V
+	public static synthetic fun daisyMenuDropdownToggleClasses$default (Lkotlinx/html/Tag;ZILjava/lang/Object;)V
+	public static final fun daisyMenuItemClasses (Lkotlinx/html/Tag;ZZ)V
+	public static synthetic fun daisyMenuItemClasses$default (Lkotlinx/html/Tag;ZZILjava/lang/Object;)V
 	public static final fun daisyMenuTitle (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyMenuTitle$default (Lkotlinx/html/FlowContent;Ljava/lang/String;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyMenuTitleClasses (Lkotlinx/html/Tag;)V

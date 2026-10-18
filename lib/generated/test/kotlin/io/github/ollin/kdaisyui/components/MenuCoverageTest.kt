@@ -39,9 +39,6 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenu(
                 id = htmlId("x-cov-id"),
-                active = true,
-                disabled = true,
-                dropdownShow = true,
                 focus = true,
                 paged = true,
                 extraClasses = "zz-extra",
@@ -49,7 +46,7 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu menu-active menu-disabled menu-dropdown-show menu-focus menu-paged zz-extra", "Menu all flags", closes = "</ul></div>")
+        assertRendered(html, "menu menu-focus menu-paged zz-extra", "Menu all flags", closes = "</ul></div>")
         assertCommonFlags(html, "Menu")
     }
 
@@ -142,14 +139,11 @@ class MenuCoverageTest {
     fun menuClasses_all_flags() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuClasses(
-                active = true,
-                disabled = true,
-                dropdownShow = true,
                 focus = true,
                 paged = true,
             )
         }
-        assertRendered(html, "menu menu-active menu-disabled menu-dropdown-show menu-focus menu-paged", "MenuClasses all flags")
+        assertRendered(html, "menu menu-focus menu-paged", "MenuClasses all flags")
     }
 
     @Test
@@ -286,12 +280,13 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdown(
                 id = htmlId("x-cov-id"),
+                show = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu-dropdown zz-extra", "MenuDropdown all flags", closes = "</ul></div>")
+        assertRendered(html, "menu-dropdown menu-dropdown-show zz-extra", "MenuDropdown all flags", closes = "</ul></div>")
         assertCommonFlags(html, "MenuDropdown")
     }
 
@@ -306,9 +301,11 @@ class MenuCoverageTest {
     @Test
     fun menuDropdownClasses_all_flags() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownClasses()
+            daisyMenuDropdownClasses(
+                show = true,
+            )
         }
-        assertRendered(html, "menu-dropdown", "MenuDropdownClasses all flags")
+        assertRendered(html, "menu-dropdown menu-dropdown-show", "MenuDropdownClasses all flags")
     }
 
     @Test
@@ -326,12 +323,13 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdownToggle(
                 id = htmlId("x-cov-id"),
+                dropdownShow = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</span></div>")
+        assertRendered(html, "menu-dropdown-show menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</span></div>")
         assertCommonFlags(html, "MenuDropdownToggle")
     }
 
@@ -346,8 +344,29 @@ class MenuCoverageTest {
     @Test
     fun menuDropdownToggleClasses_all_flags() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownToggleClasses()
+            daisyMenuDropdownToggleClasses(
+                dropdownShow = true,
+            )
         }
-        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggleClasses all flags")
+        assertRendered(html, "menu-dropdown-show menu-dropdown-toggle", "MenuDropdownToggleClasses all flags")
+    }
+
+    @Test
+    fun menuItemClasses_defaults() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuItemClasses()
+        }
+        assertTrue(!html.contains("class=\""), "MenuItemClasses defaults emits no class")
+    }
+
+    @Test
+    fun menuItemClasses_all_flags() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyMenuItemClasses(
+                active = true,
+                disabled = true,
+            )
+        }
+        assertRendered(html, "menu-active menu-disabled", "MenuItemClasses all flags")
     }
 }

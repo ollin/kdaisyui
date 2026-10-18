@@ -264,14 +264,15 @@ fun FlowContent.daisyMegamenuPanel(id: HtmlId? = null, extraClasses: String? = n
 # Menu <ul>
 enum MenuSize: Xs, Sm, Md, Lg, Xl
 enum MenuDirection: Vertical, Horizontal
-fun FlowContent.daisyMenu(id: HtmlId? = null, size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focus: Boolean = false, paged: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
-fun Tag.daisyMenuClasses(size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focus: Boolean = false, paged: Boolean = false)
+fun FlowContent.daisyMenu(id: HtmlId? = null, size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, focus: Boolean = false, paged: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun Tag.daisyMenuClasses(size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, focus: Boolean = false, paged: Boolean = false)
 fun FlowContent.daisyMenuTitle(text: String? = null, id: HtmlId? = null, extraClasses: String? = null, attrs: (H2.() -> Unit)? = null, content: (H2.() -> Unit)? = null)
 fun Tag.daisyMenuTitleClasses()
-fun FlowContent.daisyMenuDropdown(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
-fun Tag.daisyMenuDropdownClasses()
-fun FlowContent.daisyMenuDropdownToggle(id: HtmlId? = null, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
-fun Tag.daisyMenuDropdownToggleClasses()
+fun FlowContent.daisyMenuDropdown(id: HtmlId? = null, show: Boolean = false, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun Tag.daisyMenuDropdownClasses(show: Boolean = false)
+fun FlowContent.daisyMenuDropdownToggle(id: HtmlId? = null, dropdownShow: Boolean = false, extraClasses: String? = null, attrs: (SPAN.() -> Unit)? = null, content: (SPAN.() -> Unit))
+fun Tag.daisyMenuDropdownToggleClasses(dropdownShow: Boolean = false)
+fun Tag.daisyMenuItemClasses(active: Boolean = false, disabled: Boolean = false)
 
 # MockupBrowser <div>
 fun FlowContent.daisyMockupBrowser(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))

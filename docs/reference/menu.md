@@ -17,9 +17,6 @@ fun FlowContent.daisyMenu(
     id: HtmlId? = null,
     size: ClassValues<MenuSize>? = null,
     direction: ClassValues<MenuDirection>? = null,
-    active: Boolean = false,  // For the element inside <li> to look active
-    disabled: Boolean = false,  // For the element inside <li> to look disabled
-    dropdownShow: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
     focus: Boolean = false,  // For the element inside <li> to look focused
     paged: Boolean = false,  // Shows one level at a time and turns the open summary into a back button
     extraClasses: String? = null,
@@ -28,7 +25,7 @@ fun FlowContent.daisyMenu(
 )
 
 // The same classes on an element you write yourself, or beside another component's:
-fun Tag.daisyMenuClasses(size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, active: Boolean = false, disabled: Boolean = false, dropdownShow: Boolean = false, focus: Boolean = false, paged: Boolean = false)
+fun Tag.daisyMenuClasses(size: ClassValues<MenuSize>? = null, direction: ClassValues<MenuDirection>? = null, focus: Boolean = false, paged: Boolean = false)
 ```
 
 ```kotlin
@@ -47,23 +44,30 @@ fun Tag.daisyMenuTitleClasses()
 ```kotlin
 fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
+    show: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
     extraClasses: String? = null,
     attrs: (UL.() -> Unit)? = null,
     content: (UL.() -> Unit),
 )
 
 // The same classes on an element you write yourself, or beside another component's:
-fun Tag.daisyMenuDropdownClasses()
+fun Tag.daisyMenuDropdownClasses(show: Boolean = false)
 ```
 
 ```kotlin
 fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
+    dropdownShow: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
     extraClasses: String? = null,
     attrs: (SPAN.() -> Unit)? = null,
     content: (SPAN.() -> Unit),
 )
 
 // The same classes on an element you write yourself, or beside another component's:
-fun Tag.daisyMenuDropdownToggleClasses()
+fun Tag.daisyMenuDropdownToggleClasses(dropdownShow: Boolean = false)
+```
+
+```kotlin
+// Classes only, for a child DaisyUI gives no class of its own:
+fun Tag.daisyMenuItemClasses(active: Boolean = false, disabled: Boolean = false)
 ```

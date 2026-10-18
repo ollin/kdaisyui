@@ -17,9 +17,6 @@
       "parameters": [
         { "kind": "enum", "name": "size", "enum": "MenuSize", "doc": "Size variant" },
         { "kind": "enum", "name": "direction", "enum": "MenuDirection", "doc": "Direction variant" },
-        { "kind": "toggle", "name": "active", "class": "menu-active" },
-        { "kind": "toggle", "name": "disabled", "class": "menu-disabled" },
-        { "kind": "toggle", "name": "dropdownShow", "class": "menu-dropdown-show" },
         { "kind": "toggle", "name": "focus", "class": "menu-focus" },
         { "kind": "toggle", "name": "paged", "class": "menu-paged" }
       ]
@@ -40,7 +37,7 @@
       "element": "UL",
       "class": "menu-dropdown",
       "text": false,
-      "parameters": []
+      "parameters": [{ "kind": "toggle", "name": "show", "class": "menu-dropdown-show" }]
     },
     {
       "kind": "part",
@@ -49,14 +46,20 @@
       "element": "SPAN",
       "class": "menu-dropdown-toggle",
       "text": false,
-      "parameters": []
+      "parameters": [{ "kind": "toggle", "name": "dropdownShow", "class": "menu-dropdown-show" }]
+    },
+    {
+      "kind": "classes",
+      "name": "daisyMenuItem",
+      "receiver": "Tag",
+      "element": null,
+      "class": null,
+      "text": false,
+      "parameters": [
+        { "kind": "toggle", "name": "active", "class": "menu-active" },
+        { "kind": "toggle", "name": "disabled", "class": "menu-disabled" }
+      ]
     }
   ],
-  "summary": { "summary": "Navigation lists with submenus" },
-  "notExpressed": {
-    "menu-active": "#347: DaisyUI puts it on a child no function renders; daisyMenu offers it on the <ul> itself, where it has no effect.",
-    "menu-disabled": "#347: DaisyUI puts it on a child no function renders; daisyMenu offers it on the <ul> itself, where it has no effect.",
-    "menu-dropdown menu-dropdown-show": "#347: DaisyUI puts menu-dropdown-show on this element, which daisyMenuDropdown renders without offering it; daisyMenu offers it on the <ul> instead, where it has no effect.",
-    "menu-dropdown-show menu-dropdown-toggle": "#347: DaisyUI puts menu-dropdown-show on this element, which daisyMenuDropdownToggle renders without offering it; daisyMenu offers it on the <ul> instead, where it has no effect."
-  }
+  "summary": { "summary": "Navigation lists with submenus" }
 }

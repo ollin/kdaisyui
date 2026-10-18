@@ -5,6 +5,8 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.html.fieldSet
+import kotlinx.html.label
+import kotlinx.html.p
 
 class InputTest {
 
@@ -16,6 +18,7 @@ class InputTest {
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Text input")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Text input")
     }
 
     @Test
@@ -27,6 +30,7 @@ class InputTest {
         val expectedClasses = "kbd kbd-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Text input with text label inside")
+        assertEquals("kbd", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Text input with text label inside")
     }
 
     @Test
@@ -38,6 +42,7 @@ class InputTest {
         val expectedClasses = "badge badge-neutral badge-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Text input with text label inside")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Text input with text label inside")
     }
 
     @Test
@@ -48,6 +53,7 @@ class InputTest {
         val expectedClasses = "input input-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Ghost style")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Ghost style")
     }
 
     @Test
@@ -59,6 +65,7 @@ class InputTest {
         val expectedClasses = "fieldset"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and fieldset-legend")
+        assertEquals("fieldset", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and fieldset-legend")
     }
 
     @Test
@@ -70,17 +77,18 @@ class InputTest {
         val expectedClasses = "fieldset-legend"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and fieldset-legend")
+        assertEquals("legend", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and fieldset-legend")
     }
 
     @Test
     fun with_fieldset_and_fieldset_legend_daisyLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            p { daisyLabelClasses() }
         }
         val expectedClasses = "label"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and fieldset-legend")
+        assertEquals("p", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and fieldset-legend")
     }
 
     @Test
@@ -91,6 +99,7 @@ class InputTest {
         val expectedClasses = "input input-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -101,6 +110,7 @@ class InputTest {
         val expectedClasses = "input input-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -111,6 +121,7 @@ class InputTest {
         val expectedClasses = "input input-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -121,6 +132,7 @@ class InputTest {
         val expectedClasses = "input input-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -131,6 +143,7 @@ class InputTest {
         val expectedClasses = "input input-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -141,6 +154,7 @@ class InputTest {
         val expectedClasses = "input input-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -151,6 +165,7 @@ class InputTest {
         val expectedClasses = "input input-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -161,6 +176,7 @@ class InputTest {
         val expectedClasses = "input input-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Input colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Input colors")
     }
 
     @Test
@@ -171,6 +187,7 @@ class InputTest {
         val expectedClasses = "input input-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -181,6 +198,7 @@ class InputTest {
         val expectedClasses = "input input-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -191,6 +209,7 @@ class InputTest {
         val expectedClasses = "input input-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -201,6 +220,7 @@ class InputTest {
         val expectedClasses = "input input-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -211,16 +231,18 @@ class InputTest {
         val expectedClasses = "input input-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
     fun username_text_input_with_icon_and_validator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyInput(attrs = { daisyValidatorClasses() })
+            label { daisyInputClasses(); daisyValidatorClasses() }
         }
         val expectedClasses = "input validator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Username text input with icon and validator")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Username text input with icon and validator")
     }
 
     @Test
@@ -232,6 +254,7 @@ class InputTest {
         val expectedClasses = "validator-hint"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Username text input with icon and validator")
+        assertEquals("p", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Username text input with icon and validator")
     }
 
     @Test
@@ -243,6 +266,7 @@ class InputTest {
         val expectedClasses = "join"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Email input with icon, validator, button, join")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Email input with icon, validator, button, join")
     }
 
     @Test
@@ -254,5 +278,6 @@ class InputTest {
         val expectedClasses = "btn btn-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Email input with icon, validator, button, join")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Email input with icon, validator, button, join")
     }
 }

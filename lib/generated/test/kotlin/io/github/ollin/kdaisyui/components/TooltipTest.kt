@@ -16,6 +16,7 @@ class TooltipTest {
         val expectedClasses = "tooltip"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Tooltip")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Tooltip")
     }
 
     @Test
@@ -27,6 +28,7 @@ class TooltipTest {
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Tooltip")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Tooltip")
     }
 
     @Test
@@ -38,6 +40,7 @@ class TooltipTest {
         val expectedClasses = "tooltip-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Tooltip with tooltip-content")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Tooltip with tooltip-content")
     }
 
     @Test
@@ -49,6 +52,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Force open")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Force open")
     }
 
     @Test
@@ -60,6 +64,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-start tooltip-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Top")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Top")
     }
 
     @Test
@@ -71,6 +76,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Top")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Top")
     }
 
     @Test
@@ -82,6 +88,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Top")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Top")
     }
 
     @Test
@@ -93,6 +100,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-bottom tooltip-open tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Bottom")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Bottom")
     }
 
     @Test
@@ -104,6 +112,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-bottom tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Bottom")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Bottom")
     }
 
     @Test
@@ -115,6 +124,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-bottom tooltip-end tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Bottom")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Bottom")
     }
 
     @Test
@@ -126,6 +136,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-left tooltip-open tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Left")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Left")
     }
 
     @Test
@@ -137,6 +148,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-left tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Left")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Left")
     }
 
     @Test
@@ -148,6 +160,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-end tooltip-left tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Left")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Left")
     }
 
     @Test
@@ -159,6 +172,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-right tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Right")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Right")
     }
 
     @Test
@@ -170,6 +184,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-right"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Right")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Right")
     }
 
     @Test
@@ -181,6 +196,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-end tooltip-open tooltip-right"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Right")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Right")
     }
 
     @Test
@@ -192,6 +208,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
     }
 
     @Test
@@ -203,6 +220,7 @@ class TooltipTest {
         val expectedClasses = "btn btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
     }
 
     @Test
@@ -214,6 +232,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Secondary color")
     }
 
     @Test
@@ -225,6 +244,7 @@ class TooltipTest {
         val expectedClasses = "btn btn-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Secondary color")
     }
 
     @Test
@@ -236,6 +256,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-accent tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accent color")
     }
 
     @Test
@@ -247,6 +268,7 @@ class TooltipTest {
         val expectedClasses = "btn btn-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accent color")
     }
 
     @Test
@@ -258,6 +280,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-info tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
     }
 
     @Test
@@ -269,6 +292,7 @@ class TooltipTest {
         val expectedClasses = "btn btn-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
     }
 
     @Test
@@ -280,6 +304,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
     }
 
     @Test
@@ -291,6 +316,7 @@ class TooltipTest {
         val expectedClasses = "btn btn-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
     }
 
     @Test
@@ -302,6 +328,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-open tooltip-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
     }
 
     @Test
@@ -313,6 +340,7 @@ class TooltipTest {
         val expectedClasses = "btn btn-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
     }
 
     @Test
@@ -324,6 +352,7 @@ class TooltipTest {
         val expectedClasses = "tooltip tooltip-error tooltip-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
     }
 
     @Test
@@ -335,6 +364,7 @@ class TooltipTest {
         val expectedClasses = "btn btn-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
     }
 
     @Test
@@ -346,5 +376,6 @@ class TooltipTest {
         val expectedClasses = "md:tooltip-center md:tooltip-right tooltip tooltip-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive tooltip position")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive tooltip position")
     }
 }

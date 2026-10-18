@@ -16,6 +16,7 @@ class FooterTest {
         val expectedClasses = "footer sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer (vertical by default, horizontal for sm and up)")
+        assertEquals("footer", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Footer (vertical by default, horizontal for sm and up)")
     }
 
     @Test
@@ -27,6 +28,7 @@ class FooterTest {
         val expectedClasses = "footer-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer (vertical by default, horizontal for sm and up)")
+        assertEquals("h6", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Footer (vertical by default, horizontal for sm and up)")
     }
 
     @Test
@@ -38,6 +40,7 @@ class FooterTest {
         val expectedClasses = "link link-hover"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer (vertical by default, horizontal for sm and up)")
+        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Footer (vertical by default, horizontal for sm and up)")
     }
 
     @Test
@@ -49,6 +52,7 @@ class FooterTest {
         val expectedClasses = "join"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a form")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Footer with a form")
     }
 
     @Test
@@ -59,6 +63,7 @@ class FooterTest {
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a form")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Footer with a form")
     }
 
     @Test
@@ -70,6 +75,7 @@ class FooterTest {
         val expectedClasses = "btn btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a form")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Footer with a form")
     }
 
     @Test
@@ -81,6 +87,7 @@ class FooterTest {
         val expectedClasses = "footer footer-center sm:footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with copyright text")
+        assertEquals("footer", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Footer with copyright text")
     }
 
     @Test
@@ -92,6 +99,7 @@ class FooterTest {
         val expectedClasses = "footer footer-center footer-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered footer with logo and social icons")
+        assertEquals("footer", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Centered footer with logo and social icons")
     }
 
     @Test
@@ -103,5 +111,6 @@ class FooterTest {
         val expectedClasses = "footer"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Two footer")
+        assertEquals("footer", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Two footer")
     }
 }

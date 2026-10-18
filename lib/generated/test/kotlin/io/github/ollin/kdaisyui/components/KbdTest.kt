@@ -16,6 +16,7 @@ class KbdTest {
         val expectedClasses = "kbd"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd")
+        assertEquals("kbd", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Kbd")
     }
 
     @Test
@@ -27,6 +28,7 @@ class KbdTest {
         val expectedClasses = "kbd kbd-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertEquals("kbd", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Kbd sizes")
     }
 
     @Test
@@ -38,6 +40,7 @@ class KbdTest {
         val expectedClasses = "kbd kbd-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertEquals("kbd", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Kbd sizes")
     }
 
     @Test
@@ -49,6 +52,7 @@ class KbdTest {
         val expectedClasses = "kbd kbd-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertEquals("kbd", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Kbd sizes")
     }
 
     @Test
@@ -60,6 +64,7 @@ class KbdTest {
         val expectedClasses = "kbd kbd-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertEquals("kbd", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Kbd sizes")
     }
 
     @Test
@@ -71,5 +76,6 @@ class KbdTest {
         val expectedClasses = "kbd kbd-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Kbd sizes")
+        assertEquals("kbd", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Kbd sizes")
     }
 }

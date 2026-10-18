@@ -16,6 +16,7 @@ class MockupPhoneTest {
         val expectedClasses = "mockup-phone"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for iPhone mockup")
     }
 
     @Test
@@ -27,6 +28,7 @@ class MockupPhoneTest {
         val expectedClasses = "mockup-phone-camera"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for iPhone mockup")
     }
 
     @Test
@@ -38,5 +40,6 @@ class MockupPhoneTest {
         val expectedClasses = "mockup-phone-display"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for iPhone mockup")
     }
 }

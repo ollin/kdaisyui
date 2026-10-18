@@ -16,6 +16,7 @@ class ChatTest {
         val expectedClasses = "chat chat-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for chat-start and chat-end")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for chat-start and chat-end")
     }
 
     @Test
@@ -27,6 +28,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for chat-start and chat-end")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for chat-start and chat-end")
     }
 
     @Test
@@ -38,6 +40,7 @@ class ChatTest {
         val expectedClasses = "chat chat-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for chat-start and chat-end")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for chat-start and chat-end")
     }
 
     @Test
@@ -49,6 +52,7 @@ class ChatTest {
         val expectedClasses = "avatar chat-image"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat with image")
     }
 
     @Test
@@ -60,6 +64,7 @@ class ChatTest {
         val expectedClasses = "chat-header"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image, header and footer")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat with image, header and footer")
     }
 
     @Test
@@ -71,6 +76,7 @@ class ChatTest {
         val expectedClasses = "chat-footer"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat with image, header and footer")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat with image, header and footer")
     }
 
     @Test
@@ -82,6 +88,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 
     @Test
@@ -93,6 +100,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 
     @Test
@@ -104,6 +112,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 
     @Test
@@ -115,6 +124,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 
     @Test
@@ -126,6 +136,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 
     @Test
@@ -137,6 +148,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 
     @Test
@@ -148,6 +160,7 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 
     @Test
@@ -159,5 +172,6 @@ class ChatTest {
         val expectedClasses = "chat-bubble chat-bubble-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Chat Bubble with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Chat Bubble with colors")
     }
 }

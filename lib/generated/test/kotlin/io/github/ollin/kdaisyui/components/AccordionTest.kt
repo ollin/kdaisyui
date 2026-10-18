@@ -16,6 +16,7 @@ class AccordionTest {
         val expectedClasses = "collapse"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion using radio inputs")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accordion using radio inputs")
     }
 
     @Test
@@ -27,6 +28,7 @@ class AccordionTest {
         val expectedClasses = "collapse-title"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion using radio inputs")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accordion using radio inputs")
     }
 
     @Test
@@ -38,6 +40,7 @@ class AccordionTest {
         val expectedClasses = "collapse-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion using radio inputs")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accordion using radio inputs")
     }
 
     @Test
@@ -49,6 +52,7 @@ class AccordionTest {
         val expectedClasses = "collapse collapse-arrow"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion with arrow icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accordion with arrow icon")
     }
 
     @Test
@@ -60,6 +64,7 @@ class AccordionTest {
         val expectedClasses = "collapse collapse-plus"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Accordion with plus/minus icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accordion with plus/minus icon")
     }
 
     @Test
@@ -71,5 +76,6 @@ class AccordionTest {
         val expectedClasses = "join join-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Using Accordion and Join together")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Using Accordion and Join together")
     }
 }

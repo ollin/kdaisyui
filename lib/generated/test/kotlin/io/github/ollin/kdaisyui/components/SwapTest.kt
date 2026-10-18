@@ -16,6 +16,7 @@ class SwapTest {
         val expectedClasses = "swap"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Swap text")
     }
 
     @Test
@@ -27,6 +28,7 @@ class SwapTest {
         val expectedClasses = "swap-on"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Swap text")
     }
 
     @Test
@@ -38,6 +40,7 @@ class SwapTest {
         val expectedClasses = "swap-off"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap text")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Swap text")
     }
 
     @Test
@@ -49,6 +52,7 @@ class SwapTest {
         val expectedClasses = "swap swap-rotate"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap icons with rotate effect")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Swap icons with rotate effect")
     }
 
     @Test
@@ -60,6 +64,7 @@ class SwapTest {
         val expectedClasses = "btn btn-circle swap swap-rotate"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hamburger button")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hamburger button")
     }
 
     @Test
@@ -71,6 +76,7 @@ class SwapTest {
         val expectedClasses = "swap swap-flip"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Swap icons with flip effect")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Swap icons with flip effect")
     }
 
     @Test
@@ -82,5 +88,6 @@ class SwapTest {
         val expectedClasses = "swap swap-active"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Activate using class name instead of checkbox")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Activate using class name instead of checkbox")
     }
 }

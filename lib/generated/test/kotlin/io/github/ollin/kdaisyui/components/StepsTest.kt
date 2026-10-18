@@ -17,6 +17,7 @@ class StepsTest {
         val expectedClasses = "steps"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Horizontal")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Horizontal")
     }
 
     @Test
@@ -28,6 +29,7 @@ class StepsTest {
         val expectedClasses = "step step-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Horizontal")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Horizontal")
     }
 
     @Test
@@ -39,6 +41,7 @@ class StepsTest {
         val expectedClasses = "step"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Horizontal")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Horizontal")
     }
 
     @Test
@@ -50,6 +53,7 @@ class StepsTest {
         val expectedClasses = "steps steps-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Vertical")
     }
 
     @Test
@@ -61,6 +65,7 @@ class StepsTest {
         val expectedClasses = "lg:steps-horizontal steps steps-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for responsive (vertical on small screen, horizontal on large screen)")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for responsive (vertical on small screen, horizontal on large screen)")
     }
 
     @Test
@@ -72,6 +77,7 @@ class StepsTest {
         val expectedClasses = "step step-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom content in step-icon")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With custom content in step-icon")
     }
 
     @Test
@@ -83,6 +89,7 @@ class StepsTest {
         val expectedClasses = "step-icon"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom content in step-icon")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With custom content in step-icon")
     }
 
     @Test
@@ -94,6 +101,7 @@ class StepsTest {
         val expectedClasses = "step step-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom colors")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Custom colors")
     }
 
     @Test
@@ -105,6 +113,7 @@ class StepsTest {
         val expectedClasses = "step step-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Custom colors")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Custom colors")
     }
 
     @Test
@@ -116,6 +125,7 @@ class StepsTest {
         val expectedClasses = "step step-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With scrollable wrapper")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With scrollable wrapper")
     }
 
     @Test
@@ -127,6 +137,7 @@ class StepsTest {
         val expectedClasses = "step step-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With scrollable wrapper")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With scrollable wrapper")
     }
 
     @Test
@@ -138,5 +149,6 @@ class StepsTest {
         val expectedClasses = "step step-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With scrollable wrapper")
+        assertEquals("li", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With scrollable wrapper")
     }
 }

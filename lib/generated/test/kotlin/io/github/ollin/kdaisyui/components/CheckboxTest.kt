@@ -5,6 +5,7 @@ import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.html.fieldSet
+import kotlinx.html.label
 
 class CheckboxTest {
 
@@ -16,6 +17,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Checkbox")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Checkbox")
     }
 
     @Test
@@ -27,6 +29,7 @@ class CheckboxTest {
         val expectedClasses = "fieldset"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertEquals("fieldset", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and label")
     }
 
     @Test
@@ -38,17 +41,18 @@ class CheckboxTest {
         val expectedClasses = "fieldset-legend"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertEquals("legend", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and label")
     }
 
     @Test
     fun with_fieldset_and_label_daisyLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            label { daisyLabelClasses() }
         }
         val expectedClasses = "label"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and label")
     }
 
     @Test
@@ -59,6 +63,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -69,6 +74,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -79,6 +85,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -89,6 +96,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -99,6 +107,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
     }
 
     @Test
@@ -109,6 +118,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 
     @Test
@@ -119,6 +129,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 
     @Test
@@ -129,6 +140,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 
     @Test
@@ -139,6 +151,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 
     @Test
@@ -149,6 +162,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 
     @Test
@@ -159,6 +173,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 
     @Test
@@ -169,6 +184,7 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 
     @Test
@@ -179,5 +195,6 @@ class CheckboxTest {
         val expectedClasses = "checkbox checkbox-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Colors")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Colors")
     }
 }

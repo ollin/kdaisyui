@@ -16,6 +16,7 @@ class AlertTest {
         val expectedClasses = "alert"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert")
     }
 
     @Test
@@ -27,6 +28,7 @@ class AlertTest {
         val expectedClasses = "alert alert-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
     }
 
     @Test
@@ -38,6 +40,7 @@ class AlertTest {
         val expectedClasses = "alert alert-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
     }
 
     @Test
@@ -49,6 +52,7 @@ class AlertTest {
         val expectedClasses = "alert alert-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
     }
 
     @Test
@@ -60,6 +64,7 @@ class AlertTest {
         val expectedClasses = "alert alert-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
     }
 
     @Test
@@ -71,6 +76,7 @@ class AlertTest {
         val expectedClasses = "alert alert-info alert-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
     }
 
     @Test
@@ -82,6 +88,7 @@ class AlertTest {
         val expectedClasses = "alert alert-soft alert-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
     }
 
     @Test
@@ -93,6 +100,7 @@ class AlertTest {
         val expectedClasses = "alert alert-soft alert-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
     }
 
     @Test
@@ -104,6 +112,7 @@ class AlertTest {
         val expectedClasses = "alert alert-error alert-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert soft style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert soft style")
     }
 
     @Test
@@ -115,6 +124,7 @@ class AlertTest {
         val expectedClasses = "alert alert-info alert-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
     }
 
     @Test
@@ -126,6 +136,7 @@ class AlertTest {
         val expectedClasses = "alert alert-outline alert-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
     }
 
     @Test
@@ -137,6 +148,7 @@ class AlertTest {
         val expectedClasses = "alert alert-outline alert-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
     }
 
     @Test
@@ -148,6 +160,7 @@ class AlertTest {
         val expectedClasses = "alert alert-error alert-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert outline style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert outline style")
     }
 
     @Test
@@ -159,6 +172,7 @@ class AlertTest {
         val expectedClasses = "alert alert-dash alert-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
     }
 
     @Test
@@ -170,6 +184,7 @@ class AlertTest {
         val expectedClasses = "alert alert-dash alert-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
     }
 
     @Test
@@ -181,6 +196,7 @@ class AlertTest {
         val expectedClasses = "alert alert-dash alert-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
     }
 
     @Test
@@ -192,6 +208,7 @@ class AlertTest {
         val expectedClasses = "alert alert-dash alert-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert dash style")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert dash style")
     }
 
     @Test
@@ -203,6 +220,7 @@ class AlertTest {
         val expectedClasses = "alert alert-vertical sm:alert-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with buttons + responsive")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert with buttons + responsive")
     }
 
     @Test
@@ -214,6 +232,7 @@ class AlertTest {
         val expectedClasses = "btn btn-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with buttons + responsive")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert with buttons + responsive")
     }
 
     @Test
@@ -225,5 +244,6 @@ class AlertTest {
         val expectedClasses = "btn btn-primary btn-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Alert with buttons + responsive")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Alert with buttons + responsive")
     }
 }

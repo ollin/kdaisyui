@@ -4,6 +4,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.a
 
 class NavbarTest {
 
@@ -16,17 +17,18 @@ class NavbarTest {
         val expectedClasses = "navbar"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with title only")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with title only")
     }
 
     @Test
     fun navbar_with_title_only_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost) {
-            }
+            a { daisyButtonClasses(style = ButtonStyle.Ghost) }
         }
         val expectedClasses = "btn btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with title only")
+        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with title only")
     }
 
     @Test
@@ -38,6 +40,7 @@ class NavbarTest {
         val expectedClasses = "btn btn-ghost btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with title and icon")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with title and icon")
     }
 
     @Test
@@ -49,6 +52,7 @@ class NavbarTest {
         val expectedClasses = "menu menu-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with menu and submenu")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with menu and submenu")
     }
 
     @Test
@@ -59,17 +63,18 @@ class NavbarTest {
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with search input and dropdown")
     }
 
     @Test
     fun navbar_with_search_input_and_dropdown_daisyDropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(align = DropdownAlign.End) {
-            }
+            div { daisyDropdownClasses(align = DropdownAlign.End) }
         }
         val expectedClasses = "dropdown dropdown-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with search input and dropdown")
     }
 
     @Test
@@ -81,6 +86,7 @@ class NavbarTest {
         val expectedClasses = "avatar btn btn-circle btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with search input and dropdown")
     }
 
     @Test
@@ -92,6 +98,7 @@ class NavbarTest {
         val expectedClasses = "dropdown-content menu menu-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with search input and dropdown")
     }
 
     @Test
@@ -103,17 +110,18 @@ class NavbarTest {
         val expectedClasses = "badge"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with search input and dropdown")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with search input and dropdown")
     }
 
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) {
-            }
+            div { daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) }
         }
         val expectedClasses = "btn btn-circle btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -125,6 +133,7 @@ class NavbarTest {
         val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -136,6 +145,7 @@ class NavbarTest {
         val expectedClasses = "badge badge-sm indicator-item"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -147,6 +157,7 @@ class NavbarTest {
         val expectedClasses = "card card-sm dropdown-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -158,6 +169,7 @@ class NavbarTest {
         val expectedClasses = "card-body"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -169,6 +181,7 @@ class NavbarTest {
         val expectedClasses = "card-actions"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -180,6 +193,7 @@ class NavbarTest {
         val expectedClasses = "btn btn-block btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with icon, indicator and dropdown")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with icon, indicator and dropdown")
     }
 
     @Test
@@ -191,17 +205,18 @@ class NavbarTest {
         val expectedClasses = "navbar-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with dropdown, center logo and icon")
     }
 
     @Test
     fun navbar_with_dropdown_center_logo_and_icon_daisyDropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown() {
-            }
+            div { daisyDropdownClasses() }
         }
         val expectedClasses = "dropdown"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with dropdown, center logo and icon")
     }
 
     @Test
@@ -213,6 +228,7 @@ class NavbarTest {
         val expectedClasses = "navbar-center"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with dropdown, center logo and icon")
     }
 
     @Test
@@ -224,6 +240,7 @@ class NavbarTest {
         val expectedClasses = "navbar-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with dropdown, center logo and icon")
     }
 
     @Test
@@ -235,17 +252,18 @@ class NavbarTest {
         val expectedClasses = "badge badge-primary badge-xs indicator-item"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar with dropdown, center logo and icon")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar with dropdown, center logo and icon")
     }
 
     @Test
     fun responsive_dropdown_menu_on_small_screen_center_menu_on_large_screen_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            a { daisyButtonClasses() }
         }
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (dropdown menu on small screen, center menu on large screen)")
+        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive (dropdown menu on small screen, center menu on large screen)")
     }
 
     @Test
@@ -257,6 +275,7 @@ class NavbarTest {
         val expectedClasses = "collapse-title navbar"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (collapse on small screen, full content on large screen)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive (collapse on small screen, full content on large screen)")
     }
 
     @Test
@@ -268,6 +287,7 @@ class NavbarTest {
         val expectedClasses = "collapse-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (collapse on small screen, full content on large screen)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive (collapse on small screen, full content on large screen)")
     }
 
     @Test
@@ -279,5 +299,6 @@ class NavbarTest {
         val expectedClasses = "menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (collapse on small screen, full content on large screen)")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive (collapse on small screen, full content on large screen)")
     }
 }

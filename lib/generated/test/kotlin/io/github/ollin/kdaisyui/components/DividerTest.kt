@@ -16,6 +16,7 @@ class DividerTest {
         val expectedClasses = "card"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider")
     }
 
     @Test
@@ -27,6 +28,7 @@ class DividerTest {
         val expectedClasses = "divider"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider")
     }
 
     @Test
@@ -38,6 +40,7 @@ class DividerTest {
         val expectedClasses = "divider divider-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider horizontal")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider horizontal")
     }
 
     @Test
@@ -49,6 +52,7 @@ class DividerTest {
         val expectedClasses = "divider lg:divider-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for responsive (lg:divider-horizontal)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for responsive (lg:divider-horizontal)")
     }
 
     @Test
@@ -60,6 +64,7 @@ class DividerTest {
         val expectedClasses = "divider divider-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -71,6 +76,7 @@ class DividerTest {
         val expectedClasses = "divider divider-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -82,6 +88,7 @@ class DividerTest {
         val expectedClasses = "divider divider-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -93,6 +100,7 @@ class DividerTest {
         val expectedClasses = "divider divider-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -104,6 +112,7 @@ class DividerTest {
         val expectedClasses = "divider divider-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -115,6 +124,7 @@ class DividerTest {
         val expectedClasses = "divider divider-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -126,6 +136,7 @@ class DividerTest {
         val expectedClasses = "divider divider-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -137,6 +148,7 @@ class DividerTest {
         val expectedClasses = "divider divider-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
     }
 
     @Test
@@ -148,6 +160,7 @@ class DividerTest {
         val expectedClasses = "divider divider-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions")
     }
 
     @Test
@@ -159,6 +172,7 @@ class DividerTest {
         val expectedClasses = "divider divider-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions")
     }
 
     @Test
@@ -170,6 +184,7 @@ class DividerTest {
         val expectedClasses = "divider divider-horizontal divider-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions (horizontal)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions (horizontal)")
     }
 
     @Test
@@ -181,5 +196,6 @@ class DividerTest {
         val expectedClasses = "divider divider-end divider-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions (horizontal)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions (horizontal)")
     }
 }

@@ -50,7 +50,7 @@ describe('documentedCall', () => {
   const callFor = (html: string) => documentedCall([sized], markedElements(html)[0], classes)
 
   it('passes each class through its typed parameter, and a prefixed one through extraClasses', () => {
-    assert.deepEqual(callFor('<button class="$$btn $$btn-active md:$$btn-lg">x</button>'), { fn: sized.functions[0], args: 'active = true, extraClasses = "md:btn-lg"', expectedClasses: 'btn btn-active md:btn-lg', tag: 'button', rendersTag: false })
+    assert.deepEqual(callFor('<button class="$$btn $$btn-active md:$$btn-lg">x</button>'), { fn: sized.functions[0], args: 'active = true, extraClasses = "md:btn-lg"', expectedClasses: 'btn btn-active md:btn-lg', tag: 'button', rendersTag: false, onTag: 'daisyButtonClasses(active = true); addClassNames("md:btn-lg")' })
   })
 
   it('neither passes nor expects join-item, and names an enum entry', () => {

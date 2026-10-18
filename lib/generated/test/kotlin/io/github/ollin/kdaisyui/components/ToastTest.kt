@@ -16,6 +16,7 @@ class ToastTest {
         val expectedClasses = "toast"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast with alert inside")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast with alert inside")
     }
 
     @Test
@@ -27,6 +28,7 @@ class ToastTest {
         val expectedClasses = "alert alert-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast with alert inside")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast with alert inside")
     }
 
     @Test
@@ -38,6 +40,7 @@ class ToastTest {
         val expectedClasses = "toast toast-start toast-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-top toast-start")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-top toast-start")
     }
 
     @Test
@@ -49,6 +52,7 @@ class ToastTest {
         val expectedClasses = "alert alert-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-top toast-start")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-top toast-start")
     }
 
     @Test
@@ -60,6 +64,7 @@ class ToastTest {
         val expectedClasses = "toast toast-center toast-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-top toast-center")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-top toast-center")
     }
 
     @Test
@@ -71,6 +76,7 @@ class ToastTest {
         val expectedClasses = "toast toast-end toast-top"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-top toast-end")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-top toast-end")
     }
 
     @Test
@@ -82,6 +88,7 @@ class ToastTest {
         val expectedClasses = "toast toast-middle toast-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-start toast-middle")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-start toast-middle")
     }
 
     @Test
@@ -93,6 +100,7 @@ class ToastTest {
         val expectedClasses = "toast toast-center toast-middle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-center toast-middle")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-center toast-middle")
     }
 
     @Test
@@ -104,6 +112,7 @@ class ToastTest {
         val expectedClasses = "toast toast-end toast-middle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-end toast-middle")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-end toast-middle")
     }
 
     @Test
@@ -115,6 +124,7 @@ class ToastTest {
         val expectedClasses = "toast toast-start"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-start toast-bottom (default)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-start toast-bottom (default)")
     }
 
     @Test
@@ -126,6 +136,7 @@ class ToastTest {
         val expectedClasses = "toast toast-center"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-center toast-bottom (default)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-center toast-bottom (default)")
     }
 
     @Test
@@ -137,5 +148,6 @@ class ToastTest {
         val expectedClasses = "toast toast-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for toast-end (default) toast-bottom (default)")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for toast-end (default) toast-bottom (default)")
     }
 }

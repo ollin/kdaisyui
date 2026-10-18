@@ -16,6 +16,7 @@ class JoinTest {
         val expectedClasses = "join"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Join")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Join")
     }
 
     @Test
@@ -27,6 +28,7 @@ class JoinTest {
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Join")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Join")
     }
 
     @Test
@@ -38,6 +40,7 @@ class JoinTest {
         val expectedClasses = "join join-vertical"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Group items vertically")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Group items vertically")
     }
 
     @Test
@@ -49,6 +52,7 @@ class JoinTest {
         val expectedClasses = "join join-vertical lg:join-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: it's vertical on small screen and horizontal on large screen")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive: it's vertical on small screen and horizontal on large screen")
     }
 
     @Test
@@ -59,6 +63,7 @@ class JoinTest {
         val expectedClasses = "input"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With extra elements in the group")
     }
 
     @Test
@@ -70,6 +75,7 @@ class JoinTest {
         val expectedClasses = "select"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
+        assertEquals("select", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With extra elements in the group")
     }
 
     @Test
@@ -81,6 +87,7 @@ class JoinTest {
         val expectedClasses = "indicator"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With extra elements in the group")
     }
 
     @Test
@@ -92,5 +99,6 @@ class JoinTest {
         val expectedClasses = "badge badge-secondary indicator-item"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for With extra elements in the group")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With extra elements in the group")
     }
 }

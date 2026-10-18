@@ -16,6 +16,7 @@ class DrawerTest {
         val expectedClasses = "drawer"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
     }
 
     @Test
@@ -26,6 +27,7 @@ class DrawerTest {
         val expectedClasses = "drawer-toggle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
     }
 
     @Test
@@ -37,6 +39,7 @@ class DrawerTest {
         val expectedClasses = "drawer-content"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
     }
 
     @Test
@@ -48,6 +51,7 @@ class DrawerTest {
         val expectedClasses = "btn drawer-button"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
     }
 
     @Test
@@ -59,6 +63,7 @@ class DrawerTest {
         val expectedClasses = "drawer-side"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
     }
 
     @Test
@@ -70,6 +75,7 @@ class DrawerTest {
         val expectedClasses = "drawer-overlay"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
     }
 
     @Test
@@ -81,6 +87,7 @@ class DrawerTest {
         val expectedClasses = "menu"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
     }
 
     @Test
@@ -92,6 +99,7 @@ class DrawerTest {
         val expectedClasses = "navbar"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar menu for desktop + sidebar drawer for mobile")
     }
 
     @Test
@@ -103,6 +111,7 @@ class DrawerTest {
         val expectedClasses = "btn btn-ghost btn-square drawer-button"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar menu for desktop + sidebar drawer for mobile")
     }
 
     @Test
@@ -114,6 +123,7 @@ class DrawerTest {
         val expectedClasses = "menu menu-horizontal"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar menu for desktop + sidebar drawer for mobile")
     }
 
     @Test
@@ -125,6 +135,7 @@ class DrawerTest {
         val expectedClasses = "drawer lg:drawer-open"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
     }
 
     @Test
@@ -136,6 +147,7 @@ class DrawerTest {
         val expectedClasses = "drawer drawer-end"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar that opens from right side of page")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar that opens from right side of page")
     }
 
     @Test
@@ -147,5 +159,6 @@ class DrawerTest {
         val expectedClasses = "btn btn-primary drawer-button"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar that opens from right side of page")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar that opens from right side of page")
     }
 }

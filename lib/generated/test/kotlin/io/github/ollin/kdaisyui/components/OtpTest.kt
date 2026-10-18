@@ -16,6 +16,7 @@ class OtpTest {
         val expectedClasses = "otp"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP")
     }
 
     @Test
@@ -27,6 +28,7 @@ class OtpTest {
         val expectedClasses = "otp otp-joined"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP joined")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP joined")
     }
 
     @Test
@@ -38,6 +40,7 @@ class OtpTest {
         val expectedClasses = "otp otp-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different sizes")
     }
 
     @Test
@@ -49,6 +52,7 @@ class OtpTest {
         val expectedClasses = "otp otp-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different sizes")
     }
 
     @Test
@@ -60,6 +64,7 @@ class OtpTest {
         val expectedClasses = "otp otp-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different sizes")
     }
 
     @Test
@@ -71,6 +76,7 @@ class OtpTest {
         val expectedClasses = "otp otp-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different sizes")
     }
 
     @Test
@@ -82,6 +88,7 @@ class OtpTest {
         val expectedClasses = "otp otp-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different sizes")
     }
 
     @Test
@@ -93,6 +100,7 @@ class OtpTest {
         val expectedClasses = "otp otp-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 
     @Test
@@ -104,6 +112,7 @@ class OtpTest {
         val expectedClasses = "otp otp-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 
     @Test
@@ -115,6 +124,7 @@ class OtpTest {
         val expectedClasses = "otp otp-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 
     @Test
@@ -126,6 +136,7 @@ class OtpTest {
         val expectedClasses = "otp otp-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 
     @Test
@@ -137,6 +148,7 @@ class OtpTest {
         val expectedClasses = "otp otp-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 
     @Test
@@ -148,6 +160,7 @@ class OtpTest {
         val expectedClasses = "otp otp-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 
     @Test
@@ -159,6 +172,7 @@ class OtpTest {
         val expectedClasses = "otp otp-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 
     @Test
@@ -170,5 +184,6 @@ class OtpTest {
         val expectedClasses = "otp otp-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for OTP with different colors")
     }
 }

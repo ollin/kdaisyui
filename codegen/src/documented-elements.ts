@@ -9,7 +9,7 @@ import { entryName, type ComponentModel, type ModelFunction } from './model.ts'
 import { offeredBy, writtenBy } from './model-completeness.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
 import { markedElements, type MarkedElement } from './parser/documented-classes.ts'
-import { hasBuilder } from './component-shape.ts'
+import { hasBuilder, htmlTagNameFor, type TagClass } from './component-shape.ts'
 
 /** A function and the component model that declares it. */
 export interface ModelledFunction {
@@ -52,7 +52,7 @@ export function claimingGroups(models: readonly ComponentModel[], counted: reado
  * and of those offering equally much, the one rendering the documented tag.
  */
 function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: readonly string[], tag: string): ModelledFunction[] {
-  const score = ({ model, fn }: ModelledFunction) => 2 * counted.filter(cls => offers(model, fn, cls)).length + (fn.element?.toLowerCase() === tag ? 1 : 0)
+  const score = ({ model, fn }: ModelledFunction) => 2 * counted.filter(cls => offers(model, fn, cls)).length + (rendersTag(fn, tag) ? 1 : 0)
   const owners = candidates.filter(({ fn }) => fn.class === own)
   return owners.length === 0 ? [] : [owners.reduce((best, next) => (score(next) > score(best) ? next : best))]
 }
@@ -108,6 +108,8 @@ export interface DocumentedCall {
   readonly tag: string
   /** Whether `fn` renders that tag, so the test can call it; otherwise it writes the tag itself. */
   readonly rendersTag: boolean
+  /** What goes inside the tag when the test writes it: every group's sibling, and the variant classes. */
+  readonly onTag: string
 }
 
 /**
@@ -128,13 +130,19 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
     args: callArguments(primary, others, variants).join(', '),
     expectedClasses: [...new Set(expected)].sort().join(' '),
     tag: element.tag,
-    rendersTag: primary.fn.kind !== 'classes' && primary.fn.element.toLowerCase() === element.tag,
+    rendersTag: primary.fn.kind !== 'classes' && rendersTag(primary.fn, element.tag),
+    onTag: [...[primary, ...others].map(siblingCall), ...(variants.length > 0 ? [`addClassNames("${variants.join(' ')}")`] : [])].join('; '),
   }
+}
+
+/** A group's classes as its function's class sibling writes them. */
+function siblingCall(group: ClaimedGroup): string {
+  return `${group.fn.name}Classes(${groupArguments(group).join(', ')})`
 }
 
 /** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */
 function callArguments(primary: ClaimedGroup, others: readonly ClaimedGroup[], variants: readonly string[]): string[] {
-  const siblings = others.map(group => `${group.fn.name}Classes(${groupArguments(group).join(', ')})`)
+  const siblings = others.map(siblingCall)
   return [
     ...groupArguments(primary),
     ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : []),
@@ -168,4 +176,9 @@ function countedClasses(element: MarkedElement, componentClasses: ReadonlySet<st
 export function tagFindings(page: string, html: string): string[] {
   return [...new Set(markedElements(html).map(element => element.tag).filter(tag => !hasBuilder(tag)))]
     .map(tag => `${page}: <${tag}> is documented, and nothing writes that tag: kotlinx.html has no builder and the library defines none`)
+}
+
+/** Whether a function renders an HTML tag, by the tag's HTML name: `calendar-date` for `CALENDAR_DATE`. */
+function rendersTag(fn: ModelFunction, tag: string): boolean {
+  return fn.element !== null && htmlTagNameFor(fn.element as TagClass) === tag
 }

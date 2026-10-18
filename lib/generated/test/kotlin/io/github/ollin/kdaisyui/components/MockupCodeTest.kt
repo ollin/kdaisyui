@@ -16,5 +16,6 @@ class MockupCodeTest {
         val expectedClasses = "mockup-code"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for mockup code with line prefix")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for mockup code with line prefix")
     }
 }

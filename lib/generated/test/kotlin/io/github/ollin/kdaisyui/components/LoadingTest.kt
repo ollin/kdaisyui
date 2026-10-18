@@ -16,6 +16,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-spinner loading-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading spinner")
     }
 
     @Test
@@ -27,6 +28,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-sm loading-spinner"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading spinner")
     }
 
     @Test
@@ -38,6 +40,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-md loading-spinner"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading spinner")
     }
 
     @Test
@@ -49,6 +52,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-lg loading-spinner"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading spinner")
     }
 
     @Test
@@ -60,6 +64,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-spinner loading-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading spinner")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading spinner")
     }
 
     @Test
@@ -71,6 +76,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-dots loading-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading dots")
     }
 
     @Test
@@ -82,6 +88,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-dots loading-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading dots")
     }
 
     @Test
@@ -93,6 +100,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-dots loading-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading dots")
     }
 
     @Test
@@ -104,6 +112,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-dots loading-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading dots")
     }
 
     @Test
@@ -115,6 +124,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-dots loading-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading dots")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading dots")
     }
 
     @Test
@@ -126,6 +136,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ring loading-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ring")
     }
 
     @Test
@@ -137,6 +148,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ring loading-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ring")
     }
 
     @Test
@@ -148,6 +160,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-md loading-ring"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ring")
     }
 
     @Test
@@ -159,6 +172,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-lg loading-ring"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ring")
     }
 
     @Test
@@ -170,6 +184,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ring loading-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ring")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ring")
     }
 
     @Test
@@ -181,6 +196,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ball loading-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ball")
     }
 
     @Test
@@ -192,6 +208,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ball loading-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ball")
     }
 
     @Test
@@ -203,6 +220,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ball loading-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ball")
     }
 
     @Test
@@ -214,6 +232,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ball loading-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ball")
     }
 
     @Test
@@ -225,6 +244,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-ball loading-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading ball")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading ball")
     }
 
     @Test
@@ -236,6 +256,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-bars loading-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading bars")
     }
 
     @Test
@@ -247,6 +268,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-bars loading-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading bars")
     }
 
     @Test
@@ -258,6 +280,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-bars loading-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading bars")
     }
 
     @Test
@@ -269,6 +292,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-bars loading-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading bars")
     }
 
     @Test
@@ -280,6 +304,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-bars loading-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading bars")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading bars")
     }
 
     @Test
@@ -291,6 +316,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-infinity loading-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading infinity")
     }
 
     @Test
@@ -302,6 +328,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-infinity loading-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading infinity")
     }
 
     @Test
@@ -313,6 +340,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-infinity loading-md"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading infinity")
     }
 
     @Test
@@ -324,6 +352,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-infinity loading-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading infinity")
     }
 
     @Test
@@ -335,6 +364,7 @@ class LoadingTest {
         val expectedClasses = "loading loading-infinity loading-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading infinity")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading infinity")
     }
 
     @Test
@@ -346,5 +376,6 @@ class LoadingTest {
         val expectedClasses = "loading loading-spinner"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Loading with colors")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Loading with colors")
     }
 }

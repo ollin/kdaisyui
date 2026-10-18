@@ -16,6 +16,7 @@ class ButtonTest {
         val expectedClasses = "btn"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Button")
     }
 
     @Test
@@ -27,6 +28,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-xs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Button sizes")
     }
 
     @Test
@@ -38,6 +40,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-sm"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Button sizes")
     }
 
     @Test
@@ -49,6 +52,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-lg"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Button sizes")
     }
 
     @Test
@@ -60,6 +64,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button sizes")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Button sizes")
     }
 
     @Test
@@ -71,6 +76,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-xs lg:btn-lg md:btn-md sm:btn-sm xl:btn-xl"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive button")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive button")
     }
 
     @Test
@@ -82,6 +88,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -93,6 +100,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -104,6 +112,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -115,6 +124,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-accent"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -126,6 +136,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -137,6 +148,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -148,6 +160,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -159,6 +172,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons colors")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons colors")
     }
 
     @Test
@@ -170,6 +184,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -181,6 +196,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-primary btn-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -192,6 +208,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-secondary btn-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -203,6 +220,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-accent btn-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -214,6 +232,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-info btn-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -225,6 +244,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-soft btn-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -236,6 +256,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-soft btn-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -247,6 +268,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-error btn-soft"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Soft buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Soft buttons")
     }
 
     @Test
@@ -258,6 +280,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -269,6 +292,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-outline btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -280,6 +304,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-outline btn-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -291,6 +316,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-accent btn-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -302,6 +328,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-info btn-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -313,6 +340,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-outline btn-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -324,6 +352,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-outline btn-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -335,6 +364,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-error btn-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Outline buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Outline buttons")
     }
 
     @Test
@@ -346,6 +376,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -357,6 +388,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -368,6 +400,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash btn-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -379,6 +412,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-accent btn-dash"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -390,6 +424,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash btn-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -401,6 +436,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash btn-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -412,6 +448,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash btn-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -423,6 +460,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash btn-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Dash buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Dash buttons")
     }
 
     @Test
@@ -434,6 +472,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-neutral btn-outline"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral button with outline or dash style")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for neutral button with outline or dash style")
     }
 
     @Test
@@ -445,6 +484,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-dash btn-neutral"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for neutral button with outline or dash style")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for neutral button with outline or dash style")
     }
 
     @Test
@@ -456,6 +496,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-active"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -467,6 +508,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-active btn-primary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -478,6 +520,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-active btn-secondary"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -489,6 +532,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-accent btn-active"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -500,6 +544,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-active btn-info"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -511,6 +556,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-active btn-success"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -522,6 +568,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-active btn-warning"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -533,6 +580,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-active btn-error"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Active buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Active buttons")
     }
 
     @Test
@@ -544,6 +592,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-ghost"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons ghost and button link")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons ghost and button link")
     }
 
     @Test
@@ -555,6 +604,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-link"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Buttons ghost and button link")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Buttons ghost and button link")
     }
 
     @Test
@@ -566,6 +616,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-wide"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Wide button")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Wide button")
     }
 
     @Test
@@ -577,6 +628,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-disabled"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Disabled buttons")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Disabled buttons")
     }
 
     @Test
@@ -588,6 +640,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-square"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Square button and circle button")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Square button and circle button")
     }
 
     @Test
@@ -599,6 +652,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-circle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Square button and circle button")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Square button and circle button")
     }
 
     @Test
@@ -610,6 +664,7 @@ class ButtonTest {
         val expectedClasses = "btn btn-block"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button block")
+        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Button block")
     }
 
     @Test
@@ -621,5 +676,6 @@ class ButtonTest {
         val expectedClasses = "loading loading-spinner"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Button with loading spinner")
+        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Button with loading spinner")
     }
 }

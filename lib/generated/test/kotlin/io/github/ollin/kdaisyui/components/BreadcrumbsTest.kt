@@ -18,6 +18,7 @@ class BreadcrumbsTest {
         val expectedClasses = "breadcrumbs"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Breadcrumbs")
+        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Breadcrumbs")
     }
 
     @Test

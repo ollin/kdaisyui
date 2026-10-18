@@ -15,6 +15,7 @@ class MaskTest {
         val expectedClasses = "mask mask-squircle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Squircle")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Squircle")
     }
 
     @Test
@@ -25,6 +26,7 @@ class MaskTest {
         val expectedClasses = "mask mask-heart"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Heart")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Heart")
     }
 
     @Test
@@ -35,6 +37,7 @@ class MaskTest {
         val expectedClasses = "mask mask-hexagon"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hexagon")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hexagon")
     }
 
     @Test
@@ -45,6 +48,7 @@ class MaskTest {
         val expectedClasses = "mask mask-hexagon-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Hexagon-2 (horizontal hexagon)")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hexagon-2 (horizontal hexagon)")
     }
 
     @Test
@@ -55,6 +59,7 @@ class MaskTest {
         val expectedClasses = "mask mask-decagon"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Decagon")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Decagon")
     }
 
     @Test
@@ -65,6 +70,7 @@ class MaskTest {
         val expectedClasses = "mask mask-pentagon"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Pentagon")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Pentagon")
     }
 
     @Test
@@ -75,6 +81,7 @@ class MaskTest {
         val expectedClasses = "mask mask-diamond"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Diamond")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diamond")
     }
 
     @Test
@@ -85,6 +92,7 @@ class MaskTest {
         val expectedClasses = "mask mask-circle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Circle")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Circle")
     }
 
     @Test
@@ -95,6 +103,7 @@ class MaskTest {
         val expectedClasses = "mask mask-star"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Star")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Star")
     }
 
     @Test
@@ -105,6 +114,7 @@ class MaskTest {
         val expectedClasses = "mask mask-star-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Star-2 (bold star)")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Star-2 (bold star)")
     }
 
     @Test
@@ -115,6 +125,7 @@ class MaskTest {
         val expectedClasses = "mask mask-triangle"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle (pointing top)")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Triangle (pointing top)")
     }
 
     @Test
@@ -125,6 +136,7 @@ class MaskTest {
         val expectedClasses = "mask mask-triangle-2"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-2 (pointing down)")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Triangle-2 (pointing down)")
     }
 
     @Test
@@ -135,6 +147,7 @@ class MaskTest {
         val expectedClasses = "mask mask-triangle-3"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-3 (pointing left)")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Triangle-3 (pointing left)")
     }
 
     @Test
@@ -145,5 +158,6 @@ class MaskTest {
         val expectedClasses = "mask mask-triangle-4"
         val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
         assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-4 (pointing right)")
+        assertEquals("img", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Triangle-4 (pointing right)")
     }
 }

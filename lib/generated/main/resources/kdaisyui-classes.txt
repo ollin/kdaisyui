@@ -26,7 +26,6 @@ aura-sm
 aura-xl
 aura-xs
 avatar
-avatar-group
 avatar-offline
 avatar-online
 avatar-placeholder
@@ -199,7 +198,6 @@ file-input-xl
 file-input-xs
 filter
 filter-reset
-floating-label
 footer
 footer-center
 footer-horizontal
@@ -234,8 +232,6 @@ input-success
 input-warning
 input-xl
 input-xs
-is-drawer-close:
-is-drawer-open:
 join
 join-horizontal
 join-item
@@ -260,7 +256,6 @@ link-warning
 list
 list-col-grow
 list-col-wrap
-list-row
 loading
 loading-ball
 loading-bars
@@ -400,7 +395,6 @@ rating-md
 rating-sm
 rating-xl
 rating-xs
-react-day-picker
 select
 select-accent
 select-error
@@ -556,4 +550,3 @@ tooltip-top
 tooltip-warning
 validator
 validator-hint
-vc

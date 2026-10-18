@@ -3,7 +3,7 @@ import path from 'path'
 import { getAllComponentDirs, getClassesByCategory } from './parser/frontmatter.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
-import { classFindings, directoryFindings, namingFindings } from './model-completeness.ts'
+import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames } from './model.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
@@ -106,7 +106,7 @@ function main() {
     fs.writeFileSync(outFile, kotlin)
     // Only generated components contribute: a skipped one emits nothing, so listing its
     // classes would put CSS in a consumer's bundle that this library can never produce.
-    allClasses.push(...collectClasses(frontmatter.classnames))
+    allClasses.push(...offeredClasses(component.model))
     modelFindings.push(...classFindings(component.model, collectClasses(frontmatter.classnames)), ...namingFindings(component.model))
     console.log(`  ✓ ${classified.componentName}.kt (${shape.functions[0].element})`)
   }

@@ -24,6 +24,12 @@ export function offeredBy(model: ComponentModel, fn: ModelFunction): string[] {
   ]
 }
 
+/** Every class the model can put on the page: what a consumer's Tailwind must compile. */
+export function offeredClasses(model: ComponentModel): string[] {
+  const declined = new Set(Object.keys(model.notOffered ?? {}))
+  return [...placedClasses(model)].filter(cls => !declined.has(cls))
+}
+
 /** Every class the model puts on the page, or says on purpose that it does not. */
 export function placedClasses(model: ComponentModel): Set<string> {
   return new Set([

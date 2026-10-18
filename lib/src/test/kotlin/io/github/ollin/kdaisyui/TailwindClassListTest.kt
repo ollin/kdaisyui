@@ -57,6 +57,12 @@ class TailwindClassListTest {
         assertTrue(classList.startsWith("#"), "expected a comment header, got: ${classList.take(40)}")
     }
 
+    /** #345: DaisyUI's drawer variants are Tailwind variants, not classes; nothing emits them. */
+    @Test
+    fun it_lists_only_classes_a_component_can_emit() {
+        assertTrue("is-drawer-open:" !in entries && "is-drawer-close:" !in entries, "variant prefixes listed as classes")
+    }
+
     @Test
     fun it_is_not_suspiciously_short() {
         assertTrue(entries.size > 400, "expected the full DaisyUI surface, got ${entries.size} classes")

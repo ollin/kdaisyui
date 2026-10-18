@@ -11,7 +11,7 @@ import kotlinx.html.div
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-/** Modifier variants for this component (CSS prefix: `carousel-`) */
+/** Snap variants for this component (CSS prefix: `carousel-`) */
 enum class CarouselSnap(internal val className: String) : ClassValues<CarouselSnap> {
     /** CSS: `carousel-start` — Snap elements to start */
     Start("carousel-start"),

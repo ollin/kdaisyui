@@ -5,7 +5,7 @@
   "enums": [
     {
       "name": "CarouselSnap",
-      "label": "Modifier variants",
+      "label": "Snap variants",
       "classes": ["carousel-start", "carousel-center", "carousel-end"]
     }
   ],

@@ -129,8 +129,8 @@ describe('claimingGroups', () => {
 
 describe('tagFindings', () => {
   it('names a documented tag nothing can write, once, and passes the standard ones', () => {
-    assert.deepEqual(tagFindings('calendar', '<calendar-date class="$$cally"></calendar-date><calendar-date class="$$cally"></calendar-date><div class="$$cally"></div>'), [
-      'calendar: <calendar-date> is documented, and nothing writes that tag: kotlinx.html has no builder and the library defines none',
+    assert.deepEqual(tagFindings('calendar', '<x-widget class="$$cally"></x-widget><x-widget class="$$cally"></x-widget><div class="$$cally"></div>'), [
+      'calendar: <x-widget> is documented, and nothing writes that tag: kotlinx.html has no builder and the library defines none',
     ])
   })
 })

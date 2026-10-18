@@ -21,13 +21,22 @@ enum class CollapseIcon(internal val className: String) : ClassValues<CollapseIc
     override val classNames: List<String> get() = listOf(className)
 }
 
+enum class CollapseState(internal val className: String) : ClassValues<CollapseState> {
+    /** CSS: `collapse-open` */
+    Open("collapse-open"),
+    /** CSS: `collapse-close` */
+    Close("collapse-close"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Collapse is used for showing and hiding content. Renders `<div class="collapse ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param icon — Icon variant
- * @param close
- * @param open
+ * @param state — State variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
@@ -35,8 +44,7 @@ enum class CollapseIcon(internal val className: String) : ClassValues<CollapseIc
 fun FlowContent.daisyCollapse(
     id: HtmlId? = null,
     icon: ClassValues<CollapseIcon>? = null,
-    close: Boolean = false,
-    open: Boolean = false,
+    state: ClassValues<CollapseState>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -45,8 +53,7 @@ fun FlowContent.daisyCollapse(
         if (id != null) attributes["id"] = id.id
         addClassNames("collapse")
         addClassNames(icon)
-        if (close) addClassNames("collapse-close")
-        if (open) addClassNames("collapse-open")
+        addClassNames(state)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

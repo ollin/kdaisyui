@@ -39,14 +39,12 @@ class CollapseCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCollapse(
                 id = htmlId("x-cov-id"),
-                close = true,
-                open = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "collapse collapse-close collapse-open zz-extra", "Collapse all flags", closes = "</div></div>")
+        assertRendered(html, "collapse zz-extra", "Collapse all flags", closes = "</div></div>")
         assertCommonFlags(html, "Collapse")
     }
 
@@ -70,6 +68,28 @@ class CollapseCoverageTest {
             )
         }
         assertRendered(html, "collapse collapse-plus", "Collapse icon Plus")
+    }
+
+    @Test
+    fun collapse_state_open() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapse(
+                state = CollapseState.Open,
+                content = { },
+            )
+        }
+        assertRendered(html, "collapse collapse-open", "Collapse state Open")
+    }
+
+    @Test
+    fun collapse_state_close() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyCollapse(
+                state = CollapseState.Close,
+                content = { },
+            )
+        }
+        assertRendered(html, "collapse collapse-close", "Collapse state Close")
     }
 
     @Test

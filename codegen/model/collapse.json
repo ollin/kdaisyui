@@ -2,7 +2,10 @@
   "component": "collapse",
   "name": "Collapse",
   "class": "collapse",
-  "enums": [{ "name": "CollapseIcon", "label": "Icon variants", "classes": ["collapse-arrow", "collapse-plus"] }],
+  "enums": [
+    { "name": "CollapseIcon", "label": "Icon variants", "classes": ["collapse-arrow", "collapse-plus"] },
+    { "name": "CollapseState", "label": "State variants", "classes": ["collapse-open", "collapse-close"] }
+  ],
   "functions": [
     {
       "kind": "main",
@@ -13,8 +16,7 @@
       "text": false,
       "parameters": [
         { "kind": "enum", "name": "icon", "enum": "CollapseIcon", "doc": "Icon variant" },
-        { "kind": "toggle", "name": "close", "class": "collapse-close" },
-        { "kind": "toggle", "name": "open", "class": "collapse-open" }
+        { "kind": "enum", "name": "state", "enum": "CollapseState", "doc": "State variant" }
       ],
       "joinItem": true
     },

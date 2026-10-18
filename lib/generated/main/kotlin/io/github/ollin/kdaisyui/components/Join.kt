@@ -128,8 +128,7 @@ class JoinScope internal constructor(
     fun daisyCollapse(
         id: HtmlId? = null,
         icon: ClassValues<CollapseIcon>? = null,
-        close: Boolean = false,
-        open: Boolean = false,
+        state: ClassValues<CollapseState>? = null,
         extraClasses: String? = null,
         attrs: (DIV.() -> Unit)? = null,
         content: (DIV.() -> Unit),
@@ -137,8 +136,7 @@ class JoinScope internal constructor(
         flow.daisyCollapse(
             id = id,
             icon = icon,
-            close = close,
-            open = open,
+            state = state,
             extraClasses = joinItem(extraClasses),
             attrs = attrs,
             content = content,

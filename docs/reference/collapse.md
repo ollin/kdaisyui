@@ -12,11 +12,11 @@ Collapsible content sections. Renders `<div class="collapse ...">`.
 
 ```kotlin
 // CollapseIcon: Arrow | Plus
+// CollapseState: Open | Close
 fun FlowContent.daisyCollapse(
     id: HtmlId? = null,
     icon: ClassValues<CollapseIcon>? = null,
-    close: Boolean = false,
-    open: Boolean = false,
+    state: ClassValues<CollapseState>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

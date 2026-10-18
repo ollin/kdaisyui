@@ -98,7 +98,7 @@ class CollapseTest {
     @Test
     fun force_open() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(open = true) {
+            daisyCollapse(state = CollapseState.Open) {
             }
         }
         val expectedClasses = "collapse collapse-open"
@@ -109,7 +109,7 @@ class CollapseTest {
     @Test
     fun force_close() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(close = true) {
+            daisyCollapse(state = CollapseState.Close) {
             }
         }
         val expectedClasses = "collapse collapse-close"

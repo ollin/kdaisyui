@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'node:url'
 import {
+  everyDeclaredClass,
   getAllComponentDirs,
   readComponentFrontmatter,
   toPascalCase,
@@ -986,8 +987,7 @@ function generateAndReport(componentName, context: DocumentedContext) {
 function documentedContext(): DocumentedContext {
   const directories = getAllComponentDirs()
   const models = directories.map(directory => readModel(directory)).filter((model): model is ComponentModel => !isSkipped(model))
-  const componentClasses = new Set(directories.flatMap(directory => Object.values(readComponentFrontmatter(directory)?.classnames ?? {}).flatMap(entries => ((entries as { class: string }[]) ?? []).map(entry => entry.class))))
-  return { models, componentClasses }
+  return { models, componentClasses: everyDeclaredClass(directories) }
 }
 
 function generateAllComponents() {

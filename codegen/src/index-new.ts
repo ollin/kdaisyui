@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { getAllComponentDirs, getClassesByCategory, readComponentFrontmatter, readComponentPage, type ComponentName } from './parser/frontmatter.ts'
+import { everyDeclaredClass, getAllComponentDirs, getClassesByCategory, readComponentPage, type ComponentName } from './parser/frontmatter.ts'
 import { fencedHtmlBlocks } from './parser/documented-element.ts'
 import { gapFindings, gapsIn, pageFirst } from './documented-elements.ts'
 import { generateKotlinFile } from './generator-new.ts'
@@ -94,7 +94,7 @@ function main() {
   const allClasses = []
   const modelFindings: string[] = []
   const models = componentSet.generated.map(component => component.model)
-  const componentClasses = new Set(componentDirs.flatMap(dir => collectClasses(readComponentFrontmatter(dir)?.classnames)))
+  const componentClasses = everyDeclaredClass(componentDirs)
 
   // DaisyUI's own directory order, so the log reads down the same list a reader sees on disk
   // and a skipped component keeps its place among the generated ones.

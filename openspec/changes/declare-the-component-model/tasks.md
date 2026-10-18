@@ -205,7 +205,7 @@ Same cadence as block 4.
   the twelve two-look pairs that now need `extraClasses`.
 - [x] 6.2 `. d` Re-dump `lib/api/lib.api` and `lib/api/components.api`; read both diffs against
   the migration note.
-- [ ] 6.3 `. d` Rewrite `kdaisyui-codegen` and `kdaisyui-daisyui-upgrade`, the
+- [x] 6.3 `. d` Rewrite `kdaisyui-codegen` and `kdaisyui-daisyui-upgrade`, the
   `/daisyui-upgrade` command and `AGENTS.md` for the declared model and the bump report.
 - [ ] 6.4 `. d` Comment on #356 and #357 that their decisions now live in the model, and close
   both.

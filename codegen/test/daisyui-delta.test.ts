@@ -5,7 +5,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { classChanges, componentChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, joinItemChanges, type ComponentDocs } from '../src/daisyui-delta.ts'
+import { classChanges, componentChanges, COMPONENTS_IN_REPO, DocsAtTag, elementChanges, joinItemChanges, renderDelta, type ComponentDocs } from '../src/daisyui-delta.ts'
 
 /** A throwaway repository with DaisyUI's layout and two tags. */
 class FixtureRepository {
@@ -122,5 +122,26 @@ describe('joinItemChanges', () => {
     const newer = release({ join: example('<div class="$$join"><input class="$$input $$join-item"></div>') })
 
     assert.deepEqual(joinItemChanges(older, newer), { added: ['input'], removed: ['btn'] })
+  })
+})
+
+describe('renderDelta', () => {
+  it('lists every kind of change under the two tags it compares', () => {
+    const older = release({ mask: frontmatter('mask', 'mask-square'), otp: example('<div class="$$otp"></div>') })
+    const newer = release({ mask: frontmatter('mask'), otp: example('<label class="$$otp"></label>'), aura: frontmatter('aura') })
+
+    assert.equal(renderDelta(older, newer, 'v1', 'v2'), [
+      'DaisyUI documentation, v1 to v2',
+      '',
+      'Components: added aura',
+      'Classes of mask: removed mask-square',
+      'Elements of otp (otp): DIV became LABEL',
+    ].join('\n'))
+  })
+
+  it('says so when nothing structural changed', () => {
+    const page = release({ btn: frontmatter('btn') })
+
+    assert.match(renderDelta(page, page, 'v1', 'v1'), /No class, element, component or join-item change found\.$/)
   })
 })

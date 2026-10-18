@@ -51,6 +51,13 @@ measure-exclusivity:
 verify-exclusivity:
     ./gradlew :lib:verifyExclusivity
 
+# What changed in DaisyUI's component documentation between two tags, e.g.
+# `just daisyui-delta v5.7.17 v5.7.42`: components and classes added or removed, classes
+# documented on different elements, join items. Read it during a bump, then edit codegen/model/.
+# Reads the tags through git, so the submodule's checkout does not move. Always exits 0.
+daisyui-delta from to:
+    cd codegen && ([ -d node_modules ] || npm ci --silent) && node src/index-daisyui-delta.ts {{from}} {{to}}
+
 # Sync DaisyUI submodule to the tag matching the daisyui version in gradle/libs.versions.toml
 sync-daisyui:
     ./gradlew :lib:checkoutDaisyuiTag

@@ -132,3 +132,23 @@ function joinItemCompanions(docs: ComponentDocs): string[] {
 export function joinItemChanges(older: ComponentDocs, newer: ComponentDocs): SetChange {
   return setChange(joinItemCompanions(older), joinItemCompanions(newer))
 }
+
+function setLine(label: string, change: SetChange): string[] {
+  const parts = [
+    ...(change.added.length > 0 ? [`added ${change.added.join(', ')}`] : []),
+    ...(change.removed.length > 0 ? [`removed ${change.removed.join(', ')}`] : []),
+  ]
+  return parts.length === 0 ? [] : [`${label}: ${parts.join('; ')}`]
+}
+
+/** The report a human reads during a bump; the model is then edited by hand. */
+export function renderDelta(older: ComponentDocs, newer: ComponentDocs, from: string, to: string): string {
+  const lines = [
+    ...setLine('Components', componentChanges(older, newer)),
+    ...classChanges(older, newer).flatMap(change => setLine(`Classes of ${change.component}`, change)),
+    ...elementChanges(older, newer).map(change => `Elements of ${change.cssClass} (${change.component}): ${change.before.join(', ')} became ${change.after.join(', ')}`),
+    ...setLine('Join items', joinItemChanges(older, newer)),
+  ]
+  const body = lines.length === 0 ? ['No class, element, component or join-item change found.'] : lines
+  return [`DaisyUI documentation, ${from} to ${to}`, '', ...body].join('\n')
+}

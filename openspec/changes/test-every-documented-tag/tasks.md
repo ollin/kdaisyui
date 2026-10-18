@@ -35,8 +35,10 @@ Done before 3.2, reordered 2026-10-18: 3.2's first generation wrote `calendar-da
 does not compile, because the tag form needs a builder. With `daisyCalendar` rendering
 `<calendar-date>`, the calendar's test calls the function and needs none.
 
-- [ ] 4.1 `^ r (internal)` The builder table in `html-names.ts` (D4). Zero diff.
-- [ ] 4.2 `^ F (internal)` The gate fails on a documented tag the table does not know. Red: it names
+- [x] 4.1 `^ r (internal)` The builder table in `html-names.ts` (D4). Zero diff.
+  In `component-shape.ts` instead, beside the existing builder exceptions: `html-names.ts` holds
+  types only.
+- [x] 4.2 `^ F (internal)` The gate fails on a documented tag the table does not know. Red: it names
   `<calendar-date>` on the calendar page.
 - [ ] 4.3 `! F` `CALENDAR_DATE` and `calendarDate` in core, in the table, and `daisyCalendar` renders
   it. BREAKING; README migration entry. Closes #343.

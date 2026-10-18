@@ -131,4 +131,22 @@ describe('shapeFromModel', () => {
 
     assert.deepEqual([model.functions[0].parameters[0], mainFunctionConfig(model).extras], [{ kind: 'extra', ...disabled, writes: ['btn-disabled'] }, [disabled]])
   })
+
+  test('a void element takes no content parameter, even where a text shortcut exists', () => {
+    const image: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'IMG', parameters: [] }] }
+
+    assert.ok(!shapeFromModel(image, DESCRIPTIONS).functions[0].parameters.some(parameter => parameter.name === 'content'))
+  })
+
+  test('content is required, and optional only where a text shortcut competes with it', () => {
+    const contentOf = (text: boolean) => shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], text, parameters: [] }] }, DESCRIPTIONS).functions[0].parameters.at(-1)
+
+    assert.deepEqual([contentOf(false)?.default, contentOf(true)?.default], [null, 'null'])
+  })
+
+  test('calls the three kotlinx.html builders whose names differ from their tag', () => {
+    const builderOf = (element: string) => shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], element, parameters: [] }] }, DESCRIPTIONS).functions[0].tagBuilder
+
+    assert.deepEqual(['FIELDSET', 'TEXTAREA', 'DIV'].map(builderOf), ['fieldSet', 'textArea', 'div'])
+  })
 })

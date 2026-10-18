@@ -25,6 +25,10 @@ describe('gapsIn', () => {
 
     assert.deepEqual(gapsIn(html, [CARD_WITH_BODY, BUTTON], new Set(['card-body', 'btn', 'btn-ghost', 'list-row'])), [{ tag: 'button', key: 'btn btn-ghost' }, { tag: 'li', key: 'list-row' }])
   })
+
+  it('finds no gap where two components share the element', () => {
+    assert.deepEqual(gapsIn('<div class="$$card-body $$btn $$btn-active">x</div>', [CARD_WITH_BODY, BUTTON], new Set(['card-body', 'btn', 'btn-active'])), [])
+  })
 })
 
 describe('gapFindings', () => {

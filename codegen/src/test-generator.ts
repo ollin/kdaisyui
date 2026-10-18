@@ -220,6 +220,7 @@ function classBindings(model: ComponentModel): Record<string, ClassBinding> {
 function customPartsOf(model: ComponentModel) {
   return model.functions.filter(fn => fn.kind === 'custom').map((fn: ModelFunction) => ({
     name: fn.name.slice(`daisy${model.name}`.length),
+    functionName: fn.name,
     element: fn.element,
     cssClass: fn.class,
     modifierClasses: fn.always ?? [],
@@ -355,7 +356,7 @@ function customPartAssertions(part, tag) {
  * compare only the class attribute, so an attribute that carries no CSS class would
  * otherwise be invisible to both the generated tests and generated-sources-drift.
  */
-function generateComponentAttributeTest(className, componentAttributes) {
+function generateComponentAttributeTest(functionName, componentAttributes) {
   const assertions = staticAttributeAssertions(componentAttributes)
   if (assertions.length === 0) return ''
 
@@ -363,7 +364,7 @@ function generateComponentAttributeTest(className, componentAttributes) {
     @Test
     fun renders_static_attributes() {
         val html = createHTML(prettyPrint = false).div {
-            daisy${className} {
+            ${functionName} {
             }
         }
 ${assertions.join('\n')}
@@ -371,7 +372,7 @@ ${assertions.join('\n')}
 `
 }
 
-function generateCustomPartTests(className, customParts) {
+function generateCustomPartTests(customParts) {
   if (!customParts || customParts.length === 0) return ''
 
   let kotlin = ''
@@ -388,7 +389,7 @@ function generateCustomPartTests(className, customParts) {
     @Test
     fun ${funcName}() {
         val html = createHTML(prettyPrint = false).${wrapperFn} {
-            daisy${className}${part.name} {
+            ${part.functionName} {
             }
         }
 ${customPartAssertions(part, tag)}
@@ -430,12 +431,12 @@ function uniqueTestName(usedNames, funcName) {
 }
 
 /** Asserts the component emits exactly the classes the doc example shows. */
-function generateClassTest(className, { testName, args, expectedClasses, caseName }) {
+function generateClassTest(functionName, { testName, args, expectedClasses, caseName }) {
   return `
     @Test
     fun ${testName}() {
         val html = createHTML(prettyPrint = false).div {
-            daisy${className}(${args}) {
+            ${functionName}(${args}) {
             }
         }
         val expectedClasses = "${expectedClasses}"
@@ -488,7 +489,8 @@ function generateKotlinTest(componentName, testCases, frontmatter, componentMode
   const model = buildCallModel(frontmatter, componentModel)
   const customParts = customPartsOf(componentModel)
   const mainAttributes = componentModel.functions.find(fn => fn.kind === 'main')?.attributes ?? {}
-  const attributeTest = generateComponentAttributeTest(className, mainAttributes)
+  const mainName = componentModel.functions.find(fn => fn.kind === 'main')?.name ?? `daisy${className}`
+  const attributeTest = generateComponentAttributeTest(mainName, mainAttributes)
   
   const extraImports = new Set()
   if (customParts.length > 0 || attributeTest) {
@@ -520,7 +522,7 @@ class ${className}Test {
   for (const tc of testCases) {
     for (const call of componentCallsIn(model, tc.html)) {
       testCount++
-      kotlin += generateClassTest(className, {
+      kotlin += generateClassTest(mainName, {
         testName: uniqueTestName(usedNames, toTestFunctionName(tc.name)),
         args: call.args,
         expectedClasses: call.expectedClasses,
@@ -530,7 +532,7 @@ class ${className}Test {
   }
   
   kotlin += attributeTest
-  kotlin += generateCustomPartTests(className, customParts)
+  kotlin += generateCustomPartTests(customParts)
   
   kotlin += `}
 `

@@ -17,7 +17,7 @@ gate 45. Known ratios for kdaisyui codegen work, not folded in: 0.06, 0.09, 0.12
 
 ## 2. The documented tag decides between equals
 
-- [ ] 2.1 `^ F (internal)` `ownerOf` prefers, among functions offering equally much, the one
+- [x] 2.1 `^ F (internal)` `ownerOf` prefers, among functions offering equally much, the one
   rendering the documented tag (D3); unit test first; regenerated tests switch function where it
   applies.
 

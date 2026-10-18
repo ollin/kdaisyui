@@ -38,7 +38,14 @@ export interface ModelEnumParameter {
   readonly doc: string
 }
 
-export type ModelParameter = ModelEnumParameter
+/** A class-bearing boolean: one on/off feature, named after its class. */
+export interface ModelToggleParameter {
+  readonly kind: 'toggle'
+  readonly name: string
+  readonly class: string
+}
+
+export type ModelParameter = ModelEnumParameter | ModelToggleParameter
 
 export interface ModelFunction {
   readonly kind: FunctionKind
@@ -88,7 +95,18 @@ function enumShape(model: ComponentModel, declared: ModelEnum, descriptions: Des
   }
 }
 
-function parameterShape(parameter: ModelParameter): ParameterShape {
+function toggleShape(model: ComponentModel, toggle: ModelToggleParameter, descriptions: Descriptions): ParameterShape {
+  return {
+    name: toggle.name,
+    type: 'Boolean',
+    default: 'false',
+    doc: descriptions.classes[stripped(model.class, toggle.class)] ?? null,
+    cssClass: toggle.class as CssClass,
+  }
+}
+
+function parameterShape(model: ComponentModel, parameter: ModelParameter, descriptions: Descriptions): ParameterShape {
+  if (parameter.kind === 'toggle') return toggleShape(model, parameter, descriptions)
   return {
     name: parameter.name,
     type: `ClassValues<${parameter.enum}>?`,
@@ -98,7 +116,7 @@ function parameterShape(parameter: ModelParameter): ParameterShape {
   }
 }
 
-function functionShape(declared: ModelFunction, descriptions: Descriptions): FunctionShape {
+function functionShape(model: ComponentModel, declared: ModelFunction, descriptions: Descriptions): FunctionShape {
   const element = declared.element as TagClass
   return {
     kind: declared.kind,
@@ -111,7 +129,7 @@ function functionShape(declared: ModelFunction, descriptions: Descriptions): Fun
     modifierClasses: [],
     staticAttributes: [],
     desc: descriptions.desc,
-    parameters: functionParameters(element, declared.text, declared.parameters.map(parameterShape)),
+    parameters: functionParameters(element, declared.text, declared.parameters.map(parameter => parameterShape(model, parameter, descriptions))),
   }
 }
 
@@ -122,6 +140,6 @@ export function shapeFromModel(model: ComponentModel, descriptions: Descriptions
     componentDir: model.component,
     prefix: model.class as CssClass | null,
     enums: model.enums.map(declared => enumShape(model, declared, descriptions)),
-    functions: model.functions.map(declared => functionShape(declared, descriptions)),
+    functions: model.functions.map(declared => functionShape(model, declared, descriptions)),
   }
 }

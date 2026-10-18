@@ -50,4 +50,12 @@ describe('shapeFromModel', () => {
       { name: 'Lg', cssClass: 'kbd-lg', desc: null },
     ])
   })
+
+  test('makes a toggle a Boolean named as declared, documented from its stripped class', () => {
+    const button: ComponentModel = { ...KBD, class: 'btn', enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'toggle', name: 'active', class: 'btn-active' }] }] }
+
+    const active = shapeFromModel(button, { desc: '', classes: { active: 'looks active' } }).functions[0].parameters[2]
+
+    assert.deepEqual(active, { name: 'active', type: 'Boolean', default: 'false', doc: 'looks active', cssClass: 'btn-active' })
+  })
 })

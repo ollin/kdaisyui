@@ -50,7 +50,7 @@ The three Assumed claims this change rests on are checked here, before anything 
   1.2: parameter kinds `toggle` and `extra`; function fields `always`, `attributes`, `joinItem`,
   `role`, `inputType`; component fields `joinScope`, `summary`; a skipped component is
   `{ component, skip }`.
-- [ ] 1.5 `. d` **Run the element and placement cross-check once against the model**, by the code
+- [x] 1.5 `. d` **Run the element and placement cross-check once against the model**, by the code
   that still exists. Record that the only disagreements are the 30 that carry exceptions today.
   Anything else refutes the placement requirement's assumption; revise before block 3. Also
   record why it does not report `ChatVariant` on `daisyChat` or `StepsVariant` on `daisySteps`,

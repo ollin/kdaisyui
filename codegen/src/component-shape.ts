@@ -136,7 +136,7 @@ export interface ParameterShape {
  * none, and only the main function carries the component's enums. Both emitters need to know
  * which they are looking at, so the shape says it rather than each of them re-deriving it.
  */
-export type FunctionKind = 'main' | 'part' | 'custom'
+export type FunctionKind = 'main' | 'part' | 'custom' | 'classes'
 
 /** One generated Kotlin function. */
 export interface FunctionShape {
@@ -240,7 +240,16 @@ export interface ComponentShape {
    * scope's members are OTHER components' functions and this shape knows only its own.
    */
   readonly scope?: ScopeShape
+  /**
+   * Class-only functions: classes DaisyUI puts on a child with no class of its own, such as
+   * `menu-active` on the `<a>` inside a `<li>`. Each generates its class sibling and nothing else,
+   * so they are kept out of `functions`, which every emitter reads as rendering an element.
+   */
+  readonly siblingsOnly?: readonly SiblingShape[]
 }
+
+/** What a class sibling is emitted from: a rendering function, or a class-only one. */
+export type SiblingShape = Pick<FunctionShape, 'name' | 'cssClass' | 'modifierClasses' | 'parameters'>
 
 const ID_PARAMETER: ParameterShape = {
   name: 'id',
@@ -320,13 +329,13 @@ function withOwnClasses(escapeHatches: readonly ParameterShape[], own: readonly 
 }
 
 /** The parameters a class sibling takes: the function's classes, with an extra's as a toggle. */
-export function siblingParameters(shape: FunctionShape): ParameterShape[] {
+export function siblingParameters(shape: SiblingShape): ParameterShape[] {
   return shape.parameters
     .filter(parameter => parameter.enumName !== undefined || parameter.cssClass !== undefined || parameter.writes !== undefined)
     .map(parameter => (parameter.writes === undefined ? parameter : { ...parameter, type: 'Boolean', default: 'false' }))
 }
 
 /** Whether a function writes any class, and so has a class sibling. */
-export function hasSibling(shape: FunctionShape): boolean {
+export function hasSibling(shape: SiblingShape): boolean {
   return shape.cssClass !== null || shape.modifierClasses.length > 0 || siblingParameters(shape).length > 0
 }

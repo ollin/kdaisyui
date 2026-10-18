@@ -155,3 +155,14 @@ describe('the class sibling', () => {
     assert.ok(kotlinFor(withParts(button, part('daisyButtonIcon', 'btn-icon'))).includes('fun Tag.daisyButtonIconClasses() {\n    addClassNames("btn-icon")\n}'))
   })
 })
+
+describe('a class-only function', () => {
+  const menu = withParts(component('menu', 'Menu', 'menu'), { kind: 'classes', name: 'daisyMenuItem', receiver: 'Tag', element: null as unknown as string, class: null, text: false, parameters: [toggle('active', 'menu-active')] })
+
+  test('generates its class sibling and no rendering function', () => {
+    const kotlin = kotlinFor(menu)
+
+    assert.ok(kotlin.includes('fun Tag.daisyMenuItemClasses(\n    active: Boolean = false,\n) {\n    if (active) addClassNames("menu-active")\n}'))
+    assert.ok(!kotlin.includes('.daisyMenuItem('))
+  })
+})

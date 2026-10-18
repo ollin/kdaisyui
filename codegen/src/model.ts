@@ -219,7 +219,13 @@ export function shapeFromModel(model: ComponentModel, descriptions: Descriptions
     componentDir: model.component,
     prefix: model.class as CssClass | null,
     enums: model.enums.map(declared => enumShape(model, declared, descriptions)),
-    functions: model.functions.map(declared => functionShape(model, declared, descriptions)),
+    functions: model.functions.filter(declared => declared.kind !== 'classes').map(declared => functionShape(model, declared, descriptions)),
+    siblingsOnly: model.functions.filter(declared => declared.kind === 'classes').map(declared => ({
+      name: declared.name,
+      cssClass: null,
+      modifierClasses: [],
+      parameters: declared.parameters.map(parameter => parameterShape(model, parameter, descriptions)),
+    })),
   }
 }
 

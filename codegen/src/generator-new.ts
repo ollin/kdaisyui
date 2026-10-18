@@ -22,6 +22,7 @@ import {
   type FunctionShape,
   type ParameterShape,
   type ScopeShape,
+  type SiblingShape,
   type StaticAttribute,
 } from './component-shape.ts'
 
@@ -247,7 +248,7 @@ function mainFunctionBody(
  * used to be emitted here, once per parameter, and every copy of it was a branch the coverage
  * and mutation gates had to drive separately to establish the same fact.
  */
-function classValuesLines(shape: FunctionShape): string[] {
+function classValuesLines(shape: SiblingShape): string[] {
   return shape.parameters
     .filter(parameter => parameter.enumName !== undefined)
     .map(parameter => `        addClassNames(${parameter.name})`)
@@ -258,7 +259,7 @@ function classValuesLines(shape: FunctionShape): string[] {
  * rather than re-deriving which booleans exist: a boolean the shape moved to a part is emitted
  * by that part and by nothing else, and the two can never disagree.
  */
-function booleanLines(shape: FunctionShape): string[] {
+function booleanLines(shape: SiblingShape): string[] {
   return shape.parameters
     .filter(parameter => parameter.cssClass !== undefined)
     .map(parameter => `        if (${parameter.name}) addClassNames("${parameter.cssClass}")`)
@@ -269,7 +270,7 @@ function booleanLines(shape: FunctionShape): string[] {
  * element it is called on. It is how one element wears two components, and how a component's
  * classes reach an element its function does not render.
  */
-function renderSibling(shape: FunctionShape): string {
+function renderSibling(shape: SiblingShape): string {
   const parameters = siblingParameters(shape)
   const signature = parameters.length === 0 ? '()' : `(\n${parameters.map(renderParameter).join('\n')}\n)`
   const lines = [
@@ -351,7 +352,7 @@ function collectImports(shape: ComponentShape, componentConfig: MainFunctionConf
     ...shape.functions.flatMap(functionImports),
     ...(shape.scope === undefined ? [] : scopeImports(shape.scope)),
     ...configImports(componentConfig),
-    ...(shape.functions.some(hasSibling) ? ['kotlinx.html.Tag'] : []),
+    ...(shape.functions.some(hasSibling) || (shape.siblingsOnly ?? []).length > 0 ? ['kotlinx.html.Tag'] : []),
   ])
 
   // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
@@ -388,7 +389,8 @@ export function generateKotlinFile(shape: ComponentShape, componentConfig: MainF
     ...(hasSibling(fn) ? [renderSibling(fn)] : []),
   ].join('\n\n'))
   const scope = shape.scope === undefined ? '' : renderScope(shape.scope, shape.functions[0].element)
-  const body = [enums, ...functions, scope].filter(Boolean).join('\n\n')
+  const siblingsOnly = (shape.siblingsOnly ?? []).map(renderSibling)
+  const body = [enums, ...functions, ...siblingsOnly, scope].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`
 }

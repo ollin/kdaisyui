@@ -33,7 +33,10 @@ regenerating.
 - [ ] 2.2 `^ F` Emit `Tag.daisy<Name>Classes` after every function that writes a class (D1), its
   generator unit test first, and its coverage tests (D5) in the same step so `koverVerify` holds.
 - [ ] 2.3 `^ F` Reference pages and `llms.txt` list each sibling under its function.
-- [ ] 2.4 `. d` Re-dump both API baselines and read the diff: siblings only.
+- [x] 2.4 ~~`. d` Re-dump both API baselines and read the diff: siblings only.~~
+  **Folded into 2.2 on 2026-10-18.** `./gradlew build`, which TCR runs, includes `checkKotlinAbi`,
+  so 2.2's first run was reverted on the stale `lib/api/lib.api`, not on a test. The baselines are
+  re-dumped in the step that changes them, after reading that the diff only adds.
 
 ## 3. Two components on one element
 

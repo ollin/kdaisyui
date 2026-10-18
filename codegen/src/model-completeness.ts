@@ -7,19 +7,27 @@
  * completeness check.
  */
 
-import type { ComponentModel } from './model.ts'
+import type { ComponentModel, ModelFunction } from './model.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
+
+/** Every class one function writes or offers, once per way it can reach the page. */
+export function offeredBy(model: ComponentModel, fn: ModelFunction): string[] {
+  const enums = new Map(model.enums.map(declared => [declared.name, declared.classes]))
+  return [
+    ...[fn.class, ...(fn.always ?? [])].filter((cls): cls is string => cls !== null),
+    ...fn.parameters.flatMap(parameter => {
+      if (parameter.kind === 'enum') return [...(enums.get(parameter.enum) ?? [])]
+      if (parameter.kind === 'toggle') return [parameter.class]
+      return [...(parameter.writes ?? [])]
+    }),
+  ]
+}
 
 /** Every class the model puts on the page, or says on purpose that it does not. */
 export function placedClasses(model: ComponentModel): Set<string> {
   return new Set([
-    ...model.functions.flatMap(fn => [fn.class, ...(fn.always ?? [])]).filter((cls): cls is string => cls !== null),
+    ...model.functions.flatMap(fn => offeredBy(model, fn)),
     ...model.enums.flatMap(declared => declared.classes),
-    ...model.functions.flatMap(fn => fn.parameters).flatMap(parameter => {
-      if (parameter.kind === 'toggle') return [parameter.class]
-      if (parameter.kind === 'extra') return [...(parameter.writes ?? [])]
-      return []
-    }),
     ...(model.joinScope ? [JOIN_ITEM_CLASS] : []),
     ...Object.keys(model.notOffered ?? {}),
   ])

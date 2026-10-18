@@ -258,6 +258,7 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
+    inputs.dir(rootProject.file("codegen/model"))
     outputs.dir(outputDir)
     outputs.file(classList)
 }
@@ -281,6 +282,7 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
+    inputs.dir(rootProject.file("codegen/model"))
     outputs.dir(outputDir)
 }
 
@@ -398,6 +400,7 @@ val checkComponentApi = tasks.register<Exec>("checkComponentApi") {
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
+    inputs.dir(rootProject.file("codegen/model"))
     inputs.file(baseline)
     outputs.upToDateWhen { false }
 }
@@ -436,6 +439,7 @@ tasks.register<Exec>("generateReferenceDocs") {
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.file(rootProject.file("codegen/codegen-config.json"))
+    inputs.dir(rootProject.file("codegen/model"))
     inputs.file(rootProject.file("codegen/llms-template.md"))
     outputs.dir(outputDir)
     outputs.file(llmsTxt)

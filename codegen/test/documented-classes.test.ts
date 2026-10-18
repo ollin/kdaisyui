@@ -5,6 +5,7 @@ import {
   DocumentedClass,
   classTokensOf,
   documentedElementClasses,
+  markedElements,
 } from '../src/parser/documented-classes.ts'
 
 // Every fixture here is a literal HTML string. Nothing reads the DaisyUI checkout, because the
@@ -128,5 +129,13 @@ describe('documentedElementClasses', () => {
 
   test('returns nothing when the example documents no such element', () => {
     assert.deepEqual(documentedElementClasses('<p>prose only</p>', 'menu'), [])
+  })
+})
+
+describe('markedElements', () => {
+  test('lists every element carrying a daisyUI class, with its tag, and skips the rest', () => {
+    const elements = markedElements('<div class="$$card"><p class="flex">x</p><span class="$$badge lg:$$badge-lg">y</span></div>')
+
+    assert.deepEqual(elements.map(element => [element.tag, element.classes.map(cls => cls.rendered)]), [['div', ['card']], ['span', ['badge', 'lg:badge-lg']]])
   })
 })

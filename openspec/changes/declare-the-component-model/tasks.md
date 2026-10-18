@@ -94,7 +94,7 @@ do not exist and change exactly those.
 - [x] 3.2 `. r (internal)` `test-generator.ts` takes its parameter bindings from the model,
   ending its second classification loop. It keeps reading DaisyUI's examples as test input; that
   was corrected into the spec on 2026-10-18, before task 1.2.
-- [ ] 3.3 `. r (internal)` Delete the export script and the shape-equality test; the model is now
+- [x] 3.3 `. r (internal)` Delete the export script and the shape-equality test; the model is now
   the input, and the inferred side no longer exists to compare against.
 - [ ] 3.4 `^ B` `CardModifier.ImageFull` emits `image-full`, the class DaisyUI defines, not
   `card-image-full`. The regenerated component test for DaisyUI's `image-full` example is the

@@ -40,7 +40,7 @@ regenerating.
 
 ## 3. Two components on one element
 
-- [ ] 3.1 `^ r (internal)` The classifier returns the claiming groups of D4, still accepting only
+- [x] 3.1 `^ r (internal)` The classifier returns the claiming groups of D4, still accepting only
   a single group. Zero diff.
 - [ ] 3.2 `^ F` Generate a composition's test as the call plus its siblings in `attrs`, while the
   gate still accepts one group: every composite element DaisyUI documents is rendered and its

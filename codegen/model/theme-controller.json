@@ -15,5 +15,11 @@
       "joinItem": true
     }
   ],
-  "summary": { "summary": "DaisyUI theme controller toggle" }
+  "summary": { "summary": "DaisyUI theme controller toggle" },
+  "notExpressed": {
+    "btn theme-controller": "Two components on one element, daisyButton and daisyThemeController; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "checkbox theme-controller": "Two components on one element, daisyCheckbox and daisyThemeController; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "radio theme-controller": "Two components on one element, daisyRadio and daisyThemeController; one call renders one function. Call one and pass the other's classes through extraClasses.",
+    "theme-controller toggle": "Two components on one element, daisyThemeController and daisyToggle; one call renders one function. Call one and pass the other's classes through extraClasses."
+  }
 }

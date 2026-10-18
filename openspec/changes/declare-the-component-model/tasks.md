@@ -101,7 +101,7 @@ do not exist and change exactly those.
   reproducing test, in the same run.
 - [x] 3.5 `^ B` The step colors move from `daisySteps` to `daisyStepsStep` and emit `step-*`, not
   `steps-step-*`. Moved here from 4.7, which now only renames.
-- [ ] 3.6 `^ B` `tab-active` and `tab-disabled` move from `daisyTab` to the item function and emit
+- [x] 3.6 `^ B` `tab-active` and `tab-disabled` move from `daisyTab` to the item function and emit
   `tab-*`, not `tabs-tab-*`. 5.9 still renames the functions and adds the radio item.
 - [ ] 3.7 `^ F (internal)` Completeness gate: generation fails when a component's frontmatter
   classes and the classes its model places differ, naming component and class. Tests: an unplaced

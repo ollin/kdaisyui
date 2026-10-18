@@ -133,6 +133,17 @@ function stripped(prefix: string | null, cls: string): string {
   return prefix !== null && cls.startsWith(`${prefix}-`) ? cls.slice(prefix.length + 1) : cls
 }
 
+/** The class of the function whose parameter chooses from this enum. */
+function ownerClass(model: ComponentModel, enumName: string): string | null {
+  return model.functions.find(fn => fn.parameters.some(parameter => parameter.kind === 'enum' && parameter.enum === enumName))?.class ?? null
+}
+
+/** An entry is its class's suffix after the owning function's class, else the component's. */
+export function entryName(model: ComponentModel, enumName: string, cls: string): string {
+  const owner = ownerClass(model, enumName)
+  return toPascalCase(owner !== null && cls.startsWith(`${owner}-`) ? stripped(owner, cls) : stripped(model.class, cls))
+}
+
 function enumShape(model: ComponentModel, declared: ModelEnum, descriptions: Descriptions): EnumShape {
   return {
     name: declared.name,
@@ -140,7 +151,7 @@ function enumShape(model: ComponentModel, declared: ModelEnum, descriptions: Des
     categoryLabel: declared.label,
     documented: Object.keys(descriptions.classes).length > 0,
     entries: declared.classes.map(cls => ({
-      name: toPascalCase(stripped(model.class, cls)),
+      name: entryName(model, declared.name, cls),
       cssClass: cls as CssClass,
       desc: descriptions.classes[stripped(model.class, cls)] ?? null,
     })),

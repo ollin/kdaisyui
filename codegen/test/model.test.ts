@@ -134,4 +134,13 @@ describe('shapeFromModel', () => {
 
     assert.deepEqual(['FIELDSET', 'TEXTAREA', 'DIV'].map(builderOf), ['fieldSet', 'textArea', 'div'])
   })
+
+  test("names an enum's entries after the class of the part that owns it", () => {
+    const steps: ComponentModel = { ...KBD, class: 'steps', enums: [{ name: 'StepColor', label: 'Color variants', classes: ['step-primary'] }], functions: [
+      { ...KBD.functions[0], class: 'steps', parameters: [] },
+      { ...KBD.functions[0], kind: 'part', name: 'daisyStep', class: 'step', parameters: [{ kind: 'enum', name: 'color', enum: 'StepColor', doc: '' }] },
+    ] }
+
+    assert.equal(shapeFromModel(steps, DESCRIPTIONS).enums[0].entries[0].name, 'Primary')
+  })
 })

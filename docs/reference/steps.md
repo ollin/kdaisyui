@@ -11,7 +11,7 @@ Regenerate: just generate
 Step-by-step progress indicator. Renders `<ul class="steps ...">`.
 
 ```kotlin
-// StepsVariant: StepNeutral | StepPrimary | StepSecondary | StepAccent | StepInfo | StepSuccess | StepWarning | StepError
+// StepsVariant: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
 // StepsDirection: Vertical | Horizontal
 fun FlowContent.daisySteps(
     id: HtmlId? = null,

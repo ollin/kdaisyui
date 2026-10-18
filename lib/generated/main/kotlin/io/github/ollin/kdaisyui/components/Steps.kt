@@ -18,21 +18,21 @@ import kotlinx.html.UL
 /** Color variants for this component (CSS prefix: `steps-`) */
 enum class StepsVariant(internal val className: String) : ClassValues<StepsVariant> {
     /** CSS: `step-neutral` — neutral color */
-    StepNeutral("step-neutral"),
+    Neutral("step-neutral"),
     /** CSS: `step-primary` — primary color */
-    StepPrimary("step-primary"),
+    Primary("step-primary"),
     /** CSS: `step-secondary` — secondary color */
-    StepSecondary("step-secondary"),
+    Secondary("step-secondary"),
     /** CSS: `step-accent` — accent color */
-    StepAccent("step-accent"),
+    Accent("step-accent"),
     /** CSS: `step-info` — info color */
-    StepInfo("step-info"),
+    Info("step-info"),
     /** CSS: `step-success` — success color */
-    StepSuccess("step-success"),
+    Success("step-success"),
     /** CSS: `step-warning` — warning color */
-    StepWarning("step-warning"),
+    Warning("step-warning"),
     /** CSS: `step-error` — error color */
-    StepError("step-error"),
+    Error("step-error"),
     ;
 
     override val classNames: List<String> get() = listOf(className)

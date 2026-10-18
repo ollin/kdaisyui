@@ -11,7 +11,7 @@ import {
 // branded to a ComponentName. An enum member suffix is not a component name, and the classifier's
 // is the generic string form.
 import { toPascalCase as toPascalClassName } from './classifier.ts'
-import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
+import { entryName, isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import {
   documentedElementClasses,
   type DocumentedClass,
@@ -204,7 +204,7 @@ function classBindings(model: ComponentModel): Record<string, ClassBinding> {
   for (const parameter of parameters) {
     if (parameter.kind !== 'enum') continue
     for (const cssClass of enums.get(parameter.enum)?.classes ?? []) {
-      bind(cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${toPascalClassName(strippedClass(model.class, cssClass))}` })
+      bind(cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${entryName(model, parameter.enum, cssClass)}` })
     }
   }
   for (const parameter of parameters) {

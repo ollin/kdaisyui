@@ -156,9 +156,13 @@ Each commit edits the model, regenerates, and migrates every call site in `examp
   `StepsVariant.Step*` lose their `Step`, and the six indicator entries showed the second
   refutation: stripping only the part's class gives `IndicatorStart`, so an entry strips the
   component's class where that is the one that matches. Both corrections are in the spec.
-- [ ] 4.2 `^ F (internal)` The naming test, with the model edits for the function names it
+- [x] 4.2 `^ F (internal)` The naming test, with the model edits for the function names it
   refuses: `daisyStats` and its parts, `daisyStep` and `daisyStepIcon`, and whatever 4.1 found
   besides. Tab is left to 5.9.
+  **Done 2026-10-18 in seven commits.** The tab renames came here after all, because the gate
+  could not be wired while three names broke it; 5.9 keeps the element change and the radio
+  item. Found on the way: the test generator called every main function `daisy<Directory>`,
+  which for `stat` named the item, not the container; it now takes the names from the model.
 - [ ] 4.3 `^ F` Every `variant` parameter becomes `color`, and every `<X>Variant` enum becomes
   `<Stem>Color`.
 - [ ] 4.4 `^ F` The `modifier` axes get names: `AvatarPresence`, `CardLayout`, `CarouselSnap`,
@@ -182,8 +186,10 @@ Same cadence as block 4.
 - [ ] 5.7 `^ F` `daisyDropdown`: `side`, `align` and `state` axes; `hover` stays a toggle.
 - [ ] 5.8 `. d` **Check the tab item assumption:** list the tab constructions `fwb-ssr` and
   `example-app` use. A `<label>` construction refutes it; revise the tab requirement before 5.9.
-- [ ] 5.9 `^ F` Tab: `daisyTabs`, `daisyTab`, `daisyTabRadio`, `daisyTabContent` per
-  `design.md` D9; `active`/`disabled` on the items; `style` axis on the container. Closes #342.
+- [ ] 5.9 `^ F` Tab: the container renders `<div role="tablist">`, `daisyTabRadio` is added, and
+  the container's `style` axis replaces its three booleans, per `design.md` D9. The renames to
+  `daisyTabs`, `daisyTab` and `daisyTabContent`, and `active`/`disabled` on the item, landed in
+  4.2. Closes #342.
 - [ ] 5.10 `^ F` Tab demo route in `example-app` and an E2E scenario asserting the container and an
   active item.
 - [ ] 5.11 `^ F` `kdaisyui-classes.txt` lists the classes the model offers. Closes #345.

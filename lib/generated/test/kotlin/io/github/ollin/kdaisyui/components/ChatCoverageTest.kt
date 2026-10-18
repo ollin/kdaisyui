@@ -39,15 +39,35 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChat(
                 id = htmlId("x-cov-id"),
-                end = true,
-                start = true,
                 extraClasses = "zz-extra",
                 attrs = { attributes["data-attrs"] = "yes" },
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "chat chat-end chat-start zz-extra", "Chat all flags", closes = "</div></div>")
+        assertRendered(html, "chat zz-extra", "Chat all flags", closes = "</div></div>")
         assertCommonFlags(html, "Chat")
+    }
+
+    @Test
+    fun chat_placement_start() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChat(
+                placement = ChatPlacement.Start,
+                content = { },
+            )
+        }
+        assertRendered(html, "chat chat-start", "Chat placement Start")
+    }
+
+    @Test
+    fun chat_placement_end() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyChat(
+                placement = ChatPlacement.End,
+                content = { },
+            )
+        }
+        assertRendered(html, "chat chat-end", "Chat placement End")
     }
 
     @Test

@@ -16,7 +16,8 @@
         "chat-bubble-warning",
         "chat-bubble-error"
       ]
-    }
+    },
+    { "name": "ChatPlacement", "label": "Placement variants", "classes": ["chat-start", "chat-end"] }
   ],
   "functions": [
     {
@@ -26,10 +27,7 @@
       "element": "DIV",
       "class": "chat",
       "text": false,
-      "parameters": [
-        { "kind": "toggle", "name": "end", "class": "chat-end" },
-        { "kind": "toggle", "name": "start", "class": "chat-start" }
-      ]
+      "parameters": [{ "kind": "enum", "name": "placement", "enum": "ChatPlacement", "doc": "Placement variant" }]
     },
     {
       "kind": "part",

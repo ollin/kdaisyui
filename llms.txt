@@ -223,7 +223,8 @@ Chat bubble layout for conversations — renders `<div>`.
 
 ```kotlin
 enum class ChatBubbleColor { Neutral, Primary, Secondary, Accent, Info, Success, Warning, Error }
-fun FlowContent.daisyChat(id: HtmlId? = null, end: Boolean = false, start: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
+enum class ChatPlacement { Start, End }
+fun FlowContent.daisyChat(id: HtmlId? = null, placement: ClassValues<ChatPlacement>? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyChatImage(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyChatHeader(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
 fun FlowContent.daisyChatFooter(id: HtmlId? = null, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))

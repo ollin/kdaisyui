@@ -10,7 +10,7 @@ class ChatTest {
     @Test
     fun chat_start_and_chat_end() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true) {
+            daisyChat(placement = ChatPlacement.Start) {
             }
         }
         val expectedClasses = "chat chat-start"
@@ -21,7 +21,7 @@ class ChatTest {
     @Test
     fun chat_start_and_chat_end_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(end = true) {
+            daisyChat(placement = ChatPlacement.End) {
             }
         }
         val expectedClasses = "chat chat-end"
@@ -32,7 +32,7 @@ class ChatTest {
     @Test
     fun chat_with_image() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true) {
+            daisyChat(placement = ChatPlacement.Start) {
             }
         }
         val expectedClasses = "chat chat-start"
@@ -43,7 +43,7 @@ class ChatTest {
     @Test
     fun chat_with_image_header_and_footer() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true) {
+            daisyChat(placement = ChatPlacement.Start) {
             }
         }
         val expectedClasses = "chat chat-start"
@@ -54,7 +54,7 @@ class ChatTest {
     @Test
     fun chat_with_image_header_and_footer_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(end = true) {
+            daisyChat(placement = ChatPlacement.End) {
             }
         }
         val expectedClasses = "chat chat-end"
@@ -65,7 +65,7 @@ class ChatTest {
     @Test
     fun chat_with_header_and_footer() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true) {
+            daisyChat(placement = ChatPlacement.Start) {
             }
         }
         val expectedClasses = "chat chat-start"
@@ -76,7 +76,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(start = true) {
+            daisyChat(placement = ChatPlacement.Start) {
             }
         }
         val expectedClasses = "chat chat-start"
@@ -87,7 +87,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(end = true) {
+            daisyChat(placement = ChatPlacement.End) {
             }
         }
         val expectedClasses = "chat chat-end"

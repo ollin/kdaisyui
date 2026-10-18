@@ -12,10 +12,10 @@ Chat bubble layout for conversations. Renders `<div class="chat ...">`.
 
 ```kotlin
 // ChatBubbleColor: Neutral | Primary | Secondary | Accent | Info | Success | Warning | Error
+// ChatPlacement: Start | End
 fun FlowContent.daisyChat(
     id: HtmlId? = null,
-    end: Boolean = false,
-    start: Boolean = false,
+    placement: ClassValues<ChatPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),

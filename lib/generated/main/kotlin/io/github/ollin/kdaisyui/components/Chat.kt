@@ -33,20 +33,28 @@ enum class ChatBubbleColor(internal val className: String) : ClassValues<ChatBub
     override val classNames: List<String> get() = listOf(className)
 }
 
+enum class ChatPlacement(internal val className: String) : ClassValues<ChatPlacement> {
+    /** CSS: `chat-start` */
+    Start("chat-start"),
+    /** CSS: `chat-end` */
+    End("chat-end"),
+    ;
+
+    override val classNames: List<String> get() = listOf(className)
+}
+
 
 /**
  * Chat bubbles are used to show one line of conversation and all its data, including the author image, author name, time, etc. Renders `<div class="chat ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
- * @param end
- * @param start
+ * @param placement — Placement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
  * @param content — Nested HTML content
  */
 fun FlowContent.daisyChat(
     id: HtmlId? = null,
-    end: Boolean = false,
-    start: Boolean = false,
+    placement: ClassValues<ChatPlacement>? = null,
     extraClasses: String? = null,
     attrs: (DIV.() -> Unit)? = null,
     content: (DIV.() -> Unit),
@@ -54,8 +62,7 @@ fun FlowContent.daisyChat(
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("chat")
-        if (end) addClassNames("chat-end")
-        if (start) addClassNames("chat-start")
+        addClassNames(placement)
         addClassNames(extraClasses)
         if (attrs != null) attrs()
         content()

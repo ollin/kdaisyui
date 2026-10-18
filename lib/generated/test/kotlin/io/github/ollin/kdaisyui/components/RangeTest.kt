@@ -7,15 +7,17 @@ import kotlin.test.assertEquals
 
 class RangeTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun range() {
         val html = createHTML(prettyPrint = false).div {
             daisyRange()
         }
-        val expectedClasses = "range"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Range")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Range")
+        assertDocumented(html, "input", "range", "Range")
     }
 
     @Test
@@ -23,10 +25,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Neutral)
         }
-        val expectedClasses = "range range-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Neutral color")
+        assertDocumented(html, "input", "range range-neutral", "Neutral color")
     }
 
     @Test
@@ -34,10 +33,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Primary)
         }
-        val expectedClasses = "range range-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "range range-primary", "Primary color")
     }
 
     @Test
@@ -45,10 +41,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Secondary)
         }
-        val expectedClasses = "range range-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Secondary color")
+        assertDocumented(html, "input", "range range-secondary", "Secondary color")
     }
 
     @Test
@@ -56,10 +49,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Accent)
         }
-        val expectedClasses = "range range-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Accent color")
+        assertDocumented(html, "input", "range range-accent", "Accent color")
     }
 
     @Test
@@ -67,10 +57,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Success)
         }
-        val expectedClasses = "range range-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Success color")
+        assertDocumented(html, "input", "range range-success", "Success color")
     }
 
     @Test
@@ -78,10 +65,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Warning)
         }
-        val expectedClasses = "range range-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Warning color")
+        assertDocumented(html, "input", "range range-warning", "Warning color")
     }
 
     @Test
@@ -89,10 +73,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Info)
         }
-        val expectedClasses = "range range-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Info color")
+        assertDocumented(html, "input", "range range-info", "Info color")
     }
 
     @Test
@@ -100,10 +81,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(color = RangeColor.Error)
         }
-        val expectedClasses = "range range-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Error color")
+        assertDocumented(html, "input", "range range-error", "Error color")
     }
 
     @Test
@@ -111,10 +89,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(size = RangeSize.Xs)
         }
-        val expectedClasses = "range range-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "range range-xs", "Sizes")
     }
 
     @Test
@@ -122,10 +97,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(size = RangeSize.Sm)
         }
-        val expectedClasses = "range range-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "range range-sm", "Sizes")
     }
 
     @Test
@@ -133,10 +105,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(size = RangeSize.Md)
         }
-        val expectedClasses = "range range-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "range range-md", "Sizes")
     }
 
     @Test
@@ -144,10 +113,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(size = RangeSize.Lg)
         }
-        val expectedClasses = "range range-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "range range-lg", "Sizes")
     }
 
     @Test
@@ -155,10 +121,7 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(size = RangeSize.Xl)
         }
-        val expectedClasses = "range range-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "range range-xl", "Sizes")
     }
 
     @Test
@@ -166,9 +129,6 @@ class RangeTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange(vertical = true)
         }
-        val expectedClasses = "range range-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Vertical")
+        assertDocumented(html, "input", "range range-vertical", "Vertical")
     }
 }

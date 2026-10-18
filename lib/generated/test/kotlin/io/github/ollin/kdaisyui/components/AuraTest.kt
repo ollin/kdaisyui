@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class AuraTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun aura() {
         val html = createHTML(prettyPrint = false).div {
             daisyAura() {
             }
         }
-        val expectedClasses = "aura"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura")
+        assertDocumented(html, "div", "aura", "Aura")
     }
 
     @Test
@@ -25,10 +27,7 @@ class AuraTest {
             daisyCard() {
             }
         }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura")
+        assertDocumented(html, "div", "card", "Aura")
     }
 
     @Test
@@ -37,10 +36,7 @@ class AuraTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura")
+        assertDocumented(html, "div", "card-body", "Aura")
     }
 
     @Test
@@ -49,10 +45,7 @@ class AuraTest {
             daisyButton() {
             }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura around a button")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura around a button")
+        assertDocumented(html, "button", "btn", "Aura around a button")
     }
 
     @Test
@@ -61,10 +54,7 @@ class AuraTest {
             daisyAura(style = AuraStyle.Dual) {
             }
         }
-        val expectedClasses = "aura aura-dual"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura dual")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura dual")
+        assertDocumented(html, "div", "aura aura-dual", "Aura dual")
     }
 
     @Test
@@ -73,10 +63,7 @@ class AuraTest {
             daisyAura(style = AuraStyle.Rainbow) {
             }
         }
-        val expectedClasses = "aura aura-rainbow"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura rainbow")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura rainbow")
+        assertDocumented(html, "div", "aura aura-rainbow", "Aura rainbow")
     }
 
     @Test
@@ -85,10 +72,7 @@ class AuraTest {
             daisyAura(style = AuraStyle.Holo) {
             }
         }
-        val expectedClasses = "aura aura-holo"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura holo")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura holo")
+        assertDocumented(html, "div", "aura aura-holo", "Aura holo")
     }
 
     @Test
@@ -97,10 +81,7 @@ class AuraTest {
             daisyAura(style = AuraStyle.Glow) {
             }
         }
-        val expectedClasses = "aura aura-glow"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura glow")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura glow")
+        assertDocumented(html, "div", "aura aura-glow", "Aura glow")
     }
 
     @Test
@@ -109,10 +90,7 @@ class AuraTest {
             daisyAura(style = AuraStyle.Gold) {
             }
         }
-        val expectedClasses = "aura aura-gold"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura gold")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura gold")
+        assertDocumented(html, "div", "aura aura-gold", "Aura gold")
     }
 
     @Test
@@ -121,10 +99,7 @@ class AuraTest {
             daisyAura(style = AuraStyle.Silver) {
             }
         }
-        val expectedClasses = "aura aura-silver"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura silver")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura silver")
+        assertDocumented(html, "div", "aura aura-silver", "Aura silver")
     }
 
     @Test
@@ -133,10 +108,7 @@ class AuraTest {
             daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning) {
             }
         }
-        val expectedClasses = "badge badge-warning badge-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura rainbow around a pricing card")
-        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura rainbow around a pricing card")
+        assertDocumented(html, "span", "badge badge-warning badge-xs", "Aura rainbow around a pricing card")
     }
 
     @Test
@@ -145,10 +117,7 @@ class AuraTest {
             daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block) {
             }
         }
-        val expectedClasses = "btn btn-block btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura rainbow around a pricing card")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura rainbow around a pricing card")
+        assertDocumented(html, "button", "btn btn-block btn-primary", "Aura rainbow around a pricing card")
     }
 
     @Test
@@ -157,10 +126,7 @@ class AuraTest {
             daisyAura(size = AuraSize.Xs) {
             }
         }
-        val expectedClasses = "aura aura-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura sizes")
+        assertDocumented(html, "div", "aura aura-xs", "Aura sizes")
     }
 
     @Test
@@ -169,10 +135,7 @@ class AuraTest {
             daisyAura(size = AuraSize.Sm) {
             }
         }
-        val expectedClasses = "aura aura-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura sizes")
+        assertDocumented(html, "div", "aura aura-sm", "Aura sizes")
     }
 
     @Test
@@ -181,10 +144,7 @@ class AuraTest {
             daisyAura(size = AuraSize.Lg) {
             }
         }
-        val expectedClasses = "aura aura-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura sizes")
+        assertDocumented(html, "div", "aura aura-lg", "Aura sizes")
     }
 
     @Test
@@ -193,9 +153,6 @@ class AuraTest {
             daisyAura(size = AuraSize.Xl) {
             }
         }
-        val expectedClasses = "aura aura-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Aura sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Aura sizes")
+        assertDocumented(html, "div", "aura aura-xl", "Aura sizes")
     }
 }

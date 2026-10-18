@@ -9,16 +9,18 @@ import kotlinx.html.p
 
 class FieldsetTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun fieldset_fieldset_legend_and_label() {
         val html = createHTML(prettyPrint = false).div {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Fieldset fieldset-legend and label")
-        assertEquals("fieldset", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Fieldset fieldset-legend and label")
+        assertDocumented(html, "fieldset", "fieldset", "Fieldset fieldset-legend and label")
     }
 
     @Test
@@ -27,10 +29,7 @@ class FieldsetTest {
             daisyFieldsetLegend() {
             }
         }
-        val expectedClasses = "fieldset-legend"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Fieldset fieldset-legend and label")
-        assertEquals("legend", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Fieldset fieldset-legend and label")
+        assertDocumented(html, "legend", "fieldset-legend", "Fieldset fieldset-legend and label")
     }
 
     @Test
@@ -38,10 +37,7 @@ class FieldsetTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Fieldset fieldset-legend and label")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Fieldset fieldset-legend and label")
+        assertDocumented(html, "input", "input", "Fieldset fieldset-legend and label")
     }
 
     @Test
@@ -49,10 +45,7 @@ class FieldsetTest {
         val html = createHTML(prettyPrint = false).div {
             p { daisyLabelClasses() }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Fieldset fieldset-legend and label")
-        assertEquals("p", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Fieldset fieldset-legend and label")
+        assertDocumented(html, "p", "label", "Fieldset fieldset-legend and label")
     }
 
     @Test
@@ -61,10 +54,7 @@ class FieldsetTest {
             daisyJoin() {
             }
         }
-        val expectedClasses = "join"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Fieldset with multiple join items")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Fieldset with multiple join items")
+        assertDocumented(html, "div", "join", "Fieldset with multiple join items")
     }
 
     @Test
@@ -73,10 +63,7 @@ class FieldsetTest {
             daisyButton() {
             }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Fieldset with multiple join items")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Fieldset with multiple join items")
+        assertDocumented(html, "button", "btn", "Fieldset with multiple join items")
     }
 
     @Test
@@ -85,9 +72,6 @@ class FieldsetTest {
             daisyButton(color = ButtonColor.Neutral) {
             }
         }
-        val expectedClasses = "btn btn-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Login form with fieldset")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Login form with fieldset")
+        assertDocumented(html, "button", "btn btn-neutral", "Login form with fieldset")
     }
 }

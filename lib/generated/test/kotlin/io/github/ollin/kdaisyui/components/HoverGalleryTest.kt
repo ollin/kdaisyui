@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class HoverGalleryTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun hover_gallery() {
         val html = createHTML(prettyPrint = false).div {
             daisyHoverGallery() {
             }
         }
-        val expectedClasses = "hover-gallery"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery")
-        assertEquals("figure", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery")
+        assertDocumented(html, "figure", "hover-gallery", "Hover Gallery")
     }
 
     @Test
@@ -25,10 +27,7 @@ class HoverGalleryTest {
             daisyCard(size = CardSize.Sm) {
             }
         }
-        val expectedClasses = "card card-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery in a card")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery in a card")
+        assertDocumented(html, "div", "card card-sm", "Hover Gallery in a card")
     }
 
     @Test
@@ -37,10 +36,7 @@ class HoverGalleryTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery in a card")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery in a card")
+        assertDocumented(html, "div", "card-body", "Hover Gallery in a card")
     }
 
     @Test
@@ -49,9 +45,6 @@ class HoverGalleryTest {
             daisyCardTitle() {
             }
         }
-        val expectedClasses = "card-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hover Gallery in a card")
-        assertEquals("h2", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Hover Gallery in a card")
+        assertDocumented(html, "h2", "card-title", "Hover Gallery in a card")
     }
 }

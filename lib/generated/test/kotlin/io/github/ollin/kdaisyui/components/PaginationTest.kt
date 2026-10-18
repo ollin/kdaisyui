@@ -8,16 +8,18 @@ import kotlinx.html.input
 
 class PaginationTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun pagination_with_an_active_button_daisyJoin() {
         val html = createHTML(prettyPrint = false).div {
             daisyJoin() {
             }
         }
-        val expectedClasses = "join"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Pagination with an active button")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Pagination with an active button")
+        assertDocumented(html, "div", "join", "Pagination with an active button")
     }
 
     @Test
@@ -26,10 +28,7 @@ class PaginationTest {
             daisyButton() {
             }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Pagination with an active button")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Pagination with an active button")
+        assertDocumented(html, "button", "btn", "Pagination with an active button")
     }
 
     @Test
@@ -38,10 +37,7 @@ class PaginationTest {
             daisyButton(active = true) {
             }
         }
-        val expectedClasses = "btn btn-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Pagination with an active button")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Pagination with an active button")
+        assertDocumented(html, "button", "btn btn-active", "Pagination with an active button")
     }
 
     @Test
@@ -50,10 +46,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Xs) {
             }
         }
-        val expectedClasses = "btn btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-xs", "Sizes")
     }
 
     @Test
@@ -62,10 +55,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Xs, active = true) {
             }
         }
-        val expectedClasses = "btn btn-active btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-active btn-xs", "Sizes")
     }
 
     @Test
@@ -74,10 +64,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Sm) {
             }
         }
-        val expectedClasses = "btn btn-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-sm", "Sizes")
     }
 
     @Test
@@ -86,10 +73,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Sm, active = true) {
             }
         }
-        val expectedClasses = "btn btn-active btn-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-active btn-sm", "Sizes")
     }
 
     @Test
@@ -98,10 +82,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Md) {
             }
         }
-        val expectedClasses = "btn btn-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-md", "Sizes")
     }
 
     @Test
@@ -110,10 +91,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Md, active = true) {
             }
         }
-        val expectedClasses = "btn btn-active btn-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-active btn-md", "Sizes")
     }
 
     @Test
@@ -122,10 +100,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Lg) {
             }
         }
-        val expectedClasses = "btn btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-lg", "Sizes")
     }
 
     @Test
@@ -134,10 +109,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Lg, active = true) {
             }
         }
-        val expectedClasses = "btn btn-active btn-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-active btn-lg", "Sizes")
     }
 
     @Test
@@ -146,10 +118,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Xl) {
             }
         }
-        val expectedClasses = "btn btn-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-xl", "Sizes")
     }
 
     @Test
@@ -158,10 +127,7 @@ class PaginationTest {
             daisyButton(size = ButtonSize.Xl, active = true) {
             }
         }
-        val expectedClasses = "btn btn-active btn-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "button", "btn btn-active btn-xl", "Sizes")
     }
 
     @Test
@@ -170,10 +136,7 @@ class PaginationTest {
             daisyButton(disabled = true) {
             }
         }
-        val expectedClasses = "btn btn-disabled"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With a disabled button")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With a disabled button")
+        assertDocumented(html, "button", "btn btn-disabled", "With a disabled button")
     }
 
     @Test
@@ -182,10 +145,7 @@ class PaginationTest {
             daisyButton(style = ButtonStyle.Outline) {
             }
         }
-        val expectedClasses = "btn btn-outline"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Nex/Prev outline buttons with equal width")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Nex/Prev outline buttons with equal width")
+        assertDocumented(html, "button", "btn btn-outline", "Nex/Prev outline buttons with equal width")
     }
 
     @Test
@@ -193,9 +153,6 @@ class PaginationTest {
         val html = createHTML(prettyPrint = false).div {
             input { daisyButtonClasses(shape = ButtonShape.Square) }
         }
-        val expectedClasses = "btn btn-square"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Using radio inputs")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Using radio inputs")
+        assertDocumented(html, "input", "btn btn-square", "Using radio inputs")
     }
 }

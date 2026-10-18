@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class MockupPhoneTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun iphone_mockup() {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhone() {
             }
         }
-        val expectedClasses = "mockup-phone"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for iPhone mockup")
+        assertDocumented(html, "div", "mockup-phone", "iPhone mockup")
     }
 
     @Test
@@ -25,10 +27,7 @@ class MockupPhoneTest {
             daisyMockupPhoneCamera() {
             }
         }
-        val expectedClasses = "mockup-phone-camera"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for iPhone mockup")
+        assertDocumented(html, "div", "mockup-phone-camera", "iPhone mockup")
     }
 
     @Test
@@ -37,9 +36,6 @@ class MockupPhoneTest {
             daisyMockupPhoneDisplay() {
             }
         }
-        val expectedClasses = "mockup-phone-display"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for iPhone mockup")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for iPhone mockup")
+        assertDocumented(html, "div", "mockup-phone-display", "iPhone mockup")
     }
 }

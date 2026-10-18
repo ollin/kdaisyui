@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class DiffTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun diff() {
         val html = createHTML(prettyPrint = false).div {
             daisyDiff() {
             }
         }
-        val expectedClasses = "diff"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
-        assertEquals("figure", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
+        assertDocumented(html, "figure", "diff", "Diff")
     }
 
     @Test
@@ -25,10 +27,7 @@ class DiffTest {
             daisyDiffItem1() {
             }
         }
-        val expectedClasses = "diff-item-1"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
+        assertDocumented(html, "div", "diff-item-1", "Diff")
     }
 
     @Test
@@ -37,10 +36,7 @@ class DiffTest {
             daisyDiffItem2() {
             }
         }
-        val expectedClasses = "diff-item-2"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
+        assertDocumented(html, "div", "diff-item-2", "Diff")
     }
 
     @Test
@@ -49,9 +45,6 @@ class DiffTest {
             daisyDiffResizer() {
             }
         }
-        val expectedClasses = "diff-resizer"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diff")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Diff")
+        assertDocumented(html, "div", "diff-resizer", "Diff")
     }
 }

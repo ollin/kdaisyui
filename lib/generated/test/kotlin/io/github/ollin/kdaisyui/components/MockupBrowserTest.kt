@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class MockupBrowserTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun browser_mockup_with_border() {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupBrowser() {
             }
         }
-        val expectedClasses = "mockup-browser"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for browser mockup with border")
+        assertDocumented(html, "div", "mockup-browser", "browser mockup with border")
     }
 
     @Test
@@ -25,10 +27,7 @@ class MockupBrowserTest {
             daisyMockupBrowserToolbar() {
             }
         }
-        val expectedClasses = "mockup-browser-toolbar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for browser mockup with border")
+        assertDocumented(html, "div", "mockup-browser-toolbar", "browser mockup with border")
     }
 
     @Test
@@ -36,9 +35,6 @@ class MockupBrowserTest {
         val html = createHTML(prettyPrint = false).div {
             div { daisyInputClasses() }
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for browser mockup with border")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for browser mockup with border")
+        assertDocumented(html, "div", "input", "browser mockup with border")
     }
 }

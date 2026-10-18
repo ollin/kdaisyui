@@ -8,16 +8,18 @@ import kotlin.test.assertTrue
 
 class TabTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun tabs() {
         val html = createHTML(prettyPrint = false).div {
             daisyTabs() {
             }
         }
-        val expectedClasses = "tabs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for tabs")
+        assertDocumented(html, "div", "tabs", "tabs")
     }
 
     @Test
@@ -26,10 +28,7 @@ class TabTest {
             daisyTab() {
             }
         }
-        val expectedClasses = "tab"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs")
-        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for tabs")
+        assertDocumented(html, "a", "tab", "tabs")
     }
 
     @Test
@@ -38,10 +37,7 @@ class TabTest {
             daisyTab(active = true) {
             }
         }
-        val expectedClasses = "tab tab-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs")
-        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for tabs")
+        assertDocumented(html, "a", "tab tab-active", "tabs")
     }
 
     @Test
@@ -50,10 +46,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Border) {
             }
         }
-        val expectedClasses = "tabs tabs-border"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-border")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for tabs-border")
+        assertDocumented(html, "div", "tabs tabs-border", "tabs-border")
     }
 
     @Test
@@ -62,10 +55,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Lift) {
             }
         }
-        val expectedClasses = "tabs tabs-lift"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-lift")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for tabs-lift")
+        assertDocumented(html, "div", "tabs tabs-lift", "tabs-lift")
     }
 
     @Test
@@ -74,10 +64,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Box) {
             }
         }
-        val expectedClasses = "tabs tabs-box"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-box")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for tabs-box")
+        assertDocumented(html, "div", "tabs tabs-box", "tabs-box")
     }
 
     @Test
@@ -85,10 +72,7 @@ class TabTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabRadio()
         }
-        val expectedClasses = "tab"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for tabs-box using radio inputs")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for tabs-box using radio inputs")
+        assertDocumented(html, "input", "tab", "tabs-box using radio inputs")
     }
 
     @Test
@@ -97,10 +81,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Lift, size = TabsSize.Xs) {
             }
         }
-        val expectedClasses = "tabs tabs-lift tabs-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "div", "tabs tabs-lift tabs-xs", "Sizes")
     }
 
     @Test
@@ -109,10 +90,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Lift, size = TabsSize.Sm) {
             }
         }
-        val expectedClasses = "tabs tabs-lift tabs-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "div", "tabs tabs-lift tabs-sm", "Sizes")
     }
 
     @Test
@@ -121,10 +99,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Lift, size = TabsSize.Lg) {
             }
         }
-        val expectedClasses = "tabs tabs-lg tabs-lift"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "div", "tabs tabs-lg tabs-lift", "Sizes")
     }
 
     @Test
@@ -133,10 +108,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Lift, size = TabsSize.Xl) {
             }
         }
-        val expectedClasses = "tabs tabs-lift tabs-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "div", "tabs tabs-lift tabs-xl", "Sizes")
     }
 
     @Test
@@ -145,10 +117,7 @@ class TabTest {
             daisyTabContent() {
             }
         }
-        val expectedClasses = "tab-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for radio tabs-border + tab content")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for radio tabs-border + tab content")
+        assertDocumented(html, "div", "tab-content", "radio tabs-border + tab content")
     }
 
     @Test
@@ -157,10 +126,7 @@ class TabTest {
             daisyTabs(style = TabsStyle.Lift, placement = TabsPlacement.Bottom) {
             }
         }
-        val expectedClasses = "tabs tabs-bottom tabs-lift"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for radio tabs-lift + tab content on bottom")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for radio tabs-lift + tab content on bottom")
+        assertDocumented(html, "div", "tabs tabs-bottom tabs-lift", "radio tabs-lift + tab content on bottom")
     }
 
     @Test

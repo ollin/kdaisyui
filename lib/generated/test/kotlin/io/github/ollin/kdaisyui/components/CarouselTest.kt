@@ -8,16 +8,18 @@ import kotlinx.html.a
 
 class CarouselTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun snap_to_start_default() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarousel() {
             }
         }
-        val expectedClasses = "carousel"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Snap to start (default)")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Snap to start (default)")
+        assertDocumented(html, "div", "carousel", "Snap to start (default)")
     }
 
     @Test
@@ -26,10 +28,7 @@ class CarouselTest {
             daisyCarouselItem() {
             }
         }
-        val expectedClasses = "carousel-item"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Snap to start (default)")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Snap to start (default)")
+        assertDocumented(html, "div", "carousel-item", "Snap to start (default)")
     }
 
     @Test
@@ -38,10 +37,7 @@ class CarouselTest {
             daisyCarousel(snap = CarouselSnap.Center) {
             }
         }
-        val expectedClasses = "carousel carousel-center"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Snap to center")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Snap to center")
+        assertDocumented(html, "div", "carousel carousel-center", "Snap to center")
     }
 
     @Test
@@ -50,10 +46,7 @@ class CarouselTest {
             daisyCarousel(snap = CarouselSnap.End) {
             }
         }
-        val expectedClasses = "carousel carousel-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Snap to end")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Snap to end")
+        assertDocumented(html, "div", "carousel carousel-end", "Snap to end")
     }
 
     @Test
@@ -62,10 +55,7 @@ class CarouselTest {
             daisyCarousel(direction = CarouselDirection.Vertical) {
             }
         }
-        val expectedClasses = "carousel carousel-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical carousel")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Vertical carousel")
+        assertDocumented(html, "div", "carousel carousel-vertical", "Vertical carousel")
     }
 
     @Test
@@ -73,10 +63,7 @@ class CarouselTest {
         val html = createHTML(prettyPrint = false).div {
             a { daisyButtonClasses(size = ButtonSize.Xs) }
         }
-        val expectedClasses = "btn btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Carousel with indicator buttons")
-        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Carousel with indicator buttons")
+        assertDocumented(html, "a", "btn btn-xs", "Carousel with indicator buttons")
     }
 
     @Test
@@ -84,9 +71,6 @@ class CarouselTest {
         val html = createHTML(prettyPrint = false).div {
             a { daisyButtonClasses(shape = ButtonShape.Circle) }
         }
-        val expectedClasses = "btn btn-circle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Carousel with next/prev buttons")
-        assertEquals("a", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Carousel with next/prev buttons")
+        assertDocumented(html, "a", "btn btn-circle", "Carousel with next/prev buttons")
     }
 }

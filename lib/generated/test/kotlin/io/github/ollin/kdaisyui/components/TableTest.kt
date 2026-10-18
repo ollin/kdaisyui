@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class TableTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun table() {
         val html = createHTML(prettyPrint = false).div {
             daisyTable() {
             }
         }
-        val expectedClasses = "table"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table")
-        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table")
+        assertDocumented(html, "table", "table", "Table")
     }
 
     @Test
@@ -25,10 +27,7 @@ class TableTest {
             daisyTable(zebra = true) {
             }
         }
-        val expectedClasses = "table table-zebra"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Zebra")
-        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Zebra")
+        assertDocumented(html, "table", "table table-zebra", "Zebra")
     }
 
     @Test
@@ -36,10 +35,7 @@ class TableTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox()
         }
-        val expectedClasses = "checkbox"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
+        assertDocumented(html, "input", "checkbox", "Table with visual elements")
     }
 
     @Test
@@ -48,10 +44,7 @@ class TableTest {
             daisyAvatar() {
             }
         }
-        val expectedClasses = "avatar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
+        assertDocumented(html, "div", "avatar", "Table with visual elements")
     }
 
     @Test
@@ -59,10 +52,7 @@ class TableTest {
         val html = createHTML(prettyPrint = false).div {
             div { daisyMaskClasses(style = MaskStyle.Squircle) }
         }
-        val expectedClasses = "mask mask-squircle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
+        assertDocumented(html, "div", "mask mask-squircle", "Table with visual elements")
     }
 
     @Test
@@ -71,10 +61,7 @@ class TableTest {
             daisyBadge(fillStyle = BadgeFillStyle.Ghost, size = BadgeSize.Sm) {
             }
         }
-        val expectedClasses = "badge badge-ghost badge-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
-        assertEquals("span", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
+        assertDocumented(html, "span", "badge badge-ghost badge-sm", "Table with visual elements")
     }
 
     @Test
@@ -83,10 +70,7 @@ class TableTest {
             daisyButton(style = ButtonStyle.Ghost, size = ButtonSize.Xs) {
             }
         }
-        val expectedClasses = "btn btn-ghost btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with visual elements")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with visual elements")
+        assertDocumented(html, "button", "btn btn-ghost btn-xs", "Table with visual elements")
     }
 
     @Test
@@ -95,10 +79,7 @@ class TableTest {
             daisyTable(size = TableSize.Xs) {
             }
         }
-        val expectedClasses = "table table-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table xs")
-        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table xs")
+        assertDocumented(html, "table", "table table-xs", "Table xs")
     }
 
     @Test
@@ -107,10 +88,7 @@ class TableTest {
             daisyTable(pinRows = true) {
             }
         }
-        val expectedClasses = "table table-pin-rows"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with pinned-rows")
-        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with pinned-rows")
+        assertDocumented(html, "table", "table table-pin-rows", "Table with pinned-rows")
     }
 
     @Test
@@ -119,9 +97,6 @@ class TableTest {
             daisyTable(size = TableSize.Xs, pinRows = true, pinCols = true) {
             }
         }
-        val expectedClasses = "table table-pin-cols table-pin-rows table-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Table with pinned-rows and pinned-cols")
-        assertEquals("table", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Table with pinned-rows and pinned-cols")
+        assertDocumented(html, "table", "table table-pin-cols table-pin-rows table-xs", "Table with pinned-rows and pinned-cols")
     }
 }

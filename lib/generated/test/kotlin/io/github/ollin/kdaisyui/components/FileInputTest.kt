@@ -9,15 +9,17 @@ import kotlinx.html.label
 
 class FileInputTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun file_input() {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput()
         }
-        val expectedClasses = "file-input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for File input")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for File input")
+        assertDocumented(html, "input", "file-input", "File input")
     }
 
     @Test
@@ -25,10 +27,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(ghost = true)
         }
-        val expectedClasses = "file-input file-input-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for File input ghost")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for File input ghost")
+        assertDocumented(html, "input", "file-input file-input-ghost", "File input ghost")
     }
 
     @Test
@@ -37,10 +36,7 @@ class FileInputTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
-        assertEquals("fieldset", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and label")
+        assertDocumented(html, "fieldset", "fieldset", "With fieldset and label")
     }
 
     @Test
@@ -49,10 +45,7 @@ class FileInputTest {
             daisyFieldsetLegend() {
             }
         }
-        val expectedClasses = "fieldset-legend"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
-        assertEquals("legend", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and label")
+        assertDocumented(html, "legend", "fieldset-legend", "With fieldset and label")
     }
 
     @Test
@@ -60,10 +53,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             label { daisyLabelClasses() }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and label")
-        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for With fieldset and label")
+        assertDocumented(html, "label", "label", "With fieldset and label")
     }
 
     @Test
@@ -71,10 +61,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(size = FileInputSize.Xs)
         }
-        val expectedClasses = "file-input file-input-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "file-input file-input-xs", "Sizes")
     }
 
     @Test
@@ -82,10 +69,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(size = FileInputSize.Sm)
         }
-        val expectedClasses = "file-input file-input-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "file-input file-input-sm", "Sizes")
     }
 
     @Test
@@ -93,10 +77,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(size = FileInputSize.Md)
         }
-        val expectedClasses = "file-input file-input-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "file-input file-input-md", "Sizes")
     }
 
     @Test
@@ -104,10 +85,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(size = FileInputSize.Lg)
         }
-        val expectedClasses = "file-input file-input-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "file-input file-input-lg", "Sizes")
     }
 
     @Test
@@ -115,10 +93,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(size = FileInputSize.Xl)
         }
-        val expectedClasses = "file-input file-input-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Sizes")
+        assertDocumented(html, "input", "file-input file-input-xl", "Sizes")
     }
 
     @Test
@@ -126,10 +101,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Primary)
         }
-        val expectedClasses = "file-input file-input-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-primary", "Primary color")
     }
 
     @Test
@@ -137,10 +109,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Secondary)
         }
-        val expectedClasses = "file-input file-input-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-secondary", "Primary color")
     }
 
     @Test
@@ -148,10 +117,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Accent)
         }
-        val expectedClasses = "file-input file-input-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-accent", "Primary color")
     }
 
     @Test
@@ -159,10 +125,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Neutral)
         }
-        val expectedClasses = "file-input file-input-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-neutral", "Primary color")
     }
 
     @Test
@@ -170,10 +133,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Info)
         }
-        val expectedClasses = "file-input file-input-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-info", "Primary color")
     }
 
     @Test
@@ -181,10 +141,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Success)
         }
-        val expectedClasses = "file-input file-input-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-success", "Primary color")
     }
 
     @Test
@@ -192,10 +149,7 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Warning)
         }
-        val expectedClasses = "file-input file-input-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-warning", "Primary color")
     }
 
     @Test
@@ -203,9 +157,6 @@ class FileInputTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput(color = FileInputColor.Error)
         }
-        val expectedClasses = "file-input file-input-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Primary color")
+        assertDocumented(html, "input", "file-input file-input-error", "Primary color")
     }
 }

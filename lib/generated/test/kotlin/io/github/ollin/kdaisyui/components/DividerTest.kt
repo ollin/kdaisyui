@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class DividerTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun divider_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
             daisyCard() {
             }
         }
-        val expectedClasses = "card"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider")
+        assertDocumented(html, "div", "card", "Divider")
     }
 
     @Test
@@ -25,10 +27,7 @@ class DividerTest {
             daisyDivider() {
             }
         }
-        val expectedClasses = "divider"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider")
+        assertDocumented(html, "div", "divider", "Divider")
     }
 
     @Test
@@ -37,10 +36,7 @@ class DividerTest {
             daisyDivider(direction = DividerDirection.Horizontal) {
             }
         }
-        val expectedClasses = "divider divider-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider horizontal")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider horizontal")
+        assertDocumented(html, "div", "divider divider-horizontal", "Divider horizontal")
     }
 
     @Test
@@ -49,10 +45,7 @@ class DividerTest {
             daisyDivider(extraClasses = "lg:divider-horizontal") {
             }
         }
-        val expectedClasses = "divider lg:divider-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for responsive (lg:divider-horizontal)")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for responsive (lg:divider-horizontal)")
+        assertDocumented(html, "div", "divider lg:divider-horizontal", "responsive (lg:divider-horizontal)")
     }
 
     @Test
@@ -61,10 +54,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Neutral) {
             }
         }
-        val expectedClasses = "divider divider-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-neutral", "Divider with colors")
     }
 
     @Test
@@ -73,10 +63,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Primary) {
             }
         }
-        val expectedClasses = "divider divider-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-primary", "Divider with colors")
     }
 
     @Test
@@ -85,10 +72,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Secondary) {
             }
         }
-        val expectedClasses = "divider divider-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-secondary", "Divider with colors")
     }
 
     @Test
@@ -97,10 +81,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Accent) {
             }
         }
-        val expectedClasses = "divider divider-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-accent", "Divider with colors")
     }
 
     @Test
@@ -109,10 +90,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Success) {
             }
         }
-        val expectedClasses = "divider divider-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-success", "Divider with colors")
     }
 
     @Test
@@ -121,10 +99,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Warning) {
             }
         }
-        val expectedClasses = "divider divider-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-warning", "Divider with colors")
     }
 
     @Test
@@ -133,10 +108,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Info) {
             }
         }
-        val expectedClasses = "divider divider-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-info", "Divider with colors")
     }
 
     @Test
@@ -145,10 +117,7 @@ class DividerTest {
             daisyDivider(color = DividerColor.Error) {
             }
         }
-        val expectedClasses = "divider divider-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider with colors")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider with colors")
+        assertDocumented(html, "div", "divider divider-error", "Divider with colors")
     }
 
     @Test
@@ -157,10 +126,7 @@ class DividerTest {
             daisyDivider(placement = DividerPlacement.Start) {
             }
         }
-        val expectedClasses = "divider divider-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions")
+        assertDocumented(html, "div", "divider divider-start", "Divider in different positions")
     }
 
     @Test
@@ -169,10 +135,7 @@ class DividerTest {
             daisyDivider(placement = DividerPlacement.End) {
             }
         }
-        val expectedClasses = "divider divider-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions")
+        assertDocumented(html, "div", "divider divider-end", "Divider in different positions")
     }
 
     @Test
@@ -181,10 +144,7 @@ class DividerTest {
             daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.Start) {
             }
         }
-        val expectedClasses = "divider divider-horizontal divider-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions (horizontal)")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions (horizontal)")
+        assertDocumented(html, "div", "divider divider-horizontal divider-start", "Divider in different positions (horizontal)")
     }
 
     @Test
@@ -193,9 +153,6 @@ class DividerTest {
             daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.End) {
             }
         }
-        val expectedClasses = "divider divider-end divider-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Divider in different positions (horizontal)")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Divider in different positions (horizontal)")
+        assertDocumented(html, "div", "divider divider-end divider-horizontal", "Divider in different positions (horizontal)")
     }
 }

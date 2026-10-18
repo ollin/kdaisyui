@@ -264,13 +264,23 @@ function generateClassTest(call: DocumentedCall, { testName, expectedClasses, ca
         val html = createHTML(prettyPrint = false).${wrapper} {
             ${statement}
         }
-        val expectedClasses = "${expectedClasses}"
-        val actualClasses = html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for ${caseName}")
-        assertEquals("${tag}", html.substringBefore(" class=\\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for ${caseName}")
+        assertDocumented(html, "${tag}", "${expectedClasses}", "${caseName}")
     }
 `
 }
+
+/**
+ * Emitted once per test file with documented-element tests, and called by each of them: the first
+ * element carrying a class is the documented one, and it must be DaisyUI's tag with DaisyUI's
+ * classes. One call per test instead of two assertion lines, which made every test structurally
+ * identical to its neighbours.
+ */
+const DOCUMENTED_HELPER = `
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+`
 
 /** The imports a test file needs beyond the four every one of them has. */
 function extraImportLines(customParts, hasAttributeTest: boolean, classTestImports: ReadonlySet<string>): string {
@@ -345,7 +355,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals${extraImports}
 
 class ${className}Test {
-${tests}}
+${tests.includes('assertDocumented(html') ? DOCUMENTED_HELPER : ''}${tests}}
 `
 }
 

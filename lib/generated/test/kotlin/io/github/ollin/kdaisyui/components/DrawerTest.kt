@@ -7,16 +7,18 @@ import kotlin.test.assertEquals
 
 class DrawerTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun drawer_sidebar() {
         val html = createHTML(prettyPrint = false).div {
             daisyDrawer() {
             }
         }
-        val expectedClasses = "drawer"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
+        assertDocumented(html, "div", "drawer", "Drawer sidebar")
     }
 
     @Test
@@ -24,10 +26,7 @@ class DrawerTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDrawerToggle()
         }
-        val expectedClasses = "drawer-toggle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
-        assertEquals("input", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
+        assertDocumented(html, "input", "drawer-toggle", "Drawer sidebar")
     }
 
     @Test
@@ -36,10 +35,7 @@ class DrawerTest {
             daisyDrawerContent() {
             }
         }
-        val expectedClasses = "drawer-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
+        assertDocumented(html, "div", "drawer-content", "Drawer sidebar")
     }
 
     @Test
@@ -48,10 +44,7 @@ class DrawerTest {
             daisyDrawerButton(attrs = { daisyButtonClasses() }) {
             }
         }
-        val expectedClasses = "btn drawer-button"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
-        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
+        assertDocumented(html, "label", "btn drawer-button", "Drawer sidebar")
     }
 
     @Test
@@ -60,10 +53,7 @@ class DrawerTest {
             daisyDrawerSide() {
             }
         }
-        val expectedClasses = "drawer-side"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
+        assertDocumented(html, "div", "drawer-side", "Drawer sidebar")
     }
 
     @Test
@@ -72,10 +62,7 @@ class DrawerTest {
             daisyDrawerOverlay() {
             }
         }
-        val expectedClasses = "drawer-overlay"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
-        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
+        assertDocumented(html, "label", "drawer-overlay", "Drawer sidebar")
     }
 
     @Test
@@ -84,10 +71,7 @@ class DrawerTest {
             daisyMenu() {
             }
         }
-        val expectedClasses = "menu"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar")
-        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar")
+        assertDocumented(html, "ul", "menu", "Drawer sidebar")
     }
 
     @Test
@@ -96,10 +80,7 @@ class DrawerTest {
             daisyNavbar() {
             }
         }
-        val expectedClasses = "navbar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+        assertDocumented(html, "div", "navbar", "Navbar menu for desktop + sidebar drawer for mobile")
     }
 
     @Test
@@ -108,10 +89,7 @@ class DrawerTest {
             daisyDrawerButton(attrs = { daisyButtonClasses(shape = ButtonShape.Square, style = ButtonStyle.Ghost) }) {
             }
         }
-        val expectedClasses = "btn btn-ghost btn-square drawer-button"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
-        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+        assertDocumented(html, "label", "btn btn-ghost btn-square drawer-button", "Navbar menu for desktop + sidebar drawer for mobile")
     }
 
     @Test
@@ -120,10 +98,7 @@ class DrawerTest {
             daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
-        val expectedClasses = "menu menu-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Navbar menu for desktop + sidebar drawer for mobile")
-        assertEquals("ul", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Navbar menu for desktop + sidebar drawer for mobile")
+        assertDocumented(html, "ul", "menu menu-horizontal", "Navbar menu for desktop + sidebar drawer for mobile")
     }
 
     @Test
@@ -132,10 +107,7 @@ class DrawerTest {
             daisyDrawer(extraClasses = "lg:drawer-open") {
             }
         }
-        val expectedClasses = "drawer lg:drawer-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
+        assertDocumented(html, "div", "drawer lg:drawer-open", "Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
     }
 
     @Test
@@ -144,10 +116,7 @@ class DrawerTest {
             daisyDrawer(end = true) {
             }
         }
-        val expectedClasses = "drawer drawer-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar that opens from right side of page")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar that opens from right side of page")
+        assertDocumented(html, "div", "drawer drawer-end", "Drawer sidebar that opens from right side of page")
     }
 
     @Test
@@ -156,9 +125,6 @@ class DrawerTest {
             daisyDrawerButton(attrs = { daisyButtonClasses(color = ButtonColor.Primary) }) {
             }
         }
-        val expectedClasses = "btn btn-primary drawer-button"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Drawer sidebar that opens from right side of page")
-        assertEquals("label", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Drawer sidebar that opens from right side of page")
+        assertDocumented(html, "label", "btn btn-primary drawer-button", "Drawer sidebar that opens from right side of page")
     }
 }

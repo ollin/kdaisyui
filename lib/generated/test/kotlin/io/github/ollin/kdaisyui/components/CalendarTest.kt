@@ -8,16 +8,18 @@ import kotlinx.html.button
 
 class CalendarTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun cally_calendar_example() {
         val html = createHTML(prettyPrint = false).div {
             daisyCalendar() {
             }
         }
-        val expectedClasses = "cally"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally calendar example")
-        assertEquals("calendar-date", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Cally calendar example")
+        assertDocumented(html, "calendar-date", "cally", "Cally calendar example")
     }
 
     @Test
@@ -25,10 +27,7 @@ class CalendarTest {
         val html = createHTML(prettyPrint = false).div {
             button { daisyInputClasses() }
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally date picker example")
-        assertEquals("button", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Cally date picker example")
+        assertDocumented(html, "button", "input", "Cally date picker example")
     }
 
     @Test
@@ -36,9 +35,6 @@ class CalendarTest {
         val html = createHTML(prettyPrint = false).div {
             div { daisyDropdownClasses() }
         }
-        val expectedClasses = "dropdown"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Cally date picker example")
-        assertEquals("div", html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for Cally date picker example")
+        assertDocumented(html, "div", "dropdown", "Cally date picker example")
     }
 }

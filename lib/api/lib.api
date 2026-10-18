@@ -580,14 +580,24 @@ public final class io/github/ollin/kdaisyui/components/HoverGalleryKt {
 	public static synthetic fun daisyHoverGallery$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
-public final class io/github/ollin/kdaisyui/components/IndicatorHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
-	public static final field Center Lio/github/ollin/kdaisyui/components/IndicatorHorizontalPlacement;
-	public static final field End Lio/github/ollin/kdaisyui/components/IndicatorHorizontalPlacement;
-	public static final field Start Lio/github/ollin/kdaisyui/components/IndicatorHorizontalPlacement;
+public final class io/github/ollin/kdaisyui/components/IndicatorItemHorizontalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Center Lio/github/ollin/kdaisyui/components/IndicatorItemHorizontalPlacement;
+	public static final field End Lio/github/ollin/kdaisyui/components/IndicatorItemHorizontalPlacement;
+	public static final field Start Lio/github/ollin/kdaisyui/components/IndicatorItemHorizontalPlacement;
 	public fun getClassNames ()Ljava/util/List;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/IndicatorHorizontalPlacement;
-	public static fun values ()[Lio/github/ollin/kdaisyui/components/IndicatorHorizontalPlacement;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/IndicatorItemHorizontalPlacement;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/IndicatorItemHorizontalPlacement;
+}
+
+public final class io/github/ollin/kdaisyui/components/IndicatorItemVerticalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
+	public static final field Bottom Lio/github/ollin/kdaisyui/components/IndicatorItemVerticalPlacement;
+	public static final field Middle Lio/github/ollin/kdaisyui/components/IndicatorItemVerticalPlacement;
+	public static final field Top Lio/github/ollin/kdaisyui/components/IndicatorItemVerticalPlacement;
+	public fun getClassNames ()Ljava/util/List;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/IndicatorItemVerticalPlacement;
+	public static fun values ()[Lio/github/ollin/kdaisyui/components/IndicatorItemVerticalPlacement;
 }
 
 public final class io/github/ollin/kdaisyui/components/IndicatorKt {
@@ -595,16 +605,6 @@ public final class io/github/ollin/kdaisyui/components/IndicatorKt {
 	public static synthetic fun daisyIndicator$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyIndicatorItem (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyIndicatorItem$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-}
-
-public final class io/github/ollin/kdaisyui/components/IndicatorVerticalPlacement : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {
-	public static final field Bottom Lio/github/ollin/kdaisyui/components/IndicatorVerticalPlacement;
-	public static final field Middle Lio/github/ollin/kdaisyui/components/IndicatorVerticalPlacement;
-	public static final field Top Lio/github/ollin/kdaisyui/components/IndicatorVerticalPlacement;
-	public fun getClassNames ()Ljava/util/List;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/components/IndicatorVerticalPlacement;
-	public static fun values ()[Lio/github/ollin/kdaisyui/components/IndicatorVerticalPlacement;
 }
 
 public final class io/github/ollin/kdaisyui/components/InputColor : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {

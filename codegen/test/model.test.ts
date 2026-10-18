@@ -121,4 +121,14 @@ describe('shapeFromModel', () => {
       inputType: 'checkBox',
     })
   })
+
+  test('records the classes an extra parameter writes, and keeps them out of the body config', () => {
+    const disabled = { name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) { this.disabled = true; addClassNames("btn-disabled") }' }
+    const shape = shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'extra', ...disabled }] }] }, DESCRIPTIONS)
+    const config = { extras: [disabled], role: null, inputType: null } as unknown as ComponentConfig
+
+    const model = modelFromShape(shape, config)
+
+    assert.deepEqual([model.functions[0].parameters[0], mainFunctionConfig(model).extras], [{ kind: 'extra', ...disabled, writes: ['btn-disabled'] }, [disabled]])
+  })
 })

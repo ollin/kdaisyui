@@ -54,6 +54,8 @@ export interface ModelToggleParameter {
 /** A hand-written parameter: its Kotlin type, default and the fragment that applies it. */
 export interface ModelExtraParameter extends ExtraParameter {
   readonly kind: 'extra'
+  /** The classes its fragment writes, e.g. `btn-disabled`, so the class counts as placed. */
+  readonly writes?: readonly string[]
 }
 
 export type ModelParameter = ModelEnumParameter | ModelToggleParameter | ModelExtraParameter
@@ -206,7 +208,8 @@ function modelParameter(parameter: ParameterShape, extras: readonly ExtraParamet
   if (parameter.cssClass !== undefined) return { kind: 'toggle', name: parameter.name, class: parameter.cssClass }
   const extra = extras.find(candidate => candidate.name === parameter.name)
   if (extra === undefined) throw new Error(`${parameter.name}: neither an enum, a toggle nor a configured extra`)
-  return { kind: 'extra', ...extra }
+  const writes = [...extra.apply.matchAll(/addClassNames\("([^"]+)"\)/g)].map(match => match[1])
+  return { kind: 'extra', ...extra, ...(writes.length > 0 ? { writes } : {}) }
 }
 
 function modelFunction(fn: FunctionShape, componentConfig: ComponentConfig, joinItem: boolean): ModelFunction {
@@ -257,7 +260,7 @@ export function mainFunctionConfig(model: ComponentModel): MainFunctionConfig {
   return {
     extras: (main?.parameters ?? []).flatMap(parameter => {
       if (parameter.kind !== 'extra') return []
-      const { kind, ...extra } = parameter
+      const { kind, writes, ...extra } = parameter
       return [extra]
     }),
     hasTextParam: main?.text ?? false,

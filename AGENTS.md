@@ -28,7 +28,8 @@ failed, because nothing checked them.
 **The one place to edit the generated API is `codegen/model/`**, one JSON file per DaisyUI
 component, since 0.8.0. It declares every function, element, axis, toggle and name; DaisyUI
 supplies only the class list and the descriptions. Generation fails when the model and DaisyUI's
-classes disagree, or when a name breaks the naming rule. Until 0.8.0 the generator inferred all
+classes disagree, when a name breaks the naming rule, or when an element DaisyUI documents is one
+no function expresses and its page does not declare. Until 0.8.0 the generator inferred all
 of it from DaisyUI's prose and markup, and September 2026 went into guarding those inferences;
 eleven emitted classes that did not exist surfaced only when the inference was replaced.
 → skills **`kdaisyui-codegen`**, **`kdaisyui-daisyui-upgrade`**.
@@ -243,7 +244,8 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 - Editing `lib/generated/**`, `docs/reference/**` or `llms.txt` — edit `codegen/model/` instead
 - Teaching a generator to infer structure from DaisyUI's prose or markup — declare it in the
-  model; the bump report and the test generator are the only readers of DaisyUI's examples
+  model; the bump report and `documented-elements.ts`, for the gate and the tests, are the only
+  readers of DaisyUI's examples, and neither decides the API
 - Running `mcp_Tcr` on `codegen/` for a step that changes generated Kotlin: there it runs only
   the Bun suite. Run it at the repository root, where it runs `./gradlew build` and the codegen
   tests, and regenerate first — neither suite regenerates

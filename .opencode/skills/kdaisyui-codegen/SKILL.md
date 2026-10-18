@@ -18,7 +18,8 @@ it is inferred from DaisyUI's prose or example markup.
 
 ```
 codegen/model/<dir>.json  ─┐   elements, receivers, functions, axes, toggles, attributes,
-                           │   extras, join items, summaries, declared stems, notOffered
+                           │   extras, join items, summaries, declared stems, notOffered,
+                           │   notExpressed
 DaisyUI frontmatter ───────┤   the class list (for the completeness gate) and descriptions (KDoc)
                            ▼
               model.ts  shapeFromModel  →  component-shape.ts (the shape both emitters render)
@@ -26,14 +27,20 @@ DaisyUI frontmatter ───────┤   the class list (for the completen
                            ├→ generator-docs.ts      → docs/reference/**       (Markdown)
                            ├→ generator-llms.ts      → llms.txt                (from llms-template.md)
                            └→ component-api-dump.ts  → lib/api/components.api  (explicit update only)
-test-generator.ts  ← the model's bindings + DaisyUI's documented examples as test input
-                   → lib/generated/test/**
+documented-elements.ts ← every model + DaisyUI's documented examples: which function expresses
+                         each $$-marked element, or which gap it is; read by both of
+     ├→ index-new.ts       the documented-element gate
+     └→ test-generator.ts  → lib/generated/test/**, one test per expressible element
 daisyui-delta.ts   ← two DaisyUI tags, for `just daisyui-delta`; never on the generation path
 ```
 
-The test generator is the one reader of DaisyUI's fenced examples during generation: each example
-becomes a call against the declared API, and the expected classes are the ones DaisyUI wrote, so
-a wrong model fails a test rather than agreeing with itself.
+`documented-elements.ts` is the one reader of DaisyUI's fenced examples during generation. Every
+`$$`-marked element of every page, skipped pages included, is either expressed by a function or a
+gap. An expressed element becomes a test calling that function, of any component, parts and
+constructions included, with typed arguments; the expected classes are the ones DaisyUI wrote, so
+a wrong model fails a test rather than agreeing with itself. Variant-prefixed classes go through
+`extraClasses`; `join-item` is neither passed nor expected, since only a join adds it. Identical
+calls on one page are one test. The element's tag is not compared, by decision.
 
 | Gradle task | Entry point | Output |
 |---|---|---|
@@ -88,6 +95,10 @@ CI's `generated-sources-drift` fails any commit whose output no longer matches i
 - **`writes`** on an extra: the class its fragment emits, so the completeness gate counts it.
 - **`joinScope`** on the join, **`joinItem`** on a main function: the join scope's members.
 - **`notOffered`**: frontmatter classes no function offers, each with its reason.
+- **`notExpressed`**: documented elements of this page no function expresses, by key, each with
+  its reason. The key is the own classes of the functions involved when two components share the
+  element (`badge indicator-item`, whatever modifiers ride along), else all its counted classes,
+  sorted. A skipped model may carry it too.
 - A skipped directory is `{ "component": "x", "skip": "configured-skip" }`.
 
 Keep the layout: a value that fits in 120 columns stays on one line. `codegen/test/committed-model.test.ts`
@@ -115,6 +126,19 @@ reads every file in the unit tests, so a broken one fails without the submodule.
 a frontmatter class is placed nowhere, the model places a class the frontmatter lacks, one
 function offers one class twice, or directories and model files do not match. A class on several
 functions is fine: `modal` is the class of two constructions, `timeline-box` a toggle on three parts.
+
+## The documented-element gate
+
+Also run by `index-new.ts`. Generation fails, naming page, element and key, when a documented
+element is expressed by no function and its page's model does not declare the key in
+`notExpressed`, and when a declaration no element on its page needs any more. Counted classes are
+the unprefixed `$$` classes some frontmatter declares, so `rounded-box`, a utility, never counts.
+Expressible means one function's own class is among them and that function offers every other one.
+At the DaisyUI tag pinned on 2026-10-18: 39 declared keys, 12 classes no function offers (most of them #347) and 27 two
+components on one element.
+
+To close a gap, give the model what the element needs, and the declaration fails as stale until it
+is deleted. To accept one, declare it with a reason a reviewer can check.
 
 ## Where to change what
 

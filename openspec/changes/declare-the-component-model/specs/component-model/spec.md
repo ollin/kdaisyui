@@ -200,27 +200,30 @@ favour of `extraClasses`; a type-state builder was rejected for its error messag
 
 The component model SHALL name every function, axis, enum and entry by these rules:
 
-- A function is `daisy` followed by its stem, the PascalCase form of the DaisyUI class its element
-  carries: `stats` gives `daisyStats`, `stat-title` gives `daisyStatTitle`. The model declares a
-  different stem in two cases only: an abbreviated class, `btn` giving `Button`, and a function
-  whose element carries no DaisyUI class of its own, such as a construction method.
+- A main function or a part is `daisy` followed by its stem, the PascalCase form of the DaisyUI
+  class its element carries: `stats` gives `daisyStats`, `stat-title` gives `daisyStatTitle`. The
+  model declares a different stem where the class is not the component's name, which is two
+  classes: `btn` gives `Button` and `cally` gives `Calendar`. A construction method, such as
+  `daisyModalPopover`, has a declared name.
 - An axis is a noun naming what is chosen. It is DaisyUI's frontmatter category word where that
   category forms exactly one axis: `color`, `size`, `style`, `direction`, `placement`. Otherwise it
   is a declared word, such as `side`, `align`, `shape` or `width`. No axis is called `variant` or
   `modifier`, because neither names what is chosen.
 - An enum is the function's stem followed by the PascalCase axis name: `ButtonColor`,
   `StatsDirection`.
-- An entry is the PascalCase class suffix after the function's own class: `ButtonColor.Primary`
-  for `btn-primary`, `StepColor.Primary` for `step-primary`.
+- An entry is the PascalCase class suffix after the function's own class, or after the
+  component's class where that is the one the class starts with: `ButtonColor.Primary` for
+  `btn-primary`, `StepColor.Primary` for `step-primary` on the step,
+  `IndicatorItemHorizontalPlacement.Start` for `indicator-start` on the indicator item.
 
-A test SHALL fail when a function whose element carries a DaisyUI class is named otherwise and
-the model declares no stem for it.
+A test SHALL fail when a main function or a part is named otherwise and the model declares no
+stem for it.
 
-**Verified** that one declared stem suffices for the component functions, read 2026-10-18 from the
-frontmatter at the pinned tag: of the generated components, only `button` (`btn`), `stat`
-(`stats`) and `tab` (`tabs`) carry a component class that differs from their directory name, and
-`stats` and `tabs` are the names the rule should produce. `calendar` declares no component class
-and gets a declared stem.
+**Verified** that two declared stems suffice, run over the model on 2026-10-18 (task 4.1): the rule
+renames 13 functions, and the only rename that would be wrong is `daisyCalendar` to
+`daisyCally`, because the calendar's main class is `cally`, a class named after the Cally web
+component rather than after the calendar. `btn` is the other. `stats` and `tabs` are the names the
+rule should produce.
 
 **Verified** that the 0.7.0 names break these rules, read from `lib/api/components.api` on
 2026-10-18: `daisyStatStat`, `daisyStatStatTitle`, `daisyStepsStep`, `daisyTabTab` repeat their

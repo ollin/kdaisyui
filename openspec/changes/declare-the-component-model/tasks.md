@@ -141,9 +141,21 @@ do not exist and change exactly those.
 Each commit edits the model, regenerates, and migrates every call site in `example-app` and
 `e2e-tests` in the same commit, so `check` stays green.
 
-- [ ] 4.1 `. d` Run the naming rule from `specs/component-model` over the model as a throwaway
+- [x] 4.1 `. d` Run the naming rule from `specs/component-model` over the model as a throwaway
   script and record every function, enum and entry it would rename in this task. Compatibility is
   not a constraint, so the list is the whole of it.
+  **Ran 2026-10-18.** Functions (13): `daisyStat` to `daisyStats`; `daisyStatStat`,
+  `…StatTitle`, `…StatValue`, `…StatDesc`, `…StatFigure`, `…StatActions` to `daisyStat`,
+  `daisyStatTitle` and so on; `daisyStepsStep` and `…StepIcon` to `daisyStep`, `daisyStepIcon`;
+  the three tab functions to `daisyTabs`, `daisyTab`, `daisyTabContent`; and `daisyCalendar` to
+  `daisyCally`, which refuted the rule: the stem `Calendar` is declared, the second declared stem
+  beside `Button`. Parameters (25): 19 `variant` to `color`, six `modifier` needing a word.
+  Enums (24): every `<X>Variant` to `<X>Color`, `StatDirection` to `StatsDirection`,
+  `TabSize`/`TabPlacement` to `TabsSize`/`TabsPlacement`, `StepsVariant` to `StepColor`, and
+  the indicator item's two placements to `IndicatorItem…`. Entries (14): the eight
+  `StepsVariant.Step*` lose their `Step`, and the six indicator entries showed the second
+  refutation: stripping only the part's class gives `IndicatorStart`, so an entry strips the
+  component's class where that is the one that matches. Both corrections are in the spec.
 - [ ] 4.2 `^ F (internal)` The naming test, with the model edits for the function names it
   refuses: `daisyStats` and its parts, `daisyStep` and `daisyStepIcon`, and whatever 4.1 found
   besides. Tab is left to 5.9.

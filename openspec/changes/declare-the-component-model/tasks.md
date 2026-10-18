@@ -128,7 +128,7 @@ do not exist and change exactly those.
   fixtures first (`codegen/test/model-fixture.ts`), and the three rules that outlive the
   inference, void elements, content against text, and the builder names, are now pinned on the
   model reader.
-- [ ] 3.13 `. r (internal)` Delete the join-item derivation from the generation path; keep the
+- [x] 3.13 `. r (internal)` Delete the join-item derivation from the generation path; keep the
   scope emitter. `classesJoinedWith` stays, because the bump report reads it since 2.4; move it
   beside the report.
 - [ ] 3.14 `. r (internal)` Delete the exclusivity measurement: `exclusivity.json`, the probe

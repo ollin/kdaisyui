@@ -7,7 +7,7 @@ import {
   toPascalCase,
   type ClassCategory,
 } from './parser/frontmatter.ts'
-import { entryName, isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
+import { entryName, isSkipped, readModel, type ComponentModel, type ModelFunction, type ModelParameter } from './model.ts'
 import {
   documentedElementClasses,
   type DocumentedClass,
@@ -192,24 +192,33 @@ function strippedClass(prefix: string | null, cssClass: string): string {
  */
 function classBindings(model: ComponentModel): Record<string, ClassBinding> {
   const bindings: Record<string, ClassBinding> = {}
-  const bind = (cssClass: string, binding: ClassBinding) => { bindings[strippedClass(model.class, cssClass)] ??= binding }
-  const enums = new Map(model.enums.map(declared => [declared.name, declared]))
   const parameters = model.functions.flatMap(fn => fn.parameters)
-  const writtenByConstruction = new Set(model.functions.flatMap(fn => fn.always ?? []))
-
-  for (const parameter of parameters) {
-    if (parameter.kind !== 'enum') continue
-    for (const cssClass of enums.get(parameter.enum)?.classes ?? []) {
-      bind(cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${entryName(model, parameter.enum, cssClass)}` })
-    }
-  }
-  for (const parameter of parameters) {
-    if (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)) bind(parameter.class, { parameter: parameter.name, argument: 'true' })
-  }
-  for (const parameter of parameters) {
-    if (parameter.kind === 'extra') for (const cssClass of parameter.writes ?? []) bind(cssClass, { parameter: parameter.name, argument: 'true' })
+  for (const [cssClass, binding] of [...enumBindings(model, parameters), ...toggleBindings(model, parameters), ...writtenBindings(parameters)]) {
+    bindings[strippedClass(model.class, cssClass)] ??= binding
   }
   return bindings
+}
+
+type BoundClass = readonly [cssClass: string, binding: ClassBinding]
+
+function enumBindings(model: ComponentModel, parameters: readonly ModelParameter[]): BoundClass[] {
+  const enums = new Map(model.enums.map(declared => [declared.name, declared.classes]))
+  return parameters.flatMap(parameter => (parameter.kind !== 'enum' ? [] : (enums.get(parameter.enum) ?? []).map(
+    (cssClass): BoundClass => [cssClass, { parameter: parameter.name, argument: `${parameter.enum}.${entryName(model, parameter.enum, cssClass)}` }],
+  )))
+}
+
+function toggleBindings(model: ComponentModel, parameters: readonly ModelParameter[]): BoundClass[] {
+  const writtenByConstruction = new Set(model.functions.flatMap(fn => fn.always ?? []))
+  return parameters.flatMap(parameter => (parameter.kind === 'toggle' && !writtenByConstruction.has(parameter.class)
+    ? [[parameter.class, { parameter: parameter.name, argument: 'true' }] as BoundClass]
+    : []))
+}
+
+function writtenBindings(parameters: readonly ModelParameter[]): BoundClass[] {
+  return parameters.flatMap(parameter => (parameter.kind !== 'extra' ? [] : (parameter.writes ?? []).map(
+    (cssClass): BoundClass => [cssClass, { parameter: parameter.name, argument: 'true' }],
+  )))
 }
 
 /** A construction method as the custom-part tests address it: its suffix and what it writes. */

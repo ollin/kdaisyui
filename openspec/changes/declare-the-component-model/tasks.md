@@ -165,7 +165,7 @@ Each commit edits the model, regenerates, and migrates every call site in `examp
   which for `stat` named the item, not the container; it now takes the names from the model.
 - [x] 4.3 `^ F` Every `variant` parameter becomes `color`, and every `<X>Variant` enum becomes
   `<Stem>Color`.
-- [ ] 4.4 `^ F` The `modifier` axes get names: `AvatarPresence`, `CardLayout`, `CarouselSnap`,
+- [x] 4.4 `^ F` The `modifier` axes get names: `AvatarPresence`, `CardLayout`, `CarouselSnap`,
   `ListColumn`, `MaskHalf`.
 - [ ] 4.5 `^ F` `daisyTooltip`: `side` and `align`.
 - [ ] 4.6 `^ B` The chat bubble colors move from `daisyChat` to `daisyChatBubble`. The generated

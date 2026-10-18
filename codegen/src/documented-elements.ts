@@ -16,6 +16,11 @@ export interface ModelledFunction {
   readonly fn: ModelFunction
 }
 
+/** The models in the order a page's elements are matched against them: the page's own first. */
+export function pageFirst(models: readonly ComponentModel[], page: string): ComponentModel[] {
+  return [...models.filter(model => model.component === page), ...models.filter(model => model.component !== page)]
+}
+
 /**
  * The first function whose own class the element carries and that offers every other class,
  * searching `models` in the order given: the page's own model first, then the others.

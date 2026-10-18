@@ -8,7 +8,7 @@ import {
 } from './parser/frontmatter.ts'
 import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
-import { documentedCall, type DocumentedCall } from './documented-elements.ts'
+import { documentedCall, pageFirst, type DocumentedCall } from './documented-elements.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
@@ -281,7 +281,7 @@ interface DocumentedContext {
  * deduplicated across the page, with how many there were and the receivers they wrap.
  */
 function classTests(page: Pick<ComponentModel, 'component'>, context: DocumentedContext, mainName: string, testCases): { kotlin: string, testCount: number, receivers: Set<string> } {
-  const models = [...context.models.filter(model => model.component === page.component), ...context.models.filter(model => model.component !== page.component)]
+  const models = pageFirst(context.models, page.component)
   const seen = new Set<string>()
   const usedNames = new Set()
   const tests = testCases.flatMap(tc => markedElements(tc.html)

@@ -86,6 +86,17 @@ class ModalTest {
     }
 
     @Test
+    fun popover_modal_daisyModalPopover() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyModalPopover() {
+            }
+        }
+        val expectedClasses = "modal"
+        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
+        assertEquals(expectedClasses, actualClasses, "Class mismatch for Popover modal")
+    }
+
+    @Test
     fun modal_using_checkbox_daisyModalToggle() {
         val html = createHTML(prettyPrint = false).div {
             daisyModalToggle()

@@ -109,6 +109,12 @@ describe('claimingGroups', () => {
     assert.deepEqual(claims([CARD_WITH_BODY, BUTTON], ['btn', 'btn-active', 'join-item']), { groups: ['daisyButton: btn btn-active join-item'], unclaimed: [] })
   })
 
+  it('takes, of two functions offering equally much, the one rendering the documented tag', () => {
+    const tab = { ...component('tab', 'Tab', 'tabs'), functions: [part('daisyTab', 'tab', { element: 'A' }), part('daisyTabRadio', 'tab', { element: 'INPUT' })] }
+
+    assert.deepEqual([claimingGroups([tab], ['tab'], 'input').groups[0].fn.name, claimingGroups([tab], ['tab'], 'a').groups[0].fn.name], ['daisyTabRadio', 'daisyTab'])
+  })
+
   it('leaves unclaimed what no function offers', () => {
     assert.deepEqual(claims([BUTTON], ['btn', 'btn-ghost']).unclaimed, ['btn-ghost'])
   })

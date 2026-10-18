@@ -14,8 +14,8 @@ Three layers, three different frameworks. Identify which one you are in before w
 
 Produced by `codegen/src/test-generator.ts` into `lib/generated/test/kotlin/…`, which is
 **committed**. Compiling does not regenerate them, so `:lib:test` needs no Node and no
-submodules. These are the bulk of the suite: `:lib:test` ran 2,630 tests on 2026-10-18, of which
-894 are documented-element tests, one per distinct call any function makes for an element a
+submodules. These are the bulk of the suite: `:lib:test` ran 2,633 tests on 2026-10-18, of which
+896 are documented-element tests, each asserting DaisyUI's tag as well as its classes, one per distinct call any function makes for an element a
 DaisyUI page marks with `$$`, and the rest are the coverage tests.
 
 **Never hand-edit them** — `just generate` overwrites them wholesale and CI's

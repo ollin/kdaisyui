@@ -36,12 +36,20 @@ daisyui-delta.ts   ← two DaisyUI tags, for `just daisyui-delta`; never on the 
 
 `documented-elements.ts` is the one reader of DaisyUI's fenced examples during generation. Every
 `$$`-marked element of every page, skipped pages included, is either expressed or a gap. An
-expressed element becomes a test calling the function of the page's own component, with typed
-arguments, and adding any other component's classes through its class sibling in `attrs`; with no
-rendering function, the siblings run on a plain element. The expected classes are the ones DaisyUI
-wrote, so a wrong model fails a test rather than agreeing with itself. Variant-prefixed classes go through
-`extraClasses`; `join-item` is neither passed nor expected, since only a join adds it. Identical
-calls on one page are one test. The element's tag is not compared, by decision.
+expressed element becomes a test on DaisyUI's own tag, asserting the tag and the classes. Where the
+claiming function renders that tag, the test calls it, with typed arguments, and adds any other
+component's classes through its class sibling in `attrs`. Otherwise the test writes the tag with
+kotlinx.html, inside the parent `li` and `legend` need, and puts every group's classes on it through
+siblings: `a { daisyButtonClasses(color = ButtonColor.Primary) }`. Of two owners offering equally
+much, the one rendering the documented tag claims the element (`daisyTabRadio` for
+`<input class="tab">`). The expected classes are the ones DaisyUI wrote, so a wrong model fails a
+test rather than agreeing with itself. Variant-prefixed classes go through `extraClasses`, or
+`addClassNames` on a written tag; `join-item` is neither passed nor expected, since only a join adds
+it. Identical calls on one page are one test.
+
+A documented tag needs a builder: kotlinx.html's, or one the library defines in core and names in
+`LIBRARY_ELEMENTS` in `component-shape.ts`, which also gives its HTML name and package. Today that is
+`CALENDAR_DATE`, the cally web component. Generation fails on a documented tag with neither.
 
 | Gradle task | Entry point | Output |
 |---|---|---|

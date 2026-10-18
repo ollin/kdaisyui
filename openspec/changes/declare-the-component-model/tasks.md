@@ -119,7 +119,7 @@ do not exist and change exactly those.
   fails, and a model file naming no directory fails.
 - [ ] 3.10 `. r (internal)` Delete `codegen-config.json`, `config-consumption.ts` and
   `offered-twice.ts` with their tests.
-- [ ] 3.11 `. r (internal)` Delete the element heuristic, `element-observation.ts` and
+- [x] 3.11 `. r (internal)` Delete the element heuristic, `element-observation.ts` and
   `element-cross-check.ts` with their tests.
 - [ ] 3.12 `. r (internal)` Delete `class-groups.ts`, `axis-derivation.ts`, `axis-names.ts`,
   `parser/property-table.ts` and the classification parts of `component-shape.ts` with their

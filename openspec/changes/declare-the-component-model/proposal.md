@@ -37,9 +37,13 @@ catch. The guards are not made better.
 - **BREAKING:** the class-bearing boolean parameters that belong to a group become one enum-typed
   parameter per declared axis, for example `style = ButtonStyle.Ghost` instead of `ghost = true`.
   On/off features stay `Boolean = false`, named after their class as today. Passing an axis twice
-  is a compile error, because it is one named parameter. Existing enums keep their names and
-  entries. Twelve class pairs that combine two looks, such as `btn-outline` with `btn-ghost`,
+  is a compile error, because it is one named parameter. Twelve class pairs that combine two looks, such as `btn-outline` with `btn-ghost`,
   lose their typed spelling and stay reachable through `extraClasses`.
+- **BREAKING:** every generated name follows one naming rule, with no regard for 0.7.x. A
+  function is named after the class its element carries, so `daisyStatStat` becomes `daisyStat`
+  and the container `daisyStats`. An axis is named after what it chooses, so every `variant`
+  becomes `color` and no parameter is called `modifier`. Decided by Oliver on 2026-10-18: a clean
+  API now outweighs compatibility.
 - **BREAKING:** `tab`'s container and item trade places (#342). This folds in the open change
   `tab-container-and-item-trade-places`, which is deleted.
 - `kdaisyui-classes.txt` lists the classes the model offers, not every class in the frontmatter
@@ -84,8 +88,9 @@ file go. What is added is one model file per component, a completeness gate and 
 
 ## Impact
 
-- **API:** about 25 functions change parameters, and `daisyTab` and its item change elements. Every
-  break is a compile error at the call site. `README.md` gains "How to migrate from 0.7.x".
+- **API:** nearly every generated function changes a name or a parameter. Compatibility with 0.7.x
+  is deliberately not a constraint. `README.md` gains "How to migrate from 0.7.x", because the
+  `api-change-detection` capability requires one for a breaking release.
 - **Code:** `codegen/src/` loses the inference and guard modules and gains a model reader, the
   completeness gate and the delta report. `codegen-config.json` and `exclusivity.json` are deleted.
   `e2e-tests` loses its `exclusivity` source set.

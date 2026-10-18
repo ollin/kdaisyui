@@ -31,7 +31,8 @@ A *modifier* is a CSS class toggled on a component's existing element. An altern
 A toggle SHALL be named by the DaisyUI class suffix it emits, converted to camelCase and nothing
 else: `hidden` for `rating-hidden`, `zebra` for `table-zebra`. An axis member SHALL be an enum
 entry named by its class suffix in PascalCase: `ButtonStyle.Ghost` for `btn-ghost`. The axis
-parameter and its enum are named by the axis name the component model declares. The codegen SHALL
+parameter and its enum are named by the rule in `component-model`, "Every generated name follows
+one naming rule". The codegen SHALL
 carry no mapping from a single class to a differently named parameter. The documentation of a
 toggle or an enum entry SHALL be DaisyUI's own description of the class.
 
@@ -207,9 +208,9 @@ read as a documentation delta" in `component-model`.
 decision. A browser measurement no longer decides it. The measurement, `codegen/exclusivity.json`
 with its probe and its verification task, is deleted.
 
-**Migration:** see "A class group is offered as the axes the model declares" in `component-model`.
-Every enum that exists in 0.7.0 keeps its name and entries. Class-bearing booleans that belong to
-a group become an axis.
+**Migration:** see "A class group is offered as the axes the model declares" and "Every generated
+name follows one naming rule" in `component-model`. Class-bearing booleans that belong to a group
+become an axis, and every enum is renamed by the rule.
 
 ### Requirement: A class is declared on the function whose element wears it
 

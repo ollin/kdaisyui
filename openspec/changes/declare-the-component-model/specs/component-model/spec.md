@@ -121,20 +121,20 @@ Each axis the model declares for a function SHALL become one parameter typed
 `ClassValues<E>`, defaulting to `null`, where `E` is an enum named by the component and the axis
 name the model declares, with one entry per member named after the class suffix in PascalCase.
 Each toggle SHALL become one `Boolean = false` parameter named after its class suffix in
-camelCase. A class-bearing boolean SHALL exist only for a toggle. An enum that exists in 0.7.0
-SHALL keep its name and entries.
+camelCase. A class-bearing boolean SHALL exist only for a toggle.
 
 Which classes share an axis is a design decision recorded in the model, not a measurement. Two
 members of one axis cannot be passed together in typed form; that combination stays reachable
 through `extraClasses`.
 
 **Verified** which combinations the declared axes give up, against `codegen/exclusivity.json` at
-DaisyUI 5.7.42 before it is deleted: 24 pairs measured `compose` and land on one axis. Twelve are
-opposite values of one property, such as `chat-start` with `chat-end`. Twelve combine two looks,
-such as `btn-outline` with `btn-ghost`, and those are the ones a caller might want. All 24 are
-listed in `design.md`.
+DaisyUI 5.7.42 before it is deleted: 29 pairs measured `compose` and land on one axis. Seventeen
+are opposite values of one property, such as `chat-start` with `chat-end`, or two sides of a
+dropdown, which DaisyUI's examples never combine. Twelve combine two looks, such as `btn-outline`
+with `btn-ghost`, and those are the ones a caller might want. All 29 are listed in `design.md`.
 
-**Verified** as a decision, Oliver, 2026-10-18: one enum-typed parameter per axis with defaults;
+**Verified** as a decision, Oliver, 2026-10-18: compatibility with 0.7.x is not a constraint; one
+enum-typed parameter per axis with defaults;
 real on/off features stay booleans; a typed spelling for the pairs within one axis is given up in
 favour of `extraClasses`; a type-state builder was rejected for its error messages and API size.
 
@@ -157,3 +157,56 @@ favour of `extraClasses`; a type-state builder was rejected for its error messag
 
 - **WHEN** a class switches a feature on and has no alternative on its axis, such as `table-zebra`
 - **THEN** it stays a boolean parameter named `zebra`
+
+### Requirement: Every generated name follows one naming rule
+
+The component model SHALL name every function, axis, enum and entry by these rules:
+
+- A function is `daisy` followed by its stem, the PascalCase form of the DaisyUI class its element
+  carries: `stats` gives `daisyStats`, `stat-title` gives `daisyStatTitle`. The model declares a
+  different stem in two cases only: an abbreviated class, `btn` giving `Button`, and a function
+  whose element carries no DaisyUI class of its own, such as a construction method.
+- An axis is a noun naming what is chosen. It is DaisyUI's frontmatter category word where that
+  category forms exactly one axis: `color`, `size`, `style`, `direction`, `placement`. Otherwise it
+  is a declared word, such as `side`, `align`, `shape` or `width`. No axis is called `variant` or
+  `modifier`, because neither names what is chosen.
+- An enum is the function's stem followed by the PascalCase axis name: `ButtonColor`,
+  `StatsDirection`.
+- An entry is the PascalCase class suffix after the function's own class: `ButtonColor.Primary`
+  for `btn-primary`, `StepColor.Primary` for `step-primary`.
+
+A test SHALL fail when a function whose element carries a DaisyUI class is named otherwise and
+the model declares no stem for it.
+
+**Verified** that one declared stem suffices for the component functions, read 2026-10-18 from the
+frontmatter at the pinned tag: of the generated components, only `button` (`btn`), `stat`
+(`stats`) and `tab` (`tabs`) carry a component class that differs from their directory name, and
+`stats` and `tabs` are the names the rule should produce. `calendar` declares no component class
+and gets a declared stem.
+
+**Verified** that the 0.7.0 names break these rules, read from `lib/api/components.api` on
+2026-10-18: `daisyStatStat`, `daisyStatStatTitle`, `daisyStepsStep`, `daisyTabTab` repeat their
+component; 19 color parameters are called `variant`; six enums end in `Modifier`;
+`StepsVariant.StepNeutral` and `ChatVariant.BubbleNeutral` carry a class prefix inside the entry.
+
+**Verified** as a decision, Oliver, 2026-10-18: a clean API now outweighs compatibility with
+0.7.x.
+
+*Wrong if:* a DaisyUI class name gives a function name that collides with another generated
+function. The generated sources then fail to compile, and the model declares a name for one of
+them.
+
+#### Scenario: A part named after its own class
+
+- **WHEN** a function renders the element carrying `stat-title`
+- **THEN** it is named `daisyStatTitle`
+
+#### Scenario: A color axis
+
+- **WHEN** a function offers DaisyUI's color classes
+- **THEN** the parameter is `color` and its enum is `<Class>Color`, such as `ButtonColor`
+
+#### Scenario: A name that breaks the rule
+
+- **WHEN** a model file names a function differently from the class its element carries
+- **THEN** the naming test fails, naming the function and the expected name

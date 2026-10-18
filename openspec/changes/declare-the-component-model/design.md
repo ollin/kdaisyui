@@ -30,14 +30,16 @@ Three facts shape the approach:
 - One place, the model, states every structural fact, keyed one way, by DaisyUI directory.
 - Both generator loops read it, so they cannot disagree.
 - Prove the switch is behaviour-preserving by diff before any API changes.
-- Declare the axes Oliver decided on 2026-10-18 and fix the tab inversion, both as edits to the
-  model.
+- Declare the axes Oliver decided on 2026-10-18, rename the whole API by one rule, and fix the tab
+  inversion, all as edits to the model.
 
 **Non-Goals:**
 
 - A smarter heuristic, or a better guard. Both are what this change removes.
-- Changing what the generated Kotlin looks like beyond the axes and the tab functions: the
-  parameter order, the escape hatches and `ClassValues` stay.
+- Compatibility with 0.7.x. Oliver decided on 2026-10-18 that a clean API outweighs it.
+- Changing the shape of a generated function beyond names and axes: the parameter order, the
+  escape hatches and the `ClassValues` parameter type stay. `ClassValues` stays on its own merits:
+  `size = ButtonSize.Lg` reads the same, and the parked `at()` needs the common supertype.
 - Validating the model's own data shape beyond what the generators need. Nothing type-checks
   `codegen/` by decision, and a malformed model fails regeneration or `generated-sources-drift`.
 
@@ -50,7 +52,7 @@ Three facts shape the approach:
 | Enabler | Inference, guards and the exclusivity measurement deleted | regeneration: no diff, same set of files |
 | Desired | Completeness gate | its own tests, plus one deliberately removed class |
 | Desired | Bump report | fixtures, plus the 5.7.17 to 5.7.42 replay naming `mask-square` |
-| Desired | Axes and toggles, tab functions, class list from the model | generated tests, both API baselines re-dumped and read, E2E for tabs |
+| Desired | Naming rule, axes and toggles, tab functions, class list from the model | generated tests, the naming test, both API baselines re-dumped and read, E2E for tabs |
 
 Nothing in the first three rows changes a published byte.
 
@@ -84,7 +86,7 @@ Sketch, the final field names are settled in task 1.1:
       "text": true,
       "joinItem": true,
       "axes": [
-        { "name": "variant", "enum": "ButtonVariant", "classes": ["btn-neutral", "btn-primary", "…"] },
+        { "name": "color", "enum": "ButtonColor", "classes": ["btn-neutral", "btn-primary", "…"] },
         { "name": "size", "enum": "ButtonSize", "classes": ["btn-xs", "btn-sm", "btn-md", "btn-lg", "btn-xl"] }
       ],
       "toggles": ["btn-active", "btn-block", "…"],
@@ -153,69 +155,77 @@ history.
 
 ### D7. The declared axes
 
-Existing enums keep their names and entries. Only boolean groups change.
+Names follow D12. Every `variant` becomes `color`, with the enum `<Stem>Color`; that row is the
+same for all 19 and is not repeated below.
 
-| Function | Today's booleans | Axes after | Toggles after |
+| Function | 0.7.0 | 0.8.0 axes | 0.8.0 toggles |
 |---|---|---|---|
-| `daisyAlert` | `soft` | — | `soft` |
-| `daisyAura` | `dual` `glow` `gold` `holo` `rainbow` `silver` | `style: AuraStyle` | — |
-| `daisyButton` | `active` `block` `circle` `dash` `ghost` `link` `outline` `soft` `square` `wide` | `style: ButtonStyle` (Outline, Dash, Soft, Ghost, Link), `shape: ButtonShape` (Square, Circle), `width: ButtonWidth` (Wide, Block) | `active` |
-| `daisyCarousel` | `horizontal` `vertical` | `direction: CarouselDirection` | — |
-| `daisyChat` | `start` `end` | `placement: ChatPlacement` | — |
-| `daisyCollapse` | `arrow` `plus` `open` `close` | `icon: CollapseIcon`, `state: CollapseState` | — |
-| `daisyDivider` | `start` `end` | `placement: DividerPlacement` | — |
-| `daisyDropdown` | `close` `left` `right` | `side: DropdownSide` (Left, Right) | `close` |
-| `daisyFooter` | `center` `horizontal` `vertical` | `direction: FooterDirection` | `center` |
-| `daisyMegamenu` | `full` `vertical` `wide` | `width: MegamenuWidth` (Wide, Full) | `vertical` |
-| `daisyModal` | `top` `middle` `bottom` `start` `end` `open` | `verticalPlacement: ModalVerticalPlacement`, `horizontalPlacement: ModalHorizontalPlacement` | `open` |
-| `daisyStack` | `top` `bottom` `start` `end` | `placement: StackPlacement` | — |
-| `daisySwap` | `active` `flip` `rotate` | `style: SwapStyle` | `active` |
-| `daisyTabs` (D9) | `box` `border` `lift` | `style: TabStyle` | — |
-| `daisyTabItem`, `daisyTabRadio` (D9) | `tabActive` `tabDisabled`, on the container today | — | `active` `disabled` |
-| `daisyTimeline` | `compact` `horizontal` `snapIcon` `vertical` | `direction: TimelineDirection` | `compact` `snapIcon` |
+| `daisyAlert` | `style`, `direction`, boolean `soft` | `style: AlertStyle`, `direction: AlertDirection` | `soft` |
+| `daisyAura` | booleans `dual` `glow` `gold` `holo` `rainbow` `silver` | `style: AuraStyle` | — |
+| `daisyAvatar` | `modifier: AvatarModifier`, boolean `placeholder` | `presence: AvatarPresence` | `placeholder` |
+| `daisyButton` | booleans `active` `block` `circle` `dash` `ghost` `link` `outline` `soft` `square` `wide` | `style: ButtonStyle` (Outline, Dash, Soft, Ghost, Link), `shape: ButtonShape` (Square, Circle), `width: ButtonWidth` (Wide, Block) | `active` |
+| `daisyCard` | `style`, `modifier: CardModifier` | `style: CardStyle`, `layout: CardLayout` (Side, ImageFull) | — |
+| `daisyCarousel` | `modifier: CarouselModifier`, booleans `horizontal` `vertical` | `snap: CarouselSnap`, `direction: CarouselDirection` | — |
+| `daisyChat` | `variant: ChatVariant`, booleans `start` `end` | `placement: ChatPlacement` | — |
+| `daisyChatBubble` | — | `color: ChatBubbleColor`, moved here from `daisyChat` (D13) | — |
+| `daisyCollapse` | booleans `arrow` `plus` `open` `close` | `icon: CollapseIcon`, `state: CollapseState` | — |
+| `daisyDivider` | `direction`, booleans `start` `end` | `direction: DividerDirection`, `placement: DividerPlacement` | — |
+| `daisyDropdown` | `modifier`, `horizontalPlacement`, `verticalPlacement`, booleans `close` `left` `right` | `side: DropdownSide` (Top, Bottom, Left, Right), `align: DropdownAlign` (Start, Center, End), `state: DropdownState` (Open, Close) | `hover` |
+| `daisyFooter` | booleans `center` `horizontal` `vertical` | `direction: FooterDirection` | `center` |
+| `daisyIndicatorItem`, `daisyToast`, `daisyModal` | placements as booleans on modal, as enums on the other two | `horizontalPlacement`, `verticalPlacement` | modal: `open` |
+| `daisyList` | `modifier: ListModifier` | `column: ListColumn`, placement unchanged under #347 | — |
+| `daisyMask` | `style`, `modifier: MaskModifier` | `style: MaskStyle`, `half: MaskHalf` | — |
+| `daisyMegamenu` | booleans `full` `vertical` `wide` | `width: MegamenuWidth` (Wide, Full) | `vertical` |
+| `daisyStack` | booleans `top` `bottom` `start` `end` | `placement: StackPlacement` | — |
+| `daisyStats` | `daisyStat(direction)` | `direction: StatsDirection` | — |
+| `daisyStep` | — | `color: StepColor`, moved here from `daisySteps` (D13) | — |
+| `daisySwap` | booleans `active` `flip` `rotate` | `style: SwapStyle` | `active` |
+| `daisyTabs` | `daisyTab(size, placement)`, booleans `box` `border` `lift` | `size: TabsSize`, `placement: TabsPlacement`, `style: TabsStyle` | — |
+| `daisyTab`, `daisyTabRadio` | `tabActive` `tabDisabled` on the container | — | `active` `disabled` |
+| `daisyTimeline` | booleans `compact` `horizontal` `snapIcon` `vertical` | `direction: TimelineDirection` | `compact` `snapIcon` |
+| `daisyTooltip` | `sidePlacement`, `alignPlacement` | `side: TooltipSide`, `align: TooltipAlign` | `open` |
 
 Unchanged toggles: `daisyDock.active`, `daisyDrawer.end` and `open`, `daisyFab.flower`,
 `daisyFileInput`/`daisyInput`/`daisySelect`/`daisyTextarea.ghost`, `daisyLink.hover`, the four
 `daisyMenu` toggles (#347), `daisyOtp.joined`, `daisyRange.vertical`, `daisyRating.half` and
-`hidden`, `daisyTable.zebra`/`pinRows`/`pinCols`, `daisyTimelineStart`/`Middle`/`End.box`,
-`daisyTooltip.open`. A one-member style such as `input-ghost` stays a toggle; a one-entry enum
-would be ceremony.
+`hidden`, `daisyTable.zebra`/`pinRows`/`pinCols`, `daisyTimelineStart`/`Middle`/`End.box`. A
+one-member style such as `input-ghost` stays a toggle; a one-entry enum would be ceremony.
 
-The 24 pairs this gives up, read from `codegen/exclusivity.json` at 5.7.42, all measured
+The 29 pairs this gives up, read from `codegen/exclusivity.json` at 5.7.42, all measured
 `compose`:
 
 | Kind | Pairs |
 |---|---|
 | Two looks, a caller might want them (12) | button `outline|ghost` `outline|link` `dash|ghost` `dash|link` `soft|link`; aura `dual|holo` `holo|gold` `holo|silver`; swap `rotate|flip`; tabs `box|border` `box|lift` `border|lift` |
-| Opposite values of one property (12) | carousel `horizontal|vertical`; chat `start|end`; collapse `arrow|plus` `open|close`; divider `start|end`; dropdown `left|right`; megamenu `wide|full`; modal `top|middle` `top|bottom` `middle|bottom` `start|end`; timeline `horizontal|vertical` |
+| Opposite values, or two sides DaisyUI never combines (17) | carousel `horizontal|vertical`; chat `start|end`; collapse `arrow|plus` `open|close`; divider `start|end`; dropdown `top|left` `top|right` `bottom|left` `bottom|right` `left|right` `open|close`; megamenu `wide|full`; modal `top|middle` `top|bottom` `middle|bottom` `start|end`; timeline `horizontal|vertical` |
 
 Footer's one pair and stack's six measured `same`, meaning the probe could not tell them apart.
 
-### D8. Dropdown keeps both placement enums and gains `side`
+### D8. Dropdown takes the tooltip's shape: `side` and `align`
 
-`left` and `right` become `side: DropdownSide`, beside the existing `horizontalPlacement` and
-`verticalPlacement`.
+**Verified** 2026-10-18 at the pinned tag: every dropdown example in DaisyUI's documentation
+combines exactly one of `top`, `bottom`, `left`, `right` with at most one of `center`, `end`,
+twelve examples in all. That is the tooltip's shape, and none combines two sides.
 
 | Alternative | Why it lost |
 |---|---|
-| One side axis like the tooltip's, Top/Bottom/Left/Right | renames an existing enum and gives up four measured-composing pairs such as `top|left` |
+| Keep `verticalPlacement` and `horizontalPlacement`, add `side: DropdownSide` (Left, Right) | it kept 0.7.x names, which no longer matters, and calls an alignment "horizontal" even when the dropdown opens to the left |
 
-### D9. Tab gets new function names, so no old call compiles silently
+### D9. Tab names follow the classes
 
 | 0.7.0 | 0.8.0 | Renders |
 |---|---|---|
 | `daisyTab` | `daisyTabs` | `<div role="tablist" class="tabs …">` |
-| `daisyTabTab` | `daisyTabItem` | `<a role="tab" class="tab">` |
+| `daisyTabTab` | `daisyTab` | `<a role="tab" class="tab">` |
 | — | `daisyTabRadio` | `<input type="radio" role="tab" class="tab">`, void |
 | `daisyTabTabContent` | `daisyTabContent` | `<div class="tab-content">` |
 
-No 0.8.0 function carries a 0.7.0 name with a different meaning, so every old call is a compile
-error rather than a different element.
+`daisyTab` changes meaning. A 0.7.x call with no arguments, `daisyTab { }`, still compiles and now
+renders an item instead of a bar. The migration note says so in its first line about tabs.
 
 | Alternative | Why it lost |
 |---|---|
-| Keep `daisyTab` as the container | the name says the opposite of what it renders |
-| Reuse `daisyTab` for the item | `daisyTab { }` with no arguments would still compile and render an item where a bar was |
+| `daisyTabItem` for the item, so no old name changes meaning | it breaks the naming rule (D12) for one migration hazard, and compatibility is not a constraint |
 | Only the `<a>` item | DaisyUI's `tab-content` panels need the radio form to work without JavaScript |
 
 ### D10. `lib/api/components.api` stays
@@ -230,6 +240,28 @@ It lists the classes the model offers, including the ones extras and constructio
 of every frontmatter class of a generated component. Classes under `notOffered`, such as the
 drawer variants named in #345, drop out.
 
+### D12. One naming rule, applied by the model and pinned by a test
+
+The rule is in `specs/component-model`, "Every generated name follows one naming rule". In short:
+a function is named after the class its element carries, an axis after what it chooses, an enum
+after its function and axis, an entry after its class suffix. The model still declares every
+name; the test only refuses a declared name the rule contradicts, so a new DaisyUI part cannot
+arrive misnamed.
+
+| Alternative | Why it lost |
+|---|---|
+| Derive names in the generator, declare none | names would be inferred again, and the two declared stems would need a config section |
+| Declare names with no rule | 0.7.0 shows where that ends: `daisyStatStat`, `StepsVariant.StepNeutral` |
+| Keep `variant`, it is what DaisyUI's docs call colors in prose | the frontmatter calls the category `color`, and `variant` says nothing about what is chosen |
+
+### D13. Two color enums move to the part that wears them
+
+`ChatVariant` sits on `daisyChat`, but DaisyUI documents `chat-bubble-primary` on
+`<div class="chat-bubble chat-bubble-primary">`. `StepsVariant` sits on `daisySteps`, but DaisyUI
+documents `step-primary` on `<li class="step step-primary">`. Both were checked on 2026-10-18 at
+the pinned tag. The element cross-check did not report either; task 1.5 records why, because a
+defect the old gate missed is evidence about the gate this change removes.
+
 ## Risks / Trade-offs
 
 - **[A wrong model fact ships quietly between bumps.]** Nothing cross-checks the model on every
@@ -237,17 +269,19 @@ drawer variants named in #345, drop out.
   bump runs the report. The model is reviewed like code.
 - **[The export copies today's defects into the model.]** → Intended. The model starts as exactly
   today's API, and every defect leaves it by a visible edit. The known ones are #347 and #343.
-- **[24 pairs lose their typed form.]** → All stay reachable through `extraClasses`, and the
+- **[29 pairs lose their typed form.]** → All stay reachable through `extraClasses`, and the
   twelve that combine two looks are listed in the migration note.
-- **[fwb-ssr has to migrate its call sites.]** → Each is a compile error. The 0.7.x migration
-  note carries a before/after table.
+- **[fwb-ssr has to migrate nearly every call site.]** → Accepted by decision. Almost every break
+  is a compile error. The one that is not, `daisyTab { }` with no arguments, leads the tab section
+  of the migration note.
 - **[Hand-maintained JSON drifts in style across 66 files.]** → The export writes them in one
   format, and regeneration is deterministic, so a reformatting shows up as a diff.
 
 ## Migration Plan
 
 Released as 0.8.0 by a separate "declare" change, as with 0.7.0. `README.md` gains "How to migrate
-from 0.7.x" with one row per removed boolean and the tab function table from D9. Rollback is a
+from 0.7.x" with the renamed functions, the renamed enums, every removed boolean with its
+replacement, and the tab table from D9. Rollback is a
 revert of the merge. No persisted data is involved.
 
 ## Open Questions

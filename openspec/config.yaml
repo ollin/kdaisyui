@@ -9,9 +9,11 @@ context: |
   extension functions.
 
   Most of this library is GENERATED. 66 components, 324 Heroicon functions and
-  their test files are produced by the codegen from the daisyui and
-  heroicons git submodules into lib/generated/**, which is COMMITTED. Never
-  propose editing generated output — change the codegen instead. The build does
+  their test files are produced by the codegen into lib/generated/**, which is
+  COMMITTED. The component API is declared in codegen/model/ (one JSON file per
+  DaisyUI component); the daisyui submodule supplies only class names and
+  descriptions, the heroicons submodule the icons. Never propose editing
+  generated output — change the model or the codegen instead. The build does
   not run the generators; regeneration is explicit (just generate) and CI's
   generated-sources-drift job rejects committed output that no longer matches
   its inputs. Hand-written Kotlin is roughly 200 lines: lib/.../core/

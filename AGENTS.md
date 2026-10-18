@@ -25,11 +25,13 @@ taking a `SPAN` and shipped that way in v0.4.0, four pages were missing five fun
 them, and no signature on any page mentioned the `id` parameter every function takes. Nothing
 failed, because nothing checked them.
 
-**`codegen/exclusivity.json` joined that rule on 2026-09-13.** It records, for every pair of
-classes in every multi-member DaisyUI class group, whether a browser says the two can be worn at
-once — and that decides which groups become a Kotlin enum. It is written wholesale by
-`just measure-exclusivity`, which needs a system Chromium, and `:lib:verifyExclusivity` fails the
-build when it stops describing the submodule. → skill **`kdaisyui-daisyui-upgrade`**.
+**The one place to edit the generated API is `codegen/model/`**, one JSON file per DaisyUI
+component, since 0.8.0. It declares every function, element, axis, toggle and name; DaisyUI
+supplies only the class list and the descriptions. Generation fails when the model and DaisyUI's
+classes disagree, or when a name breaks the naming rule. Until 0.8.0 the generator inferred all
+of it from DaisyUI's prose and markup, and September 2026 went into guarding those inferences;
+eleven emitted classes that did not exist surfaced only when the inference was replaced.
+→ skills **`kdaisyui-codegen`**, **`kdaisyui-daisyui-upgrade`**.
 
 **`llms.txt` joined that rule in 0.7.0.** It is what the README tells library users to point
 their AI tools at, and while hand-maintained it still showed the 0.1.x API a release after 0.6.0
@@ -38,7 +40,7 @@ had replaced it. `generateReferenceDocs` now writes it whole; its prose lives in
 
 Note the singular: **`docs/reference.md`** is the hand-written entry point and is NOT generated.
 Nothing else under `docs/` is either. One editorial fact per page is hand-written too — its
-one-line description, in `codegen-config.json` → `docSummaries`.
+one-line description, under `summary` in the component's model file.
 
 The build does **not** run the generators: a clone compiles and tests with no Node, no npm and no
 git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
@@ -53,12 +55,12 @@ string)`), `import type` mandatory for types, `.ts` mandatory in import specifie
 The parameter-property ban is the one that gets written anyway, because it is the idiomatic way
 to declare a small value type and TypeScript accepts it everywhere else. Node does not: it
 strips types, and a parameter property is a type annotation that has to *emit an assignment*.
-Declare the field and assign it in the constructor body. `codegen/src/measurement.ts` shows the
-shape.
+Declare the field and assign it in the constructor body. `DocsAtTag` in
+`codegen/src/daisyui-delta.ts` shows the shape.
 
 It had **zero dependencies until 2026-09-12** and now has exactly one: an HTML parser, because
-the generator reads the markup DaisyUI documents and a regex over markup is unreadable and — on
-the three constructs that defeat it — wrong. So regeneration runs `npm ci` first, via
+the test generator and the bump report read the markup DaisyUI documents, and a regex over markup
+is unreadable and — on the three constructs that defeat it — wrong. So regeneration runs `npm ci` first, via
 `installCodegenDeps`, and needs the network on a cold `node_modules`. Adding a second dependency
 is a decision, not a habit: weigh it.
 
@@ -144,7 +146,7 @@ Say which step you are on, and name the assertion that failed.
 both: one level of indentation per function, no abbreviated names, and encoded strings wrapped
 in a type rather than `split()` at five call sites. That last one is not style — reading
 `"start|top"` and `"indicator.placements"` back as strings is what produced the nested loops
-that made `codegen/src/measurement.ts` necessary.
+in the exclusivity measurement, which 0.8.0 deleted.
 
 Nothing enforces the third row, which is why it is written here. The first two are automated
 and will not notice an unreadable test.
@@ -169,8 +171,8 @@ answer is to delete the code.
 
 | Task | Skill |
 |---|---|
-| Codegen, component shape, config knobs, adding a component, version ceiling | `kdaisyui-codegen` |
-| Bumping DaisyUI, or a failure from `generated-sources-drift` / `verifyExclusivity` / `checkComponentApi` | `kdaisyui-daisyui-upgrade` (`/daisyui-upgrade`) |
+| Codegen, the component model, the naming rule, adding a component | `kdaisyui-codegen` |
+| Bumping DaisyUI, or a failure from the model gate / `generated-sources-drift` / `checkComponentApi` | `kdaisyui-daisyui-upgrade` (`/daisyui-upgrade`) |
 | Any test work, run configurations, `just` recipes, E2E wiring, Cucumber | `kdaisyui-testing` |
 | Versioning, publishing, what CI does | `kdaisyui-release` |
 | The Gradle build itself — buildSrc, settings, toolchains, compiler flags, adding a plugin, any build warning | `kdaisyui-build` |
@@ -233,9 +235,11 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 ## Anti-patterns
 
-- Editing `lib/generated/**`, `docs/reference/**`, `llms.txt` or `codegen/exclusivity.json`
-- Reasoning about whether two DaisyUI classes conflict instead of measuring it — six attempts
-  derived it from the CSS or from the shape of class names, and all six were wrong
+- Editing `lib/generated/**`, `docs/reference/**` or `llms.txt` — edit `codegen/model/` instead
+- Teaching a generator to infer structure from DaisyUI's prose or markup — declare it in the
+  model; the bump report and the test generator are the only readers of DaisyUI's examples
+- Running `mcp_Tcr` on a step that changes generated Kotlin: it runs only the codegen's Bun
+  suite, and from the repository root it runs DaisyUI's own submodule tests
 - Hardcoding CSS class strings instead of using the generated enums
 - Hardcoding a DaisyUI, Kotlin or Ktor version anywhere but `gradle/libs.versions.toml`
 - Assuming there is no release automation — there is, see `kdaisyui-release`

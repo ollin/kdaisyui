@@ -2,173 +2,109 @@
 name: kdaisyui-daisyui-upgrade
 description: >-
   Moving kdaisyui to a new DaisyUI version, or reading a failure from one of the guards that
-  fire when it moves - generated-sources-drift, verifyExclusivity, checkComponentApi,
-  api-baseline. Covers the order the steps must run in, what each committed artefact means,
-  and the re-measurement that needs a browser. Read this before bumping `daisyui` in
-  gradle/libs.versions.toml or before re-dumping anything a guard complained about.
+  fire when it moves - the model completeness gate, generated-sources-drift, checkComponentApi,
+  api-baseline. Covers the order the steps must run in, how to read `just daisyui-delta`, and
+  how a new or removed DaisyUI class reaches codegen/model/. Read this before bumping `daisyui`
+  in gradle/libs.versions.toml or before re-dumping anything a guard complained about.
 ---
 
 # kdaisyui — upgrading DaisyUI
 
 ## The shape of the problem
 
-Almost everything this library exposes is DERIVED from DaisyUI: the components, their
-parameters, the icons, the reference pages, and — since the exclusivity measurement — which
-parameters are enums and which are booleans. A version bump therefore changes the public API,
-and the whole mechanism exists to make that change **visible and reviewed** rather than
-absorbed silently.
+The generated API is declared in `codegen/model/`, one JSON file per DaisyUI component. DaisyUI
+supplies only the class list and the descriptions, from each page's frontmatter. So a bump does
+not change the API by itself: it changes which classes exist, and generation refuses to run
+until the model says what each new class is. A human decides; nothing is inferred.
 
-Four artefacts are committed and compared against their inputs. Each has a guard, and each
-guard has a matching command that regenerates it:
+Three committed artefacts are compared against their inputs:
 
 | Committed artefact | Guard | Regenerate with |
 |---|---|---|
-| `lib/generated/**`, `docs/reference/**` | `generated-sources-drift` | `just generate` |
-| `codegen/exclusivity.json` | `:lib:verifyExclusivity` | `just measure-exclusivity` |
+| `lib/generated/**`, `docs/reference/**`, `llms.txt` | `generated-sources-drift` | `just generate` |
 | `lib/api/lib.api` | `api-baseline` | `just update-api` |
 | `lib/api/components.api` | `:lib:checkComponentApi` | `just update-api` |
 
-**A guard is not a chore.** Each one is the only place a particular kind of silent breakage
-becomes visible, and re-dumping the artefact to make the check green throws away the one
-signal the repository has.
+**A guard is not a chore.** Re-dumping an artefact to make a check green without reading its
+diff throws away the one signal the repository has.
 
-## The order, and why it is not arbitrary
+## The order
 
 ```
-1. gradle/libs.versions.toml      daisyui = "x.y.z"
-2. just sync-daisyui              check out the matching submodule tag
-3. just generate                  components, component tests, icons, reference pages
-4. just measure-exclusivity       re-measure which classes conflict — needs a browser
-5. just update-api                both Kotlin API baselines
-6. README.md                      a "How to migrate" entry, if anything broke
-7. ./gradlew check                plus ./gradlew :lib:pitest
+1. gradle/libs.versions.toml            daisyui = "x.y.z"
+2. just sync-daisyui                    check out the matching submodule tag
+3. just daisyui-delta v<old> v<new>     what changed in DaisyUI's documentation
+4. edit codegen/model/                  place every new class, drop every removed one
+5. just generate                        components, tests, icons, reference pages, llms.txt
+6. just update-api                      both Kotlin API baselines; read the diff
+7. README.md                            a "How to migrate" entry, if anything broke
+8. ./gradlew check                      plus ./gradlew :lib:pitest
 ```
 
-Step 1 has a constraint stated in `libs.versions.toml` itself: the version must be one with a
-**published webjar**, because `:ktor-integration` serves that webjar and the measurement reads
-it. A version without one makes generated components reference CSS the library cannot deliver.
+Step 1 has a constraint stated in `libs.versions.toml` itself: the version must have a
+**published webjar**, because `:ktor-integration` serves it. A version without one makes
+generated components reference CSS the library cannot deliver.
 
-Steps 3 and 4 both read the submodule, so step 2 comes first. Step 5 comes last because it
-records the API that steps 3 and 4 produced — running it earlier bakes in a baseline that the
-next step invalidates.
+Steps 3 and 4 come before generation because generation fails until the model matches.
 
-## Step 4 in detail: the exclusivity measurement
+## Step 3: reading the delta
 
-`codegen/exclusivity.json` records, for every pair of classes in every multi-member DaisyUI
-class group, whether the two can be worn at once. It decides which groups become a Kotlin
-enum. The rule is one sentence:
+`just daisyui-delta v5.7.17 v5.7.42` reads both tags through `git show`, so the submodule's
+checkout does not move. It always exits 0. It reports four kinds of change:
 
-> **A group becomes an enum only when EVERY pair in it is measured `exclusive`.**
-
-Because the cost of being wrong is asymmetric:
-
-| wrong as | consequence |
+| Line | What to do in the model |
 |---|---|
-| enum | a combination DaisyUI permits **cannot be expressed** |
-| boolean | a combination that does nothing **can be expressed** |
+| `Components: added x` | write `codegen/model/x.json`, or `{ "component": "x", "skip": "…" }` |
+| `Classes of c: added k` | place `k`: an axis member, a toggle, a part's class, or `notOffered` with a reason |
+| `Classes of c: removed k` | delete it from wherever the model places it |
+| `Elements of k (c): A became B` | DaisyUI moved the class to another element; decide whether the function that offers it still renders the right one |
+| `Join items: added c` | set `"joinItem": true` on `c`'s main function, if the library should mark it |
 
-The first defeats the library's purpose; the second is a harmless mistake the `extraClasses`
-escape hatch permits anyway. So `same` — "the probe could not tell" — falls to boolean along
-with `compose`.
+Example, the replay used as the report's positive control: 5.7.17 to 5.7.42 reports exactly
+`Classes of mask: removed mask-square`.
 
-### It cannot be reasoned out, only measured
+Read DaisyUI's `CHANGELOG.md` back to the pinned version as well. The report names classes and
+elements; a new **construction method** — a different element or attribute, like the popover
+modal in 5.6.0 — changes no class and only the changelog says so.
 
-Six earlier attempts in this repository tried to derive exclusivity by reading CSS or by the
-shape of class names. All six were wrong, several confidently. `modifiers` was assumed to be
-the untrustworthy category and `styles` the reliable one; the browser says `chat.placements`
-and `carousel.directions` compose while `card.modifiers` and `list.modifiers` are exclusive.
+## Step 4: placing a class
 
-**Do not hand-edit the file, and do not reason about a verdict.** Run the measurement.
+Every class the frontmatter declares must be placed exactly where the model says. Generation
+fails, naming component and class, when:
 
-### What `just measure-exclusivity` does
+- DaisyUI declares a class the model places nowhere;
+- the model places a class DaisyUI does not declare;
+- one function offers one class twice;
+- a DaisyUI directory has no model file, or a model file names no directory;
+- a function or an enum is named against the naming rule (`kdaisyui-codegen` has the rule).
 
-Unpacks `daisyui.css` from the webjar, builds a page holding one case per class and one per
-pair — each injected into DaisyUI's own documented example for that component — renders it in
-the system Chromium through `:e2e-tests:measureExclusivity`, and writes the whole file.
-
-The verdict for a pair `a`, `b`:
-
-```
-sig(ab) == sig(a) or sig(ab) == sig(b)   ->  one is inert against the other  ->  exclusive
-sig(ab) differs from both                ->  a third result neither produces ->  compose
-sig(a) == sig(b), neither of the above   ->  this example cannot tell        ->  same
-```
-
-### Reading the diff after a re-measurement
-
-A changed verdict is a changed public API:
-
-| change | effect |
-|---|---|
-| a group becomes all-`exclusive` | it is now a choice — the run FAILS until `enumNames` names it |
-| a group loses its last non-exclusive pair | same |
-| a group gains a `compose` or `same` pair | its enum must be withdrawn; that is a breaking change |
-| a new group appears | unmeasured until re-measured; `verifyExclusivity` says so |
-
-The `enumNames` config is checked against the measurement, not trusted: naming a group the
-browser refutes fails the run, as does declaring an axis that is not a clique, or splitting a
-group whose axes are exclusive across as well as within.
-
-### Four details of the probe that must never be lost
-
-Each was a defect that produced wrong verdicts silently, and each now has a test named after
-it in `codegen/test/exclusivity-probe.test.ts`:
-
-1. **The `$$` sentinel.** DaisyUI's docs write `class="$$btn"`. Left in, the element matches no
-   rule and every pair looks identical.
-2. **Strip the group's own members from the example.** The mask example is
-   `class="mask mask-squircle"`; injecting `mask-square` otherwise measures stylesheet order.
-3. **Hold one colour class constant.** `alert-outline` and `alert-soft` both mix
-   `--alert-color`; unlit, both compute to the same transparent black.
-4. **Load the whole `daisyui.css` bundle.** A hand-picked subset omitted every theme, so colour
-   variables were undefined, and omitted `utilities/join.css`, where `join-vertical` lives.
-
-If a re-measurement suddenly reports many `same` verdicts, suspect the probe before believing
-the finding — "indistinguishable" was the failure signature of all three defects above.
-
-### The known limitation, which is not a defect
-
-`chat-start|chat-end` composes, and no author would combine them. Two classes that each set a
-*different* subset of properties toward the same intent always will. That leaves a useless
-combination expressible, which is the cheap direction, and it is recorded in the file's own
-`limitation` field rather than worked around.
+Choosing between an axis and a toggle is a design decision. An axis is one parameter; two of its
+members cannot be passed together except through `extraClasses`. Make a new class an axis member
+when it is one more value of something the function already chooses (a new size, a new style);
+make it a toggle when it switches a feature on and has no alternative.
 
 ## When a guard fires
 
-**`:lib:verifyExclusivity` failed.** It names each group and what is wrong with it: unmeasured,
-missing a pair DaisyUI added, holding a class DaisyUI removed, or describing a group that no
-longer exists. Run `just measure-exclusivity` and read the diff.
+**Generation failed with "The model disagrees with DaisyUI's classes or with the naming rule".**
+That is step 4 not done. Read the named classes against `just daisyui-delta`.
 
-**`generated-sources-drift` failed.** The committed sources no longer match their inputs. Run
-`just generate`. Note it reports untracked files too, so a new component counts as drift rather
-than slipping through.
+**`generated-sources-drift` failed.** The committed sources no longer match the model and the
+submodule. Run `just generate` and commit the result. It reports untracked files too, so a new
+component counts as drift.
 
 **`checkComponentApi` or `api-baseline` failed.** Read the diff before re-dumping. A breaking
-change needs a **How to migrate** entry in `README.md` before it is released; `just update-api`
-prints the diff for exactly that reason.
+change needs a **How to migrate** entry in `README.md` before it is released.
 
-**`codegen-tests` failed on a pin.** `codegen/test/exclusivity.test.ts` pins the fifteen groups
-the browser calls a single choice and the four needing an axis split. A bump that moves one is
-an API change — update the pin deliberately, in the same commit as the config that reacts to it.
+## What CI checks
 
-## What CI checks, and what it does not
-
-`generated-sources-drift` runs the generators, `checkComponentApi` and `verifyExclusivity`. It
-is the only job with the submodules and Node.
-
-`codegen-tests` runs the codegen unit tests and is deliberately free of submodules and a JDK —
-`ci.yml` says so at the job. **Never make a codegen test read the submodule**; that is the
-signal the test has drifted into integration territory the drift job already covers.
-
-CI does **not** re-measure exclusivity. That needs a browser and stays a deliberate step, which
-is why the cheap guard exists: it cannot take the measurement but it can tell that the
-committed one has gone stale.
+`generated-sources-drift` runs the generators and `checkComponentApi`; it is the only job with the
+submodules. `codegen-tests` runs the codegen unit tests with no submodule and no JDK; it reads
+`codegen/model/` itself, so a broken model file fails there first. Never make a codegen unit test
+read the submodule.
 
 ## Prerequisites on the machine
 
-- Node and the git submodules — `just generate`, `just measure-exclusivity`, `just verify-exclusivity`
-- A system Chromium — `just measure-exclusivity` only. It is passed explicitly as an argument;
-  `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` does not redirect Playwright's bundled headless shell.
-- Docker — `./gradlew check`, because `:example-app` compiles its stylesheet in a container
+- Node and the git submodules, for `just generate` and `just daisyui-delta`
+- Docker, for `./gradlew check`, because `:example-app` compiles its stylesheet in a container
 
-A plain clone still compiles and tests with none of these. Only regeneration needs them.
+A plain clone still compiles and tests with none of these.

@@ -8,4 +8,4 @@ java temurin-25.0.4+101.0.LTS
 # regeneration reproducible, which is what the generated-sources-drift job relies on.
 nodejs 26.9.0
 
-just 1.58.0
+just 1.59.0

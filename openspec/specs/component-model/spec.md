@@ -273,9 +273,15 @@ An element is expressible when its counted classes split into groups such that e
 offered by one function: a function whose own class is in the group and that offers the rest of
 it, as an axis member, a toggle, a class an extra parameter writes, a class it writes on every
 call, or `join-item` where the function is one the join scope marks; or a function with no own
-class, class-only or rendering, that offers the whole group. The functions may belong to any component, because DaisyUI's examples nest
-components, and two of them on one element are one call plus a class sibling. The element's tag is
-not compared; see "Each generated function renders the one element its model declares".
+class, class-only or rendering, that offers the whole group. Of several functions with the element's own class that offer equally much,
+the one rendering the element's documented tag claims it. The functions may belong to any
+component, because DaisyUI's examples nest components, and two of them on one element are one call
+plus a class sibling.
+
+Generation SHALL also fail, naming the page and the tag, for a documented element whose tag has
+neither a kotlinx.html builder nor one the library generates, because no test, and no caller, can
+write it. At the pinned tag that was `<calendar-date>`, the cally web component, before
+`test-every-documented-tag` gave it a builder (task 1.1).
 
 A gap is declared by its key. Where the counted classes include the own classes of two or more
 functions, the key is those own classes, sorted. Otherwise the key is all the counted classes,
@@ -337,19 +343,35 @@ the same day (task 5.5): the same numbers, and no `notExpressed` declaration lef
 - **WHEN** an element carries `$$rounded-box` beside `$$menu`
 - **THEN** only `menu` counts, and `daisyMenu` expresses the element
 
+#### Scenario: Two functions with one own class, and the documented tag decides
+- **WHEN** the tab page shows `<input class="$$tab">` and both `daisyTab` (`<a>`) and
+  `daisyTabRadio` (`<input>`) have the own class `tab` and offer equally much
+- **THEN** `daisyTabRadio` claims the element
+
+#### Scenario: A tag nothing can write
+- **WHEN** an example shows an element on a tag with no kotlinx.html builder and none generated
+- **THEN** generation fails naming the page and the tag
+
 ### Requirement: Every expressible documented element is a generated test
 
 For every element the gate above finds expressible, the generated tests SHALL contain a test that
-renders it and asserts that the rendered element carries exactly the counted classes, with two
-adjustments. Where one group of its classes is offered by a function that renders an element, the
-test calls that function, the page's own functions first, with each class of the group through its
-typed parameter, and adds every other group through its function's class sibling in the call's
-`attrs`. Where every group is offered by a class sibling or a class-only function only, the test
-calls the siblings on a plain element. The element's variant-prefixed classes that some component
+renders it on DaisyUI's tag and asserts both the tag and that the element carries exactly the
+counted classes, with two adjustments. Where the claiming function of one group renders the
+documented tag, the test calls that function, the page's own functions first, with each class of
+the group through its typed parameter, and adds every other group through its function's class
+sibling in the call's `attrs`. Otherwise the test writes the documented tag with its kotlinx.html
+builder, inside the parent the builder needs (`ul` for `li`, `fieldSet` for `legend`), and adds
+every group through its class sibling. The element's variant-prefixed classes that some component
 declares, such as `lg:$$menu-horizontal`, are passed through `extraClasses` and expected as
 written. `join-item` is neither passed nor expected: only a join's content adds it, and the test
-calls the function on its own. Elements that yield the same call SHALL yield one test. The test
-SHALL NOT assert the element's tag.
+calls the function on its own. Elements that yield the same call SHALL yield one test.
+
+**Verified** how often the tag differs, measured 2026-10-18 at the pinned tag before this
+requirement changed: of the tested elements, 2,196 sit on the tag their function renders, 357 in
+45 shapes on another (`mask` on `<input>` 60, `badge` on `<div>` 50, `btn` on `<div>`, `<a>` and
+`<input>` 86, `dropdown` on `<div>` 29, `tab` on `<input>` 19), and 11 are class-only. Every tag but
+`<calendar-date>` has a kotlinx.html builder; `li` needs `ul` or `ol` as its parent and `legend`
+needs `fieldSet`, `details` or `figure`, read the same day in kotlinx-html-jvm 0.12.0's sources.
 
 **Verified** both adjustments against what the tests did before `test-every-documented-element`,
 read 2026-10-18 in `componentCallFor`: a prefixed class went to `extraClasses` and was expected,
@@ -384,8 +406,17 @@ an extra class would be a defect in the model.
 
 #### Scenario: A child with no own class
 - **WHEN** the menu page shows `<a class="$$menu-active">`
-- **THEN** a generated test calls `daisyMenuItemClasses(active = true)` on a plain element and
-  asserts `menu-active`
+- **THEN** a generated test writes `a { daisyMenuItemClasses(active = true) }` and asserts the `a`
+  and `menu-active`
+
+#### Scenario: A class on a tag its function does not render
+- **WHEN** the button page shows `<a class="$$btn $$btn-primary">`
+- **THEN** a generated test writes `a { daisyButtonClasses(color = ButtonColor.Primary) }` and
+  asserts the `a` and `btn btn-primary`
+
+#### Scenario: A tag that needs its parent
+- **WHEN** the menu page shows `<li class="$$menu-disabled">`
+- **THEN** the generated test writes it inside a `ul` and asserts the `li`
 
 ### Requirement: Every function has a typed class sibling
 

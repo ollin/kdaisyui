@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class StatTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun stat() {
         val html = createHTML(prettyPrint = false).div {
             daisyStats() {
             }
         }
-        val expectedClasses = "stats"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertDocumented(html, "div", "stats", "Stat")
     }
 
     @Test
@@ -24,9 +27,7 @@ class StatTest {
             daisyStat() {
             }
         }
-        val expectedClasses = "stat"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertDocumented(html, "div", "stat", "Stat")
     }
 
     @Test
@@ -35,9 +36,7 @@ class StatTest {
             daisyStatTitle() {
             }
         }
-        val expectedClasses = "stat-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertDocumented(html, "div", "stat-title", "Stat")
     }
 
     @Test
@@ -46,9 +45,7 @@ class StatTest {
             daisyStatValue() {
             }
         }
-        val expectedClasses = "stat-value"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertDocumented(html, "div", "stat-value", "Stat")
     }
 
     @Test
@@ -57,9 +54,7 @@ class StatTest {
             daisyStatDesc() {
             }
         }
-        val expectedClasses = "stat-desc"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat")
+        assertDocumented(html, "div", "stat-desc", "Stat")
     }
 
     @Test
@@ -68,9 +63,7 @@ class StatTest {
             daisyStatFigure() {
             }
         }
-        val expectedClasses = "stat-figure"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat with icons or image")
+        assertDocumented(html, "div", "stat-figure", "Stat with icons or image")
     }
 
     @Test
@@ -79,9 +72,7 @@ class StatTest {
             daisyAvatar(presence = AvatarPresence.Online) {
             }
         }
-        val expectedClasses = "avatar avatar-online"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Stat with icons or image")
+        assertDocumented(html, "div", "avatar avatar-online", "Stat with icons or image")
     }
 
     @Test
@@ -90,9 +81,7 @@ class StatTest {
             daisyStats(direction = StatsDirection.Vertical) {
             }
         }
-        val expectedClasses = "stats stats-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Vertical")
+        assertDocumented(html, "div", "stats stats-vertical", "Vertical")
     }
 
     @Test
@@ -101,9 +90,7 @@ class StatTest {
             daisyStats(direction = StatsDirection.Vertical, extraClasses = "lg:stats-horizontal") {
             }
         }
-        val expectedClasses = "lg:stats-horizontal stats stats-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive (vertical on small screen, horizontal on large screen)")
+        assertDocumented(html, "div", "lg:stats-horizontal stats stats-vertical", "Responsive (vertical on small screen, horizontal on large screen)")
     }
 
     @Test
@@ -112,9 +99,7 @@ class StatTest {
             daisyStatActions() {
             }
         }
-        val expectedClasses = "stat-actions"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+        assertDocumented(html, "div", "stat-actions", "With custom colors and button")
     }
 
     @Test
@@ -123,9 +108,7 @@ class StatTest {
             daisyButton(size = ButtonSize.Xs, color = ButtonColor.Success) {
             }
         }
-        val expectedClasses = "btn btn-success btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+        assertDocumented(html, "button", "btn btn-success btn-xs", "With custom colors and button")
     }
 
     @Test
@@ -134,8 +117,6 @@ class StatTest {
             daisyButton(size = ButtonSize.Xs) {
             }
         }
-        val expectedClasses = "btn btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With custom colors and button")
+        assertDocumented(html, "button", "btn btn-xs", "With custom colors and button")
     }
 }

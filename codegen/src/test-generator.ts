@@ -244,26 +244,47 @@ function uniqueTestName(usedNames, funcName) {
 }
 
 /** Asserts the function emits exactly the classes the doc example shows, inside the builder its receiver needs. */
-function generateClassTest(fn: ModelFunction, { testName, args, expectedClasses, caseName }) {
+/** The builder a test needs around a tag it writes itself: `li` and `legend` take one parent only. */
+const TAG_PARENTS: Readonly<Record<string, string>> = { li: 'ul', legend: 'fieldSet' }
+
+/** The builder and statement that render a documented element: its function, or its tag with siblings. */
+function renderingOf(call: DocumentedCall): { wrapper: string, statement: string } {
+  if (call.rendersTag) {
+    const content = isVoidElement(call.fn.element as TagClass) ? '' : ' {\n            }'
+    return { wrapper: htmlTagFnFor(wrapperTagOf(call.fn.receiver)), statement: `${call.fn.name}(${call.args})${content}` }
+  }
+  return { wrapper: TAG_PARENTS[call.tag] ?? 'div', statement: `${htmlTagFnFor(call.tag as TagName)} { ${call.onTag} }` }
+}
+
+function generateClassTest(call: DocumentedCall, { testName, expectedClasses, caseName, tag }) {
+  const { wrapper, statement } = renderingOf(call)
   return `
     @Test
     fun ${testName}() {
-        val html = createHTML(prettyPrint = false).${htmlTagFnFor(wrapperTagOf(fn.receiver))} {
-            ${fn.kind === 'classes' ? `${fn.name}Classes(${args})` : `${fn.name}(${args})${isVoidElement(fn.element as TagClass) ? '' : ' {\n            }'}`}
+        val html = createHTML(prettyPrint = false).${wrapper} {
+            ${statement}
         }
-        val expectedClasses = "${expectedClasses}"
-        val actualClasses = html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for ${caseName}")
+        assertDocumented(html, "${tag}", "${expectedClasses}", "${caseName}")
     }
 `
 }
 
+/**
+ * Emitted once per test file with documented-element tests, and called by each of them: the first
+ * element carrying a class is the documented one, and it must be DaisyUI's tag with DaisyUI's
+ * classes. One call per test instead of two assertion lines, which made every test structurally
+ * identical to its neighbours.
+ */
+const DOCUMENTED_HELPER = `
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+`
+
 /** The imports a test file needs beyond the four every one of them has. */
-function extraImportLines(customParts, hasAttributeTest: boolean, receivers: ReadonlySet<string>): string {
-  const imports = new Set<string>()
-  for (const receiver of receivers) {
-    if (receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(receiver))}`)
-  }
+function extraImportLines(customParts, hasAttributeTest: boolean, classTestImports: ReadonlySet<string>): string {
+  const imports = new Set<string>(classTestImports)
   if (customParts.length > 0 || hasAttributeTest) imports.add('import kotlin.test.assertTrue')
   for (const part of customParts) {
     if (part.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(part.receiver))}`)
@@ -279,22 +300,31 @@ interface DocumentedContext {
 
 /**
  * One test per expressible documented element of the page, whichever function expresses it,
- * deduplicated across the page, with how many there were and the receivers they wrap.
+ * deduplicated across the page, with how many there were and the imports they need.
  */
-function classTests(page: Pick<ComponentModel, 'component'>, context: DocumentedContext, mainName: string, testCases): { kotlin: string, testCount: number, receivers: Set<string> } {
+function classTests(page: Pick<ComponentModel, 'component'>, context: DocumentedContext, mainName: string, testCases): { kotlin: string, testCount: number, imports: Set<string> } {
   const models = pageFirst(context.models, page.component)
   const seen = new Set<string>()
   const usedNames = new Set()
   const tests = testCases.flatMap(tc => markedElements(tc.html)
     .map(element => documentedCall(models, element, context.componentClasses))
     .filter((call): call is DocumentedCall => call !== null && firstTime(seen, `${call.fn.name}|${call.args}|${call.expectedClasses}`))
-    .map(call => ({ call, kotlin: generateClassTest(call.fn, {
+    .map(call => ({ call, kotlin: generateClassTest(call, {
       testName: uniqueTestName(usedNames, call.fn.name === mainName ? toTestFunctionName(tc.name) : `${toTestFunctionName(tc.name)}_${call.fn.name}`),
-      args: call.args,
       expectedClasses: call.expectedClasses,
       caseName: tc.name,
+      tag: call.tag,
     }) })))
-  return { kotlin: tests.map(test => test.kotlin).join(''), testCount: tests.length, receivers: new Set(tests.map(test => test.call.fn.receiver)) }
+  return { kotlin: tests.map(test => test.kotlin).join(''), testCount: tests.length, imports: new Set(tests.flatMap(test => importsOf(test.call))) }
+}
+
+/** The imports a documented-element test needs beyond the file's four: its builders, and `addClassNames`. */
+function importsOf(call: DocumentedCall): string[] {
+  const builders = [renderingOf(call).wrapper, ...(call.rendersTag ? [] : [htmlTagFnFor(call.tag as TagName)])]
+  return [
+    ...builders.filter(builder => builder !== 'div').map(builder => `import kotlinx.html.${builder}`),
+    ...(!call.rendersTag && call.onTag.includes('addClassNames(') ? ['import io.github.ollin.kdaisyui.core.addClassNames'] : []),
+  ]
 }
 
 function firstTime(seen: Set<string>, signature: string): boolean {
@@ -309,9 +339,9 @@ function generateKotlinTest(componentName, testCases, componentModel: ComponentM
   const mainName = main?.name ?? `daisy${className}`
   const customParts = customPartsOf(componentModel)
   const attributeTest = generateComponentAttributeTest(mainName, main?.attributes ?? {})
-  const { kotlin: classTestKotlin, testCount, receivers } = classTests(componentModel, context, mainName, testCases)
+  const { kotlin: classTestKotlin, testCount, imports } = classTests(componentModel, context, mainName, testCases)
 
-  const kotlin = kotlinTestFile(className, extraImportLines(customParts, attributeTest !== '', receivers), `${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}`)
+  const kotlin = kotlinTestFile(className, extraImportLines(customParts, attributeTest !== '', imports), `${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}`)
   return { kotlin, testCount }
 }
 
@@ -325,15 +355,15 @@ import kotlin.test.Test
 import kotlin.test.assertEquals${extraImports}
 
 class ${className}Test {
-${tests}}
+${tests.includes('assertDocumented(html') ? DOCUMENTED_HELPER : ''}${tests}}
 `
 }
 
 /** A skipped page has no functions of its own, but its examples are DaisyUI's: test them alone. */
 function generateForSkippedPage(componentName, context: DocumentedContext): number {
   const testCases = parseTestCases(fs.readFileSync(path.join(DOCS_DIR, componentName, '+page.md'), 'utf8'))
-  const { kotlin, testCount, receivers } = classTests({ component: componentName }, context, '', testCases)
-  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), kotlinTestFile(toClassName(componentName), extraImportLines([], false, receivers), kotlin))
+  const { kotlin, testCount, imports } = classTests({ component: componentName }, context, '', testCases)
+  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), kotlinTestFile(toClassName(componentName), extraImportLines([], false, imports), kotlin))
   return testCount
 }
 

@@ -9,7 +9,7 @@
       "name": "daisyCalendar",
       "stem": "Calendar",
       "receiver": "FlowContent",
-      "element": "DIV",
+      "element": "CALENDAR_DATE",
       "class": "cally",
       "text": false,
       "parameters": []

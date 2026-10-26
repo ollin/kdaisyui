@@ -4,8 +4,16 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.a
+import kotlinx.html.summary
+import kotlinx.html.ul
 
 class DropdownTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun dropdown_using_details_and_summary() {
@@ -13,20 +21,15 @@ class DropdownTest {
             daisyDropdown() {
             }
         }
-        val expectedClasses = "dropdown"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown using details and summary")
+        assertDocumented(html, "details", "dropdown", "Dropdown using details and summary")
     }
 
     @Test
     fun dropdown_using_details_and_summary_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            summary { daisyButtonClasses() }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown using details and summary")
+        assertDocumented(html, "summary", "btn", "Dropdown using details and summary")
     }
 
     @Test
@@ -35,229 +38,167 @@ class DropdownTest {
             daisyDropdownContent(attrs = { daisyMenuClasses() }) {
             }
         }
-        val expectedClasses = "dropdown-content menu"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown using details and summary")
+        assertDocumented(html, "ul", "dropdown-content menu", "Dropdown using details and summary")
     }
 
     @Test
     fun dropdown_using_popover_api_and_anchor_positioning() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(attrs = { daisyMenuClasses() }) {
-            }
+            ul { daisyDropdownClasses(); daisyMenuClasses() }
         }
-        val expectedClasses = "dropdown menu"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown using popover API and anchor positioning")
+        assertDocumented(html, "ul", "dropdown menu", "Dropdown using popover API and anchor positioning")
     }
 
     @Test
     fun dropdown_aligns_to_start_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(align = DropdownAlign.Start) {
-            }
+            div { daisyDropdownClasses(align = DropdownAlign.Start) }
         }
-        val expectedClasses = "dropdown dropdown-start"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown / aligns to start of button horizontally")
+        assertDocumented(html, "div", "dropdown dropdown-start", "Dropdown / aligns to start of button horizontally")
     }
 
     @Test
     fun dropdown_aligns_to_end_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(align = DropdownAlign.End) {
-            }
+            div { daisyDropdownClasses(align = DropdownAlign.End) }
         }
-        val expectedClasses = "dropdown dropdown-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown / aligns to end of button horizontally")
+        assertDocumented(html, "div", "dropdown dropdown-end", "Dropdown / aligns to end of button horizontally")
     }
 
     @Test
     fun dropdown_aligns_to_center_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(align = DropdownAlign.Center) {
-            }
+            div { daisyDropdownClasses(align = DropdownAlign.Center) }
         }
-        val expectedClasses = "dropdown dropdown-center"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown / aligns to center of button horizontally")
+        assertDocumented(html, "div", "dropdown dropdown-center", "Dropdown / aligns to center of button horizontally")
     }
 
     @Test
     fun dropdown_top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Top) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Top) }
         }
-        val expectedClasses = "dropdown dropdown-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown top")
+        assertDocumented(html, "div", "dropdown dropdown-top", "Dropdown top")
     }
 
     @Test
     fun dropdown_top_aligns_to_center_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Top, align = DropdownAlign.Center) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Top, align = DropdownAlign.Center) }
         }
-        val expectedClasses = "dropdown dropdown-center dropdown-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown top / aligns to center of button horizontally")
+        assertDocumented(html, "div", "dropdown dropdown-center dropdown-top", "Dropdown top / aligns to center of button horizontally")
     }
 
     @Test
     fun dropdown_top_aligns_to_end_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Top, align = DropdownAlign.End) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Top, align = DropdownAlign.End) }
         }
-        val expectedClasses = "dropdown dropdown-end dropdown-top"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown top / aligns to end of button horizontally")
+        assertDocumented(html, "div", "dropdown dropdown-end dropdown-top", "Dropdown top / aligns to end of button horizontally")
     }
 
     @Test
     fun dropdown_bottom_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Bottom) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Bottom) }
         }
-        val expectedClasses = "dropdown dropdown-bottom"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown bottom (default)")
+        assertDocumented(html, "div", "dropdown dropdown-bottom", "Dropdown bottom (default)")
     }
 
     @Test
     fun dropdown_bottom_default_aligns_to_center_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Bottom, align = DropdownAlign.Center) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Bottom, align = DropdownAlign.Center) }
         }
-        val expectedClasses = "dropdown dropdown-bottom dropdown-center"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown bottom (default) / aligns to center of button horizontally")
+        assertDocumented(html, "div", "dropdown dropdown-bottom dropdown-center", "Dropdown bottom (default) / aligns to center of button horizontally")
     }
 
     @Test
     fun dropdown_bottom_default_aligns_to_end_of_button_horizontally() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Bottom, align = DropdownAlign.End) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Bottom, align = DropdownAlign.End) }
         }
-        val expectedClasses = "dropdown dropdown-bottom dropdown-end"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown bottom (default) / aligns to end of button horizontally")
+        assertDocumented(html, "div", "dropdown dropdown-bottom dropdown-end", "Dropdown bottom (default) / aligns to end of button horizontally")
     }
 
     @Test
     fun dropdown_left() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Left) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Left) }
         }
-        val expectedClasses = "dropdown dropdown-left"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown left")
+        assertDocumented(html, "div", "dropdown dropdown-left", "Dropdown left")
     }
 
     @Test
     fun dropdown_left_aligns_to_center_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Left, align = DropdownAlign.Center) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Left, align = DropdownAlign.Center) }
         }
-        val expectedClasses = "dropdown dropdown-center dropdown-left"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown left / aligns to center of button vertically")
+        assertDocumented(html, "div", "dropdown dropdown-center dropdown-left", "Dropdown left / aligns to center of button vertically")
     }
 
     @Test
     fun dropdown_left_aligns_to_end_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Left, align = DropdownAlign.End) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Left, align = DropdownAlign.End) }
         }
-        val expectedClasses = "dropdown dropdown-end dropdown-left"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown left / aligns to end of button vertically")
+        assertDocumented(html, "div", "dropdown dropdown-end dropdown-left", "Dropdown left / aligns to end of button vertically")
     }
 
     @Test
     fun dropdown_right() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Right) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Right) }
         }
-        val expectedClasses = "dropdown dropdown-right"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown right")
+        assertDocumented(html, "div", "dropdown dropdown-right", "Dropdown right")
     }
 
     @Test
     fun dropdown_right_aligns_to_end_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Right, align = DropdownAlign.End) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Right, align = DropdownAlign.End) }
         }
-        val expectedClasses = "dropdown dropdown-end dropdown-right"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown right / aligns to end of button vertically")
+        assertDocumented(html, "div", "dropdown dropdown-end dropdown-right", "Dropdown right / aligns to end of button vertically")
     }
 
     @Test
     fun dropdown_right_aligns_to_center_of_button_vertically() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(side = DropdownSide.Right, align = DropdownAlign.Center) {
-            }
+            div { daisyDropdownClasses(side = DropdownSide.Right, align = DropdownAlign.Center) }
         }
-        val expectedClasses = "dropdown dropdown-center dropdown-right"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown right / aligns to center of button vertically")
+        assertDocumented(html, "div", "dropdown dropdown-center dropdown-right", "Dropdown right / aligns to center of button vertically")
     }
 
     @Test
     fun dropdown_on_hover() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(hover = true) {
-            }
+            div { daisyDropdownClasses(hover = true) }
         }
-        val expectedClasses = "dropdown dropdown-hover"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown on hover")
+        assertDocumented(html, "div", "dropdown dropdown-hover", "Dropdown on hover")
     }
 
     @Test
     fun force_open() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(state = DropdownState.Open) {
-            }
+            div { daisyDropdownClasses(state = DropdownState.Open) }
         }
-        val expectedClasses = "dropdown dropdown-open"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Force open")
+        assertDocumented(html, "div", "dropdown dropdown-open", "Force open")
     }
 
     @Test
     fun force_close() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(state = DropdownState.Close) {
-            }
+            div { daisyDropdownClasses(state = DropdownState.Close) }
         }
-        val expectedClasses = "dropdown dropdown-close"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Force close")
+        assertDocumented(html, "div", "dropdown dropdown-close", "Force close")
     }
 
     @Test
     fun card_as_dropdown_daisyDropdownContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdownContent(attrs = { daisyCardClasses(size = CardSize.Sm) }) {
-            }
+            div { daisyDropdownContentClasses(); daisyCardClasses(size = CardSize.Sm) }
         }
-        val expectedClasses = "card card-sm dropdown-content"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card as dropdown")
+        assertDocumented(html, "div", "card card-sm dropdown-content", "Card as dropdown")
     }
 
     @Test
@@ -266,9 +207,7 @@ class DropdownTest {
             daisyCardBody() {
             }
         }
-        val expectedClasses = "card-body"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Card as dropdown")
+        assertDocumented(html, "div", "card-body", "Card as dropdown")
     }
 
     @Test
@@ -277,31 +216,23 @@ class DropdownTest {
             daisyNavbar() {
             }
         }
-        val expectedClasses = "navbar"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown in navbar")
+        assertDocumented(html, "div", "navbar", "Dropdown in navbar")
     }
 
     @Test
     fun dropdown_in_navbar_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost) {
-            }
+            a { daisyButtonClasses(style = ButtonStyle.Ghost) }
         }
-        val expectedClasses = "btn btn-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dropdown in navbar")
+        assertDocumented(html, "a", "btn btn-ghost", "Dropdown in navbar")
     }
 
     @Test
     fun helper_dropdown_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(shape = ButtonShape.Circle, style = ButtonStyle.Ghost, size = ButtonSize.Xs) {
-            }
+            div { daisyButtonClasses(shape = ButtonShape.Circle, style = ButtonStyle.Ghost, size = ButtonSize.Xs) }
         }
-        val expectedClasses = "btn btn-circle btn-ghost btn-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Helper dropdown")
+        assertDocumented(html, "div", "btn btn-circle btn-ghost btn-xs", "Helper dropdown")
     }
 
     @Test
@@ -310,8 +241,6 @@ class DropdownTest {
             daisyCardTitle() {
             }
         }
-        val expectedClasses = "card-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Helper dropdown")
+        assertDocumented(html, "h2", "card-title", "Helper dropdown")
     }
 }

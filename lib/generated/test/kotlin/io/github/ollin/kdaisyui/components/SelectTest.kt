@@ -8,15 +8,18 @@ import kotlinx.html.fieldSet
 
 class SelectTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun select() {
         val html = createHTML(prettyPrint = false).div {
             daisySelect() {
             }
         }
-        val expectedClasses = "select"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Select")
+        assertDocumented(html, "select", "select", "Select")
     }
 
     @Test
@@ -25,9 +28,7 @@ class SelectTest {
             daisySelect(ghost = true) {
             }
         }
-        val expectedClasses = "select select-ghost"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Ghost (no background)")
+        assertDocumented(html, "select", "select select-ghost", "Ghost (no background)")
     }
 
     @Test
@@ -36,9 +37,7 @@ class SelectTest {
             daisyFieldset() {
             }
         }
-        val expectedClasses = "fieldset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and labels")
+        assertDocumented(html, "fieldset", "fieldset", "With fieldset and labels")
     }
 
     @Test
@@ -47,9 +46,7 @@ class SelectTest {
             daisyFieldsetLegend() {
             }
         }
-        val expectedClasses = "fieldset-legend"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and labels")
+        assertDocumented(html, "legend", "fieldset-legend", "With fieldset and labels")
     }
 
     @Test
@@ -58,9 +55,7 @@ class SelectTest {
             daisyLabel() {
             }
         }
-        val expectedClasses = "label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for With fieldset and labels")
+        assertDocumented(html, "span", "label", "With fieldset and labels")
     }
 
     @Test
@@ -69,9 +64,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Primary) {
             }
         }
-        val expectedClasses = "select select-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Primary color")
+        assertDocumented(html, "select", "select select-primary", "Primary color")
     }
 
     @Test
@@ -80,9 +73,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Secondary) {
             }
         }
-        val expectedClasses = "select select-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Secondary color")
+        assertDocumented(html, "select", "select select-secondary", "Secondary color")
     }
 
     @Test
@@ -91,9 +82,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Accent) {
             }
         }
-        val expectedClasses = "select select-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Accent color")
+        assertDocumented(html, "select", "select select-accent", "Accent color")
     }
 
     @Test
@@ -102,9 +91,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Neutral) {
             }
         }
-        val expectedClasses = "select select-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Neutral color")
+        assertDocumented(html, "select", "select select-neutral", "Neutral color")
     }
 
     @Test
@@ -113,9 +100,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Info) {
             }
         }
-        val expectedClasses = "select select-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Info color")
+        assertDocumented(html, "select", "select select-info", "Info color")
     }
 
     @Test
@@ -124,9 +109,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Success) {
             }
         }
-        val expectedClasses = "select select-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Success color")
+        assertDocumented(html, "select", "select select-success", "Success color")
     }
 
     @Test
@@ -135,9 +118,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Warning) {
             }
         }
-        val expectedClasses = "select select-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Warning color")
+        assertDocumented(html, "select", "select select-warning", "Warning color")
     }
 
     @Test
@@ -146,9 +127,7 @@ class SelectTest {
             daisySelect(color = SelectColor.Error) {
             }
         }
-        val expectedClasses = "select select-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Error color")
+        assertDocumented(html, "select", "select select-error", "Error color")
     }
 
     @Test
@@ -157,9 +136,7 @@ class SelectTest {
             daisySelect(size = SelectSize.Xs) {
             }
         }
-        val expectedClasses = "select select-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "select", "select select-xs", "Sizes")
     }
 
     @Test
@@ -168,9 +145,7 @@ class SelectTest {
             daisySelect(size = SelectSize.Sm) {
             }
         }
-        val expectedClasses = "select select-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "select", "select select-sm", "Sizes")
     }
 
     @Test
@@ -179,9 +154,7 @@ class SelectTest {
             daisySelect(size = SelectSize.Md) {
             }
         }
-        val expectedClasses = "select select-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "select", "select select-md", "Sizes")
     }
 
     @Test
@@ -190,9 +163,7 @@ class SelectTest {
             daisySelect(size = SelectSize.Lg) {
             }
         }
-        val expectedClasses = "select select-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "select", "select select-lg", "Sizes")
     }
 
     @Test
@@ -201,8 +172,6 @@ class SelectTest {
             daisySelect(size = SelectSize.Xl) {
             }
         }
-        val expectedClasses = "select select-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Sizes")
+        assertDocumented(html, "select", "select select-xl", "Sizes")
     }
 }

@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { everyDeclaredClass, getAllComponentDirs, getClassesByCategory, readComponentPage, type ComponentName } from './parser/frontmatter.ts'
 import { fencedHtmlBlocks } from './parser/documented-element.ts'
-import { gapFindings, gapsIn, pageFirst } from './documented-elements.ts'
+import { gapFindings, gapsIn, pageFirst, tagFindings } from './documented-elements.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
 import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
@@ -35,7 +35,7 @@ function collectClasses(classnames) {
 /** The page's documented elements no function expresses and its model does not declare, and stale declarations. */
 function documentedGapFindings(page: Pick<ComponentModel, 'component' | 'notExpressed'>, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): string[] {
   const html = fencedHtmlBlocks(readComponentPage(page.component as ComponentName) ?? '')
-  return gapFindings(page, gapsIn(html, pageFirst(models, page.component), componentClasses))
+  return [...gapFindings(page, gapsIn(html, pageFirst(models, page.component), componentClasses)), ...tagFindings(page.component, html)]
 }
 
 function writeClassList(classes) {

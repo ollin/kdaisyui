@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class DockTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun dock() {
         val html = createHTML(prettyPrint = false).div {
             daisyDock() {
             }
         }
-        val expectedClasses = "dock"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock")
+        assertDocumented(html, "div", "dock", "Dock")
     }
 
     @Test
@@ -24,9 +27,7 @@ class DockTest {
             daisyDockLabel() {
             }
         }
-        val expectedClasses = "dock-label"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock")
+        assertDocumented(html, "span", "dock-label", "Dock")
     }
 
     @Test
@@ -35,9 +36,7 @@ class DockTest {
             daisyDockItem(active = true) {
             }
         }
-        val expectedClasses = "dock-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock")
+        assertDocumented(html, "button", "dock-active", "Dock")
     }
 
     @Test
@@ -46,9 +45,7 @@ class DockTest {
             daisyDock(size = DockSize.Xs) {
             }
         }
-        val expectedClasses = "dock dock-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Extra Small size")
+        assertDocumented(html, "div", "dock dock-xs", "Dock Extra Small size")
     }
 
     @Test
@@ -57,9 +54,7 @@ class DockTest {
             daisyDock(size = DockSize.Sm) {
             }
         }
-        val expectedClasses = "dock dock-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Small size")
+        assertDocumented(html, "div", "dock dock-sm", "Dock Small size")
     }
 
     @Test
@@ -68,9 +63,7 @@ class DockTest {
             daisyDock(size = DockSize.Md) {
             }
         }
-        val expectedClasses = "dock dock-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Medium size")
+        assertDocumented(html, "div", "dock dock-md", "Dock Medium size")
     }
 
     @Test
@@ -79,9 +72,7 @@ class DockTest {
             daisyDock(size = DockSize.Lg) {
             }
         }
-        val expectedClasses = "dock dock-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Large size")
+        assertDocumented(html, "div", "dock dock-lg", "Dock Large size")
     }
 
     @Test
@@ -90,8 +81,6 @@ class DockTest {
             daisyDock(size = DockSize.Xl) {
             }
         }
-        val expectedClasses = "dock dock-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Dock Extra Large size")
+        assertDocumented(html, "div", "dock dock-xl", "Dock Extra Large size")
     }
 }

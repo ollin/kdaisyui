@@ -4,9 +4,16 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.html.div
+import kotlinx.html.a
+import kotlinx.html.li
+import kotlinx.html.ul
 
 class MenuTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun menu() {
@@ -14,9 +21,7 @@ class MenuTest {
             daisyMenu() {
             }
         }
-        val expectedClasses = "menu"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu")
+        assertDocumented(html, "ul", "menu", "Menu")
     }
 
     @Test
@@ -25,9 +30,7 @@ class MenuTest {
             daisyMenu(direction = MenuDirection.Vertical, extraClasses = "lg:menu-horizontal") {
             }
         }
-        val expectedClasses = "lg:menu-horizontal menu menu-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Responsive: vertical on small screen, horizontal on large screen")
+        assertDocumented(html, "ul", "lg:menu-horizontal menu menu-vertical", "Responsive: vertical on small screen, horizontal on large screen")
     }
 
     @Test
@@ -36,9 +39,7 @@ class MenuTest {
             daisyMenu(paged = true, direction = MenuDirection.Vertical) {
             }
         }
-        val expectedClasses = "menu menu-paged menu-vertical"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Paged menu with nested submenus")
+        assertDocumented(html, "ul", "menu menu-paged menu-vertical", "Paged menu with nested submenus")
     }
 
     @Test
@@ -47,31 +48,23 @@ class MenuTest {
             daisyMenu(direction = MenuDirection.Horizontal) {
             }
         }
-        val expectedClasses = "menu menu-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icon only (horizontal)")
+        assertDocumented(html, "ul", "menu menu-horizontal", "Menu with icon only (horizontal)")
     }
 
     @Test
     fun menu_with_icon_only_with_tooltip_daisyTooltip() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(side = TooltipSide.Right) {
-            }
+            a { daisyTooltipClasses(side = TooltipSide.Right) }
         }
-        val expectedClasses = "tooltip tooltip-right"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icon only with tooltip")
+        assertDocumented(html, "a", "tooltip tooltip-right", "Menu with icon only with tooltip")
     }
 
     @Test
     fun menu_with_icon_only_horizontal_with_tooltip_daisyTooltip() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip() {
-            }
+            a { daisyTooltipClasses() }
         }
-        val expectedClasses = "tooltip"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icon only (horizontal) with tooltip")
+        assertDocumented(html, "a", "tooltip", "Menu with icon only (horizontal) with tooltip")
     }
 
     @Test
@@ -80,9 +73,7 @@ class MenuTest {
             daisyMenu(size = MenuSize.Xs) {
             }
         }
-        val expectedClasses = "menu menu-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu sizes")
+        assertDocumented(html, "ul", "menu menu-xs", "Menu sizes")
     }
 
     @Test
@@ -91,9 +82,7 @@ class MenuTest {
             daisyMenu(size = MenuSize.Sm) {
             }
         }
-        val expectedClasses = "menu menu-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu sizes")
+        assertDocumented(html, "ul", "menu menu-sm", "Menu sizes")
     }
 
     @Test
@@ -102,9 +91,7 @@ class MenuTest {
             daisyMenu(size = MenuSize.Md) {
             }
         }
-        val expectedClasses = "menu menu-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu sizes")
+        assertDocumented(html, "ul", "menu menu-md", "Menu sizes")
     }
 
     @Test
@@ -113,9 +100,7 @@ class MenuTest {
             daisyMenu(size = MenuSize.Lg) {
             }
         }
-        val expectedClasses = "menu menu-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu sizes")
+        assertDocumented(html, "ul", "menu menu-lg", "Menu sizes")
     }
 
     @Test
@@ -124,19 +109,15 @@ class MenuTest {
             daisyMenu(size = MenuSize.Xl) {
             }
         }
-        val expectedClasses = "menu menu-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu sizes")
+        assertDocumented(html, "ul", "menu menu-xl", "Menu sizes")
     }
 
     @Test
     fun menu_with_disabled_items_daisyMenuItem() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuItemClasses(disabled = true)
+        val html = createHTML(prettyPrint = false).ul {
+            li { daisyMenuItemClasses(disabled = true) }
         }
-        val expectedClasses = "menu-disabled"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with disabled items")
+        assertDocumented(html, "li", "menu-disabled", "Menu with disabled items")
     }
 
     @Test
@@ -145,9 +126,7 @@ class MenuTest {
             daisyMenu(extraClasses = "lg:menu-horizontal") {
             }
         }
-        val expectedClasses = "lg:menu-horizontal menu"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icons and badge (responsive)")
+        assertDocumented(html, "ul", "lg:menu-horizontal menu", "Menu with icons and badge (responsive)")
     }
 
     @Test
@@ -156,9 +135,7 @@ class MenuTest {
             daisyBadge(size = BadgeSize.Xs) {
             }
         }
-        val expectedClasses = "badge badge-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icons and badge (responsive)")
+        assertDocumented(html, "span", "badge badge-xs", "Menu with icons and badge (responsive)")
     }
 
     @Test
@@ -167,9 +144,7 @@ class MenuTest {
             daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning) {
             }
         }
-        val expectedClasses = "badge badge-warning badge-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icons and badge (responsive)")
+        assertDocumented(html, "span", "badge badge-warning badge-xs", "Menu with icons and badge (responsive)")
     }
 
     @Test
@@ -178,20 +153,15 @@ class MenuTest {
             daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Info) {
             }
         }
-        val expectedClasses = "badge badge-info badge-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with icons and badge (responsive)")
+        assertDocumented(html, "span", "badge badge-info badge-xs", "Menu with icons and badge (responsive)")
     }
 
     @Test
     fun menu_with_title_daisyMenuTitle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuTitle() {
-            }
+        val html = createHTML(prettyPrint = false).ul {
+            li { daisyMenuTitleClasses() }
         }
-        val expectedClasses = "menu-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with title")
+        assertDocumented(html, "li", "menu-title", "Menu with title")
     }
 
     @Test
@@ -200,9 +170,7 @@ class MenuTest {
             daisyMenuDropdownToggle() {
             }
         }
-        val expectedClasses = "menu-dropdown-toggle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
+        assertDocumented(html, "span", "menu-dropdown-toggle", "Collapsible submenu that works with class names")
     }
 
     @Test
@@ -211,9 +179,7 @@ class MenuTest {
             daisyMenuDropdown() {
             }
         }
-        val expectedClasses = "menu-dropdown"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
+        assertDocumented(html, "ul", "menu-dropdown", "Collapsible submenu that works with class names")
     }
 
     @Test
@@ -222,9 +188,7 @@ class MenuTest {
             daisyMenuDropdownToggle(dropdownShow = true) {
             }
         }
-        val expectedClasses = "menu-dropdown-show menu-dropdown-toggle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
+        assertDocumented(html, "span", "menu-dropdown-show menu-dropdown-toggle", "Collapsible submenu that works with class names")
     }
 
     @Test
@@ -233,19 +197,15 @@ class MenuTest {
             daisyMenuDropdown(show = true) {
             }
         }
-        val expectedClasses = "menu-dropdown menu-dropdown-show"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Collapsible submenu that works with class names")
+        assertDocumented(html, "ul", "menu-dropdown menu-dropdown-show", "Collapsible submenu that works with class names")
     }
 
     @Test
     fun menu_with_active_item_daisyMenuItem() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenuItemClasses(active = true)
+            a { daisyMenuItemClasses(active = true) }
         }
-        val expectedClasses = "menu-active"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Menu with active item")
+        assertDocumented(html, "a", "menu-active", "Menu with active item")
     }
 
     @Test
@@ -254,8 +214,6 @@ class MenuTest {
             daisyMenu(extraClasses = "xl:menu-horizontal") {
             }
         }
-        val expectedClasses = "menu xl:menu-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Mega menu with submenu (responsive)")
+        assertDocumented(html, "ul", "menu xl:menu-horizontal", "Mega menu with submenu (responsive)")
     }
 }

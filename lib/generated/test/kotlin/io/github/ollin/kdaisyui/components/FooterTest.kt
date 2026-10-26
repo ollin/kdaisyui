@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class FooterTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun footer_vertical_by_default_horizontal_for_sm_and_up() {
         val html = createHTML(prettyPrint = false).div {
             daisyFooter(extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer sm:footer-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer (vertical by default, horizontal for sm and up)")
+        assertDocumented(html, "footer", "footer sm:footer-horizontal", "Footer (vertical by default, horizontal for sm and up)")
     }
 
     @Test
@@ -24,9 +27,7 @@ class FooterTest {
             daisyFooterTitle() {
             }
         }
-        val expectedClasses = "footer-title"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer (vertical by default, horizontal for sm and up)")
+        assertDocumented(html, "h6", "footer-title", "Footer (vertical by default, horizontal for sm and up)")
     }
 
     @Test
@@ -35,9 +36,7 @@ class FooterTest {
             daisyLink(hover = true) {
             }
         }
-        val expectedClasses = "link link-hover"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer (vertical by default, horizontal for sm and up)")
+        assertDocumented(html, "a", "link link-hover", "Footer (vertical by default, horizontal for sm and up)")
     }
 
     @Test
@@ -46,9 +45,7 @@ class FooterTest {
             daisyJoin() {
             }
         }
-        val expectedClasses = "join"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a form")
+        assertDocumented(html, "div", "join", "Footer with a form")
     }
 
     @Test
@@ -56,9 +53,7 @@ class FooterTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        val expectedClasses = "input"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a form")
+        assertDocumented(html, "input", "input", "Footer with a form")
     }
 
     @Test
@@ -67,9 +62,7 @@ class FooterTest {
             daisyButton(color = ButtonColor.Primary) {
             }
         }
-        val expectedClasses = "btn btn-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with a form")
+        assertDocumented(html, "button", "btn btn-primary", "Footer with a form")
     }
 
     @Test
@@ -78,9 +71,7 @@ class FooterTest {
             daisyFooter(center = true, extraClasses = "sm:footer-horizontal") {
             }
         }
-        val expectedClasses = "footer footer-center sm:footer-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Footer with copyright text")
+        assertDocumented(html, "footer", "footer footer-center sm:footer-horizontal", "Footer with copyright text")
     }
 
     @Test
@@ -89,9 +80,7 @@ class FooterTest {
             daisyFooter(direction = FooterDirection.Horizontal, center = true) {
             }
         }
-        val expectedClasses = "footer footer-center footer-horizontal"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Centered footer with logo and social icons")
+        assertDocumented(html, "footer", "footer footer-center footer-horizontal", "Centered footer with logo and social icons")
     }
 
     @Test
@@ -100,8 +89,6 @@ class FooterTest {
             daisyFooter() {
             }
         }
-        val expectedClasses = "footer"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Two footer")
+        assertDocumented(html, "footer", "footer", "Two footer")
     }
 }

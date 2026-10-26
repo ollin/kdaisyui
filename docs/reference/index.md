@@ -25,7 +25,7 @@ import io.github.ollin.kdaisyui.components.*
 | [Badge](badge.md) | Labels, counts, and status tags | `<span>` |
 | [Breadcrumbs](breadcrumbs.md) | Navigation trail showing current location | `<div>` |
 | [Button](button.md) | Actions and triggers | `<button>` |
-| [Calendar](calendar.md) | Calendar date picker widget | `<div>` |
+| [Calendar](calendar.md) | Calendar date picker widget | `<calendar-date>` |
 | [Card](card.md) | Content containers with body and title | `<div>` |
 | [Carousel](carousel.md) | Slideshow of images or content | `<div>` |
 | [Chat](chat.md) | Chat bubble layout for conversations | `<div>` |

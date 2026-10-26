@@ -7,15 +7,18 @@ import kotlin.test.assertEquals
 
 class OtpTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun otp() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtp() {
             }
         }
-        val expectedClasses = "otp"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP")
+        assertDocumented(html, "label", "otp", "OTP")
     }
 
     @Test
@@ -24,9 +27,7 @@ class OtpTest {
             daisyOtp(joined = true) {
             }
         }
-        val expectedClasses = "otp otp-joined"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP joined")
+        assertDocumented(html, "label", "otp otp-joined", "OTP joined")
     }
 
     @Test
@@ -35,9 +36,7 @@ class OtpTest {
             daisyOtp(size = OtpSize.Xs) {
             }
         }
-        val expectedClasses = "otp otp-xs"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertDocumented(html, "label", "otp otp-xs", "OTP with different sizes")
     }
 
     @Test
@@ -46,9 +45,7 @@ class OtpTest {
             daisyOtp(size = OtpSize.Sm) {
             }
         }
-        val expectedClasses = "otp otp-sm"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertDocumented(html, "label", "otp otp-sm", "OTP with different sizes")
     }
 
     @Test
@@ -57,9 +54,7 @@ class OtpTest {
             daisyOtp(size = OtpSize.Md) {
             }
         }
-        val expectedClasses = "otp otp-md"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertDocumented(html, "label", "otp otp-md", "OTP with different sizes")
     }
 
     @Test
@@ -68,9 +63,7 @@ class OtpTest {
             daisyOtp(size = OtpSize.Lg) {
             }
         }
-        val expectedClasses = "otp otp-lg"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertDocumented(html, "label", "otp otp-lg", "OTP with different sizes")
     }
 
     @Test
@@ -79,9 +72,7 @@ class OtpTest {
             daisyOtp(size = OtpSize.Xl) {
             }
         }
-        val expectedClasses = "otp otp-xl"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different sizes")
+        assertDocumented(html, "label", "otp otp-xl", "OTP with different sizes")
     }
 
     @Test
@@ -90,9 +81,7 @@ class OtpTest {
             daisyOtp(color = OtpColor.Neutral) {
             }
         }
-        val expectedClasses = "otp otp-neutral"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-neutral", "OTP with different colors")
     }
 
     @Test
@@ -101,9 +90,7 @@ class OtpTest {
             daisyOtp(color = OtpColor.Primary) {
             }
         }
-        val expectedClasses = "otp otp-primary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-primary", "OTP with different colors")
     }
 
     @Test
@@ -112,9 +99,7 @@ class OtpTest {
             daisyOtp(color = OtpColor.Secondary) {
             }
         }
-        val expectedClasses = "otp otp-secondary"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-secondary", "OTP with different colors")
     }
 
     @Test
@@ -123,9 +108,7 @@ class OtpTest {
             daisyOtp(color = OtpColor.Accent) {
             }
         }
-        val expectedClasses = "otp otp-accent"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-accent", "OTP with different colors")
     }
 
     @Test
@@ -134,9 +117,7 @@ class OtpTest {
             daisyOtp(color = OtpColor.Info) {
             }
         }
-        val expectedClasses = "otp otp-info"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-info", "OTP with different colors")
     }
 
     @Test
@@ -145,9 +126,7 @@ class OtpTest {
             daisyOtp(color = OtpColor.Success) {
             }
         }
-        val expectedClasses = "otp otp-success"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-success", "OTP with different colors")
     }
 
     @Test
@@ -156,9 +135,7 @@ class OtpTest {
             daisyOtp(color = OtpColor.Warning) {
             }
         }
-        val expectedClasses = "otp otp-warning"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-warning", "OTP with different colors")
     }
 
     @Test
@@ -167,8 +144,6 @@ class OtpTest {
             daisyOtp(color = OtpColor.Error) {
             }
         }
-        val expectedClasses = "otp otp-error"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for OTP with different colors")
+        assertDocumented(html, "label", "otp otp-error", "OTP with different colors")
     }
 }

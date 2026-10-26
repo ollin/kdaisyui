@@ -7,14 +7,17 @@ import kotlin.test.assertEquals
 
 class RadialProgressTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun radial_progress() {
         val html = createHTML(prettyPrint = false).div {
             daisyRadialProgress() {
             }
         }
-        val expectedClasses = "radial-progress"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Radial progress")
+        assertDocumented(html, "div", "radial-progress", "Radial progress")
     }
 }

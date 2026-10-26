@@ -4,8 +4,14 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.html.input
 
 class FilterTest {
+
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
 
     @Test
     fun filter_using_html_form_radio_buttons_and_reset_button() {
@@ -13,31 +19,23 @@ class FilterTest {
             daisyFilter() {
             }
         }
-        val expectedClasses = "filter"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter using HTML form, radio buttons and reset button")
+        assertDocumented(html, "form", "filter", "Filter using HTML form, radio buttons and reset button")
     }
 
     @Test
     fun filter_using_html_form_radio_buttons_and_reset_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(shape = ButtonShape.Square) {
-            }
+            input { daisyButtonClasses(shape = ButtonShape.Square) }
         }
-        val expectedClasses = "btn btn-square"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter using HTML form, radio buttons and reset button")
+        assertDocumented(html, "input", "btn btn-square", "Filter using HTML form, radio buttons and reset button")
     }
 
     @Test
     fun filter_using_html_form_radio_buttons_and_reset_button_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            input { daisyButtonClasses() }
         }
-        val expectedClasses = "btn"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter using HTML form, radio buttons and reset button")
+        assertDocumented(html, "input", "btn", "Filter using HTML form, radio buttons and reset button")
     }
 
     @Test
@@ -45,8 +43,6 @@ class FilterTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFilterReset(attrs = { daisyButtonClasses() })
         }
-        val expectedClasses = "btn filter-reset"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Filter without HTML form")
+        assertDocumented(html, "input", "btn filter-reset", "Filter without HTML form")
     }
 }

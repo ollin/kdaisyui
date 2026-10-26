@@ -7,14 +7,17 @@ import kotlin.test.assertEquals
 
 class MaskTest {
 
+    private fun assertDocumented(html: String, tag: String, classes: String, case: String) {
+        assertEquals(classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), "Class mismatch for $case")
+        assertEquals(tag, html.substringBefore(" class=\"").substringAfterLast("<").substringBefore(" "), "Tag mismatch for $case")
+    }
+
     @Test
     fun squircle() {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Squircle)
         }
-        val expectedClasses = "mask mask-squircle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Squircle")
+        assertDocumented(html, "img", "mask mask-squircle", "Squircle")
     }
 
     @Test
@@ -22,9 +25,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Heart)
         }
-        val expectedClasses = "mask mask-heart"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Heart")
+        assertDocumented(html, "img", "mask mask-heart", "Heart")
     }
 
     @Test
@@ -32,9 +33,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Hexagon)
         }
-        val expectedClasses = "mask mask-hexagon"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hexagon")
+        assertDocumented(html, "img", "mask mask-hexagon", "Hexagon")
     }
 
     @Test
@@ -42,9 +41,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Hexagon2)
         }
-        val expectedClasses = "mask mask-hexagon-2"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Hexagon-2 (horizontal hexagon)")
+        assertDocumented(html, "img", "mask mask-hexagon-2", "Hexagon-2 (horizontal hexagon)")
     }
 
     @Test
@@ -52,9 +49,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Decagon)
         }
-        val expectedClasses = "mask mask-decagon"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Decagon")
+        assertDocumented(html, "img", "mask mask-decagon", "Decagon")
     }
 
     @Test
@@ -62,9 +57,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Pentagon)
         }
-        val expectedClasses = "mask mask-pentagon"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Pentagon")
+        assertDocumented(html, "img", "mask mask-pentagon", "Pentagon")
     }
 
     @Test
@@ -72,9 +65,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Diamond)
         }
-        val expectedClasses = "mask mask-diamond"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Diamond")
+        assertDocumented(html, "img", "mask mask-diamond", "Diamond")
     }
 
     @Test
@@ -82,9 +73,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Circle)
         }
-        val expectedClasses = "mask mask-circle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Circle")
+        assertDocumented(html, "img", "mask mask-circle", "Circle")
     }
 
     @Test
@@ -92,9 +81,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Star)
         }
-        val expectedClasses = "mask mask-star"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Star")
+        assertDocumented(html, "img", "mask mask-star", "Star")
     }
 
     @Test
@@ -102,9 +89,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Star2)
         }
-        val expectedClasses = "mask mask-star-2"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Star-2 (bold star)")
+        assertDocumented(html, "img", "mask mask-star-2", "Star-2 (bold star)")
     }
 
     @Test
@@ -112,9 +97,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Triangle)
         }
-        val expectedClasses = "mask mask-triangle"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle (pointing top)")
+        assertDocumented(html, "img", "mask mask-triangle", "Triangle (pointing top)")
     }
 
     @Test
@@ -122,9 +105,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Triangle2)
         }
-        val expectedClasses = "mask mask-triangle-2"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-2 (pointing down)")
+        assertDocumented(html, "img", "mask mask-triangle-2", "Triangle-2 (pointing down)")
     }
 
     @Test
@@ -132,9 +113,7 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Triangle3)
         }
-        val expectedClasses = "mask mask-triangle-3"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-3 (pointing left)")
+        assertDocumented(html, "img", "mask mask-triangle-3", "Triangle-3 (pointing left)")
     }
 
     @Test
@@ -142,8 +121,6 @@ class MaskTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask(style = MaskStyle.Triangle4)
         }
-        val expectedClasses = "mask mask-triangle-4"
-        val actualClasses = html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" ")
-        assertEquals(expectedClasses, actualClasses, "Class mismatch for Triangle-4 (pointing right)")
+        assertDocumented(html, "img", "mask mask-triangle-4", "Triangle-4 (pointing right)")
     }
 }

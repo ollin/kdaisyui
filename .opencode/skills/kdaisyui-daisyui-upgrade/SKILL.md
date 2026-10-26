@@ -42,8 +42,9 @@ diff throws away the one signal the repository has.
 ```
 
 Step 1 has a constraint stated in `libs.versions.toml` itself: the version must have a
-**published webjar**, because `:ktor-integration` serves it. A version without one makes
-generated components reference CSS the library cannot deliver.
+**published webjar**, because README tells consumers who want DaisyUI's prebuilt stylesheet to add
+`org.webjars.npm:daisyui` at this version. Renovate finds DaisyUI updates through that webjar
+coordinate, the `webjar-daisyui` alias, which no module depends on; it is there for Renovate.
 
 Steps 3 and 4 come before generation because generation fails until the model matches.
 

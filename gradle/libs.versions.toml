@@ -19,7 +19,8 @@ pitest-junit5 = "1.2.3"
 
 # Codegen submodule tags (drive `git checkout` of the daisyui/heroicons submodules).
 # daisyui must stay at a version that also has a published webjar (see webjar-daisyui
-# library below), so generated components never reference CSS absent from the webjar.
+# library below): README tells consumers who want DaisyUI's prebuilt stylesheet to add
+# org.webjars.npm:daisyui at this version, so it must exist.
 daisyui = "5.7.50"
 heroicons = "2.2.0"
 
@@ -50,6 +51,9 @@ ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref 
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 # WebJars
+# webjar-daisyui and webjar-tailwindcss-browser are not dependencies of any module. They are
+# how Renovate finds updates for the daisyui and webjar-tailwindcss-browser versions above, and
+# for daisyui it guarantees an offered version has a published webjar (renovate.json). Keep them.
 webjar-daisyui = { module = "org.webjars.npm:daisyui", version.ref = "daisyui" }
 webjar-tailwindcss-browser = { module = "org.webjars.npm:tailwindcss__browser", version.ref = "webjar-tailwindcss-browser" }
 webjar-htmx = { module = "org.webjars.npm:htmx.org", version.ref = "webjar-htmx" }

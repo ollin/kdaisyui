@@ -6,6 +6,7 @@ import com.microsoft.playwright.Playwright
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kdaisyui.example.configureRouting
+import kotlinx.coroutines.runBlocking
 import java.net.HttpURLConnection
 import java.net.URI
 
@@ -17,8 +18,14 @@ import java.net.URI
  */
 internal object SharedInfrastructure {
 
-    const val BASE_URL = "http://localhost:8080"
+    /**
+     * Where the server answers, known only once it has started: it binds port 0 on the loopback
+     * address, so the operating system picks a free port. A fixed 8080 failed the whole suite
+     * with BindException whenever anything else on the machine held that port.
+     */
+    val BASE_URL: String
 
+    private const val LOOPBACK = "127.0.0.1"
     private const val SERVER_START_TIMEOUT_MS = 30_000L
     private const val POLL_INTERVAL_MS = 200L
 
@@ -28,10 +35,12 @@ internal object SharedInfrastructure {
     private val playwright: Playwright
 
     init {
-        server = embeddedServer(Netty, port = 8080) {
+        server = embeddedServer(Netty, port = 0, host = LOOPBACK) {
             configureRouting()
         }
         server.start(wait = false)
+        val port = runBlocking { server.engine.resolvedConnectors().first().port }
+        BASE_URL = "http://$LOOPBACK:$port"
         waitForServer()
 
         playwright = Playwright.create()
@@ -52,7 +61,7 @@ internal object SharedInfrastructure {
         val deadline = System.currentTimeMillis() + SERVER_START_TIMEOUT_MS
         while (System.currentTimeMillis() < deadline) {
             try {
-                val connection = URI("http://localhost:8080/").toURL()
+                val connection = URI("$BASE_URL/").toURL()
                     .openConnection() as HttpURLConnection
                 connection.connectTimeout = 1000
                 connection.readTimeout = 1000

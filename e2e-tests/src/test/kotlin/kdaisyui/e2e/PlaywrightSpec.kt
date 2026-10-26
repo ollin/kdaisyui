@@ -63,6 +63,6 @@ abstract class PlaywrightSpec : FunSpec() {
     }
 
     companion object {
-        const val BASE_URL = SharedInfrastructure.BASE_URL
+        val BASE_URL: String get() = SharedInfrastructure.BASE_URL
     }
 }

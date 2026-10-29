@@ -6,7 +6,7 @@
 [versions]
 kotlin = "2.4.21"
 kotlinx-html = "0.12.0"
-ktor = "3.6.0"
+ktor = "3.6.1"
 logback = "1.6.6"
 jreleaser = "1.26.0"
 kover = "0.9.11"

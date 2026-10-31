@@ -31,6 +31,12 @@ class SnippetSourceTest {
     }
 
     @Test
+    fun theNamesTheDocumentPutsInScopeAreImported() {
+        val source = SnippetSource("README.md", KotlinFence(9, ""), scope = listOf("snippets.README_md_L3.shellSidebar"))
+        assertEquals("import snippets.README_md_L3.shellSidebar", importsOf(source.text).last())
+    }
+
+    @Test
     fun kotlinxHtmlAndTheComponentsAreImported() {
         assertEquals(listOf("import kotlinx.html.*", "import io.github.ollin.kdaisyui.components.*"), importsOf(textOf("")))
     }

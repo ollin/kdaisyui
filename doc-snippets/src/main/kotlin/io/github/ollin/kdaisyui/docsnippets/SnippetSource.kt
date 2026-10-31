@@ -1,7 +1,7 @@
 package io.github.ollin.kdaisyui.docsnippets
 
 /** The Kotlin file one snippet compiles as, named for its [document] and the line of its fence. */
-class SnippetSource(private val document: String, private val fence: KotlinFence) {
+class SnippetSource(private val document: String, private val fence: KotlinFence, private val scope: List<String> = emptyList()) {
     private val name = document.replace(Regex("\\W"), "_") + "_L${fence.line}"
 
     val fileName: String get() = "$name.kt"
@@ -12,7 +12,7 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
 
     private val lines = fence.code.lines().partition { it.startsWith("import ") }
 
-    private val imports: List<String> get() = defaultImports.map { "import $it" } + lines.first
+    private val imports: List<String> get() = (defaultImports + scope).map { "import $it" } + lines.first
 
     private val code: String get() = lines.second.joinToString("\n")
 

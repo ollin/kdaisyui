@@ -53,6 +53,13 @@ describe('documentedCall', () => {
     assert.deepEqual(callFor('<button class="$$btn $$btn-active md:$$btn-lg">x</button>'), { fn: sized.functions[0], args: 'active = true, extraClasses = "md:btn-lg"', expectedClasses: 'btn btn-active md:btn-lg', tag: 'button', rendersTag: false, onTag: 'daisyButtonClasses(active = true); addClassNames("md:btn-lg")' })
   })
 
+  it('names an id for an anchored popover, which cannot be called without one', () => {
+    const dropdown = { ...component('dropdown', 'Dropdown', 'dropdown'), functions: [{ ...part('daisyDropdownPopover', 'dropdown', { element: 'UL', anchoredPopover: true as const }), kind: 'custom' as const }] }
+    const call = documentedCall([dropdown], markedElements('<ul class="$$dropdown" popover>x</ul>')[0], new Set(['dropdown']))
+
+    assert.equal(call?.args, 'id = htmlId("documented")')
+  })
+
   it('neither passes nor expects join-item, and names an enum entry', () => {
     assert.deepEqual(callFor('<button class="$$btn $$btn-sm $$join-item">x</button>')?.args, 'size = ButtonSize.Sm')
     assert.equal(callFor('<button class="$$btn $$join-item">x</button>')?.expectedClasses, 'btn')

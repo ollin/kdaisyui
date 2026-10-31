@@ -324,6 +324,7 @@ function importsOf(call: DocumentedCall): string[] {
   return [
     ...builders.filter(builder => builder !== 'div').map(builder => `import kotlinx.html.${builder}`),
     ...(!call.rendersTag && call.onTag.includes('addClassNames(') ? ['import io.github.ollin.kdaisyui.core.addClassNames'] : []),
+    ...(call.args.includes('htmlId(') ? ['import io.github.ollin.kdaisyui.core.htmlId'] : []),
   ]
 }
 

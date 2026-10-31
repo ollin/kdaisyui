@@ -7,6 +7,7 @@ import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
 import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
+import { componentMapLine } from './component-map.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -53,6 +54,16 @@ function writeClassList(classes) {
   return sorted.length
 }
 
+/** The component map beside the class list, for the Gradle plugin that narrows it. */
+function writeComponentMap(lines: readonly string[]): void {
+  const header = [
+    '# Per component: its name, the JVM classes a consumer names when using it, and the CSS classes',
+    '# it can emit, tab-separated. Read by the kdaisyui Gradle plugin. Generated - do not edit.',
+    '',
+  ]
+  fs.writeFileSync(path.join(path.dirname(CLASS_LIST_FILE), 'kdaisyui-components.txt'), `${header.join('\n')}${[...lines].sort().join('\n')}\n`)
+}
+
 /**
  * Fails the run when a component's model and the classes DaisyUI declares for it disagree.
  * Runs after generation like the checks above, so the output a wrong model produced is on disk.
@@ -92,6 +103,7 @@ function main() {
   const skipReasons = new Map(componentSet.skipped.map(component => [component.componentDir, component.reason]))
 
   const allClasses = []
+  const componentMap: string[] = []
   const modelFindings: string[] = []
   const models = componentSet.generated.map(component => component.model)
   const componentClasses = everyDeclaredClass(componentDirs)
@@ -119,11 +131,13 @@ function main() {
     // Only generated components contribute: a skipped one emits nothing, so listing its
     // classes would put CSS in a consumer's bundle that this library can never produce.
     allClasses.push(...offeredClasses(component.model))
+    componentMap.push(componentMapLine(componentName, classified.componentName, kotlin, offeredClasses(component.model)))
     modelFindings.push(...classFindings(component.model, collectClasses(frontmatter.classnames)), ...namingFindings(component.model), ...documentedGapFindings(component.model, models, componentClasses))
     console.log(`  ✓ ${classified.componentName}.kt (${shape.functions[0].element})`)
   }
 
   const classCount = writeClassList(allClasses)
+  writeComponentMap(componentMap)
 
   console.log(`\nGenerated ${componentSet.generated.length} components, skipped ${componentSet.skipped.length}`)
   console.log(`Output: ${OUTPUT_DIR}`)

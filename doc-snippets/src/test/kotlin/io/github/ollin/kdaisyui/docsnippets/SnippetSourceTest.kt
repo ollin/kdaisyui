@@ -13,26 +13,31 @@ class SnippetSourceTest {
 
     @Test
     fun aStatementIsWrappedInAFlowContentBuilderInItsOwnPackage() {
-        val text = SnippetSource("README.md", KotlinFence(line = 9, code = "daisyBadge(\"New\")")).text
+        val text = textOf("daisyBadge(\"New\")")
         assertEquals("// README.md:9\npackage snippets.README_md_L9", text.lines().take(2).joinToString("\n"))
-        assertEquals("fun FlowContent.snippet() {\ndaisyBadge(\"New\")\n}\n", text.substringAfterLast("\n\n"))
+        assertEquals("fun FlowContent.snippet() {\ndaisyBadge(\"New\")\n}\n", bodyOf(text))
     }
 
     @Test
     fun aSnippetDeclaringSomethingAtColumnZeroIsNotWrapped() {
-        val text = SnippetSource("README.md", KotlinFence(line = 9, code = "fun FlowContent.card() {\n}")).text
-        assertEquals("fun FlowContent.card() {\n}\n", text.substringAfterLast("\n\n"))
+        assertEquals("fun FlowContent.card() {\n}\n", bodyOf(textOf("fun FlowContent.card() {\n}")))
     }
 
     @Test
     fun theSnippetsOwnImportsJoinTheImportBlock() {
-        val text = SnippetSource("README.md", KotlinFence(line = 9, code = "import a.B\nval b = B()")).text
-        assertEquals("import a.B\n\nval b = B()\n", text.substringAfter("components.*\n"))
+        val text = textOf("import a.B\nval b = B()")
+        assertEquals("import a.B", importsOf(text).last())
+        assertEquals("val b = B()\n", bodyOf(text))
     }
 
     @Test
     fun kotlinxHtmlAndTheComponentsAreImported() {
-        val imports = SnippetSource("README.md", KotlinFence(line = 9, code = "")).text.lines()
-        assertEquals(listOf("import kotlinx.html.*", "import io.github.ollin.kdaisyui.components.*"), imports.filter { it.startsWith("import ") })
+        assertEquals(listOf("import kotlinx.html.*", "import io.github.ollin.kdaisyui.components.*"), importsOf(textOf("")))
     }
+
+    private fun textOf(code: String) = SnippetSource("README.md", KotlinFence(line = 9, code = code)).text
+
+    private fun importsOf(text: String) = text.lines().filter { it.startsWith("import ") }
+
+    private fun bodyOf(text: String) = text.substringAfterLast("\n\n")
 }

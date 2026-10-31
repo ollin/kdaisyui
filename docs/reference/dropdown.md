@@ -30,6 +30,20 @@ fun Tag.daisyDropdownClasses(side: ClassValues<DropdownSide>? = null, align: Cla
 ```
 
 ```kotlin
+fun FlowContent.daisyDropdownPopover(
+    id: HtmlId,
+    side: ClassValues<DropdownSide>? = null,
+    align: ClassValues<DropdownAlign>? = null,
+    extraClasses: String? = null,
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
+)
+
+// The same classes on an element you write yourself, or beside another component's:
+fun Tag.daisyDropdownPopoverClasses(side: ClassValues<DropdownSide>? = null, align: ClassValues<DropdownAlign>? = null)
+```
+
+```kotlin
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
     extraClasses: String? = null,

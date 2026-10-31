@@ -531,6 +531,10 @@ public final class io/github/ollin/kdaisyui/components/DropdownKt {
 	public static final fun daisyDropdownContent (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyDropdownContent$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyDropdownContentClasses (Lkotlinx/html/Tag;)V
+	public static final fun daisyDropdownPopover (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyDropdownPopover$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyDropdownPopoverClasses (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;)V
+	public static synthetic fun daisyDropdownPopoverClasses$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/components/DropdownSide : java/lang/Enum, io/github/ollin/kdaisyui/core/ClassValues {

@@ -4,9 +4,10 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import io.github.ollin.kdaisyui.core.htmlId
+import kotlin.test.assertTrue
 import kotlinx.html.a
 import kotlinx.html.summary
-import kotlinx.html.ul
 
 class DropdownTest {
 
@@ -42,9 +43,10 @@ class DropdownTest {
     }
 
     @Test
-    fun dropdown_using_popover_api_and_anchor_positioning() {
+    fun dropdown_using_popover_api_and_anchor_positioning_daisyDropdownPopover() {
         val html = createHTML(prettyPrint = false).div {
-            ul { daisyDropdownClasses(); daisyMenuClasses() }
+            daisyDropdownPopover(id = htmlId("documented"), attrs = { daisyMenuClasses() }) {
+            }
         }
         assertDocumented(html, "ul", "dropdown menu", "Dropdown using popover API and anchor positioning")
     }
@@ -242,5 +244,17 @@ class DropdownTest {
             }
         }
         assertDocumented(html, "h2", "card-title", "Helper dropdown")
+    }
+
+    @Test
+    fun custom_part_popover_renders_ul() {
+        val html = createHTML(prettyPrint = false).div {
+            daisyDropdownPopover(id = htmlId("custom-part")) {
+            }
+        }
+        assertTrue(html.contains("<ul"))
+        assertTrue(html.contains("class=\"dropdown"))
+        assertTrue(html.contains("popover=\"\""))
+        assertTrue(html.contains("style=\"position-anchor:--custom-part\""))
     }
 }

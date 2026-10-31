@@ -364,6 +364,8 @@ enum class DropdownAlign { Start, Center, End }
 enum class DropdownState { Open, Close }
 fun FlowContent.daisyDropdown(id: HtmlId? = null, side: ClassValues<DropdownSide>? = null, align: ClassValues<DropdownAlign>? = null, state: ClassValues<DropdownState>? = null, hover: Boolean = false, extraClasses: String? = null, attrs: (DETAILS.() -> Unit)? = null, content: (DETAILS.() -> Unit))
 fun Tag.daisyDropdownClasses(side: ClassValues<DropdownSide>? = null, align: ClassValues<DropdownAlign>? = null, state: ClassValues<DropdownState>? = null, hover: Boolean = false)
+fun FlowContent.daisyDropdownPopover(id: HtmlId, side: ClassValues<DropdownSide>? = null, align: ClassValues<DropdownAlign>? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
+fun Tag.daisyDropdownPopoverClasses(side: ClassValues<DropdownSide>? = null, align: ClassValues<DropdownAlign>? = null)
 fun FlowContent.daisyDropdownContent(id: HtmlId? = null, extraClasses: String? = null, attrs: (UL.() -> Unit)? = null, content: (UL.() -> Unit))
 fun Tag.daisyDropdownContentClasses()
 ```

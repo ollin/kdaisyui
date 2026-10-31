@@ -6,12 +6,12 @@ Ordered by what can kill the idea cheapest, not by what has to be built first. S
 **no extractor at all** — they decide whether writing one is worth it, using lists assembled by
 hand from what is already known.
 
-- [ ] 1 **Measure the boolean-fallback ceiling, without building anything.** For `example-app`,
+- [x] 1 **Measure the boolean-fallback ceiling, without building anything.** For `example-app`,
       assemble the class list the *pessimistic* rule would produce: every enum-member class it
       names, plus **every** class of every component whose function it calls. Compare to 560. This
       is the upper bound of what an extractor could ever deliver, and it needs only the 27-of-66
       call list already measured.
-- [ ] 2 **Weigh it.** Compile a Tailwind stylesheet from that list and record raw and gzip size
+- [x] 2 **Weigh it.** Compile a Tailwind stylesheet from that list and record raw and gzip size
       beside today's 412 KB / 49.2 KB. Also compile from the *optimistic* list — enum entries only,
       no boolean fallback — to bracket the answer. The gap between the two brackets is what the
       extractor's precision is worth, in bytes.

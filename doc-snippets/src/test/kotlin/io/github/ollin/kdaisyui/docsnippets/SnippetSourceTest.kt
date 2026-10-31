@@ -8,7 +8,7 @@ class SnippetSourceTest {
     @Test
     fun theFileIsNamedForTheDocumentAndTheLineOfTheFence() {
         val source = SnippetSource("docs/how-to.md", KotlinFence(line = 71, code = ""))
-        assertEquals("docs_how_to_md_L71.kt", source.fileName)
+        assertEquals("docs_how_to_md_L71.kt", source.relativePath)
     }
 
     @Test

@@ -11,5 +11,5 @@ import kotlin.io.path.writeText
 fun main(args: Array<String>) {
     val (root, out) = args.take(2).map(::Path)
     args.drop(2).flatMap { SnippetDocument(it, root.resolve(it).readText()).sources }
-        .forEach { out.resolve(it.fileName).writeText(it.text) }
+        .forEach { out.resolve(it.relativePath).writeText(it.text) }
 }

@@ -4,7 +4,7 @@ package io.github.ollin.kdaisyui.docsnippets
 class SnippetSource(private val document: String, private val fence: KotlinFence, private val scope: List<String> = emptyList()) {
     private val name = snippetName(document, fence)
 
-    val fileName: String get() = "$name.kt"
+    val relativePath: String get() = "$name.kt"
 
     val text: String get() = "// $document:${fence.line}\npackage snippets.$name\n\n" +
         imports.joinToString("") { "$it\n" } + "\n" +

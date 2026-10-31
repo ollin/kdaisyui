@@ -2,7 +2,7 @@ package io.github.ollin.kdaisyui.docsnippets
 
 /** The Kotlin file one snippet compiles as, named for its [document] and the line of its fence. */
 class SnippetSource(private val document: String, private val fence: KotlinFence, private val scope: List<String> = emptyList()) {
-    private val name = document.replace(Regex("\\W"), "_") + "_L${fence.line}"
+    private val name = snippetName(document, fence)
 
     val fileName: String get() = "$name.kt"
 
@@ -24,3 +24,6 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
 private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ")
 
 private val defaultImports = listOf("kotlinx.html.*", "io.github.ollin.kdaisyui.components.*")
+
+/** The name of a snippet's file and package: its [document] and the line of its [fence]. */
+fun snippetName(document: String, fence: KotlinFence): String = document.replace(Regex("\\W"), "_") + "_L${fence.line}"

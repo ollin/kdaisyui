@@ -10,7 +10,11 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
         defaultImports.joinToString("") { "import $it\n" } + "\n" +
         body + "\n"
 
-    private val body: String get() = "fun FlowContent.snippet() {\n${fence.code}\n}"
+    private val body: String get() =
+        if (fence.code.lines().any { topLevelDeclaration.containsMatchIn(it) }) fence.code
+        else "fun FlowContent.snippet() {\n${fence.code}\n}"
 }
+
+private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ")
 
 private val defaultImports = listOf("kotlinx.html.*", "io.github.ollin.kdaisyui.components.*")

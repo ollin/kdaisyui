@@ -19,6 +19,12 @@ class SnippetSourceTest {
     }
 
     @Test
+    fun aSnippetDeclaringSomethingAtColumnZeroIsNotWrapped() {
+        val text = SnippetSource("README.md", KotlinFence(line = 9, code = "fun FlowContent.card() {\n}")).text
+        assertEquals("fun FlowContent.card() {\n}\n", text.substringAfterLast("\n\n"))
+    }
+
+    @Test
     fun kotlinxHtmlAndTheComponentsAreImported() {
         val imports = SnippetSource("README.md", KotlinFence(line = 9, code = "")).text.lines()
         assertEquals(listOf("import kotlinx.html.*", "import io.github.ollin.kdaisyui.components.*"), imports.filter { it.startsWith("import ") })

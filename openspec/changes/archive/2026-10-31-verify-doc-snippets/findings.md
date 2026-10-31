@@ -102,7 +102,7 @@ One row per finding (house rules §9).
 | F2 | - | fixed - in this change (task 3.5) |
 | F3 | - | fixed - in this change (section 3) |
 | F4 | - | fixed - #423: the `unit-tests` job runs `check`, so no task of it can miss CI |
-| F5 | The `fwb-tcr` recovery ladder names Kotlin's unreachable safe-call branches as a known cause of a coverage revert | open |
+| F5 | A sentence in `kdaisyui-testing`, beside the branch gate that causes it, not in `fwb-tcr`: no check can tell an unreachable branch from an untested one, and `fwb-tcr` is fwb-application's | fixed - in the kdaisyui-testing skill (section 2) |
 | F6 | - | none - record only; the exclusion is commented in `doc-snippets/build.gradle.kts` |
 | F7 | getting-started's build script uses the Maven Central coordinates README shows | open |
 | F8 | `kdaisyui-build`'s "Problems: 0" becomes a recorded number that a check compares, instead of a sentence | open |

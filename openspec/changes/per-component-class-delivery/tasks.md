@@ -21,9 +21,9 @@ decides the plugin's place before any of it is written.
 ## 3. The plugin, under TCR
 
 - [ ] 3.1 `. F (internal)` The included build `gradle-plugin/`, empty, built and measured.
-- [ ] 3.2 `. F` Find every `io/github/ollin/kdaisyui/components/` class name in a set of class files.
-- [ ] 3.3 `. F` Read the map, and select the CSS classes of the components found.
-- [ ] 3.4 `. F` Fall back to the full list, with a warning, on an unknown class or none found.
+- [x] 3.2 `. F` Find every `io/github/ollin/kdaisyui/components/` class name in a set of class files.
+- [x] 3.3 `. F` Read the map, and select the CSS classes of the components found.
+- [x] 3.4 `. F` Fall back to the full list, with a warning, on an unknown class or none found.
 - [ ] 3.5 `. F` The plugin registers `kdaisyuiClasses` over the main source set's classes and the
   `kdaisyui` artifact on the runtime classpath; a TestKit build proves it.
 

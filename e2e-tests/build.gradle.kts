@@ -41,10 +41,14 @@ dependencies {
 val systemChromium: Provider<String> =
     providers.environmentVariable("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH")
         .orElse(providers.provider {
+            // providers.exec, not ProcessBuilder: Gradle 9 deprecates starting a process at
+            // configuration time, and Gradle 11 makes it an error.
             listOf("chromium", "chromium-browser", "google-chrome-stable", "google-chrome")
                 .firstNotNullOfOrNull { name ->
-                    ProcessBuilder("which", name).start()
-                        .inputStream.bufferedReader().readLine()?.takeIf { it.isNotBlank() }
+                    providers.exec {
+                        commandLine("which", name)
+                        isIgnoreExitValue = true
+                    }.standardOutput.asText.get().lineSequence().firstOrNull()?.takeIf { it.isNotBlank() }
                 }
         })
 

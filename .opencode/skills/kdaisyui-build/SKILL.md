@@ -9,21 +9,33 @@ description: >-
 
 # kdaisyui — The Gradle Build
 
-## The standard: zero problems, and that is checkable
+## The standard: no Gradle problem of our own, and CI checks it
 
 ```
-gradle check --warning-mode all
+./gradlew check -x :e2e-tests:test && ./gradlew :build-checks:checkGradleProblems
 ```
 
-must end with `Problems: 0`. It does today, so **any warning you see is one you introduced**,
-and there is no pre-existing noise to hide in. Without `--warning-mode all` Gradle collapses
-deprecations into one line at the bottom of the build, which is easy to read past.
+The second call reads `build/reports/problems/problems-report.html`, the report the first one
+wrote, and fails, naming each, on any problem `gradle/allowed-gradle-problems.txt` does not accept.
+CI's `unit-tests` job runs exactly this. It has to be a second invocation: Gradle writes the report
+when a build ends, so no task can read its own build's.
 
-The Gradle MCP server reports the same thing as a `Problems:` count with stable ids, so
-`query_build(kind="PROBLEMS")` is how you find out *what* rather than *that*.
+**Since 2026-10-31 the build causes none.** The only accepted problems are the deprecated
+`Configuration.setVisible` that Kover 0.9.11 and the PIT plugin 1.19.0 call, each the latest release
+that day, each with its reason in the allowlist. A problem the build itself causes is attributed to
+no plugin, so it can never be listed: fix it. The last one was the E2E build's `which` lookup of
+Chromium through `ProcessBuilder` at configuration time; `providers.exec` replaced it. When a
+plugin release drops `setVisible`, delete its line.
 
-Use `--rerun-tasks` when the count matters. An up-to-date task emits no warnings, so a cached
-build can report zero while the underlying problem is still there.
+The report caps its listed diagnostics and folds the rest into `summaries`, which carry no
+location. The check counts a summary as the listed problem it repeats, and one whose id nothing
+lists as the build's own.
+
+Until then this section said `gradle check --warning-mode all` "must end with `Problems: 0`", and it
+had stopped being true without anyone noticing: a sentence is not a check.
+
+Use `--rerun-tasks` when you hunt for a warning by eye. An up-to-date task emits no warnings, so a
+cached build can show none while the problem is still there.
 
 ### IntelliJ's sync warning is not ours — do not chase it
 

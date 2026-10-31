@@ -44,7 +44,7 @@ sections. It stays as it was; the revision is measured as part of the run.
 Each document is one task, checked with `compileSnippets`: fix what no longer compiles, mark what
 must not.
 
-- [ ] 3.1 `. d` `docs/tutorials/getting-started.md`
+- [x] 3.1 `. d` `docs/tutorials/getting-started.md`
 - [ ] 3.2 `. d` `docs/tutorials/build-a-dashboard.md`
 - [ ] 3.3 `. d` `docs/how-to.md`
 - [ ] 3.4 `. d` `docs/explanation.md`

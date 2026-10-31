@@ -13,5 +13,8 @@ class SnippetDocument(private val path: String, markdown: String) {
 
     private fun scopeOf(fence: KotlinFence): List<String> =
         (fences.filter { it.line < fence.line }.flatMap { it.declaredNames } - fence.declaredNames.toSet()).distinct()
-            .map { name -> "snippets.${snippetName(path, fences.last { it.line < fence.line && name in it.declaredNames })}.$name" }
+            .map { name -> "snippets.${snippetName(path, declarationOf(name, fence))}.$name" }
+
+    private fun declarationOf(name: String, fence: KotlinFence): KotlinFence =
+        fences.last { it.line < fence.line && name in it.declaredNames }
 }

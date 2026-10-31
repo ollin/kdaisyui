@@ -1,7 +1,9 @@
 package kdaisyui.example
 
 import io.github.ollin.kdaisyui.components.*
+import io.github.ollin.kdaisyui.core.PopoverTargetAction
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.popoverTarget
 import kotlinx.html.*
 
 /**
@@ -26,7 +28,7 @@ fun HTML.popoverModalPage() {
         daisyButton(
             text = "Open modal",
             color = ButtonColor.Primary,
-            attrs = { attributes["popovertarget"] = modalId.id },
+            attrs = { popoverTarget(modalId) },
         )
         daisyModalPopover(id = modalId) {
             daisyModalBox {
@@ -35,10 +37,7 @@ fun HTML.popoverModalPage() {
                 daisyModalAction {
                     daisyButton(
                         text = "Close",
-                        attrs = {
-                            attributes["popovertarget"] = modalId.id
-                            attributes["popovertargetaction"] = "hide"
-                        },
+                        attrs = { popoverTarget(modalId, PopoverTargetAction.Hide) },
                     )
                 }
             }

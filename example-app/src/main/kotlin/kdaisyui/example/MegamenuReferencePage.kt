@@ -5,6 +5,7 @@ import io.github.ollin.kdaisyui.components.daisyMegamenu
 import io.github.ollin.kdaisyui.components.daisyMegamenuActive
 import io.github.ollin.kdaisyui.components.daisyMegamenuPanel
 import io.github.ollin.kdaisyui.core.HtmlId
+import io.github.ollin.kdaisyui.core.popoverTarget
 import kotlinx.html.*
 
 /**
@@ -37,7 +38,7 @@ fun HTML.megamenuReferencePage() {
         daisyButton(
             text = "Menu",
             extraClasses = "sm:hidden",
-            attrs = { attributes["popovertarget"] = Megamenu.Reference().id },
+            attrs = { popoverTarget(Megamenu.Reference()) },
         )
 
         daisyMegamenu(
@@ -74,5 +75,5 @@ fun HTML.megamenuReferencePage() {
  * outer trigger that opens the whole megamenu is a `btn`.
  */
 private fun FlowContent.panelTrigger(label: String, panel: HtmlId) {
-    button { attributes["popovertarget"] = panel.id; +label }
+    button { popoverTarget(panel); +label }
 }

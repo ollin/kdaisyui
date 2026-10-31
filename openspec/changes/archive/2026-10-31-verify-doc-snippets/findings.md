@@ -101,7 +101,7 @@ One row per finding (house rules §9).
 | F1 | - | fixed - in this change (the plan was revised to compile in place) |
 | F2 | - | fixed - in this change (task 3.5) |
 | F3 | - | fixed - in this change (section 3) |
-| F4 | A CI test fails when a Gradle task that `check` depends on is run by no CI job | open |
+| F4 | - | fixed - #423: the `unit-tests` job runs `check`, so no task of it can miss CI |
 | F5 | The `fwb-tcr` recovery ladder names Kotlin's unreachable safe-call branches as a known cause of a coverage revert | open |
 | F6 | - | none - record only; the exclusion is commented in `doc-snippets/build.gradle.kts` |
 | F7 | getting-started's build script uses the Maven Central coordinates README shows | open |

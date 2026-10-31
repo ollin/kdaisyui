@@ -16,13 +16,14 @@ E2E as early as the function allows.
 
 ## 2. The model fact, under TCR
 
-- [ ] 2.1 `^ r (internal)` The shape carries `idRequired`, default false; no model sets it, so the
-  regeneration diff is empty.
-- [ ] 2.2 `. F (internal)` A function with `idRequired` takes `id: HtmlId` without a default and
+- [x] 2.1 ~~`^ r (internal)` The shape carries `idRequired`~~ Not needed: the body reads whether
+  `id` is required from the signature, as it does for `content`, so no shape flag exists. The
+  regeneration after 2.3 showed no diff, which is what this task was to prove.
+- [x] 2.2 `. F (internal)` A function with `idRequired` takes `id: HtmlId` without a default and
   writes it unconditionally.
-- [ ] 2.3 `. F (internal)` `"anchoredPopover": true` in a model sets `idRequired` and writes
+- [x] 2.3 `. F (internal)` `"anchoredPopover": true` in a model sets `idRequired` and writes
   `popover` and `style="position-anchor:${id.anchorName}"`.
-- [ ] 2.4 `. F (internal)` The test generator passes an id to a function whose `id` is required,
+- [x] 2.4 `. F (internal)` The test generator passes an id to a function whose `id` is required,
   in the documented-element call and in the coverage test's minimal case (1.2 found both).
 
 ## 3. Core, under TCR
@@ -34,7 +35,7 @@ E2E as early as the function allows.
 
 ## 4. The function, and the E2E that can refute it
 
-- [ ] 4.1 `^ F` `daisyDropdownPopover` in `codegen/model/dropdown.json`, regenerated; the
+- [x] 4.1 `^ F` `daisyDropdownPopover` in `codegen/model/dropdown.json`, regenerated; the
   documented `<ul>`'s test now calls it.
 - [ ] 4.2 `^ F` An example-app page with a trigger and a popover dropdown, no script.
 - [ ] 4.3 `^ F` E2E: the click opens the menu, and its top edge meets the trigger's bottom edge.
@@ -43,7 +44,10 @@ E2E as early as the function allows.
 
 ## 5. Baselines and docs
 
-- [ ] 5.1 `. d` `just update-api`: read both diffs; additions only.
+- [x] 5.1 `. d` `just update-api`: read both diffs; additions only. Done within each step instead,
+  because `checkKotlinAbi` runs in `build` and would turn every step red: `lib.api` gained
+  `anchorName`, `popoverTarget`, `PopoverTargetAction`, `daisyDropdownPopover` and its class
+  sibling; `components.api` the last two. Nothing removed.
 - [ ] 5.2 `. d` `docs/how-to.md`: a recipe for the popover dropdown, compiled by `:doc-snippets`.
 
 ## 6. Gate and adoption

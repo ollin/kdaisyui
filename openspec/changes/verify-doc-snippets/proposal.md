@@ -1,81 +1,70 @@
 ## Why
 
-`docs/how-to.md`, `docs/tutorials/**`, `docs/explanation.md` and `README.md` contain roughly
-1100 lines of hand-written prose, and inside it a large number of Kotlin snippets. **Not one of
-them is compiled.** A snippet can name a function that was renamed, pass a parameter that was
-removed, or use a lambda receiver that changed — the same `DIV` → `SPAN` move that made
-`docs/reference/megamenu.md` wrong — and nothing anywhere fails.
+`README.md`, `docs/how-to.md`, `docs/explanation.md` and the two tutorials hold **68 Kotlin code
+blocks, 634 lines**, counted 2026-10-31: 41 that use the library, 21 migration before/after
+snippets and 6 build scripts. **Not one of them is compiled.** A snippet can name a function
+that was renamed, pass a parameter that was removed, or use a lambda receiver that changed (the
+same `DIV` → `SPAN` move that once made `docs/reference/megamenu.md` wrong), and nothing fails.
 
-This is a worse failure than the reference-page drift that `generate-component-reference`
-addresses, for two reasons. A reference page is at least mechanically derivable, so it *can* be
-generated; prose cannot, and must stay hand-written. And a tutorial is what a new user types
-first, so a broken snippet is the library's first impression.
+A tutorial is what a new user types first, so a broken snippet is the library's first impression.
+Reference pages are generated and drift-checked; the prose around them cannot be generated and
+must stay hand-written. Only the code inside it can be kept honest.
+
+**Revised 2026-10-31** (`findings.md` F1). This change first planned to *inject* the snippets
+from named regions in `example-app`. Its own survey refuted that: only about 12 of the 41 usage
+snippets have an honest home there, because tutorials show code growing step by step and
+`example-app` holds only the finished state. Oliver chose to compile the snippets where they stand.
 
 ## What Changes
 
-- Snippets in the prose documentation are **injected from real source files** rather than typed
-  into Markdown, using named regions in the source — not line numbers, which would relocate the
-  drift rather than remove it.
-- The source of a snippet is `example-app/`, which compiles as part of `check` and is driven
-  through a real browser by `:e2e-tests`. A snippet therefore carries two guarantees: it
-  compiles, and the page it belongs to is asserted to render.
-- A missing or renamed region **fails loudly** rather than silently emitting nothing.
-- CI gains a check that the injected documentation is in step with its sources, on the same
-  terms as `generated-sources-drift`.
-- `README.md`'s component table — a third copy of the 66 components — is taken over by the same
-  mechanism, closing the gap `generate-component-reference` deliberately left open.
+- Every Kotlin code block in the prose documentation is **compiled by `./gradlew check`**, where
+  it stands. The Markdown stays the single place the snippet is written.
+- A new, unpublished module **`:doc-snippets`** does it. Its `main` source set is the extractor, a
+  small Kotlin program unit-tested under the repository's 100% coverage gate. It writes one Kotlin
+  file per snippet, and a second source set compiles those against `:lib`, `:ktor-integration`,
+  kotlinx.html and Ktor.
+- A snippet that cannot compile on purpose (the *before* half of a migration note, a signature
+  quoted for reading, a hypothetical pattern) says so in an invisible marker right above its
+  fence, **with a reason**. A marker without a reason fails the build.
+- A snippet that stops compiling fails `check`, naming the document and the line of the fence.
+- Snippets that no longer compile today are fixed in this change, and README's stale *What's new
+  in 0.2.0* section is deleted (`findings.md` F2).
+- **No Node and no new dependency.** The extractor is plain Kotlin, so `check` keeps the promise
+  that a clone builds with no Node, npm or submodules.
+
+**Removed from the first plan:** markdown-magic (measured at 71 packages, 18 MB), region markers in
+`example-app`, the CI drift job (nothing generated is committed, so there is nothing to drift),
+and `llms.txt` (generated since 0.7.0).
 
 **Not breaking.** No published artifact changes.
 
-### The subtractive option, stated
+## Assumptions
 
-The alternative to injecting snippets is **removing them**: cut the tutorials down to prose that
-points at `example-app` and let readers read the real thing. That is genuinely cheaper and it is
-not obviously worse — a tutorial that shows five lines and links to the working file may serve a
-reader better than one that inlines forty.
-
-It is rejected for the tutorials, because a tutorial that cannot be read linearly stops being a
-tutorial. It should be **taken** wherever a snippet is long enough that nobody reads it inline;
-the first task measures which snippets those are, so the decision is made against a list rather
-than a feeling.
-
-A second subtraction is available and should be weighed during implementation: several
-`how-to.md` recipes may duplicate what a tutorial already shows, and deleting the duplicate
-beats injecting it twice.
-
-## Out of scope — owned by `generate-component-reference`
-
-The 66 per-component pages and `docs/reference/index.md`. Those are fully derivable and are
-generated wholesale by that change, with no dependency added. **This change depends on it
-having landed**, for one substantive reason beyond ordering: `generate-component-reference`
-moves prose out of `index.md` into `docs/explanation.md`, and this change then treats
-`explanation.md` as prose to be snippet-verified. Doing them in the other order means touching
-the same sections twice.
+| ID | Assumption | Checked by | Status |
+|---|---|---|---|
+| A1 | No requirement of a main spec this builds on contradicts it. It touches none of `generated-sources`, `coverage-enforcement`, `api-change-detection` or `css-delivery`; it only adds a module that publishes nothing | code | confirmed at proposal - the specs' requirements name `lib/generated/**`, `codegen/`, the published artifacts and the aggregated gate, none of which this changes |
+| A2 | Most usage snippets compile with one default context (a statement inside a `FlowContent` builder, standard imports), so markers stay the exception | code | to check in task 1.1 |
+| A3 | A new module's `main` source set can join the aggregated 100% Kover gate the way `:lib` and `:ktor-integration` do | code | to check in task 1.2 |
+| A4 | `example-app` can be the source of the snippets | code | false - about 12 of 41 have a home there; replaced by compiling in place (finding F1) |
 
 ## Capabilities
 
 ### New Capabilities
 
-- `documentation-snippets`: code shown in prose documentation is extracted from sources that
-  compile and are exercised by tests, and a snippet whose source moves or disappears fails the
-  build rather than going stale.
+- `documentation-snippets`: every Kotlin snippet in the prose documentation is compiled by the
+  build, or says why it is not; a snippet that stops compiling fails the build and names where it
+  is.
 
 ### Modified Capabilities
 
-<!-- none: generated-sources covers generated output, which this is not — the prose files stay
-     hand-written and only their fenced code blocks are injected. -->
+<!-- none: generated-sources covers generated output; these documents stay hand-written. -->
 
 ## Impact
 
-- **New dependency**: `markdown-magic`, or a small purpose-built transform. This is the change's
-  central cost and its first task decides it by measuring the footprint against the number of
-  snippets and transforms actually needed. If the tool is adopted it goes in its **own package**,
-  not in `codegen/`, because a documentation tool has no business in the dependency tree that
-  generates the library.
-  **Corrected 2026-09-12:** this justified the separation by `codegen/`'s zero-dependency
-  property, which `verify-generator-assertions` has since spent on an HTML parser. The separation
-  stands on its own reasoning; the appeal to an unbroken promise does not.
-- **Edited**: `docs/how-to.md`, `docs/tutorials/**`, `docs/explanation.md`, `README.md`.
-- **Edited**: `example-app/**` gains region markers in comments.
-- **CI**: one more check.
-- No change to `lib`, `ktor-integration`, `bom` or any published artifact.
+- **New module**: `doc-snippets/` (settings, build file, extractor, its tests). Not published,
+  not in the BOM.
+- **Edited**: `README.md`, `docs/how-to.md`, `docs/explanation.md`, `docs/tutorials/*.md`, for
+  markers and for snippets that no longer compile.
+- **Edited**: root `build.gradle.kts` for the Kover aggregation, if A3 holds.
+- **Edited**: `AGENTS.md` and the `kdaisyui-testing` skill, for the marker convention.
+- No change to `lib`, `ktor-integration`, `bom`, CI workflows or any published artifact.

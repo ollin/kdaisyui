@@ -173,6 +173,11 @@ jobs:
         # Only the E2E suite is left to its own job, which installs Chromium.
         run: ./gradlew check -x :e2e-tests:test koverXmlReport --no-daemon
 
+      - name: No Gradle problem beyond the accepted ones
+        # Reads the problems report the step above wrote, which no task of that build can read
+        # itself. The accepted problems, each with its reason: gradle/allowed-gradle-problems.txt.
+        run: ./gradlew :build-checks:checkGradleProblems --no-daemon
+
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@v7

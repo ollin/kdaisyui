@@ -1,0 +1,10 @@
+# Gradle problems the build accepts: `<problem id> <plugin id>` per line, each with why above it.
+# CI's unit-tests job fails on any other problem in build/reports/problems/problems-report.html
+# (:build-checks:checkGradleProblems). A problem the build itself causes has no plugin id, so it
+# can never be listed here: fix it instead.
+
+# Kover 0.9.11, the latest release on 2026-10-31, calls the deprecated Configuration.setVisible.
+the-configuration-setvisible-boolean-method-has-been-deprecated org.jetbrains.kotlinx.kover
+
+# The PIT plugin 1.19.0, the latest release on 2026-10-31, calls it too.
+the-configuration-setvisible-boolean-method-has-been-deprecated info.solidsoft.pitest

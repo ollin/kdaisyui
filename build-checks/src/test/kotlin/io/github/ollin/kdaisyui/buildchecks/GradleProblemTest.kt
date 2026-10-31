@@ -12,4 +12,11 @@ class GradleProblemTest {
             """{"problemId":[{"name":"deprecation"},{"name":"external-process"}],"severity":"WARNING"}]}"""
         assertEquals(listOf(GradleProblem("set-visible", "org.example.kover"), GradleProblem("external-process", null)), problemsIn(report))
     }
+
+    @Test
+    fun aSummaryOfAListedProblemIsThatProblemAndOneOfAnUnlistedProblemIsTheBuildsOwn() {
+        val report = """{"diagnostics":[{"problemId":[{"name":"set-visible"}],"locations":[{"pluginId":"org.example.kover"}]}],""" +
+            """"problemsReport":{"summaries":[{"problemId":[{"name":"set-visible"}],"count":5},{"problemId":[{"name":"get-properties"}],"count":1}]}}"""
+        assertEquals(listOf(GradleProblem("set-visible", "org.example.kover"), GradleProblem("get-properties", null)), problemsIn(report))
+    }
 }

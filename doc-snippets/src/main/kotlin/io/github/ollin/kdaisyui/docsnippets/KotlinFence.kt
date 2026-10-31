@@ -2,8 +2,9 @@ package io.github.ollin.kdaisyui.docsnippets
 
 /** A fenced `kotlin` code block of a Markdown document; [line] is its opening fence, 1-based. */
 data class KotlinFence(val line: Int, val code: String, val marker: String? = null) {
-    /** The functions and properties this snippet declares at column 0. */
-    val declaredNames: List<String> get() = code.lines().mapNotNull { declaration.find(it)?.groupValues[1] }
+    /** The functions and properties this snippet declares at top level; inside a receiver it declares none. */
+    val declaredNames: List<String> get() =
+        if (directive is Directive.In) emptyList() else code.lines().mapNotNull { declaration.find(it)?.groupValues[1] }
 
     /** What the marker above the fence asks of it. */
     val directive: Directive get() = directiveOf(marker)

@@ -33,4 +33,9 @@ class KotlinFenceTest {
         val code = "fun FlowContent.shellSidebar() {\n    val inner = 1\n}\nval html = 2\nsuspend fun RoutingCall.respond() { }"
         assertEquals(listOf("shellSidebar", "html", "respond"), KotlinFence(1, code).declaredNames)
     }
+
+    @Test
+    fun aFenceMarkedInAReceiverDeclaresNothingAtTopLevel() {
+        assertEquals(emptyList(), KotlinFence(1, "fun helper() { }", marker = "in Route").declaredNames)
+    }
 }

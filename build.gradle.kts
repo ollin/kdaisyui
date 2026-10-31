@@ -13,12 +13,14 @@ repositories {
     mavenCentral()
 }
 
-// Root-level coverage aggregation: merge the published library modules into one
-// report. Only :lib and :ktor-integration are measured; :example-app, :e2e-tests,
-// and :bom are intentionally out of scope (demo / test code / no code).
+// Root-level coverage aggregation: merge the measured modules into one report. :lib and
+// :ktor-integration are the published code; :doc-snippets' extractor is measured too, because
+// the build relies on it. :example-app, :e2e-tests, and :bom are intentionally out of scope
+// (demo / test code / no code).
 dependencies {
     kover(project(":lib"))
     kover(project(":ktor-integration"))
+    kover(project(":doc-snippets"))
 }
 
 // Aggregated coverage reports. The hard verify rule is added LAST (see the

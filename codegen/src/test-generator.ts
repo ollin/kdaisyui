@@ -802,13 +802,13 @@ function closesSuffix(ctx) {
 }
 
 /** The `Expected` a case asserts against, as Kotlin. */
-function expectedValue(ctx, classes, label, withCloses, content = true) {
+function expectedValue(ctx, classes, label, { withCloses = false, content = true } = {}) {
   const closes = withCloses ? closesSuffix(ctx) : null
   return `Expected("${label}", "${classes}"${closes ? `, closes = "${closes}"` : ''}${content ? '' : ', content = false'})`
 }
 
 function renderedAssert(ctx, classes, label, withCloses) {
-  return `assertRendered(html, ${expectedValue(ctx, classes, label, withCloses)})`
+  return `assertRendered(html, ${expectedValue(ctx, classes, label, { withCloses })})`
 }
 
 function renderTest(funcName, wrapperFn, callArgs, asserts) {
@@ -898,7 +898,7 @@ function allFlagsAsserts(ctx, boolCss) {
   // and four parameters say the same thing and trip neither rule.
   const classes = sortedClasses([ctx.base, ...boolCss, ...(ctx.hasHatches ? ['zz-extra'] : [])])
   const asserts = [
-    `val expected = ${expectedValue(ctx, classes, `${ctx.daisyName} all flags`, true, ctx.hasContent)}`,
+    `val expected = ${expectedValue(ctx, classes, `${ctx.daisyName} all flags`, { withCloses: true, content: ctx.hasContent })}`,
     'assertRendered(html, expected)',
     ...(ctx.hasHatches ? ['assertCommonFlags(html, expected)'] : []),
   ]

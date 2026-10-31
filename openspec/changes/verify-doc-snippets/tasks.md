@@ -31,7 +31,7 @@ sections. It stays as it was; the revision is measured as part of the run.
   `kotlin` fence in a document, with the line of its opening fence.
 - [x] 2.2 `. F (internal)` Wrap a snippet in the default context, in its own package, in a file
   named for document and line.
-- [ ] 2.3 `. F (internal)` `in <Receiver>` wraps a snippet in an extension on that receiver.
+- [x] 2.3 `. F (internal)` `in <Receiver>` wraps a snippet in an extension on that receiver.
 - [ ] 2.3a `. F (internal)` Document scope: a block imports the other blocks' top-level
   declarations, the nearest before it winning, else the nearest after it.
 - [ ] 2.4 `. F (internal)` `skip - <reason>` excludes a snippet; `skip` without a reason fails.

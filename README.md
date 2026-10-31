@@ -49,35 +49,17 @@ This project follows the [Diátaxis](https://diataxis.fr/) documentation framewo
 
 > Published to [Maven Central](https://central.sonatype.com/artifact/io.github.ollin.kdaisyui/kdaisyui). Use the latest version shown on the badge above (or build from source with `just build`).
 
-## What's new in 0.2.0
+## Upgrading
 
-Tracks DaisyUI 5.7.16, up from 5.5.20. **66 components**, up from 63.
-
-**New components**
-
-<!-- Hand-maintained. The pages this table links to are generated from DaisyUI and
-     drift-checked; these three rows are not, and they have already been wrong: the
-     Megamenu row omitted daisyMegamenuPanel from 0.2.0 until 2026-09-12. Check them
-     against docs/reference/ when a release adds a function. -->
-
-| Component | Function | What it does |
-|---|---|---|
-| [Aura](docs/reference/aura.md) | `daisyAura` | Border light effect wrapping a component — `dual`, `glow`, `gold`, `holo`, `rainbow`, `silver` |
-| [Otp](docs/reference/otp.md) | `daisyOtp` | One-time password / verification code input, 8 colours, `joined` |
-| [Megamenu](docs/reference/megamenu.md) | `daisyMegamenu`, `daisyMegamenuActive`, `daisyMegamenuPanel` | Horizontal menu with popover navigation blocks — `full`, `vertical`, `wide` |
-
-**New on existing components**
-
-- `daisyDrawerButton` — a new drawer part
-- `daisyMenu(paged = true)` — shows one level at a time, turning the open summary into a back button
-- `daisyRange(vertical = true)`
-- `daisyTooltip(start = …, center = …, end = …)` — alignment alongside the existing `top`/`bottom`/`left`/`right`
+Every release that breaks the API says what to change. Read the sections from the version you
+have up to the one you move to; the release notes on GitHub list everything else.
 
 ### How to migrate from 0.1.x
 
 **1. `TooltipVariant.Neutral` was removed.** DaisyUI dropped the `tooltip-neutral` class, so
 the enum entry went with it. This is a compile error, not a silent change:
 
+<!-- snippet: skip - a migration note from 0.1.x, written against the API of its release -->
 ```kotlin
 // before
 daisyTooltip("Copy to clipboard", variant = TooltipVariant.Neutral) { … }
@@ -94,6 +76,7 @@ Generated parameters are sorted alphabetically, so a DaisyUI release that adds a
 inserts it into the *middle* of an existing signature. In 0.2.0, `center` and `end` landed
 between `bottom` and `left` on `daisyTooltip`:
 
+<!-- snippet: skip - a migration note from 0.1.x, written against the API of its release -->
 ```kotlin
 // 0.1.x — third boolean was `left`
 daisyTooltip("Hint", null, false, true) { … }   // meant left = true
@@ -104,6 +87,7 @@ daisyTooltip("Hint", null, false, true) { … }   // meant left = true
 Every modifier is `Boolean = false`, so the compiler cannot notice. Named arguments are
 immune, and they are the only call style this project can keep stable across DaisyUI releases:
 
+<!-- snippet: skip - a migration note from 0.1.x, written against the API of its release -->
 ```kotlin
 daisyTooltip("Hint", left = true) { … }
 ```
@@ -113,6 +97,7 @@ daisyTooltip("Hint", left = true) { … }
 **`daisyMegamenuActive` now renders a `<span>`, not a `<div>`.** Its `attrs` and `content`
 lambdas therefore receive `SPAN` instead of `DIV`:
 
+<!-- snippet: skip - a migration note from 0.3.x, written against the API of its release -->
 ```kotlin
 // before
 daisyMegamenuActive(attrs = { /* this: DIV */ }) { /* this: DIV */ }
@@ -148,6 +133,7 @@ dangerous one.
 lambda.** All three render a void element — two `<input>`, one `<img>` — and HTML forbids
 children there, so anything that lambda wrote could never legally render:
 
+<!-- snippet: skip - a migration note from 0.4.x, written against the API of its release -->
 ```kotlin
 // before
 daisyMask(circle = true) { }
@@ -164,6 +150,7 @@ the arity changes.
 **2. `daisyOtp` now renders a `<label>`, not a `<div>`.** Its `attrs` and `content` lambdas
 receive `LABEL` instead of `DIV`:
 
+<!-- snippet: skip - a migration note from 0.4.x, written against the API of its release -->
 ```kotlin
 // before
 daisyOtp(joined = true, attrs = { /* this: DIV */ }) { /* this: DIV */ }
@@ -197,6 +184,7 @@ A boolean that became an enum entry is gone as a parameter, so the compiler name
 of a component's classes cannot both take effect, the booleans were replaced by a single
 parameter:
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before — nothing stopped you asking for both
 daisyMenu(vertical = true, horizontal = true) { … }
@@ -237,6 +225,7 @@ the booleans around it stay booleans.
 **2. Four placement groups split into two independent axes**, because their classes compose
 *across* the split even though each axis is a single choice:
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before
 daisyTooltip("Copy", top = true, start = true) { … }
@@ -274,6 +263,7 @@ is, apply a variant as a literal through `extraClasses`, which is the form Tailw
 
 Only code that names the type explicitly is affected:
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before
 val size: ButtonSize? = if (compact) ButtonSize.Sm else null
@@ -294,6 +284,7 @@ which element carries each class, and where the generator had put a parameter on
 while DaisyUI puts the class on a child, the parameter moved. The class had been reaching the
 page and styling nothing.
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before — the placement classes sat on the container, where they do nothing
 daisyIndicator(verticalPlacement = IndicatorVerticalPlacement.Top) { daisyIndicatorItem { … } }
@@ -309,6 +300,7 @@ Sixteen parts now render the element DaisyUI documents rather than one guessed f
 and `daisyStatus` renders `<div>` — measured, because DaisyUI shows `status` on a `<div>` 16
 times and a `<span>` once, and all thirteen of its variant classes on `<div>` alone.
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before
 daisyStatus(attrs = { /* this: SPAN */ }) { /* this: SPAN */ }
@@ -330,6 +322,7 @@ which is the point: it never rendered valid HTML.
 `skeleton-text` in exactly one markup, `<span class="skeleton skeleton-text">`, and the boolean
 offered it on a `<div>` instead — for a modifier whose purpose is animating *text* colour.
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before
 daisySkeleton(text = true) { +"AI is thinking harder..." }
@@ -344,6 +337,7 @@ than a hand-written entry. A rename, nothing else.
 `daisyFilterReset` and `daisyModalToggle` render `<input>`, which the HTML specification says
 cannot hold children — so the lambda described children that were never rendered.
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before — the lambda ran, and nothing it wrote appeared
 daisyModalToggle { }
@@ -354,6 +348,7 @@ daisyModalToggle()
 **11. `daisyJoin`'s `content` lambda receives a `JoinScope`, not a `DIV`.** Inside it, a
 component call DaisyUI documents as a join item marks itself:
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before — join-item was unreachable except as a raw string
 daisyJoin {
@@ -378,6 +373,7 @@ into a set, so it renders once, not twice.
 Two behaviours are worth knowing before you rely on them, both of which follow DaisyUI's own
 markup rather than being choices:
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 daisyJoin {
     daisyButton("One")                       // marked
@@ -404,6 +400,7 @@ removed `mask-square` from the library **in v5** and only removed it from the do
 which was removed from the library in v5"*). kdaisyui generated the constant from those docs,
 so it has been emitting a class no stylesheet matches.
 
+<!-- snippet: skip - a migration note from 0.5.x, written against the API of its release -->
 ```kotlin
 // before — compiled, rendered class="mask mask-square", and no rule ever matched it
 daisyMask(style = ClassValues.of(MaskStyle.Square)) { src = "/cat.png" }
@@ -437,6 +434,7 @@ In 0.6.0 they did not: `end`, `start`, `center`, `top` and `bottom` were still p
 the enums, so `daisyDropdown(end = true, horizontalPlacement = DropdownHorizontalPlacement.Start)`
 compiled and emitted both classes. They are gone now, and it breaks at compile time:
 
+<!-- snippet: skip - a migration note from 0.6.x, written against the API of its release -->
 ```kotlin
 // before — compiled in 0.6.0
 daisyDropdown(end = true, top = true) { … }
@@ -466,6 +464,7 @@ depends on `kdaisyui` alone.
 
 Add what you actually use, at the versions you choose:
 
+<!-- snippet: skip - a Gradle build script, not code against the library -->
 ```kotlin
 // build.gradle.kts
 implementation("io.ktor:ktor-server-resources")            // needed to compile against the integration
@@ -513,9 +512,13 @@ DaisyUI does not have, so an active tab never looked active.
 
 **2. Every `variant` is now `color`, and its enum `<Name>Color`.**
 
+<!-- snippet: skip - the 0.7.x API, shown for migration -->
 ```kotlin
 // before
 daisyButton("Save", variant = ButtonVariant.Primary)
+```
+
+```kotlin
 // after
 daisyButton("Save", color = ButtonColor.Primary)
 ```
@@ -577,11 +580,15 @@ The booleans that remain are on/off features, such as `zebra`, `active`, `soft` 
 **6. The dropdown takes the tooltip's shape.** DaisyUI's examples combine one side with at most
 one alignment, so that is what the parameters say:
 
+<!-- snippet: skip - the 0.7.x API, shown for migration -->
 ```kotlin
 // before
 daisyDropdown(verticalPlacement = DropdownVerticalPlacement.Top, horizontalPlacement = DropdownHorizontalPlacement.End, left = false)
+```
+
+```kotlin
 // after
-daisyDropdown(side = DropdownSide.Top, align = DropdownAlign.End)
+daisyDropdown(side = DropdownSide.Top, align = DropdownAlign.End) { /* … */ }
 ```
 
 `left` and `right` are `DropdownSide.Left` and `.Right`. `DropdownModifier.Open` and the `close`
@@ -623,7 +630,7 @@ strings 0.7.x needed for such cases:
 
 ```kotlin
 // <ul class="dropdown-content menu menu-sm">
-daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) { … }
+daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) { /* … */ }
 // <a class="btn btn-primary">
 a { daisyButtonClasses(color = ButtonColor.Primary) }
 ```
@@ -637,6 +644,7 @@ rendered nothing to look at. The lambda receiver is now `CALENDAR_DATE`, from
 
 ### 1. Add the dependency
 
+<!-- snippet: skip - a Gradle build script, not code against the library -->
 ```kotlin
 // build.gradle.kts
 repositories {
@@ -692,6 +700,7 @@ and your button renders unstyled with no error anywhere.
 
 So the library ships the list. Extract it and point Tailwind at it:
 
+<!-- snippet: skip - a Gradle build script, not code against the library -->
 ```kotlin
 // build.gradle.kts
 val kdaisyuiClasses by configurations.creating
@@ -726,15 +735,20 @@ component and forgets, and the failure is silent.
 For a prototype you can skip the build step and serve DaisyUI's prebuilt stylesheet from its
 webjar, through Ktor's Webjars plugin:
 
+<!-- snippet: skip - a Gradle build script, not code against the library -->
 ```kotlin
 // build.gradle.kts — DAISYUI_VERSION: see below
 implementation("io.ktor:ktor-server-webjars")
 implementation("org.webjars.npm:daisyui:DAISYUI_VERSION")
 ```
 
+<!-- snippet: in Application -->
 ```kotlin
 install(Webjars)
-// …
+```
+
+<!-- snippet: in HEAD -->
+```kotlin
 link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
 ```
 

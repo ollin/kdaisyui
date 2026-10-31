@@ -7,7 +7,7 @@ package io.github.ollin.kdaisyui.docsnippets
  * declare: the nearest declaration before it, or failing that the nearest after it.
  */
 class SnippetDocument(private val path: String, markdown: String) {
-    private val fences = kotlinFencesIn(markdown)
+    private val fences = kotlinFencesIn(markdown).filterNot { (it.marker ?: "").startsWith("skip - ") }
 
     val sources: List<SnippetSource> get() = fences.map { SnippetSource(path, it, scopeOf(it)) }
 

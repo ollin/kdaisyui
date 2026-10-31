@@ -18,4 +18,10 @@ class PopoverTest {
         val html = createHTML(prettyPrint = false).button { attributes["style"] = "color:red"; popoverTarget(htmlId("menu")) }
         assertEquals("""<button style="color:red;anchor-name:--menu" popovertarget="menu"></button>""", html)
     }
+
+    @Test
+    fun aCloseButtonNamesItsAction() {
+        val html = createHTML(prettyPrint = false).button { popoverTarget(htmlId("modal"), PopoverTargetAction.Hide) }
+        assertEquals("""<button popovertarget="modal" popovertargetaction="hide" style="anchor-name:--modal"></button>""", html)
+    }
 }

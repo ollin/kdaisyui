@@ -33,6 +33,8 @@ class Dashboard : AnnotatedIdBase("dashboard") {
 
     class PopoverModal(parent: Dashboard = Dashboard()) : AnnotatedIdBase("popover-modal", parent)
 
+    class DropdownPopover(parent: Dashboard = Dashboard()) : AnnotatedIdBase("dropdown-popover", parent)
+
     class Pipelines(parent: Dashboard = Dashboard()) : AnnotatedIdBase("pipelines", parent)
 
     class Issues(parent: Dashboard = Dashboard()) : AnnotatedIdBase("issues", parent)

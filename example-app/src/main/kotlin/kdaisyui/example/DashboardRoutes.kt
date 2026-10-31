@@ -16,6 +16,7 @@ fun Route.dashboardRoutes() {
     }
 
     get<PopoverModalDemo> { call.respondHtml(HttpStatusCode.OK) { popoverModalPage() } }
+    get<DropdownPopoverDemo> { call.respondHtml(HttpStatusCode.OK) { dropdownPopoverPage() } }
 
     get<MegamenuReference> { call.respondHtml(HttpStatusCode.OK) { megamenuReferencePage() } }
 

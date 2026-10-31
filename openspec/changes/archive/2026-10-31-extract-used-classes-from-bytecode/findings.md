@@ -31,3 +31,14 @@
   five steps.
 - **Cause:** an edit to the step list that did not reach the signal text.
 - **Cost:** none, but it left a reader guessing whether a step had been lost.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | A probe states each threshold as a share of a baseline it measures with a named command, so a moved baseline rescales the threshold instead of leaving it stale | open |
+| F2 | - | none - record only; `observations.md` keeps the `source(none)` lesson |
+| F3 | `example-app`'s `app.css` says `source(none)`, so its stylesheet depends only on the sources it declares | adopted -> per-component-class-delivery |
+| F4 | - | none - record only |

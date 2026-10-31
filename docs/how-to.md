@@ -179,6 +179,7 @@ Pattern: `daisyFieldset` wraps each field group. `daisyLabel` adds the label. Th
 
 Use the DaisyUI drawer pattern:
 
+<!-- snippet: in HTML -->
 ```kotlin
 body("drawer lg:drawer-open min-h-screen") {
     // Hidden checkbox toggles the drawer on mobile
@@ -240,6 +241,7 @@ div {
 
 **Step 2**: Create a fragment endpoint that returns raw HTML (not a full document):
 
+<!-- snippet: in Route -->
 ```kotlin
 import kotlinx.html.stream.appendHTML
 

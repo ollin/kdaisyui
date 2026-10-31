@@ -34,8 +34,9 @@ dependencies {
     "snippetsImplementation"(libs.bundles.ktor.server.app)
 }
 
-// The snippets are documentation, not code the build relies on: Kover neither compiles nor
-// measures them, or `build` would fail on every snippet and the gate would count them.
+// The snippets are documentation, not code the build relies on: Kover must not measure them,
+// or the coverage gate would count every snippet as an untested line. `check` compiles them
+// through compileSnippets instead.
 kover {
     currentProject {
         sources {
@@ -44,8 +45,10 @@ kover {
     }
 }
 
-tasks.register("compileSnippets") {
+val compileSnippets = tasks.register("compileSnippets") {
     description = "Compiles every Kotlin snippet of the prose documentation."
     group = "verification"
     dependsOn(snippets.classesTaskName)
 }
+
+tasks.named("check") { dependsOn(compileSnippets) }

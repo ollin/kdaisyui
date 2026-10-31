@@ -168,7 +168,9 @@ jobs:
       - name: Run unit tests and enforce coverage gate
         # koverVerify is the aggregated 100% gate — keep it here so CI fails on a
         # coverage shortfall; reverting this to a bare :lib:test silently disables it.
-        run: ./gradlew :lib:test koverVerify koverXmlReport --no-daemon
+        # compileSnippets compiles every Kotlin snippet of README.md and docs/; no job
+        # runs `check` as a whole, so without it here a stale snippet would merge.
+        run: ./gradlew :lib:test koverVerify koverXmlReport :doc-snippets:compileSnippets --no-daemon
 
       - name: Upload test report
         if: failure()

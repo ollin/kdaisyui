@@ -37,8 +37,8 @@ E2E as early as the function allows.
 
 - [x] 4.1 `^ F` `daisyDropdownPopover` in `codegen/model/dropdown.json`, regenerated; the
   documented `<ul>`'s test now calls it.
-- [ ] 4.2 `^ F` An example-app page with a trigger and a popover dropdown, no script.
-- [ ] 4.3 `^ F` E2E: the click opens the menu, and its top edge meets the trigger's bottom edge.
+- [x] 4.2 `^ F` An example-app page with a trigger and a popover dropdown, no script.
+- [x] 4.3 `^ F` E2E: the click opens the menu, and its top edge meets the trigger's bottom edge.
   If this refutes the Assumed requirement, revise the change before going on.
 - [ ] 4.4 `^ r` The example app's four untyped `popovertarget` strings become `popoverTarget(…)`.
 

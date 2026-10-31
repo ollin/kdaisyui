@@ -43,9 +43,9 @@ writes `popovertarget` with the popover's id, `popovertargetaction` when an acti
 In the example application, clicking the trigger of a `daisyDropdownPopover` SHALL show the menu
 next to the trigger, with no script on the page.
 
-**Assumed** that DaisyUI's anchor positioning places it there in the E2E browser. *Wrong if:* the
-open menu's bounding box does not touch the trigger's, which is what a popover without a working
-anchor does: it opens at the centre of the viewport.
+**Verified** 2026-10-31 by `e2e-tests/.../dropdown_popover.feature` in Chromium: the open menu's
+top edge meets the trigger's bottom edge within 4px. The check was seen to fail with the trigger's
+`anchor-name` removed: the menu then opened 80px off.
 
 #### Scenario: Click opens it under the button
 

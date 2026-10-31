@@ -32,7 +32,7 @@ sections. It stays as it was; the revision is measured as part of the run.
 - [x] 2.2 `. F (internal)` Wrap a snippet in the default context, in its own package, in a file
   named for document and line.
 - [x] 2.3 `. F (internal)` `in <Receiver>` wraps a snippet in an extension on that receiver.
-- [ ] 2.3a `. F (internal)` Document scope: a block imports the other blocks' top-level
+- [x] 2.3a `. F (internal)` Document scope: a block imports the other blocks' top-level
   declarations, the nearest before it winning, else the nearest after it.
 - [ ] 2.4 `. F (internal)` `skip - <reason>` excludes a snippet; `skip` without a reason fails.
 - [ ] 2.5 `. F (internal)` An unknown directive fails, naming document and line.

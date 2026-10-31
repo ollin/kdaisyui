@@ -26,6 +26,7 @@ Create a new Gradle module (or a standalone project) with these dependencies.
 
 **build.gradle.kts**
 
+<!-- snippet: skip - a Gradle build script, not code against the library -->
 ```kotlin
 plugins {
     // current Kotlin version: see gradle/libs.versions.toml → kotlin
@@ -218,12 +219,6 @@ section("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full
         daisyStatDesc("12% increase")
     }
 }
-    daisyStats {
-        daisyStatTitle("Users")
-        daisyStatValue("1,200")
-        daisyStatDesc("12% increase")
-    }
-}
 ```
 
 Refresh the page. You should see the stats section.
@@ -252,20 +247,14 @@ fun Route.dashboardRoutes() {
     }
     get("/fragments/stats") {
         call.respondHtmlFragment {
-section {
-    addClassNames("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full shadow-xs")
-    daisyStat {
-        daisyStatTitle("Page Views")
-        daisyStatValue("89,400")
-        daisyStatDesc("21% more than last month")
-    }
-    daisyStat {
-        daisyStatTitle("Users")
-        daisyStatValue("1,200")
-        daisyStatDesc("12% increase")
-    }
-}
-                daisyStats {
+            section {
+                addClassNames("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full shadow-xs")
+                daisyStat {
+                    daisyStatTitle("Page Views")
+                    daisyStatValue("89,400")
+                    daisyStatDesc("21% more than last month")
+                }
+                daisyStat {
                     daisyStatTitle("Users")
                     daisyStatValue("1,200")
                     daisyStatDesc("12% increase")
@@ -300,6 +289,7 @@ Refresh the page. You should see a brief spinner, then the stats appear. Open th
 
 Follow the same pattern for additional sections. Here's a transactions table:
 
+<!-- snippet: in Route -->
 ```kotlin
 get("/fragments/transactions") {
     call.respondHtmlFragment {

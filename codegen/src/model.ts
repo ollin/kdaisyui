@@ -208,7 +208,8 @@ function functionShape(model: ComponentModel, declared: ModelFunction, descripti
     htmlTag: htmlTagNameFor(element),
     cssClass: declared.class as CssClass | null,
     modifierClasses: (declared.always ?? []) as CssClass[],
-    staticAttributes: Object.entries(declared.attributes ?? {}),
+    staticAttributes: [...(declared.anchoredPopover ? [['popover', ''] as const] : []), ...Object.entries(declared.attributes ?? {})],
+    ...(declared.anchoredPopover ? { anchoredPopover: true as const } : {}),
     desc: functionDesc(declared, descriptions),
     parameters: functionParameters(element, declared.text, declared.parameters.map(parameter => parameterShape(model, parameter, descriptions)), declared.anchoredPopover === true),
   }

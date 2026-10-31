@@ -58,3 +58,16 @@
   measures `lib/generated/` like hand-written code.
 - **Cost:** none to this change; the gate stays failed on that one generated file, and Oliver
   decides at adoption.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | none - record only; the proposal followed the documented element |
+| F2 | - | fixed - in this change (task 2.4) |
+| F3 | - | fixed - in this change (task 4.1) |
+| F4 | - | fixed - in this change (task 4.3a) |
+| F5 | - | fixed - in this change (task 5.2) |
+| F6 | The coverage-test generator emits one parameterized test per axis instead of one test per entry, so CodeScene's gate measures generated tests without a standing duplication finding | open |

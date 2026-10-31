@@ -217,3 +217,6 @@ val verifyStagingComplete =
 
 tasks.matching { it.name == "jreleaserDeploy" || it.name == "jreleaserFullRelease" }
     .configureEach { dependsOn(verifyStagingComplete) }
+
+// The plugin is an included build, so the root `check` runs its tests and its own coverage gate.
+tasks.named("check") { dependsOn(gradle.includedBuild("gradle-plugin").task(":check")) }

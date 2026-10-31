@@ -40,3 +40,13 @@
 - **Cause:** an assumption about CI that nobody had written down, so nobody had checked it. It is
   now A5.
 - **Cost:** a design correction before any code; the job gains one task (task 4.1).
+
+## F5 - The branch gate reverts idiomatic null handling
+
+- **What happened:** two TCR steps in section 2 were reverted by `koverVerify`'s 100% branch rule,
+  not by an assertion. `?.groupValues?.get(1)` and `?.removePrefix(…) ?: default` each compile
+  to a null check on a value that can never be null, so one branch is unreachable.
+- **Cause:** the gate measures bytecode branches, and Kotlin emits them for safe calls whose
+  result cannot be null.
+- **Cost:** two reverts, about 3 minutes; each was retried in a form with no unreachable branch
+  (`?.groupValues[1]`, `(marker ?: default).removePrefix(…)`).

@@ -4,6 +4,22 @@
 plugins {
     id("kdaisyui.kotlin-library-conventions")
     alias(libs.plugins.kover)
+    alias(libs.plugins.pitest)
+}
+
+// Mutation testing, like :lib's and for the same reason: Kover says the extractor's lines ran,
+// PIT says a test would notice if they ran differently. 100% test strength, the same gate, with
+// lib/build.gradle.kts holding why it is test strength and not mutation score. Not in `check`;
+// CI's mutation-tests job runs it.
+pitest {
+    targetClasses.set(setOf("io.github.ollin.kdaisyui.docsnippets.*"))
+    targetTests.set(setOf("io.github.ollin.kdaisyui.docsnippets.*"))
+    junit5PluginVersion.set(libs.versions.pitest.junit5.get())
+    // Kotlin emits null-check calls into `kotlin.jvm.internal` on every parameter; mutating
+    // them yields mutants no test can meaningfully kill.
+    avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+    outputFormats.set(setOf("HTML", "XML"))
+    testStrengthThreshold.set(100)
 }
 
 // Every document whose Kotlin snippets are compiled. A document that is not listed is not

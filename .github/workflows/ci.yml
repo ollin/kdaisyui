@@ -214,15 +214,19 @@ jobs:
 
       - name: Run mutation tests and enforce the test-strength gate
         # testStrengthThreshold = 100 lives in lib/build.gradle.kts, next to the reasoning
-        # for why it is test strength and not mutation score. Do not move the number here.
-        run: ./gradlew :lib:pitest --no-daemon
+        # for why it is test strength and not mutation score, and in
+        # doc-snippets/build.gradle.kts for the documentation extractor. Do not move the
+        # number here.
+        run: ./gradlew :lib:pitest :doc-snippets:pitest --no-daemon
 
       - name: Upload mutation report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: mutation-report
-          path: lib/build/reports/pitest/
+          path: |
+            lib/build/reports/pitest/
+            doc-snippets/build/reports/pitest/
           retention-days: 7
 
   e2e-tests:

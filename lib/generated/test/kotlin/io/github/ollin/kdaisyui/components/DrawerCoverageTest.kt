@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class DrawerCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -35,19 +50,7 @@ class DrawerCoverageTest {
 
     @Test
     fun drawer_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDrawer(
-                id = htmlId("x-cov-id"),
-                end = true,
-                open = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Drawer all flags", "drawer drawer-end drawer-open zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Drawer all flags", "drawer drawer-end drawer-open zz-extra", closes = "</div></div>")) { daisyDrawer(id = ID, end = true, open = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -80,16 +83,7 @@ class DrawerCoverageTest {
 
     @Test
     fun drawerToggle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDrawerToggle(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-            )
-        }
-        val expected = Expected("DrawerToggle all flags", "drawer-toggle zz-extra", content = false)
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("DrawerToggle all flags", "drawer-toggle zz-extra", content = false)) { daisyDrawerToggle(id = ID, extraClasses = EXTRA, attrs = ATTRS) }
     }
 
     @Test
@@ -121,17 +115,7 @@ class DrawerCoverageTest {
 
     @Test
     fun drawerContent_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDrawerContent(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("DrawerContent all flags", "drawer-content zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("DrawerContent all flags", "drawer-content zz-extra", closes = "</div></div>")) { daisyDrawerContent(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -163,17 +147,7 @@ class DrawerCoverageTest {
 
     @Test
     fun drawerSide_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDrawerSide(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("DrawerSide all flags", "drawer-side zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("DrawerSide all flags", "drawer-side zz-extra", closes = "</div></div>")) { daisyDrawerSide(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -205,17 +179,7 @@ class DrawerCoverageTest {
 
     @Test
     fun drawerOverlay_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDrawerOverlay(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("DrawerOverlay all flags", "drawer-overlay zz-extra", closes = "</label></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("DrawerOverlay all flags", "drawer-overlay zz-extra", closes = "</label></div>")) { daisyDrawerOverlay(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -247,17 +211,7 @@ class DrawerCoverageTest {
 
     @Test
     fun drawerButton_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDrawerButton(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("DrawerButton all flags", "drawer-button zz-extra", closes = "</label></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("DrawerButton all flags", "drawer-button zz-extra", closes = "</label></div>")) { daisyDrawerButton(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test

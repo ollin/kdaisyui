@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class SwapCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -35,18 +50,7 @@ class SwapCoverageTest {
 
     @Test
     fun swap_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwap(
-                id = htmlId("x-cov-id"),
-                active = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Swap all flags", "swap swap-active zz-extra", closes = "</label></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Swap all flags", "swap swap-active zz-extra", closes = "</label></div>")) { daisySwap(id = ID, active = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -122,17 +126,7 @@ class SwapCoverageTest {
 
     @Test
     fun swapOn_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwapOn(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("SwapOn all flags", "swap-on zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("SwapOn all flags", "swap-on zz-extra", closes = "</div></div>")) { daisySwapOn(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -164,17 +158,7 @@ class SwapCoverageTest {
 
     @Test
     fun swapOff_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwapOff(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("SwapOff all flags", "swap-off zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("SwapOff all flags", "swap-off zz-extra", closes = "</div></div>")) { daisySwapOff(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -206,17 +190,7 @@ class SwapCoverageTest {
 
     @Test
     fun swapIndeterminate_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwapIndeterminate(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("SwapIndeterminate all flags", "swap-indeterminate zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("SwapIndeterminate all flags", "swap-indeterminate zz-extra", closes = "</div></div>")) { daisySwapIndeterminate(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test

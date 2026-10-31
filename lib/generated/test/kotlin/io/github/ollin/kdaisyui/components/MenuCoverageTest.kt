@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class MenuCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -35,19 +50,7 @@ class MenuCoverageTest {
 
     @Test
     fun menu_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                id = htmlId("x-cov-id"),
-                focus = true,
-                paged = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Menu all flags", "menu menu-focus menu-paged zz-extra", closes = "</ul></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Menu all flags", "menu menu-focus menu-paged zz-extra", closes = "</ul></div>")) { daisyMenu(id = ID, focus = true, paged = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -227,17 +230,7 @@ class MenuCoverageTest {
 
     @Test
     fun menuTitle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuTitle(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("MenuTitle all flags", "menu-title zz-extra", closes = "</h2></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("MenuTitle all flags", "menu-title zz-extra", closes = "</h2></div>")) { daisyMenuTitle(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -280,18 +273,7 @@ class MenuCoverageTest {
 
     @Test
     fun menuDropdown_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdown(
-                id = htmlId("x-cov-id"),
-                show = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("MenuDropdown all flags", "menu-dropdown menu-dropdown-show zz-extra", closes = "</ul></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("MenuDropdown all flags", "menu-dropdown menu-dropdown-show zz-extra", closes = "</ul></div>")) { daisyMenuDropdown(id = ID, show = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -325,18 +307,7 @@ class MenuCoverageTest {
 
     @Test
     fun menuDropdownToggle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownToggle(
-                id = htmlId("x-cov-id"),
-                dropdownShow = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("MenuDropdownToggle all flags", "menu-dropdown-show menu-dropdown-toggle zz-extra", closes = "</span></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("MenuDropdownToggle all flags", "menu-dropdown-show menu-dropdown-toggle zz-extra", closes = "</span></div>")) { daisyMenuDropdownToggle(id = ID, dropdownShow = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test

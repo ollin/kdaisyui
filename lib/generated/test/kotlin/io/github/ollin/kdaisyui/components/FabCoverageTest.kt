@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class FabCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -35,18 +50,7 @@ class FabCoverageTest {
 
     @Test
     fun fab_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFab(
-                id = htmlId("x-cov-id"),
-                flower = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Fab all flags", "fab fab-flower zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Fab all flags", "fab fab-flower zz-extra", closes = "</div></div>")) { daisyFab(id = ID, flower = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -80,17 +84,7 @@ class FabCoverageTest {
 
     @Test
     fun fabClose_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabClose(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("FabClose all flags", "fab-close zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("FabClose all flags", "fab-close zz-extra", closes = "</div></div>")) { daisyFabClose(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -122,17 +116,7 @@ class FabCoverageTest {
 
     @Test
     fun fabMainAction_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabMainAction(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("FabMainAction all flags", "fab-main-action zz-extra", closes = "</button></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("FabMainAction all flags", "fab-main-action zz-extra", closes = "</button></div>")) { daisyFabMainAction(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test

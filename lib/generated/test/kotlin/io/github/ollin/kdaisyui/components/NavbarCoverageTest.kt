@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class NavbarCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -35,17 +50,7 @@ class NavbarCoverageTest {
 
     @Test
     fun navbar_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyNavbar(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Navbar all flags", "navbar zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Navbar all flags", "navbar zz-extra", closes = "</div></div>")) { daisyNavbar(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -77,17 +82,7 @@ class NavbarCoverageTest {
 
     @Test
     fun navbarStart_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyNavbarStart(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("NavbarStart all flags", "navbar-start zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("NavbarStart all flags", "navbar-start zz-extra", closes = "</div></div>")) { daisyNavbarStart(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -119,17 +114,7 @@ class NavbarCoverageTest {
 
     @Test
     fun navbarCenter_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyNavbarCenter(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("NavbarCenter all flags", "navbar-center zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("NavbarCenter all flags", "navbar-center zz-extra", closes = "</div></div>")) { daisyNavbarCenter(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -161,17 +146,7 @@ class NavbarCoverageTest {
 
     @Test
     fun navbarEnd_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyNavbarEnd(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("NavbarEnd all flags", "navbar-end zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("NavbarEnd all flags", "navbar-end zz-extra", closes = "</div></div>")) { daisyNavbarEnd(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test

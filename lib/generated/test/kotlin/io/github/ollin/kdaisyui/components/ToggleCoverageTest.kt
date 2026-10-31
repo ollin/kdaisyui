@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class ToggleCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -34,18 +49,7 @@ class ToggleCoverageTest {
 
     @Test
     fun toggle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                id = htmlId("x-cov-id"),
-                checked = true,
-                disabled = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-            )
-        }
-        val expected = Expected("Toggle all flags", "toggle zz-extra", content = false)
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Toggle all flags", "toggle zz-extra", content = false)) { daisyToggle(id = ID, checked = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS) }
         assertTrue(html.contains("type=\""), "Toggle sets type")
         assertTrue(html.contains("checked=\""), "Toggle sets checked")
         assertTrue(html.contains("disabled=\""), "Toggle sets disabled")

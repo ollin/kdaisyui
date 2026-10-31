@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class TabCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -35,17 +50,7 @@ class TabCoverageTest {
 
     @Test
     fun tabs_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Tabs all flags", "tabs zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Tabs all flags", "tabs zz-extra", closes = "</div></div>")) { daisyTabs(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -287,19 +292,7 @@ class TabCoverageTest {
 
     @Test
     fun tab_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTab(
-                id = htmlId("x-cov-id"),
-                active = true,
-                disabled = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Tab all flags", "tab tab-active tab-disabled zz-extra", closes = "</a></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Tab all flags", "tab tab-active tab-disabled zz-extra", closes = "</a></div>")) { daisyTab(id = ID, active = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -332,18 +325,7 @@ class TabCoverageTest {
 
     @Test
     fun tabRadio_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabRadio(
-                id = htmlId("x-cov-id"),
-                active = true,
-                disabled = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-            )
-        }
-        val expected = Expected("TabRadio all flags", "tab tab-active tab-disabled zz-extra", content = false)
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("TabRadio all flags", "tab tab-active tab-disabled zz-extra", content = false)) { daisyTabRadio(id = ID, active = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS) }
     }
 
     @Test
@@ -378,17 +360,7 @@ class TabCoverageTest {
 
     @Test
     fun tabContent_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabContent(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("TabContent all flags", "tab-content zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("TabContent all flags", "tab-content zz-extra", closes = "</div></div>")) { daisyTabContent(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test

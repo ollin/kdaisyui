@@ -4,6 +4,8 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -15,6 +17,19 @@ class TimelineCoverageTest {
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
+    }
+
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
     }
 
     private fun assertCommonFlags(html: String, expected: Expected) {
@@ -35,19 +50,7 @@ class TimelineCoverageTest {
 
     @Test
     fun timeline_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(
-                id = htmlId("x-cov-id"),
-                compact = true,
-                snapIcon = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("Timeline all flags", "timeline timeline-compact timeline-snap-icon zz-extra", closes = "</ul></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("Timeline all flags", "timeline timeline-compact timeline-snap-icon zz-extra", closes = "</ul></div>")) { daisyTimeline(id = ID, compact = true, snapIcon = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -124,18 +127,7 @@ class TimelineCoverageTest {
 
     @Test
     fun timelineStart_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimelineStart(
-                id = htmlId("x-cov-id"),
-                box = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("TimelineStart all flags", "timeline-box timeline-start zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("TimelineStart all flags", "timeline-box timeline-start zz-extra", closes = "</div></div>")) { daisyTimelineStart(id = ID, box = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -169,18 +161,7 @@ class TimelineCoverageTest {
 
     @Test
     fun timelineMiddle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimelineMiddle(
-                id = htmlId("x-cov-id"),
-                box = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("TimelineMiddle all flags", "timeline-box timeline-middle zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("TimelineMiddle all flags", "timeline-box timeline-middle zz-extra", closes = "</div></div>")) { daisyTimelineMiddle(id = ID, box = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -214,18 +195,7 @@ class TimelineCoverageTest {
 
     @Test
     fun timelineEnd_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimelineEnd(
-                id = htmlId("x-cov-id"),
-                box = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        val expected = Expected("TimelineEnd all flags", "timeline-box timeline-end zz-extra", closes = "</div></div>")
-        assertRendered(html, expected)
-        assertCommonFlags(html, expected)
+        val html = allFlags(Expected("TimelineEnd all flags", "timeline-box timeline-end zz-extra", closes = "</div></div>")) { daisyTimelineEnd(id = ID, box = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test

@@ -762,6 +762,19 @@ const COVERAGE_HELPER = `
         if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "\${expected.label} closes")
     }
 
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\\"x-cov-id\\""), "\${expected.label} id")
         assertTrue(html.contains("data-attrs=\\"yes\\""), "\${expected.label} attrs")
@@ -888,7 +901,27 @@ function allFlagsAsserts(ctx, boolCss) {
 function allFlagsTest(ctx) {
   const boolCss = []
   const args = allFlagsArgs(ctx, boolCss)
-  return wrapTest(ctx, `${ctx.fnBase}_all_flags`, args, allFlagsAsserts(ctx, boolCss))
+  const asserts = allFlagsAsserts(ctx, boolCss)
+  // Inside a plain `div`, the hatches and their assertions are the same in every function, so they
+  // go through `allFlags` and the constants; a nested wrapper keeps the call written out.
+  if (!ctx.hasHatches || ctx.wrapperFn !== 'div') return wrapTest(ctx, `${ctx.fnBase}_all_flags`, args, asserts)
+  const hatched = args.map(arg => HATCH_CONSTANTS[arg] ?? arg).join(', ')
+  const rest = asserts.filter(line => !line.startsWith('val expected') && line !== 'assertRendered(html, expected)' && line !== 'assertCommonFlags(html, expected)')
+  const expected = asserts[0].replace('val expected = ', '')
+  return `
+    @Test
+    fun ${ctx.fnBase}_all_flags() {
+        val html = allFlags(${expected}) { daisy${ctx.daisyName}(${hatched}) }
+${rest.map(line => `        ${line}`).join('\n')}${rest.length > 0 ? '\n' : ''}    }
+`
+}
+
+/** The all-flags arguments every function passes alike, and the constant each becomes. */
+const HATCH_CONSTANTS: Readonly<Record<string, string>> = {
+  'id = htmlId("x-cov-id")': 'id = ID',
+  'extraClasses = "zz-extra"': 'extraClasses = EXTRA',
+  'attrs = { attributes["data-attrs"] = "yes" }': 'attrs = ATTRS',
+  'content = { attributes["data-content"] = "yes" }': 'content = CONTENT',
 }
 
 function enumArmTests(ctx) {
@@ -953,6 +986,8 @@ function coverageImports(funcs, enums): Set<string> {
     'import kotlin.test.Test',
     'import kotlin.test.assertEquals',
     'import kotlin.test.assertTrue',
+    'import kotlinx.html.FlowContent',
+    'import kotlinx.html.Tag',
   ])
   for (const fn of funcs) {
     if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)

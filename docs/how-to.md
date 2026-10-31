@@ -274,35 +274,42 @@ get("/fragments/stats") {
 
 Use `"load"` for above-the-fold content, `"revealed"` for below-the-fold sections.
 
-## Add a notification dropdown
+## Add a dropdown
 
-Combine dropdown, indicator, badge, and avatar:
+DaisyUI documents two dropdowns that open without JavaScript, and kdaisyui offers both.
+
+**`daisyDropdown`** renders `<details>`, which the browser opens and closes on its `<summary>`:
 
 ```kotlin
-daisyDropdown(align = DropdownAlign.End, extraClasses = "z-10") {
-    div {
-        attributes["tabindex"] = "0"
-        classes = setOf("btn", "btn-circle", "btn-ghost")
+daisyDropdown(align = DropdownAlign.End) {
+    summary {
+        daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle)
         daisyIndicator {
-            daisyBadge(color = BadgeColor.Error, size = BadgeSize.Xs, extraClasses = "indicator-item")
+            daisyIndicatorItem { daisyBadge(color = BadgeColor.Error, size = BadgeSize.Xs) }
             +"🔔"
         }
     }
-    daisyDropdownContent(extraClasses = "rounded-box bg-base-100 mt-3 w-80 p-2 shadow-2xl") {
-        attributes["tabindex"] = "0"
-        li {
-            a("gap-4") {
-                daisyAvatar {
-                    div("w-8 rounded-full") { img(src = "https://example.com/photo.jpg") }
-                }
-                span { b { +"New message" }; br; +"Alice: Hi!" }
-            }
-        }
+    daisyDropdownContent(extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl", attrs = { daisyMenuClasses() }) {
+        li { a { b { +"New message" }; +" Alice: Hi!" } }
     }
 }
 ```
 
-The `tabindex="0"` on both the trigger and the content is required for DaisyUI's CSS-based dropdown to work.
+**`daisyDropdownPopover`** is the menu itself, opened on the browser's top layer by a trigger that
+names it, so no ancestor's `overflow` can clip it and it needs no `z-index`. `anchored = true`
+places it next to its trigger through CSS anchor positioning:
+
+<!-- snippet: in FlowContent -->
+```kotlin
+val notifications = htmlId("notifications")
+daisyButton("🔔", attrs = { popoverTarget(notifications, anchored = true) })
+daisyDropdownPopover(id = notifications, align = DropdownAlign.End, extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl", attrs = { daisyMenuClasses() }) {
+    li { a { b { +"New message" }; +" Alice: Hi!" } }
+}
+```
+
+Anchor positioning is new: Chromium 125, Safari 26, Firefox 147. Where it is missing, DaisyUI's CSS
+falls back, and `daisyDropdown` is the choice that behaves the same everywhere.
 
 ## Show validation feedback
 

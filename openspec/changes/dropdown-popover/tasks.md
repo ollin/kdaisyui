@@ -50,7 +50,7 @@ E2E as early as the function allows.
   because `checkKotlinAbi` runs in `build` and would turn every step red: `lib.api` gained
   `anchorName`, `popoverTarget`, `PopoverTargetAction`, `daisyDropdownPopover` and its class
   sibling; `components.api` the last two. Nothing removed.
-- [ ] 5.2 `. d` `docs/how-to.md`: a recipe for the popover dropdown, compiled by `:doc-snippets`.
+- [x] 5.2 `. d` `docs/how-to.md`: a recipe for the popover dropdown, compiled by `:doc-snippets`.
 
 ## 6. Gate and adoption
 

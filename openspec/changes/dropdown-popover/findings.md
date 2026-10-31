@@ -36,3 +36,13 @@
   to the megamenu without reading its CSS.
 - **Cost:** a design correction and one more task (4.3a) before the example app moved onto the
   helper; nothing shipped.
+
+## F5 - The how-to's dropdown recipe compiled and could not open
+
+- **What happened:** task 5.2. "Add a notification dropdown" put DaisyUI's CSS-focus trigger, a
+  `div` with `tabindex="0"`, inside `daisyDropdown`, which renders `<details>`. A `<details>` with
+  no `<summary>` never opens. It also wrote `btn` classes as strings and `indicator-item` through
+  `extraClasses`. `:doc-snippets` passed it, because it compiles.
+- **Cause:** the recipe predates 0.6's switch of `daisyDropdown` to `<details>`; compiling proves
+  the API exists, not that the markup works, as `documentation-snippets`' design says.
+- **Cost:** the recipe was rewritten as "Add a dropdown", with both forms, in the same task.

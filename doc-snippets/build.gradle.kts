@@ -23,3 +23,29 @@ tasks.register<JavaExec>("extractSnippets") {
     // A fence that was removed must take its file with it.
     doFirst { snippetsDir.get().asFile.run { deleteRecursively(); mkdirs() } }
 }
+
+val snippets = sourceSets.create("snippets") {
+    kotlin.srcDir(tasks.named("extractSnippets"))
+}
+
+dependencies {
+    "snippetsImplementation"(project(":lib"))
+    "snippetsImplementation"(project(":ktor-integration"))
+    "snippetsImplementation"(libs.bundles.ktor.server.app)
+}
+
+// The snippets are documentation, not code the build relies on: Kover neither compiles nor
+// measures them, or `build` would fail on every snippet and the gate would count them.
+kover {
+    currentProject {
+        sources {
+            excludedSourceSets.add(snippets.name)
+        }
+    }
+}
+
+tasks.register("compileSnippets") {
+    description = "Compiles every Kotlin snippet of the prose documentation."
+    group = "verification"
+    dependsOn(snippets.classesTaskName)
+}

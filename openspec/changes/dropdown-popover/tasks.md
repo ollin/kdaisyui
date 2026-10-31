@@ -27,10 +27,10 @@ E2E as early as the function allows.
 
 ## 3. Core, under TCR
 
-- [ ] 3.1 `. F` `HtmlId.anchorName`: `--` plus the id, characters outside a dashed-ident replaced by `_`.
-- [ ] 3.2 `. F` `Tag.popoverTarget(popover)` writes `popovertarget` and `anchor-name`.
-- [ ] 3.3 `. F` It appends `anchor-name` to an existing `style`.
-- [ ] 3.4 `. F` `PopoverTargetAction` and the `action` parameter write `popovertargetaction`.
+- [x] 3.1 `. F` `HtmlId.anchorName`: `--` plus the id, characters outside a dashed-ident replaced by `_`.
+- [x] 3.2 `. F` `Tag.popoverTarget(popover)` writes `popovertarget` and `anchor-name`.
+- [x] 3.3 `. F` It appends `anchor-name` to an existing `style`.
+- [x] 3.4 `. F` `PopoverTargetAction` and the `action` parameter write `popovertargetaction`.
 
 ## 4. The function, and the E2E that can refute it
 

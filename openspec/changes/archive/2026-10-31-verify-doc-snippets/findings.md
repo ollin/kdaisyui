@@ -104,6 +104,6 @@ One row per finding (house rules §9).
 | F4 | - | fixed - #423: the `unit-tests` job runs `check`, so no task of it can miss CI |
 | F5 | A sentence in `kdaisyui-testing`, beside the branch gate that causes it, not in `fwb-tcr`: no check can tell an unreachable branch from an untested one, and `fwb-tcr` is fwb-application's | fixed - in the kdaisyui-testing skill (section 2) |
 | F6 | - | none - record only; the exclusion is commented in `doc-snippets/build.gradle.kts` |
-| F7 | getting-started's build script uses the Maven Central coordinates README shows | open |
+| F7 | getting-started's build script uses the Maven Central coordinates README shows | fixed - in docs/getting-started-from-maven-central, with the dashboard tutorial's, which had the same `project(":lib")` |
 | F8 | `kdaisyui-build`'s "Problems: 0" becomes a recorded number that a check compares, instead of a sentence | open |
 | F9 | `:doc-snippets` joins the PIT configuration and CI's `mutation-tests` job | open |

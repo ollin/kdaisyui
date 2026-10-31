@@ -1,7 +1,12 @@
 package io.github.ollin.kdaisyui.docsnippets
 
 /** A fenced `kotlin` code block of a Markdown document; [line] is its opening fence, 1-based. */
-data class KotlinFence(val line: Int, val code: String, val marker: String? = null)
+data class KotlinFence(val line: Int, val code: String, val marker: String? = null) {
+    /** The functions and properties this snippet declares at column 0. */
+    val declaredNames: List<String> get() = code.lines().mapNotNull { declaration.find(it)?.groupValues[1] }
+}
+
+private val declaration = Regex("^(?:suspend )?(?:fun (?:\\S+\\.)?|val )(\\w+)")
 
 fun kotlinFencesIn(markdown: String): List<KotlinFence> {
     val lines = markdown.lines()

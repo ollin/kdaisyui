@@ -27,4 +27,10 @@ class KotlinFenceTest {
         val markdown = "<!-- snippet: in Route -->\n```kotlin\nget(\"/\") { }\n```\n"
         assertEquals(listOf("in Route"), kotlinFencesIn(markdown).map { it.marker })
     }
+
+    @Test
+    fun aFenceNamesWhatItDeclaresAtColumnZero() {
+        val code = "fun FlowContent.shellSidebar() {\n    val inner = 1\n}\nval html = 2\nsuspend fun RoutingCall.respond() { }"
+        assertEquals(listOf("shellSidebar", "html", "respond"), KotlinFence(1, code).declaredNames)
+    }
 }

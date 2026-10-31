@@ -15,6 +15,12 @@ class SnippetSourceTest {
     fun aStatementIsWrappedInAFlowContentBuilderInItsOwnPackage() {
         val text = SnippetSource("README.md", KotlinFence(line = 9, code = "daisyBadge(\"New\")")).text
         assertEquals("// README.md:9\npackage snippets.README_md_L9", text.lines().take(2).joinToString("\n"))
-        assertEquals("fun FlowContent.snippet() {\ndaisyBadge(\"New\")\n}\n", text.substringAfter("\n\n"))
+        assertEquals("fun FlowContent.snippet() {\ndaisyBadge(\"New\")\n}\n", text.substringAfterLast("\n\n"))
+    }
+
+    @Test
+    fun kotlinxHtmlAndTheComponentsAreImported() {
+        val imports = SnippetSource("README.md", KotlinFence(line = 9, code = "")).text.lines()
+        assertEquals(listOf("import kotlinx.html.*", "import io.github.ollin.kdaisyui.components.*"), imports.filter { it.startsWith("import ") })
     }
 }

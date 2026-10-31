@@ -25,6 +25,11 @@ class StepsCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -73,13 +78,7 @@ class StepsCoverageTest {
     }
 
     @Test
-    fun stepsClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStepsClasses()
-        }
-        val expected = Expected("StepsClasses all flags", "steps", content = false)
-        assertRendered(html, expected)
-    }
+    fun stepsClasses_all_flags() = assertRenders(Expected("StepsClasses all flags", "steps", content = false)) { daisyStepsClasses() }
 
     @Test
     fun stepsClasses_direction() = assertEachEntry("StepsClasses direction", mapOf(StepsDirection.Vertical to "steps steps-vertical", StepsDirection.Horizontal to "steps steps-horizontal")) { daisyStepsClasses(direction = it) }
@@ -206,13 +205,7 @@ class StepsCoverageTest {
     }
 
     @Test
-    fun stepClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStepClasses()
-        }
-        val expected = Expected("StepClasses all flags", "step", content = false)
-        assertRendered(html, expected)
-    }
+    fun stepClasses_all_flags() = assertRenders(Expected("StepClasses all flags", "step", content = false)) { daisyStepClasses() }
 
     @Test
     fun stepClasses_color() = assertEachEntry("StepClasses color", mapOf(StepColor.Neutral to "step step-neutral", StepColor.Primary to "step step-primary", StepColor.Secondary to "step step-secondary", StepColor.Accent to "step step-accent", StepColor.Info to "step step-info", StepColor.Success to "step step-success", StepColor.Warning to "step step-warning", StepColor.Error to "step step-error")) { daisyStepClasses(color = it) }
@@ -241,11 +234,5 @@ class StepsCoverageTest {
     }
 
     @Test
-    fun stepIconClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStepIconClasses()
-        }
-        val expected = Expected("StepIconClasses all flags", "step-icon", content = false)
-        assertRendered(html, expected)
-    }
+    fun stepIconClasses_all_flags() = assertRenders(Expected("StepIconClasses all flags", "step-icon", content = false)) { daisyStepIconClasses() }
 }

@@ -24,6 +24,11 @@ class CalendarCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,13 +74,7 @@ class CalendarCoverageTest {
     }
 
     @Test
-    fun calendarClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCalendarClasses()
-        }
-        val expected = Expected("CalendarClasses all flags", "cally", content = false)
-        assertRendered(html, expected)
-    }
+    fun calendarClasses_all_flags() = assertRenders(Expected("CalendarClasses all flags", "cally", content = false)) { daisyCalendarClasses() }
 
     @Test
     fun vc_defaults() {
@@ -101,11 +100,5 @@ class CalendarCoverageTest {
     }
 
     @Test
-    fun vcClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyVcClasses()
-        }
-        val expected = Expected("VcClasses all flags", "vc", content = false)
-        assertRendered(html, expected)
-    }
+    fun vcClasses_all_flags() = assertRenders(Expected("VcClasses all flags", "vc", content = false)) { daisyVcClasses() }
 }

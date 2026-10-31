@@ -24,6 +24,11 @@ class AvatarCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -72,15 +77,7 @@ class AvatarCoverageTest {
     }
 
     @Test
-    fun avatarClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatarClasses(
-                placeholder = true,
-            )
-        }
-        val expected = Expected("AvatarClasses all flags", "avatar avatar-placeholder", content = false)
-        assertRendered(html, expected)
-    }
+    fun avatarClasses_all_flags() = assertRenders(Expected("AvatarClasses all flags", "avatar avatar-placeholder", content = false)) { daisyAvatarClasses(placeholder = true) }
 
     @Test
     fun avatarClasses_presence() = assertEachEntry("AvatarClasses presence", mapOf(AvatarPresence.Online to "avatar avatar-online", AvatarPresence.Offline to "avatar avatar-offline")) { daisyAvatarClasses(presence = it) }
@@ -109,11 +106,5 @@ class AvatarCoverageTest {
     }
 
     @Test
-    fun avatarGroupClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatarGroupClasses()
-        }
-        val expected = Expected("AvatarGroupClasses all flags", "avatar-group", content = false)
-        assertRendered(html, expected)
-    }
+    fun avatarGroupClasses_all_flags() = assertRenders(Expected("AvatarGroupClasses all flags", "avatar-group", content = false)) { daisyAvatarGroupClasses() }
 }

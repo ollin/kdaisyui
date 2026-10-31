@@ -24,6 +24,11 @@ class TooltipCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -78,15 +83,7 @@ class TooltipCoverageTest {
     }
 
     @Test
-    fun tooltipClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                open = true,
-            )
-        }
-        val expected = Expected("TooltipClasses all flags", "tooltip tooltip-open", content = false)
-        assertRendered(html, expected)
-    }
+    fun tooltipClasses_all_flags() = assertRenders(Expected("TooltipClasses all flags", "tooltip tooltip-open", content = false)) { daisyTooltipClasses(open = true) }
 
     @Test
     fun tooltipClasses_color() = assertEachEntry("TooltipClasses color", mapOf(TooltipColor.Primary to "tooltip tooltip-primary", TooltipColor.Secondary to "tooltip tooltip-secondary", TooltipColor.Accent to "tooltip tooltip-accent", TooltipColor.Info to "tooltip tooltip-info", TooltipColor.Success to "tooltip tooltip-success", TooltipColor.Warning to "tooltip tooltip-warning", TooltipColor.Error to "tooltip tooltip-error")) { daisyTooltipClasses(color = it) }
@@ -121,11 +118,5 @@ class TooltipCoverageTest {
     }
 
     @Test
-    fun tooltipContentClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipContentClasses()
-        }
-        val expected = Expected("TooltipContentClasses all flags", "tooltip-content", content = false)
-        assertRendered(html, expected)
-    }
+    fun tooltipContentClasses_all_flags() = assertRenders(Expected("TooltipContentClasses all flags", "tooltip-content", content = false)) { daisyTooltipContentClasses() }
 }

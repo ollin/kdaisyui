@@ -24,6 +24,11 @@ class ProgressCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -72,13 +77,7 @@ class ProgressCoverageTest {
     }
 
     @Test
-    fun progressClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses()
-        }
-        val expected = Expected("ProgressClasses all flags", "progress", content = false)
-        assertRendered(html, expected)
-    }
+    fun progressClasses_all_flags() = assertRenders(Expected("ProgressClasses all flags", "progress", content = false)) { daisyProgressClasses() }
 
     @Test
     fun progressClasses_color() = assertEachEntry("ProgressClasses color", mapOf(ProgressColor.Neutral to "progress progress-neutral", ProgressColor.Primary to "progress progress-primary", ProgressColor.Secondary to "progress progress-secondary", ProgressColor.Accent to "progress progress-accent", ProgressColor.Info to "progress progress-info", ProgressColor.Success to "progress progress-success", ProgressColor.Warning to "progress progress-warning", ProgressColor.Error to "progress progress-error")) { daisyProgressClasses(color = it) }

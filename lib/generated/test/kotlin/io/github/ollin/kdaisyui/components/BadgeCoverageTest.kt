@@ -24,6 +24,11 @@ class BadgeCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -90,13 +95,7 @@ class BadgeCoverageTest {
     }
 
     @Test
-    fun badgeClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses()
-        }
-        val expected = Expected("BadgeClasses all flags", "badge", content = false)
-        assertRendered(html, expected)
-    }
+    fun badgeClasses_all_flags() = assertRenders(Expected("BadgeClasses all flags", "badge", content = false)) { daisyBadgeClasses() }
 
     @Test
     fun badgeClasses_color() = assertEachEntry("BadgeClasses color", mapOf(BadgeColor.Neutral to "badge badge-neutral", BadgeColor.Primary to "badge badge-primary", BadgeColor.Secondary to "badge badge-secondary", BadgeColor.Accent to "badge badge-accent", BadgeColor.Info to "badge badge-info", BadgeColor.Success to "badge badge-success", BadgeColor.Warning to "badge badge-warning", BadgeColor.Error to "badge badge-error")) { daisyBadgeClasses(color = it) }

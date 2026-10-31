@@ -24,6 +24,11 @@ class ToggleCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -77,13 +82,7 @@ class ToggleCoverageTest {
     }
 
     @Test
-    fun toggleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses()
-        }
-        val expected = Expected("ToggleClasses all flags", "toggle", content = false)
-        assertRendered(html, expected)
-    }
+    fun toggleClasses_all_flags() = assertRenders(Expected("ToggleClasses all flags", "toggle", content = false)) { daisyToggleClasses() }
 
     @Test
     fun toggleClasses_color() = assertEachEntry("ToggleClasses color", mapOf(ToggleColor.Primary to "toggle toggle-primary", ToggleColor.Secondary to "toggle toggle-secondary", ToggleColor.Accent to "toggle toggle-accent", ToggleColor.Neutral to "toggle toggle-neutral", ToggleColor.Success to "toggle toggle-success", ToggleColor.Warning to "toggle toggle-warning", ToggleColor.Info to "toggle toggle-info", ToggleColor.Error to "toggle toggle-error")) { daisyToggleClasses(color = it) }

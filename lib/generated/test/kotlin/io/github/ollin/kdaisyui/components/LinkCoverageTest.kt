@@ -24,6 +24,11 @@ class LinkCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -81,15 +86,7 @@ class LinkCoverageTest {
     }
 
     @Test
-    fun linkClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                hover = true,
-            )
-        }
-        val expected = Expected("LinkClasses all flags", "link link-hover", content = false)
-        assertRendered(html, expected)
-    }
+    fun linkClasses_all_flags() = assertRenders(Expected("LinkClasses all flags", "link link-hover", content = false)) { daisyLinkClasses(hover = true) }
 
     @Test
     fun linkClasses_color() = assertEachEntry("LinkClasses color", mapOf(LinkColor.Neutral to "link link-neutral", LinkColor.Primary to "link link-primary", LinkColor.Secondary to "link link-secondary", LinkColor.Accent to "link link-accent", LinkColor.Success to "link link-success", LinkColor.Info to "link link-info", LinkColor.Warning to "link link-warning", LinkColor.Error to "link link-error")) { daisyLinkClasses(color = it) }

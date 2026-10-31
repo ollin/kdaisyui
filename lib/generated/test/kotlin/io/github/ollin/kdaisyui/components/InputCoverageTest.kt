@@ -24,6 +24,11 @@ class InputCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -80,15 +85,7 @@ class InputCoverageTest {
     }
 
     @Test
-    fun inputClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                ghost = true,
-            )
-        }
-        val expected = Expected("InputClasses all flags", "input input-ghost", content = false)
-        assertRendered(html, expected)
-    }
+    fun inputClasses_all_flags() = assertRenders(Expected("InputClasses all flags", "input input-ghost", content = false)) { daisyInputClasses(ghost = true) }
 
     @Test
     fun inputClasses_color() = assertEachEntry("InputClasses color", mapOf(InputColor.Neutral to "input input-neutral", InputColor.Primary to "input input-primary", InputColor.Secondary to "input input-secondary", InputColor.Accent to "input input-accent", InputColor.Info to "input input-info", InputColor.Success to "input input-success", InputColor.Warning to "input input-warning", InputColor.Error to "input input-error")) { daisyInputClasses(color = it) }

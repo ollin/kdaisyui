@@ -24,6 +24,11 @@ class AuraCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -75,13 +80,7 @@ class AuraCoverageTest {
     }
 
     @Test
-    fun auraClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses()
-        }
-        val expected = Expected("AuraClasses all flags", "aura", content = false)
-        assertRendered(html, expected)
-    }
+    fun auraClasses_all_flags() = assertRenders(Expected("AuraClasses all flags", "aura", content = false)) { daisyAuraClasses() }
 
     @Test
     fun auraClasses_size() = assertEachEntry("AuraClasses size", mapOf(AuraSize.Xs to "aura aura-xs", AuraSize.Sm to "aura aura-sm", AuraSize.Md to "aura aura-md", AuraSize.Lg to "aura aura-lg", AuraSize.Xl to "aura aura-xl")) { daisyAuraClasses(size = it) }

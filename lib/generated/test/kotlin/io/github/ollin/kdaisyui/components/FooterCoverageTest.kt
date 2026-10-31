@@ -24,6 +24,11 @@ class FooterCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -72,15 +77,7 @@ class FooterCoverageTest {
     }
 
     @Test
-    fun footerClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFooterClasses(
-                center = true,
-            )
-        }
-        val expected = Expected("FooterClasses all flags", "footer footer-center", content = false)
-        assertRendered(html, expected)
-    }
+    fun footerClasses_all_flags() = assertRenders(Expected("FooterClasses all flags", "footer footer-center", content = false)) { daisyFooterClasses(center = true) }
 
     @Test
     fun footerClasses_direction() = assertEachEntry("FooterClasses direction", mapOf(FooterDirection.Horizontal to "footer footer-horizontal", FooterDirection.Vertical to "footer footer-vertical")) { daisyFooterClasses(direction = it) }
@@ -118,11 +115,5 @@ class FooterCoverageTest {
     }
 
     @Test
-    fun footerTitleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFooterTitleClasses()
-        }
-        val expected = Expected("FooterTitleClasses all flags", "footer-title", content = false)
-        assertRendered(html, expected)
-    }
+    fun footerTitleClasses_all_flags() = assertRenders(Expected("FooterTitleClasses all flags", "footer-title", content = false)) { daisyFooterTitleClasses() }
 }

@@ -24,6 +24,11 @@ class RatingCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -72,15 +77,7 @@ class RatingCoverageTest {
     }
 
     @Test
-    fun ratingClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingClasses(
-                half = true,
-            )
-        }
-        val expected = Expected("RatingClasses all flags", "rating rating-half", content = false)
-        assertRendered(html, expected)
-    }
+    fun ratingClasses_all_flags() = assertRenders(Expected("RatingClasses all flags", "rating rating-half", content = false)) { daisyRatingClasses(half = true) }
 
     @Test
     fun ratingClasses_size() = assertEachEntry("RatingClasses size", mapOf(RatingSize.Xs to "rating rating-xs", RatingSize.Sm to "rating rating-sm", RatingSize.Md to "rating rating-md", RatingSize.Lg to "rating rating-lg", RatingSize.Xl to "rating rating-xl")) { daisyRatingClasses(size = it) }
@@ -94,13 +91,5 @@ class RatingCoverageTest {
     }
 
     @Test
-    fun ratingItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingItemClasses(
-                hidden = true,
-            )
-        }
-        val expected = Expected("RatingItemClasses all flags", "rating-hidden", content = false)
-        assertRendered(html, expected)
-    }
+    fun ratingItemClasses_all_flags() = assertRenders(Expected("RatingItemClasses all flags", "rating-hidden", content = false)) { daisyRatingItemClasses(hidden = true) }
 }

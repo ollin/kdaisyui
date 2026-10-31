@@ -25,6 +25,11 @@ class ButtonCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -96,16 +101,7 @@ class ButtonCoverageTest {
     }
 
     @Test
-    fun buttonClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyButtonClasses(
-                active = true,
-                disabled = true,
-            )
-        }
-        val expected = Expected("ButtonClasses all flags", "btn btn-active btn-disabled", content = false)
-        assertRendered(html, expected)
-    }
+    fun buttonClasses_all_flags() = assertRenders(Expected("ButtonClasses all flags", "btn btn-active btn-disabled", content = false)) { daisyButtonClasses(active = true, disabled = true) }
 
     @Test
     fun buttonClasses_color() = assertEachEntry("ButtonClasses color", mapOf(ButtonColor.Neutral to "btn btn-neutral", ButtonColor.Primary to "btn btn-primary", ButtonColor.Secondary to "btn btn-secondary", ButtonColor.Accent to "btn btn-accent", ButtonColor.Info to "btn btn-info", ButtonColor.Success to "btn btn-success", ButtonColor.Warning to "btn btn-warning", ButtonColor.Error to "btn btn-error")) { daisyButtonClasses(color = it) }

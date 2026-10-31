@@ -24,6 +24,11 @@ class MenuCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -75,16 +80,7 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menuClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                focus = true,
-                paged = true,
-            )
-        }
-        val expected = Expected("MenuClasses all flags", "menu menu-focus menu-paged", content = false)
-        assertRendered(html, expected)
-    }
+    fun menuClasses_all_flags() = assertRenders(Expected("MenuClasses all flags", "menu menu-focus menu-paged", content = false)) { daisyMenuClasses(focus = true, paged = true) }
 
     @Test
     fun menuClasses_size() = assertEachEntry("MenuClasses size", mapOf(MenuSize.Xs to "menu menu-xs", MenuSize.Sm to "menu menu-sm", MenuSize.Md to "menu menu-md", MenuSize.Lg to "menu menu-lg", MenuSize.Xl to "menu menu-xl")) { daisyMenuClasses(size = it) }
@@ -125,13 +121,7 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menuTitleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuTitleClasses()
-        }
-        val expected = Expected("MenuTitleClasses all flags", "menu-title", content = false)
-        assertRendered(html, expected)
-    }
+    fun menuTitleClasses_all_flags() = assertRenders(Expected("MenuTitleClasses all flags", "menu-title", content = false)) { daisyMenuTitleClasses() }
 
     @Test
     fun menuDropdown_defaults() {
@@ -157,15 +147,7 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menuDropdownClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownClasses(
-                show = true,
-            )
-        }
-        val expected = Expected("MenuDropdownClasses all flags", "menu-dropdown menu-dropdown-show", content = false)
-        assertRendered(html, expected)
-    }
+    fun menuDropdownClasses_all_flags() = assertRenders(Expected("MenuDropdownClasses all flags", "menu-dropdown menu-dropdown-show", content = false)) { daisyMenuDropdownClasses(show = true) }
 
     @Test
     fun menuDropdownToggle_defaults() {
@@ -191,15 +173,7 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menuDropdownToggleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownToggleClasses(
-                dropdownShow = true,
-            )
-        }
-        val expected = Expected("MenuDropdownToggleClasses all flags", "menu-dropdown-show menu-dropdown-toggle", content = false)
-        assertRendered(html, expected)
-    }
+    fun menuDropdownToggleClasses_all_flags() = assertRenders(Expected("MenuDropdownToggleClasses all flags", "menu-dropdown-show menu-dropdown-toggle", content = false)) { daisyMenuDropdownToggleClasses(dropdownShow = true) }
 
     @Test
     fun menuItemClasses_defaults() {
@@ -210,14 +184,5 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menuItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuItemClasses(
-                active = true,
-                disabled = true,
-            )
-        }
-        val expected = Expected("MenuItemClasses all flags", "menu-active menu-disabled", content = false)
-        assertRendered(html, expected)
-    }
+    fun menuItemClasses_all_flags() = assertRenders(Expected("MenuItemClasses all flags", "menu-active menu-disabled", content = false)) { daisyMenuItemClasses(active = true, disabled = true) }
 }

@@ -24,6 +24,11 @@ class KbdCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -81,13 +86,7 @@ class KbdCoverageTest {
     }
 
     @Test
-    fun kbdClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbdClasses()
-        }
-        val expected = Expected("KbdClasses all flags", "kbd", content = false)
-        assertRendered(html, expected)
-    }
+    fun kbdClasses_all_flags() = assertRenders(Expected("KbdClasses all flags", "kbd", content = false)) { daisyKbdClasses() }
 
     @Test
     fun kbdClasses_size() = assertEachEntry("KbdClasses size", mapOf(KbdSize.Xs to "kbd kbd-xs", KbdSize.Sm to "kbd kbd-sm", KbdSize.Md to "kbd kbd-md", KbdSize.Lg to "kbd kbd-lg", KbdSize.Xl to "kbd kbd-xl")) { daisyKbdClasses(size = it) }

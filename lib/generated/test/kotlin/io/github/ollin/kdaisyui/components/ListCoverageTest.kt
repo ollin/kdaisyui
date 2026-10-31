@@ -25,6 +25,11 @@ class ListCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -70,13 +75,7 @@ class ListCoverageTest {
     }
 
     @Test
-    fun listClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyListClasses()
-        }
-        val expected = Expected("ListClasses all flags", "list", content = false)
-        assertRendered(html, expected)
-    }
+    fun listClasses_all_flags() = assertRenders(Expected("ListClasses all flags", "list", content = false)) { daisyListClasses() }
 
     @Test
     fun listRow_defaults() {
@@ -112,13 +111,7 @@ class ListCoverageTest {
     }
 
     @Test
-    fun listRowClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyListRowClasses()
-        }
-        val expected = Expected("ListRowClasses all flags", "list-row", content = false)
-        assertRendered(html, expected)
-    }
+    fun listRowClasses_all_flags() = assertRenders(Expected("ListRowClasses all flags", "list-row", content = false)) { daisyListRowClasses() }
 
     @Test
     fun listCellClasses_defaults() {
@@ -129,14 +122,5 @@ class ListCoverageTest {
     }
 
     @Test
-    fun listCellClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyListCellClasses(
-                colGrow = true,
-                colWrap = true,
-            )
-        }
-        val expected = Expected("ListCellClasses all flags", "list-col-grow list-col-wrap", content = false)
-        assertRendered(html, expected)
-    }
+    fun listCellClasses_all_flags() = assertRenders(Expected("ListCellClasses all flags", "list-col-grow list-col-wrap", content = false)) { daisyListCellClasses(colGrow = true, colWrap = true) }
 }

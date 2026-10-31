@@ -24,6 +24,11 @@ class RadioCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -79,13 +84,7 @@ class RadioCoverageTest {
     }
 
     @Test
-    fun radioClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses()
-        }
-        val expected = Expected("RadioClasses all flags", "radio", content = false)
-        assertRendered(html, expected)
-    }
+    fun radioClasses_all_flags() = assertRenders(Expected("RadioClasses all flags", "radio", content = false)) { daisyRadioClasses() }
 
     @Test
     fun radioClasses_color() = assertEachEntry("RadioClasses color", mapOf(RadioColor.Neutral to "radio radio-neutral", RadioColor.Primary to "radio radio-primary", RadioColor.Secondary to "radio radio-secondary", RadioColor.Accent to "radio radio-accent", RadioColor.Success to "radio radio-success", RadioColor.Warning to "radio radio-warning", RadioColor.Info to "radio radio-info", RadioColor.Error to "radio radio-error")) { daisyRadioClasses(color = it) }

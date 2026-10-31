@@ -24,6 +24,11 @@ class AlertCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -80,15 +85,7 @@ class AlertCoverageTest {
     }
 
     @Test
-    fun alertClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAlertClasses(
-                soft = true,
-            )
-        }
-        val expected = Expected("AlertClasses all flags", "alert alert-soft", content = false)
-        assertRendered(html, expected)
-    }
+    fun alertClasses_all_flags() = assertRenders(Expected("AlertClasses all flags", "alert alert-soft", content = false)) { daisyAlertClasses(soft = true) }
 
     @Test
     fun alertClasses_color() = assertEachEntry("AlertClasses color", mapOf(AlertColor.Info to "alert alert-info", AlertColor.Success to "alert alert-success", AlertColor.Warning to "alert alert-warning", AlertColor.Error to "alert alert-error")) { daisyAlertClasses(color = it) }

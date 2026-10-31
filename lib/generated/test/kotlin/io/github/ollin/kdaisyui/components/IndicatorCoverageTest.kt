@@ -24,6 +24,11 @@ class IndicatorCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,13 +74,7 @@ class IndicatorCoverageTest {
     }
 
     @Test
-    fun indicatorClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorClasses()
-        }
-        val expected = Expected("IndicatorClasses all flags", "indicator", content = false)
-        assertRendered(html, expected)
-    }
+    fun indicatorClasses_all_flags() = assertRenders(Expected("IndicatorClasses all flags", "indicator", content = false)) { daisyIndicatorClasses() }
 
     @Test
     fun indicatorItem_defaults() {
@@ -107,13 +106,7 @@ class IndicatorCoverageTest {
     }
 
     @Test
-    fun indicatorItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItemClasses()
-        }
-        val expected = Expected("IndicatorItemClasses all flags", "indicator-item", content = false)
-        assertRendered(html, expected)
-    }
+    fun indicatorItemClasses_all_flags() = assertRenders(Expected("IndicatorItemClasses all flags", "indicator-item", content = false)) { daisyIndicatorItemClasses() }
 
     @Test
     fun indicatorItemClasses_horizontalPlacement() = assertEachEntry("IndicatorItemClasses horizontalPlacement", mapOf(IndicatorItemHorizontalPlacement.Start to "indicator-item indicator-start", IndicatorItemHorizontalPlacement.Center to "indicator-center indicator-item", IndicatorItemHorizontalPlacement.End to "indicator-end indicator-item")) { daisyIndicatorItemClasses(horizontalPlacement = it) }

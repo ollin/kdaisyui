@@ -24,6 +24,11 @@ class DropdownCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -78,15 +83,7 @@ class DropdownCoverageTest {
     }
 
     @Test
-    fun dropdownClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                hover = true,
-            )
-        }
-        val expected = Expected("DropdownClasses all flags", "dropdown dropdown-hover", content = false)
-        assertRendered(html, expected)
-    }
+    fun dropdownClasses_all_flags() = assertRenders(Expected("DropdownClasses all flags", "dropdown dropdown-hover", content = false)) { daisyDropdownClasses(hover = true) }
 
     @Test
     fun dropdownClasses_side() = assertEachEntry("DropdownClasses side", mapOf(DropdownSide.Top to "dropdown dropdown-top", DropdownSide.Bottom to "dropdown dropdown-bottom", DropdownSide.Left to "dropdown dropdown-left", DropdownSide.Right to "dropdown dropdown-right")) { daisyDropdownClasses(side = it) }
@@ -128,13 +125,7 @@ class DropdownCoverageTest {
     }
 
     @Test
-    fun dropdownPopoverClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses()
-        }
-        val expected = Expected("DropdownPopoverClasses all flags", "dropdown", content = false)
-        assertRendered(html, expected)
-    }
+    fun dropdownPopoverClasses_all_flags() = assertRenders(Expected("DropdownPopoverClasses all flags", "dropdown", content = false)) { daisyDropdownPopoverClasses() }
 
     @Test
     fun dropdownPopoverClasses_side() = assertEachEntry("DropdownPopoverClasses side", mapOf(DropdownSide.Top to "dropdown dropdown-top", DropdownSide.Bottom to "dropdown dropdown-bottom", DropdownSide.Left to "dropdown dropdown-left", DropdownSide.Right to "dropdown dropdown-right")) { daisyDropdownPopoverClasses(side = it) }
@@ -166,11 +157,5 @@ class DropdownCoverageTest {
     }
 
     @Test
-    fun dropdownContentClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownContentClasses()
-        }
-        val expected = Expected("DropdownContentClasses all flags", "dropdown-content", content = false)
-        assertRendered(html, expected)
-    }
+    fun dropdownContentClasses_all_flags() = assertRenders(Expected("DropdownContentClasses all flags", "dropdown-content", content = false)) { daisyDropdownContentClasses() }
 }

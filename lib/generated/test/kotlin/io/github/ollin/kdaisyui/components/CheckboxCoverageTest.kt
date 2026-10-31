@@ -24,6 +24,11 @@ class CheckboxCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -77,13 +82,7 @@ class CheckboxCoverageTest {
     }
 
     @Test
-    fun checkboxClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCheckboxClasses()
-        }
-        val expected = Expected("CheckboxClasses all flags", "checkbox", content = false)
-        assertRendered(html, expected)
-    }
+    fun checkboxClasses_all_flags() = assertRenders(Expected("CheckboxClasses all flags", "checkbox", content = false)) { daisyCheckboxClasses() }
 
     @Test
     fun checkboxClasses_color() = assertEachEntry("CheckboxClasses color", mapOf(CheckboxColor.Primary to "checkbox checkbox-primary", CheckboxColor.Secondary to "checkbox checkbox-secondary", CheckboxColor.Accent to "checkbox checkbox-accent", CheckboxColor.Neutral to "checkbox checkbox-neutral", CheckboxColor.Success to "checkbox checkbox-success", CheckboxColor.Warning to "checkbox checkbox-warning", CheckboxColor.Info to "checkbox checkbox-info", CheckboxColor.Error to "checkbox checkbox-error")) { daisyCheckboxClasses(color = it) }

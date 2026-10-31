@@ -24,6 +24,11 @@ class DividerCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -78,13 +83,7 @@ class DividerCoverageTest {
     }
 
     @Test
-    fun dividerClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDividerClasses()
-        }
-        val expected = Expected("DividerClasses all flags", "divider", content = false)
-        assertRendered(html, expected)
-    }
+    fun dividerClasses_all_flags() = assertRenders(Expected("DividerClasses all flags", "divider", content = false)) { daisyDividerClasses() }
 
     @Test
     fun dividerClasses_color() = assertEachEntry("DividerClasses color", mapOf(DividerColor.Neutral to "divider divider-neutral", DividerColor.Primary to "divider divider-primary", DividerColor.Secondary to "divider divider-secondary", DividerColor.Accent to "divider divider-accent", DividerColor.Success to "divider divider-success", DividerColor.Warning to "divider divider-warning", DividerColor.Info to "divider divider-info", DividerColor.Error to "divider divider-error")) { daisyDividerClasses(color = it) }

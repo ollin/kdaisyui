@@ -24,6 +24,11 @@ class ValidatorCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -67,13 +72,7 @@ class ValidatorCoverageTest {
     }
 
     @Test
-    fun validatorClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidatorClasses()
-        }
-        val expected = Expected("ValidatorClasses all flags", "validator", content = false)
-        assertRendered(html, expected)
-    }
+    fun validatorClasses_all_flags() = assertRenders(Expected("ValidatorClasses all flags", "validator", content = false)) { daisyValidatorClasses() }
 
     @Test
     fun validatorHint_defaults() {
@@ -99,11 +98,5 @@ class ValidatorCoverageTest {
     }
 
     @Test
-    fun validatorHintClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyValidatorHintClasses()
-        }
-        val expected = Expected("ValidatorHintClasses all flags", "validator-hint", content = false)
-        assertRendered(html, expected)
-    }
+    fun validatorHintClasses_all_flags() = assertRenders(Expected("ValidatorHintClasses all flags", "validator-hint", content = false)) { daisyValidatorHintClasses() }
 }

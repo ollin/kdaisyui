@@ -24,6 +24,11 @@ class FabCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,15 +74,7 @@ class FabCoverageTest {
     }
 
     @Test
-    fun fabClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabClasses(
-                flower = true,
-            )
-        }
-        val expected = Expected("FabClasses all flags", "fab fab-flower", content = false)
-        assertRendered(html, expected)
-    }
+    fun fabClasses_all_flags() = assertRenders(Expected("FabClasses all flags", "fab fab-flower", content = false)) { daisyFabClasses(flower = true) }
 
     @Test
     fun fabClose_defaults() {
@@ -103,13 +100,7 @@ class FabCoverageTest {
     }
 
     @Test
-    fun fabCloseClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabCloseClasses()
-        }
-        val expected = Expected("FabCloseClasses all flags", "fab-close", content = false)
-        assertRendered(html, expected)
-    }
+    fun fabCloseClasses_all_flags() = assertRenders(Expected("FabCloseClasses all flags", "fab-close", content = false)) { daisyFabCloseClasses() }
 
     @Test
     fun fabMainAction_defaults() {
@@ -135,11 +126,5 @@ class FabCoverageTest {
     }
 
     @Test
-    fun fabMainActionClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabMainActionClasses()
-        }
-        val expected = Expected("FabMainActionClasses all flags", "fab-main-action", content = false)
-        assertRendered(html, expected)
-    }
+    fun fabMainActionClasses_all_flags() = assertRenders(Expected("FabMainActionClasses all flags", "fab-main-action", content = false)) { daisyFabMainActionClasses() }
 }

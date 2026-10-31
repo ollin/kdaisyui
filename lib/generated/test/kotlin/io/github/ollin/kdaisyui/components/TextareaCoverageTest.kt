@@ -24,6 +24,11 @@ class TextareaCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -75,15 +80,7 @@ class TextareaCoverageTest {
     }
 
     @Test
-    fun textareaClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                ghost = true,
-            )
-        }
-        val expected = Expected("TextareaClasses all flags", "textarea textarea-ghost", content = false)
-        assertRendered(html, expected)
-    }
+    fun textareaClasses_all_flags() = assertRenders(Expected("TextareaClasses all flags", "textarea textarea-ghost", content = false)) { daisyTextareaClasses(ghost = true) }
 
     @Test
     fun textareaClasses_color() = assertEachEntry("TextareaClasses color", mapOf(TextareaColor.Neutral to "textarea textarea-neutral", TextareaColor.Primary to "textarea textarea-primary", TextareaColor.Secondary to "textarea textarea-secondary", TextareaColor.Accent to "textarea textarea-accent", TextareaColor.Info to "textarea textarea-info", TextareaColor.Success to "textarea textarea-success", TextareaColor.Warning to "textarea textarea-warning", TextareaColor.Error to "textarea textarea-error")) { daisyTextareaClasses(color = it) }

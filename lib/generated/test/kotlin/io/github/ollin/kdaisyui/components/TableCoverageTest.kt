@@ -24,6 +24,11 @@ class TableCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -72,17 +77,7 @@ class TableCoverageTest {
     }
 
     @Test
-    fun tableClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                pinCols = true,
-                pinRows = true,
-                zebra = true,
-            )
-        }
-        val expected = Expected("TableClasses all flags", "table table-pin-cols table-pin-rows table-zebra", content = false)
-        assertRendered(html, expected)
-    }
+    fun tableClasses_all_flags() = assertRenders(Expected("TableClasses all flags", "table table-pin-cols table-pin-rows table-zebra", content = false)) { daisyTableClasses(pinCols = true, pinRows = true, zebra = true) }
 
     @Test
     fun tableClasses_size() = assertEachEntry("TableClasses size", mapOf(TableSize.Xs to "table table-xs", TableSize.Sm to "table table-sm", TableSize.Md to "table table-md", TableSize.Lg to "table table-lg", TableSize.Xl to "table table-xl")) { daisyTableClasses(size = it) }

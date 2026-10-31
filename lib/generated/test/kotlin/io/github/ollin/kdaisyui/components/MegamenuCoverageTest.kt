@@ -24,6 +24,11 @@ class MegamenuCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -75,15 +80,7 @@ class MegamenuCoverageTest {
     }
 
     @Test
-    fun megamenuClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                vertical = true,
-            )
-        }
-        val expected = Expected("MegamenuClasses all flags", "megamenu megamenu-vertical", content = false)
-        assertRendered(html, expected)
-    }
+    fun megamenuClasses_all_flags() = assertRenders(Expected("MegamenuClasses all flags", "megamenu megamenu-vertical", content = false)) { daisyMegamenuClasses(vertical = true) }
 
     @Test
     fun megamenuClasses_size() = assertEachEntry("MegamenuClasses size", mapOf(MegamenuSize.Xs to "megamenu megamenu-xs", MegamenuSize.Sm to "megamenu megamenu-sm", MegamenuSize.Md to "megamenu megamenu-md", MegamenuSize.Lg to "megamenu megamenu-lg", MegamenuSize.Xl to "megamenu megamenu-xl")) { daisyMegamenuClasses(size = it) }
@@ -115,13 +112,7 @@ class MegamenuCoverageTest {
     }
 
     @Test
-    fun megamenuActiveClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuActiveClasses()
-        }
-        val expected = Expected("MegamenuActiveClasses all flags", "megamenu-active", content = false)
-        assertRendered(html, expected)
-    }
+    fun megamenuActiveClasses_all_flags() = assertRenders(Expected("MegamenuActiveClasses all flags", "megamenu-active", content = false)) { daisyMegamenuActiveClasses() }
 
     @Test
     fun megamenuPanel_defaults() {

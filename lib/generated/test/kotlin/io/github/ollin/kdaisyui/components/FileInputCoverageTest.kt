@@ -24,6 +24,11 @@ class FileInputCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -73,15 +78,7 @@ class FileInputCoverageTest {
     }
 
     @Test
-    fun fileInputClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                ghost = true,
-            )
-        }
-        val expected = Expected("FileInputClasses all flags", "file-input file-input-ghost", content = false)
-        assertRendered(html, expected)
-    }
+    fun fileInputClasses_all_flags() = assertRenders(Expected("FileInputClasses all flags", "file-input file-input-ghost", content = false)) { daisyFileInputClasses(ghost = true) }
 
     @Test
     fun fileInputClasses_color() = assertEachEntry("FileInputClasses color", mapOf(FileInputColor.Neutral to "file-input file-input-neutral", FileInputColor.Primary to "file-input file-input-primary", FileInputColor.Secondary to "file-input file-input-secondary", FileInputColor.Accent to "file-input file-input-accent", FileInputColor.Info to "file-input file-input-info", FileInputColor.Success to "file-input file-input-success", FileInputColor.Warning to "file-input file-input-warning", FileInputColor.Error to "file-input file-input-error")) { daisyFileInputClasses(color = it) }

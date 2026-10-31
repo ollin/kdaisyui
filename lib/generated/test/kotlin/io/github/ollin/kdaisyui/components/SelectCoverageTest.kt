@@ -24,6 +24,11 @@ class SelectCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -76,15 +81,7 @@ class SelectCoverageTest {
     }
 
     @Test
-    fun selectClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                ghost = true,
-            )
-        }
-        val expected = Expected("SelectClasses all flags", "select select-ghost", content = false)
-        assertRendered(html, expected)
-    }
+    fun selectClasses_all_flags() = assertRenders(Expected("SelectClasses all flags", "select select-ghost", content = false)) { daisySelectClasses(ghost = true) }
 
     @Test
     fun selectClasses_color() = assertEachEntry("SelectClasses color", mapOf(SelectColor.Neutral to "select select-neutral", SelectColor.Primary to "select select-primary", SelectColor.Secondary to "select select-secondary", SelectColor.Accent to "select select-accent", SelectColor.Info to "select select-info", SelectColor.Success to "select select-success", SelectColor.Warning to "select select-warning", SelectColor.Error to "select select-error")) { daisySelectClasses(color = it) }

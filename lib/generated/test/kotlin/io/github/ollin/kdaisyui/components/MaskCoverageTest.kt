@@ -24,6 +24,11 @@ class MaskCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -73,13 +78,7 @@ class MaskCoverageTest {
     }
 
     @Test
-    fun maskClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMaskClasses()
-        }
-        val expected = Expected("MaskClasses all flags", "mask", content = false)
-        assertRendered(html, expected)
-    }
+    fun maskClasses_all_flags() = assertRenders(Expected("MaskClasses all flags", "mask", content = false)) { daisyMaskClasses() }
 
     @Test
     fun maskClasses_style() = assertEachEntry("MaskClasses style", mapOf(MaskStyle.Squircle to "mask mask-squircle", MaskStyle.Heart to "mask mask-heart", MaskStyle.Hexagon to "mask mask-hexagon", MaskStyle.Hexagon2 to "mask mask-hexagon-2", MaskStyle.Decagon to "mask mask-decagon", MaskStyle.Pentagon to "mask mask-pentagon", MaskStyle.Diamond to "mask mask-diamond", MaskStyle.Circle to "mask mask-circle", MaskStyle.Star to "mask mask-star", MaskStyle.Star2 to "mask mask-star-2", MaskStyle.Triangle to "mask mask-triangle", MaskStyle.Triangle2 to "mask mask-triangle-2", MaskStyle.Triangle3 to "mask mask-triangle-3", MaskStyle.Triangle4 to "mask mask-triangle-4")) { daisyMaskClasses(style = it) }

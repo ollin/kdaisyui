@@ -24,6 +24,11 @@ class CollapseCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -75,13 +80,7 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapseClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapseClasses()
-        }
-        val expected = Expected("CollapseClasses all flags", "collapse", content = false)
-        assertRendered(html, expected)
-    }
+    fun collapseClasses_all_flags() = assertRenders(Expected("CollapseClasses all flags", "collapse", content = false)) { daisyCollapseClasses() }
 
     @Test
     fun collapseClasses_icon() = assertEachEntry("CollapseClasses icon", mapOf(CollapseIcon.Arrow to "collapse collapse-arrow", CollapseIcon.Plus to "collapse collapse-plus")) { daisyCollapseClasses(icon = it) }
@@ -122,13 +121,7 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapseTitleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapseTitleClasses()
-        }
-        val expected = Expected("CollapseTitleClasses all flags", "collapse-title", content = false)
-        assertRendered(html, expected)
-    }
+    fun collapseTitleClasses_all_flags() = assertRenders(Expected("CollapseTitleClasses all flags", "collapse-title", content = false)) { daisyCollapseTitleClasses() }
 
     @Test
     fun collapseContent_defaults() {
@@ -154,11 +147,5 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapseContentClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapseContentClasses()
-        }
-        val expected = Expected("CollapseContentClasses all flags", "collapse-content", content = false)
-        assertRendered(html, expected)
-    }
+    fun collapseContentClasses_all_flags() = assertRenders(Expected("CollapseContentClasses all flags", "collapse-content", content = false)) { daisyCollapseContentClasses() }
 }

@@ -24,6 +24,11 @@ class DiffCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,13 +74,7 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDiffClasses()
-        }
-        val expected = Expected("DiffClasses all flags", "diff", content = false)
-        assertRendered(html, expected)
-    }
+    fun diffClasses_all_flags() = assertRenders(Expected("DiffClasses all flags", "diff", content = false)) { daisyDiffClasses() }
 
     @Test
     fun diffItem1_defaults() {
@@ -101,13 +100,7 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffItem1Classes_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDiffItem1Classes()
-        }
-        val expected = Expected("DiffItem1Classes all flags", "diff-item-1", content = false)
-        assertRendered(html, expected)
-    }
+    fun diffItem1Classes_all_flags() = assertRenders(Expected("DiffItem1Classes all flags", "diff-item-1", content = false)) { daisyDiffItem1Classes() }
 
     @Test
     fun diffItem2_defaults() {
@@ -133,13 +126,7 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffItem2Classes_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDiffItem2Classes()
-        }
-        val expected = Expected("DiffItem2Classes all flags", "diff-item-2", content = false)
-        assertRendered(html, expected)
-    }
+    fun diffItem2Classes_all_flags() = assertRenders(Expected("DiffItem2Classes all flags", "diff-item-2", content = false)) { daisyDiffItem2Classes() }
 
     @Test
     fun diffResizer_defaults() {
@@ -165,11 +152,5 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffResizerClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDiffResizerClasses()
-        }
-        val expected = Expected("DiffResizerClasses all flags", "diff-resizer", content = false)
-        assertRendered(html, expected)
-    }
+    fun diffResizerClasses_all_flags() = assertRenders(Expected("DiffResizerClasses all flags", "diff-resizer", content = false)) { daisyDiffResizerClasses() }
 }

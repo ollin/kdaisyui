@@ -24,6 +24,11 @@ class SkeletonCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,13 +74,7 @@ class SkeletonCoverageTest {
     }
 
     @Test
-    fun skeletonClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySkeletonClasses()
-        }
-        val expected = Expected("SkeletonClasses all flags", "skeleton", content = false)
-        assertRendered(html, expected)
-    }
+    fun skeletonClasses_all_flags() = assertRenders(Expected("SkeletonClasses all flags", "skeleton", content = false)) { daisySkeletonClasses() }
 
     @Test
     fun skeletonText_defaults() {
@@ -101,11 +100,5 @@ class SkeletonCoverageTest {
     }
 
     @Test
-    fun skeletonTextClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySkeletonTextClasses()
-        }
-        val expected = Expected("SkeletonTextClasses all flags", "skeleton skeleton-text", content = false)
-        assertRendered(html, expected)
-    }
+    fun skeletonTextClasses_all_flags() = assertRenders(Expected("SkeletonTextClasses all flags", "skeleton skeleton-text", content = false)) { daisySkeletonTextClasses() }
 }

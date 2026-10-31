@@ -24,6 +24,11 @@ class RangeCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -84,15 +89,7 @@ class RangeCoverageTest {
     }
 
     @Test
-    fun rangeClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                vertical = true,
-            )
-        }
-        val expected = Expected("RangeClasses all flags", "range range-vertical", content = false)
-        assertRendered(html, expected)
-    }
+    fun rangeClasses_all_flags() = assertRenders(Expected("RangeClasses all flags", "range range-vertical", content = false)) { daisyRangeClasses(vertical = true) }
 
     @Test
     fun rangeClasses_color() = assertEachEntry("RangeClasses color", mapOf(RangeColor.Neutral to "range range-neutral", RangeColor.Primary to "range range-primary", RangeColor.Secondary to "range range-secondary", RangeColor.Accent to "range range-accent", RangeColor.Success to "range range-success", RangeColor.Warning to "range range-warning", RangeColor.Info to "range range-info", RangeColor.Error to "range range-error")) { daisyRangeClasses(color = it) }

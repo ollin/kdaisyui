@@ -24,6 +24,11 @@ class HeroCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,13 +74,7 @@ class HeroCoverageTest {
     }
 
     @Test
-    fun heroClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyHeroClasses()
-        }
-        val expected = Expected("HeroClasses all flags", "hero", content = false)
-        assertRendered(html, expected)
-    }
+    fun heroClasses_all_flags() = assertRenders(Expected("HeroClasses all flags", "hero", content = false)) { daisyHeroClasses() }
 
     @Test
     fun heroContent_defaults() {
@@ -101,13 +100,7 @@ class HeroCoverageTest {
     }
 
     @Test
-    fun heroContentClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyHeroContentClasses()
-        }
-        val expected = Expected("HeroContentClasses all flags", "hero-content", content = false)
-        assertRendered(html, expected)
-    }
+    fun heroContentClasses_all_flags() = assertRenders(Expected("HeroContentClasses all flags", "hero-content", content = false)) { daisyHeroContentClasses() }
 
     @Test
     fun heroOverlay_defaults() {
@@ -133,11 +126,5 @@ class HeroCoverageTest {
     }
 
     @Test
-    fun heroOverlayClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyHeroOverlayClasses()
-        }
-        val expected = Expected("HeroOverlayClasses all flags", "hero-overlay", content = false)
-        assertRendered(html, expected)
-    }
+    fun heroOverlayClasses_all_flags() = assertRenders(Expected("HeroOverlayClasses all flags", "hero-overlay", content = false)) { daisyHeroOverlayClasses() }
 }

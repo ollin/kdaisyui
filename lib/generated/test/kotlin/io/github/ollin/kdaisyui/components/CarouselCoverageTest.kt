@@ -24,6 +24,11 @@ class CarouselCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -75,13 +80,7 @@ class CarouselCoverageTest {
     }
 
     @Test
-    fun carouselClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselClasses()
-        }
-        val expected = Expected("CarouselClasses all flags", "carousel", content = false)
-        assertRendered(html, expected)
-    }
+    fun carouselClasses_all_flags() = assertRenders(Expected("CarouselClasses all flags", "carousel", content = false)) { daisyCarouselClasses() }
 
     @Test
     fun carouselClasses_snap() = assertEachEntry("CarouselClasses snap", mapOf(CarouselSnap.Start to "carousel carousel-start", CarouselSnap.Center to "carousel carousel-center", CarouselSnap.End to "carousel carousel-end")) { daisyCarouselClasses(snap = it) }
@@ -113,11 +112,5 @@ class CarouselCoverageTest {
     }
 
     @Test
-    fun carouselItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselItemClasses()
-        }
-        val expected = Expected("CarouselItemClasses all flags", "carousel-item", content = false)
-        assertRendered(html, expected)
-    }
+    fun carouselItemClasses_all_flags() = assertRenders(Expected("CarouselItemClasses all flags", "carousel-item", content = false)) { daisyCarouselItemClasses() }
 }

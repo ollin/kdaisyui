@@ -24,6 +24,11 @@ class ChatCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -72,13 +77,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatClasses()
-        }
-        val expected = Expected("ChatClasses all flags", "chat", content = false)
-        assertRendered(html, expected)
-    }
+    fun chatClasses_all_flags() = assertRenders(Expected("ChatClasses all flags", "chat", content = false)) { daisyChatClasses() }
 
     @Test
     fun chatClasses_placement() = assertEachEntry("ChatClasses placement", mapOf(ChatPlacement.Start to "chat chat-start", ChatPlacement.End to "chat chat-end")) { daisyChatClasses(placement = it) }
@@ -107,13 +106,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatImageClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatImageClasses()
-        }
-        val expected = Expected("ChatImageClasses all flags", "chat-image", content = false)
-        assertRendered(html, expected)
-    }
+    fun chatImageClasses_all_flags() = assertRenders(Expected("ChatImageClasses all flags", "chat-image", content = false)) { daisyChatImageClasses() }
 
     @Test
     fun chatHeader_defaults() {
@@ -139,13 +132,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatHeaderClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatHeaderClasses()
-        }
-        val expected = Expected("ChatHeaderClasses all flags", "chat-header", content = false)
-        assertRendered(html, expected)
-    }
+    fun chatHeaderClasses_all_flags() = assertRenders(Expected("ChatHeaderClasses all flags", "chat-header", content = false)) { daisyChatHeaderClasses() }
 
     @Test
     fun chatFooter_defaults() {
@@ -171,13 +158,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatFooterClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatFooterClasses()
-        }
-        val expected = Expected("ChatFooterClasses all flags", "chat-footer", content = false)
-        assertRendered(html, expected)
-    }
+    fun chatFooterClasses_all_flags() = assertRenders(Expected("ChatFooterClasses all flags", "chat-footer", content = false)) { daisyChatFooterClasses() }
 
     @Test
     fun chatBubble_defaults() {
@@ -206,13 +187,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatBubbleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses()
-        }
-        val expected = Expected("ChatBubbleClasses all flags", "chat-bubble", content = false)
-        assertRendered(html, expected)
-    }
+    fun chatBubbleClasses_all_flags() = assertRenders(Expected("ChatBubbleClasses all flags", "chat-bubble", content = false)) { daisyChatBubbleClasses() }
 
     @Test
     fun chatBubbleClasses_color() = assertEachEntry("ChatBubbleClasses color", mapOf(ChatBubbleColor.Neutral to "chat-bubble chat-bubble-neutral", ChatBubbleColor.Primary to "chat-bubble chat-bubble-primary", ChatBubbleColor.Secondary to "chat-bubble chat-bubble-secondary", ChatBubbleColor.Accent to "chat-bubble chat-bubble-accent", ChatBubbleColor.Info to "chat-bubble chat-bubble-info", ChatBubbleColor.Success to "chat-bubble chat-bubble-success", ChatBubbleColor.Warning to "chat-bubble chat-bubble-warning", ChatBubbleColor.Error to "chat-bubble chat-bubble-error")) { daisyChatBubbleClasses(color = it) }

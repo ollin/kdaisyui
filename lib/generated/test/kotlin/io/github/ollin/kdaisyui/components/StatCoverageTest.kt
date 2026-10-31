@@ -24,6 +24,11 @@ class StatCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -72,13 +77,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statsClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatsClasses()
-        }
-        val expected = Expected("StatsClasses all flags", "stats", content = false)
-        assertRendered(html, expected)
-    }
+    fun statsClasses_all_flags() = assertRenders(Expected("StatsClasses all flags", "stats", content = false)) { daisyStatsClasses() }
 
     @Test
     fun statsClasses_direction() = assertEachEntry("StatsClasses direction", mapOf(StatsDirection.Horizontal to "stats stats-horizontal", StatsDirection.Vertical to "stats stats-vertical")) { daisyStatsClasses(direction = it) }
@@ -107,13 +106,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatClasses()
-        }
-        val expected = Expected("StatClasses all flags", "stat", content = false)
-        assertRendered(html, expected)
-    }
+    fun statClasses_all_flags() = assertRenders(Expected("StatClasses all flags", "stat", content = false)) { daisyStatClasses() }
 
     @Test
     fun statTitle_defaults() {
@@ -148,13 +141,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statTitleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatTitleClasses()
-        }
-        val expected = Expected("StatTitleClasses all flags", "stat-title", content = false)
-        assertRendered(html, expected)
-    }
+    fun statTitleClasses_all_flags() = assertRenders(Expected("StatTitleClasses all flags", "stat-title", content = false)) { daisyStatTitleClasses() }
 
     @Test
     fun statValue_defaults() {
@@ -189,13 +176,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statValueClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatValueClasses()
-        }
-        val expected = Expected("StatValueClasses all flags", "stat-value", content = false)
-        assertRendered(html, expected)
-    }
+    fun statValueClasses_all_flags() = assertRenders(Expected("StatValueClasses all flags", "stat-value", content = false)) { daisyStatValueClasses() }
 
     @Test
     fun statDesc_defaults() {
@@ -230,13 +211,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statDescClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatDescClasses()
-        }
-        val expected = Expected("StatDescClasses all flags", "stat-desc", content = false)
-        assertRendered(html, expected)
-    }
+    fun statDescClasses_all_flags() = assertRenders(Expected("StatDescClasses all flags", "stat-desc", content = false)) { daisyStatDescClasses() }
 
     @Test
     fun statFigure_defaults() {
@@ -262,13 +237,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statFigureClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatFigureClasses()
-        }
-        val expected = Expected("StatFigureClasses all flags", "stat-figure", content = false)
-        assertRendered(html, expected)
-    }
+    fun statFigureClasses_all_flags() = assertRenders(Expected("StatFigureClasses all flags", "stat-figure", content = false)) { daisyStatFigureClasses() }
 
     @Test
     fun statActions_defaults() {
@@ -294,11 +263,5 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statActionsClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatActionsClasses()
-        }
-        val expected = Expected("StatActionsClasses all flags", "stat-actions", content = false)
-        assertRendered(html, expected)
-    }
+    fun statActionsClasses_all_flags() = assertRenders(Expected("StatActionsClasses all flags", "stat-actions", content = false)) { daisyStatActionsClasses() }
 }

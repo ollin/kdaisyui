@@ -24,6 +24,11 @@ class MockupCodeCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,11 +74,5 @@ class MockupCodeCoverageTest {
     }
 
     @Test
-    fun mockupCodeClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMockupCodeClasses()
-        }
-        val expected = Expected("MockupCodeClasses all flags", "mockup-code", content = false)
-        assertRendered(html, expected)
-    }
+    fun mockupCodeClasses_all_flags() = assertRenders(Expected("MockupCodeClasses all flags", "mockup-code", content = false)) { daisyMockupCodeClasses() }
 }

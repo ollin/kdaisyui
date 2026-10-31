@@ -24,6 +24,11 @@ class FilterCoverageTest {
     private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
     private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
 
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
     /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
     private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
         val html = createHTML(prettyPrint = false).div { render() }
@@ -69,13 +74,7 @@ class FilterCoverageTest {
     }
 
     @Test
-    fun filterClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFilterClasses()
-        }
-        val expected = Expected("FilterClasses all flags", "filter", content = false)
-        assertRendered(html, expected)
-    }
+    fun filterClasses_all_flags() = assertRenders(Expected("FilterClasses all flags", "filter", content = false)) { daisyFilterClasses() }
 
     @Test
     fun filterReset_defaults() {
@@ -99,11 +98,5 @@ class FilterCoverageTest {
     }
 
     @Test
-    fun filterResetClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFilterResetClasses()
-        }
-        val expected = Expected("FilterResetClasses all flags", "filter-reset", content = false)
-        assertRendered(html, expected)
-    }
+    fun filterResetClasses_all_flags() = assertRenders(Expected("FilterResetClasses all flags", "filter-reset", content = false)) { daisyFilterResetClasses() }
 }

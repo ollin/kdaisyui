@@ -17,7 +17,7 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
     private val code: String get() = lines.second.joinToString("\n")
 
     private val body: String get() =
-        if (code.lines().any { topLevelDeclaration.containsMatchIn(it) }) code
+        if (fence.directive !is Directive.In && code.lines().any { topLevelDeclaration.containsMatchIn(it) }) code
         else "fun $receiver.snippet() {\n$code\n}"
 
     private val receiver: String get() = when (val directive = fence.directive) {

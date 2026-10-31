@@ -49,6 +49,11 @@ class SnippetSourceTest {
         assertEquals("fun Route.snippet() {\nget(\"/\") { }\n}\n", bodyOf(textOf("get(\"/\") { }", marker = "in Route")))
     }
 
+    @Test
+    fun aSnippetMarkedInAReceiverIsWrappedEvenWhenItDeclaresSomething() {
+        assertEquals("fun Route.snippet() {\nfun helper() { }\nhelper()\n}\n", bodyOf(textOf("fun helper() { }\nhelper()", marker = "in Route")))
+    }
+
     private fun textOf(code: String, marker: String? = null) = SnippetSource("README.md", KotlinFence(9, code, marker)).text
 
     private fun importsOf(text: String) = text.lines().filter { it.startsWith("import ") }

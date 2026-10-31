@@ -26,3 +26,13 @@
 - **Cause:** 1.2 read the generator, not its output; only regenerating with a required `id` shows
   every site.
 - **Cost:** about 10 minutes, inside task 4.1.
+
+## F4 - Writing an anchor name on every trigger would misplace the megamenu
+
+- **What happened:** before task 4.4. `popoverTarget` wrote `anchor-name` on every trigger, and the
+  design called that harmless for the modal and the megamenu. DaisyUI's `megamenu.css` sets
+  `anchor-name: var(--mm-anchor)` on each trigger itself, and an inline one overrides it.
+- **Cause:** the design reasoned about the modal, which has no anchor, and extended the conclusion
+  to the megamenu without reading its CSS.
+- **Cost:** a design correction and one more task (4.3a) before the example app moved onto the
+  helper; nothing shipped.

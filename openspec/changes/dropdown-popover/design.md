@@ -35,8 +35,13 @@ would not serve the modal or the megamenu, which need the same `popovertarget`.
 **Rejected: the popover writing its own trigger.** A function renders one element, and the
 trigger is not inside the popover.
 
-Writing `anchor-name` on a modal or megamenu trigger, which has no anchored popover, is harmless:
-nothing reads it.
+**Corrected in task 4.4** (`findings.md` F4): the anchor is opt-in, `anchored: Boolean = false`.
+This said writing `anchor-name` on a modal or megamenu trigger was harmless. For the megamenu it
+is not: DaisyUI's `megamenu.css` sets `anchor-name: var(--mm-anchor)` on each trigger itself, and
+an inline `anchor-name` would override it and misplace the panel. **Rejected: anchoring by
+default.** Then every megamenu trigger would need to opt out, and forgetting to breaks a layout
+DaisyUI already gets right. With the default off, forgetting `anchored = true` on a dropdown's
+trigger misplaces only the popover the author is building, where they are looking.
 
 ### 3. The anchor name is derived in one place
 

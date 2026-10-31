@@ -23,15 +23,21 @@ popover id="popover-1" style="position-anchor:--anchor-1">`.
 
 ### Requirement: A popover's trigger is typed and anchored to it
 
-The library SHALL offer `Tag.popoverTarget(popover: HtmlId, action: PopoverTargetAction?)`, which
-writes `popovertarget` with the popover's id, `popovertargetaction` when an action is given, and an
-`anchor-name` equal to the `position-anchor` that popover writes. It SHALL append to an existing
-`style` rather than replace it.
+The library SHALL offer `Tag.popoverTarget(popover: HtmlId, action: PopoverTargetAction?, anchored:
+Boolean)`, which writes `popovertarget` with the popover's id and `popovertargetaction` when an
+action is given. Only when `anchored` is true does it write an `anchor-name` equal to the
+`position-anchor` that popover writes, appended to an existing `style` rather than replacing it.
+Off by default, because DaisyUI's megamenu sets `anchor-name` on its triggers itself.
 
 #### Scenario: Trigger and popover agree on an id with a space
 
-- **WHEN** a trigger calls `popoverTarget(htmlId("main menu"))` and `daisyDropdownPopover(id = htmlId("main menu"))` renders
+- **WHEN** a trigger calls `popoverTarget(htmlId("main menu"), anchored = true)` and `daisyDropdownPopover(id = htmlId("main menu"))` renders
 - **THEN** the trigger's `anchor-name` and the popover's `position-anchor` are the same valid dashed-ident
+
+#### Scenario: A megamenu trigger keeps DaisyUI's own anchor
+
+- **WHEN** a trigger calls `popoverTarget(panel)` without `anchored`
+- **THEN** it writes no `anchor-name`
 
 #### Scenario: A close button
 

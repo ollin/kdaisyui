@@ -40,7 +40,9 @@ E2E as early as the function allows.
 - [x] 4.2 `^ F` An example-app page with a trigger and a popover dropdown, no script.
 - [x] 4.3 `^ F` E2E: the click opens the menu, and its top edge meets the trigger's bottom edge.
   If this refutes the Assumed requirement, revise the change before going on.
-- [ ] 4.4 `^ r` The example app's four untyped `popovertarget` strings become `popoverTarget(…)`.
+- [ ] 4.3a `! F` The anchor is opt-in: `popoverTarget(popover, anchored = true)`; without it no
+  `anchor-name` is written, so a megamenu trigger keeps the one DaisyUI's CSS sets (F4).
+- [ ] 4.4 `^ r` The example app's five untyped `popovertarget` strings become `popoverTarget(…)`.
 
 ## 5. Baselines and docs
 

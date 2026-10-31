@@ -2,6 +2,7 @@ package io.github.ollin.kdaisyui.docsnippets
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class SnippetDocumentTest {
 
@@ -23,6 +24,12 @@ class SnippetDocumentTest {
     fun aFenceMarkedSkipWithAReasonIsNotCompiled() {
         val markdown = "<!-- snippet: skip - the 0.7.x API -->\n```kotlin\nold()\n```\n\n```kotlin\nnew()\n```\n"
         assertEquals(listOf("x_md_L6.kt"), SnippetDocument("x.md", markdown).sources.map { it.fileName })
+    }
+
+    @Test
+    fun anInvalidMarkerFailsNamingTheDocumentAndTheLine() {
+        val failure = assertFailsWith<IllegalStateException> { SnippetDocument("x.md", "<!-- snippet: skip -->\n```kotlin\nold()\n```\n") }
+        assertEquals("x.md:2: skip needs a reason: <!-- snippet: skip - <reason> -->", failure.message)
     }
 
     private fun scopeImportsOf(vararg snippets: String): List<List<String>> {

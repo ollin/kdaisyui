@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class DockCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock", "Dock defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Dock defaults", "dock", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class DockCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dock zz-extra", "Dock all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Dock")
+        val expected = Expected("Dock all flags", "dock zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock dock-xs", "Dock size Xs")
+        assertRendered(html, Expected("Dock size Xs", "dock dock-xs"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock dock-sm", "Dock size Sm")
+        assertRendered(html, Expected("Dock size Sm", "dock dock-sm"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock dock-md", "Dock size Md")
+        assertRendered(html, Expected("Dock size Md", "dock dock-md"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock dock-lg", "Dock size Lg")
+        assertRendered(html, Expected("Dock size Lg", "dock dock-lg"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock dock-xl", "Dock size Xl")
+        assertRendered(html, Expected("Dock size Xl", "dock dock-xl"))
     }
 
     @Test
@@ -108,7 +108,7 @@ class DockCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDockClasses()
         }
-        assertRendered(html, "dock", "DockClasses defaults")
+        assertRendered(html, Expected("DockClasses defaults", "dock"))
     }
 
     @Test
@@ -116,7 +116,8 @@ class DockCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDockClasses()
         }
-        assertRendered(html, "dock", "DockClasses all flags")
+        val expected = Expected("DockClasses all flags", "dock", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -126,7 +127,7 @@ class DockCoverageTest {
                 size = DockSize.Xs,
             )
         }
-        assertRendered(html, "dock dock-xs", "DockClasses size Xs")
+        assertRendered(html, Expected("DockClasses size Xs", "dock dock-xs"))
     }
 
     @Test
@@ -136,7 +137,7 @@ class DockCoverageTest {
                 size = DockSize.Sm,
             )
         }
-        assertRendered(html, "dock dock-sm", "DockClasses size Sm")
+        assertRendered(html, Expected("DockClasses size Sm", "dock dock-sm"))
     }
 
     @Test
@@ -146,7 +147,7 @@ class DockCoverageTest {
                 size = DockSize.Md,
             )
         }
-        assertRendered(html, "dock dock-md", "DockClasses size Md")
+        assertRendered(html, Expected("DockClasses size Md", "dock dock-md"))
     }
 
     @Test
@@ -156,7 +157,7 @@ class DockCoverageTest {
                 size = DockSize.Lg,
             )
         }
-        assertRendered(html, "dock dock-lg", "DockClasses size Lg")
+        assertRendered(html, Expected("DockClasses size Lg", "dock dock-lg"))
     }
 
     @Test
@@ -166,7 +167,7 @@ class DockCoverageTest {
                 size = DockSize.Xl,
             )
         }
-        assertRendered(html, "dock dock-xl", "DockClasses size Xl")
+        assertRendered(html, Expected("DockClasses size Xl", "dock dock-xl"))
     }
 
     @Test
@@ -191,8 +192,9 @@ class DockCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dock-active zz-extra", "DockItem all flags", closes = "</button></div>")
-        assertCommonFlags(html, "DockItem")
+        val expected = Expected("DockItem all flags", "dock-active zz-extra", closes = "</button></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -210,7 +212,8 @@ class DockCoverageTest {
                 active = true,
             )
         }
-        assertRendered(html, "dock-active", "DockItemClasses all flags")
+        val expected = Expected("DockItemClasses all flags", "dock-active", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -220,7 +223,7 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock-label", "DockLabel defaults", closes = "</span></div>")
+        assertRendered(html, Expected("DockLabel defaults", "dock-label", closes = "</span></div>"))
     }
 
     @Test
@@ -233,8 +236,9 @@ class DockCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dock-label zz-extra", "DockLabel all flags", closes = "</span></div>")
-        assertCommonFlags(html, "DockLabel")
+        val expected = Expected("DockLabel all flags", "dock-label zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -242,7 +246,7 @@ class DockCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDockLabelClasses()
         }
-        assertRendered(html, "dock-label", "DockLabelClasses defaults")
+        assertRendered(html, Expected("DockLabelClasses defaults", "dock-label"))
     }
 
     @Test
@@ -250,6 +254,7 @@ class DockCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDockLabelClasses()
         }
-        assertRendered(html, "dock-label", "DockLabelClasses all flags")
+        val expected = Expected("DockLabelClasses all flags", "dock-label", content = false)
+        assertRendered(html, expected)
     }
 }

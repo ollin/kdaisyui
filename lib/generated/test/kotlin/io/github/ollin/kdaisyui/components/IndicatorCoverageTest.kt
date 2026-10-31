@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class IndicatorCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator", "Indicator defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Indicator defaults", "indicator", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class IndicatorCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "indicator zz-extra", "Indicator all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Indicator")
+        val expected = Expected("Indicator all flags", "indicator zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class IndicatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorClasses()
         }
-        assertRendered(html, "indicator", "IndicatorClasses defaults")
+        assertRendered(html, Expected("IndicatorClasses defaults", "indicator"))
     }
 
     @Test
@@ -61,7 +61,8 @@ class IndicatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorClasses()
         }
-        assertRendered(html, "indicator", "IndicatorClasses all flags")
+        val expected = Expected("IndicatorClasses all flags", "indicator", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -71,7 +72,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-item", "IndicatorItem defaults", closes = "</span></div>")
+        assertRendered(html, Expected("IndicatorItem defaults", "indicator-item", closes = "</span></div>"))
     }
 
     @Test
@@ -84,8 +85,9 @@ class IndicatorCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "indicator-item zz-extra", "IndicatorItem all flags", closes = "</span></div>")
-        assertCommonFlags(html, "IndicatorItem")
+        val expected = Expected("IndicatorItem all flags", "indicator-item zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -96,7 +98,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-item indicator-start", "IndicatorItem horizontalPlacement Start")
+        assertRendered(html, Expected("IndicatorItem horizontalPlacement Start", "indicator-item indicator-start"))
     }
 
     @Test
@@ -107,7 +109,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-center indicator-item", "IndicatorItem horizontalPlacement Center")
+        assertRendered(html, Expected("IndicatorItem horizontalPlacement Center", "indicator-center indicator-item"))
     }
 
     @Test
@@ -118,7 +120,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-end indicator-item", "IndicatorItem horizontalPlacement End")
+        assertRendered(html, Expected("IndicatorItem horizontalPlacement End", "indicator-end indicator-item"))
     }
 
     @Test
@@ -129,7 +131,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-item indicator-top", "IndicatorItem verticalPlacement Top")
+        assertRendered(html, Expected("IndicatorItem verticalPlacement Top", "indicator-item indicator-top"))
     }
 
     @Test
@@ -140,7 +142,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-item indicator-middle", "IndicatorItem verticalPlacement Middle")
+        assertRendered(html, Expected("IndicatorItem verticalPlacement Middle", "indicator-item indicator-middle"))
     }
 
     @Test
@@ -151,7 +153,7 @@ class IndicatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "indicator-bottom indicator-item", "IndicatorItem verticalPlacement Bottom")
+        assertRendered(html, Expected("IndicatorItem verticalPlacement Bottom", "indicator-bottom indicator-item"))
     }
 
     @Test
@@ -159,7 +161,7 @@ class IndicatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItemClasses()
         }
-        assertRendered(html, "indicator-item", "IndicatorItemClasses defaults")
+        assertRendered(html, Expected("IndicatorItemClasses defaults", "indicator-item"))
     }
 
     @Test
@@ -167,7 +169,8 @@ class IndicatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyIndicatorItemClasses()
         }
-        assertRendered(html, "indicator-item", "IndicatorItemClasses all flags")
+        val expected = Expected("IndicatorItemClasses all flags", "indicator-item", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -177,7 +180,7 @@ class IndicatorCoverageTest {
                 horizontalPlacement = IndicatorItemHorizontalPlacement.Start,
             )
         }
-        assertRendered(html, "indicator-item indicator-start", "IndicatorItemClasses horizontalPlacement Start")
+        assertRendered(html, Expected("IndicatorItemClasses horizontalPlacement Start", "indicator-item indicator-start"))
     }
 
     @Test
@@ -187,7 +190,7 @@ class IndicatorCoverageTest {
                 horizontalPlacement = IndicatorItemHorizontalPlacement.Center,
             )
         }
-        assertRendered(html, "indicator-center indicator-item", "IndicatorItemClasses horizontalPlacement Center")
+        assertRendered(html, Expected("IndicatorItemClasses horizontalPlacement Center", "indicator-center indicator-item"))
     }
 
     @Test
@@ -197,7 +200,7 @@ class IndicatorCoverageTest {
                 horizontalPlacement = IndicatorItemHorizontalPlacement.End,
             )
         }
-        assertRendered(html, "indicator-end indicator-item", "IndicatorItemClasses horizontalPlacement End")
+        assertRendered(html, Expected("IndicatorItemClasses horizontalPlacement End", "indicator-end indicator-item"))
     }
 
     @Test
@@ -207,7 +210,7 @@ class IndicatorCoverageTest {
                 verticalPlacement = IndicatorItemVerticalPlacement.Top,
             )
         }
-        assertRendered(html, "indicator-item indicator-top", "IndicatorItemClasses verticalPlacement Top")
+        assertRendered(html, Expected("IndicatorItemClasses verticalPlacement Top", "indicator-item indicator-top"))
     }
 
     @Test
@@ -217,7 +220,7 @@ class IndicatorCoverageTest {
                 verticalPlacement = IndicatorItemVerticalPlacement.Middle,
             )
         }
-        assertRendered(html, "indicator-item indicator-middle", "IndicatorItemClasses verticalPlacement Middle")
+        assertRendered(html, Expected("IndicatorItemClasses verticalPlacement Middle", "indicator-item indicator-middle"))
     }
 
     @Test
@@ -227,6 +230,6 @@ class IndicatorCoverageTest {
                 verticalPlacement = IndicatorItemVerticalPlacement.Bottom,
             )
         }
-        assertRendered(html, "indicator-bottom indicator-item", "IndicatorItemClasses verticalPlacement Bottom")
+        assertRendered(html, Expected("IndicatorItemClasses verticalPlacement Bottom", "indicator-bottom indicator-item"))
     }
 }

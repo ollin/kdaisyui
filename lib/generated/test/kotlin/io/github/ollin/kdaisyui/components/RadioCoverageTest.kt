@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class RadioCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class RadioCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRadio()
         }
-        assertRendered(html, "radio", "Radio defaults")
+        assertRendered(html, Expected("Radio defaults", "radio"))
         assertTrue(html.contains("type=\""), "Radio sets type")
     }
 
@@ -45,8 +44,9 @@ class RadioCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "radio zz-extra", "Radio all flags")
-        assertCommonFlags(html, "Radio", content = false)
+        val expected = Expected("Radio all flags", "radio zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("name=\"x\""), "Radio name")
         assertTrue(html.contains("type=\""), "Radio sets type")
         assertTrue(html.contains("name=\""), "Radio sets name")
@@ -61,7 +61,7 @@ class RadioCoverageTest {
                 color = RadioColor.Neutral,
             )
         }
-        assertRendered(html, "radio radio-neutral", "Radio color Neutral")
+        assertRendered(html, Expected("Radio color Neutral", "radio radio-neutral"))
     }
 
     @Test
@@ -71,7 +71,7 @@ class RadioCoverageTest {
                 color = RadioColor.Primary,
             )
         }
-        assertRendered(html, "radio radio-primary", "Radio color Primary")
+        assertRendered(html, Expected("Radio color Primary", "radio radio-primary"))
     }
 
     @Test
@@ -81,7 +81,7 @@ class RadioCoverageTest {
                 color = RadioColor.Secondary,
             )
         }
-        assertRendered(html, "radio radio-secondary", "Radio color Secondary")
+        assertRendered(html, Expected("Radio color Secondary", "radio radio-secondary"))
     }
 
     @Test
@@ -91,7 +91,7 @@ class RadioCoverageTest {
                 color = RadioColor.Accent,
             )
         }
-        assertRendered(html, "radio radio-accent", "Radio color Accent")
+        assertRendered(html, Expected("Radio color Accent", "radio radio-accent"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class RadioCoverageTest {
                 color = RadioColor.Success,
             )
         }
-        assertRendered(html, "radio radio-success", "Radio color Success")
+        assertRendered(html, Expected("Radio color Success", "radio radio-success"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class RadioCoverageTest {
                 color = RadioColor.Warning,
             )
         }
-        assertRendered(html, "radio radio-warning", "Radio color Warning")
+        assertRendered(html, Expected("Radio color Warning", "radio radio-warning"))
     }
 
     @Test
@@ -121,7 +121,7 @@ class RadioCoverageTest {
                 color = RadioColor.Info,
             )
         }
-        assertRendered(html, "radio radio-info", "Radio color Info")
+        assertRendered(html, Expected("Radio color Info", "radio radio-info"))
     }
 
     @Test
@@ -131,7 +131,7 @@ class RadioCoverageTest {
                 color = RadioColor.Error,
             )
         }
-        assertRendered(html, "radio radio-error", "Radio color Error")
+        assertRendered(html, Expected("Radio color Error", "radio radio-error"))
     }
 
     @Test
@@ -141,7 +141,7 @@ class RadioCoverageTest {
                 size = RadioSize.Xs,
             )
         }
-        assertRendered(html, "radio radio-xs", "Radio size Xs")
+        assertRendered(html, Expected("Radio size Xs", "radio radio-xs"))
     }
 
     @Test
@@ -151,7 +151,7 @@ class RadioCoverageTest {
                 size = RadioSize.Sm,
             )
         }
-        assertRendered(html, "radio radio-sm", "Radio size Sm")
+        assertRendered(html, Expected("Radio size Sm", "radio radio-sm"))
     }
 
     @Test
@@ -161,7 +161,7 @@ class RadioCoverageTest {
                 size = RadioSize.Md,
             )
         }
-        assertRendered(html, "radio radio-md", "Radio size Md")
+        assertRendered(html, Expected("Radio size Md", "radio radio-md"))
     }
 
     @Test
@@ -171,7 +171,7 @@ class RadioCoverageTest {
                 size = RadioSize.Lg,
             )
         }
-        assertRendered(html, "radio radio-lg", "Radio size Lg")
+        assertRendered(html, Expected("Radio size Lg", "radio radio-lg"))
     }
 
     @Test
@@ -181,7 +181,7 @@ class RadioCoverageTest {
                 size = RadioSize.Xl,
             )
         }
-        assertRendered(html, "radio radio-xl", "Radio size Xl")
+        assertRendered(html, Expected("Radio size Xl", "radio radio-xl"))
     }
 
     @Test
@@ -189,7 +189,7 @@ class RadioCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRadioClasses()
         }
-        assertRendered(html, "radio", "RadioClasses defaults")
+        assertRendered(html, Expected("RadioClasses defaults", "radio"))
     }
 
     @Test
@@ -197,7 +197,8 @@ class RadioCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRadioClasses()
         }
-        assertRendered(html, "radio", "RadioClasses all flags")
+        val expected = Expected("RadioClasses all flags", "radio", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -207,7 +208,7 @@ class RadioCoverageTest {
                 color = RadioColor.Neutral,
             )
         }
-        assertRendered(html, "radio radio-neutral", "RadioClasses color Neutral")
+        assertRendered(html, Expected("RadioClasses color Neutral", "radio radio-neutral"))
     }
 
     @Test
@@ -217,7 +218,7 @@ class RadioCoverageTest {
                 color = RadioColor.Primary,
             )
         }
-        assertRendered(html, "radio radio-primary", "RadioClasses color Primary")
+        assertRendered(html, Expected("RadioClasses color Primary", "radio radio-primary"))
     }
 
     @Test
@@ -227,7 +228,7 @@ class RadioCoverageTest {
                 color = RadioColor.Secondary,
             )
         }
-        assertRendered(html, "radio radio-secondary", "RadioClasses color Secondary")
+        assertRendered(html, Expected("RadioClasses color Secondary", "radio radio-secondary"))
     }
 
     @Test
@@ -237,7 +238,7 @@ class RadioCoverageTest {
                 color = RadioColor.Accent,
             )
         }
-        assertRendered(html, "radio radio-accent", "RadioClasses color Accent")
+        assertRendered(html, Expected("RadioClasses color Accent", "radio radio-accent"))
     }
 
     @Test
@@ -247,7 +248,7 @@ class RadioCoverageTest {
                 color = RadioColor.Success,
             )
         }
-        assertRendered(html, "radio radio-success", "RadioClasses color Success")
+        assertRendered(html, Expected("RadioClasses color Success", "radio radio-success"))
     }
 
     @Test
@@ -257,7 +258,7 @@ class RadioCoverageTest {
                 color = RadioColor.Warning,
             )
         }
-        assertRendered(html, "radio radio-warning", "RadioClasses color Warning")
+        assertRendered(html, Expected("RadioClasses color Warning", "radio radio-warning"))
     }
 
     @Test
@@ -267,7 +268,7 @@ class RadioCoverageTest {
                 color = RadioColor.Info,
             )
         }
-        assertRendered(html, "radio radio-info", "RadioClasses color Info")
+        assertRendered(html, Expected("RadioClasses color Info", "radio radio-info"))
     }
 
     @Test
@@ -277,7 +278,7 @@ class RadioCoverageTest {
                 color = RadioColor.Error,
             )
         }
-        assertRendered(html, "radio radio-error", "RadioClasses color Error")
+        assertRendered(html, Expected("RadioClasses color Error", "radio radio-error"))
     }
 
     @Test
@@ -287,7 +288,7 @@ class RadioCoverageTest {
                 size = RadioSize.Xs,
             )
         }
-        assertRendered(html, "radio radio-xs", "RadioClasses size Xs")
+        assertRendered(html, Expected("RadioClasses size Xs", "radio radio-xs"))
     }
 
     @Test
@@ -297,7 +298,7 @@ class RadioCoverageTest {
                 size = RadioSize.Sm,
             )
         }
-        assertRendered(html, "radio radio-sm", "RadioClasses size Sm")
+        assertRendered(html, Expected("RadioClasses size Sm", "radio radio-sm"))
     }
 
     @Test
@@ -307,7 +308,7 @@ class RadioCoverageTest {
                 size = RadioSize.Md,
             )
         }
-        assertRendered(html, "radio radio-md", "RadioClasses size Md")
+        assertRendered(html, Expected("RadioClasses size Md", "radio radio-md"))
     }
 
     @Test
@@ -317,7 +318,7 @@ class RadioCoverageTest {
                 size = RadioSize.Lg,
             )
         }
-        assertRendered(html, "radio radio-lg", "RadioClasses size Lg")
+        assertRendered(html, Expected("RadioClasses size Lg", "radio radio-lg"))
     }
 
     @Test
@@ -327,6 +328,6 @@ class RadioCoverageTest {
                 size = RadioSize.Xl,
             )
         }
-        assertRendered(html, "radio radio-xl", "RadioClasses size Xl")
+        assertRendered(html, Expected("RadioClasses size Xl", "radio radio-xl"))
     }
 }

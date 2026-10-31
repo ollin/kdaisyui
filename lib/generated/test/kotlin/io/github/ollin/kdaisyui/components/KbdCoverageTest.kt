@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class KbdCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class KbdCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyKbd()
         }
-        assertRendered(html, "kbd", "Kbd defaults", closes = "</kbd></div>")
+        assertRendered(html, Expected("Kbd defaults", "kbd", closes = "</kbd></div>"))
     }
 
     @Test
@@ -42,8 +41,9 @@ class KbdCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "kbd zz-extra", "Kbd all flags", closes = "</kbd></div>")
-        assertCommonFlags(html, "Kbd")
+        val expected = Expected("Kbd all flags", "kbd zz-extra", closes = "</kbd></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class KbdCoverageTest {
                 size = KbdSize.Xs,
             )
         }
-        assertRendered(html, "kbd kbd-xs", "Kbd size Xs")
+        assertRendered(html, Expected("Kbd size Xs", "kbd kbd-xs"))
     }
 
     @Test
@@ -63,7 +63,7 @@ class KbdCoverageTest {
                 size = KbdSize.Sm,
             )
         }
-        assertRendered(html, "kbd kbd-sm", "Kbd size Sm")
+        assertRendered(html, Expected("Kbd size Sm", "kbd kbd-sm"))
     }
 
     @Test
@@ -73,7 +73,7 @@ class KbdCoverageTest {
                 size = KbdSize.Md,
             )
         }
-        assertRendered(html, "kbd kbd-md", "Kbd size Md")
+        assertRendered(html, Expected("Kbd size Md", "kbd kbd-md"))
     }
 
     @Test
@@ -83,7 +83,7 @@ class KbdCoverageTest {
                 size = KbdSize.Lg,
             )
         }
-        assertRendered(html, "kbd kbd-lg", "Kbd size Lg")
+        assertRendered(html, Expected("Kbd size Lg", "kbd kbd-lg"))
     }
 
     @Test
@@ -93,7 +93,7 @@ class KbdCoverageTest {
                 size = KbdSize.Xl,
             )
         }
-        assertRendered(html, "kbd kbd-xl", "Kbd size Xl")
+        assertRendered(html, Expected("Kbd size Xl", "kbd kbd-xl"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class KbdCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "kbd", "Kbd text")
+        assertRendered(html, Expected("Kbd text", "kbd"))
         assertTrue(html.contains("txtmark"), "Kbd text content")
     }
 
@@ -112,7 +112,7 @@ class KbdCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyKbdClasses()
         }
-        assertRendered(html, "kbd", "KbdClasses defaults")
+        assertRendered(html, Expected("KbdClasses defaults", "kbd"))
     }
 
     @Test
@@ -120,7 +120,8 @@ class KbdCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyKbdClasses()
         }
-        assertRendered(html, "kbd", "KbdClasses all flags")
+        val expected = Expected("KbdClasses all flags", "kbd", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -130,7 +131,7 @@ class KbdCoverageTest {
                 size = KbdSize.Xs,
             )
         }
-        assertRendered(html, "kbd kbd-xs", "KbdClasses size Xs")
+        assertRendered(html, Expected("KbdClasses size Xs", "kbd kbd-xs"))
     }
 
     @Test
@@ -140,7 +141,7 @@ class KbdCoverageTest {
                 size = KbdSize.Sm,
             )
         }
-        assertRendered(html, "kbd kbd-sm", "KbdClasses size Sm")
+        assertRendered(html, Expected("KbdClasses size Sm", "kbd kbd-sm"))
     }
 
     @Test
@@ -150,7 +151,7 @@ class KbdCoverageTest {
                 size = KbdSize.Md,
             )
         }
-        assertRendered(html, "kbd kbd-md", "KbdClasses size Md")
+        assertRendered(html, Expected("KbdClasses size Md", "kbd kbd-md"))
     }
 
     @Test
@@ -160,7 +161,7 @@ class KbdCoverageTest {
                 size = KbdSize.Lg,
             )
         }
-        assertRendered(html, "kbd kbd-lg", "KbdClasses size Lg")
+        assertRendered(html, Expected("KbdClasses size Lg", "kbd kbd-lg"))
     }
 
     @Test
@@ -170,6 +171,6 @@ class KbdCoverageTest {
                 size = KbdSize.Xl,
             )
         }
-        assertRendered(html, "kbd kbd-xl", "KbdClasses size Xl")
+        assertRendered(html, Expected("KbdClasses size Xl", "kbd kbd-xl"))
     }
 }

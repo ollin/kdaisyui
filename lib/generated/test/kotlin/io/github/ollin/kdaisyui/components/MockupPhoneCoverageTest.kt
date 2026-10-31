@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class MockupPhoneCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class MockupPhoneCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "mockup-phone", "MockupPhone defaults", closes = "</div></div>")
+        assertRendered(html, Expected("MockupPhone defaults", "mockup-phone", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class MockupPhoneCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "mockup-phone zz-extra", "MockupPhone all flags", closes = "</div></div>")
-        assertCommonFlags(html, "MockupPhone")
+        val expected = Expected("MockupPhone all flags", "mockup-phone zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class MockupPhoneCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneClasses()
         }
-        assertRendered(html, "mockup-phone", "MockupPhoneClasses defaults")
+        assertRendered(html, Expected("MockupPhoneClasses defaults", "mockup-phone"))
     }
 
     @Test
@@ -61,7 +61,8 @@ class MockupPhoneCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneClasses()
         }
-        assertRendered(html, "mockup-phone", "MockupPhoneClasses all flags")
+        val expected = Expected("MockupPhoneClasses all flags", "mockup-phone", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -71,7 +72,7 @@ class MockupPhoneCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "mockup-phone-camera", "MockupPhoneCamera defaults", closes = "</div></div>")
+        assertRendered(html, Expected("MockupPhoneCamera defaults", "mockup-phone-camera", closes = "</div></div>"))
     }
 
     @Test
@@ -84,8 +85,9 @@ class MockupPhoneCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "mockup-phone-camera zz-extra", "MockupPhoneCamera all flags", closes = "</div></div>")
-        assertCommonFlags(html, "MockupPhoneCamera")
+        val expected = Expected("MockupPhoneCamera all flags", "mockup-phone-camera zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -93,7 +95,7 @@ class MockupPhoneCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneCameraClasses()
         }
-        assertRendered(html, "mockup-phone-camera", "MockupPhoneCameraClasses defaults")
+        assertRendered(html, Expected("MockupPhoneCameraClasses defaults", "mockup-phone-camera"))
     }
 
     @Test
@@ -101,7 +103,8 @@ class MockupPhoneCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneCameraClasses()
         }
-        assertRendered(html, "mockup-phone-camera", "MockupPhoneCameraClasses all flags")
+        val expected = Expected("MockupPhoneCameraClasses all flags", "mockup-phone-camera", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -111,7 +114,7 @@ class MockupPhoneCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "mockup-phone-display", "MockupPhoneDisplay defaults", closes = "</div></div>")
+        assertRendered(html, Expected("MockupPhoneDisplay defaults", "mockup-phone-display", closes = "</div></div>"))
     }
 
     @Test
@@ -124,8 +127,9 @@ class MockupPhoneCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "mockup-phone-display zz-extra", "MockupPhoneDisplay all flags", closes = "</div></div>")
-        assertCommonFlags(html, "MockupPhoneDisplay")
+        val expected = Expected("MockupPhoneDisplay all flags", "mockup-phone-display zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -133,7 +137,7 @@ class MockupPhoneCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneDisplayClasses()
         }
-        assertRendered(html, "mockup-phone-display", "MockupPhoneDisplayClasses defaults")
+        assertRendered(html, Expected("MockupPhoneDisplayClasses defaults", "mockup-phone-display"))
     }
 
     @Test
@@ -141,6 +145,7 @@ class MockupPhoneCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupPhoneDisplayClasses()
         }
-        assertRendered(html, "mockup-phone-display", "MockupPhoneDisplayClasses all flags")
+        val expected = Expected("MockupPhoneDisplayClasses all flags", "mockup-phone-display", content = false)
+        assertRendered(html, expected)
     }
 }

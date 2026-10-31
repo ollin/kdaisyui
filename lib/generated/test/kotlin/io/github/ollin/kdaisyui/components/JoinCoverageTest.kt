@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class JoinCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class JoinCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "join", "Join defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Join defaults", "join", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class JoinCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "join zz-extra", "Join all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Join")
+        val expected = Expected("Join all flags", "join zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class JoinCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "join join-vertical", "Join direction Vertical")
+        assertRendered(html, Expected("Join direction Vertical", "join join-vertical"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class JoinCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "join join-horizontal", "Join direction Horizontal")
+        assertRendered(html, Expected("Join direction Horizontal", "join join-horizontal"))
     }
 
     @Test
@@ -75,7 +75,7 @@ class JoinCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyJoinClasses()
         }
-        assertRendered(html, "join", "JoinClasses defaults")
+        assertRendered(html, Expected("JoinClasses defaults", "join"))
     }
 
     @Test
@@ -83,7 +83,8 @@ class JoinCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyJoinClasses()
         }
-        assertRendered(html, "join", "JoinClasses all flags")
+        val expected = Expected("JoinClasses all flags", "join", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -93,7 +94,7 @@ class JoinCoverageTest {
                 direction = JoinDirection.Vertical,
             )
         }
-        assertRendered(html, "join join-vertical", "JoinClasses direction Vertical")
+        assertRendered(html, Expected("JoinClasses direction Vertical", "join join-vertical"))
     }
 
     @Test
@@ -103,7 +104,7 @@ class JoinCoverageTest {
                 direction = JoinDirection.Horizontal,
             )
         }
-        assertRendered(html, "join join-horizontal", "JoinClasses direction Horizontal")
+        assertRendered(html, Expected("JoinClasses direction Horizontal", "join join-horizontal"))
     }
 
     @Test

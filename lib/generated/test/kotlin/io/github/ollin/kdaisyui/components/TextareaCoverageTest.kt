@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class TextareaCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea", "Textarea defaults", closes = "</textarea></div>")
+        assertRendered(html, Expected("Textarea defaults", "textarea", closes = "</textarea></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class TextareaCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "textarea textarea-ghost zz-extra", "Textarea all flags", closes = "</textarea></div>")
-        assertCommonFlags(html, "Textarea")
+        val expected = Expected("Textarea all flags", "textarea textarea-ghost zz-extra", closes = "</textarea></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-neutral", "Textarea color Neutral")
+        assertRendered(html, Expected("Textarea color Neutral", "textarea textarea-neutral"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-primary", "Textarea color Primary")
+        assertRendered(html, Expected("Textarea color Primary", "textarea textarea-primary"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-secondary", "Textarea color Secondary")
+        assertRendered(html, Expected("Textarea color Secondary", "textarea textarea-secondary"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-accent", "Textarea color Accent")
+        assertRendered(html, Expected("Textarea color Accent", "textarea textarea-accent"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-info", "Textarea color Info")
+        assertRendered(html, Expected("Textarea color Info", "textarea textarea-info"))
     }
 
     @Test
@@ -112,7 +112,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-success", "Textarea color Success")
+        assertRendered(html, Expected("Textarea color Success", "textarea textarea-success"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-warning", "Textarea color Warning")
+        assertRendered(html, Expected("Textarea color Warning", "textarea textarea-warning"))
     }
 
     @Test
@@ -134,7 +134,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-error", "Textarea color Error")
+        assertRendered(html, Expected("Textarea color Error", "textarea textarea-error"))
     }
 
     @Test
@@ -145,7 +145,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-xs", "Textarea size Xs")
+        assertRendered(html, Expected("Textarea size Xs", "textarea textarea-xs"))
     }
 
     @Test
@@ -156,7 +156,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-sm", "Textarea size Sm")
+        assertRendered(html, Expected("Textarea size Sm", "textarea textarea-sm"))
     }
 
     @Test
@@ -167,7 +167,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-md", "Textarea size Md")
+        assertRendered(html, Expected("Textarea size Md", "textarea textarea-md"))
     }
 
     @Test
@@ -178,7 +178,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-lg", "Textarea size Lg")
+        assertRendered(html, Expected("Textarea size Lg", "textarea textarea-lg"))
     }
 
     @Test
@@ -189,7 +189,7 @@ class TextareaCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "textarea textarea-xl", "Textarea size Xl")
+        assertRendered(html, Expected("Textarea size Xl", "textarea textarea-xl"))
     }
 
     @Test
@@ -197,7 +197,7 @@ class TextareaCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTextareaClasses()
         }
-        assertRendered(html, "textarea", "TextareaClasses defaults")
+        assertRendered(html, Expected("TextareaClasses defaults", "textarea"))
     }
 
     @Test
@@ -207,7 +207,8 @@ class TextareaCoverageTest {
                 ghost = true,
             )
         }
-        assertRendered(html, "textarea textarea-ghost", "TextareaClasses all flags")
+        val expected = Expected("TextareaClasses all flags", "textarea textarea-ghost", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -217,7 +218,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Neutral,
             )
         }
-        assertRendered(html, "textarea textarea-neutral", "TextareaClasses color Neutral")
+        assertRendered(html, Expected("TextareaClasses color Neutral", "textarea textarea-neutral"))
     }
 
     @Test
@@ -227,7 +228,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Primary,
             )
         }
-        assertRendered(html, "textarea textarea-primary", "TextareaClasses color Primary")
+        assertRendered(html, Expected("TextareaClasses color Primary", "textarea textarea-primary"))
     }
 
     @Test
@@ -237,7 +238,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Secondary,
             )
         }
-        assertRendered(html, "textarea textarea-secondary", "TextareaClasses color Secondary")
+        assertRendered(html, Expected("TextareaClasses color Secondary", "textarea textarea-secondary"))
     }
 
     @Test
@@ -247,7 +248,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Accent,
             )
         }
-        assertRendered(html, "textarea textarea-accent", "TextareaClasses color Accent")
+        assertRendered(html, Expected("TextareaClasses color Accent", "textarea textarea-accent"))
     }
 
     @Test
@@ -257,7 +258,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Info,
             )
         }
-        assertRendered(html, "textarea textarea-info", "TextareaClasses color Info")
+        assertRendered(html, Expected("TextareaClasses color Info", "textarea textarea-info"))
     }
 
     @Test
@@ -267,7 +268,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Success,
             )
         }
-        assertRendered(html, "textarea textarea-success", "TextareaClasses color Success")
+        assertRendered(html, Expected("TextareaClasses color Success", "textarea textarea-success"))
     }
 
     @Test
@@ -277,7 +278,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Warning,
             )
         }
-        assertRendered(html, "textarea textarea-warning", "TextareaClasses color Warning")
+        assertRendered(html, Expected("TextareaClasses color Warning", "textarea textarea-warning"))
     }
 
     @Test
@@ -287,7 +288,7 @@ class TextareaCoverageTest {
                 color = TextareaColor.Error,
             )
         }
-        assertRendered(html, "textarea textarea-error", "TextareaClasses color Error")
+        assertRendered(html, Expected("TextareaClasses color Error", "textarea textarea-error"))
     }
 
     @Test
@@ -297,7 +298,7 @@ class TextareaCoverageTest {
                 size = TextareaSize.Xs,
             )
         }
-        assertRendered(html, "textarea textarea-xs", "TextareaClasses size Xs")
+        assertRendered(html, Expected("TextareaClasses size Xs", "textarea textarea-xs"))
     }
 
     @Test
@@ -307,7 +308,7 @@ class TextareaCoverageTest {
                 size = TextareaSize.Sm,
             )
         }
-        assertRendered(html, "textarea textarea-sm", "TextareaClasses size Sm")
+        assertRendered(html, Expected("TextareaClasses size Sm", "textarea textarea-sm"))
     }
 
     @Test
@@ -317,7 +318,7 @@ class TextareaCoverageTest {
                 size = TextareaSize.Md,
             )
         }
-        assertRendered(html, "textarea textarea-md", "TextareaClasses size Md")
+        assertRendered(html, Expected("TextareaClasses size Md", "textarea textarea-md"))
     }
 
     @Test
@@ -327,7 +328,7 @@ class TextareaCoverageTest {
                 size = TextareaSize.Lg,
             )
         }
-        assertRendered(html, "textarea textarea-lg", "TextareaClasses size Lg")
+        assertRendered(html, Expected("TextareaClasses size Lg", "textarea textarea-lg"))
     }
 
     @Test
@@ -337,6 +338,6 @@ class TextareaCoverageTest {
                 size = TextareaSize.Xl,
             )
         }
-        assertRendered(html, "textarea textarea-xl", "TextareaClasses size Xl")
+        assertRendered(html, Expected("TextareaClasses size Xl", "textarea textarea-xl"))
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class TimelineCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "timeline", "Timeline defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("Timeline defaults", "timeline", closes = "</ul></div>"))
     }
 
     @Test
@@ -46,8 +45,9 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "timeline timeline-compact timeline-snap-icon zz-extra", "Timeline all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "Timeline")
+        val expected = Expected("Timeline all flags", "timeline timeline-compact timeline-snap-icon zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -58,7 +58,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "timeline timeline-horizontal", "Timeline direction Horizontal")
+        assertRendered(html, Expected("Timeline direction Horizontal", "timeline timeline-horizontal"))
     }
 
     @Test
@@ -69,7 +69,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "timeline timeline-vertical", "Timeline direction Vertical")
+        assertRendered(html, Expected("Timeline direction Vertical", "timeline timeline-vertical"))
     }
 
     @Test
@@ -77,7 +77,7 @@ class TimelineCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTimelineClasses()
         }
-        assertRendered(html, "timeline", "TimelineClasses defaults")
+        assertRendered(html, Expected("TimelineClasses defaults", "timeline"))
     }
 
     @Test
@@ -88,7 +88,8 @@ class TimelineCoverageTest {
                 snapIcon = true,
             )
         }
-        assertRendered(html, "timeline timeline-compact timeline-snap-icon", "TimelineClasses all flags")
+        val expected = Expected("TimelineClasses all flags", "timeline timeline-compact timeline-snap-icon", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -98,7 +99,7 @@ class TimelineCoverageTest {
                 direction = TimelineDirection.Horizontal,
             )
         }
-        assertRendered(html, "timeline timeline-horizontal", "TimelineClasses direction Horizontal")
+        assertRendered(html, Expected("TimelineClasses direction Horizontal", "timeline timeline-horizontal"))
     }
 
     @Test
@@ -108,7 +109,7 @@ class TimelineCoverageTest {
                 direction = TimelineDirection.Vertical,
             )
         }
-        assertRendered(html, "timeline timeline-vertical", "TimelineClasses direction Vertical")
+        assertRendered(html, Expected("TimelineClasses direction Vertical", "timeline timeline-vertical"))
     }
 
     @Test
@@ -118,7 +119,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "timeline-start", "TimelineStart defaults", closes = "</div></div>")
+        assertRendered(html, Expected("TimelineStart defaults", "timeline-start", closes = "</div></div>"))
     }
 
     @Test
@@ -132,8 +133,9 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "timeline-box timeline-start zz-extra", "TimelineStart all flags", closes = "</div></div>")
-        assertCommonFlags(html, "TimelineStart")
+        val expected = Expected("TimelineStart all flags", "timeline-box timeline-start zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -141,7 +143,7 @@ class TimelineCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTimelineStartClasses()
         }
-        assertRendered(html, "timeline-start", "TimelineStartClasses defaults")
+        assertRendered(html, Expected("TimelineStartClasses defaults", "timeline-start"))
     }
 
     @Test
@@ -151,7 +153,8 @@ class TimelineCoverageTest {
                 box = true,
             )
         }
-        assertRendered(html, "timeline-box timeline-start", "TimelineStartClasses all flags")
+        val expected = Expected("TimelineStartClasses all flags", "timeline-box timeline-start", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -161,7 +164,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "timeline-middle", "TimelineMiddle defaults", closes = "</div></div>")
+        assertRendered(html, Expected("TimelineMiddle defaults", "timeline-middle", closes = "</div></div>"))
     }
 
     @Test
@@ -175,8 +178,9 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "timeline-box timeline-middle zz-extra", "TimelineMiddle all flags", closes = "</div></div>")
-        assertCommonFlags(html, "TimelineMiddle")
+        val expected = Expected("TimelineMiddle all flags", "timeline-box timeline-middle zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -184,7 +188,7 @@ class TimelineCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTimelineMiddleClasses()
         }
-        assertRendered(html, "timeline-middle", "TimelineMiddleClasses defaults")
+        assertRendered(html, Expected("TimelineMiddleClasses defaults", "timeline-middle"))
     }
 
     @Test
@@ -194,7 +198,8 @@ class TimelineCoverageTest {
                 box = true,
             )
         }
-        assertRendered(html, "timeline-box timeline-middle", "TimelineMiddleClasses all flags")
+        val expected = Expected("TimelineMiddleClasses all flags", "timeline-box timeline-middle", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -204,7 +209,7 @@ class TimelineCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "timeline-end", "TimelineEnd defaults", closes = "</div></div>")
+        assertRendered(html, Expected("TimelineEnd defaults", "timeline-end", closes = "</div></div>"))
     }
 
     @Test
@@ -218,8 +223,9 @@ class TimelineCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "timeline-box timeline-end zz-extra", "TimelineEnd all flags", closes = "</div></div>")
-        assertCommonFlags(html, "TimelineEnd")
+        val expected = Expected("TimelineEnd all flags", "timeline-box timeline-end zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -227,7 +233,7 @@ class TimelineCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTimelineEndClasses()
         }
-        assertRendered(html, "timeline-end", "TimelineEndClasses defaults")
+        assertRendered(html, Expected("TimelineEndClasses defaults", "timeline-end"))
     }
 
     @Test
@@ -237,6 +243,7 @@ class TimelineCoverageTest {
                 box = true,
             )
         }
-        assertRendered(html, "timeline-box timeline-end", "TimelineEndClasses all flags")
+        val expected = Expected("TimelineEndClasses all flags", "timeline-box timeline-end", content = false)
+        assertRendered(html, expected)
     }
 }

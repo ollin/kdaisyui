@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class CarouselCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel", "Carousel defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Carousel defaults", "carousel", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class CarouselCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "carousel zz-extra", "Carousel all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Carousel")
+        val expected = Expected("Carousel all flags", "carousel zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-start", "Carousel snap Start")
+        assertRendered(html, Expected("Carousel snap Start", "carousel carousel-start"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-center", "Carousel snap Center")
+        assertRendered(html, Expected("Carousel snap Center", "carousel carousel-center"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-end", "Carousel snap End")
+        assertRendered(html, Expected("Carousel snap End", "carousel carousel-end"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-horizontal", "Carousel direction Horizontal")
+        assertRendered(html, Expected("Carousel direction Horizontal", "carousel carousel-horizontal"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel carousel-vertical", "Carousel direction Vertical")
+        assertRendered(html, Expected("Carousel direction Vertical", "carousel carousel-vertical"))
     }
 
     @Test
@@ -108,7 +108,7 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarouselClasses()
         }
-        assertRendered(html, "carousel", "CarouselClasses defaults")
+        assertRendered(html, Expected("CarouselClasses defaults", "carousel"))
     }
 
     @Test
@@ -116,7 +116,8 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarouselClasses()
         }
-        assertRendered(html, "carousel", "CarouselClasses all flags")
+        val expected = Expected("CarouselClasses all flags", "carousel", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -126,7 +127,7 @@ class CarouselCoverageTest {
                 snap = CarouselSnap.Start,
             )
         }
-        assertRendered(html, "carousel carousel-start", "CarouselClasses snap Start")
+        assertRendered(html, Expected("CarouselClasses snap Start", "carousel carousel-start"))
     }
 
     @Test
@@ -136,7 +137,7 @@ class CarouselCoverageTest {
                 snap = CarouselSnap.Center,
             )
         }
-        assertRendered(html, "carousel carousel-center", "CarouselClasses snap Center")
+        assertRendered(html, Expected("CarouselClasses snap Center", "carousel carousel-center"))
     }
 
     @Test
@@ -146,7 +147,7 @@ class CarouselCoverageTest {
                 snap = CarouselSnap.End,
             )
         }
-        assertRendered(html, "carousel carousel-end", "CarouselClasses snap End")
+        assertRendered(html, Expected("CarouselClasses snap End", "carousel carousel-end"))
     }
 
     @Test
@@ -156,7 +157,7 @@ class CarouselCoverageTest {
                 direction = CarouselDirection.Horizontal,
             )
         }
-        assertRendered(html, "carousel carousel-horizontal", "CarouselClasses direction Horizontal")
+        assertRendered(html, Expected("CarouselClasses direction Horizontal", "carousel carousel-horizontal"))
     }
 
     @Test
@@ -166,7 +167,7 @@ class CarouselCoverageTest {
                 direction = CarouselDirection.Vertical,
             )
         }
-        assertRendered(html, "carousel carousel-vertical", "CarouselClasses direction Vertical")
+        assertRendered(html, Expected("CarouselClasses direction Vertical", "carousel carousel-vertical"))
     }
 
     @Test
@@ -176,7 +177,7 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel-item", "CarouselItem defaults", closes = "</div></div>")
+        assertRendered(html, Expected("CarouselItem defaults", "carousel-item", closes = "</div></div>"))
     }
 
     @Test
@@ -189,8 +190,9 @@ class CarouselCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "carousel-item zz-extra", "CarouselItem all flags", closes = "</div></div>")
-        assertCommonFlags(html, "CarouselItem")
+        val expected = Expected("CarouselItem all flags", "carousel-item zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -198,7 +200,7 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarouselItemClasses()
         }
-        assertRendered(html, "carousel-item", "CarouselItemClasses defaults")
+        assertRendered(html, Expected("CarouselItemClasses defaults", "carousel-item"))
     }
 
     @Test
@@ -206,6 +208,7 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarouselItemClasses()
         }
-        assertRendered(html, "carousel-item", "CarouselItemClasses all flags")
+        val expected = Expected("CarouselItemClasses all flags", "carousel-item", content = false)
+        assertRendered(html, expected)
     }
 }

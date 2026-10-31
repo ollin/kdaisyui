@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class DropdownCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown", "Dropdown defaults", closes = "</details></div>")
+        assertRendered(html, Expected("Dropdown defaults", "dropdown", closes = "</details></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class DropdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dropdown dropdown-hover zz-extra", "Dropdown all flags", closes = "</details></div>")
-        assertCommonFlags(html, "Dropdown")
+        val expected = Expected("Dropdown all flags", "dropdown dropdown-hover zz-extra", closes = "</details></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-top", "Dropdown side Top")
+        assertRendered(html, Expected("Dropdown side Top", "dropdown dropdown-top"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-bottom", "Dropdown side Bottom")
+        assertRendered(html, Expected("Dropdown side Bottom", "dropdown dropdown-bottom"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-left", "Dropdown side Left")
+        assertRendered(html, Expected("Dropdown side Left", "dropdown dropdown-left"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-right", "Dropdown side Right")
+        assertRendered(html, Expected("Dropdown side Right", "dropdown dropdown-right"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-start", "Dropdown align Start")
+        assertRendered(html, Expected("Dropdown align Start", "dropdown dropdown-start"))
     }
 
     @Test
@@ -112,7 +112,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-center", "Dropdown align Center")
+        assertRendered(html, Expected("Dropdown align Center", "dropdown dropdown-center"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-end", "Dropdown align End")
+        assertRendered(html, Expected("Dropdown align End", "dropdown dropdown-end"))
     }
 
     @Test
@@ -134,7 +134,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-open", "Dropdown state Open")
+        assertRendered(html, Expected("Dropdown state Open", "dropdown dropdown-open"))
     }
 
     @Test
@@ -145,7 +145,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-close", "Dropdown state Close")
+        assertRendered(html, Expected("Dropdown state Close", "dropdown dropdown-close"))
     }
 
     @Test
@@ -153,7 +153,7 @@ class DropdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdownClasses()
         }
-        assertRendered(html, "dropdown", "DropdownClasses defaults")
+        assertRendered(html, Expected("DropdownClasses defaults", "dropdown"))
     }
 
     @Test
@@ -163,7 +163,8 @@ class DropdownCoverageTest {
                 hover = true,
             )
         }
-        assertRendered(html, "dropdown dropdown-hover", "DropdownClasses all flags")
+        val expected = Expected("DropdownClasses all flags", "dropdown dropdown-hover", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -173,7 +174,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Top,
             )
         }
-        assertRendered(html, "dropdown dropdown-top", "DropdownClasses side Top")
+        assertRendered(html, Expected("DropdownClasses side Top", "dropdown dropdown-top"))
     }
 
     @Test
@@ -183,7 +184,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Bottom,
             )
         }
-        assertRendered(html, "dropdown dropdown-bottom", "DropdownClasses side Bottom")
+        assertRendered(html, Expected("DropdownClasses side Bottom", "dropdown dropdown-bottom"))
     }
 
     @Test
@@ -193,7 +194,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Left,
             )
         }
-        assertRendered(html, "dropdown dropdown-left", "DropdownClasses side Left")
+        assertRendered(html, Expected("DropdownClasses side Left", "dropdown dropdown-left"))
     }
 
     @Test
@@ -203,7 +204,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Right,
             )
         }
-        assertRendered(html, "dropdown dropdown-right", "DropdownClasses side Right")
+        assertRendered(html, Expected("DropdownClasses side Right", "dropdown dropdown-right"))
     }
 
     @Test
@@ -213,7 +214,7 @@ class DropdownCoverageTest {
                 align = DropdownAlign.Start,
             )
         }
-        assertRendered(html, "dropdown dropdown-start", "DropdownClasses align Start")
+        assertRendered(html, Expected("DropdownClasses align Start", "dropdown dropdown-start"))
     }
 
     @Test
@@ -223,7 +224,7 @@ class DropdownCoverageTest {
                 align = DropdownAlign.Center,
             )
         }
-        assertRendered(html, "dropdown dropdown-center", "DropdownClasses align Center")
+        assertRendered(html, Expected("DropdownClasses align Center", "dropdown dropdown-center"))
     }
 
     @Test
@@ -233,7 +234,7 @@ class DropdownCoverageTest {
                 align = DropdownAlign.End,
             )
         }
-        assertRendered(html, "dropdown dropdown-end", "DropdownClasses align End")
+        assertRendered(html, Expected("DropdownClasses align End", "dropdown dropdown-end"))
     }
 
     @Test
@@ -243,7 +244,7 @@ class DropdownCoverageTest {
                 state = DropdownState.Open,
             )
         }
-        assertRendered(html, "dropdown dropdown-open", "DropdownClasses state Open")
+        assertRendered(html, Expected("DropdownClasses state Open", "dropdown dropdown-open"))
     }
 
     @Test
@@ -253,7 +254,7 @@ class DropdownCoverageTest {
                 state = DropdownState.Close,
             )
         }
-        assertRendered(html, "dropdown dropdown-close", "DropdownClasses state Close")
+        assertRendered(html, Expected("DropdownClasses state Close", "dropdown dropdown-close"))
     }
 
     @Test
@@ -264,7 +265,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown", "DropdownPopover defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("DropdownPopover defaults", "dropdown", closes = "</ul></div>"))
     }
 
     @Test
@@ -277,8 +278,9 @@ class DropdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dropdown zz-extra", "DropdownPopover all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "DropdownPopover")
+        val expected = Expected("DropdownPopover all flags", "dropdown zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -290,7 +292,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-top", "DropdownPopover side Top")
+        assertRendered(html, Expected("DropdownPopover side Top", "dropdown dropdown-top"))
     }
 
     @Test
@@ -302,7 +304,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-bottom", "DropdownPopover side Bottom")
+        assertRendered(html, Expected("DropdownPopover side Bottom", "dropdown dropdown-bottom"))
     }
 
     @Test
@@ -314,7 +316,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-left", "DropdownPopover side Left")
+        assertRendered(html, Expected("DropdownPopover side Left", "dropdown dropdown-left"))
     }
 
     @Test
@@ -326,7 +328,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-right", "DropdownPopover side Right")
+        assertRendered(html, Expected("DropdownPopover side Right", "dropdown dropdown-right"))
     }
 
     @Test
@@ -338,7 +340,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-start", "DropdownPopover align Start")
+        assertRendered(html, Expected("DropdownPopover align Start", "dropdown dropdown-start"))
     }
 
     @Test
@@ -350,7 +352,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-center", "DropdownPopover align Center")
+        assertRendered(html, Expected("DropdownPopover align Center", "dropdown dropdown-center"))
     }
 
     @Test
@@ -362,7 +364,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown dropdown-end", "DropdownPopover align End")
+        assertRendered(html, Expected("DropdownPopover align End", "dropdown dropdown-end"))
     }
 
     @Test
@@ -370,7 +372,7 @@ class DropdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdownPopoverClasses()
         }
-        assertRendered(html, "dropdown", "DropdownPopoverClasses defaults")
+        assertRendered(html, Expected("DropdownPopoverClasses defaults", "dropdown"))
     }
 
     @Test
@@ -378,7 +380,8 @@ class DropdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdownPopoverClasses()
         }
-        assertRendered(html, "dropdown", "DropdownPopoverClasses all flags")
+        val expected = Expected("DropdownPopoverClasses all flags", "dropdown", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -388,7 +391,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Top,
             )
         }
-        assertRendered(html, "dropdown dropdown-top", "DropdownPopoverClasses side Top")
+        assertRendered(html, Expected("DropdownPopoverClasses side Top", "dropdown dropdown-top"))
     }
 
     @Test
@@ -398,7 +401,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Bottom,
             )
         }
-        assertRendered(html, "dropdown dropdown-bottom", "DropdownPopoverClasses side Bottom")
+        assertRendered(html, Expected("DropdownPopoverClasses side Bottom", "dropdown dropdown-bottom"))
     }
 
     @Test
@@ -408,7 +411,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Left,
             )
         }
-        assertRendered(html, "dropdown dropdown-left", "DropdownPopoverClasses side Left")
+        assertRendered(html, Expected("DropdownPopoverClasses side Left", "dropdown dropdown-left"))
     }
 
     @Test
@@ -418,7 +421,7 @@ class DropdownCoverageTest {
                 side = DropdownSide.Right,
             )
         }
-        assertRendered(html, "dropdown dropdown-right", "DropdownPopoverClasses side Right")
+        assertRendered(html, Expected("DropdownPopoverClasses side Right", "dropdown dropdown-right"))
     }
 
     @Test
@@ -428,7 +431,7 @@ class DropdownCoverageTest {
                 align = DropdownAlign.Start,
             )
         }
-        assertRendered(html, "dropdown dropdown-start", "DropdownPopoverClasses align Start")
+        assertRendered(html, Expected("DropdownPopoverClasses align Start", "dropdown dropdown-start"))
     }
 
     @Test
@@ -438,7 +441,7 @@ class DropdownCoverageTest {
                 align = DropdownAlign.Center,
             )
         }
-        assertRendered(html, "dropdown dropdown-center", "DropdownPopoverClasses align Center")
+        assertRendered(html, Expected("DropdownPopoverClasses align Center", "dropdown dropdown-center"))
     }
 
     @Test
@@ -448,7 +451,7 @@ class DropdownCoverageTest {
                 align = DropdownAlign.End,
             )
         }
-        assertRendered(html, "dropdown dropdown-end", "DropdownPopoverClasses align End")
+        assertRendered(html, Expected("DropdownPopoverClasses align End", "dropdown dropdown-end"))
     }
 
     @Test
@@ -458,7 +461,7 @@ class DropdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dropdown-content", "DropdownContent defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("DropdownContent defaults", "dropdown-content", closes = "</ul></div>"))
     }
 
     @Test
@@ -471,8 +474,9 @@ class DropdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "dropdown-content zz-extra", "DropdownContent all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "DropdownContent")
+        val expected = Expected("DropdownContent all flags", "dropdown-content zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -480,7 +484,7 @@ class DropdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdownContentClasses()
         }
-        assertRendered(html, "dropdown-content", "DropdownContentClasses defaults")
+        assertRendered(html, Expected("DropdownContentClasses defaults", "dropdown-content"))
     }
 
     @Test
@@ -488,6 +492,7 @@ class DropdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDropdownContentClasses()
         }
-        assertRendered(html, "dropdown-content", "DropdownContentClasses all flags")
+        val expected = Expected("DropdownContentClasses all flags", "dropdown-content", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class LinkCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class LinkCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLink()
         }
-        assertRendered(html, "link", "Link defaults", closes = "</a></div>")
+        assertRendered(html, Expected("Link defaults", "link", closes = "</a></div>"))
     }
 
     @Test
@@ -43,8 +42,9 @@ class LinkCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "link link-hover zz-extra", "Link all flags", closes = "</a></div>")
-        assertCommonFlags(html, "Link")
+        val expected = Expected("Link all flags", "link link-hover zz-extra", closes = "</a></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -54,7 +54,7 @@ class LinkCoverageTest {
                 color = LinkColor.Neutral,
             )
         }
-        assertRendered(html, "link link-neutral", "Link color Neutral")
+        assertRendered(html, Expected("Link color Neutral", "link link-neutral"))
     }
 
     @Test
@@ -64,7 +64,7 @@ class LinkCoverageTest {
                 color = LinkColor.Primary,
             )
         }
-        assertRendered(html, "link link-primary", "Link color Primary")
+        assertRendered(html, Expected("Link color Primary", "link link-primary"))
     }
 
     @Test
@@ -74,7 +74,7 @@ class LinkCoverageTest {
                 color = LinkColor.Secondary,
             )
         }
-        assertRendered(html, "link link-secondary", "Link color Secondary")
+        assertRendered(html, Expected("Link color Secondary", "link link-secondary"))
     }
 
     @Test
@@ -84,7 +84,7 @@ class LinkCoverageTest {
                 color = LinkColor.Accent,
             )
         }
-        assertRendered(html, "link link-accent", "Link color Accent")
+        assertRendered(html, Expected("Link color Accent", "link link-accent"))
     }
 
     @Test
@@ -94,7 +94,7 @@ class LinkCoverageTest {
                 color = LinkColor.Success,
             )
         }
-        assertRendered(html, "link link-success", "Link color Success")
+        assertRendered(html, Expected("Link color Success", "link link-success"))
     }
 
     @Test
@@ -104,7 +104,7 @@ class LinkCoverageTest {
                 color = LinkColor.Info,
             )
         }
-        assertRendered(html, "link link-info", "Link color Info")
+        assertRendered(html, Expected("Link color Info", "link link-info"))
     }
 
     @Test
@@ -114,7 +114,7 @@ class LinkCoverageTest {
                 color = LinkColor.Warning,
             )
         }
-        assertRendered(html, "link link-warning", "Link color Warning")
+        assertRendered(html, Expected("Link color Warning", "link link-warning"))
     }
 
     @Test
@@ -124,7 +124,7 @@ class LinkCoverageTest {
                 color = LinkColor.Error,
             )
         }
-        assertRendered(html, "link link-error", "Link color Error")
+        assertRendered(html, Expected("Link color Error", "link link-error"))
     }
 
     @Test
@@ -134,7 +134,7 @@ class LinkCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "link", "Link text")
+        assertRendered(html, Expected("Link text", "link"))
         assertTrue(html.contains("txtmark"), "Link text content")
     }
 
@@ -143,7 +143,7 @@ class LinkCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLinkClasses()
         }
-        assertRendered(html, "link", "LinkClasses defaults")
+        assertRendered(html, Expected("LinkClasses defaults", "link"))
     }
 
     @Test
@@ -153,7 +153,8 @@ class LinkCoverageTest {
                 hover = true,
             )
         }
-        assertRendered(html, "link link-hover", "LinkClasses all flags")
+        val expected = Expected("LinkClasses all flags", "link link-hover", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -163,7 +164,7 @@ class LinkCoverageTest {
                 color = LinkColor.Neutral,
             )
         }
-        assertRendered(html, "link link-neutral", "LinkClasses color Neutral")
+        assertRendered(html, Expected("LinkClasses color Neutral", "link link-neutral"))
     }
 
     @Test
@@ -173,7 +174,7 @@ class LinkCoverageTest {
                 color = LinkColor.Primary,
             )
         }
-        assertRendered(html, "link link-primary", "LinkClasses color Primary")
+        assertRendered(html, Expected("LinkClasses color Primary", "link link-primary"))
     }
 
     @Test
@@ -183,7 +184,7 @@ class LinkCoverageTest {
                 color = LinkColor.Secondary,
             )
         }
-        assertRendered(html, "link link-secondary", "LinkClasses color Secondary")
+        assertRendered(html, Expected("LinkClasses color Secondary", "link link-secondary"))
     }
 
     @Test
@@ -193,7 +194,7 @@ class LinkCoverageTest {
                 color = LinkColor.Accent,
             )
         }
-        assertRendered(html, "link link-accent", "LinkClasses color Accent")
+        assertRendered(html, Expected("LinkClasses color Accent", "link link-accent"))
     }
 
     @Test
@@ -203,7 +204,7 @@ class LinkCoverageTest {
                 color = LinkColor.Success,
             )
         }
-        assertRendered(html, "link link-success", "LinkClasses color Success")
+        assertRendered(html, Expected("LinkClasses color Success", "link link-success"))
     }
 
     @Test
@@ -213,7 +214,7 @@ class LinkCoverageTest {
                 color = LinkColor.Info,
             )
         }
-        assertRendered(html, "link link-info", "LinkClasses color Info")
+        assertRendered(html, Expected("LinkClasses color Info", "link link-info"))
     }
 
     @Test
@@ -223,7 +224,7 @@ class LinkCoverageTest {
                 color = LinkColor.Warning,
             )
         }
-        assertRendered(html, "link link-warning", "LinkClasses color Warning")
+        assertRendered(html, Expected("LinkClasses color Warning", "link link-warning"))
     }
 
     @Test
@@ -233,6 +234,6 @@ class LinkCoverageTest {
                 color = LinkColor.Error,
             )
         }
-        assertRendered(html, "link link-error", "LinkClasses color Error")
+        assertRendered(html, Expected("LinkClasses color Error", "link link-error"))
     }
 }

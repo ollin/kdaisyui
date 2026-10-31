@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class MegamenuCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu", "Megamenu defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Megamenu defaults", "megamenu", closes = "</div></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class MegamenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "megamenu megamenu-vertical zz-extra", "Megamenu all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Megamenu")
+        val expected = Expected("Megamenu all flags", "megamenu megamenu-vertical zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu megamenu-xs", "Megamenu size Xs")
+        assertRendered(html, Expected("Megamenu size Xs", "megamenu megamenu-xs"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu megamenu-sm", "Megamenu size Sm")
+        assertRendered(html, Expected("Megamenu size Sm", "megamenu megamenu-sm"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu megamenu-md", "Megamenu size Md")
+        assertRendered(html, Expected("Megamenu size Md", "megamenu megamenu-md"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu megamenu-lg", "Megamenu size Lg")
+        assertRendered(html, Expected("Megamenu size Lg", "megamenu megamenu-lg"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu megamenu-xl", "Megamenu size Xl")
+        assertRendered(html, Expected("Megamenu size Xl", "megamenu megamenu-xl"))
     }
 
     @Test
@@ -112,7 +112,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu megamenu-wide", "Megamenu width Wide")
+        assertRendered(html, Expected("Megamenu width Wide", "megamenu megamenu-wide"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu megamenu-full", "Megamenu width Full")
+        assertRendered(html, Expected("Megamenu width Full", "megamenu megamenu-full"))
     }
 
     @Test
@@ -131,7 +131,7 @@ class MegamenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenuClasses()
         }
-        assertRendered(html, "megamenu", "MegamenuClasses defaults")
+        assertRendered(html, Expected("MegamenuClasses defaults", "megamenu"))
     }
 
     @Test
@@ -141,7 +141,8 @@ class MegamenuCoverageTest {
                 vertical = true,
             )
         }
-        assertRendered(html, "megamenu megamenu-vertical", "MegamenuClasses all flags")
+        val expected = Expected("MegamenuClasses all flags", "megamenu megamenu-vertical", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -151,7 +152,7 @@ class MegamenuCoverageTest {
                 size = MegamenuSize.Xs,
             )
         }
-        assertRendered(html, "megamenu megamenu-xs", "MegamenuClasses size Xs")
+        assertRendered(html, Expected("MegamenuClasses size Xs", "megamenu megamenu-xs"))
     }
 
     @Test
@@ -161,7 +162,7 @@ class MegamenuCoverageTest {
                 size = MegamenuSize.Sm,
             )
         }
-        assertRendered(html, "megamenu megamenu-sm", "MegamenuClasses size Sm")
+        assertRendered(html, Expected("MegamenuClasses size Sm", "megamenu megamenu-sm"))
     }
 
     @Test
@@ -171,7 +172,7 @@ class MegamenuCoverageTest {
                 size = MegamenuSize.Md,
             )
         }
-        assertRendered(html, "megamenu megamenu-md", "MegamenuClasses size Md")
+        assertRendered(html, Expected("MegamenuClasses size Md", "megamenu megamenu-md"))
     }
 
     @Test
@@ -181,7 +182,7 @@ class MegamenuCoverageTest {
                 size = MegamenuSize.Lg,
             )
         }
-        assertRendered(html, "megamenu megamenu-lg", "MegamenuClasses size Lg")
+        assertRendered(html, Expected("MegamenuClasses size Lg", "megamenu megamenu-lg"))
     }
 
     @Test
@@ -191,7 +192,7 @@ class MegamenuCoverageTest {
                 size = MegamenuSize.Xl,
             )
         }
-        assertRendered(html, "megamenu megamenu-xl", "MegamenuClasses size Xl")
+        assertRendered(html, Expected("MegamenuClasses size Xl", "megamenu megamenu-xl"))
     }
 
     @Test
@@ -201,7 +202,7 @@ class MegamenuCoverageTest {
                 width = MegamenuWidth.Wide,
             )
         }
-        assertRendered(html, "megamenu megamenu-wide", "MegamenuClasses width Wide")
+        assertRendered(html, Expected("MegamenuClasses width Wide", "megamenu megamenu-wide"))
     }
 
     @Test
@@ -211,7 +212,7 @@ class MegamenuCoverageTest {
                 width = MegamenuWidth.Full,
             )
         }
-        assertRendered(html, "megamenu megamenu-full", "MegamenuClasses width Full")
+        assertRendered(html, Expected("MegamenuClasses width Full", "megamenu megamenu-full"))
     }
 
     @Test
@@ -221,7 +222,7 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu-active", "MegamenuActive defaults", closes = "</span></div>")
+        assertRendered(html, Expected("MegamenuActive defaults", "megamenu-active", closes = "</span></div>"))
     }
 
     @Test
@@ -234,8 +235,9 @@ class MegamenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "megamenu-active zz-extra", "MegamenuActive all flags", closes = "</span></div>")
-        assertCommonFlags(html, "MegamenuActive")
+        val expected = Expected("MegamenuActive all flags", "megamenu-active zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -243,7 +245,7 @@ class MegamenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenuActiveClasses()
         }
-        assertRendered(html, "megamenu-active", "MegamenuActiveClasses defaults")
+        assertRendered(html, Expected("MegamenuActiveClasses defaults", "megamenu-active"))
     }
 
     @Test
@@ -251,7 +253,8 @@ class MegamenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenuActiveClasses()
         }
-        assertRendered(html, "megamenu-active", "MegamenuActiveClasses all flags")
+        val expected = Expected("MegamenuActiveClasses all flags", "megamenu-active", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -275,7 +278,8 @@ class MegamenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "zz-extra", "MegamenuPanel all flags", closes = "</div></div>")
-        assertCommonFlags(html, "MegamenuPanel")
+        val expected = Expected("MegamenuPanel all flags", "zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 }

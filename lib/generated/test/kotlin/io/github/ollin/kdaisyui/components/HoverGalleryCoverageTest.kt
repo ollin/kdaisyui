@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class HoverGalleryCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class HoverGalleryCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "hover-gallery", "HoverGallery defaults", closes = "</figure></div>")
+        assertRendered(html, Expected("HoverGallery defaults", "hover-gallery", closes = "</figure></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class HoverGalleryCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "hover-gallery zz-extra", "HoverGallery all flags", closes = "</figure></div>")
-        assertCommonFlags(html, "HoverGallery")
+        val expected = Expected("HoverGallery all flags", "hover-gallery zz-extra", closes = "</figure></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class HoverGalleryCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHoverGalleryClasses()
         }
-        assertRendered(html, "hover-gallery", "HoverGalleryClasses defaults")
+        assertRendered(html, Expected("HoverGalleryClasses defaults", "hover-gallery"))
     }
 
     @Test
@@ -61,6 +61,7 @@ class HoverGalleryCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHoverGalleryClasses()
         }
-        assertRendered(html, "hover-gallery", "HoverGalleryClasses all flags")
+        val expected = Expected("HoverGalleryClasses all flags", "hover-gallery", content = false)
+        assertRendered(html, expected)
     }
 }

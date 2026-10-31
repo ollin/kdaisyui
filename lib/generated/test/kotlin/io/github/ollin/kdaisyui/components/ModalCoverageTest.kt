@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class ModalCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal", "Modal defaults", closes = "</dialog></div>")
+        assertRendered(html, Expected("Modal defaults", "modal", closes = "</dialog></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal modal-open zz-extra", "Modal all flags", closes = "</dialog></div>")
-        assertCommonFlags(html, "Modal")
+        val expected = Expected("Modal all flags", "modal modal-open zz-extra", closes = "</dialog></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal modal-top", "Modal verticalPlacement Top")
+        assertRendered(html, Expected("Modal verticalPlacement Top", "modal modal-top"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal modal-middle", "Modal verticalPlacement Middle")
+        assertRendered(html, Expected("Modal verticalPlacement Middle", "modal modal-middle"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal modal-bottom", "Modal verticalPlacement Bottom")
+        assertRendered(html, Expected("Modal verticalPlacement Bottom", "modal modal-bottom"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal modal-start", "Modal horizontalPlacement Start")
+        assertRendered(html, Expected("Modal horizontalPlacement Start", "modal modal-start"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal modal-end", "Modal horizontalPlacement End")
+        assertRendered(html, Expected("Modal horizontalPlacement End", "modal modal-end"))
     }
 
     @Test
@@ -109,7 +109,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalClasses()
         }
-        assertRendered(html, "modal", "ModalClasses defaults")
+        assertRendered(html, Expected("ModalClasses defaults", "modal"))
     }
 
     @Test
@@ -119,7 +119,8 @@ class ModalCoverageTest {
                 open = true,
             )
         }
-        assertRendered(html, "modal modal-open", "ModalClasses all flags")
+        val expected = Expected("ModalClasses all flags", "modal modal-open", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -129,7 +130,7 @@ class ModalCoverageTest {
                 verticalPlacement = ModalVerticalPlacement.Top,
             )
         }
-        assertRendered(html, "modal modal-top", "ModalClasses verticalPlacement Top")
+        assertRendered(html, Expected("ModalClasses verticalPlacement Top", "modal modal-top"))
     }
 
     @Test
@@ -139,7 +140,7 @@ class ModalCoverageTest {
                 verticalPlacement = ModalVerticalPlacement.Middle,
             )
         }
-        assertRendered(html, "modal modal-middle", "ModalClasses verticalPlacement Middle")
+        assertRendered(html, Expected("ModalClasses verticalPlacement Middle", "modal modal-middle"))
     }
 
     @Test
@@ -149,7 +150,7 @@ class ModalCoverageTest {
                 verticalPlacement = ModalVerticalPlacement.Bottom,
             )
         }
-        assertRendered(html, "modal modal-bottom", "ModalClasses verticalPlacement Bottom")
+        assertRendered(html, Expected("ModalClasses verticalPlacement Bottom", "modal modal-bottom"))
     }
 
     @Test
@@ -159,7 +160,7 @@ class ModalCoverageTest {
                 horizontalPlacement = ModalHorizontalPlacement.Start,
             )
         }
-        assertRendered(html, "modal modal-start", "ModalClasses horizontalPlacement Start")
+        assertRendered(html, Expected("ModalClasses horizontalPlacement Start", "modal modal-start"))
     }
 
     @Test
@@ -169,7 +170,7 @@ class ModalCoverageTest {
                 horizontalPlacement = ModalHorizontalPlacement.End,
             )
         }
-        assertRendered(html, "modal modal-end", "ModalClasses horizontalPlacement End")
+        assertRendered(html, Expected("ModalClasses horizontalPlacement End", "modal modal-end"))
     }
 
     @Test
@@ -179,7 +180,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal-box", "ModalBox defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalBox defaults", "modal-box", closes = "</div></div>"))
     }
 
     @Test
@@ -192,8 +193,9 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal-box zz-extra", "ModalBox all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalBox")
+        val expected = Expected("ModalBox all flags", "modal-box zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -201,7 +203,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalBoxClasses()
         }
-        assertRendered(html, "modal-box", "ModalBoxClasses defaults")
+        assertRendered(html, Expected("ModalBoxClasses defaults", "modal-box"))
     }
 
     @Test
@@ -209,7 +211,8 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalBoxClasses()
         }
-        assertRendered(html, "modal-box", "ModalBoxClasses all flags")
+        val expected = Expected("ModalBoxClasses all flags", "modal-box", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -219,7 +222,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal-action", "ModalAction defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalAction defaults", "modal-action", closes = "</div></div>"))
     }
 
     @Test
@@ -232,8 +235,9 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal-action zz-extra", "ModalAction all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalAction")
+        val expected = Expected("ModalAction all flags", "modal-action zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -241,7 +245,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalActionClasses()
         }
-        assertRendered(html, "modal-action", "ModalActionClasses defaults")
+        assertRendered(html, Expected("ModalActionClasses defaults", "modal-action"))
     }
 
     @Test
@@ -249,7 +253,8 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalActionClasses()
         }
-        assertRendered(html, "modal-action", "ModalActionClasses all flags")
+        val expected = Expected("ModalActionClasses all flags", "modal-action", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -259,7 +264,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal-backdrop", "ModalBackdrop defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalBackdrop defaults", "modal-backdrop", closes = "</div></div>"))
     }
 
     @Test
@@ -272,8 +277,9 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal-backdrop zz-extra", "ModalBackdrop all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalBackdrop")
+        val expected = Expected("ModalBackdrop all flags", "modal-backdrop zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -281,7 +287,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalBackdropClasses()
         }
-        assertRendered(html, "modal-backdrop", "ModalBackdropClasses defaults")
+        assertRendered(html, Expected("ModalBackdropClasses defaults", "modal-backdrop"))
     }
 
     @Test
@@ -289,7 +295,8 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalBackdropClasses()
         }
-        assertRendered(html, "modal-backdrop", "ModalBackdropClasses all flags")
+        val expected = Expected("ModalBackdropClasses all flags", "modal-backdrop", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -297,7 +304,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalToggle()
         }
-        assertRendered(html, "modal-toggle", "ModalToggle defaults")
+        assertRendered(html, Expected("ModalToggle defaults", "modal-toggle"))
     }
 
     @Test
@@ -309,8 +316,9 @@ class ModalCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags")
-        assertCommonFlags(html, "ModalToggle", content = false)
+        val expected = Expected("ModalToggle all flags", "modal-toggle zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -318,7 +326,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalToggleClasses()
         }
-        assertRendered(html, "modal-toggle", "ModalToggleClasses defaults")
+        assertRendered(html, Expected("ModalToggleClasses defaults", "modal-toggle"))
     }
 
     @Test
@@ -326,7 +334,8 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalToggleClasses()
         }
-        assertRendered(html, "modal-toggle", "ModalToggleClasses all flags")
+        val expected = Expected("ModalToggleClasses all flags", "modal-toggle", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -336,7 +345,7 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal", "ModalPopover defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalPopover defaults", "modal", closes = "</div></div>"))
     }
 
     @Test
@@ -349,8 +358,9 @@ class ModalCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "modal zz-extra", "ModalPopover all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalPopover")
+        val expected = Expected("ModalPopover all flags", "modal zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -358,7 +368,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalPopoverClasses()
         }
-        assertRendered(html, "modal", "ModalPopoverClasses defaults")
+        assertRendered(html, Expected("ModalPopoverClasses defaults", "modal"))
     }
 
     @Test
@@ -366,6 +376,7 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalPopoverClasses()
         }
-        assertRendered(html, "modal", "ModalPopoverClasses all flags")
+        val expected = Expected("ModalPopoverClasses all flags", "modal", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class FabCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fab", "Fab defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Fab defaults", "fab", closes = "</div></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class FabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "fab fab-flower zz-extra", "Fab all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Fab")
+        val expected = Expected("Fab all flags", "fab fab-flower zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -54,7 +54,7 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabClasses()
         }
-        assertRendered(html, "fab", "FabClasses defaults")
+        assertRendered(html, Expected("FabClasses defaults", "fab"))
     }
 
     @Test
@@ -64,7 +64,8 @@ class FabCoverageTest {
                 flower = true,
             )
         }
-        assertRendered(html, "fab fab-flower", "FabClasses all flags")
+        val expected = Expected("FabClasses all flags", "fab fab-flower", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -74,7 +75,7 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fab-close", "FabClose defaults", closes = "</div></div>")
+        assertRendered(html, Expected("FabClose defaults", "fab-close", closes = "</div></div>"))
     }
 
     @Test
@@ -87,8 +88,9 @@ class FabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "fab-close zz-extra", "FabClose all flags", closes = "</div></div>")
-        assertCommonFlags(html, "FabClose")
+        val expected = Expected("FabClose all flags", "fab-close zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -96,7 +98,7 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabCloseClasses()
         }
-        assertRendered(html, "fab-close", "FabCloseClasses defaults")
+        assertRendered(html, Expected("FabCloseClasses defaults", "fab-close"))
     }
 
     @Test
@@ -104,7 +106,8 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabCloseClasses()
         }
-        assertRendered(html, "fab-close", "FabCloseClasses all flags")
+        val expected = Expected("FabCloseClasses all flags", "fab-close", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -114,7 +117,7 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fab-main-action", "FabMainAction defaults", closes = "</button></div>")
+        assertRendered(html, Expected("FabMainAction defaults", "fab-main-action", closes = "</button></div>"))
     }
 
     @Test
@@ -127,8 +130,9 @@ class FabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "fab-main-action zz-extra", "FabMainAction all flags", closes = "</button></div>")
-        assertCommonFlags(html, "FabMainAction")
+        val expected = Expected("FabMainAction all flags", "fab-main-action zz-extra", closes = "</button></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -136,7 +140,7 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabMainActionClasses()
         }
-        assertRendered(html, "fab-main-action", "FabMainActionClasses defaults")
+        assertRendered(html, Expected("FabMainActionClasses defaults", "fab-main-action"))
     }
 
     @Test
@@ -144,6 +148,7 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabMainActionClasses()
         }
-        assertRendered(html, "fab-main-action", "FabMainActionClasses all flags")
+        val expected = Expected("FabMainActionClasses all flags", "fab-main-action", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -754,19 +754,18 @@ function sortedClasses(arr) {
  * doing so here: this is a refactoring, and a refactoring does not change an assertion.
  */
 const COVERAGE_HELPER = `
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "\${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\\"x-cov-id\\""), "$label id")
-        assertTrue(html.contains("data-attrs=\\"yes\\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\\"yes\\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\\"x-cov-id\\""), "\${expected.label} id")
+        assertTrue(html.contains("data-attrs=\\"yes\\""), "\${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\\"yes\\""), "\${expected.label} content")
     }
 `
 
@@ -777,9 +776,14 @@ function closesSuffix(ctx) {
   return `</${tag}></${ctx.wrapperTag}>`
 }
 
-function renderedAssert(ctx, classes, label, withCloses) {
+/** The `Expected` a case asserts against, as Kotlin. */
+function expectedValue(ctx, classes, label, withCloses, content = true) {
   const closes = withCloses ? closesSuffix(ctx) : null
-  return `assertRendered(html, "${classes}", "${label}"${closes ? `, closes = "${closes}"` : ''})`
+  return `Expected("${label}", "${classes}"${closes ? `, closes = "${closes}"` : ''}${content ? '' : ', content = false'})`
+}
+
+function renderedAssert(ctx, classes, label, withCloses) {
+  return `assertRendered(html, ${expectedValue(ctx, classes, label, withCloses)})`
 }
 
 function renderTest(funcName, wrapperFn, callArgs, asserts) {
@@ -867,9 +871,11 @@ function allFlagsAsserts(ctx, boolCss) {
   // and reverted: it needed five parameters against Kotlin's threshold of four and traded
   // the duplication for an Excess Number of Function Arguments smell. Two helpers of three
   // and four parameters say the same thing and trip neither rule.
+  const classes = sortedClasses([ctx.base, ...boolCss, ...(ctx.hasHatches ? ['zz-extra'] : [])])
   const asserts = [
-    renderedAssert(ctx, sortedClasses([ctx.base, ...boolCss, ...(ctx.hasHatches ? ['zz-extra'] : [])]), `${ctx.daisyName} all flags`, true),
-    ...(ctx.hasHatches ? [`assertCommonFlags(html, "${ctx.daisyName}"${ctx.hasContent ? '' : ', content = false'})`] : []),
+    `val expected = ${expectedValue(ctx, classes, `${ctx.daisyName} all flags`, true, ctx.hasContent)}`,
+    'assertRendered(html, expected)',
+    ...(ctx.hasHatches ? ['assertCommonFlags(html, expected)'] : []),
   ]
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)

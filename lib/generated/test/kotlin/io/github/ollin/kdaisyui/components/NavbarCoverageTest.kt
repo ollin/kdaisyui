@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class NavbarCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "navbar", "Navbar defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Navbar defaults", "navbar", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "navbar zz-extra", "Navbar all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Navbar")
+        val expected = Expected("Navbar all flags", "navbar zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarClasses()
         }
-        assertRendered(html, "navbar", "NavbarClasses defaults")
+        assertRendered(html, Expected("NavbarClasses defaults", "navbar"))
     }
 
     @Test
@@ -61,7 +61,8 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarClasses()
         }
-        assertRendered(html, "navbar", "NavbarClasses all flags")
+        val expected = Expected("NavbarClasses all flags", "navbar", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -71,7 +72,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "navbar-start", "NavbarStart defaults", closes = "</div></div>")
+        assertRendered(html, Expected("NavbarStart defaults", "navbar-start", closes = "</div></div>"))
     }
 
     @Test
@@ -84,8 +85,9 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "navbar-start zz-extra", "NavbarStart all flags", closes = "</div></div>")
-        assertCommonFlags(html, "NavbarStart")
+        val expected = Expected("NavbarStart all flags", "navbar-start zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -93,7 +95,7 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarStartClasses()
         }
-        assertRendered(html, "navbar-start", "NavbarStartClasses defaults")
+        assertRendered(html, Expected("NavbarStartClasses defaults", "navbar-start"))
     }
 
     @Test
@@ -101,7 +103,8 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarStartClasses()
         }
-        assertRendered(html, "navbar-start", "NavbarStartClasses all flags")
+        val expected = Expected("NavbarStartClasses all flags", "navbar-start", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -111,7 +114,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "navbar-center", "NavbarCenter defaults", closes = "</div></div>")
+        assertRendered(html, Expected("NavbarCenter defaults", "navbar-center", closes = "</div></div>"))
     }
 
     @Test
@@ -124,8 +127,9 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "navbar-center zz-extra", "NavbarCenter all flags", closes = "</div></div>")
-        assertCommonFlags(html, "NavbarCenter")
+        val expected = Expected("NavbarCenter all flags", "navbar-center zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -133,7 +137,7 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarCenterClasses()
         }
-        assertRendered(html, "navbar-center", "NavbarCenterClasses defaults")
+        assertRendered(html, Expected("NavbarCenterClasses defaults", "navbar-center"))
     }
 
     @Test
@@ -141,7 +145,8 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarCenterClasses()
         }
-        assertRendered(html, "navbar-center", "NavbarCenterClasses all flags")
+        val expected = Expected("NavbarCenterClasses all flags", "navbar-center", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -151,7 +156,7 @@ class NavbarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "navbar-end", "NavbarEnd defaults", closes = "</div></div>")
+        assertRendered(html, Expected("NavbarEnd defaults", "navbar-end", closes = "</div></div>"))
     }
 
     @Test
@@ -164,8 +169,9 @@ class NavbarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "navbar-end zz-extra", "NavbarEnd all flags", closes = "</div></div>")
-        assertCommonFlags(html, "NavbarEnd")
+        val expected = Expected("NavbarEnd all flags", "navbar-end zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -173,7 +179,7 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarEndClasses()
         }
-        assertRendered(html, "navbar-end", "NavbarEndClasses defaults")
+        assertRendered(html, Expected("NavbarEndClasses defaults", "navbar-end"))
     }
 
     @Test
@@ -181,6 +187,7 @@ class NavbarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyNavbarEndClasses()
         }
-        assertRendered(html, "navbar-end", "NavbarEndClasses all flags")
+        val expected = Expected("NavbarEndClasses all flags", "navbar-end", content = false)
+        assertRendered(html, expected)
     }
 }

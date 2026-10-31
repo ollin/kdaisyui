@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class MenuCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu", "Menu defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("Menu defaults", "menu", closes = "</ul></div>"))
     }
 
     @Test
@@ -46,8 +45,9 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu menu-focus menu-paged zz-extra", "Menu all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "Menu")
+        val expected = Expected("Menu all flags", "menu menu-focus menu-paged zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -58,7 +58,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu menu-xs", "Menu size Xs")
+        assertRendered(html, Expected("Menu size Xs", "menu menu-xs"))
     }
 
     @Test
@@ -69,7 +69,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu menu-sm", "Menu size Sm")
+        assertRendered(html, Expected("Menu size Sm", "menu menu-sm"))
     }
 
     @Test
@@ -80,7 +80,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu menu-md", "Menu size Md")
+        assertRendered(html, Expected("Menu size Md", "menu menu-md"))
     }
 
     @Test
@@ -91,7 +91,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu menu-lg", "Menu size Lg")
+        assertRendered(html, Expected("Menu size Lg", "menu menu-lg"))
     }
 
     @Test
@@ -102,7 +102,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu menu-xl", "Menu size Xl")
+        assertRendered(html, Expected("Menu size Xl", "menu menu-xl"))
     }
 
     @Test
@@ -113,7 +113,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu menu-vertical", "Menu direction Vertical")
+        assertRendered(html, Expected("Menu direction Vertical", "menu menu-vertical"))
     }
 
     @Test
@@ -124,7 +124,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu menu-horizontal", "Menu direction Horizontal")
+        assertRendered(html, Expected("Menu direction Horizontal", "menu menu-horizontal"))
     }
 
     @Test
@@ -132,7 +132,7 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuClasses()
         }
-        assertRendered(html, "menu", "MenuClasses defaults")
+        assertRendered(html, Expected("MenuClasses defaults", "menu"))
     }
 
     @Test
@@ -143,7 +143,8 @@ class MenuCoverageTest {
                 paged = true,
             )
         }
-        assertRendered(html, "menu menu-focus menu-paged", "MenuClasses all flags")
+        val expected = Expected("MenuClasses all flags", "menu menu-focus menu-paged", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -153,7 +154,7 @@ class MenuCoverageTest {
                 size = MenuSize.Xs,
             )
         }
-        assertRendered(html, "menu menu-xs", "MenuClasses size Xs")
+        assertRendered(html, Expected("MenuClasses size Xs", "menu menu-xs"))
     }
 
     @Test
@@ -163,7 +164,7 @@ class MenuCoverageTest {
                 size = MenuSize.Sm,
             )
         }
-        assertRendered(html, "menu menu-sm", "MenuClasses size Sm")
+        assertRendered(html, Expected("MenuClasses size Sm", "menu menu-sm"))
     }
 
     @Test
@@ -173,7 +174,7 @@ class MenuCoverageTest {
                 size = MenuSize.Md,
             )
         }
-        assertRendered(html, "menu menu-md", "MenuClasses size Md")
+        assertRendered(html, Expected("MenuClasses size Md", "menu menu-md"))
     }
 
     @Test
@@ -183,7 +184,7 @@ class MenuCoverageTest {
                 size = MenuSize.Lg,
             )
         }
-        assertRendered(html, "menu menu-lg", "MenuClasses size Lg")
+        assertRendered(html, Expected("MenuClasses size Lg", "menu menu-lg"))
     }
 
     @Test
@@ -193,7 +194,7 @@ class MenuCoverageTest {
                 size = MenuSize.Xl,
             )
         }
-        assertRendered(html, "menu menu-xl", "MenuClasses size Xl")
+        assertRendered(html, Expected("MenuClasses size Xl", "menu menu-xl"))
     }
 
     @Test
@@ -203,7 +204,7 @@ class MenuCoverageTest {
                 direction = MenuDirection.Vertical,
             )
         }
-        assertRendered(html, "menu menu-vertical", "MenuClasses direction Vertical")
+        assertRendered(html, Expected("MenuClasses direction Vertical", "menu menu-vertical"))
     }
 
     @Test
@@ -213,7 +214,7 @@ class MenuCoverageTest {
                 direction = MenuDirection.Horizontal,
             )
         }
-        assertRendered(html, "menu menu-horizontal", "MenuClasses direction Horizontal")
+        assertRendered(html, Expected("MenuClasses direction Horizontal", "menu menu-horizontal"))
     }
 
     @Test
@@ -221,7 +222,7 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuTitle()
         }
-        assertRendered(html, "menu-title", "MenuTitle defaults", closes = "</h2></div>")
+        assertRendered(html, Expected("MenuTitle defaults", "menu-title", closes = "</h2></div>"))
     }
 
     @Test
@@ -234,8 +235,9 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu-title zz-extra", "MenuTitle all flags", closes = "</h2></div>")
-        assertCommonFlags(html, "MenuTitle")
+        val expected = Expected("MenuTitle all flags", "menu-title zz-extra", closes = "</h2></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -245,7 +247,7 @@ class MenuCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "menu-title", "MenuTitle text")
+        assertRendered(html, Expected("MenuTitle text", "menu-title"))
         assertTrue(html.contains("txtmark"), "MenuTitle text content")
     }
 
@@ -254,7 +256,7 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuTitleClasses()
         }
-        assertRendered(html, "menu-title", "MenuTitleClasses defaults")
+        assertRendered(html, Expected("MenuTitleClasses defaults", "menu-title"))
     }
 
     @Test
@@ -262,7 +264,8 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuTitleClasses()
         }
-        assertRendered(html, "menu-title", "MenuTitleClasses all flags")
+        val expected = Expected("MenuTitleClasses all flags", "menu-title", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -272,7 +275,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu-dropdown", "MenuDropdown defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("MenuDropdown defaults", "menu-dropdown", closes = "</ul></div>"))
     }
 
     @Test
@@ -286,8 +289,9 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu-dropdown menu-dropdown-show zz-extra", "MenuDropdown all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "MenuDropdown")
+        val expected = Expected("MenuDropdown all flags", "menu-dropdown menu-dropdown-show zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -295,7 +299,7 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdownClasses()
         }
-        assertRendered(html, "menu-dropdown", "MenuDropdownClasses defaults")
+        assertRendered(html, Expected("MenuDropdownClasses defaults", "menu-dropdown"))
     }
 
     @Test
@@ -305,7 +309,8 @@ class MenuCoverageTest {
                 show = true,
             )
         }
-        assertRendered(html, "menu-dropdown menu-dropdown-show", "MenuDropdownClasses all flags")
+        val expected = Expected("MenuDropdownClasses all flags", "menu-dropdown menu-dropdown-show", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -315,7 +320,7 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggle defaults", closes = "</span></div>")
+        assertRendered(html, Expected("MenuDropdownToggle defaults", "menu-dropdown-toggle", closes = "</span></div>"))
     }
 
     @Test
@@ -329,8 +334,9 @@ class MenuCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "menu-dropdown-show menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</span></div>")
-        assertCommonFlags(html, "MenuDropdownToggle")
+        val expected = Expected("MenuDropdownToggle all flags", "menu-dropdown-show menu-dropdown-toggle zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -338,7 +344,7 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdownToggleClasses()
         }
-        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggleClasses defaults")
+        assertRendered(html, Expected("MenuDropdownToggleClasses defaults", "menu-dropdown-toggle"))
     }
 
     @Test
@@ -348,7 +354,8 @@ class MenuCoverageTest {
                 dropdownShow = true,
             )
         }
-        assertRendered(html, "menu-dropdown-show menu-dropdown-toggle", "MenuDropdownToggleClasses all flags")
+        val expected = Expected("MenuDropdownToggleClasses all flags", "menu-dropdown-show menu-dropdown-toggle", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -367,6 +374,7 @@ class MenuCoverageTest {
                 disabled = true,
             )
         }
-        assertRendered(html, "menu-active menu-disabled", "MenuItemClasses all flags")
+        val expected = Expected("MenuItemClasses all flags", "menu-active menu-disabled", content = false)
+        assertRendered(html, expected)
     }
 }

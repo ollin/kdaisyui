@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class FooterCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class FooterCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "footer", "Footer defaults", closes = "</footer></div>")
+        assertRendered(html, Expected("Footer defaults", "footer", closes = "</footer></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class FooterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "footer footer-center zz-extra", "Footer all flags", closes = "</footer></div>")
-        assertCommonFlags(html, "Footer")
+        val expected = Expected("Footer all flags", "footer footer-center zz-extra", closes = "</footer></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class FooterCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "footer footer-horizontal", "Footer direction Horizontal")
+        assertRendered(html, Expected("Footer direction Horizontal", "footer footer-horizontal"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class FooterCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "footer footer-vertical", "Footer direction Vertical")
+        assertRendered(html, Expected("Footer direction Vertical", "footer footer-vertical"))
     }
 
     @Test
@@ -76,7 +76,7 @@ class FooterCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFooterClasses()
         }
-        assertRendered(html, "footer", "FooterClasses defaults")
+        assertRendered(html, Expected("FooterClasses defaults", "footer"))
     }
 
     @Test
@@ -86,7 +86,8 @@ class FooterCoverageTest {
                 center = true,
             )
         }
-        assertRendered(html, "footer footer-center", "FooterClasses all flags")
+        val expected = Expected("FooterClasses all flags", "footer footer-center", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -96,7 +97,7 @@ class FooterCoverageTest {
                 direction = FooterDirection.Horizontal,
             )
         }
-        assertRendered(html, "footer footer-horizontal", "FooterClasses direction Horizontal")
+        assertRendered(html, Expected("FooterClasses direction Horizontal", "footer footer-horizontal"))
     }
 
     @Test
@@ -106,7 +107,7 @@ class FooterCoverageTest {
                 direction = FooterDirection.Vertical,
             )
         }
-        assertRendered(html, "footer footer-vertical", "FooterClasses direction Vertical")
+        assertRendered(html, Expected("FooterClasses direction Vertical", "footer footer-vertical"))
     }
 
     @Test
@@ -114,7 +115,7 @@ class FooterCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFooterTitle()
         }
-        assertRendered(html, "footer-title", "FooterTitle defaults", closes = "</h6></div>")
+        assertRendered(html, Expected("FooterTitle defaults", "footer-title", closes = "</h6></div>"))
     }
 
     @Test
@@ -127,8 +128,9 @@ class FooterCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "footer-title zz-extra", "FooterTitle all flags", closes = "</h6></div>")
-        assertCommonFlags(html, "FooterTitle")
+        val expected = Expected("FooterTitle all flags", "footer-title zz-extra", closes = "</h6></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -138,7 +140,7 @@ class FooterCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "footer-title", "FooterTitle text")
+        assertRendered(html, Expected("FooterTitle text", "footer-title"))
         assertTrue(html.contains("txtmark"), "FooterTitle text content")
     }
 
@@ -147,7 +149,7 @@ class FooterCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFooterTitleClasses()
         }
-        assertRendered(html, "footer-title", "FooterTitleClasses defaults")
+        assertRendered(html, Expected("FooterTitleClasses defaults", "footer-title"))
     }
 
     @Test
@@ -155,6 +157,7 @@ class FooterCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFooterTitleClasses()
         }
-        assertRendered(html, "footer-title", "FooterTitleClasses all flags")
+        val expected = Expected("FooterTitleClasses all flags", "footer-title", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class SkeletonCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class SkeletonCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "skeleton", "Skeleton defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Skeleton defaults", "skeleton", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class SkeletonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "skeleton zz-extra", "Skeleton all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Skeleton")
+        val expected = Expected("Skeleton all flags", "skeleton zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class SkeletonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySkeletonClasses()
         }
-        assertRendered(html, "skeleton", "SkeletonClasses defaults")
+        assertRendered(html, Expected("SkeletonClasses defaults", "skeleton"))
     }
 
     @Test
@@ -61,7 +61,8 @@ class SkeletonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySkeletonClasses()
         }
-        assertRendered(html, "skeleton", "SkeletonClasses all flags")
+        val expected = Expected("SkeletonClasses all flags", "skeleton", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -71,7 +72,7 @@ class SkeletonCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "skeleton skeleton-text", "SkeletonText defaults", closes = "</span></div>")
+        assertRendered(html, Expected("SkeletonText defaults", "skeleton skeleton-text", closes = "</span></div>"))
     }
 
     @Test
@@ -84,8 +85,9 @@ class SkeletonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "skeleton skeleton-text zz-extra", "SkeletonText all flags", closes = "</span></div>")
-        assertCommonFlags(html, "SkeletonText")
+        val expected = Expected("SkeletonText all flags", "skeleton skeleton-text zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -93,7 +95,7 @@ class SkeletonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySkeletonTextClasses()
         }
-        assertRendered(html, "skeleton skeleton-text", "SkeletonTextClasses defaults")
+        assertRendered(html, Expected("SkeletonTextClasses defaults", "skeleton skeleton-text"))
     }
 
     @Test
@@ -101,6 +103,7 @@ class SkeletonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySkeletonTextClasses()
         }
-        assertRendered(html, "skeleton skeleton-text", "SkeletonTextClasses all flags")
+        val expected = Expected("SkeletonTextClasses all flags", "skeleton skeleton-text", content = false)
+        assertRendered(html, expected)
     }
 }

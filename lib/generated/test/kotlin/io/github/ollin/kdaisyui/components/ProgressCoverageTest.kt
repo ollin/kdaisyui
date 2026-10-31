@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class ProgressCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress", "Progress defaults", closes = "</progress></div>")
+        assertRendered(html, Expected("Progress defaults", "progress", closes = "</progress></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class ProgressCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "progress zz-extra", "Progress all flags", closes = "</progress></div>")
-        assertCommonFlags(html, "Progress")
+        val expected = Expected("Progress all flags", "progress zz-extra", closes = "</progress></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-neutral", "Progress color Neutral")
+        assertRendered(html, Expected("Progress color Neutral", "progress progress-neutral"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-primary", "Progress color Primary")
+        assertRendered(html, Expected("Progress color Primary", "progress progress-primary"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-secondary", "Progress color Secondary")
+        assertRendered(html, Expected("Progress color Secondary", "progress progress-secondary"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-accent", "Progress color Accent")
+        assertRendered(html, Expected("Progress color Accent", "progress progress-accent"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-info", "Progress color Info")
+        assertRendered(html, Expected("Progress color Info", "progress progress-info"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-success", "Progress color Success")
+        assertRendered(html, Expected("Progress color Success", "progress progress-success"))
     }
 
     @Test
@@ -122,7 +122,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-warning", "Progress color Warning")
+        assertRendered(html, Expected("Progress color Warning", "progress progress-warning"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class ProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "progress progress-error", "Progress color Error")
+        assertRendered(html, Expected("Progress color Error", "progress progress-error"))
     }
 
     @Test
@@ -141,7 +141,7 @@ class ProgressCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyProgressClasses()
         }
-        assertRendered(html, "progress", "ProgressClasses defaults")
+        assertRendered(html, Expected("ProgressClasses defaults", "progress"))
     }
 
     @Test
@@ -149,7 +149,8 @@ class ProgressCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyProgressClasses()
         }
-        assertRendered(html, "progress", "ProgressClasses all flags")
+        val expected = Expected("ProgressClasses all flags", "progress", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -159,7 +160,7 @@ class ProgressCoverageTest {
                 color = ProgressColor.Neutral,
             )
         }
-        assertRendered(html, "progress progress-neutral", "ProgressClasses color Neutral")
+        assertRendered(html, Expected("ProgressClasses color Neutral", "progress progress-neutral"))
     }
 
     @Test
@@ -169,7 +170,7 @@ class ProgressCoverageTest {
                 color = ProgressColor.Primary,
             )
         }
-        assertRendered(html, "progress progress-primary", "ProgressClasses color Primary")
+        assertRendered(html, Expected("ProgressClasses color Primary", "progress progress-primary"))
     }
 
     @Test
@@ -179,7 +180,7 @@ class ProgressCoverageTest {
                 color = ProgressColor.Secondary,
             )
         }
-        assertRendered(html, "progress progress-secondary", "ProgressClasses color Secondary")
+        assertRendered(html, Expected("ProgressClasses color Secondary", "progress progress-secondary"))
     }
 
     @Test
@@ -189,7 +190,7 @@ class ProgressCoverageTest {
                 color = ProgressColor.Accent,
             )
         }
-        assertRendered(html, "progress progress-accent", "ProgressClasses color Accent")
+        assertRendered(html, Expected("ProgressClasses color Accent", "progress progress-accent"))
     }
 
     @Test
@@ -199,7 +200,7 @@ class ProgressCoverageTest {
                 color = ProgressColor.Info,
             )
         }
-        assertRendered(html, "progress progress-info", "ProgressClasses color Info")
+        assertRendered(html, Expected("ProgressClasses color Info", "progress progress-info"))
     }
 
     @Test
@@ -209,7 +210,7 @@ class ProgressCoverageTest {
                 color = ProgressColor.Success,
             )
         }
-        assertRendered(html, "progress progress-success", "ProgressClasses color Success")
+        assertRendered(html, Expected("ProgressClasses color Success", "progress progress-success"))
     }
 
     @Test
@@ -219,7 +220,7 @@ class ProgressCoverageTest {
                 color = ProgressColor.Warning,
             )
         }
-        assertRendered(html, "progress progress-warning", "ProgressClasses color Warning")
+        assertRendered(html, Expected("ProgressClasses color Warning", "progress progress-warning"))
     }
 
     @Test
@@ -229,6 +230,6 @@ class ProgressCoverageTest {
                 color = ProgressColor.Error,
             )
         }
-        assertRendered(html, "progress progress-error", "ProgressClasses color Error")
+        assertRendered(html, Expected("ProgressClasses color Error", "progress progress-error"))
     }
 }

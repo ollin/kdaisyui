@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class BadgeCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class BadgeCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyBadge()
         }
-        assertRendered(html, "badge", "Badge defaults", closes = "</span></div>")
+        assertRendered(html, Expected("Badge defaults", "badge", closes = "</span></div>"))
     }
 
     @Test
@@ -42,8 +41,9 @@ class BadgeCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "badge zz-extra", "Badge all flags", closes = "</span></div>")
-        assertCommonFlags(html, "Badge")
+        val expected = Expected("Badge all flags", "badge zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Neutral,
             )
         }
-        assertRendered(html, "badge badge-neutral", "Badge color Neutral")
+        assertRendered(html, Expected("Badge color Neutral", "badge badge-neutral"))
     }
 
     @Test
@@ -63,7 +63,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Primary,
             )
         }
-        assertRendered(html, "badge badge-primary", "Badge color Primary")
+        assertRendered(html, Expected("Badge color Primary", "badge badge-primary"))
     }
 
     @Test
@@ -73,7 +73,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Secondary,
             )
         }
-        assertRendered(html, "badge badge-secondary", "Badge color Secondary")
+        assertRendered(html, Expected("Badge color Secondary", "badge badge-secondary"))
     }
 
     @Test
@@ -83,7 +83,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Accent,
             )
         }
-        assertRendered(html, "badge badge-accent", "Badge color Accent")
+        assertRendered(html, Expected("Badge color Accent", "badge badge-accent"))
     }
 
     @Test
@@ -93,7 +93,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Info,
             )
         }
-        assertRendered(html, "badge badge-info", "Badge color Info")
+        assertRendered(html, Expected("Badge color Info", "badge badge-info"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Success,
             )
         }
-        assertRendered(html, "badge badge-success", "Badge color Success")
+        assertRendered(html, Expected("Badge color Success", "badge badge-success"))
     }
 
     @Test
@@ -113,7 +113,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Warning,
             )
         }
-        assertRendered(html, "badge badge-warning", "Badge color Warning")
+        assertRendered(html, Expected("Badge color Warning", "badge badge-warning"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Error,
             )
         }
-        assertRendered(html, "badge badge-error", "Badge color Error")
+        assertRendered(html, Expected("Badge color Error", "badge badge-error"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Xs,
             )
         }
-        assertRendered(html, "badge badge-xs", "Badge size Xs")
+        assertRendered(html, Expected("Badge size Xs", "badge badge-xs"))
     }
 
     @Test
@@ -143,7 +143,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Sm,
             )
         }
-        assertRendered(html, "badge badge-sm", "Badge size Sm")
+        assertRendered(html, Expected("Badge size Sm", "badge badge-sm"))
     }
 
     @Test
@@ -153,7 +153,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Md,
             )
         }
-        assertRendered(html, "badge badge-md", "Badge size Md")
+        assertRendered(html, Expected("Badge size Md", "badge badge-md"))
     }
 
     @Test
@@ -163,7 +163,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Lg,
             )
         }
-        assertRendered(html, "badge badge-lg", "Badge size Lg")
+        assertRendered(html, Expected("Badge size Lg", "badge badge-lg"))
     }
 
     @Test
@@ -173,7 +173,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Xl,
             )
         }
-        assertRendered(html, "badge badge-xl", "Badge size Xl")
+        assertRendered(html, Expected("Badge size Xl", "badge badge-xl"))
     }
 
     @Test
@@ -183,7 +183,7 @@ class BadgeCoverageTest {
                 outlineStyle = BadgeOutlineStyle.Outline,
             )
         }
-        assertRendered(html, "badge badge-outline", "Badge outlineStyle Outline")
+        assertRendered(html, Expected("Badge outlineStyle Outline", "badge badge-outline"))
     }
 
     @Test
@@ -193,7 +193,7 @@ class BadgeCoverageTest {
                 outlineStyle = BadgeOutlineStyle.Dash,
             )
         }
-        assertRendered(html, "badge badge-dash", "Badge outlineStyle Dash")
+        assertRendered(html, Expected("Badge outlineStyle Dash", "badge badge-dash"))
     }
 
     @Test
@@ -203,7 +203,7 @@ class BadgeCoverageTest {
                 fillStyle = BadgeFillStyle.Soft,
             )
         }
-        assertRendered(html, "badge badge-soft", "Badge fillStyle Soft")
+        assertRendered(html, Expected("Badge fillStyle Soft", "badge badge-soft"))
     }
 
     @Test
@@ -213,7 +213,7 @@ class BadgeCoverageTest {
                 fillStyle = BadgeFillStyle.Ghost,
             )
         }
-        assertRendered(html, "badge badge-ghost", "Badge fillStyle Ghost")
+        assertRendered(html, Expected("Badge fillStyle Ghost", "badge badge-ghost"))
     }
 
     @Test
@@ -223,7 +223,7 @@ class BadgeCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "badge", "Badge text")
+        assertRendered(html, Expected("Badge text", "badge"))
         assertTrue(html.contains("txtmark"), "Badge text content")
     }
 
@@ -232,7 +232,7 @@ class BadgeCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyBadgeClasses()
         }
-        assertRendered(html, "badge", "BadgeClasses defaults")
+        assertRendered(html, Expected("BadgeClasses defaults", "badge"))
     }
 
     @Test
@@ -240,7 +240,8 @@ class BadgeCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyBadgeClasses()
         }
-        assertRendered(html, "badge", "BadgeClasses all flags")
+        val expected = Expected("BadgeClasses all flags", "badge", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -250,7 +251,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Neutral,
             )
         }
-        assertRendered(html, "badge badge-neutral", "BadgeClasses color Neutral")
+        assertRendered(html, Expected("BadgeClasses color Neutral", "badge badge-neutral"))
     }
 
     @Test
@@ -260,7 +261,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Primary,
             )
         }
-        assertRendered(html, "badge badge-primary", "BadgeClasses color Primary")
+        assertRendered(html, Expected("BadgeClasses color Primary", "badge badge-primary"))
     }
 
     @Test
@@ -270,7 +271,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Secondary,
             )
         }
-        assertRendered(html, "badge badge-secondary", "BadgeClasses color Secondary")
+        assertRendered(html, Expected("BadgeClasses color Secondary", "badge badge-secondary"))
     }
 
     @Test
@@ -280,7 +281,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Accent,
             )
         }
-        assertRendered(html, "badge badge-accent", "BadgeClasses color Accent")
+        assertRendered(html, Expected("BadgeClasses color Accent", "badge badge-accent"))
     }
 
     @Test
@@ -290,7 +291,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Info,
             )
         }
-        assertRendered(html, "badge badge-info", "BadgeClasses color Info")
+        assertRendered(html, Expected("BadgeClasses color Info", "badge badge-info"))
     }
 
     @Test
@@ -300,7 +301,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Success,
             )
         }
-        assertRendered(html, "badge badge-success", "BadgeClasses color Success")
+        assertRendered(html, Expected("BadgeClasses color Success", "badge badge-success"))
     }
 
     @Test
@@ -310,7 +311,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Warning,
             )
         }
-        assertRendered(html, "badge badge-warning", "BadgeClasses color Warning")
+        assertRendered(html, Expected("BadgeClasses color Warning", "badge badge-warning"))
     }
 
     @Test
@@ -320,7 +321,7 @@ class BadgeCoverageTest {
                 color = BadgeColor.Error,
             )
         }
-        assertRendered(html, "badge badge-error", "BadgeClasses color Error")
+        assertRendered(html, Expected("BadgeClasses color Error", "badge badge-error"))
     }
 
     @Test
@@ -330,7 +331,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Xs,
             )
         }
-        assertRendered(html, "badge badge-xs", "BadgeClasses size Xs")
+        assertRendered(html, Expected("BadgeClasses size Xs", "badge badge-xs"))
     }
 
     @Test
@@ -340,7 +341,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Sm,
             )
         }
-        assertRendered(html, "badge badge-sm", "BadgeClasses size Sm")
+        assertRendered(html, Expected("BadgeClasses size Sm", "badge badge-sm"))
     }
 
     @Test
@@ -350,7 +351,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Md,
             )
         }
-        assertRendered(html, "badge badge-md", "BadgeClasses size Md")
+        assertRendered(html, Expected("BadgeClasses size Md", "badge badge-md"))
     }
 
     @Test
@@ -360,7 +361,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Lg,
             )
         }
-        assertRendered(html, "badge badge-lg", "BadgeClasses size Lg")
+        assertRendered(html, Expected("BadgeClasses size Lg", "badge badge-lg"))
     }
 
     @Test
@@ -370,7 +371,7 @@ class BadgeCoverageTest {
                 size = BadgeSize.Xl,
             )
         }
-        assertRendered(html, "badge badge-xl", "BadgeClasses size Xl")
+        assertRendered(html, Expected("BadgeClasses size Xl", "badge badge-xl"))
     }
 
     @Test
@@ -380,7 +381,7 @@ class BadgeCoverageTest {
                 outlineStyle = BadgeOutlineStyle.Outline,
             )
         }
-        assertRendered(html, "badge badge-outline", "BadgeClasses outlineStyle Outline")
+        assertRendered(html, Expected("BadgeClasses outlineStyle Outline", "badge badge-outline"))
     }
 
     @Test
@@ -390,7 +391,7 @@ class BadgeCoverageTest {
                 outlineStyle = BadgeOutlineStyle.Dash,
             )
         }
-        assertRendered(html, "badge badge-dash", "BadgeClasses outlineStyle Dash")
+        assertRendered(html, Expected("BadgeClasses outlineStyle Dash", "badge badge-dash"))
     }
 
     @Test
@@ -400,7 +401,7 @@ class BadgeCoverageTest {
                 fillStyle = BadgeFillStyle.Soft,
             )
         }
-        assertRendered(html, "badge badge-soft", "BadgeClasses fillStyle Soft")
+        assertRendered(html, Expected("BadgeClasses fillStyle Soft", "badge badge-soft"))
     }
 
     @Test
@@ -410,6 +411,6 @@ class BadgeCoverageTest {
                 fillStyle = BadgeFillStyle.Ghost,
             )
         }
-        assertRendered(html, "badge badge-ghost", "BadgeClasses fillStyle Ghost")
+        assertRendered(html, Expected("BadgeClasses fillStyle Ghost", "badge badge-ghost"))
     }
 }

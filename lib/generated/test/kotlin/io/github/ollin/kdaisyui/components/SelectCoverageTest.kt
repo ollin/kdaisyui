@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class SelectCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select", "Select defaults", closes = "</select></div>")
+        assertRendered(html, Expected("Select defaults", "select", closes = "</select></div>"))
     }
 
     @Test
@@ -46,8 +45,9 @@ class SelectCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "select select-ghost zz-extra", "Select all flags", closes = "</select></div>")
-        assertCommonFlags(html, "Select")
+        val expected = Expected("Select all flags", "select select-ghost zz-extra", closes = "</select></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("disabled=\""), "Select sets disabled")
     }
 
@@ -59,7 +59,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-neutral", "Select color Neutral")
+        assertRendered(html, Expected("Select color Neutral", "select select-neutral"))
     }
 
     @Test
@@ -70,7 +70,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-primary", "Select color Primary")
+        assertRendered(html, Expected("Select color Primary", "select select-primary"))
     }
 
     @Test
@@ -81,7 +81,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-secondary", "Select color Secondary")
+        assertRendered(html, Expected("Select color Secondary", "select select-secondary"))
     }
 
     @Test
@@ -92,7 +92,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-accent", "Select color Accent")
+        assertRendered(html, Expected("Select color Accent", "select select-accent"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-info", "Select color Info")
+        assertRendered(html, Expected("Select color Info", "select select-info"))
     }
 
     @Test
@@ -114,7 +114,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-success", "Select color Success")
+        assertRendered(html, Expected("Select color Success", "select select-success"))
     }
 
     @Test
@@ -125,7 +125,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-warning", "Select color Warning")
+        assertRendered(html, Expected("Select color Warning", "select select-warning"))
     }
 
     @Test
@@ -136,7 +136,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-error", "Select color Error")
+        assertRendered(html, Expected("Select color Error", "select select-error"))
     }
 
     @Test
@@ -147,7 +147,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-xs", "Select size Xs")
+        assertRendered(html, Expected("Select size Xs", "select select-xs"))
     }
 
     @Test
@@ -158,7 +158,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-sm", "Select size Sm")
+        assertRendered(html, Expected("Select size Sm", "select select-sm"))
     }
 
     @Test
@@ -169,7 +169,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-md", "Select size Md")
+        assertRendered(html, Expected("Select size Md", "select select-md"))
     }
 
     @Test
@@ -180,7 +180,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-lg", "Select size Lg")
+        assertRendered(html, Expected("Select size Lg", "select select-lg"))
     }
 
     @Test
@@ -191,7 +191,7 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select select-xl", "Select size Xl")
+        assertRendered(html, Expected("Select size Xl", "select select-xl"))
     }
 
     @Test
@@ -199,7 +199,7 @@ class SelectCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySelectClasses()
         }
-        assertRendered(html, "select", "SelectClasses defaults")
+        assertRendered(html, Expected("SelectClasses defaults", "select"))
     }
 
     @Test
@@ -209,7 +209,8 @@ class SelectCoverageTest {
                 ghost = true,
             )
         }
-        assertRendered(html, "select select-ghost", "SelectClasses all flags")
+        val expected = Expected("SelectClasses all flags", "select select-ghost", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -219,7 +220,7 @@ class SelectCoverageTest {
                 color = SelectColor.Neutral,
             )
         }
-        assertRendered(html, "select select-neutral", "SelectClasses color Neutral")
+        assertRendered(html, Expected("SelectClasses color Neutral", "select select-neutral"))
     }
 
     @Test
@@ -229,7 +230,7 @@ class SelectCoverageTest {
                 color = SelectColor.Primary,
             )
         }
-        assertRendered(html, "select select-primary", "SelectClasses color Primary")
+        assertRendered(html, Expected("SelectClasses color Primary", "select select-primary"))
     }
 
     @Test
@@ -239,7 +240,7 @@ class SelectCoverageTest {
                 color = SelectColor.Secondary,
             )
         }
-        assertRendered(html, "select select-secondary", "SelectClasses color Secondary")
+        assertRendered(html, Expected("SelectClasses color Secondary", "select select-secondary"))
     }
 
     @Test
@@ -249,7 +250,7 @@ class SelectCoverageTest {
                 color = SelectColor.Accent,
             )
         }
-        assertRendered(html, "select select-accent", "SelectClasses color Accent")
+        assertRendered(html, Expected("SelectClasses color Accent", "select select-accent"))
     }
 
     @Test
@@ -259,7 +260,7 @@ class SelectCoverageTest {
                 color = SelectColor.Info,
             )
         }
-        assertRendered(html, "select select-info", "SelectClasses color Info")
+        assertRendered(html, Expected("SelectClasses color Info", "select select-info"))
     }
 
     @Test
@@ -269,7 +270,7 @@ class SelectCoverageTest {
                 color = SelectColor.Success,
             )
         }
-        assertRendered(html, "select select-success", "SelectClasses color Success")
+        assertRendered(html, Expected("SelectClasses color Success", "select select-success"))
     }
 
     @Test
@@ -279,7 +280,7 @@ class SelectCoverageTest {
                 color = SelectColor.Warning,
             )
         }
-        assertRendered(html, "select select-warning", "SelectClasses color Warning")
+        assertRendered(html, Expected("SelectClasses color Warning", "select select-warning"))
     }
 
     @Test
@@ -289,7 +290,7 @@ class SelectCoverageTest {
                 color = SelectColor.Error,
             )
         }
-        assertRendered(html, "select select-error", "SelectClasses color Error")
+        assertRendered(html, Expected("SelectClasses color Error", "select select-error"))
     }
 
     @Test
@@ -299,7 +300,7 @@ class SelectCoverageTest {
                 size = SelectSize.Xs,
             )
         }
-        assertRendered(html, "select select-xs", "SelectClasses size Xs")
+        assertRendered(html, Expected("SelectClasses size Xs", "select select-xs"))
     }
 
     @Test
@@ -309,7 +310,7 @@ class SelectCoverageTest {
                 size = SelectSize.Sm,
             )
         }
-        assertRendered(html, "select select-sm", "SelectClasses size Sm")
+        assertRendered(html, Expected("SelectClasses size Sm", "select select-sm"))
     }
 
     @Test
@@ -319,7 +320,7 @@ class SelectCoverageTest {
                 size = SelectSize.Md,
             )
         }
-        assertRendered(html, "select select-md", "SelectClasses size Md")
+        assertRendered(html, Expected("SelectClasses size Md", "select select-md"))
     }
 
     @Test
@@ -329,7 +330,7 @@ class SelectCoverageTest {
                 size = SelectSize.Lg,
             )
         }
-        assertRendered(html, "select select-lg", "SelectClasses size Lg")
+        assertRendered(html, Expected("SelectClasses size Lg", "select select-lg"))
     }
 
     @Test
@@ -339,6 +340,6 @@ class SelectCoverageTest {
                 size = SelectSize.Xl,
             )
         }
-        assertRendered(html, "select select-xl", "SelectClasses size Xl")
+        assertRendered(html, Expected("SelectClasses size Xl", "select select-xl"))
     }
 }

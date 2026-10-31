@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class RadialProgressCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class RadialProgressCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "radial-progress", "RadialProgress defaults", closes = "</div></div>")
+        assertRendered(html, Expected("RadialProgress defaults", "radial-progress", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class RadialProgressCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "radial-progress zz-extra", "RadialProgress all flags", closes = "</div></div>")
-        assertCommonFlags(html, "RadialProgress")
+        val expected = Expected("RadialProgress all flags", "radial-progress zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class RadialProgressCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRadialProgressClasses()
         }
-        assertRendered(html, "radial-progress", "RadialProgressClasses defaults")
+        assertRendered(html, Expected("RadialProgressClasses defaults", "radial-progress"))
     }
 
     @Test
@@ -61,6 +61,7 @@ class RadialProgressCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRadialProgressClasses()
         }
-        assertRendered(html, "radial-progress", "RadialProgressClasses all flags")
+        val expected = Expected("RadialProgressClasses all flags", "radial-progress", content = false)
+        assertRendered(html, expected)
     }
 }

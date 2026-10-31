@@ -10,19 +10,18 @@ import kotlinx.html.stream.createHTML
 
 class ButtonCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -30,7 +29,7 @@ class ButtonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyButton()
         }
-        assertRendered(html, "btn", "Button defaults", closes = "</button></div>")
+        assertRendered(html, Expected("Button defaults", "btn", closes = "</button></div>"))
     }
 
     @Test
@@ -46,8 +45,9 @@ class ButtonCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "btn btn-active btn-disabled zz-extra", "Button all flags", closes = "</button></div>")
-        assertCommonFlags(html, "Button")
+        val expected = Expected("Button all flags", "btn btn-active btn-disabled zz-extra", closes = "</button></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("disabled=\""), "Button sets disabled")
         assertTrue(html.contains("type=\""), "Button sets type")
     }
@@ -59,7 +59,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Neutral,
             )
         }
-        assertRendered(html, "btn btn-neutral", "Button color Neutral")
+        assertRendered(html, Expected("Button color Neutral", "btn btn-neutral"))
     }
 
     @Test
@@ -69,7 +69,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Primary,
             )
         }
-        assertRendered(html, "btn btn-primary", "Button color Primary")
+        assertRendered(html, Expected("Button color Primary", "btn btn-primary"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Secondary,
             )
         }
-        assertRendered(html, "btn btn-secondary", "Button color Secondary")
+        assertRendered(html, Expected("Button color Secondary", "btn btn-secondary"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Accent,
             )
         }
-        assertRendered(html, "btn btn-accent", "Button color Accent")
+        assertRendered(html, Expected("Button color Accent", "btn btn-accent"))
     }
 
     @Test
@@ -99,7 +99,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Info,
             )
         }
-        assertRendered(html, "btn btn-info", "Button color Info")
+        assertRendered(html, Expected("Button color Info", "btn btn-info"))
     }
 
     @Test
@@ -109,7 +109,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Success,
             )
         }
-        assertRendered(html, "btn btn-success", "Button color Success")
+        assertRendered(html, Expected("Button color Success", "btn btn-success"))
     }
 
     @Test
@@ -119,7 +119,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Warning,
             )
         }
-        assertRendered(html, "btn btn-warning", "Button color Warning")
+        assertRendered(html, Expected("Button color Warning", "btn btn-warning"))
     }
 
     @Test
@@ -129,7 +129,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Error,
             )
         }
-        assertRendered(html, "btn btn-error", "Button color Error")
+        assertRendered(html, Expected("Button color Error", "btn btn-error"))
     }
 
     @Test
@@ -139,7 +139,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Xs,
             )
         }
-        assertRendered(html, "btn btn-xs", "Button size Xs")
+        assertRendered(html, Expected("Button size Xs", "btn btn-xs"))
     }
 
     @Test
@@ -149,7 +149,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Sm,
             )
         }
-        assertRendered(html, "btn btn-sm", "Button size Sm")
+        assertRendered(html, Expected("Button size Sm", "btn btn-sm"))
     }
 
     @Test
@@ -159,7 +159,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Md,
             )
         }
-        assertRendered(html, "btn btn-md", "Button size Md")
+        assertRendered(html, Expected("Button size Md", "btn btn-md"))
     }
 
     @Test
@@ -169,7 +169,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Lg,
             )
         }
-        assertRendered(html, "btn btn-lg", "Button size Lg")
+        assertRendered(html, Expected("Button size Lg", "btn btn-lg"))
     }
 
     @Test
@@ -179,7 +179,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Xl,
             )
         }
-        assertRendered(html, "btn btn-xl", "Button size Xl")
+        assertRendered(html, Expected("Button size Xl", "btn btn-xl"))
     }
 
     @Test
@@ -189,7 +189,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Outline,
             )
         }
-        assertRendered(html, "btn btn-outline", "Button style Outline")
+        assertRendered(html, Expected("Button style Outline", "btn btn-outline"))
     }
 
     @Test
@@ -199,7 +199,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Dash,
             )
         }
-        assertRendered(html, "btn btn-dash", "Button style Dash")
+        assertRendered(html, Expected("Button style Dash", "btn btn-dash"))
     }
 
     @Test
@@ -209,7 +209,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Soft,
             )
         }
-        assertRendered(html, "btn btn-soft", "Button style Soft")
+        assertRendered(html, Expected("Button style Soft", "btn btn-soft"))
     }
 
     @Test
@@ -219,7 +219,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Ghost,
             )
         }
-        assertRendered(html, "btn btn-ghost", "Button style Ghost")
+        assertRendered(html, Expected("Button style Ghost", "btn btn-ghost"))
     }
 
     @Test
@@ -229,7 +229,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Link,
             )
         }
-        assertRendered(html, "btn btn-link", "Button style Link")
+        assertRendered(html, Expected("Button style Link", "btn btn-link"))
     }
 
     @Test
@@ -239,7 +239,7 @@ class ButtonCoverageTest {
                 shape = ButtonShape.Square,
             )
         }
-        assertRendered(html, "btn btn-square", "Button shape Square")
+        assertRendered(html, Expected("Button shape Square", "btn btn-square"))
     }
 
     @Test
@@ -249,7 +249,7 @@ class ButtonCoverageTest {
                 shape = ButtonShape.Circle,
             )
         }
-        assertRendered(html, "btn btn-circle", "Button shape Circle")
+        assertRendered(html, Expected("Button shape Circle", "btn btn-circle"))
     }
 
     @Test
@@ -259,7 +259,7 @@ class ButtonCoverageTest {
                 width = ButtonWidth.Wide,
             )
         }
-        assertRendered(html, "btn btn-wide", "Button width Wide")
+        assertRendered(html, Expected("Button width Wide", "btn btn-wide"))
     }
 
     @Test
@@ -269,7 +269,7 @@ class ButtonCoverageTest {
                 width = ButtonWidth.Block,
             )
         }
-        assertRendered(html, "btn btn-block", "Button width Block")
+        assertRendered(html, Expected("Button width Block", "btn btn-block"))
     }
 
     @Test
@@ -279,7 +279,7 @@ class ButtonCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "btn", "Button text")
+        assertRendered(html, Expected("Button text", "btn"))
         assertTrue(html.contains("txtmark"), "Button text content")
     }
 
@@ -288,7 +288,7 @@ class ButtonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyButtonClasses()
         }
-        assertRendered(html, "btn", "ButtonClasses defaults")
+        assertRendered(html, Expected("ButtonClasses defaults", "btn"))
     }
 
     @Test
@@ -299,7 +299,8 @@ class ButtonCoverageTest {
                 disabled = true,
             )
         }
-        assertRendered(html, "btn btn-active btn-disabled", "ButtonClasses all flags")
+        val expected = Expected("ButtonClasses all flags", "btn btn-active btn-disabled", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -309,7 +310,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Neutral,
             )
         }
-        assertRendered(html, "btn btn-neutral", "ButtonClasses color Neutral")
+        assertRendered(html, Expected("ButtonClasses color Neutral", "btn btn-neutral"))
     }
 
     @Test
@@ -319,7 +320,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Primary,
             )
         }
-        assertRendered(html, "btn btn-primary", "ButtonClasses color Primary")
+        assertRendered(html, Expected("ButtonClasses color Primary", "btn btn-primary"))
     }
 
     @Test
@@ -329,7 +330,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Secondary,
             )
         }
-        assertRendered(html, "btn btn-secondary", "ButtonClasses color Secondary")
+        assertRendered(html, Expected("ButtonClasses color Secondary", "btn btn-secondary"))
     }
 
     @Test
@@ -339,7 +340,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Accent,
             )
         }
-        assertRendered(html, "btn btn-accent", "ButtonClasses color Accent")
+        assertRendered(html, Expected("ButtonClasses color Accent", "btn btn-accent"))
     }
 
     @Test
@@ -349,7 +350,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Info,
             )
         }
-        assertRendered(html, "btn btn-info", "ButtonClasses color Info")
+        assertRendered(html, Expected("ButtonClasses color Info", "btn btn-info"))
     }
 
     @Test
@@ -359,7 +360,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Success,
             )
         }
-        assertRendered(html, "btn btn-success", "ButtonClasses color Success")
+        assertRendered(html, Expected("ButtonClasses color Success", "btn btn-success"))
     }
 
     @Test
@@ -369,7 +370,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Warning,
             )
         }
-        assertRendered(html, "btn btn-warning", "ButtonClasses color Warning")
+        assertRendered(html, Expected("ButtonClasses color Warning", "btn btn-warning"))
     }
 
     @Test
@@ -379,7 +380,7 @@ class ButtonCoverageTest {
                 color = ButtonColor.Error,
             )
         }
-        assertRendered(html, "btn btn-error", "ButtonClasses color Error")
+        assertRendered(html, Expected("ButtonClasses color Error", "btn btn-error"))
     }
 
     @Test
@@ -389,7 +390,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Xs,
             )
         }
-        assertRendered(html, "btn btn-xs", "ButtonClasses size Xs")
+        assertRendered(html, Expected("ButtonClasses size Xs", "btn btn-xs"))
     }
 
     @Test
@@ -399,7 +400,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Sm,
             )
         }
-        assertRendered(html, "btn btn-sm", "ButtonClasses size Sm")
+        assertRendered(html, Expected("ButtonClasses size Sm", "btn btn-sm"))
     }
 
     @Test
@@ -409,7 +410,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Md,
             )
         }
-        assertRendered(html, "btn btn-md", "ButtonClasses size Md")
+        assertRendered(html, Expected("ButtonClasses size Md", "btn btn-md"))
     }
 
     @Test
@@ -419,7 +420,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Lg,
             )
         }
-        assertRendered(html, "btn btn-lg", "ButtonClasses size Lg")
+        assertRendered(html, Expected("ButtonClasses size Lg", "btn btn-lg"))
     }
 
     @Test
@@ -429,7 +430,7 @@ class ButtonCoverageTest {
                 size = ButtonSize.Xl,
             )
         }
-        assertRendered(html, "btn btn-xl", "ButtonClasses size Xl")
+        assertRendered(html, Expected("ButtonClasses size Xl", "btn btn-xl"))
     }
 
     @Test
@@ -439,7 +440,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Outline,
             )
         }
-        assertRendered(html, "btn btn-outline", "ButtonClasses style Outline")
+        assertRendered(html, Expected("ButtonClasses style Outline", "btn btn-outline"))
     }
 
     @Test
@@ -449,7 +450,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Dash,
             )
         }
-        assertRendered(html, "btn btn-dash", "ButtonClasses style Dash")
+        assertRendered(html, Expected("ButtonClasses style Dash", "btn btn-dash"))
     }
 
     @Test
@@ -459,7 +460,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Soft,
             )
         }
-        assertRendered(html, "btn btn-soft", "ButtonClasses style Soft")
+        assertRendered(html, Expected("ButtonClasses style Soft", "btn btn-soft"))
     }
 
     @Test
@@ -469,7 +470,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Ghost,
             )
         }
-        assertRendered(html, "btn btn-ghost", "ButtonClasses style Ghost")
+        assertRendered(html, Expected("ButtonClasses style Ghost", "btn btn-ghost"))
     }
 
     @Test
@@ -479,7 +480,7 @@ class ButtonCoverageTest {
                 style = ButtonStyle.Link,
             )
         }
-        assertRendered(html, "btn btn-link", "ButtonClasses style Link")
+        assertRendered(html, Expected("ButtonClasses style Link", "btn btn-link"))
     }
 
     @Test
@@ -489,7 +490,7 @@ class ButtonCoverageTest {
                 shape = ButtonShape.Square,
             )
         }
-        assertRendered(html, "btn btn-square", "ButtonClasses shape Square")
+        assertRendered(html, Expected("ButtonClasses shape Square", "btn btn-square"))
     }
 
     @Test
@@ -499,7 +500,7 @@ class ButtonCoverageTest {
                 shape = ButtonShape.Circle,
             )
         }
-        assertRendered(html, "btn btn-circle", "ButtonClasses shape Circle")
+        assertRendered(html, Expected("ButtonClasses shape Circle", "btn btn-circle"))
     }
 
     @Test
@@ -509,7 +510,7 @@ class ButtonCoverageTest {
                 width = ButtonWidth.Wide,
             )
         }
-        assertRendered(html, "btn btn-wide", "ButtonClasses width Wide")
+        assertRendered(html, Expected("ButtonClasses width Wide", "btn btn-wide"))
     }
 
     @Test
@@ -519,6 +520,6 @@ class ButtonCoverageTest {
                 width = ButtonWidth.Block,
             )
         }
-        assertRendered(html, "btn btn-block", "ButtonClasses width Block")
+        assertRendered(html, Expected("ButtonClasses width Block", "btn btn-block"))
     }
 }

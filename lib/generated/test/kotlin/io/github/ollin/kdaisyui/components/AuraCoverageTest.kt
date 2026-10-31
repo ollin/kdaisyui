@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class AuraCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura", "Aura defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Aura defaults", "aura", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class AuraCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "aura zz-extra", "Aura all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Aura")
+        val expected = Expected("Aura all flags", "aura zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-xs", "Aura size Xs")
+        assertRendered(html, Expected("Aura size Xs", "aura aura-xs"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-sm", "Aura size Sm")
+        assertRendered(html, Expected("Aura size Sm", "aura aura-sm"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-md", "Aura size Md")
+        assertRendered(html, Expected("Aura size Md", "aura aura-md"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-lg", "Aura size Lg")
+        assertRendered(html, Expected("Aura size Lg", "aura aura-lg"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-xl", "Aura size Xl")
+        assertRendered(html, Expected("Aura size Xl", "aura aura-xl"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-dual", "Aura style Dual")
+        assertRendered(html, Expected("Aura style Dual", "aura aura-dual"))
     }
 
     @Test
@@ -122,7 +122,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-rainbow", "Aura style Rainbow")
+        assertRendered(html, Expected("Aura style Rainbow", "aura aura-rainbow"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-holo", "Aura style Holo")
+        assertRendered(html, Expected("Aura style Holo", "aura aura-holo"))
     }
 
     @Test
@@ -144,7 +144,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-gold", "Aura style Gold")
+        assertRendered(html, Expected("Aura style Gold", "aura aura-gold"))
     }
 
     @Test
@@ -155,7 +155,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-silver", "Aura style Silver")
+        assertRendered(html, Expected("Aura style Silver", "aura aura-silver"))
     }
 
     @Test
@@ -166,7 +166,7 @@ class AuraCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "aura aura-glow", "Aura style Glow")
+        assertRendered(html, Expected("Aura style Glow", "aura aura-glow"))
     }
 
     @Test
@@ -174,7 +174,7 @@ class AuraCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAuraClasses()
         }
-        assertRendered(html, "aura", "AuraClasses defaults")
+        assertRendered(html, Expected("AuraClasses defaults", "aura"))
     }
 
     @Test
@@ -182,7 +182,8 @@ class AuraCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAuraClasses()
         }
-        assertRendered(html, "aura", "AuraClasses all flags")
+        val expected = Expected("AuraClasses all flags", "aura", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -192,7 +193,7 @@ class AuraCoverageTest {
                 size = AuraSize.Xs,
             )
         }
-        assertRendered(html, "aura aura-xs", "AuraClasses size Xs")
+        assertRendered(html, Expected("AuraClasses size Xs", "aura aura-xs"))
     }
 
     @Test
@@ -202,7 +203,7 @@ class AuraCoverageTest {
                 size = AuraSize.Sm,
             )
         }
-        assertRendered(html, "aura aura-sm", "AuraClasses size Sm")
+        assertRendered(html, Expected("AuraClasses size Sm", "aura aura-sm"))
     }
 
     @Test
@@ -212,7 +213,7 @@ class AuraCoverageTest {
                 size = AuraSize.Md,
             )
         }
-        assertRendered(html, "aura aura-md", "AuraClasses size Md")
+        assertRendered(html, Expected("AuraClasses size Md", "aura aura-md"))
     }
 
     @Test
@@ -222,7 +223,7 @@ class AuraCoverageTest {
                 size = AuraSize.Lg,
             )
         }
-        assertRendered(html, "aura aura-lg", "AuraClasses size Lg")
+        assertRendered(html, Expected("AuraClasses size Lg", "aura aura-lg"))
     }
 
     @Test
@@ -232,7 +233,7 @@ class AuraCoverageTest {
                 size = AuraSize.Xl,
             )
         }
-        assertRendered(html, "aura aura-xl", "AuraClasses size Xl")
+        assertRendered(html, Expected("AuraClasses size Xl", "aura aura-xl"))
     }
 
     @Test
@@ -242,7 +243,7 @@ class AuraCoverageTest {
                 style = AuraStyle.Dual,
             )
         }
-        assertRendered(html, "aura aura-dual", "AuraClasses style Dual")
+        assertRendered(html, Expected("AuraClasses style Dual", "aura aura-dual"))
     }
 
     @Test
@@ -252,7 +253,7 @@ class AuraCoverageTest {
                 style = AuraStyle.Rainbow,
             )
         }
-        assertRendered(html, "aura aura-rainbow", "AuraClasses style Rainbow")
+        assertRendered(html, Expected("AuraClasses style Rainbow", "aura aura-rainbow"))
     }
 
     @Test
@@ -262,7 +263,7 @@ class AuraCoverageTest {
                 style = AuraStyle.Holo,
             )
         }
-        assertRendered(html, "aura aura-holo", "AuraClasses style Holo")
+        assertRendered(html, Expected("AuraClasses style Holo", "aura aura-holo"))
     }
 
     @Test
@@ -272,7 +273,7 @@ class AuraCoverageTest {
                 style = AuraStyle.Gold,
             )
         }
-        assertRendered(html, "aura aura-gold", "AuraClasses style Gold")
+        assertRendered(html, Expected("AuraClasses style Gold", "aura aura-gold"))
     }
 
     @Test
@@ -282,7 +283,7 @@ class AuraCoverageTest {
                 style = AuraStyle.Silver,
             )
         }
-        assertRendered(html, "aura aura-silver", "AuraClasses style Silver")
+        assertRendered(html, Expected("AuraClasses style Silver", "aura aura-silver"))
     }
 
     @Test
@@ -292,6 +293,6 @@ class AuraCoverageTest {
                 style = AuraStyle.Glow,
             )
         }
-        assertRendered(html, "aura aura-glow", "AuraClasses style Glow")
+        assertRendered(html, Expected("AuraClasses style Glow", "aura aura-glow"))
     }
 }

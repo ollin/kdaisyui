@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class HeroCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class HeroCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "hero", "Hero defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Hero defaults", "hero", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class HeroCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "hero zz-extra", "Hero all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Hero")
+        val expected = Expected("Hero all flags", "hero zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class HeroCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroClasses()
         }
-        assertRendered(html, "hero", "HeroClasses defaults")
+        assertRendered(html, Expected("HeroClasses defaults", "hero"))
     }
 
     @Test
@@ -61,7 +61,8 @@ class HeroCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroClasses()
         }
-        assertRendered(html, "hero", "HeroClasses all flags")
+        val expected = Expected("HeroClasses all flags", "hero", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -71,7 +72,7 @@ class HeroCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "hero-content", "HeroContent defaults", closes = "</div></div>")
+        assertRendered(html, Expected("HeroContent defaults", "hero-content", closes = "</div></div>"))
     }
 
     @Test
@@ -84,8 +85,9 @@ class HeroCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "hero-content zz-extra", "HeroContent all flags", closes = "</div></div>")
-        assertCommonFlags(html, "HeroContent")
+        val expected = Expected("HeroContent all flags", "hero-content zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -93,7 +95,7 @@ class HeroCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroContentClasses()
         }
-        assertRendered(html, "hero-content", "HeroContentClasses defaults")
+        assertRendered(html, Expected("HeroContentClasses defaults", "hero-content"))
     }
 
     @Test
@@ -101,7 +103,8 @@ class HeroCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroContentClasses()
         }
-        assertRendered(html, "hero-content", "HeroContentClasses all flags")
+        val expected = Expected("HeroContentClasses all flags", "hero-content", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -111,7 +114,7 @@ class HeroCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "hero-overlay", "HeroOverlay defaults", closes = "</div></div>")
+        assertRendered(html, Expected("HeroOverlay defaults", "hero-overlay", closes = "</div></div>"))
     }
 
     @Test
@@ -124,8 +127,9 @@ class HeroCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "hero-overlay zz-extra", "HeroOverlay all flags", closes = "</div></div>")
-        assertCommonFlags(html, "HeroOverlay")
+        val expected = Expected("HeroOverlay all flags", "hero-overlay zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -133,7 +137,7 @@ class HeroCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroOverlayClasses()
         }
-        assertRendered(html, "hero-overlay", "HeroOverlayClasses defaults")
+        assertRendered(html, Expected("HeroOverlayClasses defaults", "hero-overlay"))
     }
 
     @Test
@@ -141,6 +145,7 @@ class HeroCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyHeroOverlayClasses()
         }
-        assertRendered(html, "hero-overlay", "HeroOverlayClasses all flags")
+        val expected = Expected("HeroOverlayClasses all flags", "hero-overlay", content = false)
+        assertRendered(html, expected)
     }
 }

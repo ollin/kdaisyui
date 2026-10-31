@@ -10,19 +10,18 @@ import kotlinx.html.stream.createHTML
 
 class FieldsetCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -32,7 +31,7 @@ class FieldsetCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fieldset", "Fieldset defaults", closes = "</fieldset></div>")
+        assertRendered(html, Expected("Fieldset defaults", "fieldset", closes = "</fieldset></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class FieldsetCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "fieldset zz-extra", "Fieldset all flags", closes = "</fieldset></div>")
-        assertCommonFlags(html, "Fieldset")
+        val expected = Expected("Fieldset all flags", "fieldset zz-extra", closes = "</fieldset></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -54,7 +54,7 @@ class FieldsetCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFieldsetClasses()
         }
-        assertRendered(html, "fieldset", "FieldsetClasses defaults")
+        assertRendered(html, Expected("FieldsetClasses defaults", "fieldset"))
     }
 
     @Test
@@ -62,7 +62,8 @@ class FieldsetCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFieldsetClasses()
         }
-        assertRendered(html, "fieldset", "FieldsetClasses all flags")
+        val expected = Expected("FieldsetClasses all flags", "fieldset", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -72,7 +73,7 @@ class FieldsetCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fieldset-legend", "FieldsetLegend defaults", closes = "</legend></fieldset>")
+        assertRendered(html, Expected("FieldsetLegend defaults", "fieldset-legend", closes = "</legend></fieldset>"))
     }
 
     @Test
@@ -85,8 +86,9 @@ class FieldsetCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "fieldset-legend zz-extra", "FieldsetLegend all flags", closes = "</legend></fieldset>")
-        assertCommonFlags(html, "FieldsetLegend")
+        val expected = Expected("FieldsetLegend all flags", "fieldset-legend zz-extra", closes = "</legend></fieldset>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -94,7 +96,7 @@ class FieldsetCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFieldsetLegendClasses()
         }
-        assertRendered(html, "fieldset-legend", "FieldsetLegendClasses defaults")
+        assertRendered(html, Expected("FieldsetLegendClasses defaults", "fieldset-legend"))
     }
 
     @Test
@@ -102,6 +104,7 @@ class FieldsetCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFieldsetLegendClasses()
         }
-        assertRendered(html, "fieldset-legend", "FieldsetLegendClasses all flags")
+        val expected = Expected("FieldsetLegendClasses all flags", "fieldset-legend", content = false)
+        assertRendered(html, expected)
     }
 }

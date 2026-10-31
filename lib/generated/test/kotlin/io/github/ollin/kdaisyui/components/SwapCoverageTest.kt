@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class SwapCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "swap", "Swap defaults", closes = "</label></div>")
+        assertRendered(html, Expected("Swap defaults", "swap", closes = "</label></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "swap swap-active zz-extra", "Swap all flags", closes = "</label></div>")
-        assertCommonFlags(html, "Swap")
+        val expected = Expected("Swap all flags", "swap swap-active zz-extra", closes = "</label></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "swap swap-rotate", "Swap style Rotate")
+        assertRendered(html, Expected("Swap style Rotate", "swap swap-rotate"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "swap swap-flip", "Swap style Flip")
+        assertRendered(html, Expected("Swap style Flip", "swap swap-flip"))
     }
 
     @Test
@@ -76,7 +76,7 @@ class SwapCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySwapClasses()
         }
-        assertRendered(html, "swap", "SwapClasses defaults")
+        assertRendered(html, Expected("SwapClasses defaults", "swap"))
     }
 
     @Test
@@ -86,7 +86,8 @@ class SwapCoverageTest {
                 active = true,
             )
         }
-        assertRendered(html, "swap swap-active", "SwapClasses all flags")
+        val expected = Expected("SwapClasses all flags", "swap swap-active", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -96,7 +97,7 @@ class SwapCoverageTest {
                 style = SwapStyle.Rotate,
             )
         }
-        assertRendered(html, "swap swap-rotate", "SwapClasses style Rotate")
+        assertRendered(html, Expected("SwapClasses style Rotate", "swap swap-rotate"))
     }
 
     @Test
@@ -106,7 +107,7 @@ class SwapCoverageTest {
                 style = SwapStyle.Flip,
             )
         }
-        assertRendered(html, "swap swap-flip", "SwapClasses style Flip")
+        assertRendered(html, Expected("SwapClasses style Flip", "swap swap-flip"))
     }
 
     @Test
@@ -116,7 +117,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "swap-on", "SwapOn defaults", closes = "</div></div>")
+        assertRendered(html, Expected("SwapOn defaults", "swap-on", closes = "</div></div>"))
     }
 
     @Test
@@ -129,8 +130,9 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "swap-on zz-extra", "SwapOn all flags", closes = "</div></div>")
-        assertCommonFlags(html, "SwapOn")
+        val expected = Expected("SwapOn all flags", "swap-on zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -138,7 +140,7 @@ class SwapCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySwapOnClasses()
         }
-        assertRendered(html, "swap-on", "SwapOnClasses defaults")
+        assertRendered(html, Expected("SwapOnClasses defaults", "swap-on"))
     }
 
     @Test
@@ -146,7 +148,8 @@ class SwapCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySwapOnClasses()
         }
-        assertRendered(html, "swap-on", "SwapOnClasses all flags")
+        val expected = Expected("SwapOnClasses all flags", "swap-on", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -156,7 +159,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "swap-off", "SwapOff defaults", closes = "</div></div>")
+        assertRendered(html, Expected("SwapOff defaults", "swap-off", closes = "</div></div>"))
     }
 
     @Test
@@ -169,8 +172,9 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "swap-off zz-extra", "SwapOff all flags", closes = "</div></div>")
-        assertCommonFlags(html, "SwapOff")
+        val expected = Expected("SwapOff all flags", "swap-off zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -178,7 +182,7 @@ class SwapCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySwapOffClasses()
         }
-        assertRendered(html, "swap-off", "SwapOffClasses defaults")
+        assertRendered(html, Expected("SwapOffClasses defaults", "swap-off"))
     }
 
     @Test
@@ -186,7 +190,8 @@ class SwapCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySwapOffClasses()
         }
-        assertRendered(html, "swap-off", "SwapOffClasses all flags")
+        val expected = Expected("SwapOffClasses all flags", "swap-off", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -196,7 +201,7 @@ class SwapCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "swap-indeterminate", "SwapIndeterminate defaults", closes = "</div></div>")
+        assertRendered(html, Expected("SwapIndeterminate defaults", "swap-indeterminate", closes = "</div></div>"))
     }
 
     @Test
@@ -209,8 +214,9 @@ class SwapCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "swap-indeterminate zz-extra", "SwapIndeterminate all flags", closes = "</div></div>")
-        assertCommonFlags(html, "SwapIndeterminate")
+        val expected = Expected("SwapIndeterminate all flags", "swap-indeterminate zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -218,7 +224,7 @@ class SwapCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySwapIndeterminateClasses()
         }
-        assertRendered(html, "swap-indeterminate", "SwapIndeterminateClasses defaults")
+        assertRendered(html, Expected("SwapIndeterminateClasses defaults", "swap-indeterminate"))
     }
 
     @Test
@@ -226,6 +232,7 @@ class SwapCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySwapIndeterminateClasses()
         }
-        assertRendered(html, "swap-indeterminate", "SwapIndeterminateClasses all flags")
+        val expected = Expected("SwapIndeterminateClasses all flags", "swap-indeterminate", content = false)
+        assertRendered(html, expected)
     }
 }

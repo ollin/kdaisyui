@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class StackCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class StackCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stack", "Stack defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Stack defaults", "stack", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class StackCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "stack zz-extra", "Stack all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Stack")
+        val expected = Expected("Stack all flags", "stack zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class StackCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stack stack-top", "Stack placement Top")
+        assertRendered(html, Expected("Stack placement Top", "stack stack-top"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class StackCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stack stack-bottom", "Stack placement Bottom")
+        assertRendered(html, Expected("Stack placement Bottom", "stack stack-bottom"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class StackCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stack stack-start", "Stack placement Start")
+        assertRendered(html, Expected("Stack placement Start", "stack stack-start"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class StackCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stack stack-end", "Stack placement End")
+        assertRendered(html, Expected("Stack placement End", "stack stack-end"))
     }
 
     @Test
@@ -97,7 +97,7 @@ class StackCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStackClasses()
         }
-        assertRendered(html, "stack", "StackClasses defaults")
+        assertRendered(html, Expected("StackClasses defaults", "stack"))
     }
 
     @Test
@@ -105,7 +105,8 @@ class StackCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStackClasses()
         }
-        assertRendered(html, "stack", "StackClasses all flags")
+        val expected = Expected("StackClasses all flags", "stack", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -115,7 +116,7 @@ class StackCoverageTest {
                 placement = StackPlacement.Top,
             )
         }
-        assertRendered(html, "stack stack-top", "StackClasses placement Top")
+        assertRendered(html, Expected("StackClasses placement Top", "stack stack-top"))
     }
 
     @Test
@@ -125,7 +126,7 @@ class StackCoverageTest {
                 placement = StackPlacement.Bottom,
             )
         }
-        assertRendered(html, "stack stack-bottom", "StackClasses placement Bottom")
+        assertRendered(html, Expected("StackClasses placement Bottom", "stack stack-bottom"))
     }
 
     @Test
@@ -135,7 +136,7 @@ class StackCoverageTest {
                 placement = StackPlacement.Start,
             )
         }
-        assertRendered(html, "stack stack-start", "StackClasses placement Start")
+        assertRendered(html, Expected("StackClasses placement Start", "stack stack-start"))
     }
 
     @Test
@@ -145,6 +146,6 @@ class StackCoverageTest {
                 placement = StackPlacement.End,
             )
         }
-        assertRendered(html, "stack stack-end", "StackClasses placement End")
+        assertRendered(html, Expected("StackClasses placement End", "stack stack-end"))
     }
 }

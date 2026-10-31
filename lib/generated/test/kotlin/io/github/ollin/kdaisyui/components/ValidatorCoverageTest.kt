@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class ValidatorCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class ValidatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyValidator()
         }
-        assertRendered(html, "validator", "Validator defaults")
+        assertRendered(html, Expected("Validator defaults", "validator"))
     }
 
     @Test
@@ -41,8 +40,9 @@ class ValidatorCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "validator zz-extra", "Validator all flags")
-        assertCommonFlags(html, "Validator", content = false)
+        val expected = Expected("Validator all flags", "validator zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -50,7 +50,7 @@ class ValidatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyValidatorClasses()
         }
-        assertRendered(html, "validator", "ValidatorClasses defaults")
+        assertRendered(html, Expected("ValidatorClasses defaults", "validator"))
     }
 
     @Test
@@ -58,7 +58,8 @@ class ValidatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyValidatorClasses()
         }
-        assertRendered(html, "validator", "ValidatorClasses all flags")
+        val expected = Expected("ValidatorClasses all flags", "validator", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -68,7 +69,7 @@ class ValidatorCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "validator-hint", "ValidatorHint defaults", closes = "</p></div>")
+        assertRendered(html, Expected("ValidatorHint defaults", "validator-hint", closes = "</p></div>"))
     }
 
     @Test
@@ -81,8 +82,9 @@ class ValidatorCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "validator-hint zz-extra", "ValidatorHint all flags", closes = "</p></div>")
-        assertCommonFlags(html, "ValidatorHint")
+        val expected = Expected("ValidatorHint all flags", "validator-hint zz-extra", closes = "</p></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -90,7 +92,7 @@ class ValidatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyValidatorHintClasses()
         }
-        assertRendered(html, "validator-hint", "ValidatorHintClasses defaults")
+        assertRendered(html, Expected("ValidatorHintClasses defaults", "validator-hint"))
     }
 
     @Test
@@ -98,6 +100,7 @@ class ValidatorCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyValidatorHintClasses()
         }
-        assertRendered(html, "validator-hint", "ValidatorHintClasses all flags")
+        val expected = Expected("ValidatorHintClasses all flags", "validator-hint", content = false)
+        assertRendered(html, expected)
     }
 }

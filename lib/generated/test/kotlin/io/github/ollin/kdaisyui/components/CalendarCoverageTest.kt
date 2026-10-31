@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class CalendarCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class CalendarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "cally", "Calendar defaults")
+        assertRendered(html, Expected("Calendar defaults", "cally"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class CalendarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "cally zz-extra", "Calendar all flags")
-        assertCommonFlags(html, "Calendar")
+        val expected = Expected("Calendar all flags", "cally zz-extra")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class CalendarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCalendarClasses()
         }
-        assertRendered(html, "cally", "CalendarClasses defaults")
+        assertRendered(html, Expected("CalendarClasses defaults", "cally"))
     }
 
     @Test
@@ -61,7 +61,8 @@ class CalendarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCalendarClasses()
         }
-        assertRendered(html, "cally", "CalendarClasses all flags")
+        val expected = Expected("CalendarClasses all flags", "cally", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -71,7 +72,7 @@ class CalendarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "vc", "Vc defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Vc defaults", "vc", closes = "</div></div>"))
     }
 
     @Test
@@ -84,8 +85,9 @@ class CalendarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "vc zz-extra", "Vc all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Vc")
+        val expected = Expected("Vc all flags", "vc zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -93,7 +95,7 @@ class CalendarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyVcClasses()
         }
-        assertRendered(html, "vc", "VcClasses defaults")
+        assertRendered(html, Expected("VcClasses defaults", "vc"))
     }
 
     @Test
@@ -101,6 +103,7 @@ class CalendarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyVcClasses()
         }
-        assertRendered(html, "vc", "VcClasses all flags")
+        val expected = Expected("VcClasses all flags", "vc", content = false)
+        assertRendered(html, expected)
     }
 }

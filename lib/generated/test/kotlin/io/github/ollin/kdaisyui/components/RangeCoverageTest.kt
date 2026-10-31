@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class RangeCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class RangeCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRange()
         }
-        assertRendered(html, "range", "Range defaults")
+        assertRendered(html, Expected("Range defaults", "range"))
         assertTrue(html.contains("type=\""), "Range sets type")
     }
 
@@ -48,8 +47,9 @@ class RangeCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "range range-vertical zz-extra", "Range all flags")
-        assertCommonFlags(html, "Range", content = false)
+        val expected = Expected("Range all flags", "range range-vertical zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("min=\"x\""), "Range min")
         assertTrue(html.contains("max=\"x\""), "Range max")
         assertTrue(html.contains("value=\"x\""), "Range value")
@@ -69,7 +69,7 @@ class RangeCoverageTest {
                 color = RangeColor.Neutral,
             )
         }
-        assertRendered(html, "range range-neutral", "Range color Neutral")
+        assertRendered(html, Expected("Range color Neutral", "range range-neutral"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class RangeCoverageTest {
                 color = RangeColor.Primary,
             )
         }
-        assertRendered(html, "range range-primary", "Range color Primary")
+        assertRendered(html, Expected("Range color Primary", "range range-primary"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class RangeCoverageTest {
                 color = RangeColor.Secondary,
             )
         }
-        assertRendered(html, "range range-secondary", "Range color Secondary")
+        assertRendered(html, Expected("Range color Secondary", "range range-secondary"))
     }
 
     @Test
@@ -99,7 +99,7 @@ class RangeCoverageTest {
                 color = RangeColor.Accent,
             )
         }
-        assertRendered(html, "range range-accent", "Range color Accent")
+        assertRendered(html, Expected("Range color Accent", "range range-accent"))
     }
 
     @Test
@@ -109,7 +109,7 @@ class RangeCoverageTest {
                 color = RangeColor.Success,
             )
         }
-        assertRendered(html, "range range-success", "Range color Success")
+        assertRendered(html, Expected("Range color Success", "range range-success"))
     }
 
     @Test
@@ -119,7 +119,7 @@ class RangeCoverageTest {
                 color = RangeColor.Warning,
             )
         }
-        assertRendered(html, "range range-warning", "Range color Warning")
+        assertRendered(html, Expected("Range color Warning", "range range-warning"))
     }
 
     @Test
@@ -129,7 +129,7 @@ class RangeCoverageTest {
                 color = RangeColor.Info,
             )
         }
-        assertRendered(html, "range range-info", "Range color Info")
+        assertRendered(html, Expected("Range color Info", "range range-info"))
     }
 
     @Test
@@ -139,7 +139,7 @@ class RangeCoverageTest {
                 color = RangeColor.Error,
             )
         }
-        assertRendered(html, "range range-error", "Range color Error")
+        assertRendered(html, Expected("Range color Error", "range range-error"))
     }
 
     @Test
@@ -149,7 +149,7 @@ class RangeCoverageTest {
                 size = RangeSize.Xs,
             )
         }
-        assertRendered(html, "range range-xs", "Range size Xs")
+        assertRendered(html, Expected("Range size Xs", "range range-xs"))
     }
 
     @Test
@@ -159,7 +159,7 @@ class RangeCoverageTest {
                 size = RangeSize.Sm,
             )
         }
-        assertRendered(html, "range range-sm", "Range size Sm")
+        assertRendered(html, Expected("Range size Sm", "range range-sm"))
     }
 
     @Test
@@ -169,7 +169,7 @@ class RangeCoverageTest {
                 size = RangeSize.Md,
             )
         }
-        assertRendered(html, "range range-md", "Range size Md")
+        assertRendered(html, Expected("Range size Md", "range range-md"))
     }
 
     @Test
@@ -179,7 +179,7 @@ class RangeCoverageTest {
                 size = RangeSize.Lg,
             )
         }
-        assertRendered(html, "range range-lg", "Range size Lg")
+        assertRendered(html, Expected("Range size Lg", "range range-lg"))
     }
 
     @Test
@@ -189,7 +189,7 @@ class RangeCoverageTest {
                 size = RangeSize.Xl,
             )
         }
-        assertRendered(html, "range range-xl", "Range size Xl")
+        assertRendered(html, Expected("Range size Xl", "range range-xl"))
     }
 
     @Test
@@ -197,7 +197,7 @@ class RangeCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRangeClasses()
         }
-        assertRendered(html, "range", "RangeClasses defaults")
+        assertRendered(html, Expected("RangeClasses defaults", "range"))
     }
 
     @Test
@@ -207,7 +207,8 @@ class RangeCoverageTest {
                 vertical = true,
             )
         }
-        assertRendered(html, "range range-vertical", "RangeClasses all flags")
+        val expected = Expected("RangeClasses all flags", "range range-vertical", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -217,7 +218,7 @@ class RangeCoverageTest {
                 color = RangeColor.Neutral,
             )
         }
-        assertRendered(html, "range range-neutral", "RangeClasses color Neutral")
+        assertRendered(html, Expected("RangeClasses color Neutral", "range range-neutral"))
     }
 
     @Test
@@ -227,7 +228,7 @@ class RangeCoverageTest {
                 color = RangeColor.Primary,
             )
         }
-        assertRendered(html, "range range-primary", "RangeClasses color Primary")
+        assertRendered(html, Expected("RangeClasses color Primary", "range range-primary"))
     }
 
     @Test
@@ -237,7 +238,7 @@ class RangeCoverageTest {
                 color = RangeColor.Secondary,
             )
         }
-        assertRendered(html, "range range-secondary", "RangeClasses color Secondary")
+        assertRendered(html, Expected("RangeClasses color Secondary", "range range-secondary"))
     }
 
     @Test
@@ -247,7 +248,7 @@ class RangeCoverageTest {
                 color = RangeColor.Accent,
             )
         }
-        assertRendered(html, "range range-accent", "RangeClasses color Accent")
+        assertRendered(html, Expected("RangeClasses color Accent", "range range-accent"))
     }
 
     @Test
@@ -257,7 +258,7 @@ class RangeCoverageTest {
                 color = RangeColor.Success,
             )
         }
-        assertRendered(html, "range range-success", "RangeClasses color Success")
+        assertRendered(html, Expected("RangeClasses color Success", "range range-success"))
     }
 
     @Test
@@ -267,7 +268,7 @@ class RangeCoverageTest {
                 color = RangeColor.Warning,
             )
         }
-        assertRendered(html, "range range-warning", "RangeClasses color Warning")
+        assertRendered(html, Expected("RangeClasses color Warning", "range range-warning"))
     }
 
     @Test
@@ -277,7 +278,7 @@ class RangeCoverageTest {
                 color = RangeColor.Info,
             )
         }
-        assertRendered(html, "range range-info", "RangeClasses color Info")
+        assertRendered(html, Expected("RangeClasses color Info", "range range-info"))
     }
 
     @Test
@@ -287,7 +288,7 @@ class RangeCoverageTest {
                 color = RangeColor.Error,
             )
         }
-        assertRendered(html, "range range-error", "RangeClasses color Error")
+        assertRendered(html, Expected("RangeClasses color Error", "range range-error"))
     }
 
     @Test
@@ -297,7 +298,7 @@ class RangeCoverageTest {
                 size = RangeSize.Xs,
             )
         }
-        assertRendered(html, "range range-xs", "RangeClasses size Xs")
+        assertRendered(html, Expected("RangeClasses size Xs", "range range-xs"))
     }
 
     @Test
@@ -307,7 +308,7 @@ class RangeCoverageTest {
                 size = RangeSize.Sm,
             )
         }
-        assertRendered(html, "range range-sm", "RangeClasses size Sm")
+        assertRendered(html, Expected("RangeClasses size Sm", "range range-sm"))
     }
 
     @Test
@@ -317,7 +318,7 @@ class RangeCoverageTest {
                 size = RangeSize.Md,
             )
         }
-        assertRendered(html, "range range-md", "RangeClasses size Md")
+        assertRendered(html, Expected("RangeClasses size Md", "range range-md"))
     }
 
     @Test
@@ -327,7 +328,7 @@ class RangeCoverageTest {
                 size = RangeSize.Lg,
             )
         }
-        assertRendered(html, "range range-lg", "RangeClasses size Lg")
+        assertRendered(html, Expected("RangeClasses size Lg", "range range-lg"))
     }
 
     @Test
@@ -337,6 +338,6 @@ class RangeCoverageTest {
                 size = RangeSize.Xl,
             )
         }
-        assertRendered(html, "range range-xl", "RangeClasses size Xl")
+        assertRendered(html, Expected("RangeClasses size Xl", "range range-xl"))
     }
 }

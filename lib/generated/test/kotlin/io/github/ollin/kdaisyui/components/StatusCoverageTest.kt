@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class StatusCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status", "Status defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Status defaults", "status", closes = "</div></div>"))
         assertTrue(html.contains("role=\""), "Status sets role")
     }
 
@@ -45,8 +44,9 @@ class StatusCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "status zz-extra", "Status all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Status")
+        val expected = Expected("Status all flags", "status zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("role=\""), "Status sets role")
     }
 
@@ -58,7 +58,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-neutral", "Status color Neutral")
+        assertRendered(html, Expected("Status color Neutral", "status status-neutral"))
     }
 
     @Test
@@ -69,7 +69,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-primary", "Status color Primary")
+        assertRendered(html, Expected("Status color Primary", "status status-primary"))
     }
 
     @Test
@@ -80,7 +80,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-secondary", "Status color Secondary")
+        assertRendered(html, Expected("Status color Secondary", "status status-secondary"))
     }
 
     @Test
@@ -91,7 +91,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-accent", "Status color Accent")
+        assertRendered(html, Expected("Status color Accent", "status status-accent"))
     }
 
     @Test
@@ -102,7 +102,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-info", "Status color Info")
+        assertRendered(html, Expected("Status color Info", "status status-info"))
     }
 
     @Test
@@ -113,7 +113,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-success", "Status color Success")
+        assertRendered(html, Expected("Status color Success", "status status-success"))
     }
 
     @Test
@@ -124,7 +124,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-warning", "Status color Warning")
+        assertRendered(html, Expected("Status color Warning", "status status-warning"))
     }
 
     @Test
@@ -135,7 +135,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-error", "Status color Error")
+        assertRendered(html, Expected("Status color Error", "status status-error"))
     }
 
     @Test
@@ -146,7 +146,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-xs", "Status size Xs")
+        assertRendered(html, Expected("Status size Xs", "status status-xs"))
     }
 
     @Test
@@ -157,7 +157,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-sm", "Status size Sm")
+        assertRendered(html, Expected("Status size Sm", "status status-sm"))
     }
 
     @Test
@@ -168,7 +168,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-md", "Status size Md")
+        assertRendered(html, Expected("Status size Md", "status status-md"))
     }
 
     @Test
@@ -179,7 +179,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-lg", "Status size Lg")
+        assertRendered(html, Expected("Status size Lg", "status status-lg"))
     }
 
     @Test
@@ -190,7 +190,7 @@ class StatusCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "status status-xl", "Status size Xl")
+        assertRendered(html, Expected("Status size Xl", "status status-xl"))
     }
 
     @Test
@@ -198,7 +198,7 @@ class StatusCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatusClasses()
         }
-        assertRendered(html, "status", "StatusClasses defaults")
+        assertRendered(html, Expected("StatusClasses defaults", "status"))
     }
 
     @Test
@@ -206,7 +206,8 @@ class StatusCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatusClasses()
         }
-        assertRendered(html, "status", "StatusClasses all flags")
+        val expected = Expected("StatusClasses all flags", "status", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -216,7 +217,7 @@ class StatusCoverageTest {
                 color = StatusColor.Neutral,
             )
         }
-        assertRendered(html, "status status-neutral", "StatusClasses color Neutral")
+        assertRendered(html, Expected("StatusClasses color Neutral", "status status-neutral"))
     }
 
     @Test
@@ -226,7 +227,7 @@ class StatusCoverageTest {
                 color = StatusColor.Primary,
             )
         }
-        assertRendered(html, "status status-primary", "StatusClasses color Primary")
+        assertRendered(html, Expected("StatusClasses color Primary", "status status-primary"))
     }
 
     @Test
@@ -236,7 +237,7 @@ class StatusCoverageTest {
                 color = StatusColor.Secondary,
             )
         }
-        assertRendered(html, "status status-secondary", "StatusClasses color Secondary")
+        assertRendered(html, Expected("StatusClasses color Secondary", "status status-secondary"))
     }
 
     @Test
@@ -246,7 +247,7 @@ class StatusCoverageTest {
                 color = StatusColor.Accent,
             )
         }
-        assertRendered(html, "status status-accent", "StatusClasses color Accent")
+        assertRendered(html, Expected("StatusClasses color Accent", "status status-accent"))
     }
 
     @Test
@@ -256,7 +257,7 @@ class StatusCoverageTest {
                 color = StatusColor.Info,
             )
         }
-        assertRendered(html, "status status-info", "StatusClasses color Info")
+        assertRendered(html, Expected("StatusClasses color Info", "status status-info"))
     }
 
     @Test
@@ -266,7 +267,7 @@ class StatusCoverageTest {
                 color = StatusColor.Success,
             )
         }
-        assertRendered(html, "status status-success", "StatusClasses color Success")
+        assertRendered(html, Expected("StatusClasses color Success", "status status-success"))
     }
 
     @Test
@@ -276,7 +277,7 @@ class StatusCoverageTest {
                 color = StatusColor.Warning,
             )
         }
-        assertRendered(html, "status status-warning", "StatusClasses color Warning")
+        assertRendered(html, Expected("StatusClasses color Warning", "status status-warning"))
     }
 
     @Test
@@ -286,7 +287,7 @@ class StatusCoverageTest {
                 color = StatusColor.Error,
             )
         }
-        assertRendered(html, "status status-error", "StatusClasses color Error")
+        assertRendered(html, Expected("StatusClasses color Error", "status status-error"))
     }
 
     @Test
@@ -296,7 +297,7 @@ class StatusCoverageTest {
                 size = StatusSize.Xs,
             )
         }
-        assertRendered(html, "status status-xs", "StatusClasses size Xs")
+        assertRendered(html, Expected("StatusClasses size Xs", "status status-xs"))
     }
 
     @Test
@@ -306,7 +307,7 @@ class StatusCoverageTest {
                 size = StatusSize.Sm,
             )
         }
-        assertRendered(html, "status status-sm", "StatusClasses size Sm")
+        assertRendered(html, Expected("StatusClasses size Sm", "status status-sm"))
     }
 
     @Test
@@ -316,7 +317,7 @@ class StatusCoverageTest {
                 size = StatusSize.Md,
             )
         }
-        assertRendered(html, "status status-md", "StatusClasses size Md")
+        assertRendered(html, Expected("StatusClasses size Md", "status status-md"))
     }
 
     @Test
@@ -326,7 +327,7 @@ class StatusCoverageTest {
                 size = StatusSize.Lg,
             )
         }
-        assertRendered(html, "status status-lg", "StatusClasses size Lg")
+        assertRendered(html, Expected("StatusClasses size Lg", "status status-lg"))
     }
 
     @Test
@@ -336,6 +337,6 @@ class StatusCoverageTest {
                 size = StatusSize.Xl,
             )
         }
-        assertRendered(html, "status status-xl", "StatusClasses size Xl")
+        assertRendered(html, Expected("StatusClasses size Xl", "status status-xl"))
     }
 }

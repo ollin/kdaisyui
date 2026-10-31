@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class CheckboxCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class CheckboxCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckbox()
         }
-        assertRendered(html, "checkbox", "Checkbox defaults")
+        assertRendered(html, Expected("Checkbox defaults", "checkbox"))
         assertTrue(html.contains("type=\""), "Checkbox sets type")
     }
 
@@ -44,8 +43,9 @@ class CheckboxCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "checkbox zz-extra", "Checkbox all flags")
-        assertCommonFlags(html, "Checkbox", content = false)
+        val expected = Expected("Checkbox all flags", "checkbox zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("type=\""), "Checkbox sets type")
         assertTrue(html.contains("checked=\""), "Checkbox sets checked")
         assertTrue(html.contains("disabled=\""), "Checkbox sets disabled")
@@ -58,7 +58,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Primary,
             )
         }
-        assertRendered(html, "checkbox checkbox-primary", "Checkbox color Primary")
+        assertRendered(html, Expected("Checkbox color Primary", "checkbox checkbox-primary"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Secondary,
             )
         }
-        assertRendered(html, "checkbox checkbox-secondary", "Checkbox color Secondary")
+        assertRendered(html, Expected("Checkbox color Secondary", "checkbox checkbox-secondary"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Accent,
             )
         }
-        assertRendered(html, "checkbox checkbox-accent", "Checkbox color Accent")
+        assertRendered(html, Expected("Checkbox color Accent", "checkbox checkbox-accent"))
     }
 
     @Test
@@ -88,7 +88,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Neutral,
             )
         }
-        assertRendered(html, "checkbox checkbox-neutral", "Checkbox color Neutral")
+        assertRendered(html, Expected("Checkbox color Neutral", "checkbox checkbox-neutral"))
     }
 
     @Test
@@ -98,7 +98,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Success,
             )
         }
-        assertRendered(html, "checkbox checkbox-success", "Checkbox color Success")
+        assertRendered(html, Expected("Checkbox color Success", "checkbox checkbox-success"))
     }
 
     @Test
@@ -108,7 +108,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Warning,
             )
         }
-        assertRendered(html, "checkbox checkbox-warning", "Checkbox color Warning")
+        assertRendered(html, Expected("Checkbox color Warning", "checkbox checkbox-warning"))
     }
 
     @Test
@@ -118,7 +118,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Info,
             )
         }
-        assertRendered(html, "checkbox checkbox-info", "Checkbox color Info")
+        assertRendered(html, Expected("Checkbox color Info", "checkbox checkbox-info"))
     }
 
     @Test
@@ -128,7 +128,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Error,
             )
         }
-        assertRendered(html, "checkbox checkbox-error", "Checkbox color Error")
+        assertRendered(html, Expected("Checkbox color Error", "checkbox checkbox-error"))
     }
 
     @Test
@@ -138,7 +138,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Xs,
             )
         }
-        assertRendered(html, "checkbox checkbox-xs", "Checkbox size Xs")
+        assertRendered(html, Expected("Checkbox size Xs", "checkbox checkbox-xs"))
     }
 
     @Test
@@ -148,7 +148,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Sm,
             )
         }
-        assertRendered(html, "checkbox checkbox-sm", "Checkbox size Sm")
+        assertRendered(html, Expected("Checkbox size Sm", "checkbox checkbox-sm"))
     }
 
     @Test
@@ -158,7 +158,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Md,
             )
         }
-        assertRendered(html, "checkbox checkbox-md", "Checkbox size Md")
+        assertRendered(html, Expected("Checkbox size Md", "checkbox checkbox-md"))
     }
 
     @Test
@@ -168,7 +168,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Lg,
             )
         }
-        assertRendered(html, "checkbox checkbox-lg", "Checkbox size Lg")
+        assertRendered(html, Expected("Checkbox size Lg", "checkbox checkbox-lg"))
     }
 
     @Test
@@ -178,7 +178,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Xl,
             )
         }
-        assertRendered(html, "checkbox checkbox-xl", "Checkbox size Xl")
+        assertRendered(html, Expected("Checkbox size Xl", "checkbox checkbox-xl"))
     }
 
     @Test
@@ -186,7 +186,7 @@ class CheckboxCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckboxClasses()
         }
-        assertRendered(html, "checkbox", "CheckboxClasses defaults")
+        assertRendered(html, Expected("CheckboxClasses defaults", "checkbox"))
     }
 
     @Test
@@ -194,7 +194,8 @@ class CheckboxCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCheckboxClasses()
         }
-        assertRendered(html, "checkbox", "CheckboxClasses all flags")
+        val expected = Expected("CheckboxClasses all flags", "checkbox", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -204,7 +205,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Primary,
             )
         }
-        assertRendered(html, "checkbox checkbox-primary", "CheckboxClasses color Primary")
+        assertRendered(html, Expected("CheckboxClasses color Primary", "checkbox checkbox-primary"))
     }
 
     @Test
@@ -214,7 +215,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Secondary,
             )
         }
-        assertRendered(html, "checkbox checkbox-secondary", "CheckboxClasses color Secondary")
+        assertRendered(html, Expected("CheckboxClasses color Secondary", "checkbox checkbox-secondary"))
     }
 
     @Test
@@ -224,7 +225,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Accent,
             )
         }
-        assertRendered(html, "checkbox checkbox-accent", "CheckboxClasses color Accent")
+        assertRendered(html, Expected("CheckboxClasses color Accent", "checkbox checkbox-accent"))
     }
 
     @Test
@@ -234,7 +235,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Neutral,
             )
         }
-        assertRendered(html, "checkbox checkbox-neutral", "CheckboxClasses color Neutral")
+        assertRendered(html, Expected("CheckboxClasses color Neutral", "checkbox checkbox-neutral"))
     }
 
     @Test
@@ -244,7 +245,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Success,
             )
         }
-        assertRendered(html, "checkbox checkbox-success", "CheckboxClasses color Success")
+        assertRendered(html, Expected("CheckboxClasses color Success", "checkbox checkbox-success"))
     }
 
     @Test
@@ -254,7 +255,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Warning,
             )
         }
-        assertRendered(html, "checkbox checkbox-warning", "CheckboxClasses color Warning")
+        assertRendered(html, Expected("CheckboxClasses color Warning", "checkbox checkbox-warning"))
     }
 
     @Test
@@ -264,7 +265,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Info,
             )
         }
-        assertRendered(html, "checkbox checkbox-info", "CheckboxClasses color Info")
+        assertRendered(html, Expected("CheckboxClasses color Info", "checkbox checkbox-info"))
     }
 
     @Test
@@ -274,7 +275,7 @@ class CheckboxCoverageTest {
                 color = CheckboxColor.Error,
             )
         }
-        assertRendered(html, "checkbox checkbox-error", "CheckboxClasses color Error")
+        assertRendered(html, Expected("CheckboxClasses color Error", "checkbox checkbox-error"))
     }
 
     @Test
@@ -284,7 +285,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Xs,
             )
         }
-        assertRendered(html, "checkbox checkbox-xs", "CheckboxClasses size Xs")
+        assertRendered(html, Expected("CheckboxClasses size Xs", "checkbox checkbox-xs"))
     }
 
     @Test
@@ -294,7 +295,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Sm,
             )
         }
-        assertRendered(html, "checkbox checkbox-sm", "CheckboxClasses size Sm")
+        assertRendered(html, Expected("CheckboxClasses size Sm", "checkbox checkbox-sm"))
     }
 
     @Test
@@ -304,7 +305,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Md,
             )
         }
-        assertRendered(html, "checkbox checkbox-md", "CheckboxClasses size Md")
+        assertRendered(html, Expected("CheckboxClasses size Md", "checkbox checkbox-md"))
     }
 
     @Test
@@ -314,7 +315,7 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Lg,
             )
         }
-        assertRendered(html, "checkbox checkbox-lg", "CheckboxClasses size Lg")
+        assertRendered(html, Expected("CheckboxClasses size Lg", "checkbox checkbox-lg"))
     }
 
     @Test
@@ -324,6 +325,6 @@ class CheckboxCoverageTest {
                 size = CheckboxSize.Xl,
             )
         }
-        assertRendered(html, "checkbox checkbox-xl", "CheckboxClasses size Xl")
+        assertRendered(html, Expected("CheckboxClasses size Xl", "checkbox checkbox-xl"))
     }
 }

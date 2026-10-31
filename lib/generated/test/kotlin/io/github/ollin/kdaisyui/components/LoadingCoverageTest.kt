@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class LoadingCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading", "Loading defaults", closes = "</span></div>")
+        assertRendered(html, Expected("Loading defaults", "loading", closes = "</span></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class LoadingCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "loading zz-extra", "Loading all flags", closes = "</span></div>")
-        assertCommonFlags(html, "Loading")
+        val expected = Expected("Loading all flags", "loading zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-xs", "Loading size Xs")
+        assertRendered(html, Expected("Loading size Xs", "loading loading-xs"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-sm", "Loading size Sm")
+        assertRendered(html, Expected("Loading size Sm", "loading loading-sm"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-md", "Loading size Md")
+        assertRendered(html, Expected("Loading size Md", "loading loading-md"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-lg", "Loading size Lg")
+        assertRendered(html, Expected("Loading size Lg", "loading loading-lg"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-xl", "Loading size Xl")
+        assertRendered(html, Expected("Loading size Xl", "loading loading-xl"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-spinner", "Loading style Spinner")
+        assertRendered(html, Expected("Loading style Spinner", "loading loading-spinner"))
     }
 
     @Test
@@ -122,7 +122,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-dots", "Loading style Dots")
+        assertRendered(html, Expected("Loading style Dots", "loading loading-dots"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-ring", "Loading style Ring")
+        assertRendered(html, Expected("Loading style Ring", "loading loading-ring"))
     }
 
     @Test
@@ -144,7 +144,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-ball", "Loading style Ball")
+        assertRendered(html, Expected("Loading style Ball", "loading loading-ball"))
     }
 
     @Test
@@ -155,7 +155,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-bars", "Loading style Bars")
+        assertRendered(html, Expected("Loading style Bars", "loading loading-bars"))
     }
 
     @Test
@@ -166,7 +166,7 @@ class LoadingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "loading loading-infinity", "Loading style Infinity")
+        assertRendered(html, Expected("Loading style Infinity", "loading loading-infinity"))
     }
 
     @Test
@@ -174,7 +174,7 @@ class LoadingCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLoadingClasses()
         }
-        assertRendered(html, "loading", "LoadingClasses defaults")
+        assertRendered(html, Expected("LoadingClasses defaults", "loading"))
     }
 
     @Test
@@ -182,7 +182,8 @@ class LoadingCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLoadingClasses()
         }
-        assertRendered(html, "loading", "LoadingClasses all flags")
+        val expected = Expected("LoadingClasses all flags", "loading", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -192,7 +193,7 @@ class LoadingCoverageTest {
                 size = LoadingSize.Xs,
             )
         }
-        assertRendered(html, "loading loading-xs", "LoadingClasses size Xs")
+        assertRendered(html, Expected("LoadingClasses size Xs", "loading loading-xs"))
     }
 
     @Test
@@ -202,7 +203,7 @@ class LoadingCoverageTest {
                 size = LoadingSize.Sm,
             )
         }
-        assertRendered(html, "loading loading-sm", "LoadingClasses size Sm")
+        assertRendered(html, Expected("LoadingClasses size Sm", "loading loading-sm"))
     }
 
     @Test
@@ -212,7 +213,7 @@ class LoadingCoverageTest {
                 size = LoadingSize.Md,
             )
         }
-        assertRendered(html, "loading loading-md", "LoadingClasses size Md")
+        assertRendered(html, Expected("LoadingClasses size Md", "loading loading-md"))
     }
 
     @Test
@@ -222,7 +223,7 @@ class LoadingCoverageTest {
                 size = LoadingSize.Lg,
             )
         }
-        assertRendered(html, "loading loading-lg", "LoadingClasses size Lg")
+        assertRendered(html, Expected("LoadingClasses size Lg", "loading loading-lg"))
     }
 
     @Test
@@ -232,7 +233,7 @@ class LoadingCoverageTest {
                 size = LoadingSize.Xl,
             )
         }
-        assertRendered(html, "loading loading-xl", "LoadingClasses size Xl")
+        assertRendered(html, Expected("LoadingClasses size Xl", "loading loading-xl"))
     }
 
     @Test
@@ -242,7 +243,7 @@ class LoadingCoverageTest {
                 style = LoadingStyle.Spinner,
             )
         }
-        assertRendered(html, "loading loading-spinner", "LoadingClasses style Spinner")
+        assertRendered(html, Expected("LoadingClasses style Spinner", "loading loading-spinner"))
     }
 
     @Test
@@ -252,7 +253,7 @@ class LoadingCoverageTest {
                 style = LoadingStyle.Dots,
             )
         }
-        assertRendered(html, "loading loading-dots", "LoadingClasses style Dots")
+        assertRendered(html, Expected("LoadingClasses style Dots", "loading loading-dots"))
     }
 
     @Test
@@ -262,7 +263,7 @@ class LoadingCoverageTest {
                 style = LoadingStyle.Ring,
             )
         }
-        assertRendered(html, "loading loading-ring", "LoadingClasses style Ring")
+        assertRendered(html, Expected("LoadingClasses style Ring", "loading loading-ring"))
     }
 
     @Test
@@ -272,7 +273,7 @@ class LoadingCoverageTest {
                 style = LoadingStyle.Ball,
             )
         }
-        assertRendered(html, "loading loading-ball", "LoadingClasses style Ball")
+        assertRendered(html, Expected("LoadingClasses style Ball", "loading loading-ball"))
     }
 
     @Test
@@ -282,7 +283,7 @@ class LoadingCoverageTest {
                 style = LoadingStyle.Bars,
             )
         }
-        assertRendered(html, "loading loading-bars", "LoadingClasses style Bars")
+        assertRendered(html, Expected("LoadingClasses style Bars", "loading loading-bars"))
     }
 
     @Test
@@ -292,6 +293,6 @@ class LoadingCoverageTest {
                 style = LoadingStyle.Infinity,
             )
         }
-        assertRendered(html, "loading loading-infinity", "LoadingClasses style Infinity")
+        assertRendered(html, Expected("LoadingClasses style Infinity", "loading loading-infinity"))
     }
 }

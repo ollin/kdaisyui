@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class ToastCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast", "Toast defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Toast defaults", "toast", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class ToastCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "toast zz-extra", "Toast all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Toast")
+        val expected = Expected("Toast all flags", "toast zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast toast-start", "Toast horizontalPlacement Start")
+        assertRendered(html, Expected("Toast horizontalPlacement Start", "toast toast-start"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast toast-center", "Toast horizontalPlacement Center")
+        assertRendered(html, Expected("Toast horizontalPlacement Center", "toast toast-center"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast toast-end", "Toast horizontalPlacement End")
+        assertRendered(html, Expected("Toast horizontalPlacement End", "toast toast-end"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast toast-top", "Toast verticalPlacement Top")
+        assertRendered(html, Expected("Toast verticalPlacement Top", "toast toast-top"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast toast-middle", "Toast verticalPlacement Middle")
+        assertRendered(html, Expected("Toast verticalPlacement Middle", "toast toast-middle"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast toast-bottom", "Toast verticalPlacement Bottom")
+        assertRendered(html, Expected("Toast verticalPlacement Bottom", "toast toast-bottom"))
     }
 
     @Test
@@ -119,7 +119,7 @@ class ToastCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToastClasses()
         }
-        assertRendered(html, "toast", "ToastClasses defaults")
+        assertRendered(html, Expected("ToastClasses defaults", "toast"))
     }
 
     @Test
@@ -127,7 +127,8 @@ class ToastCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToastClasses()
         }
-        assertRendered(html, "toast", "ToastClasses all flags")
+        val expected = Expected("ToastClasses all flags", "toast", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -137,7 +138,7 @@ class ToastCoverageTest {
                 horizontalPlacement = ToastHorizontalPlacement.Start,
             )
         }
-        assertRendered(html, "toast toast-start", "ToastClasses horizontalPlacement Start")
+        assertRendered(html, Expected("ToastClasses horizontalPlacement Start", "toast toast-start"))
     }
 
     @Test
@@ -147,7 +148,7 @@ class ToastCoverageTest {
                 horizontalPlacement = ToastHorizontalPlacement.Center,
             )
         }
-        assertRendered(html, "toast toast-center", "ToastClasses horizontalPlacement Center")
+        assertRendered(html, Expected("ToastClasses horizontalPlacement Center", "toast toast-center"))
     }
 
     @Test
@@ -157,7 +158,7 @@ class ToastCoverageTest {
                 horizontalPlacement = ToastHorizontalPlacement.End,
             )
         }
-        assertRendered(html, "toast toast-end", "ToastClasses horizontalPlacement End")
+        assertRendered(html, Expected("ToastClasses horizontalPlacement End", "toast toast-end"))
     }
 
     @Test
@@ -167,7 +168,7 @@ class ToastCoverageTest {
                 verticalPlacement = ToastVerticalPlacement.Top,
             )
         }
-        assertRendered(html, "toast toast-top", "ToastClasses verticalPlacement Top")
+        assertRendered(html, Expected("ToastClasses verticalPlacement Top", "toast toast-top"))
     }
 
     @Test
@@ -177,7 +178,7 @@ class ToastCoverageTest {
                 verticalPlacement = ToastVerticalPlacement.Middle,
             )
         }
-        assertRendered(html, "toast toast-middle", "ToastClasses verticalPlacement Middle")
+        assertRendered(html, Expected("ToastClasses verticalPlacement Middle", "toast toast-middle"))
     }
 
     @Test
@@ -187,6 +188,6 @@ class ToastCoverageTest {
                 verticalPlacement = ToastVerticalPlacement.Bottom,
             )
         }
-        assertRendered(html, "toast toast-bottom", "ToastClasses verticalPlacement Bottom")
+        assertRendered(html, Expected("ToastClasses verticalPlacement Bottom", "toast toast-bottom"))
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class AvatarCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class AvatarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "avatar", "Avatar defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Avatar defaults", "avatar", closes = "</div></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class AvatarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "avatar avatar-placeholder zz-extra", "Avatar all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Avatar")
+        val expected = Expected("Avatar all flags", "avatar avatar-placeholder zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class AvatarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "avatar avatar-online", "Avatar presence Online")
+        assertRendered(html, Expected("Avatar presence Online", "avatar avatar-online"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class AvatarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "avatar avatar-offline", "Avatar presence Offline")
+        assertRendered(html, Expected("Avatar presence Offline", "avatar avatar-offline"))
     }
 
     @Test
@@ -76,7 +76,7 @@ class AvatarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatarClasses()
         }
-        assertRendered(html, "avatar", "AvatarClasses defaults")
+        assertRendered(html, Expected("AvatarClasses defaults", "avatar"))
     }
 
     @Test
@@ -86,7 +86,8 @@ class AvatarCoverageTest {
                 placeholder = true,
             )
         }
-        assertRendered(html, "avatar avatar-placeholder", "AvatarClasses all flags")
+        val expected = Expected("AvatarClasses all flags", "avatar avatar-placeholder", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -96,7 +97,7 @@ class AvatarCoverageTest {
                 presence = AvatarPresence.Online,
             )
         }
-        assertRendered(html, "avatar avatar-online", "AvatarClasses presence Online")
+        assertRendered(html, Expected("AvatarClasses presence Online", "avatar avatar-online"))
     }
 
     @Test
@@ -106,7 +107,7 @@ class AvatarCoverageTest {
                 presence = AvatarPresence.Offline,
             )
         }
-        assertRendered(html, "avatar avatar-offline", "AvatarClasses presence Offline")
+        assertRendered(html, Expected("AvatarClasses presence Offline", "avatar avatar-offline"))
     }
 
     @Test
@@ -116,7 +117,7 @@ class AvatarCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "avatar-group", "AvatarGroup defaults", closes = "</div></div>")
+        assertRendered(html, Expected("AvatarGroup defaults", "avatar-group", closes = "</div></div>"))
     }
 
     @Test
@@ -129,8 +130,9 @@ class AvatarCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "avatar-group zz-extra", "AvatarGroup all flags", closes = "</div></div>")
-        assertCommonFlags(html, "AvatarGroup")
+        val expected = Expected("AvatarGroup all flags", "avatar-group zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -138,7 +140,7 @@ class AvatarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatarGroupClasses()
         }
-        assertRendered(html, "avatar-group", "AvatarGroupClasses defaults")
+        assertRendered(html, Expected("AvatarGroupClasses defaults", "avatar-group"))
     }
 
     @Test
@@ -146,6 +148,7 @@ class AvatarCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAvatarGroupClasses()
         }
-        assertRendered(html, "avatar-group", "AvatarGroupClasses all flags")
+        val expected = Expected("AvatarGroupClasses all flags", "avatar-group", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class TooltipCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip", "Tooltip defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Tooltip defaults", "tooltip", closes = "</div></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class TooltipCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tooltip tooltip-open zz-extra", "Tooltip all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Tooltip")
+        val expected = Expected("Tooltip all flags", "tooltip tooltip-open zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-primary", "Tooltip color Primary")
+        assertRendered(html, Expected("Tooltip color Primary", "tooltip tooltip-primary"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-secondary", "Tooltip color Secondary")
+        assertRendered(html, Expected("Tooltip color Secondary", "tooltip tooltip-secondary"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-accent", "Tooltip color Accent")
+        assertRendered(html, Expected("Tooltip color Accent", "tooltip tooltip-accent"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-info", "Tooltip color Info")
+        assertRendered(html, Expected("Tooltip color Info", "tooltip tooltip-info"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-success", "Tooltip color Success")
+        assertRendered(html, Expected("Tooltip color Success", "tooltip tooltip-success"))
     }
 
     @Test
@@ -112,7 +112,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-warning", "Tooltip color Warning")
+        assertRendered(html, Expected("Tooltip color Warning", "tooltip tooltip-warning"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-error", "Tooltip color Error")
+        assertRendered(html, Expected("Tooltip color Error", "tooltip tooltip-error"))
     }
 
     @Test
@@ -134,7 +134,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-top", "Tooltip side Top")
+        assertRendered(html, Expected("Tooltip side Top", "tooltip tooltip-top"))
     }
 
     @Test
@@ -145,7 +145,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-bottom", "Tooltip side Bottom")
+        assertRendered(html, Expected("Tooltip side Bottom", "tooltip tooltip-bottom"))
     }
 
     @Test
@@ -156,7 +156,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-left", "Tooltip side Left")
+        assertRendered(html, Expected("Tooltip side Left", "tooltip tooltip-left"))
     }
 
     @Test
@@ -167,7 +167,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-right", "Tooltip side Right")
+        assertRendered(html, Expected("Tooltip side Right", "tooltip tooltip-right"))
     }
 
     @Test
@@ -178,7 +178,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-start", "Tooltip align Start")
+        assertRendered(html, Expected("Tooltip align Start", "tooltip tooltip-start"))
     }
 
     @Test
@@ -189,7 +189,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-center", "Tooltip align Center")
+        assertRendered(html, Expected("Tooltip align Center", "tooltip tooltip-center"))
     }
 
     @Test
@@ -200,7 +200,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip tooltip-end", "Tooltip align End")
+        assertRendered(html, Expected("Tooltip align End", "tooltip tooltip-end"))
     }
 
     @Test
@@ -208,7 +208,7 @@ class TooltipCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltipClasses()
         }
-        assertRendered(html, "tooltip", "TooltipClasses defaults")
+        assertRendered(html, Expected("TooltipClasses defaults", "tooltip"))
     }
 
     @Test
@@ -218,7 +218,8 @@ class TooltipCoverageTest {
                 open = true,
             )
         }
-        assertRendered(html, "tooltip tooltip-open", "TooltipClasses all flags")
+        val expected = Expected("TooltipClasses all flags", "tooltip tooltip-open", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -228,7 +229,7 @@ class TooltipCoverageTest {
                 color = TooltipColor.Primary,
             )
         }
-        assertRendered(html, "tooltip tooltip-primary", "TooltipClasses color Primary")
+        assertRendered(html, Expected("TooltipClasses color Primary", "tooltip tooltip-primary"))
     }
 
     @Test
@@ -238,7 +239,7 @@ class TooltipCoverageTest {
                 color = TooltipColor.Secondary,
             )
         }
-        assertRendered(html, "tooltip tooltip-secondary", "TooltipClasses color Secondary")
+        assertRendered(html, Expected("TooltipClasses color Secondary", "tooltip tooltip-secondary"))
     }
 
     @Test
@@ -248,7 +249,7 @@ class TooltipCoverageTest {
                 color = TooltipColor.Accent,
             )
         }
-        assertRendered(html, "tooltip tooltip-accent", "TooltipClasses color Accent")
+        assertRendered(html, Expected("TooltipClasses color Accent", "tooltip tooltip-accent"))
     }
 
     @Test
@@ -258,7 +259,7 @@ class TooltipCoverageTest {
                 color = TooltipColor.Info,
             )
         }
-        assertRendered(html, "tooltip tooltip-info", "TooltipClasses color Info")
+        assertRendered(html, Expected("TooltipClasses color Info", "tooltip tooltip-info"))
     }
 
     @Test
@@ -268,7 +269,7 @@ class TooltipCoverageTest {
                 color = TooltipColor.Success,
             )
         }
-        assertRendered(html, "tooltip tooltip-success", "TooltipClasses color Success")
+        assertRendered(html, Expected("TooltipClasses color Success", "tooltip tooltip-success"))
     }
 
     @Test
@@ -278,7 +279,7 @@ class TooltipCoverageTest {
                 color = TooltipColor.Warning,
             )
         }
-        assertRendered(html, "tooltip tooltip-warning", "TooltipClasses color Warning")
+        assertRendered(html, Expected("TooltipClasses color Warning", "tooltip tooltip-warning"))
     }
 
     @Test
@@ -288,7 +289,7 @@ class TooltipCoverageTest {
                 color = TooltipColor.Error,
             )
         }
-        assertRendered(html, "tooltip tooltip-error", "TooltipClasses color Error")
+        assertRendered(html, Expected("TooltipClasses color Error", "tooltip tooltip-error"))
     }
 
     @Test
@@ -298,7 +299,7 @@ class TooltipCoverageTest {
                 side = TooltipSide.Top,
             )
         }
-        assertRendered(html, "tooltip tooltip-top", "TooltipClasses side Top")
+        assertRendered(html, Expected("TooltipClasses side Top", "tooltip tooltip-top"))
     }
 
     @Test
@@ -308,7 +309,7 @@ class TooltipCoverageTest {
                 side = TooltipSide.Bottom,
             )
         }
-        assertRendered(html, "tooltip tooltip-bottom", "TooltipClasses side Bottom")
+        assertRendered(html, Expected("TooltipClasses side Bottom", "tooltip tooltip-bottom"))
     }
 
     @Test
@@ -318,7 +319,7 @@ class TooltipCoverageTest {
                 side = TooltipSide.Left,
             )
         }
-        assertRendered(html, "tooltip tooltip-left", "TooltipClasses side Left")
+        assertRendered(html, Expected("TooltipClasses side Left", "tooltip tooltip-left"))
     }
 
     @Test
@@ -328,7 +329,7 @@ class TooltipCoverageTest {
                 side = TooltipSide.Right,
             )
         }
-        assertRendered(html, "tooltip tooltip-right", "TooltipClasses side Right")
+        assertRendered(html, Expected("TooltipClasses side Right", "tooltip tooltip-right"))
     }
 
     @Test
@@ -338,7 +339,7 @@ class TooltipCoverageTest {
                 align = TooltipAlign.Start,
             )
         }
-        assertRendered(html, "tooltip tooltip-start", "TooltipClasses align Start")
+        assertRendered(html, Expected("TooltipClasses align Start", "tooltip tooltip-start"))
     }
 
     @Test
@@ -348,7 +349,7 @@ class TooltipCoverageTest {
                 align = TooltipAlign.Center,
             )
         }
-        assertRendered(html, "tooltip tooltip-center", "TooltipClasses align Center")
+        assertRendered(html, Expected("TooltipClasses align Center", "tooltip tooltip-center"))
     }
 
     @Test
@@ -358,7 +359,7 @@ class TooltipCoverageTest {
                 align = TooltipAlign.End,
             )
         }
-        assertRendered(html, "tooltip tooltip-end", "TooltipClasses align End")
+        assertRendered(html, Expected("TooltipClasses align End", "tooltip tooltip-end"))
     }
 
     @Test
@@ -368,7 +369,7 @@ class TooltipCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tooltip-content", "TooltipContent defaults", closes = "</div></div>")
+        assertRendered(html, Expected("TooltipContent defaults", "tooltip-content", closes = "</div></div>"))
     }
 
     @Test
@@ -381,8 +382,9 @@ class TooltipCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tooltip-content zz-extra", "TooltipContent all flags", closes = "</div></div>")
-        assertCommonFlags(html, "TooltipContent")
+        val expected = Expected("TooltipContent all flags", "tooltip-content zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -390,7 +392,7 @@ class TooltipCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltipContentClasses()
         }
-        assertRendered(html, "tooltip-content", "TooltipContentClasses defaults")
+        assertRendered(html, Expected("TooltipContentClasses defaults", "tooltip-content"))
     }
 
     @Test
@@ -398,6 +400,7 @@ class TooltipCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTooltipContentClasses()
         }
-        assertRendered(html, "tooltip-content", "TooltipContentClasses all flags")
+        val expected = Expected("TooltipContentClasses all flags", "tooltip-content", content = false)
+        assertRendered(html, expected)
     }
 }

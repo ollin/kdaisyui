@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class MockupBrowserCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class MockupBrowserCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "mockup-browser", "MockupBrowser defaults", closes = "</div></div>")
+        assertRendered(html, Expected("MockupBrowser defaults", "mockup-browser", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class MockupBrowserCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "mockup-browser zz-extra", "MockupBrowser all flags", closes = "</div></div>")
-        assertCommonFlags(html, "MockupBrowser")
+        val expected = Expected("MockupBrowser all flags", "mockup-browser zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class MockupBrowserCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupBrowserClasses()
         }
-        assertRendered(html, "mockup-browser", "MockupBrowserClasses defaults")
+        assertRendered(html, Expected("MockupBrowserClasses defaults", "mockup-browser"))
     }
 
     @Test
@@ -61,7 +61,8 @@ class MockupBrowserCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupBrowserClasses()
         }
-        assertRendered(html, "mockup-browser", "MockupBrowserClasses all flags")
+        val expected = Expected("MockupBrowserClasses all flags", "mockup-browser", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -71,7 +72,7 @@ class MockupBrowserCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "mockup-browser-toolbar", "MockupBrowserToolbar defaults", closes = "</div></div>")
+        assertRendered(html, Expected("MockupBrowserToolbar defaults", "mockup-browser-toolbar", closes = "</div></div>"))
     }
 
     @Test
@@ -84,8 +85,9 @@ class MockupBrowserCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "mockup-browser-toolbar zz-extra", "MockupBrowserToolbar all flags", closes = "</div></div>")
-        assertCommonFlags(html, "MockupBrowserToolbar")
+        val expected = Expected("MockupBrowserToolbar all flags", "mockup-browser-toolbar zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -93,7 +95,7 @@ class MockupBrowserCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupBrowserToolbarClasses()
         }
-        assertRendered(html, "mockup-browser-toolbar", "MockupBrowserToolbarClasses defaults")
+        assertRendered(html, Expected("MockupBrowserToolbarClasses defaults", "mockup-browser-toolbar"))
     }
 
     @Test
@@ -101,6 +103,7 @@ class MockupBrowserCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMockupBrowserToolbarClasses()
         }
-        assertRendered(html, "mockup-browser-toolbar", "MockupBrowserToolbarClasses all flags")
+        val expected = Expected("MockupBrowserToolbarClasses all flags", "mockup-browser-toolbar", content = false)
+        assertRendered(html, expected)
     }
 }

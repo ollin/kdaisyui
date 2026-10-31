@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class TableCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "table", "Table defaults", closes = "</table></div>")
+        assertRendered(html, Expected("Table defaults", "table", closes = "</table></div>"))
     }
 
     @Test
@@ -47,8 +46,9 @@ class TableCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "table table-pin-cols table-pin-rows table-zebra zz-extra", "Table all flags", closes = "</table></div>")
-        assertCommonFlags(html, "Table")
+        val expected = Expected("Table all flags", "table table-pin-cols table-pin-rows table-zebra zz-extra", closes = "</table></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -59,7 +59,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "table table-xs", "Table size Xs")
+        assertRendered(html, Expected("Table size Xs", "table table-xs"))
     }
 
     @Test
@@ -70,7 +70,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "table table-sm", "Table size Sm")
+        assertRendered(html, Expected("Table size Sm", "table table-sm"))
     }
 
     @Test
@@ -81,7 +81,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "table table-md", "Table size Md")
+        assertRendered(html, Expected("Table size Md", "table table-md"))
     }
 
     @Test
@@ -92,7 +92,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "table table-lg", "Table size Lg")
+        assertRendered(html, Expected("Table size Lg", "table table-lg"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "table table-xl", "Table size Xl")
+        assertRendered(html, Expected("Table size Xl", "table table-xl"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class TableCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTableClasses()
         }
-        assertRendered(html, "table", "TableClasses defaults")
+        assertRendered(html, Expected("TableClasses defaults", "table"))
     }
 
     @Test
@@ -123,7 +123,8 @@ class TableCoverageTest {
                 zebra = true,
             )
         }
-        assertRendered(html, "table table-pin-cols table-pin-rows table-zebra", "TableClasses all flags")
+        val expected = Expected("TableClasses all flags", "table table-pin-cols table-pin-rows table-zebra", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -133,7 +134,7 @@ class TableCoverageTest {
                 size = TableSize.Xs,
             )
         }
-        assertRendered(html, "table table-xs", "TableClasses size Xs")
+        assertRendered(html, Expected("TableClasses size Xs", "table table-xs"))
     }
 
     @Test
@@ -143,7 +144,7 @@ class TableCoverageTest {
                 size = TableSize.Sm,
             )
         }
-        assertRendered(html, "table table-sm", "TableClasses size Sm")
+        assertRendered(html, Expected("TableClasses size Sm", "table table-sm"))
     }
 
     @Test
@@ -153,7 +154,7 @@ class TableCoverageTest {
                 size = TableSize.Md,
             )
         }
-        assertRendered(html, "table table-md", "TableClasses size Md")
+        assertRendered(html, Expected("TableClasses size Md", "table table-md"))
     }
 
     @Test
@@ -163,7 +164,7 @@ class TableCoverageTest {
                 size = TableSize.Lg,
             )
         }
-        assertRendered(html, "table table-lg", "TableClasses size Lg")
+        assertRendered(html, Expected("TableClasses size Lg", "table table-lg"))
     }
 
     @Test
@@ -173,6 +174,6 @@ class TableCoverageTest {
                 size = TableSize.Xl,
             )
         }
-        assertRendered(html, "table table-xl", "TableClasses size Xl")
+        assertRendered(html, Expected("TableClasses size Xl", "table table-xl"))
     }
 }

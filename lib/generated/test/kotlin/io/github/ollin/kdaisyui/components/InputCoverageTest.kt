@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class InputCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class InputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        assertRendered(html, "input", "Input defaults")
+        assertRendered(html, Expected("Input defaults", "input"))
         assertTrue(html.contains("type=\""), "Input sets type")
     }
 
@@ -46,8 +45,9 @@ class InputCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "input input-ghost zz-extra", "Input all flags")
-        assertCommonFlags(html, "Input", content = false)
+        val expected = Expected("Input all flags", "input input-ghost zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("placeholder=\"x\""), "Input placeholder")
         assertTrue(html.contains("value=\"x\""), "Input value")
         assertTrue(html.contains("type=\""), "Input sets type")
@@ -63,7 +63,7 @@ class InputCoverageTest {
                 color = InputColor.Neutral,
             )
         }
-        assertRendered(html, "input input-neutral", "Input color Neutral")
+        assertRendered(html, Expected("Input color Neutral", "input input-neutral"))
     }
 
     @Test
@@ -73,7 +73,7 @@ class InputCoverageTest {
                 color = InputColor.Primary,
             )
         }
-        assertRendered(html, "input input-primary", "Input color Primary")
+        assertRendered(html, Expected("Input color Primary", "input input-primary"))
     }
 
     @Test
@@ -83,7 +83,7 @@ class InputCoverageTest {
                 color = InputColor.Secondary,
             )
         }
-        assertRendered(html, "input input-secondary", "Input color Secondary")
+        assertRendered(html, Expected("Input color Secondary", "input input-secondary"))
     }
 
     @Test
@@ -93,7 +93,7 @@ class InputCoverageTest {
                 color = InputColor.Accent,
             )
         }
-        assertRendered(html, "input input-accent", "Input color Accent")
+        assertRendered(html, Expected("Input color Accent", "input input-accent"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class InputCoverageTest {
                 color = InputColor.Info,
             )
         }
-        assertRendered(html, "input input-info", "Input color Info")
+        assertRendered(html, Expected("Input color Info", "input input-info"))
     }
 
     @Test
@@ -113,7 +113,7 @@ class InputCoverageTest {
                 color = InputColor.Success,
             )
         }
-        assertRendered(html, "input input-success", "Input color Success")
+        assertRendered(html, Expected("Input color Success", "input input-success"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class InputCoverageTest {
                 color = InputColor.Warning,
             )
         }
-        assertRendered(html, "input input-warning", "Input color Warning")
+        assertRendered(html, Expected("Input color Warning", "input input-warning"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class InputCoverageTest {
                 color = InputColor.Error,
             )
         }
-        assertRendered(html, "input input-error", "Input color Error")
+        assertRendered(html, Expected("Input color Error", "input input-error"))
     }
 
     @Test
@@ -143,7 +143,7 @@ class InputCoverageTest {
                 size = InputSize.Xs,
             )
         }
-        assertRendered(html, "input input-xs", "Input size Xs")
+        assertRendered(html, Expected("Input size Xs", "input input-xs"))
     }
 
     @Test
@@ -153,7 +153,7 @@ class InputCoverageTest {
                 size = InputSize.Sm,
             )
         }
-        assertRendered(html, "input input-sm", "Input size Sm")
+        assertRendered(html, Expected("Input size Sm", "input input-sm"))
     }
 
     @Test
@@ -163,7 +163,7 @@ class InputCoverageTest {
                 size = InputSize.Md,
             )
         }
-        assertRendered(html, "input input-md", "Input size Md")
+        assertRendered(html, Expected("Input size Md", "input input-md"))
     }
 
     @Test
@@ -173,7 +173,7 @@ class InputCoverageTest {
                 size = InputSize.Lg,
             )
         }
-        assertRendered(html, "input input-lg", "Input size Lg")
+        assertRendered(html, Expected("Input size Lg", "input input-lg"))
     }
 
     @Test
@@ -183,7 +183,7 @@ class InputCoverageTest {
                 size = InputSize.Xl,
             )
         }
-        assertRendered(html, "input input-xl", "Input size Xl")
+        assertRendered(html, Expected("Input size Xl", "input input-xl"))
     }
 
     @Test
@@ -191,7 +191,7 @@ class InputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInputClasses()
         }
-        assertRendered(html, "input", "InputClasses defaults")
+        assertRendered(html, Expected("InputClasses defaults", "input"))
     }
 
     @Test
@@ -201,7 +201,8 @@ class InputCoverageTest {
                 ghost = true,
             )
         }
-        assertRendered(html, "input input-ghost", "InputClasses all flags")
+        val expected = Expected("InputClasses all flags", "input input-ghost", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -211,7 +212,7 @@ class InputCoverageTest {
                 color = InputColor.Neutral,
             )
         }
-        assertRendered(html, "input input-neutral", "InputClasses color Neutral")
+        assertRendered(html, Expected("InputClasses color Neutral", "input input-neutral"))
     }
 
     @Test
@@ -221,7 +222,7 @@ class InputCoverageTest {
                 color = InputColor.Primary,
             )
         }
-        assertRendered(html, "input input-primary", "InputClasses color Primary")
+        assertRendered(html, Expected("InputClasses color Primary", "input input-primary"))
     }
 
     @Test
@@ -231,7 +232,7 @@ class InputCoverageTest {
                 color = InputColor.Secondary,
             )
         }
-        assertRendered(html, "input input-secondary", "InputClasses color Secondary")
+        assertRendered(html, Expected("InputClasses color Secondary", "input input-secondary"))
     }
 
     @Test
@@ -241,7 +242,7 @@ class InputCoverageTest {
                 color = InputColor.Accent,
             )
         }
-        assertRendered(html, "input input-accent", "InputClasses color Accent")
+        assertRendered(html, Expected("InputClasses color Accent", "input input-accent"))
     }
 
     @Test
@@ -251,7 +252,7 @@ class InputCoverageTest {
                 color = InputColor.Info,
             )
         }
-        assertRendered(html, "input input-info", "InputClasses color Info")
+        assertRendered(html, Expected("InputClasses color Info", "input input-info"))
     }
 
     @Test
@@ -261,7 +262,7 @@ class InputCoverageTest {
                 color = InputColor.Success,
             )
         }
-        assertRendered(html, "input input-success", "InputClasses color Success")
+        assertRendered(html, Expected("InputClasses color Success", "input input-success"))
     }
 
     @Test
@@ -271,7 +272,7 @@ class InputCoverageTest {
                 color = InputColor.Warning,
             )
         }
-        assertRendered(html, "input input-warning", "InputClasses color Warning")
+        assertRendered(html, Expected("InputClasses color Warning", "input input-warning"))
     }
 
     @Test
@@ -281,7 +282,7 @@ class InputCoverageTest {
                 color = InputColor.Error,
             )
         }
-        assertRendered(html, "input input-error", "InputClasses color Error")
+        assertRendered(html, Expected("InputClasses color Error", "input input-error"))
     }
 
     @Test
@@ -291,7 +292,7 @@ class InputCoverageTest {
                 size = InputSize.Xs,
             )
         }
-        assertRendered(html, "input input-xs", "InputClasses size Xs")
+        assertRendered(html, Expected("InputClasses size Xs", "input input-xs"))
     }
 
     @Test
@@ -301,7 +302,7 @@ class InputCoverageTest {
                 size = InputSize.Sm,
             )
         }
-        assertRendered(html, "input input-sm", "InputClasses size Sm")
+        assertRendered(html, Expected("InputClasses size Sm", "input input-sm"))
     }
 
     @Test
@@ -311,7 +312,7 @@ class InputCoverageTest {
                 size = InputSize.Md,
             )
         }
-        assertRendered(html, "input input-md", "InputClasses size Md")
+        assertRendered(html, Expected("InputClasses size Md", "input input-md"))
     }
 
     @Test
@@ -321,7 +322,7 @@ class InputCoverageTest {
                 size = InputSize.Lg,
             )
         }
-        assertRendered(html, "input input-lg", "InputClasses size Lg")
+        assertRendered(html, Expected("InputClasses size Lg", "input input-lg"))
     }
 
     @Test
@@ -331,6 +332,6 @@ class InputCoverageTest {
                 size = InputSize.Xl,
             )
         }
-        assertRendered(html, "input input-xl", "InputClasses size Xl")
+        assertRendered(html, Expected("InputClasses size Xl", "input input-xl"))
     }
 }

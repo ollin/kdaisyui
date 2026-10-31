@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class OtpCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp", "Otp defaults", closes = "</label></div>")
+        assertRendered(html, Expected("Otp defaults", "otp", closes = "</label></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class OtpCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "otp otp-joined zz-extra", "Otp all flags", closes = "</label></div>")
-        assertCommonFlags(html, "Otp")
+        val expected = Expected("Otp all flags", "otp otp-joined zz-extra", closes = "</label></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-neutral", "Otp color Neutral")
+        assertRendered(html, Expected("Otp color Neutral", "otp otp-neutral"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-primary", "Otp color Primary")
+        assertRendered(html, Expected("Otp color Primary", "otp otp-primary"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-secondary", "Otp color Secondary")
+        assertRendered(html, Expected("Otp color Secondary", "otp otp-secondary"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-accent", "Otp color Accent")
+        assertRendered(html, Expected("Otp color Accent", "otp otp-accent"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-success", "Otp color Success")
+        assertRendered(html, Expected("Otp color Success", "otp otp-success"))
     }
 
     @Test
@@ -112,7 +112,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-info", "Otp color Info")
+        assertRendered(html, Expected("Otp color Info", "otp otp-info"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-warning", "Otp color Warning")
+        assertRendered(html, Expected("Otp color Warning", "otp otp-warning"))
     }
 
     @Test
@@ -134,7 +134,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-error", "Otp color Error")
+        assertRendered(html, Expected("Otp color Error", "otp otp-error"))
     }
 
     @Test
@@ -145,7 +145,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-xs", "Otp size Xs")
+        assertRendered(html, Expected("Otp size Xs", "otp otp-xs"))
     }
 
     @Test
@@ -156,7 +156,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-sm", "Otp size Sm")
+        assertRendered(html, Expected("Otp size Sm", "otp otp-sm"))
     }
 
     @Test
@@ -167,7 +167,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-md", "Otp size Md")
+        assertRendered(html, Expected("Otp size Md", "otp otp-md"))
     }
 
     @Test
@@ -178,7 +178,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-lg", "Otp size Lg")
+        assertRendered(html, Expected("Otp size Lg", "otp otp-lg"))
     }
 
     @Test
@@ -189,7 +189,7 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp otp-xl", "Otp size Xl")
+        assertRendered(html, Expected("Otp size Xl", "otp otp-xl"))
     }
 
     @Test
@@ -197,7 +197,7 @@ class OtpCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyOtpClasses()
         }
-        assertRendered(html, "otp", "OtpClasses defaults")
+        assertRendered(html, Expected("OtpClasses defaults", "otp"))
     }
 
     @Test
@@ -207,7 +207,8 @@ class OtpCoverageTest {
                 joined = true,
             )
         }
-        assertRendered(html, "otp otp-joined", "OtpClasses all flags")
+        val expected = Expected("OtpClasses all flags", "otp otp-joined", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -217,7 +218,7 @@ class OtpCoverageTest {
                 color = OtpColor.Neutral,
             )
         }
-        assertRendered(html, "otp otp-neutral", "OtpClasses color Neutral")
+        assertRendered(html, Expected("OtpClasses color Neutral", "otp otp-neutral"))
     }
 
     @Test
@@ -227,7 +228,7 @@ class OtpCoverageTest {
                 color = OtpColor.Primary,
             )
         }
-        assertRendered(html, "otp otp-primary", "OtpClasses color Primary")
+        assertRendered(html, Expected("OtpClasses color Primary", "otp otp-primary"))
     }
 
     @Test
@@ -237,7 +238,7 @@ class OtpCoverageTest {
                 color = OtpColor.Secondary,
             )
         }
-        assertRendered(html, "otp otp-secondary", "OtpClasses color Secondary")
+        assertRendered(html, Expected("OtpClasses color Secondary", "otp otp-secondary"))
     }
 
     @Test
@@ -247,7 +248,7 @@ class OtpCoverageTest {
                 color = OtpColor.Accent,
             )
         }
-        assertRendered(html, "otp otp-accent", "OtpClasses color Accent")
+        assertRendered(html, Expected("OtpClasses color Accent", "otp otp-accent"))
     }
 
     @Test
@@ -257,7 +258,7 @@ class OtpCoverageTest {
                 color = OtpColor.Success,
             )
         }
-        assertRendered(html, "otp otp-success", "OtpClasses color Success")
+        assertRendered(html, Expected("OtpClasses color Success", "otp otp-success"))
     }
 
     @Test
@@ -267,7 +268,7 @@ class OtpCoverageTest {
                 color = OtpColor.Info,
             )
         }
-        assertRendered(html, "otp otp-info", "OtpClasses color Info")
+        assertRendered(html, Expected("OtpClasses color Info", "otp otp-info"))
     }
 
     @Test
@@ -277,7 +278,7 @@ class OtpCoverageTest {
                 color = OtpColor.Warning,
             )
         }
-        assertRendered(html, "otp otp-warning", "OtpClasses color Warning")
+        assertRendered(html, Expected("OtpClasses color Warning", "otp otp-warning"))
     }
 
     @Test
@@ -287,7 +288,7 @@ class OtpCoverageTest {
                 color = OtpColor.Error,
             )
         }
-        assertRendered(html, "otp otp-error", "OtpClasses color Error")
+        assertRendered(html, Expected("OtpClasses color Error", "otp otp-error"))
     }
 
     @Test
@@ -297,7 +298,7 @@ class OtpCoverageTest {
                 size = OtpSize.Xs,
             )
         }
-        assertRendered(html, "otp otp-xs", "OtpClasses size Xs")
+        assertRendered(html, Expected("OtpClasses size Xs", "otp otp-xs"))
     }
 
     @Test
@@ -307,7 +308,7 @@ class OtpCoverageTest {
                 size = OtpSize.Sm,
             )
         }
-        assertRendered(html, "otp otp-sm", "OtpClasses size Sm")
+        assertRendered(html, Expected("OtpClasses size Sm", "otp otp-sm"))
     }
 
     @Test
@@ -317,7 +318,7 @@ class OtpCoverageTest {
                 size = OtpSize.Md,
             )
         }
-        assertRendered(html, "otp otp-md", "OtpClasses size Md")
+        assertRendered(html, Expected("OtpClasses size Md", "otp otp-md"))
     }
 
     @Test
@@ -327,7 +328,7 @@ class OtpCoverageTest {
                 size = OtpSize.Lg,
             )
         }
-        assertRendered(html, "otp otp-lg", "OtpClasses size Lg")
+        assertRendered(html, Expected("OtpClasses size Lg", "otp otp-lg"))
     }
 
     @Test
@@ -337,6 +338,6 @@ class OtpCoverageTest {
                 size = OtpSize.Xl,
             )
         }
-        assertRendered(html, "otp otp-xl", "OtpClasses size Xl")
+        assertRendered(html, Expected("OtpClasses size Xl", "otp otp-xl"))
     }
 }

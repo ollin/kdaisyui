@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class RatingCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "rating", "Rating defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Rating defaults", "rating", closes = "</div></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class RatingCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "rating rating-half zz-extra", "Rating all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Rating")
+        val expected = Expected("Rating all flags", "rating rating-half zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "rating rating-xs", "Rating size Xs")
+        assertRendered(html, Expected("Rating size Xs", "rating rating-xs"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "rating rating-sm", "Rating size Sm")
+        assertRendered(html, Expected("Rating size Sm", "rating rating-sm"))
     }
 
     @Test
@@ -79,7 +79,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "rating rating-md", "Rating size Md")
+        assertRendered(html, Expected("Rating size Md", "rating rating-md"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "rating rating-lg", "Rating size Lg")
+        assertRendered(html, Expected("Rating size Lg", "rating rating-lg"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "rating rating-xl", "Rating size Xl")
+        assertRendered(html, Expected("Rating size Xl", "rating rating-xl"))
     }
 
     @Test
@@ -109,7 +109,7 @@ class RatingCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyRatingClasses()
         }
-        assertRendered(html, "rating", "RatingClasses defaults")
+        assertRendered(html, Expected("RatingClasses defaults", "rating"))
     }
 
     @Test
@@ -119,7 +119,8 @@ class RatingCoverageTest {
                 half = true,
             )
         }
-        assertRendered(html, "rating rating-half", "RatingClasses all flags")
+        val expected = Expected("RatingClasses all flags", "rating rating-half", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -129,7 +130,7 @@ class RatingCoverageTest {
                 size = RatingSize.Xs,
             )
         }
-        assertRendered(html, "rating rating-xs", "RatingClasses size Xs")
+        assertRendered(html, Expected("RatingClasses size Xs", "rating rating-xs"))
     }
 
     @Test
@@ -139,7 +140,7 @@ class RatingCoverageTest {
                 size = RatingSize.Sm,
             )
         }
-        assertRendered(html, "rating rating-sm", "RatingClasses size Sm")
+        assertRendered(html, Expected("RatingClasses size Sm", "rating rating-sm"))
     }
 
     @Test
@@ -149,7 +150,7 @@ class RatingCoverageTest {
                 size = RatingSize.Md,
             )
         }
-        assertRendered(html, "rating rating-md", "RatingClasses size Md")
+        assertRendered(html, Expected("RatingClasses size Md", "rating rating-md"))
     }
 
     @Test
@@ -159,7 +160,7 @@ class RatingCoverageTest {
                 size = RatingSize.Lg,
             )
         }
-        assertRendered(html, "rating rating-lg", "RatingClasses size Lg")
+        assertRendered(html, Expected("RatingClasses size Lg", "rating rating-lg"))
     }
 
     @Test
@@ -169,7 +170,7 @@ class RatingCoverageTest {
                 size = RatingSize.Xl,
             )
         }
-        assertRendered(html, "rating rating-xl", "RatingClasses size Xl")
+        assertRendered(html, Expected("RatingClasses size Xl", "rating rating-xl"))
     }
 
     @Test
@@ -187,6 +188,7 @@ class RatingCoverageTest {
                 hidden = true,
             )
         }
-        assertRendered(html, "rating-hidden", "RatingItemClasses all flags")
+        val expected = Expected("RatingItemClasses all flags", "rating-hidden", content = false)
+        assertRendered(html, expected)
     }
 }

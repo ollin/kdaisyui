@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class DividerCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider", "Divider defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Divider defaults", "divider", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class DividerCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "divider zz-extra", "Divider all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Divider")
+        val expected = Expected("Divider all flags", "divider zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-neutral", "Divider color Neutral")
+        assertRendered(html, Expected("Divider color Neutral", "divider divider-neutral"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-primary", "Divider color Primary")
+        assertRendered(html, Expected("Divider color Primary", "divider divider-primary"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-secondary", "Divider color Secondary")
+        assertRendered(html, Expected("Divider color Secondary", "divider divider-secondary"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-accent", "Divider color Accent")
+        assertRendered(html, Expected("Divider color Accent", "divider divider-accent"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-success", "Divider color Success")
+        assertRendered(html, Expected("Divider color Success", "divider divider-success"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-warning", "Divider color Warning")
+        assertRendered(html, Expected("Divider color Warning", "divider divider-warning"))
     }
 
     @Test
@@ -122,7 +122,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-info", "Divider color Info")
+        assertRendered(html, Expected("Divider color Info", "divider divider-info"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-error", "Divider color Error")
+        assertRendered(html, Expected("Divider color Error", "divider divider-error"))
     }
 
     @Test
@@ -144,7 +144,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-vertical", "Divider direction Vertical")
+        assertRendered(html, Expected("Divider direction Vertical", "divider divider-vertical"))
     }
 
     @Test
@@ -155,7 +155,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-horizontal", "Divider direction Horizontal")
+        assertRendered(html, Expected("Divider direction Horizontal", "divider divider-horizontal"))
     }
 
     @Test
@@ -166,7 +166,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-start", "Divider placement Start")
+        assertRendered(html, Expected("Divider placement Start", "divider divider-start"))
     }
 
     @Test
@@ -177,7 +177,7 @@ class DividerCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "divider divider-end", "Divider placement End")
+        assertRendered(html, Expected("Divider placement End", "divider divider-end"))
     }
 
     @Test
@@ -185,7 +185,7 @@ class DividerCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDividerClasses()
         }
-        assertRendered(html, "divider", "DividerClasses defaults")
+        assertRendered(html, Expected("DividerClasses defaults", "divider"))
     }
 
     @Test
@@ -193,7 +193,8 @@ class DividerCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDividerClasses()
         }
-        assertRendered(html, "divider", "DividerClasses all flags")
+        val expected = Expected("DividerClasses all flags", "divider", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -203,7 +204,7 @@ class DividerCoverageTest {
                 color = DividerColor.Neutral,
             )
         }
-        assertRendered(html, "divider divider-neutral", "DividerClasses color Neutral")
+        assertRendered(html, Expected("DividerClasses color Neutral", "divider divider-neutral"))
     }
 
     @Test
@@ -213,7 +214,7 @@ class DividerCoverageTest {
                 color = DividerColor.Primary,
             )
         }
-        assertRendered(html, "divider divider-primary", "DividerClasses color Primary")
+        assertRendered(html, Expected("DividerClasses color Primary", "divider divider-primary"))
     }
 
     @Test
@@ -223,7 +224,7 @@ class DividerCoverageTest {
                 color = DividerColor.Secondary,
             )
         }
-        assertRendered(html, "divider divider-secondary", "DividerClasses color Secondary")
+        assertRendered(html, Expected("DividerClasses color Secondary", "divider divider-secondary"))
     }
 
     @Test
@@ -233,7 +234,7 @@ class DividerCoverageTest {
                 color = DividerColor.Accent,
             )
         }
-        assertRendered(html, "divider divider-accent", "DividerClasses color Accent")
+        assertRendered(html, Expected("DividerClasses color Accent", "divider divider-accent"))
     }
 
     @Test
@@ -243,7 +244,7 @@ class DividerCoverageTest {
                 color = DividerColor.Success,
             )
         }
-        assertRendered(html, "divider divider-success", "DividerClasses color Success")
+        assertRendered(html, Expected("DividerClasses color Success", "divider divider-success"))
     }
 
     @Test
@@ -253,7 +254,7 @@ class DividerCoverageTest {
                 color = DividerColor.Warning,
             )
         }
-        assertRendered(html, "divider divider-warning", "DividerClasses color Warning")
+        assertRendered(html, Expected("DividerClasses color Warning", "divider divider-warning"))
     }
 
     @Test
@@ -263,7 +264,7 @@ class DividerCoverageTest {
                 color = DividerColor.Info,
             )
         }
-        assertRendered(html, "divider divider-info", "DividerClasses color Info")
+        assertRendered(html, Expected("DividerClasses color Info", "divider divider-info"))
     }
 
     @Test
@@ -273,7 +274,7 @@ class DividerCoverageTest {
                 color = DividerColor.Error,
             )
         }
-        assertRendered(html, "divider divider-error", "DividerClasses color Error")
+        assertRendered(html, Expected("DividerClasses color Error", "divider divider-error"))
     }
 
     @Test
@@ -283,7 +284,7 @@ class DividerCoverageTest {
                 direction = DividerDirection.Vertical,
             )
         }
-        assertRendered(html, "divider divider-vertical", "DividerClasses direction Vertical")
+        assertRendered(html, Expected("DividerClasses direction Vertical", "divider divider-vertical"))
     }
 
     @Test
@@ -293,7 +294,7 @@ class DividerCoverageTest {
                 direction = DividerDirection.Horizontal,
             )
         }
-        assertRendered(html, "divider divider-horizontal", "DividerClasses direction Horizontal")
+        assertRendered(html, Expected("DividerClasses direction Horizontal", "divider divider-horizontal"))
     }
 
     @Test
@@ -303,7 +304,7 @@ class DividerCoverageTest {
                 placement = DividerPlacement.Start,
             )
         }
-        assertRendered(html, "divider divider-start", "DividerClasses placement Start")
+        assertRendered(html, Expected("DividerClasses placement Start", "divider divider-start"))
     }
 
     @Test
@@ -313,6 +314,6 @@ class DividerCoverageTest {
                 placement = DividerPlacement.End,
             )
         }
-        assertRendered(html, "divider divider-end", "DividerClasses placement End")
+        assertRendered(html, Expected("DividerClasses placement End", "divider divider-end"))
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class TabCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs", "Tabs defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Tabs defaults", "tabs", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class TabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tabs zz-extra", "Tabs all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Tabs")
+        val expected = Expected("Tabs all flags", "tabs zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-xs", "Tabs size Xs")
+        assertRendered(html, Expected("Tabs size Xs", "tabs tabs-xs"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-sm", "Tabs size Sm")
+        assertRendered(html, Expected("Tabs size Sm", "tabs tabs-sm"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-md", "Tabs size Md")
+        assertRendered(html, Expected("Tabs size Md", "tabs tabs-md"))
     }
 
     @Test
@@ -89,7 +89,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-lg", "Tabs size Lg")
+        assertRendered(html, Expected("Tabs size Lg", "tabs tabs-lg"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-xl", "Tabs size Xl")
+        assertRendered(html, Expected("Tabs size Xl", "tabs tabs-xl"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-top", "Tabs placement Top")
+        assertRendered(html, Expected("Tabs placement Top", "tabs tabs-top"))
     }
 
     @Test
@@ -122,7 +122,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-bottom", "Tabs placement Bottom")
+        assertRendered(html, Expected("Tabs placement Bottom", "tabs tabs-bottom"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-box", "Tabs style Box")
+        assertRendered(html, Expected("Tabs style Box", "tabs tabs-box"))
     }
 
     @Test
@@ -144,7 +144,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-border", "Tabs style Border")
+        assertRendered(html, Expected("Tabs style Border", "tabs tabs-border"))
     }
 
     @Test
@@ -155,7 +155,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tabs tabs-lift", "Tabs style Lift")
+        assertRendered(html, Expected("Tabs style Lift", "tabs tabs-lift"))
     }
 
     @Test
@@ -163,7 +163,7 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabsClasses()
         }
-        assertRendered(html, "tabs", "TabsClasses defaults")
+        assertRendered(html, Expected("TabsClasses defaults", "tabs"))
     }
 
     @Test
@@ -171,7 +171,8 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabsClasses()
         }
-        assertRendered(html, "tabs", "TabsClasses all flags")
+        val expected = Expected("TabsClasses all flags", "tabs", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -181,7 +182,7 @@ class TabCoverageTest {
                 size = TabsSize.Xs,
             )
         }
-        assertRendered(html, "tabs tabs-xs", "TabsClasses size Xs")
+        assertRendered(html, Expected("TabsClasses size Xs", "tabs tabs-xs"))
     }
 
     @Test
@@ -191,7 +192,7 @@ class TabCoverageTest {
                 size = TabsSize.Sm,
             )
         }
-        assertRendered(html, "tabs tabs-sm", "TabsClasses size Sm")
+        assertRendered(html, Expected("TabsClasses size Sm", "tabs tabs-sm"))
     }
 
     @Test
@@ -201,7 +202,7 @@ class TabCoverageTest {
                 size = TabsSize.Md,
             )
         }
-        assertRendered(html, "tabs tabs-md", "TabsClasses size Md")
+        assertRendered(html, Expected("TabsClasses size Md", "tabs tabs-md"))
     }
 
     @Test
@@ -211,7 +212,7 @@ class TabCoverageTest {
                 size = TabsSize.Lg,
             )
         }
-        assertRendered(html, "tabs tabs-lg", "TabsClasses size Lg")
+        assertRendered(html, Expected("TabsClasses size Lg", "tabs tabs-lg"))
     }
 
     @Test
@@ -221,7 +222,7 @@ class TabCoverageTest {
                 size = TabsSize.Xl,
             )
         }
-        assertRendered(html, "tabs tabs-xl", "TabsClasses size Xl")
+        assertRendered(html, Expected("TabsClasses size Xl", "tabs tabs-xl"))
     }
 
     @Test
@@ -231,7 +232,7 @@ class TabCoverageTest {
                 placement = TabsPlacement.Top,
             )
         }
-        assertRendered(html, "tabs tabs-top", "TabsClasses placement Top")
+        assertRendered(html, Expected("TabsClasses placement Top", "tabs tabs-top"))
     }
 
     @Test
@@ -241,7 +242,7 @@ class TabCoverageTest {
                 placement = TabsPlacement.Bottom,
             )
         }
-        assertRendered(html, "tabs tabs-bottom", "TabsClasses placement Bottom")
+        assertRendered(html, Expected("TabsClasses placement Bottom", "tabs tabs-bottom"))
     }
 
     @Test
@@ -251,7 +252,7 @@ class TabCoverageTest {
                 style = TabsStyle.Box,
             )
         }
-        assertRendered(html, "tabs tabs-box", "TabsClasses style Box")
+        assertRendered(html, Expected("TabsClasses style Box", "tabs tabs-box"))
     }
 
     @Test
@@ -261,7 +262,7 @@ class TabCoverageTest {
                 style = TabsStyle.Border,
             )
         }
-        assertRendered(html, "tabs tabs-border", "TabsClasses style Border")
+        assertRendered(html, Expected("TabsClasses style Border", "tabs tabs-border"))
     }
 
     @Test
@@ -271,7 +272,7 @@ class TabCoverageTest {
                 style = TabsStyle.Lift,
             )
         }
-        assertRendered(html, "tabs tabs-lift", "TabsClasses style Lift")
+        assertRendered(html, Expected("TabsClasses style Lift", "tabs tabs-lift"))
     }
 
     @Test
@@ -281,7 +282,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tab", "Tab defaults", closes = "</a></div>")
+        assertRendered(html, Expected("Tab defaults", "tab", closes = "</a></div>"))
     }
 
     @Test
@@ -296,8 +297,9 @@ class TabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tab tab-active tab-disabled zz-extra", "Tab all flags", closes = "</a></div>")
-        assertCommonFlags(html, "Tab")
+        val expected = Expected("Tab all flags", "tab tab-active tab-disabled zz-extra", closes = "</a></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -305,7 +307,7 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabClasses()
         }
-        assertRendered(html, "tab", "TabClasses defaults")
+        assertRendered(html, Expected("TabClasses defaults", "tab"))
     }
 
     @Test
@@ -316,7 +318,8 @@ class TabCoverageTest {
                 disabled = true,
             )
         }
-        assertRendered(html, "tab tab-active tab-disabled", "TabClasses all flags")
+        val expected = Expected("TabClasses all flags", "tab tab-active tab-disabled", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -324,7 +327,7 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabRadio()
         }
-        assertRendered(html, "tab", "TabRadio defaults")
+        assertRendered(html, Expected("TabRadio defaults", "tab"))
     }
 
     @Test
@@ -338,8 +341,9 @@ class TabCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "tab tab-active tab-disabled zz-extra", "TabRadio all flags")
-        assertCommonFlags(html, "TabRadio", content = false)
+        val expected = Expected("TabRadio all flags", "tab tab-active tab-disabled zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -347,7 +351,7 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabRadioClasses()
         }
-        assertRendered(html, "tab", "TabRadioClasses defaults")
+        assertRendered(html, Expected("TabRadioClasses defaults", "tab"))
     }
 
     @Test
@@ -358,7 +362,8 @@ class TabCoverageTest {
                 disabled = true,
             )
         }
-        assertRendered(html, "tab tab-active tab-disabled", "TabRadioClasses all flags")
+        val expected = Expected("TabRadioClasses all flags", "tab tab-active tab-disabled", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -368,7 +373,7 @@ class TabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "tab-content", "TabContent defaults", closes = "</div></div>")
+        assertRendered(html, Expected("TabContent defaults", "tab-content", closes = "</div></div>"))
     }
 
     @Test
@@ -381,8 +386,9 @@ class TabCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "tab-content zz-extra", "TabContent all flags", closes = "</div></div>")
-        assertCommonFlags(html, "TabContent")
+        val expected = Expected("TabContent all flags", "tab-content zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -390,7 +396,7 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabContentClasses()
         }
-        assertRendered(html, "tab-content", "TabContentClasses defaults")
+        assertRendered(html, Expected("TabContentClasses defaults", "tab-content"))
     }
 
     @Test
@@ -398,6 +404,7 @@ class TabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTabContentClasses()
         }
-        assertRendered(html, "tab-content", "TabContentClasses all flags")
+        val expected = Expected("TabContentClasses all flags", "tab-content", content = false)
+        assertRendered(html, expected)
     }
 }

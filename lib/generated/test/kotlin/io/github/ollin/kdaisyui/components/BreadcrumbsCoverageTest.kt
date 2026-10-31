@@ -10,19 +10,18 @@ import kotlinx.html.ul
 
 class BreadcrumbsCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -32,7 +31,7 @@ class BreadcrumbsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "breadcrumbs", "Breadcrumbs defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Breadcrumbs defaults", "breadcrumbs", closes = "</div></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class BreadcrumbsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "breadcrumbs zz-extra", "Breadcrumbs all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Breadcrumbs")
+        val expected = Expected("Breadcrumbs all flags", "breadcrumbs zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -54,7 +54,7 @@ class BreadcrumbsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyBreadcrumbsClasses()
         }
-        assertRendered(html, "breadcrumbs", "BreadcrumbsClasses defaults")
+        assertRendered(html, Expected("BreadcrumbsClasses defaults", "breadcrumbs"))
     }
 
     @Test
@@ -62,7 +62,8 @@ class BreadcrumbsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyBreadcrumbsClasses()
         }
-        assertRendered(html, "breadcrumbs", "BreadcrumbsClasses all flags")
+        val expected = Expected("BreadcrumbsClasses all flags", "breadcrumbs", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -86,8 +87,9 @@ class BreadcrumbsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "zz-extra", "BreadcrumbsItems all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "BreadcrumbsItems")
+        val expected = Expected("BreadcrumbsItems all flags", "zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -111,7 +113,8 @@ class BreadcrumbsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "zz-extra", "BreadcrumbsItem all flags", closes = "</li></ul>")
-        assertCommonFlags(html, "BreadcrumbsItem")
+        val expected = Expected("BreadcrumbsItem all flags", "zz-extra", closes = "</li></ul>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 }

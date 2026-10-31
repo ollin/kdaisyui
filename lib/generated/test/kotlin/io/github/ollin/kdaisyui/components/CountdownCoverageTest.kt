@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class CountdownCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class CountdownCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "countdown", "Countdown defaults", closes = "</span></div>")
+        assertRendered(html, Expected("Countdown defaults", "countdown", closes = "</span></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class CountdownCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "countdown zz-extra", "Countdown all flags", closes = "</span></div>")
-        assertCommonFlags(html, "Countdown")
+        val expected = Expected("Countdown all flags", "countdown zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class CountdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCountdownClasses()
         }
-        assertRendered(html, "countdown", "CountdownClasses defaults")
+        assertRendered(html, Expected("CountdownClasses defaults", "countdown"))
     }
 
     @Test
@@ -61,6 +61,7 @@ class CountdownCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCountdownClasses()
         }
-        assertRendered(html, "countdown", "CountdownClasses all flags")
+        val expected = Expected("CountdownClasses all flags", "countdown", content = false)
+        assertRendered(html, expected)
     }
 }

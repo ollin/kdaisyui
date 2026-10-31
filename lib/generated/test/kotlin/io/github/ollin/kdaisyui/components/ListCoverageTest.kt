@@ -10,19 +10,18 @@ import kotlinx.html.ul
 
 class ListCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -32,7 +31,7 @@ class ListCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "list", "List defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("List defaults", "list", closes = "</ul></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class ListCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "list zz-extra", "List all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "List")
+        val expected = Expected("List all flags", "list zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -54,7 +54,7 @@ class ListCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyListClasses()
         }
-        assertRendered(html, "list", "ListClasses defaults")
+        assertRendered(html, Expected("ListClasses defaults", "list"))
     }
 
     @Test
@@ -62,7 +62,8 @@ class ListCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyListClasses()
         }
-        assertRendered(html, "list", "ListClasses all flags")
+        val expected = Expected("ListClasses all flags", "list", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -72,7 +73,7 @@ class ListCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "list-row", "ListRow defaults", closes = "</li></ul>")
+        assertRendered(html, Expected("ListRow defaults", "list-row", closes = "</li></ul>"))
     }
 
     @Test
@@ -85,8 +86,9 @@ class ListCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "list-row zz-extra", "ListRow all flags", closes = "</li></ul>")
-        assertCommonFlags(html, "ListRow")
+        val expected = Expected("ListRow all flags", "list-row zz-extra", closes = "</li></ul>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -94,7 +96,7 @@ class ListCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyListRowClasses()
         }
-        assertRendered(html, "list-row", "ListRowClasses defaults")
+        assertRendered(html, Expected("ListRowClasses defaults", "list-row"))
     }
 
     @Test
@@ -102,7 +104,8 @@ class ListCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyListRowClasses()
         }
-        assertRendered(html, "list-row", "ListRowClasses all flags")
+        val expected = Expected("ListRowClasses all flags", "list-row", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -121,6 +124,7 @@ class ListCoverageTest {
                 colWrap = true,
             )
         }
-        assertRendered(html, "list-col-grow list-col-wrap", "ListCellClasses all flags")
+        val expected = Expected("ListCellClasses all flags", "list-col-grow list-col-wrap", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class ChatCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat", "Chat defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Chat defaults", "chat", closes = "</div></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "chat zz-extra", "Chat all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Chat")
+        val expected = Expected("Chat all flags", "chat zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -56,7 +56,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-start", "Chat placement Start")
+        assertRendered(html, Expected("Chat placement Start", "chat chat-start"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat chat-end", "Chat placement End")
+        assertRendered(html, Expected("Chat placement End", "chat chat-end"))
     }
 
     @Test
@@ -75,7 +75,7 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatClasses()
         }
-        assertRendered(html, "chat", "ChatClasses defaults")
+        assertRendered(html, Expected("ChatClasses defaults", "chat"))
     }
 
     @Test
@@ -83,7 +83,8 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatClasses()
         }
-        assertRendered(html, "chat", "ChatClasses all flags")
+        val expected = Expected("ChatClasses all flags", "chat", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -93,7 +94,7 @@ class ChatCoverageTest {
                 placement = ChatPlacement.Start,
             )
         }
-        assertRendered(html, "chat chat-start", "ChatClasses placement Start")
+        assertRendered(html, Expected("ChatClasses placement Start", "chat chat-start"))
     }
 
     @Test
@@ -103,7 +104,7 @@ class ChatCoverageTest {
                 placement = ChatPlacement.End,
             )
         }
-        assertRendered(html, "chat chat-end", "ChatClasses placement End")
+        assertRendered(html, Expected("ChatClasses placement End", "chat chat-end"))
     }
 
     @Test
@@ -113,7 +114,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-image", "ChatImage defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ChatImage defaults", "chat-image", closes = "</div></div>"))
     }
 
     @Test
@@ -126,8 +127,9 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "chat-image zz-extra", "ChatImage all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ChatImage")
+        val expected = Expected("ChatImage all flags", "chat-image zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -135,7 +137,7 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatImageClasses()
         }
-        assertRendered(html, "chat-image", "ChatImageClasses defaults")
+        assertRendered(html, Expected("ChatImageClasses defaults", "chat-image"))
     }
 
     @Test
@@ -143,7 +145,8 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatImageClasses()
         }
-        assertRendered(html, "chat-image", "ChatImageClasses all flags")
+        val expected = Expected("ChatImageClasses all flags", "chat-image", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -153,7 +156,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-header", "ChatHeader defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ChatHeader defaults", "chat-header", closes = "</div></div>"))
     }
 
     @Test
@@ -166,8 +169,9 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "chat-header zz-extra", "ChatHeader all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ChatHeader")
+        val expected = Expected("ChatHeader all flags", "chat-header zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -175,7 +179,7 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatHeaderClasses()
         }
-        assertRendered(html, "chat-header", "ChatHeaderClasses defaults")
+        assertRendered(html, Expected("ChatHeaderClasses defaults", "chat-header"))
     }
 
     @Test
@@ -183,7 +187,8 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatHeaderClasses()
         }
-        assertRendered(html, "chat-header", "ChatHeaderClasses all flags")
+        val expected = Expected("ChatHeaderClasses all flags", "chat-header", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -193,7 +198,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-footer", "ChatFooter defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ChatFooter defaults", "chat-footer", closes = "</div></div>"))
     }
 
     @Test
@@ -206,8 +211,9 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "chat-footer zz-extra", "ChatFooter all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ChatFooter")
+        val expected = Expected("ChatFooter all flags", "chat-footer zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -215,7 +221,7 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatFooterClasses()
         }
-        assertRendered(html, "chat-footer", "ChatFooterClasses defaults")
+        assertRendered(html, Expected("ChatFooterClasses defaults", "chat-footer"))
     }
 
     @Test
@@ -223,7 +229,8 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatFooterClasses()
         }
-        assertRendered(html, "chat-footer", "ChatFooterClasses all flags")
+        val expected = Expected("ChatFooterClasses all flags", "chat-footer", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -233,7 +240,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble", "ChatBubble defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ChatBubble defaults", "chat-bubble", closes = "</div></div>"))
     }
 
     @Test
@@ -246,8 +253,9 @@ class ChatCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "chat-bubble zz-extra", "ChatBubble all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ChatBubble")
+        val expected = Expected("ChatBubble all flags", "chat-bubble zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -258,7 +266,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-neutral", "ChatBubble color Neutral")
+        assertRendered(html, Expected("ChatBubble color Neutral", "chat-bubble chat-bubble-neutral"))
     }
 
     @Test
@@ -269,7 +277,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-primary", "ChatBubble color Primary")
+        assertRendered(html, Expected("ChatBubble color Primary", "chat-bubble chat-bubble-primary"))
     }
 
     @Test
@@ -280,7 +288,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-secondary", "ChatBubble color Secondary")
+        assertRendered(html, Expected("ChatBubble color Secondary", "chat-bubble chat-bubble-secondary"))
     }
 
     @Test
@@ -291,7 +299,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-accent", "ChatBubble color Accent")
+        assertRendered(html, Expected("ChatBubble color Accent", "chat-bubble chat-bubble-accent"))
     }
 
     @Test
@@ -302,7 +310,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-info", "ChatBubble color Info")
+        assertRendered(html, Expected("ChatBubble color Info", "chat-bubble chat-bubble-info"))
     }
 
     @Test
@@ -313,7 +321,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-success", "ChatBubble color Success")
+        assertRendered(html, Expected("ChatBubble color Success", "chat-bubble chat-bubble-success"))
     }
 
     @Test
@@ -324,7 +332,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-warning", "ChatBubble color Warning")
+        assertRendered(html, Expected("ChatBubble color Warning", "chat-bubble chat-bubble-warning"))
     }
 
     @Test
@@ -335,7 +343,7 @@ class ChatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-error", "ChatBubble color Error")
+        assertRendered(html, Expected("ChatBubble color Error", "chat-bubble chat-bubble-error"))
     }
 
     @Test
@@ -343,7 +351,7 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatBubbleClasses()
         }
-        assertRendered(html, "chat-bubble", "ChatBubbleClasses defaults")
+        assertRendered(html, Expected("ChatBubbleClasses defaults", "chat-bubble"))
     }
 
     @Test
@@ -351,7 +359,8 @@ class ChatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyChatBubbleClasses()
         }
-        assertRendered(html, "chat-bubble", "ChatBubbleClasses all flags")
+        val expected = Expected("ChatBubbleClasses all flags", "chat-bubble", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -361,7 +370,7 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Neutral,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-neutral", "ChatBubbleClasses color Neutral")
+        assertRendered(html, Expected("ChatBubbleClasses color Neutral", "chat-bubble chat-bubble-neutral"))
     }
 
     @Test
@@ -371,7 +380,7 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Primary,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-primary", "ChatBubbleClasses color Primary")
+        assertRendered(html, Expected("ChatBubbleClasses color Primary", "chat-bubble chat-bubble-primary"))
     }
 
     @Test
@@ -381,7 +390,7 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Secondary,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-secondary", "ChatBubbleClasses color Secondary")
+        assertRendered(html, Expected("ChatBubbleClasses color Secondary", "chat-bubble chat-bubble-secondary"))
     }
 
     @Test
@@ -391,7 +400,7 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Accent,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-accent", "ChatBubbleClasses color Accent")
+        assertRendered(html, Expected("ChatBubbleClasses color Accent", "chat-bubble chat-bubble-accent"))
     }
 
     @Test
@@ -401,7 +410,7 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Info,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-info", "ChatBubbleClasses color Info")
+        assertRendered(html, Expected("ChatBubbleClasses color Info", "chat-bubble chat-bubble-info"))
     }
 
     @Test
@@ -411,7 +420,7 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Success,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-success", "ChatBubbleClasses color Success")
+        assertRendered(html, Expected("ChatBubbleClasses color Success", "chat-bubble chat-bubble-success"))
     }
 
     @Test
@@ -421,7 +430,7 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Warning,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-warning", "ChatBubbleClasses color Warning")
+        assertRendered(html, Expected("ChatBubbleClasses color Warning", "chat-bubble chat-bubble-warning"))
     }
 
     @Test
@@ -431,6 +440,6 @@ class ChatCoverageTest {
                 color = ChatBubbleColor.Error,
             )
         }
-        assertRendered(html, "chat-bubble chat-bubble-error", "ChatBubbleClasses color Error")
+        assertRendered(html, Expected("ChatBubbleClasses color Error", "chat-bubble chat-bubble-error"))
     }
 }

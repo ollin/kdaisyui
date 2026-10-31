@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class AlertCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert", "Alert defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Alert defaults", "alert", closes = "</div></div>"))
         assertTrue(html.contains("role=\""), "Alert sets role")
     }
 
@@ -46,8 +45,9 @@ class AlertCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "alert alert-soft zz-extra", "Alert all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Alert")
+        val expected = Expected("Alert all flags", "alert alert-soft zz-extra", closes = "</div></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("role=\""), "Alert sets role")
     }
 
@@ -59,7 +59,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-info", "Alert color Info")
+        assertRendered(html, Expected("Alert color Info", "alert alert-info"))
     }
 
     @Test
@@ -70,7 +70,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-success", "Alert color Success")
+        assertRendered(html, Expected("Alert color Success", "alert alert-success"))
     }
 
     @Test
@@ -81,7 +81,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-warning", "Alert color Warning")
+        assertRendered(html, Expected("Alert color Warning", "alert alert-warning"))
     }
 
     @Test
@@ -92,7 +92,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-error", "Alert color Error")
+        assertRendered(html, Expected("Alert color Error", "alert alert-error"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-outline", "Alert style Outline")
+        assertRendered(html, Expected("Alert style Outline", "alert alert-outline"))
     }
 
     @Test
@@ -114,7 +114,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-dash", "Alert style Dash")
+        assertRendered(html, Expected("Alert style Dash", "alert alert-dash"))
     }
 
     @Test
@@ -125,7 +125,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-vertical", "Alert direction Vertical")
+        assertRendered(html, Expected("Alert direction Vertical", "alert alert-vertical"))
     }
 
     @Test
@@ -136,7 +136,7 @@ class AlertCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "alert alert-horizontal", "Alert direction Horizontal")
+        assertRendered(html, Expected("Alert direction Horizontal", "alert alert-horizontal"))
     }
 
     @Test
@@ -144,7 +144,7 @@ class AlertCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyAlertClasses()
         }
-        assertRendered(html, "alert", "AlertClasses defaults")
+        assertRendered(html, Expected("AlertClasses defaults", "alert"))
     }
 
     @Test
@@ -154,7 +154,8 @@ class AlertCoverageTest {
                 soft = true,
             )
         }
-        assertRendered(html, "alert alert-soft", "AlertClasses all flags")
+        val expected = Expected("AlertClasses all flags", "alert alert-soft", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -164,7 +165,7 @@ class AlertCoverageTest {
                 color = AlertColor.Info,
             )
         }
-        assertRendered(html, "alert alert-info", "AlertClasses color Info")
+        assertRendered(html, Expected("AlertClasses color Info", "alert alert-info"))
     }
 
     @Test
@@ -174,7 +175,7 @@ class AlertCoverageTest {
                 color = AlertColor.Success,
             )
         }
-        assertRendered(html, "alert alert-success", "AlertClasses color Success")
+        assertRendered(html, Expected("AlertClasses color Success", "alert alert-success"))
     }
 
     @Test
@@ -184,7 +185,7 @@ class AlertCoverageTest {
                 color = AlertColor.Warning,
             )
         }
-        assertRendered(html, "alert alert-warning", "AlertClasses color Warning")
+        assertRendered(html, Expected("AlertClasses color Warning", "alert alert-warning"))
     }
 
     @Test
@@ -194,7 +195,7 @@ class AlertCoverageTest {
                 color = AlertColor.Error,
             )
         }
-        assertRendered(html, "alert alert-error", "AlertClasses color Error")
+        assertRendered(html, Expected("AlertClasses color Error", "alert alert-error"))
     }
 
     @Test
@@ -204,7 +205,7 @@ class AlertCoverageTest {
                 style = AlertStyle.Outline,
             )
         }
-        assertRendered(html, "alert alert-outline", "AlertClasses style Outline")
+        assertRendered(html, Expected("AlertClasses style Outline", "alert alert-outline"))
     }
 
     @Test
@@ -214,7 +215,7 @@ class AlertCoverageTest {
                 style = AlertStyle.Dash,
             )
         }
-        assertRendered(html, "alert alert-dash", "AlertClasses style Dash")
+        assertRendered(html, Expected("AlertClasses style Dash", "alert alert-dash"))
     }
 
     @Test
@@ -224,7 +225,7 @@ class AlertCoverageTest {
                 direction = AlertDirection.Vertical,
             )
         }
-        assertRendered(html, "alert alert-vertical", "AlertClasses direction Vertical")
+        assertRendered(html, Expected("AlertClasses direction Vertical", "alert alert-vertical"))
     }
 
     @Test
@@ -234,6 +235,6 @@ class AlertCoverageTest {
                 direction = AlertDirection.Horizontal,
             )
         }
-        assertRendered(html, "alert alert-horizontal", "AlertClasses direction Horizontal")
+        assertRendered(html, Expected("AlertClasses direction Horizontal", "alert alert-horizontal"))
     }
 }

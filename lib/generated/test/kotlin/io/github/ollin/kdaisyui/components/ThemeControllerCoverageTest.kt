@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class ThemeControllerCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class ThemeControllerCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeController()
         }
-        assertRendered(html, "theme-controller", "ThemeController defaults")
+        assertRendered(html, Expected("ThemeController defaults", "theme-controller"))
     }
 
     @Test
@@ -41,8 +40,9 @@ class ThemeControllerCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "theme-controller zz-extra", "ThemeController all flags")
-        assertCommonFlags(html, "ThemeController", content = false)
+        val expected = Expected("ThemeController all flags", "theme-controller zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -50,7 +50,7 @@ class ThemeControllerCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeControllerClasses()
         }
-        assertRendered(html, "theme-controller", "ThemeControllerClasses defaults")
+        assertRendered(html, Expected("ThemeControllerClasses defaults", "theme-controller"))
     }
 
     @Test
@@ -58,6 +58,7 @@ class ThemeControllerCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyThemeControllerClasses()
         }
-        assertRendered(html, "theme-controller", "ThemeControllerClasses all flags")
+        val expected = Expected("ThemeControllerClasses all flags", "theme-controller", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class TextRotateCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,7 +30,7 @@ class TextRotateCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "text-rotate", "TextRotate defaults", closes = "</span></div>")
+        assertRendered(html, Expected("TextRotate defaults", "text-rotate", closes = "</span></div>"))
     }
 
     @Test
@@ -44,8 +43,9 @@ class TextRotateCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "text-rotate zz-extra", "TextRotate all flags", closes = "</span></div>")
-        assertCommonFlags(html, "TextRotate")
+        val expected = Expected("TextRotate all flags", "text-rotate zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class TextRotateCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTextRotateClasses()
         }
-        assertRendered(html, "text-rotate", "TextRotateClasses defaults")
+        assertRendered(html, Expected("TextRotateClasses defaults", "text-rotate"))
     }
 
     @Test
@@ -61,6 +61,7 @@ class TextRotateCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyTextRotateClasses()
         }
-        assertRendered(html, "text-rotate", "TextRotateClasses all flags")
+        val expected = Expected("TextRotateClasses all flags", "text-rotate", content = false)
+        assertRendered(html, expected)
     }
 }

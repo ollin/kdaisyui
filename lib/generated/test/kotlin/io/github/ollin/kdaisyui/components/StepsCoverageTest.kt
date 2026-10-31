@@ -10,19 +10,18 @@ import kotlinx.html.ul
 
 class StepsCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -32,7 +31,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "steps", "Steps defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("Steps defaults", "steps", closes = "</ul></div>"))
     }
 
     @Test
@@ -45,8 +44,9 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "steps zz-extra", "Steps all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "Steps")
+        val expected = Expected("Steps all flags", "steps zz-extra", closes = "</ul></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "steps steps-vertical", "Steps direction Vertical")
+        assertRendered(html, Expected("Steps direction Vertical", "steps steps-vertical"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "steps steps-horizontal", "Steps direction Horizontal")
+        assertRendered(html, Expected("Steps direction Horizontal", "steps steps-horizontal"))
     }
 
     @Test
@@ -76,7 +76,7 @@ class StepsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStepsClasses()
         }
-        assertRendered(html, "steps", "StepsClasses defaults")
+        assertRendered(html, Expected("StepsClasses defaults", "steps"))
     }
 
     @Test
@@ -84,7 +84,8 @@ class StepsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStepsClasses()
         }
-        assertRendered(html, "steps", "StepsClasses all flags")
+        val expected = Expected("StepsClasses all flags", "steps", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -94,7 +95,7 @@ class StepsCoverageTest {
                 direction = StepsDirection.Vertical,
             )
         }
-        assertRendered(html, "steps steps-vertical", "StepsClasses direction Vertical")
+        assertRendered(html, Expected("StepsClasses direction Vertical", "steps steps-vertical"))
     }
 
     @Test
@@ -104,7 +105,7 @@ class StepsCoverageTest {
                 direction = StepsDirection.Horizontal,
             )
         }
-        assertRendered(html, "steps steps-horizontal", "StepsClasses direction Horizontal")
+        assertRendered(html, Expected("StepsClasses direction Horizontal", "steps steps-horizontal"))
     }
 
     @Test
@@ -114,7 +115,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step", "Step defaults", closes = "</li></ul>")
+        assertRendered(html, Expected("Step defaults", "step", closes = "</li></ul>"))
     }
 
     @Test
@@ -127,8 +128,9 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "step zz-extra", "Step all flags", closes = "</li></ul>")
-        assertCommonFlags(html, "Step")
+        val expected = Expected("Step all flags", "step zz-extra", closes = "</li></ul>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -139,7 +141,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-neutral", "Step color Neutral")
+        assertRendered(html, Expected("Step color Neutral", "step step-neutral"))
     }
 
     @Test
@@ -150,7 +152,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-primary", "Step color Primary")
+        assertRendered(html, Expected("Step color Primary", "step step-primary"))
     }
 
     @Test
@@ -161,7 +163,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-secondary", "Step color Secondary")
+        assertRendered(html, Expected("Step color Secondary", "step step-secondary"))
     }
 
     @Test
@@ -172,7 +174,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-accent", "Step color Accent")
+        assertRendered(html, Expected("Step color Accent", "step step-accent"))
     }
 
     @Test
@@ -183,7 +185,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-info", "Step color Info")
+        assertRendered(html, Expected("Step color Info", "step step-info"))
     }
 
     @Test
@@ -194,7 +196,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-success", "Step color Success")
+        assertRendered(html, Expected("Step color Success", "step step-success"))
     }
 
     @Test
@@ -205,7 +207,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-warning", "Step color Warning")
+        assertRendered(html, Expected("Step color Warning", "step step-warning"))
     }
 
     @Test
@@ -216,7 +218,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step step-error", "Step color Error")
+        assertRendered(html, Expected("Step color Error", "step step-error"))
     }
 
     @Test
@@ -224,7 +226,7 @@ class StepsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStepClasses()
         }
-        assertRendered(html, "step", "StepClasses defaults")
+        assertRendered(html, Expected("StepClasses defaults", "step"))
     }
 
     @Test
@@ -232,7 +234,8 @@ class StepsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStepClasses()
         }
-        assertRendered(html, "step", "StepClasses all flags")
+        val expected = Expected("StepClasses all flags", "step", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -242,7 +245,7 @@ class StepsCoverageTest {
                 color = StepColor.Neutral,
             )
         }
-        assertRendered(html, "step step-neutral", "StepClasses color Neutral")
+        assertRendered(html, Expected("StepClasses color Neutral", "step step-neutral"))
     }
 
     @Test
@@ -252,7 +255,7 @@ class StepsCoverageTest {
                 color = StepColor.Primary,
             )
         }
-        assertRendered(html, "step step-primary", "StepClasses color Primary")
+        assertRendered(html, Expected("StepClasses color Primary", "step step-primary"))
     }
 
     @Test
@@ -262,7 +265,7 @@ class StepsCoverageTest {
                 color = StepColor.Secondary,
             )
         }
-        assertRendered(html, "step step-secondary", "StepClasses color Secondary")
+        assertRendered(html, Expected("StepClasses color Secondary", "step step-secondary"))
     }
 
     @Test
@@ -272,7 +275,7 @@ class StepsCoverageTest {
                 color = StepColor.Accent,
             )
         }
-        assertRendered(html, "step step-accent", "StepClasses color Accent")
+        assertRendered(html, Expected("StepClasses color Accent", "step step-accent"))
     }
 
     @Test
@@ -282,7 +285,7 @@ class StepsCoverageTest {
                 color = StepColor.Info,
             )
         }
-        assertRendered(html, "step step-info", "StepClasses color Info")
+        assertRendered(html, Expected("StepClasses color Info", "step step-info"))
     }
 
     @Test
@@ -292,7 +295,7 @@ class StepsCoverageTest {
                 color = StepColor.Success,
             )
         }
-        assertRendered(html, "step step-success", "StepClasses color Success")
+        assertRendered(html, Expected("StepClasses color Success", "step step-success"))
     }
 
     @Test
@@ -302,7 +305,7 @@ class StepsCoverageTest {
                 color = StepColor.Warning,
             )
         }
-        assertRendered(html, "step step-warning", "StepClasses color Warning")
+        assertRendered(html, Expected("StepClasses color Warning", "step step-warning"))
     }
 
     @Test
@@ -312,7 +315,7 @@ class StepsCoverageTest {
                 color = StepColor.Error,
             )
         }
-        assertRendered(html, "step step-error", "StepClasses color Error")
+        assertRendered(html, Expected("StepClasses color Error", "step step-error"))
     }
 
     @Test
@@ -322,7 +325,7 @@ class StepsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "step-icon", "StepIcon defaults", closes = "</span></div>")
+        assertRendered(html, Expected("StepIcon defaults", "step-icon", closes = "</span></div>"))
     }
 
     @Test
@@ -335,8 +338,9 @@ class StepsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "step-icon zz-extra", "StepIcon all flags", closes = "</span></div>")
-        assertCommonFlags(html, "StepIcon")
+        val expected = Expected("StepIcon all flags", "step-icon zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -344,7 +348,7 @@ class StepsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStepIconClasses()
         }
-        assertRendered(html, "step-icon", "StepIconClasses defaults")
+        assertRendered(html, Expected("StepIconClasses defaults", "step-icon"))
     }
 
     @Test
@@ -352,6 +356,7 @@ class StepsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStepIconClasses()
         }
-        assertRendered(html, "step-icon", "StepIconClasses all flags")
+        val expected = Expected("StepIconClasses all flags", "step-icon", content = false)
+        assertRendered(html, expected)
     }
 }

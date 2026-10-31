@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class ToggleCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class ToggleCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggle()
         }
-        assertRendered(html, "toggle", "Toggle defaults")
+        assertRendered(html, Expected("Toggle defaults", "toggle"))
         assertTrue(html.contains("type=\""), "Toggle sets type")
     }
 
@@ -44,8 +43,9 @@ class ToggleCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "toggle zz-extra", "Toggle all flags")
-        assertCommonFlags(html, "Toggle", content = false)
+        val expected = Expected("Toggle all flags", "toggle zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
         assertTrue(html.contains("type=\""), "Toggle sets type")
         assertTrue(html.contains("checked=\""), "Toggle sets checked")
         assertTrue(html.contains("disabled=\""), "Toggle sets disabled")
@@ -58,7 +58,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Primary,
             )
         }
-        assertRendered(html, "toggle toggle-primary", "Toggle color Primary")
+        assertRendered(html, Expected("Toggle color Primary", "toggle toggle-primary"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Secondary,
             )
         }
-        assertRendered(html, "toggle toggle-secondary", "Toggle color Secondary")
+        assertRendered(html, Expected("Toggle color Secondary", "toggle toggle-secondary"))
     }
 
     @Test
@@ -78,7 +78,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Accent,
             )
         }
-        assertRendered(html, "toggle toggle-accent", "Toggle color Accent")
+        assertRendered(html, Expected("Toggle color Accent", "toggle toggle-accent"))
     }
 
     @Test
@@ -88,7 +88,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Neutral,
             )
         }
-        assertRendered(html, "toggle toggle-neutral", "Toggle color Neutral")
+        assertRendered(html, Expected("Toggle color Neutral", "toggle toggle-neutral"))
     }
 
     @Test
@@ -98,7 +98,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Success,
             )
         }
-        assertRendered(html, "toggle toggle-success", "Toggle color Success")
+        assertRendered(html, Expected("Toggle color Success", "toggle toggle-success"))
     }
 
     @Test
@@ -108,7 +108,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Warning,
             )
         }
-        assertRendered(html, "toggle toggle-warning", "Toggle color Warning")
+        assertRendered(html, Expected("Toggle color Warning", "toggle toggle-warning"))
     }
 
     @Test
@@ -118,7 +118,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Info,
             )
         }
-        assertRendered(html, "toggle toggle-info", "Toggle color Info")
+        assertRendered(html, Expected("Toggle color Info", "toggle toggle-info"))
     }
 
     @Test
@@ -128,7 +128,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Error,
             )
         }
-        assertRendered(html, "toggle toggle-error", "Toggle color Error")
+        assertRendered(html, Expected("Toggle color Error", "toggle toggle-error"))
     }
 
     @Test
@@ -138,7 +138,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Xs,
             )
         }
-        assertRendered(html, "toggle toggle-xs", "Toggle size Xs")
+        assertRendered(html, Expected("Toggle size Xs", "toggle toggle-xs"))
     }
 
     @Test
@@ -148,7 +148,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Sm,
             )
         }
-        assertRendered(html, "toggle toggle-sm", "Toggle size Sm")
+        assertRendered(html, Expected("Toggle size Sm", "toggle toggle-sm"))
     }
 
     @Test
@@ -158,7 +158,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Md,
             )
         }
-        assertRendered(html, "toggle toggle-md", "Toggle size Md")
+        assertRendered(html, Expected("Toggle size Md", "toggle toggle-md"))
     }
 
     @Test
@@ -168,7 +168,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Lg,
             )
         }
-        assertRendered(html, "toggle toggle-lg", "Toggle size Lg")
+        assertRendered(html, Expected("Toggle size Lg", "toggle toggle-lg"))
     }
 
     @Test
@@ -178,7 +178,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Xl,
             )
         }
-        assertRendered(html, "toggle toggle-xl", "Toggle size Xl")
+        assertRendered(html, Expected("Toggle size Xl", "toggle toggle-xl"))
     }
 
     @Test
@@ -186,7 +186,7 @@ class ToggleCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggleClasses()
         }
-        assertRendered(html, "toggle", "ToggleClasses defaults")
+        assertRendered(html, Expected("ToggleClasses defaults", "toggle"))
     }
 
     @Test
@@ -194,7 +194,8 @@ class ToggleCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyToggleClasses()
         }
-        assertRendered(html, "toggle", "ToggleClasses all flags")
+        val expected = Expected("ToggleClasses all flags", "toggle", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -204,7 +205,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Primary,
             )
         }
-        assertRendered(html, "toggle toggle-primary", "ToggleClasses color Primary")
+        assertRendered(html, Expected("ToggleClasses color Primary", "toggle toggle-primary"))
     }
 
     @Test
@@ -214,7 +215,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Secondary,
             )
         }
-        assertRendered(html, "toggle toggle-secondary", "ToggleClasses color Secondary")
+        assertRendered(html, Expected("ToggleClasses color Secondary", "toggle toggle-secondary"))
     }
 
     @Test
@@ -224,7 +225,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Accent,
             )
         }
-        assertRendered(html, "toggle toggle-accent", "ToggleClasses color Accent")
+        assertRendered(html, Expected("ToggleClasses color Accent", "toggle toggle-accent"))
     }
 
     @Test
@@ -234,7 +235,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Neutral,
             )
         }
-        assertRendered(html, "toggle toggle-neutral", "ToggleClasses color Neutral")
+        assertRendered(html, Expected("ToggleClasses color Neutral", "toggle toggle-neutral"))
     }
 
     @Test
@@ -244,7 +245,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Success,
             )
         }
-        assertRendered(html, "toggle toggle-success", "ToggleClasses color Success")
+        assertRendered(html, Expected("ToggleClasses color Success", "toggle toggle-success"))
     }
 
     @Test
@@ -254,7 +255,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Warning,
             )
         }
-        assertRendered(html, "toggle toggle-warning", "ToggleClasses color Warning")
+        assertRendered(html, Expected("ToggleClasses color Warning", "toggle toggle-warning"))
     }
 
     @Test
@@ -264,7 +265,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Info,
             )
         }
-        assertRendered(html, "toggle toggle-info", "ToggleClasses color Info")
+        assertRendered(html, Expected("ToggleClasses color Info", "toggle toggle-info"))
     }
 
     @Test
@@ -274,7 +275,7 @@ class ToggleCoverageTest {
                 color = ToggleColor.Error,
             )
         }
-        assertRendered(html, "toggle toggle-error", "ToggleClasses color Error")
+        assertRendered(html, Expected("ToggleClasses color Error", "toggle toggle-error"))
     }
 
     @Test
@@ -284,7 +285,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Xs,
             )
         }
-        assertRendered(html, "toggle toggle-xs", "ToggleClasses size Xs")
+        assertRendered(html, Expected("ToggleClasses size Xs", "toggle toggle-xs"))
     }
 
     @Test
@@ -294,7 +295,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Sm,
             )
         }
-        assertRendered(html, "toggle toggle-sm", "ToggleClasses size Sm")
+        assertRendered(html, Expected("ToggleClasses size Sm", "toggle toggle-sm"))
     }
 
     @Test
@@ -304,7 +305,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Md,
             )
         }
-        assertRendered(html, "toggle toggle-md", "ToggleClasses size Md")
+        assertRendered(html, Expected("ToggleClasses size Md", "toggle toggle-md"))
     }
 
     @Test
@@ -314,7 +315,7 @@ class ToggleCoverageTest {
                 size = ToggleSize.Lg,
             )
         }
-        assertRendered(html, "toggle toggle-lg", "ToggleClasses size Lg")
+        assertRendered(html, Expected("ToggleClasses size Lg", "toggle toggle-lg"))
     }
 
     @Test
@@ -324,6 +325,6 @@ class ToggleCoverageTest {
                 size = ToggleSize.Xl,
             )
         }
-        assertRendered(html, "toggle toggle-xl", "ToggleClasses size Xl")
+        assertRendered(html, Expected("ToggleClasses size Xl", "toggle toggle-xl"))
     }
 }

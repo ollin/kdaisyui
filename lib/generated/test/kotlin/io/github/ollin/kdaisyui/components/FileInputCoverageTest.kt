@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class FileInputCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInput()
         }
-        assertRendered(html, "file-input", "FileInput defaults")
+        assertRendered(html, Expected("FileInput defaults", "file-input"))
     }
 
     @Test
@@ -42,8 +41,9 @@ class FileInputCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "file-input file-input-ghost zz-extra", "FileInput all flags")
-        assertCommonFlags(html, "FileInput", content = false)
+        val expected = Expected("FileInput all flags", "file-input file-input-ghost zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Neutral,
             )
         }
-        assertRendered(html, "file-input file-input-neutral", "FileInput color Neutral")
+        assertRendered(html, Expected("FileInput color Neutral", "file-input file-input-neutral"))
     }
 
     @Test
@@ -63,7 +63,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Primary,
             )
         }
-        assertRendered(html, "file-input file-input-primary", "FileInput color Primary")
+        assertRendered(html, Expected("FileInput color Primary", "file-input file-input-primary"))
     }
 
     @Test
@@ -73,7 +73,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Secondary,
             )
         }
-        assertRendered(html, "file-input file-input-secondary", "FileInput color Secondary")
+        assertRendered(html, Expected("FileInput color Secondary", "file-input file-input-secondary"))
     }
 
     @Test
@@ -83,7 +83,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Accent,
             )
         }
-        assertRendered(html, "file-input file-input-accent", "FileInput color Accent")
+        assertRendered(html, Expected("FileInput color Accent", "file-input file-input-accent"))
     }
 
     @Test
@@ -93,7 +93,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Info,
             )
         }
-        assertRendered(html, "file-input file-input-info", "FileInput color Info")
+        assertRendered(html, Expected("FileInput color Info", "file-input file-input-info"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Success,
             )
         }
-        assertRendered(html, "file-input file-input-success", "FileInput color Success")
+        assertRendered(html, Expected("FileInput color Success", "file-input file-input-success"))
     }
 
     @Test
@@ -113,7 +113,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Warning,
             )
         }
-        assertRendered(html, "file-input file-input-warning", "FileInput color Warning")
+        assertRendered(html, Expected("FileInput color Warning", "file-input file-input-warning"))
     }
 
     @Test
@@ -123,7 +123,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Error,
             )
         }
-        assertRendered(html, "file-input file-input-error", "FileInput color Error")
+        assertRendered(html, Expected("FileInput color Error", "file-input file-input-error"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Xs,
             )
         }
-        assertRendered(html, "file-input file-input-xs", "FileInput size Xs")
+        assertRendered(html, Expected("FileInput size Xs", "file-input file-input-xs"))
     }
 
     @Test
@@ -143,7 +143,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Sm,
             )
         }
-        assertRendered(html, "file-input file-input-sm", "FileInput size Sm")
+        assertRendered(html, Expected("FileInput size Sm", "file-input file-input-sm"))
     }
 
     @Test
@@ -153,7 +153,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Md,
             )
         }
-        assertRendered(html, "file-input file-input-md", "FileInput size Md")
+        assertRendered(html, Expected("FileInput size Md", "file-input file-input-md"))
     }
 
     @Test
@@ -163,7 +163,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Lg,
             )
         }
-        assertRendered(html, "file-input file-input-lg", "FileInput size Lg")
+        assertRendered(html, Expected("FileInput size Lg", "file-input file-input-lg"))
     }
 
     @Test
@@ -173,7 +173,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Xl,
             )
         }
-        assertRendered(html, "file-input file-input-xl", "FileInput size Xl")
+        assertRendered(html, Expected("FileInput size Xl", "file-input file-input-xl"))
     }
 
     @Test
@@ -181,7 +181,7 @@ class FileInputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFileInputClasses()
         }
-        assertRendered(html, "file-input", "FileInputClasses defaults")
+        assertRendered(html, Expected("FileInputClasses defaults", "file-input"))
     }
 
     @Test
@@ -191,7 +191,8 @@ class FileInputCoverageTest {
                 ghost = true,
             )
         }
-        assertRendered(html, "file-input file-input-ghost", "FileInputClasses all flags")
+        val expected = Expected("FileInputClasses all flags", "file-input file-input-ghost", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -201,7 +202,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Neutral,
             )
         }
-        assertRendered(html, "file-input file-input-neutral", "FileInputClasses color Neutral")
+        assertRendered(html, Expected("FileInputClasses color Neutral", "file-input file-input-neutral"))
     }
 
     @Test
@@ -211,7 +212,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Primary,
             )
         }
-        assertRendered(html, "file-input file-input-primary", "FileInputClasses color Primary")
+        assertRendered(html, Expected("FileInputClasses color Primary", "file-input file-input-primary"))
     }
 
     @Test
@@ -221,7 +222,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Secondary,
             )
         }
-        assertRendered(html, "file-input file-input-secondary", "FileInputClasses color Secondary")
+        assertRendered(html, Expected("FileInputClasses color Secondary", "file-input file-input-secondary"))
     }
 
     @Test
@@ -231,7 +232,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Accent,
             )
         }
-        assertRendered(html, "file-input file-input-accent", "FileInputClasses color Accent")
+        assertRendered(html, Expected("FileInputClasses color Accent", "file-input file-input-accent"))
     }
 
     @Test
@@ -241,7 +242,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Info,
             )
         }
-        assertRendered(html, "file-input file-input-info", "FileInputClasses color Info")
+        assertRendered(html, Expected("FileInputClasses color Info", "file-input file-input-info"))
     }
 
     @Test
@@ -251,7 +252,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Success,
             )
         }
-        assertRendered(html, "file-input file-input-success", "FileInputClasses color Success")
+        assertRendered(html, Expected("FileInputClasses color Success", "file-input file-input-success"))
     }
 
     @Test
@@ -261,7 +262,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Warning,
             )
         }
-        assertRendered(html, "file-input file-input-warning", "FileInputClasses color Warning")
+        assertRendered(html, Expected("FileInputClasses color Warning", "file-input file-input-warning"))
     }
 
     @Test
@@ -271,7 +272,7 @@ class FileInputCoverageTest {
                 color = FileInputColor.Error,
             )
         }
-        assertRendered(html, "file-input file-input-error", "FileInputClasses color Error")
+        assertRendered(html, Expected("FileInputClasses color Error", "file-input file-input-error"))
     }
 
     @Test
@@ -281,7 +282,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Xs,
             )
         }
-        assertRendered(html, "file-input file-input-xs", "FileInputClasses size Xs")
+        assertRendered(html, Expected("FileInputClasses size Xs", "file-input file-input-xs"))
     }
 
     @Test
@@ -291,7 +292,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Sm,
             )
         }
-        assertRendered(html, "file-input file-input-sm", "FileInputClasses size Sm")
+        assertRendered(html, Expected("FileInputClasses size Sm", "file-input file-input-sm"))
     }
 
     @Test
@@ -301,7 +302,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Md,
             )
         }
-        assertRendered(html, "file-input file-input-md", "FileInputClasses size Md")
+        assertRendered(html, Expected("FileInputClasses size Md", "file-input file-input-md"))
     }
 
     @Test
@@ -311,7 +312,7 @@ class FileInputCoverageTest {
                 size = FileInputSize.Lg,
             )
         }
-        assertRendered(html, "file-input file-input-lg", "FileInputClasses size Lg")
+        assertRendered(html, Expected("FileInputClasses size Lg", "file-input file-input-lg"))
     }
 
     @Test
@@ -321,6 +322,6 @@ class FileInputCoverageTest {
                 size = FileInputSize.Xl,
             )
         }
-        assertRendered(html, "file-input file-input-xl", "FileInputClasses size Xl")
+        assertRendered(html, Expected("FileInputClasses size Xl", "file-input file-input-xl"))
     }
 }

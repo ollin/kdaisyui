@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class MaskCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class MaskCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMask()
         }
-        assertRendered(html, "mask", "Mask defaults")
+        assertRendered(html, Expected("Mask defaults", "mask"))
     }
 
     @Test
@@ -41,8 +40,9 @@ class MaskCoverageTest {
                 attrs = { attributes["data-attrs"] = "yes" },
             )
         }
-        assertRendered(html, "mask zz-extra", "Mask all flags")
-        assertCommonFlags(html, "Mask", content = false)
+        val expected = Expected("Mask all flags", "mask zz-extra", content = false)
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -52,7 +52,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Squircle,
             )
         }
-        assertRendered(html, "mask mask-squircle", "Mask style Squircle")
+        assertRendered(html, Expected("Mask style Squircle", "mask mask-squircle"))
     }
 
     @Test
@@ -62,7 +62,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Heart,
             )
         }
-        assertRendered(html, "mask mask-heart", "Mask style Heart")
+        assertRendered(html, Expected("Mask style Heart", "mask mask-heart"))
     }
 
     @Test
@@ -72,7 +72,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Hexagon,
             )
         }
-        assertRendered(html, "mask mask-hexagon", "Mask style Hexagon")
+        assertRendered(html, Expected("Mask style Hexagon", "mask mask-hexagon"))
     }
 
     @Test
@@ -82,7 +82,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Hexagon2,
             )
         }
-        assertRendered(html, "mask mask-hexagon-2", "Mask style Hexagon2")
+        assertRendered(html, Expected("Mask style Hexagon2", "mask mask-hexagon-2"))
     }
 
     @Test
@@ -92,7 +92,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Decagon,
             )
         }
-        assertRendered(html, "mask mask-decagon", "Mask style Decagon")
+        assertRendered(html, Expected("Mask style Decagon", "mask mask-decagon"))
     }
 
     @Test
@@ -102,7 +102,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Pentagon,
             )
         }
-        assertRendered(html, "mask mask-pentagon", "Mask style Pentagon")
+        assertRendered(html, Expected("Mask style Pentagon", "mask mask-pentagon"))
     }
 
     @Test
@@ -112,7 +112,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Diamond,
             )
         }
-        assertRendered(html, "mask mask-diamond", "Mask style Diamond")
+        assertRendered(html, Expected("Mask style Diamond", "mask mask-diamond"))
     }
 
     @Test
@@ -122,7 +122,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Circle,
             )
         }
-        assertRendered(html, "mask mask-circle", "Mask style Circle")
+        assertRendered(html, Expected("Mask style Circle", "mask mask-circle"))
     }
 
     @Test
@@ -132,7 +132,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Star,
             )
         }
-        assertRendered(html, "mask mask-star", "Mask style Star")
+        assertRendered(html, Expected("Mask style Star", "mask mask-star"))
     }
 
     @Test
@@ -142,7 +142,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Star2,
             )
         }
-        assertRendered(html, "mask mask-star-2", "Mask style Star2")
+        assertRendered(html, Expected("Mask style Star2", "mask mask-star-2"))
     }
 
     @Test
@@ -152,7 +152,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle,
             )
         }
-        assertRendered(html, "mask mask-triangle", "Mask style Triangle")
+        assertRendered(html, Expected("Mask style Triangle", "mask mask-triangle"))
     }
 
     @Test
@@ -162,7 +162,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle2,
             )
         }
-        assertRendered(html, "mask mask-triangle-2", "Mask style Triangle2")
+        assertRendered(html, Expected("Mask style Triangle2", "mask mask-triangle-2"))
     }
 
     @Test
@@ -172,7 +172,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle3,
             )
         }
-        assertRendered(html, "mask mask-triangle-3", "Mask style Triangle3")
+        assertRendered(html, Expected("Mask style Triangle3", "mask mask-triangle-3"))
     }
 
     @Test
@@ -182,7 +182,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle4,
             )
         }
-        assertRendered(html, "mask mask-triangle-4", "Mask style Triangle4")
+        assertRendered(html, Expected("Mask style Triangle4", "mask mask-triangle-4"))
     }
 
     @Test
@@ -192,7 +192,7 @@ class MaskCoverageTest {
                 half = MaskHalf.Half1,
             )
         }
-        assertRendered(html, "mask mask-half-1", "Mask half Half1")
+        assertRendered(html, Expected("Mask half Half1", "mask mask-half-1"))
     }
 
     @Test
@@ -202,7 +202,7 @@ class MaskCoverageTest {
                 half = MaskHalf.Half2,
             )
         }
-        assertRendered(html, "mask mask-half-2", "Mask half Half2")
+        assertRendered(html, Expected("Mask half Half2", "mask mask-half-2"))
     }
 
     @Test
@@ -210,7 +210,7 @@ class MaskCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMaskClasses()
         }
-        assertRendered(html, "mask", "MaskClasses defaults")
+        assertRendered(html, Expected("MaskClasses defaults", "mask"))
     }
 
     @Test
@@ -218,7 +218,8 @@ class MaskCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMaskClasses()
         }
-        assertRendered(html, "mask", "MaskClasses all flags")
+        val expected = Expected("MaskClasses all flags", "mask", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -228,7 +229,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Squircle,
             )
         }
-        assertRendered(html, "mask mask-squircle", "MaskClasses style Squircle")
+        assertRendered(html, Expected("MaskClasses style Squircle", "mask mask-squircle"))
     }
 
     @Test
@@ -238,7 +239,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Heart,
             )
         }
-        assertRendered(html, "mask mask-heart", "MaskClasses style Heart")
+        assertRendered(html, Expected("MaskClasses style Heart", "mask mask-heart"))
     }
 
     @Test
@@ -248,7 +249,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Hexagon,
             )
         }
-        assertRendered(html, "mask mask-hexagon", "MaskClasses style Hexagon")
+        assertRendered(html, Expected("MaskClasses style Hexagon", "mask mask-hexagon"))
     }
 
     @Test
@@ -258,7 +259,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Hexagon2,
             )
         }
-        assertRendered(html, "mask mask-hexagon-2", "MaskClasses style Hexagon2")
+        assertRendered(html, Expected("MaskClasses style Hexagon2", "mask mask-hexagon-2"))
     }
 
     @Test
@@ -268,7 +269,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Decagon,
             )
         }
-        assertRendered(html, "mask mask-decagon", "MaskClasses style Decagon")
+        assertRendered(html, Expected("MaskClasses style Decagon", "mask mask-decagon"))
     }
 
     @Test
@@ -278,7 +279,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Pentagon,
             )
         }
-        assertRendered(html, "mask mask-pentagon", "MaskClasses style Pentagon")
+        assertRendered(html, Expected("MaskClasses style Pentagon", "mask mask-pentagon"))
     }
 
     @Test
@@ -288,7 +289,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Diamond,
             )
         }
-        assertRendered(html, "mask mask-diamond", "MaskClasses style Diamond")
+        assertRendered(html, Expected("MaskClasses style Diamond", "mask mask-diamond"))
     }
 
     @Test
@@ -298,7 +299,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Circle,
             )
         }
-        assertRendered(html, "mask mask-circle", "MaskClasses style Circle")
+        assertRendered(html, Expected("MaskClasses style Circle", "mask mask-circle"))
     }
 
     @Test
@@ -308,7 +309,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Star,
             )
         }
-        assertRendered(html, "mask mask-star", "MaskClasses style Star")
+        assertRendered(html, Expected("MaskClasses style Star", "mask mask-star"))
     }
 
     @Test
@@ -318,7 +319,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Star2,
             )
         }
-        assertRendered(html, "mask mask-star-2", "MaskClasses style Star2")
+        assertRendered(html, Expected("MaskClasses style Star2", "mask mask-star-2"))
     }
 
     @Test
@@ -328,7 +329,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle,
             )
         }
-        assertRendered(html, "mask mask-triangle", "MaskClasses style Triangle")
+        assertRendered(html, Expected("MaskClasses style Triangle", "mask mask-triangle"))
     }
 
     @Test
@@ -338,7 +339,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle2,
             )
         }
-        assertRendered(html, "mask mask-triangle-2", "MaskClasses style Triangle2")
+        assertRendered(html, Expected("MaskClasses style Triangle2", "mask mask-triangle-2"))
     }
 
     @Test
@@ -348,7 +349,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle3,
             )
         }
-        assertRendered(html, "mask mask-triangle-3", "MaskClasses style Triangle3")
+        assertRendered(html, Expected("MaskClasses style Triangle3", "mask mask-triangle-3"))
     }
 
     @Test
@@ -358,7 +359,7 @@ class MaskCoverageTest {
                 style = MaskStyle.Triangle4,
             )
         }
-        assertRendered(html, "mask mask-triangle-4", "MaskClasses style Triangle4")
+        assertRendered(html, Expected("MaskClasses style Triangle4", "mask mask-triangle-4"))
     }
 
     @Test
@@ -368,7 +369,7 @@ class MaskCoverageTest {
                 half = MaskHalf.Half1,
             )
         }
-        assertRendered(html, "mask mask-half-1", "MaskClasses half Half1")
+        assertRendered(html, Expected("MaskClasses half Half1", "mask mask-half-1"))
     }
 
     @Test
@@ -378,6 +379,6 @@ class MaskCoverageTest {
                 half = MaskHalf.Half2,
             )
         }
-        assertRendered(html, "mask mask-half-2", "MaskClasses half Half2")
+        assertRendered(html, Expected("MaskClasses half Half2", "mask mask-half-2"))
     }
 }

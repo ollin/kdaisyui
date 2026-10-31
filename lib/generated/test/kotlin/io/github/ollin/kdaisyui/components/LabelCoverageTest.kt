@@ -9,19 +9,18 @@ import kotlinx.html.stream.createHTML
 
 class LabelCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,7 +28,7 @@ class LabelCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLabel()
         }
-        assertRendered(html, "label", "Label defaults", closes = "</span></div>")
+        assertRendered(html, Expected("Label defaults", "label", closes = "</span></div>"))
     }
 
     @Test
@@ -42,8 +41,9 @@ class LabelCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "label zz-extra", "Label all flags", closes = "</span></div>")
-        assertCommonFlags(html, "Label")
+        val expected = Expected("Label all flags", "label zz-extra", closes = "</span></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -53,7 +53,7 @@ class LabelCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "label", "Label text")
+        assertRendered(html, Expected("Label text", "label"))
         assertTrue(html.contains("txtmark"), "Label text content")
     }
 
@@ -62,7 +62,7 @@ class LabelCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLabelClasses()
         }
-        assertRendered(html, "label", "LabelClasses defaults")
+        assertRendered(html, Expected("LabelClasses defaults", "label"))
     }
 
     @Test
@@ -70,7 +70,8 @@ class LabelCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyLabelClasses()
         }
-        assertRendered(html, "label", "LabelClasses all flags")
+        val expected = Expected("LabelClasses all flags", "label", content = false)
+        assertRendered(html, expected)
     }
 
     @Test
@@ -80,7 +81,7 @@ class LabelCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "floating-label", "FloatingLabel defaults", closes = "</label></div>")
+        assertRendered(html, Expected("FloatingLabel defaults", "floating-label", closes = "</label></div>"))
     }
 
     @Test
@@ -93,8 +94,9 @@ class LabelCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "floating-label zz-extra", "FloatingLabel all flags", closes = "</label></div>")
-        assertCommonFlags(html, "FloatingLabel")
+        val expected = Expected("FloatingLabel all flags", "floating-label zz-extra", closes = "</label></div>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 
     @Test
@@ -102,7 +104,7 @@ class LabelCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFloatingLabelClasses()
         }
-        assertRendered(html, "floating-label", "FloatingLabelClasses defaults")
+        assertRendered(html, Expected("FloatingLabelClasses defaults", "floating-label"))
     }
 
     @Test
@@ -110,6 +112,7 @@ class LabelCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFloatingLabelClasses()
         }
-        assertRendered(html, "floating-label", "FloatingLabelClasses all flags")
+        val expected = Expected("FloatingLabelClasses all flags", "floating-label", content = false)
+        assertRendered(html, expected)
     }
 }

@@ -54,7 +54,7 @@ narrowing it is exactly the tooling `css-delivery` names as missing.
 | A2 | A consumer's compiled classes name the JVM class of every component it uses | code | confirmed at proposal - a byte scan of `example-app/build/classes` found 20 component file classes (`ButtonKt` …) and 13 enums, the probe's 19 components plus `Dropdown`, which the popover page added since |
 | A3 | The 22.6 KB of one demo app generalises to real consumers | external | open - only `example-app` has been measured |
 | A4 | Prefix matching on class names cannot map a class to its component | code | confirmed at proposal - `Stat` is a prefix of `Status` and `Menu` of `MenuDropdown…`; the map lists exact JVM names |
-| A5 | Publishing to Maven Central only is enough: a consumer adds `mavenCentral()` to `pluginManagement` | user | open - ask at review; the Plugin Portal needs an account and a key of its own |
+| A5 | Publishing to Maven Central only is enough: a consumer adds `mavenCentral()` to `pluginManagement` | user | confirmed by the user 2026-10-31 - Maven Central only |
 | A6 | The plugin, built as an included build so `example-app` can apply it, can still be staged into the root build's `staging-deploy` and released by JReleaser with the others | code | to check in task 1.1 |
 | A7 | The plugin's marker artifact stages under `io/github/ollin/kdaisyui/`, so `verifyStagingComplete` can guard it | code | to check in task 1.1 |
 

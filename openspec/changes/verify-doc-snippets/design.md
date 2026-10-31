@@ -100,4 +100,4 @@ default and few explicit directives, each visible in the Markdown above its fenc
 **Markers are noise in the source of the documentation.** They are invisible when rendered, and
 each one carries its reason, which is information a maintainer otherwise lacks.
 
-**Compile time.** Measured in task 4.1: extracting and compiling all 71 snippets takes about a second with a warm Gradle daemon, and nothing when the documents and the library are unchanged.
+**Compile time.** Measured in task 4.1: extracting the 71 fences and compiling the 43 that are not skipped takes about a second with a warm Gradle daemon, and nothing when the documents and the library are unchanged.

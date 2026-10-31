@@ -65,7 +65,7 @@ must not.
 
 ## 5. Close the loop
 
-- [ ] 5.1 `. d` Update `AGENTS.md` and the `kdaisyui-testing` skill: the marker convention, and
+- [x] 5.1 `. d` Update `AGENTS.md` and the `kdaisyui-testing` skill: the marker convention, and
   that `check` compiles the documentation.
 
 ## 6. Gate and adoption

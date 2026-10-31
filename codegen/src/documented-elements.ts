@@ -126,11 +126,9 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
   const rendersDocumentedTag = primary.fn.kind !== 'classes' && rendersTag(primary.fn, element.tag)
-  // An anchored popover's id is required: the call cannot be written without one.
-  const id = rendersDocumentedTag && primary.fn.anchoredPopover ? ['id = htmlId("documented")'] : []
   return {
     fn: primary.fn,
-    args: [...id, ...callArguments(primary, others, variants)].join(', '),
+    args: [...requiredIdArguments(primary.fn, rendersDocumentedTag), ...callArguments(primary, others, variants)].join(', '),
     expectedClasses: [...new Set(expected)].sort().join(' '),
     tag: element.tag,
     rendersTag: rendersDocumentedTag,
@@ -149,6 +147,11 @@ function siblingCall(group: ClaimedGroup): string {
 }
 
 /** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */
+/** An anchored popover's id is required, so a call of it cannot be written without one. */
+function requiredIdArguments(fn: ModelFunction, called: boolean): string[] {
+  return called && fn.anchoredPopover ? ['id = htmlId("documented")'] : []
+}
+
 function callArguments(primary: ClaimedGroup, others: readonly ClaimedGroup[], variants: readonly string[]): string[] {
   const siblings = others.map(siblingCall)
   return [

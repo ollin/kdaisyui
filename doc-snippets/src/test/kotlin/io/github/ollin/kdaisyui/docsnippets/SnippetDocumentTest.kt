@@ -12,10 +12,11 @@ class SnippetDocumentTest {
     }
 
     @Test
-    fun aSnippetSeesTheNearestEarlierDeclarationOfAName() {
+    fun aSnippetSeesTheNearestEarlierDeclarationOfANameElseTheNearestLaterOne() {
         val imports = scopeImportsOf("fun FlowContent.a() { }", "fun FlowContent.a() { }", "fun FlowContent.b() { }", "a()")
         val fromL5 = "import snippets.x_md_L5.a"
-        assertEquals(listOf(emptyList(), emptyList(), listOf(fromL5), listOf(fromL5, "import snippets.x_md_L9.b")), imports)
+        val fromL9 = "import snippets.x_md_L9.b"
+        assertEquals(listOf(listOf(fromL9), listOf(fromL9), listOf(fromL5), listOf(fromL5, fromL9)), imports)
     }
 
     private fun scopeImportsOf(vararg snippets: String): List<List<String>> {

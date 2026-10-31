@@ -35,4 +35,4 @@ as production code.
 | A1 | No requirement of a main spec this builds on contradicts it. It touches the generated tests that `generated-sources` and `coverage-enforcement` count, and neither requires one test per entry | code | confirmed at proposal - read both; `generated-sources` quotes a dated test count (1488) as a measurement, not a requirement |
 | A2 | The three moves together reach 10.0 | code | confirmed at proposal - a probe rewrote Card, Dropdown, Menu and Button's coverage tests by script: all four scored 10.0; each move alone left a finding (Excess Number of Function Arguments, then String Heavy Function Arguments) |
 | A3 | The rewritten tests compile and pass | code | confirmed at proposal - the probe's Card, Dropdown and Menu files ran in place of the generated ones: 23, 22 and 23 tests, all green |
-| A4 | Mutation test strength stays at 100% | code | to check in task 2.4 - a table still asserts every entry |
+| A4 | Mutation test strength stays at 100% | code | confirmed in task 2.4 - `:lib:pitest` 221 of 225 killed, the same four uncovered bridges, test strength 100%; and all 66 coverage tests score 10.0 |

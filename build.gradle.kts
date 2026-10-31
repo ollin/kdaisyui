@@ -14,13 +14,14 @@ repositories {
 }
 
 // Root-level coverage aggregation: merge the measured modules into one report. :lib and
-// :ktor-integration are the published code; :doc-snippets' extractor is measured too, because
-// the build relies on it. :example-app, :e2e-tests, and :bom are intentionally out of scope
+// :ktor-integration are the published code; :doc-snippets' extractor and :build-checks are
+// measured too, because the build relies on them. :example-app, :e2e-tests, and :bom are intentionally out of scope
 // (demo / test code / no code).
 dependencies {
     kover(project(":lib"))
     kover(project(":ktor-integration"))
     kover(project(":doc-snippets"))
+    kover(project(":build-checks"))
 }
 
 // Aggregated coverage reports. The hard verify rule is added LAST (see the

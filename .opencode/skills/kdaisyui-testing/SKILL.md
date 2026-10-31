@@ -51,6 +51,13 @@ directly. Only three files exist:
 
 Style: render with `createHTML().div { … }` and assert against the produced HTML string.
 
+## 2a. Documentation snippets — `:doc-snippets:compileSnippets`
+
+Every Kotlin snippet of `README.md` and `docs/` is compiled against the library, in `check` and
+in CI's `unit-tests` job; the marker convention is in `AGENTS.md`. The extractor in
+`doc-snippets/src/main` has its own unit tests under `:doc-snippets:test`, and sits under the
+aggregated Kover gate. The compiled snippets do not, because they are documentation.
+
 ## 3. End-to-end — `:e2e-tests:test`
 
 Two styles coexist in one module, both on the JUnit Platform, both in the same `test` task.
@@ -112,6 +119,7 @@ configuration.
 |---|---|
 | Unit tests | `:lib:test` |
 | E2E | `:e2e-tests:test` |
+| Documentation snippets | `:doc-snippets:compileSnippets` |
 | Regenerate components | `:lib:generateComponents` |
 | Demo server | `:example-app:run` |
 
@@ -147,7 +155,7 @@ then five — so check the file rather than trusting this count.
 | `generated-sources-drift` | the five `:lib:generate*` tasks, `:lib:checkComponentApi`, and `git status --porcelain` | `submodules: recursive`, Node, JDK |
 | `codegen-tests` | `npm test` in `codegen/` (`node --test test/`) | Node only |
 | `api-baseline` | `:lib:checkKotlinAbi` | JDK |
-| `unit-tests` | `:lib:test koverVerify koverXmlReport` | JDK |
+| `unit-tests` | `:lib:test koverVerify koverXmlReport :doc-snippets:compileSnippets` | JDK |
 | `mutation-tests` | `:lib:pitest`, gated at 100% **test strength** | JDK |
 | `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | JDK, **Docker** |
 

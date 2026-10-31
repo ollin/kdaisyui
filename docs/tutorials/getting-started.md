@@ -14,6 +14,7 @@ Create a new directory and add the minimal Gradle files.
 
 **settings.gradle.kts**
 
+<!-- snippet: skip - a Gradle settings script, not code against the library -->
 ```kotlin
 rootProject.name = "my-app"
 includeBuild("../kdaisyui")   // point to where you cloned kdaisyui
@@ -21,6 +22,7 @@ includeBuild("../kdaisyui")   // point to where you cloned kdaisyui
 
 **build.gradle.kts**
 
+<!-- snippet: skip - a Gradle build script, not code against the library -->
 ```kotlin
 plugins {
     // current Kotlin version: see gradle/libs.versions.toml → kotlin
@@ -139,19 +141,13 @@ Stats are a DaisyUI component that shows key metrics:
 
 ```kotlin
 val html = createHTML(prettyPrint = false).div {
-daisyStats(direction = StatsDirection.Horizontal, extraClasses = "bg-base-100 shadow-xs w-full") {
-    daisyStat {
-        daisyStatTitle("Users")
-        daisyStatValue("1,200")
-        daisyStatDesc("12% increase")
-    }
-    daisyStat {
-        daisyStatTitle("Revenue")
-        daisyStatValue("$34,000")
-        daisyStatDesc("8% increase")
-    }
-}
-        daisyStats {
+    daisyStats(direction = StatsDirection.Horizontal, extraClasses = "bg-base-100 shadow-xs w-full") {
+        daisyStat {
+            daisyStatTitle("Users")
+            daisyStatValue("1,200")
+            daisyStatDesc("12% increase")
+        }
+        daisyStat {
             daisyStatTitle("Revenue")
             daisyStatValue("$34,000")
             daisyStatDesc("8% increase")

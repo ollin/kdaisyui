@@ -1,0 +1,43 @@
+package io.github.ollin.kdaisyui.docsnippets
+
+/**
+ * The Kotlin file one snippet compiles as, at `<document>/L<line>.kt`, so a compile error's own
+ * path names the document and the line of the fence.
+ */
+class SnippetSource(private val document: String, private val fence: KotlinFence, private val scope: List<String> = emptyList()) {
+    private val name = snippetName(document, fence)
+
+    val relativePath: String get() = "$document/L${fence.line}.kt"
+
+    val text: String get() = "// $document:${fence.line}\npackage snippets.$name\n\n" +
+        imports.joinToString("") { "$it\n" } + "\n" +
+        body + "\n"
+
+    private val lines = fence.code.lines().partition { it.startsWith("import ") }
+
+    private val imports: List<String> get() = (defaultImports + scope).map { "import $it" } + lines.first
+
+    private val code: String get() = lines.second.joinToString("\n")
+
+    private val body: String get() =
+        if (fence.directive !is Directive.In && topLevelDeclaration.containsMatchIn(code)) code
+        else "fun $receiver.snippet() {\n$code\n}"
+
+    private val receiver: String get() = when (val directive = fence.directive) {
+        is Directive.In -> directive.receiver
+        else -> "FlowContent"
+    }
+}
+
+private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ", RegexOption.MULTILINE)
+
+/** What a reader of the documentation is assumed to have imported: the library, kotlinx.html, the Ktor server. */
+private val defaultImports = listOf(
+    "kotlinx.html.*", "kotlinx.html.stream.*",
+    "io.github.ollin.kdaisyui.components.*", "io.github.ollin.kdaisyui.core.*", "io.github.ollin.kdaisyui.icons.*",
+    "io.ktor.http.*", "io.ktor.server.application.*", "io.ktor.server.html.*", "io.ktor.server.response.*",
+    "io.ktor.server.routing.*", "io.ktor.server.webjars.*",
+)
+
+/** The name of a snippet's file and package: its [document] and the line of its [fence]. */
+fun snippetName(document: String, fence: KotlinFence): String = document.replace(Regex("\\W"), "_") + "_L${fence.line}"

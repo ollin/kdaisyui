@@ -82,7 +82,10 @@ Hand-written Kotlin exists only here:
 - `lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/` — `HeroIconSize.kt`, `HeroIconVariant.kt`
   (the icon *functions* next to them are generated; these two support files are not)
 - `ktor-integration/src/main/kotlin/io/github/ollin/kdaisyui/ktor/Resolvable.kt`
-- tests: `lib/src/test/…` (10 files), `ktor-integration/src/test/…` (1), `e2e-tests/src/test/…`
+- `doc-snippets/src/main/kotlin/…` — the extractor that turns the prose documentation's snippets
+  into Kotlin files
+- tests: `lib/src/test/…` (10 files), `ktor-integration/src/test/…` (1), `doc-snippets/src/test/…`,
+  `e2e-tests/src/test/…`
 - `example-app/…`
 
 Package is `io.github.ollin.kdaisyui` — never `com.github.ollin`.
@@ -96,6 +99,7 @@ Package is `io.github.ollin.kdaisyui` — never `com.github.ollin`.
 | `example-app` | Ktor + htmx demo dashboard, port 8080 |
 | `e2e-tests` | Kotest + Playwright + Cucumber |
 | `bom` | `java-platform` BOM aligning `kdaisyui` and `kdaisyui-ktor-integration` |
+| `doc-snippets` | compiles every Kotlin snippet of `README.md` and `docs/`; not published |
 | `buildSrc` | Gradle convention plugins |
 
 The root `build.gradle.kts` carries the release (JReleaser → Maven Central) and the aggregated
@@ -134,6 +138,25 @@ repository has already paid for five times (see the `generated-sources-drift` an
 positive-control notes below).
 
 Say which step you are on, and name the assertion that failed.
+
+## The documentation's Kotlin snippets compile
+
+`check`, and CI's `unit-tests` job, compile every ` ```kotlin ` block of `README.md`,
+`docs/how-to.md`, `docs/explanation.md` and `docs/tutorials/*.md` against the library
+(`./gradlew :doc-snippets:compileSnippets`). Until 2026-10-31 nothing did, and three snippets
+had stopped compiling unnoticed: two tutorial steps carried pasted leftover lines, and one used
+an ellipsis that is not Kotlin. A failure names the snippet as
+`…/generated/snippets/<document>/L<fence line>.kt`.
+
+A snippet is a statement inside a `FlowContent` builder, or a top-level file when it declares
+something at column 0, and it sees what the other snippets of its document declare. An HTML
+comment directly above the fence says anything else, and renders as nothing:
+
+- `<!-- snippet: in Route -->` compiles it inside an extension on that receiver;
+- `<!-- snippet: skip - <reason> -->` leaves it out. A skip without a reason, or a directive the
+  build does not know, fails the build.
+
+A new prose document is checked only once `doc-snippets/build.gradle.kts` lists it.
 
 ## Test quality: three questions, and no gate answers another's
 

@@ -114,6 +114,7 @@ Every component accepts these escape-hatch parameters:
 
 ### `addClassNames` — `io.github.ollin.kdaisyui.core`
 
+<!-- snippet: skip - signatures quoted for reading; lib/api/lib.api is what checks them -->
 ```kotlin
 fun Tag.addClassNames(vararg classNames: String)
 fun Tag.addClassNames(classNames: String?)
@@ -147,13 +148,15 @@ This design has consequences:
 
 Every component follows the same parameter pattern:
 
+<!-- snippet: skip - the shape every component shares, not a function the library has -->
 ```kotlin
 fun FlowContent.daisyComponent(
-    // Typed DaisyUI parameters
-    color: ComponentColor? = null,
-    size: ComponentSize? = null,
-    // Boolean modifiers
-    outline: Boolean = false,
+    id: HtmlId? = null,                  // the element's id, typed
+    // Typed DaisyUI parameters, one per axis
+    color: ClassValues<ComponentColor>? = null,
+    size: ClassValues<ComponentSize>? = null,
+    // A class that stands alone
+    disabled: Boolean = false,
     // Escape hatches
     extraClasses: String? = null,        // add any CSS class
     attrs: (TAG.() -> Unit)? = null,     // set any HTML attribute

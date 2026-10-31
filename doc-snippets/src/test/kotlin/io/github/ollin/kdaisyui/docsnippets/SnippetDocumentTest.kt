@@ -1,0 +1,39 @@
+package io.github.ollin.kdaisyui.docsnippets
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+
+class SnippetDocumentTest {
+
+    @Test
+    fun everyKotlinFenceOfTheDocumentBecomesOneSource() {
+        val markdown = "```kotlin\na()\n```\n\n```kotlin\nb()\n```\n"
+        assertEquals(listOf("docs/x.md/L1.kt", "docs/x.md/L5.kt"), SnippetDocument("docs/x.md", markdown).sources.map { it.relativePath })
+    }
+
+    @Test
+    fun aSnippetSeesTheNearestEarlierDeclarationOfANameElseTheNearestLaterOne() {
+        val imports = scopeImportsOf("fun FlowContent.a() { }", "fun FlowContent.a() { }", "fun FlowContent.b() { }", "a()")
+        val fromL5 = "import snippets.x_md_L5.a"
+        val fromL9 = "import snippets.x_md_L9.b"
+        assertEquals(listOf(listOf(fromL9), listOf(fromL9), listOf(fromL5), listOf(fromL5, fromL9)), imports)
+    }
+
+    @Test
+    fun aFenceMarkedSkipWithAReasonIsNotCompiled() {
+        val markdown = "<!-- snippet: skip - the 0.7.x API -->\n```kotlin\nold()\n```\n\n```kotlin\nnew()\n```\n"
+        assertEquals(listOf("x.md/L6.kt"), SnippetDocument("x.md", markdown).sources.map { it.relativePath })
+    }
+
+    @Test
+    fun anInvalidMarkerFailsNamingTheDocumentAndTheLine() {
+        val failure = assertFailsWith<IllegalStateException> { SnippetDocument("x.md", "<!-- snippet: skip -->\n```kotlin\nold()\n```\n") }
+        assertEquals("x.md:2: skip needs a reason: <!-- snippet: skip - <reason> -->", failure.message)
+    }
+
+    private fun scopeImportsOf(vararg snippets: String): List<List<String>> {
+        val markdown = snippets.joinToString("\n") { "```kotlin\n$it\n```\n" }
+        return SnippetDocument("x.md", markdown).sources.map { source -> source.text.lines().filter { it.startsWith("import snippets.") } }
+    }
+}

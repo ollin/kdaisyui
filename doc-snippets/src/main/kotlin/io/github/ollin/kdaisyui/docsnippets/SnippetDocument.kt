@@ -7,7 +7,7 @@ package io.github.ollin.kdaisyui.docsnippets
  * declare: the nearest declaration before it, or failing that the nearest after it.
  */
 class SnippetDocument(private val path: String, markdown: String) {
-    private val fences = kotlinFencesIn(markdown).onEach(::failOnInvalidMarker).filterNot { (it.marker ?: "").startsWith("skip - ") }
+    private val fences = kotlinFencesIn(markdown).onEach(::failOnInvalidMarker).filterNot { it.directive is Directive.Skip }
 
     val sources: List<SnippetSource> get() = fences.map { SnippetSource(path, it, scopeOf(it)) }
 
@@ -16,7 +16,7 @@ class SnippetDocument(private val path: String, markdown: String) {
             .map { name -> "snippets.${snippetName(path, declarationOf(name, fence))}.$name" }
 
     private fun failOnInvalidMarker(fence: KotlinFence) {
-        val directive = directiveOf(fence.marker)
+        val directive = fence.directive
         if (directive is Directive.Invalid) error("$path:${fence.line}: ${directive.problem}")
     }
 

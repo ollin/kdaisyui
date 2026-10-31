@@ -4,6 +4,9 @@ package io.github.ollin.kdaisyui.docsnippets
 data class KotlinFence(val line: Int, val code: String, val marker: String? = null) {
     /** The functions and properties this snippet declares at column 0. */
     val declaredNames: List<String> get() = code.lines().mapNotNull { declaration.find(it)?.groupValues[1] }
+
+    /** What the marker above the fence asks of it. */
+    val directive: Directive get() = directiveOf(marker)
 }
 
 private val declaration = Regex("^(?:suspend )?(?:fun (?:\\S+\\.)?|val )(\\w+)")

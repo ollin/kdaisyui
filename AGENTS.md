@@ -84,8 +84,10 @@ Hand-written Kotlin exists only here:
 - `ktor-integration/src/main/kotlin/io/github/ollin/kdaisyui/ktor/Resolvable.kt`
 - `doc-snippets/src/main/kotlin/…` — the extractor that turns the prose documentation's snippets
   into Kotlin files
+- `build-checks/src/main/kotlin/…` — the check that fails CI on a Gradle problem the allowlist
+  `gradle/allowed-gradle-problems.txt` does not accept
 - tests: `lib/src/test/…` (10 files), `ktor-integration/src/test/…` (1), `doc-snippets/src/test/…`,
-  `e2e-tests/src/test/…`
+  `build-checks/src/test/…`, `e2e-tests/src/test/…`
 - `example-app/…`
 
 Package is `io.github.ollin.kdaisyui` — never `com.github.ollin`.
@@ -100,6 +102,7 @@ Package is `io.github.ollin.kdaisyui` — never `com.github.ollin`.
 | `e2e-tests` | Kotest + Playwright + Cucumber |
 | `bom` | `java-platform` BOM aligning `kdaisyui` and `kdaisyui-ktor-integration` |
 | `doc-snippets` | compiles every Kotlin snippet of `README.md` and `docs/`; not published |
+| `build-checks` | checks on the build itself, run by CI after `check`; not published |
 | `buildSrc` | Gradle convention plugins |
 
 The root `build.gradle.kts` carries the release (JReleaser → Maven Central) and the aggregated
@@ -163,7 +166,7 @@ A new prose document is checked only once `doc-snippets/build.gradle.kts` lists 
 | Question | What answers it | Where |
 |---|---|---|
 | was the line **executed**? | `koverVerify` — 100% line **and** branch, aggregated | `./gradlew check`, `unit-tests` job |
-| was the executed line **asserted**? | `:lib:pitest`, `:doc-snippets:pitest` — 100% **test strength** | `mutation-tests` job, NOT in `check` |
+| was the executed line **asserted**? | `:lib:pitest`, `:doc-snippets:pitest`, `:build-checks:pitest` — 100% **test strength** | `mutation-tests` job, NOT in `check` |
 | is the test itself **readable**? | CodeScene, run by hand on the test file | no job — you have to ask |
 
 **A test file is production code and is reviewed as one.** `code_health_review` applies to

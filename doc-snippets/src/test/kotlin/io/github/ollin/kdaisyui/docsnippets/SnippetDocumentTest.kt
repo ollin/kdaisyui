@@ -9,7 +9,7 @@ class SnippetDocumentTest {
     @Test
     fun everyKotlinFenceOfTheDocumentBecomesOneSource() {
         val markdown = "```kotlin\na()\n```\n\n```kotlin\nb()\n```\n"
-        assertEquals(listOf("docs_x_md_L1.kt", "docs_x_md_L5.kt"), SnippetDocument("docs/x.md", markdown).sources.map { it.relativePath })
+        assertEquals(listOf("docs/x.md/L1.kt", "docs/x.md/L5.kt"), SnippetDocument("docs/x.md", markdown).sources.map { it.relativePath })
     }
 
     @Test
@@ -23,7 +23,7 @@ class SnippetDocumentTest {
     @Test
     fun aFenceMarkedSkipWithAReasonIsNotCompiled() {
         val markdown = "<!-- snippet: skip - the 0.7.x API -->\n```kotlin\nold()\n```\n\n```kotlin\nnew()\n```\n"
-        assertEquals(listOf("x_md_L6.kt"), SnippetDocument("x.md", markdown).sources.map { it.relativePath })
+        assertEquals(listOf("x.md/L6.kt"), SnippetDocument("x.md", markdown).sources.map { it.relativePath })
     }
 
     @Test

@@ -1,10 +1,13 @@
 package io.github.ollin.kdaisyui.docsnippets
 
-/** The Kotlin file one snippet compiles as, named for its [document] and the line of its fence. */
+/**
+ * The Kotlin file one snippet compiles as, at `<document>/L<line>.kt`, so a compile error's own
+ * path names the document and the line of the fence.
+ */
 class SnippetSource(private val document: String, private val fence: KotlinFence, private val scope: List<String> = emptyList()) {
     private val name = snippetName(document, fence)
 
-    val relativePath: String get() = "$name.kt"
+    val relativePath: String get() = "$document/L${fence.line}.kt"
 
     val text: String get() = "// $document:${fence.line}\npackage snippets.$name\n\n" +
         imports.joinToString("") { "$it\n" } + "\n" +

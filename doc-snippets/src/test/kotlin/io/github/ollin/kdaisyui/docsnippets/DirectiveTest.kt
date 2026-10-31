@@ -12,7 +12,7 @@ class DirectiveTest {
     fun inNamesTheReceiver() = assertEquals(Directive.In("Route"), directiveOf("in Route"))
 
     @Test
-    fun skipCarriesItsReason() = assertEquals(Directive.Skip("the 0.7.x API"), directiveOf("skip - the 0.7.x API"))
+    fun skipWithAReasonLeavesTheSnippetOut() = assertEquals(Directive.Skip, directiveOf("skip - the 0.7.x API"))
 
     @Test
     fun aSkipWithoutAReasonIsInvalid() =

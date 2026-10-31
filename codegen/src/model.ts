@@ -74,6 +74,8 @@ export interface ModelFunction {
   readonly always?: readonly string[]
   /** Attributes written on every call, e.g. `{ "popover": "" }`. */
   readonly attributes?: Readonly<Record<string, string>>
+  /** A popover its trigger anchors: its `id` is required, since a trigger has to name it. */
+  readonly anchoredPopover?: true
   /** On a main function: inside a join's content, this call marks itself `join-item`. */
   readonly joinItem?: true
   /** On a main function: the ARIA role it always sets, e.g. `alert`. */
@@ -208,7 +210,7 @@ function functionShape(model: ComponentModel, declared: ModelFunction, descripti
     modifierClasses: (declared.always ?? []) as CssClass[],
     staticAttributes: Object.entries(declared.attributes ?? {}),
     desc: functionDesc(declared, descriptions),
-    parameters: functionParameters(element, declared.text, declared.parameters.map(parameter => parameterShape(model, parameter, descriptions))),
+    parameters: functionParameters(element, declared.text, declared.parameters.map(parameter => parameterShape(model, parameter, descriptions)), declared.anchoredPopover === true),
   }
 }
 

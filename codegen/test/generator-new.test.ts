@@ -166,3 +166,16 @@ describe('a class-only function', () => {
     assert.ok(!kotlin.includes('.daisyMenuItem('))
   })
 })
+
+describe('an anchored popover', () => {
+  const popover = () =>
+    kotlinFor(withParts(component('dropdown', 'Dropdown', 'dropdown'), { ...part('daisyDropdownPopover', 'dropdown', { element: 'UL', anchoredPopover: true }), kind: 'custom' }))
+
+  test('requires its id, since a trigger has to name it, and always writes it', () => {
+    const fn = popover().split('fun FlowContent.daisyDropdownPopover')[1]
+
+    assert.match(fn, /^ {4}id: HtmlId,$/m)
+    assert.match(fn, /^ {8}attributes\["id"\] = id\.id$/m)
+  })
+})
+

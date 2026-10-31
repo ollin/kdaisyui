@@ -286,8 +286,9 @@ function renderSibling(shape: SiblingShape): string {
 /** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
 function secondaryFunctionBody(shape: FunctionShape): string {
   const hasTextParam = shape.parameters.some(parameter => parameter.name === 'text')
+  const idRequired = shape.parameters.some(parameter => parameter.name === 'id' && parameter.default === null)
 
-  const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
+  const lines: string[] = [idRequired ? '        attributes["id"] = id.id' : '        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
   if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
   lines.push(...shape.modifierClasses.map(cssClass => `        addClassNames("${cssClass}")`))

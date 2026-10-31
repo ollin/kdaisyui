@@ -20,7 +20,7 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
     private val code: String get() = lines.second.joinToString("\n")
 
     private val body: String get() =
-        if (fence.directive !is Directive.In && code.lines().any { topLevelDeclaration.containsMatchIn(it) }) code
+        if (fence.directive !is Directive.In && topLevelDeclaration.containsMatchIn(code)) code
         else "fun $receiver.snippet() {\n$code\n}"
 
     private val receiver: String get() = when (val directive = fence.directive) {
@@ -29,7 +29,7 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
     }
 }
 
-private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ")
+private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ", RegexOption.MULTILINE)
 
 /** What a reader of the documentation is assumed to have imported: the library, kotlinx.html, the Ktor server. */
 private val defaultImports = listOf(

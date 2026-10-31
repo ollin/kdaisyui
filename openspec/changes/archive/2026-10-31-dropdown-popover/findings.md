@@ -70,4 +70,4 @@ One row per finding (house rules §9).
 | F3 | - | fixed - in this change (task 4.1) |
 | F4 | - | fixed - in this change (task 4.3a) |
 | F5 | - | fixed - in this change (task 5.2) |
-| F6 | The coverage-test generator emits one parameterized test per axis instead of one test per entry, so CodeScene's gate measures generated tests without a standing duplication finding | open |
+| F6 | The coverage-test generator emits one parameterized test per axis instead of one test per entry, so CodeScene's gate measures generated tests without a standing duplication finding | adopted -> coverage-tests-without-duplication |

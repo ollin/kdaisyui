@@ -21,7 +21,7 @@ class SnippetDocument(private val path: String, markdown: String) {
     }
 
     private fun declarationOf(name: String, fence: KotlinFence): KotlinFence {
-        val declaring = fences.filter { name in it.declaredNames }
-        return declaring.lastOrNull { it.line < fence.line } ?: declaring.first()
+        val earlier = fences.subList(0, fences.indexOf(fence))
+        return earlier.lastOrNull { name in it.declaredNames } ?: fences.first { name in it.declaredNames }
     }
 }

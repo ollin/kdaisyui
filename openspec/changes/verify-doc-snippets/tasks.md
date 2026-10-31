@@ -29,7 +29,7 @@ sections. It stays as it was; the revision is measured as part of the run.
 
 - [x] 2.1 `. F (internal)` Add the `:doc-snippets` module with its first behaviour: find every
   `kotlin` fence in a document, with the line of its opening fence.
-- [ ] 2.2 `. F (internal)` Wrap a snippet in the default context, in its own package, in a file
+- [x] 2.2 `. F (internal)` Wrap a snippet in the default context, in its own package, in a file
   named for document and line.
 - [ ] 2.3 `. F (internal)` `in <Receiver>` wraps a snippet in an extension on that receiver.
 - [ ] 2.3a `. F (internal)` Document scope: a block imports the other blocks' top-level

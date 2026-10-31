@@ -47,7 +47,7 @@ must not.
 - [x] 3.1 `. d` `docs/tutorials/getting-started.md`
 - [x] 3.2 `. d` `docs/tutorials/build-a-dashboard.md`
 - [x] 3.3 `. d` `docs/how-to.md`
-- [ ] 3.4 `. d` `docs/explanation.md`
+- [x] 3.4 `. d` `docs/explanation.md`
 - [ ] 3.5 `. d` `README.md`, deleting the stale *What's new in 0.2.0* section (F2)
 
 ## 4. Wire it into `check`

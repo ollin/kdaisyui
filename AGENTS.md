@@ -163,7 +163,7 @@ A new prose document is checked only once `doc-snippets/build.gradle.kts` lists 
 | Question | What answers it | Where |
 |---|---|---|
 | was the line **executed**? | `koverVerify` — 100% line **and** branch, aggregated | `./gradlew check`, `unit-tests` job |
-| was the executed line **asserted**? | `:lib:pitest` — 100% **test strength** | `mutation-tests` job, NOT in `check` |
+| was the executed line **asserted**? | `:lib:pitest`, `:doc-snippets:pitest` — 100% **test strength** | `mutation-tests` job, NOT in `check` |
 | is the test itself **readable**? | CodeScene, run by hand on the test file | no job — you have to ask |
 
 **A test file is production code and is reviewed as one.** `code_health_review` applies to
@@ -188,7 +188,7 @@ number; read it before "fixing" the threshold to `mutationThreshold`.
 
 Run it with `./gradlew :lib:pitest` (~15s). It is deliberately outside `check` — it forks a JVM
 per mutant. Read `lib/build/reports/pitest/index.html`, or `mutations.xml` for a mechanical
-list. Scope is `core.*` plus five branch-rich components, named in the build file; **a surviving
+list. Scope is `core.*` plus five branch-rich components, named in the build file, and all of `:doc-snippets`' extractor (~5s); **a surviving
 mutant is not always a missing assertion** — it can be code that cannot matter, and then the
 answer is to delete the code.
 

@@ -106,4 +106,4 @@ One row per finding (house rules §9).
 | F6 | - | none - record only; the exclusion is commented in `doc-snippets/build.gradle.kts` |
 | F7 | getting-started's build script uses the Maven Central coordinates README shows | open |
 | F8 | `kdaisyui-build`'s "Problems: 0" becomes a recorded number that a check compares, instead of a sentence | open |
-| F9 | `:doc-snippets` joins the PIT configuration and CI's `mutation-tests` job | open |
+| F9 | `:doc-snippets` joins the PIT configuration and CI's `mutation-tests` job | fixed - in chore/mutation-test-doc-snippets: 47 of 47 killed, after the one equivalent mutant's comparison was refactored away |

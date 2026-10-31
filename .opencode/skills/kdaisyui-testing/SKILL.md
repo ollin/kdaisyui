@@ -161,7 +161,7 @@ then five — so check the file rather than trusting this count.
 | `codegen-tests` | `npm test` in `codegen/` (`node --test test/`) | Node only |
 | `api-baseline` | `:lib:checkKotlinAbi` | JDK |
 | `unit-tests` | `check -x :e2e-tests:test koverXmlReport`: everything `check` runs but the browser tests | JDK, Docker |
-| `mutation-tests` | `:lib:pitest`, gated at 100% **test strength** | JDK |
+| `mutation-tests` | `:lib:pitest :doc-snippets:pitest`, each gated at 100% **test strength** | JDK |
 | `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | JDK, **Docker** |
 
 `unit-tests` and `mutation-tests` are a deliberate pair and neither implies the other: Kover

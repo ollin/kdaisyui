@@ -18,11 +18,11 @@ sections. It stays as it was; the revision is measured as part of the run.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A2) Wrap every Kotlin block with the default context in a throwaway build under
+- [x] 1.1 `. d` (A2) Wrap every Kotlin block with the default context in a throwaway build under
   `tmp/verify-doc-snippets/`, compile, and count which compile, which need another context, which
   are deliberately not code, and which are broken today. Decide the directive set from the counts,
   and record them in `design.md`.
-- [ ] 1.2 `. d` (A3) Check that a new module's `main` source set can join the aggregated Kover
+- [x] 1.2 `. d` (A3) Check that a new module's `main` source set can join the aggregated Kover
   gate, and how.
 
 ## 2. The extractor, under TCR

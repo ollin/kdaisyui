@@ -1704,6 +1704,7 @@ public abstract class io/github/ollin/kdaisyui/core/NamedAnnotatedIdBase : io/gi
 }
 
 public final class io/github/ollin/kdaisyui/core/TagIdKt {
+	public static final fun getAnchorName (Lio/github/ollin/kdaisyui/core/HtmlId;)Ljava/lang/String;
 	public static final fun htmlId (Ljava/lang/String;)Lio/github/ollin/kdaisyui/core/HtmlId;
 }
 

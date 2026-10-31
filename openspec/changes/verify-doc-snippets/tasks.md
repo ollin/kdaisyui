@@ -34,8 +34,8 @@ sections. It stays as it was; the revision is measured as part of the run.
 - [x] 2.3 `. F (internal)` `in <Receiver>` wraps a snippet in an extension on that receiver.
 - [x] 2.3a `. F (internal)` Document scope: a block imports the other blocks' top-level
   declarations, the nearest before it winning, else the nearest after it.
-- [ ] 2.4 `. F (internal)` `skip - <reason>` excludes a snippet; `skip` without a reason fails.
-- [ ] 2.5 `. F (internal)` An unknown directive fails, naming document and line.
+- [x] 2.4 `. F (internal)` `skip - <reason>` excludes a snippet; `skip` without a reason fails.
+- [x] 2.5 `. F (internal)` An unknown directive fails, naming document and line.
 - [ ] 2.6 `. F (internal)` A `compileSnippets` task runs the extractor over the documents and
   compiles the result. Not yet part of `check`, so the documents can be brought in step first.
 

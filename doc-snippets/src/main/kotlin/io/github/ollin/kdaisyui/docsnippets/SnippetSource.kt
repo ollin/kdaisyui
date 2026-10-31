@@ -18,7 +18,7 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
 
     private val body: String get() =
         if (code.lines().any { topLevelDeclaration.containsMatchIn(it) }) code
-        else "fun FlowContent.snippet() {\n$code\n}"
+        else "fun ${(fence.marker ?: "in FlowContent").removePrefix("in ")}.snippet() {\n$code\n}"
 }
 
 private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ")

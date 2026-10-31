@@ -35,7 +35,12 @@ class SnippetSourceTest {
         assertEquals(listOf("import kotlinx.html.*", "import io.github.ollin.kdaisyui.components.*"), importsOf(textOf("")))
     }
 
-    private fun textOf(code: String) = SnippetSource("README.md", KotlinFence(line = 9, code = code)).text
+    @Test
+    fun aSnippetMarkedInAReceiverIsWrappedInAnExtensionOnIt() {
+        assertEquals("fun Route.snippet() {\nget(\"/\") { }\n}\n", bodyOf(textOf("get(\"/\") { }", marker = "in Route")))
+    }
+
+    private fun textOf(code: String, marker: String? = null) = SnippetSource("README.md", KotlinFence(9, code, marker)).text
 
     private fun importsOf(text: String) = text.lines().filter { it.startsWith("import ") }
 

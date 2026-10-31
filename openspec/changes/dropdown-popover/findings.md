@@ -46,3 +46,15 @@
 - **Cause:** the recipe predates 0.6's switch of `daisyDropdown` to `<details>`; compiling proves
   the API exists, not that the markup works, as `documentation-snippets`' design says.
 - **Cost:** the recipe was rewritten as "Add a dropdown", with both forms, in the same task.
+
+## F6 - CodeScene's gate fails on a generated coverage test
+
+- **What happened:** task 6.1. `analyze_change_set` reports `DropdownCoverageTest.kt` as degraded,
+  Code Duplication: the coverage generator writes one near-identical test per enum entry, and the
+  new function added eleven. Every component's coverage test has this shape. The file is
+  regenerated wholesale, so no hand edit can fix it. `documented-elements.ts`, degraded too, was
+  fixed by a refactoring.
+- **Cause:** the coverage generator emits a test per case, not a parameterized one; CodeScene
+  measures `lib/generated/` like hand-written code.
+- **Cost:** none to this change; the gate stays failed on that one generated file, and Oliver
+  decides at adoption.

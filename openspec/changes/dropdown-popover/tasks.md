@@ -54,6 +54,6 @@ E2E as early as the function allows.
 
 ## 6. Gate and adoption
 
-- [ ] 6.1 Full green: `check` with E2E, `koverVerify`, both PIT runs, `analyze_change_set`.
-- [ ] 6.2 `openspec validate dropdown-popover --strict`.
-- [ ] 6.3 The evaluation under `tmp/dropdown-popover/` for Oliver to adopt.
+- [x] 6.1 Full green: `check` with E2E, `koverVerify`, both PIT runs, `analyze_change_set`.
+- [x] 6.2 `openspec validate dropdown-popover --strict`.
+- [x] 6.3 The evaluation under `tmp/dropdown-popover/` for Oliver to adopt.

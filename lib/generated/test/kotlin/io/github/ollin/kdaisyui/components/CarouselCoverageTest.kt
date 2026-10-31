@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class CarouselCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,143 +57,36 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel", "Carousel defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Carousel defaults", "carousel", closes = "</div></div>"))
     }
 
     @Test
     fun carousel_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "carousel zz-extra", "Carousel all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Carousel")
+        val html = allFlags(Expected("Carousel all flags", "carousel zz-extra", closes = "</div></div>")) { daisyCarousel(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun carousel_snap_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(
-                snap = CarouselSnap.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, "carousel carousel-start", "Carousel snap Start")
-    }
+    fun carousel_snap() = assertEachEntry("Carousel snap", mapOf(CarouselSnap.Start to "carousel carousel-start", CarouselSnap.Center to "carousel carousel-center", CarouselSnap.End to "carousel carousel-end")) { daisyCarousel(snap = it, content = { }) }
 
     @Test
-    fun carousel_snap_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(
-                snap = CarouselSnap.Center,
-                content = { },
-            )
-        }
-        assertRendered(html, "carousel carousel-center", "Carousel snap Center")
-    }
-
-    @Test
-    fun carousel_snap_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(
-                snap = CarouselSnap.End,
-                content = { },
-            )
-        }
-        assertRendered(html, "carousel carousel-end", "Carousel snap End")
-    }
-
-    @Test
-    fun carousel_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(
-                direction = CarouselDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, "carousel carousel-horizontal", "Carousel direction Horizontal")
-    }
-
-    @Test
-    fun carousel_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(
-                direction = CarouselDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, "carousel carousel-vertical", "Carousel direction Vertical")
-    }
+    fun carousel_direction() = assertEachEntry("Carousel direction", mapOf(CarouselDirection.Horizontal to "carousel carousel-horizontal", CarouselDirection.Vertical to "carousel carousel-vertical")) { daisyCarousel(direction = it, content = { }) }
 
     @Test
     fun carouselClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyCarouselClasses()
         }
-        assertRendered(html, "carousel", "CarouselClasses defaults")
+        assertRendered(html, Expected("CarouselClasses defaults", "carousel"))
     }
 
     @Test
-    fun carouselClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselClasses()
-        }
-        assertRendered(html, "carousel", "CarouselClasses all flags")
-    }
+    fun carouselClasses_all_flags() = assertRenders(Expected("CarouselClasses all flags", "carousel", content = false)) { daisyCarouselClasses() }
 
     @Test
-    fun carouselClasses_snap_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselClasses(
-                snap = CarouselSnap.Start,
-            )
-        }
-        assertRendered(html, "carousel carousel-start", "CarouselClasses snap Start")
-    }
+    fun carouselClasses_snap() = assertEachEntry("CarouselClasses snap", mapOf(CarouselSnap.Start to "carousel carousel-start", CarouselSnap.Center to "carousel carousel-center", CarouselSnap.End to "carousel carousel-end")) { daisyCarouselClasses(snap = it) }
 
     @Test
-    fun carouselClasses_snap_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselClasses(
-                snap = CarouselSnap.Center,
-            )
-        }
-        assertRendered(html, "carousel carousel-center", "CarouselClasses snap Center")
-    }
-
-    @Test
-    fun carouselClasses_snap_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselClasses(
-                snap = CarouselSnap.End,
-            )
-        }
-        assertRendered(html, "carousel carousel-end", "CarouselClasses snap End")
-    }
-
-    @Test
-    fun carouselClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselClasses(
-                direction = CarouselDirection.Horizontal,
-            )
-        }
-        assertRendered(html, "carousel carousel-horizontal", "CarouselClasses direction Horizontal")
-    }
-
-    @Test
-    fun carouselClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselClasses(
-                direction = CarouselDirection.Vertical,
-            )
-        }
-        assertRendered(html, "carousel carousel-vertical", "CarouselClasses direction Vertical")
-    }
+    fun carouselClasses_direction() = assertEachEntry("CarouselClasses direction", mapOf(CarouselDirection.Horizontal to "carousel carousel-horizontal", CarouselDirection.Vertical to "carousel carousel-vertical")) { daisyCarouselClasses(direction = it) }
 
     @Test
     fun carouselItem_defaults() {
@@ -176,21 +95,12 @@ class CarouselCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "carousel-item", "CarouselItem defaults", closes = "</div></div>")
+        assertRendered(html, Expected("CarouselItem defaults", "carousel-item", closes = "</div></div>"))
     }
 
     @Test
     fun carouselItem_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselItem(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "carousel-item zz-extra", "CarouselItem all flags", closes = "</div></div>")
-        assertCommonFlags(html, "CarouselItem")
+        val html = allFlags(Expected("CarouselItem all flags", "carousel-item zz-extra", closes = "</div></div>")) { daisyCarouselItem(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -198,14 +108,9 @@ class CarouselCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCarouselItemClasses()
         }
-        assertRendered(html, "carousel-item", "CarouselItemClasses defaults")
+        assertRendered(html, Expected("CarouselItemClasses defaults", "carousel-item"))
     }
 
     @Test
-    fun carouselItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCarouselItemClasses()
-        }
-        assertRendered(html, "carousel-item", "CarouselItemClasses all flags")
-    }
+    fun carouselItemClasses_all_flags() = assertRenders(Expected("CarouselItemClasses all flags", "carousel-item", content = false)) { daisyCarouselItemClasses() }
 }

@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class ToastCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,162 +57,34 @@ class ToastCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "toast", "Toast defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Toast defaults", "toast", closes = "</div></div>"))
     }
 
     @Test
     fun toast_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "toast zz-extra", "Toast all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Toast")
+        val html = allFlags(Expected("Toast all flags", "toast zz-extra", closes = "</div></div>")) { daisyToast(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun toast_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                horizontalPlacement = ToastHorizontalPlacement.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, "toast toast-start", "Toast horizontalPlacement Start")
-    }
+    fun toast_horizontalPlacement() = assertEachEntry("Toast horizontalPlacement", mapOf(ToastHorizontalPlacement.Start to "toast toast-start", ToastHorizontalPlacement.Center to "toast toast-center", ToastHorizontalPlacement.End to "toast toast-end")) { daisyToast(horizontalPlacement = it, content = { }) }
 
     @Test
-    fun toast_horizontalPlacement_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                horizontalPlacement = ToastHorizontalPlacement.Center,
-                content = { },
-            )
-        }
-        assertRendered(html, "toast toast-center", "Toast horizontalPlacement Center")
-    }
-
-    @Test
-    fun toast_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                horizontalPlacement = ToastHorizontalPlacement.End,
-                content = { },
-            )
-        }
-        assertRendered(html, "toast toast-end", "Toast horizontalPlacement End")
-    }
-
-    @Test
-    fun toast_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                verticalPlacement = ToastVerticalPlacement.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, "toast toast-top", "Toast verticalPlacement Top")
-    }
-
-    @Test
-    fun toast_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                verticalPlacement = ToastVerticalPlacement.Middle,
-                content = { },
-            )
-        }
-        assertRendered(html, "toast toast-middle", "Toast verticalPlacement Middle")
-    }
-
-    @Test
-    fun toast_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                verticalPlacement = ToastVerticalPlacement.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, "toast toast-bottom", "Toast verticalPlacement Bottom")
-    }
+    fun toast_verticalPlacement() = assertEachEntry("Toast verticalPlacement", mapOf(ToastVerticalPlacement.Top to "toast toast-top", ToastVerticalPlacement.Middle to "toast toast-middle", ToastVerticalPlacement.Bottom to "toast toast-bottom")) { daisyToast(verticalPlacement = it, content = { }) }
 
     @Test
     fun toastClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyToastClasses()
         }
-        assertRendered(html, "toast", "ToastClasses defaults")
+        assertRendered(html, Expected("ToastClasses defaults", "toast"))
     }
 
     @Test
-    fun toastClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses()
-        }
-        assertRendered(html, "toast", "ToastClasses all flags")
-    }
+    fun toastClasses_all_flags() = assertRenders(Expected("ToastClasses all flags", "toast", content = false)) { daisyToastClasses() }
 
     @Test
-    fun toastClasses_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                horizontalPlacement = ToastHorizontalPlacement.Start,
-            )
-        }
-        assertRendered(html, "toast toast-start", "ToastClasses horizontalPlacement Start")
-    }
+    fun toastClasses_horizontalPlacement() = assertEachEntry("ToastClasses horizontalPlacement", mapOf(ToastHorizontalPlacement.Start to "toast toast-start", ToastHorizontalPlacement.Center to "toast toast-center", ToastHorizontalPlacement.End to "toast toast-end")) { daisyToastClasses(horizontalPlacement = it) }
 
     @Test
-    fun toastClasses_horizontalPlacement_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                horizontalPlacement = ToastHorizontalPlacement.Center,
-            )
-        }
-        assertRendered(html, "toast toast-center", "ToastClasses horizontalPlacement Center")
-    }
-
-    @Test
-    fun toastClasses_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                horizontalPlacement = ToastHorizontalPlacement.End,
-            )
-        }
-        assertRendered(html, "toast toast-end", "ToastClasses horizontalPlacement End")
-    }
-
-    @Test
-    fun toastClasses_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                verticalPlacement = ToastVerticalPlacement.Top,
-            )
-        }
-        assertRendered(html, "toast toast-top", "ToastClasses verticalPlacement Top")
-    }
-
-    @Test
-    fun toastClasses_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                verticalPlacement = ToastVerticalPlacement.Middle,
-            )
-        }
-        assertRendered(html, "toast toast-middle", "ToastClasses verticalPlacement Middle")
-    }
-
-    @Test
-    fun toastClasses_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                verticalPlacement = ToastVerticalPlacement.Bottom,
-            )
-        }
-        assertRendered(html, "toast toast-bottom", "ToastClasses verticalPlacement Bottom")
-    }
+    fun toastClasses_verticalPlacement() = assertEachEntry("ToastClasses verticalPlacement", mapOf(ToastVerticalPlacement.Top to "toast toast-top", ToastVerticalPlacement.Middle to "toast toast-middle", ToastVerticalPlacement.Bottom to "toast toast-bottom")) { daisyToastClasses(verticalPlacement = it) }
 }

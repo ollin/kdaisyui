@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class InputCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -29,25 +55,13 @@ class InputCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyInput()
         }
-        assertRendered(html, "input", "Input defaults")
+        assertRendered(html, Expected("Input defaults", "input"))
         assertTrue(html.contains("type=\""), "Input sets type")
     }
 
     @Test
     fun input_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                id = htmlId("x-cov-id"),
-                ghost = true,
-                disabled = true,
-                placeholder = "x",
-                value = "x",
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-            )
-        }
-        assertRendered(html, "input input-ghost zz-extra", "Input all flags")
-        assertCommonFlags(html, "Input", content = false)
+        val html = allFlags(Expected("Input all flags", "input input-ghost zz-extra", content = false)) { daisyInput(id = ID, ghost = true, disabled = true, placeholder = "x", value = "x", extraClasses = EXTRA, attrs = ATTRS) }
         assertTrue(html.contains("placeholder=\"x\""), "Input placeholder")
         assertTrue(html.contains("value=\"x\""), "Input value")
         assertTrue(html.contains("type=\""), "Input sets type")
@@ -57,280 +71,25 @@ class InputCoverageTest {
     }
 
     @Test
-    fun input_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Neutral,
-            )
-        }
-        assertRendered(html, "input input-neutral", "Input color Neutral")
-    }
+    fun input_color() = assertEachEntry("Input color", mapOf(InputColor.Neutral to "input input-neutral", InputColor.Primary to "input input-primary", InputColor.Secondary to "input input-secondary", InputColor.Accent to "input input-accent", InputColor.Info to "input input-info", InputColor.Success to "input input-success", InputColor.Warning to "input input-warning", InputColor.Error to "input input-error")) { daisyInput(color = it) }
 
     @Test
-    fun input_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Primary,
-            )
-        }
-        assertRendered(html, "input input-primary", "Input color Primary")
-    }
-
-    @Test
-    fun input_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Secondary,
-            )
-        }
-        assertRendered(html, "input input-secondary", "Input color Secondary")
-    }
-
-    @Test
-    fun input_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Accent,
-            )
-        }
-        assertRendered(html, "input input-accent", "Input color Accent")
-    }
-
-    @Test
-    fun input_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Info,
-            )
-        }
-        assertRendered(html, "input input-info", "Input color Info")
-    }
-
-    @Test
-    fun input_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Success,
-            )
-        }
-        assertRendered(html, "input input-success", "Input color Success")
-    }
-
-    @Test
-    fun input_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Warning,
-            )
-        }
-        assertRendered(html, "input input-warning", "Input color Warning")
-    }
-
-    @Test
-    fun input_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                color = InputColor.Error,
-            )
-        }
-        assertRendered(html, "input input-error", "Input color Error")
-    }
-
-    @Test
-    fun input_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                size = InputSize.Xs,
-            )
-        }
-        assertRendered(html, "input input-xs", "Input size Xs")
-    }
-
-    @Test
-    fun input_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                size = InputSize.Sm,
-            )
-        }
-        assertRendered(html, "input input-sm", "Input size Sm")
-    }
-
-    @Test
-    fun input_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                size = InputSize.Md,
-            )
-        }
-        assertRendered(html, "input input-md", "Input size Md")
-    }
-
-    @Test
-    fun input_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                size = InputSize.Lg,
-            )
-        }
-        assertRendered(html, "input input-lg", "Input size Lg")
-    }
-
-    @Test
-    fun input_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInput(
-                size = InputSize.Xl,
-            )
-        }
-        assertRendered(html, "input input-xl", "Input size Xl")
-    }
+    fun input_size() = assertEachEntry("Input size", mapOf(InputSize.Xs to "input input-xs", InputSize.Sm to "input input-sm", InputSize.Md to "input input-md", InputSize.Lg to "input input-lg", InputSize.Xl to "input input-xl")) { daisyInput(size = it) }
 
     @Test
     fun inputClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyInputClasses()
         }
-        assertRendered(html, "input", "InputClasses defaults")
+        assertRendered(html, Expected("InputClasses defaults", "input"))
     }
 
     @Test
-    fun inputClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                ghost = true,
-            )
-        }
-        assertRendered(html, "input input-ghost", "InputClasses all flags")
-    }
+    fun inputClasses_all_flags() = assertRenders(Expected("InputClasses all flags", "input input-ghost", content = false)) { daisyInputClasses(ghost = true) }
 
     @Test
-    fun inputClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Neutral,
-            )
-        }
-        assertRendered(html, "input input-neutral", "InputClasses color Neutral")
-    }
+    fun inputClasses_color() = assertEachEntry("InputClasses color", mapOf(InputColor.Neutral to "input input-neutral", InputColor.Primary to "input input-primary", InputColor.Secondary to "input input-secondary", InputColor.Accent to "input input-accent", InputColor.Info to "input input-info", InputColor.Success to "input input-success", InputColor.Warning to "input input-warning", InputColor.Error to "input input-error")) { daisyInputClasses(color = it) }
 
     @Test
-    fun inputClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Primary,
-            )
-        }
-        assertRendered(html, "input input-primary", "InputClasses color Primary")
-    }
-
-    @Test
-    fun inputClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Secondary,
-            )
-        }
-        assertRendered(html, "input input-secondary", "InputClasses color Secondary")
-    }
-
-    @Test
-    fun inputClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Accent,
-            )
-        }
-        assertRendered(html, "input input-accent", "InputClasses color Accent")
-    }
-
-    @Test
-    fun inputClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Info,
-            )
-        }
-        assertRendered(html, "input input-info", "InputClasses color Info")
-    }
-
-    @Test
-    fun inputClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Success,
-            )
-        }
-        assertRendered(html, "input input-success", "InputClasses color Success")
-    }
-
-    @Test
-    fun inputClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Warning,
-            )
-        }
-        assertRendered(html, "input input-warning", "InputClasses color Warning")
-    }
-
-    @Test
-    fun inputClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                color = InputColor.Error,
-            )
-        }
-        assertRendered(html, "input input-error", "InputClasses color Error")
-    }
-
-    @Test
-    fun inputClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                size = InputSize.Xs,
-            )
-        }
-        assertRendered(html, "input input-xs", "InputClasses size Xs")
-    }
-
-    @Test
-    fun inputClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                size = InputSize.Sm,
-            )
-        }
-        assertRendered(html, "input input-sm", "InputClasses size Sm")
-    }
-
-    @Test
-    fun inputClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                size = InputSize.Md,
-            )
-        }
-        assertRendered(html, "input input-md", "InputClasses size Md")
-    }
-
-    @Test
-    fun inputClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                size = InputSize.Lg,
-            )
-        }
-        assertRendered(html, "input input-lg", "InputClasses size Lg")
-    }
-
-    @Test
-    fun inputClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyInputClasses(
-                size = InputSize.Xl,
-            )
-        }
-        assertRendered(html, "input input-xl", "InputClasses size Xl")
-    }
+    fun inputClasses_size() = assertEachEntry("InputClasses size", mapOf(InputSize.Xs to "input input-xs", InputSize.Sm to "input input-sm", InputSize.Md to "input input-md", InputSize.Lg to "input input-lg", InputSize.Xl to "input input-xl")) { daisyInputClasses(size = it) }
 }

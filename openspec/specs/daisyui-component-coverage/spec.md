@@ -595,7 +595,7 @@ popover id="popover-1" style="position-anchor:--anchor-1">`.
 
 - **WHEN** the component tests are generated
 - **THEN** the test for the documented popover `<ul>` calls `daisyDropdownPopover` and asserts its tag and classes
-- **AND** the function's coverage test asserts the `popover` attribute and the `position-anchor`
+- **AND** the function's custom-part test asserts the `popover` attribute and the `position-anchor`
 
 #### Scenario: A placement reaches the popover
 

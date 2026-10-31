@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class DockCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,143 +57,30 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock", "Dock defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Dock defaults", "dock", closes = "</div></div>"))
     }
 
     @Test
     fun dock_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "dock zz-extra", "Dock all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Dock")
+        val html = allFlags(Expected("Dock all flags", "dock zz-extra", closes = "</div></div>")) { daisyDock(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun dock_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "dock dock-xs", "Dock size Xs")
-    }
-
-    @Test
-    fun dock_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "dock dock-sm", "Dock size Sm")
-    }
-
-    @Test
-    fun dock_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "dock dock-md", "Dock size Md")
-    }
-
-    @Test
-    fun dock_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "dock dock-lg", "Dock size Lg")
-    }
-
-    @Test
-    fun dock_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "dock dock-xl", "Dock size Xl")
-    }
+    fun dock_size() = assertEachEntry("Dock size", mapOf(DockSize.Xs to "dock dock-xs", DockSize.Sm to "dock dock-sm", DockSize.Md to "dock dock-md", DockSize.Lg to "dock dock-lg", DockSize.Xl to "dock dock-xl")) { daisyDock(size = it, content = { }) }
 
     @Test
     fun dockClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyDockClasses()
         }
-        assertRendered(html, "dock", "DockClasses defaults")
+        assertRendered(html, Expected("DockClasses defaults", "dock"))
     }
 
     @Test
-    fun dockClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses()
-        }
-        assertRendered(html, "dock", "DockClasses all flags")
-    }
+    fun dockClasses_all_flags() = assertRenders(Expected("DockClasses all flags", "dock", content = false)) { daisyDockClasses() }
 
     @Test
-    fun dockClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Xs,
-            )
-        }
-        assertRendered(html, "dock dock-xs", "DockClasses size Xs")
-    }
-
-    @Test
-    fun dockClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Sm,
-            )
-        }
-        assertRendered(html, "dock dock-sm", "DockClasses size Sm")
-    }
-
-    @Test
-    fun dockClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Md,
-            )
-        }
-        assertRendered(html, "dock dock-md", "DockClasses size Md")
-    }
-
-    @Test
-    fun dockClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Lg,
-            )
-        }
-        assertRendered(html, "dock dock-lg", "DockClasses size Lg")
-    }
-
-    @Test
-    fun dockClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Xl,
-            )
-        }
-        assertRendered(html, "dock dock-xl", "DockClasses size Xl")
-    }
+    fun dockClasses_size() = assertEachEntry("DockClasses size", mapOf(DockSize.Xs to "dock dock-xs", DockSize.Sm to "dock dock-sm", DockSize.Md to "dock dock-md", DockSize.Lg to "dock dock-lg", DockSize.Xl to "dock dock-xl")) { daisyDockClasses(size = it) }
 
     @Test
     fun dockItem_defaults() {
@@ -182,17 +95,7 @@ class DockCoverageTest {
 
     @Test
     fun dockItem_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockItem(
-                id = htmlId("x-cov-id"),
-                active = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "dock-active zz-extra", "DockItem all flags", closes = "</button></div>")
-        assertCommonFlags(html, "DockItem")
+        val html = allFlags(Expected("DockItem all flags", "dock-active zz-extra", closes = "</button></div>")) { daisyDockItem(id = ID, active = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -204,14 +107,7 @@ class DockCoverageTest {
     }
 
     @Test
-    fun dockItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockItemClasses(
-                active = true,
-            )
-        }
-        assertRendered(html, "dock-active", "DockItemClasses all flags")
-    }
+    fun dockItemClasses_all_flags() = assertRenders(Expected("DockItemClasses all flags", "dock-active", content = false)) { daisyDockItemClasses(active = true) }
 
     @Test
     fun dockLabel_defaults() {
@@ -220,21 +116,12 @@ class DockCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "dock-label", "DockLabel defaults", closes = "</span></div>")
+        assertRendered(html, Expected("DockLabel defaults", "dock-label", closes = "</span></div>"))
     }
 
     @Test
     fun dockLabel_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockLabel(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "dock-label zz-extra", "DockLabel all flags", closes = "</span></div>")
-        assertCommonFlags(html, "DockLabel")
+        val html = allFlags(Expected("DockLabel all flags", "dock-label zz-extra", closes = "</span></div>")) { daisyDockLabel(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -242,14 +129,9 @@ class DockCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyDockLabelClasses()
         }
-        assertRendered(html, "dock-label", "DockLabelClasses defaults")
+        assertRendered(html, Expected("DockLabelClasses defaults", "dock-label"))
     }
 
     @Test
-    fun dockLabelClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockLabelClasses()
-        }
-        assertRendered(html, "dock-label", "DockLabelClasses all flags")
-    }
+    fun dockLabelClasses_all_flags() = assertRenders(Expected("DockLabelClasses all flags", "dock-label", content = false)) { daisyDockLabelClasses() }
 }

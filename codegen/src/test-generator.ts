@@ -754,19 +754,43 @@ function sortedClasses(arr) {
  * doing so here: this is a refactoring, and a refactoring does not change an assertion.
  */
 const COVERAGE_HELPER = `
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "\${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\\"x-cov-id\\""), "$label id")
-        assertTrue(html.contains("data-attrs=\\"yes\\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\\"yes\\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("\$label \$entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\\"x-cov-id\\""), "\${expected.label} id")
+        assertTrue(html.contains("data-attrs=\\"yes\\""), "\${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\\"yes\\""), "\${expected.label} content")
     }
 `
 
@@ -777,9 +801,14 @@ function closesSuffix(ctx) {
   return `</${tag}></${ctx.wrapperTag}>`
 }
 
-function renderedAssert(ctx, classes, label, withCloses) {
+/** The `Expected` a case asserts against, as Kotlin. */
+function expectedValue(ctx, classes, label, { withCloses = false, content = true } = {}) {
   const closes = withCloses ? closesSuffix(ctx) : null
-  return `assertRendered(html, "${classes}", "${label}"${closes ? `, closes = "${closes}"` : ''})`
+  return `Expected("${label}", "${classes}"${closes ? `, closes = "${closes}"` : ''}${content ? '' : ', content = false'})`
+}
+
+function renderedAssert(ctx, classes, label, withCloses) {
+  return `assertRendered(html, ${expectedValue(ctx, classes, label, { withCloses })})`
 }
 
 function renderTest(funcName, wrapperFn, callArgs, asserts) {
@@ -867,9 +896,11 @@ function allFlagsAsserts(ctx, boolCss) {
   // and reverted: it needed five parameters against Kotlin's threshold of four and traded
   // the duplication for an Excess Number of Function Arguments smell. Two helpers of three
   // and four parameters say the same thing and trip neither rule.
+  const classes = sortedClasses([ctx.base, ...boolCss, ...(ctx.hasHatches ? ['zz-extra'] : [])])
   const asserts = [
-    renderedAssert(ctx, sortedClasses([ctx.base, ...boolCss, ...(ctx.hasHatches ? ['zz-extra'] : [])]), `${ctx.daisyName} all flags`, true),
-    ...(ctx.hasHatches ? [`assertCommonFlags(html, "${ctx.daisyName}"${ctx.hasContent ? '' : ', content = false'})`] : []),
+    `val expected = ${expectedValue(ctx, classes, `${ctx.daisyName} all flags`, { withCloses: true, content: ctx.hasContent })}`,
+    'assertRendered(html, expected)',
+    ...(ctx.hasHatches ? ['assertCommonFlags(html, expected)'] : []),
   ]
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)
@@ -882,10 +913,42 @@ function allFlagsAsserts(ctx, boolCss) {
 function allFlagsTest(ctx) {
   const boolCss = []
   const args = allFlagsArgs(ctx, boolCss)
-  return wrapTest(ctx, `${ctx.fnBase}_all_flags`, args, allFlagsAsserts(ctx, boolCss))
+  const asserts = allFlagsAsserts(ctx, boolCss)
+  // Inside a plain `div`, the hatches and their assertions are the same in every function, so they
+  // go through `allFlags` and the constants; a nested wrapper keeps the call written out.
+  if (ctx.wrapperFn !== 'div') return wrapTest(ctx, `${ctx.fnBase}_all_flags`, args, asserts)
+  if (!ctx.hasHatches) return siblingAllFlagsTest(ctx, args, asserts)
+  const hatched = args.map(arg => HATCH_CONSTANTS[arg] ?? arg).join(', ')
+  const rest = asserts.filter(line => !line.startsWith('val expected') && line !== 'assertRendered(html, expected)' && line !== 'assertCommonFlags(html, expected)')
+  const expected = asserts[0].replace('val expected = ', '')
+  return `
+    @Test
+    fun ${ctx.fnBase}_all_flags() {
+        val html = allFlags(${expected}) { daisy${ctx.daisyName}(${hatched}) }
+${rest.map(line => `        ${line}`).join('\n')}${rest.length > 0 ? '\n' : ''}    }
+`
+}
+
+/** A class sibling's all-flags test: no hatches, so one call when it asserts nothing else. */
+function siblingAllFlagsTest(ctx, args, asserts) {
+  const expected = asserts[0].replace('val expected = ', '')
+  if (asserts.length > 2) return wrapTest(ctx, `${ctx.fnBase}_all_flags`, args, asserts)
+  return `
+    @Test
+    fun ${ctx.fnBase}_all_flags() = assertRenders(${expected}) { daisy${ctx.daisyName}(${args.join(', ')}) }
+`
+}
+
+/** The all-flags arguments every function passes alike, and the constant each becomes. */
+const HATCH_CONSTANTS: Readonly<Record<string, string>> = {
+  'id = htmlId("x-cov-id")': 'id = ID',
+  'extraClasses = "zz-extra"': 'extraClasses = EXTRA',
+  'attrs = { attributes["data-attrs"] = "yes" }': 'attrs = ATTRS',
+  'content = { attributes["data-content"] = "yes" }': 'content = CONTENT',
 }
 
 function enumArmTests(ctx) {
+  if (ctx.wrapperFn === 'div') return ctx.params.filter((p) => p.kind === 'enumClass').map(e => enumAxisTest(ctx, e)).join('')
   let tests = ''
   for (const e of ctx.params.filter((p) => p.kind === 'enumClass')) {
     for (const { entry, css } of e.enumEntries) {
@@ -897,6 +960,16 @@ function enumArmTests(ctx) {
     }
   }
   return tests
+}
+
+/** One test for an axis: a table from each entry to the classes it must render. */
+function enumAxisTest(ctx, e) {
+  const table = e.enumEntries.map(({ entry, css }) => `${e.enumType}.${entry} to "${sortedClasses([ctx.base, css])}"`).join(', ')
+  const call = `daisy${ctx.daisyName}(${[`${e.name} = it`, ...requiredArgs(ctx)].join(', ')})`
+  return `
+    @Test
+    fun ${ctx.fnBase}_${e.name}() = assertEachEntry("${ctx.daisyName} ${e.name}", mapOf(${table})) { ${call} }
+`
 }
 
 function textArmTest(ctx) {
@@ -947,6 +1020,8 @@ function coverageImports(funcs, enums): Set<string> {
     'import kotlin.test.Test',
     'import kotlin.test.assertEquals',
     'import kotlin.test.assertTrue',
+    'import kotlinx.html.FlowContent',
+    'import kotlinx.html.Tag',
   ])
   for (const fn of funcs) {
     if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)

@@ -1,0 +1,5 @@
+schema: spec-driven
+created: 2026-10-31
+# Generated test shape only: no behaviour of the library or of a gate changes, so nothing
+# belongs in openspec/specs/.
+skip_specs: true

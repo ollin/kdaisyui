@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class MegamenuCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,188 +57,36 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu", "Megamenu defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Megamenu defaults", "megamenu", closes = "</div></div>"))
     }
 
     @Test
     fun megamenu_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                id = htmlId("x-cov-id"),
-                vertical = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-vertical zz-extra", "Megamenu all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Megamenu")
+        val html = allFlags(Expected("Megamenu all flags", "megamenu megamenu-vertical zz-extra", closes = "</div></div>")) { daisyMegamenu(id = ID, vertical = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun megamenu_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-xs", "Megamenu size Xs")
-    }
+    fun megamenu_size() = assertEachEntry("Megamenu size", mapOf(MegamenuSize.Xs to "megamenu megamenu-xs", MegamenuSize.Sm to "megamenu megamenu-sm", MegamenuSize.Md to "megamenu megamenu-md", MegamenuSize.Lg to "megamenu megamenu-lg", MegamenuSize.Xl to "megamenu megamenu-xl")) { daisyMegamenu(size = it, content = { }) }
 
     @Test
-    fun megamenu_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-sm", "Megamenu size Sm")
-    }
-
-    @Test
-    fun megamenu_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-md", "Megamenu size Md")
-    }
-
-    @Test
-    fun megamenu_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-lg", "Megamenu size Lg")
-    }
-
-    @Test
-    fun megamenu_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-xl", "Megamenu size Xl")
-    }
-
-    @Test
-    fun megamenu_width_wide() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                width = MegamenuWidth.Wide,
-                content = { },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-wide", "Megamenu width Wide")
-    }
-
-    @Test
-    fun megamenu_width_full() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                width = MegamenuWidth.Full,
-                content = { },
-            )
-        }
-        assertRendered(html, "megamenu megamenu-full", "Megamenu width Full")
-    }
+    fun megamenu_width() = assertEachEntry("Megamenu width", mapOf(MegamenuWidth.Wide to "megamenu megamenu-wide", MegamenuWidth.Full to "megamenu megamenu-full")) { daisyMegamenu(width = it, content = { }) }
 
     @Test
     fun megamenuClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenuClasses()
         }
-        assertRendered(html, "megamenu", "MegamenuClasses defaults")
+        assertRendered(html, Expected("MegamenuClasses defaults", "megamenu"))
     }
 
     @Test
-    fun megamenuClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                vertical = true,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-vertical", "MegamenuClasses all flags")
-    }
+    fun megamenuClasses_all_flags() = assertRenders(Expected("MegamenuClasses all flags", "megamenu megamenu-vertical", content = false)) { daisyMegamenuClasses(vertical = true) }
 
     @Test
-    fun megamenuClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Xs,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-xs", "MegamenuClasses size Xs")
-    }
+    fun megamenuClasses_size() = assertEachEntry("MegamenuClasses size", mapOf(MegamenuSize.Xs to "megamenu megamenu-xs", MegamenuSize.Sm to "megamenu megamenu-sm", MegamenuSize.Md to "megamenu megamenu-md", MegamenuSize.Lg to "megamenu megamenu-lg", MegamenuSize.Xl to "megamenu megamenu-xl")) { daisyMegamenuClasses(size = it) }
 
     @Test
-    fun megamenuClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Sm,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-sm", "MegamenuClasses size Sm")
-    }
-
-    @Test
-    fun megamenuClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Md,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-md", "MegamenuClasses size Md")
-    }
-
-    @Test
-    fun megamenuClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Lg,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-lg", "MegamenuClasses size Lg")
-    }
-
-    @Test
-    fun megamenuClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Xl,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-xl", "MegamenuClasses size Xl")
-    }
-
-    @Test
-    fun megamenuClasses_width_wide() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                width = MegamenuWidth.Wide,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-wide", "MegamenuClasses width Wide")
-    }
-
-    @Test
-    fun megamenuClasses_width_full() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                width = MegamenuWidth.Full,
-            )
-        }
-        assertRendered(html, "megamenu megamenu-full", "MegamenuClasses width Full")
-    }
+    fun megamenuClasses_width() = assertEachEntry("MegamenuClasses width", mapOf(MegamenuWidth.Wide to "megamenu megamenu-wide", MegamenuWidth.Full to "megamenu megamenu-full")) { daisyMegamenuClasses(width = it) }
 
     @Test
     fun megamenuActive_defaults() {
@@ -221,21 +95,12 @@ class MegamenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "megamenu-active", "MegamenuActive defaults", closes = "</span></div>")
+        assertRendered(html, Expected("MegamenuActive defaults", "megamenu-active", closes = "</span></div>"))
     }
 
     @Test
     fun megamenuActive_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuActive(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "megamenu-active zz-extra", "MegamenuActive all flags", closes = "</span></div>")
-        assertCommonFlags(html, "MegamenuActive")
+        val html = allFlags(Expected("MegamenuActive all flags", "megamenu-active zz-extra", closes = "</span></div>")) { daisyMegamenuActive(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -243,16 +108,11 @@ class MegamenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMegamenuActiveClasses()
         }
-        assertRendered(html, "megamenu-active", "MegamenuActiveClasses defaults")
+        assertRendered(html, Expected("MegamenuActiveClasses defaults", "megamenu-active"))
     }
 
     @Test
-    fun megamenuActiveClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuActiveClasses()
-        }
-        assertRendered(html, "megamenu-active", "MegamenuActiveClasses all flags")
-    }
+    fun megamenuActiveClasses_all_flags() = assertRenders(Expected("MegamenuActiveClasses all flags", "megamenu-active", content = false)) { daisyMegamenuActiveClasses() }
 
     @Test
     fun megamenuPanel_defaults() {
@@ -267,15 +127,6 @@ class MegamenuCoverageTest {
 
     @Test
     fun megamenuPanel_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuPanel(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "zz-extra", "MegamenuPanel all flags", closes = "</div></div>")
-        assertCommonFlags(html, "MegamenuPanel")
+        val html = allFlags(Expected("MegamenuPanel all flags", "zz-extra", closes = "</div></div>")) { daisyMegamenuPanel(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 }

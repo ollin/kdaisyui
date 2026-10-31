@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class StackCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,120 +57,28 @@ class StackCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stack", "Stack defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Stack defaults", "stack", closes = "</div></div>"))
     }
 
     @Test
     fun stack_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStack(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stack zz-extra", "Stack all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Stack")
+        val html = allFlags(Expected("Stack all flags", "stack zz-extra", closes = "</div></div>")) { daisyStack(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun stack_placement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStack(
-                placement = StackPlacement.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, "stack stack-top", "Stack placement Top")
-    }
-
-    @Test
-    fun stack_placement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStack(
-                placement = StackPlacement.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, "stack stack-bottom", "Stack placement Bottom")
-    }
-
-    @Test
-    fun stack_placement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStack(
-                placement = StackPlacement.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, "stack stack-start", "Stack placement Start")
-    }
-
-    @Test
-    fun stack_placement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStack(
-                placement = StackPlacement.End,
-                content = { },
-            )
-        }
-        assertRendered(html, "stack stack-end", "Stack placement End")
-    }
+    fun stack_placement() = assertEachEntry("Stack placement", mapOf(StackPlacement.Top to "stack stack-top", StackPlacement.Bottom to "stack stack-bottom", StackPlacement.Start to "stack stack-start", StackPlacement.End to "stack stack-end")) { daisyStack(placement = it, content = { }) }
 
     @Test
     fun stackClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyStackClasses()
         }
-        assertRendered(html, "stack", "StackClasses defaults")
+        assertRendered(html, Expected("StackClasses defaults", "stack"))
     }
 
     @Test
-    fun stackClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStackClasses()
-        }
-        assertRendered(html, "stack", "StackClasses all flags")
-    }
+    fun stackClasses_all_flags() = assertRenders(Expected("StackClasses all flags", "stack", content = false)) { daisyStackClasses() }
 
     @Test
-    fun stackClasses_placement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStackClasses(
-                placement = StackPlacement.Top,
-            )
-        }
-        assertRendered(html, "stack stack-top", "StackClasses placement Top")
-    }
-
-    @Test
-    fun stackClasses_placement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStackClasses(
-                placement = StackPlacement.Bottom,
-            )
-        }
-        assertRendered(html, "stack stack-bottom", "StackClasses placement Bottom")
-    }
-
-    @Test
-    fun stackClasses_placement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStackClasses(
-                placement = StackPlacement.Start,
-            )
-        }
-        assertRendered(html, "stack stack-start", "StackClasses placement Start")
-    }
-
-    @Test
-    fun stackClasses_placement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStackClasses(
-                placement = StackPlacement.End,
-            )
-        }
-        assertRendered(html, "stack stack-end", "StackClasses placement End")
-    }
+    fun stackClasses_placement() = assertEachEntry("StackClasses placement", mapOf(StackPlacement.Top to "stack stack-top", StackPlacement.Bottom to "stack stack-bottom", StackPlacement.Start to "stack stack-start", StackPlacement.End to "stack stack-end")) { daisyStackClasses(placement = it) }
 }

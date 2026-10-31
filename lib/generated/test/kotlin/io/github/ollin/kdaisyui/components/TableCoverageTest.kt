@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class TableCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,148 +57,28 @@ class TableCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "table", "Table defaults", closes = "</table></div>")
+        assertRendered(html, Expected("Table defaults", "table", closes = "</table></div>"))
     }
 
     @Test
     fun table_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                id = htmlId("x-cov-id"),
-                pinCols = true,
-                pinRows = true,
-                zebra = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "table table-pin-cols table-pin-rows table-zebra zz-extra", "Table all flags", closes = "</table></div>")
-        assertCommonFlags(html, "Table")
+        val html = allFlags(Expected("Table all flags", "table table-pin-cols table-pin-rows table-zebra zz-extra", closes = "</table></div>")) { daisyTable(id = ID, pinCols = true, pinRows = true, zebra = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun table_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "table table-xs", "Table size Xs")
-    }
-
-    @Test
-    fun table_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "table table-sm", "Table size Sm")
-    }
-
-    @Test
-    fun table_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "table table-md", "Table size Md")
-    }
-
-    @Test
-    fun table_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "table table-lg", "Table size Lg")
-    }
-
-    @Test
-    fun table_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "table table-xl", "Table size Xl")
-    }
+    fun table_size() = assertEachEntry("Table size", mapOf(TableSize.Xs to "table table-xs", TableSize.Sm to "table table-sm", TableSize.Md to "table table-md", TableSize.Lg to "table table-lg", TableSize.Xl to "table table-xl")) { daisyTable(size = it, content = { }) }
 
     @Test
     fun tableClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyTableClasses()
         }
-        assertRendered(html, "table", "TableClasses defaults")
+        assertRendered(html, Expected("TableClasses defaults", "table"))
     }
 
     @Test
-    fun tableClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                pinCols = true,
-                pinRows = true,
-                zebra = true,
-            )
-        }
-        assertRendered(html, "table table-pin-cols table-pin-rows table-zebra", "TableClasses all flags")
-    }
+    fun tableClasses_all_flags() = assertRenders(Expected("TableClasses all flags", "table table-pin-cols table-pin-rows table-zebra", content = false)) { daisyTableClasses(pinCols = true, pinRows = true, zebra = true) }
 
     @Test
-    fun tableClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Xs,
-            )
-        }
-        assertRendered(html, "table table-xs", "TableClasses size Xs")
-    }
-
-    @Test
-    fun tableClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Sm,
-            )
-        }
-        assertRendered(html, "table table-sm", "TableClasses size Sm")
-    }
-
-    @Test
-    fun tableClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Md,
-            )
-        }
-        assertRendered(html, "table table-md", "TableClasses size Md")
-    }
-
-    @Test
-    fun tableClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Lg,
-            )
-        }
-        assertRendered(html, "table table-lg", "TableClasses size Lg")
-    }
-
-    @Test
-    fun tableClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Xl,
-            )
-        }
-        assertRendered(html, "table table-xl", "TableClasses size Xl")
-    }
+    fun tableClasses_size() = assertEachEntry("TableClasses size", mapOf(TableSize.Xs to "table table-xs", TableSize.Sm to "table table-sm", TableSize.Md to "table table-md", TableSize.Lg to "table table-lg", TableSize.Xl to "table table-xl")) { daisyTableClasses(size = it) }
 }

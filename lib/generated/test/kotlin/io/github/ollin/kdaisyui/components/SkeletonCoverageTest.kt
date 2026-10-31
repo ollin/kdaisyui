@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class SkeletonCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,21 +57,12 @@ class SkeletonCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "skeleton", "Skeleton defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Skeleton defaults", "skeleton", closes = "</div></div>"))
     }
 
     @Test
     fun skeleton_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySkeleton(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "skeleton zz-extra", "Skeleton all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Skeleton")
+        val html = allFlags(Expected("Skeleton all flags", "skeleton zz-extra", closes = "</div></div>")) { daisySkeleton(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -53,16 +70,11 @@ class SkeletonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySkeletonClasses()
         }
-        assertRendered(html, "skeleton", "SkeletonClasses defaults")
+        assertRendered(html, Expected("SkeletonClasses defaults", "skeleton"))
     }
 
     @Test
-    fun skeletonClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySkeletonClasses()
-        }
-        assertRendered(html, "skeleton", "SkeletonClasses all flags")
-    }
+    fun skeletonClasses_all_flags() = assertRenders(Expected("SkeletonClasses all flags", "skeleton", content = false)) { daisySkeletonClasses() }
 
     @Test
     fun skeletonText_defaults() {
@@ -71,21 +83,12 @@ class SkeletonCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "skeleton skeleton-text", "SkeletonText defaults", closes = "</span></div>")
+        assertRendered(html, Expected("SkeletonText defaults", "skeleton skeleton-text", closes = "</span></div>"))
     }
 
     @Test
     fun skeletonText_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySkeletonText(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "skeleton skeleton-text zz-extra", "SkeletonText all flags", closes = "</span></div>")
-        assertCommonFlags(html, "SkeletonText")
+        val html = allFlags(Expected("SkeletonText all flags", "skeleton skeleton-text zz-extra", closes = "</span></div>")) { daisySkeletonText(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -93,14 +96,9 @@ class SkeletonCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisySkeletonTextClasses()
         }
-        assertRendered(html, "skeleton skeleton-text", "SkeletonTextClasses defaults")
+        assertRendered(html, Expected("SkeletonTextClasses defaults", "skeleton skeleton-text"))
     }
 
     @Test
-    fun skeletonTextClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySkeletonTextClasses()
-        }
-        assertRendered(html, "skeleton skeleton-text", "SkeletonTextClasses all flags")
-    }
+    fun skeletonTextClasses_all_flags() = assertRenders(Expected("SkeletonTextClasses all flags", "skeleton skeleton-text", content = false)) { daisySkeletonTextClasses() }
 }

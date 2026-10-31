@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class ModalCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,146 +57,36 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal", "Modal defaults", closes = "</dialog></div>")
+        assertRendered(html, Expected("Modal defaults", "modal", closes = "</dialog></div>"))
     }
 
     @Test
     fun modal_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                id = htmlId("x-cov-id"),
-                open = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "modal modal-open zz-extra", "Modal all flags", closes = "</dialog></div>")
-        assertCommonFlags(html, "Modal")
+        val html = allFlags(Expected("Modal all flags", "modal modal-open zz-extra", closes = "</dialog></div>")) { daisyModal(id = ID, open = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun modal_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                verticalPlacement = ModalVerticalPlacement.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, "modal modal-top", "Modal verticalPlacement Top")
-    }
+    fun modal_verticalPlacement() = assertEachEntry("Modal verticalPlacement", mapOf(ModalVerticalPlacement.Top to "modal modal-top", ModalVerticalPlacement.Middle to "modal modal-middle", ModalVerticalPlacement.Bottom to "modal modal-bottom")) { daisyModal(verticalPlacement = it, content = { }) }
 
     @Test
-    fun modal_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                verticalPlacement = ModalVerticalPlacement.Middle,
-                content = { },
-            )
-        }
-        assertRendered(html, "modal modal-middle", "Modal verticalPlacement Middle")
-    }
-
-    @Test
-    fun modal_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                verticalPlacement = ModalVerticalPlacement.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, "modal modal-bottom", "Modal verticalPlacement Bottom")
-    }
-
-    @Test
-    fun modal_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                horizontalPlacement = ModalHorizontalPlacement.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, "modal modal-start", "Modal horizontalPlacement Start")
-    }
-
-    @Test
-    fun modal_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                horizontalPlacement = ModalHorizontalPlacement.End,
-                content = { },
-            )
-        }
-        assertRendered(html, "modal modal-end", "Modal horizontalPlacement End")
-    }
+    fun modal_horizontalPlacement() = assertEachEntry("Modal horizontalPlacement", mapOf(ModalHorizontalPlacement.Start to "modal modal-start", ModalHorizontalPlacement.End to "modal modal-end")) { daisyModal(horizontalPlacement = it, content = { }) }
 
     @Test
     fun modalClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyModalClasses()
         }
-        assertRendered(html, "modal", "ModalClasses defaults")
+        assertRendered(html, Expected("ModalClasses defaults", "modal"))
     }
 
     @Test
-    fun modalClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                open = true,
-            )
-        }
-        assertRendered(html, "modal modal-open", "ModalClasses all flags")
-    }
+    fun modalClasses_all_flags() = assertRenders(Expected("ModalClasses all flags", "modal modal-open", content = false)) { daisyModalClasses(open = true) }
 
     @Test
-    fun modalClasses_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                verticalPlacement = ModalVerticalPlacement.Top,
-            )
-        }
-        assertRendered(html, "modal modal-top", "ModalClasses verticalPlacement Top")
-    }
+    fun modalClasses_verticalPlacement() = assertEachEntry("ModalClasses verticalPlacement", mapOf(ModalVerticalPlacement.Top to "modal modal-top", ModalVerticalPlacement.Middle to "modal modal-middle", ModalVerticalPlacement.Bottom to "modal modal-bottom")) { daisyModalClasses(verticalPlacement = it) }
 
     @Test
-    fun modalClasses_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                verticalPlacement = ModalVerticalPlacement.Middle,
-            )
-        }
-        assertRendered(html, "modal modal-middle", "ModalClasses verticalPlacement Middle")
-    }
-
-    @Test
-    fun modalClasses_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                verticalPlacement = ModalVerticalPlacement.Bottom,
-            )
-        }
-        assertRendered(html, "modal modal-bottom", "ModalClasses verticalPlacement Bottom")
-    }
-
-    @Test
-    fun modalClasses_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                horizontalPlacement = ModalHorizontalPlacement.Start,
-            )
-        }
-        assertRendered(html, "modal modal-start", "ModalClasses horizontalPlacement Start")
-    }
-
-    @Test
-    fun modalClasses_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                horizontalPlacement = ModalHorizontalPlacement.End,
-            )
-        }
-        assertRendered(html, "modal modal-end", "ModalClasses horizontalPlacement End")
-    }
+    fun modalClasses_horizontalPlacement() = assertEachEntry("ModalClasses horizontalPlacement", mapOf(ModalHorizontalPlacement.Start to "modal modal-start", ModalHorizontalPlacement.End to "modal modal-end")) { daisyModalClasses(horizontalPlacement = it) }
 
     @Test
     fun modalBox_defaults() {
@@ -179,21 +95,12 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal-box", "ModalBox defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalBox defaults", "modal-box", closes = "</div></div>"))
     }
 
     @Test
     fun modalBox_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalBox(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "modal-box zz-extra", "ModalBox all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalBox")
+        val html = allFlags(Expected("ModalBox all flags", "modal-box zz-extra", closes = "</div></div>")) { daisyModalBox(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -201,16 +108,11 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalBoxClasses()
         }
-        assertRendered(html, "modal-box", "ModalBoxClasses defaults")
+        assertRendered(html, Expected("ModalBoxClasses defaults", "modal-box"))
     }
 
     @Test
-    fun modalBoxClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalBoxClasses()
-        }
-        assertRendered(html, "modal-box", "ModalBoxClasses all flags")
-    }
+    fun modalBoxClasses_all_flags() = assertRenders(Expected("ModalBoxClasses all flags", "modal-box", content = false)) { daisyModalBoxClasses() }
 
     @Test
     fun modalAction_defaults() {
@@ -219,21 +121,12 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal-action", "ModalAction defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalAction defaults", "modal-action", closes = "</div></div>"))
     }
 
     @Test
     fun modalAction_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalAction(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "modal-action zz-extra", "ModalAction all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalAction")
+        val html = allFlags(Expected("ModalAction all flags", "modal-action zz-extra", closes = "</div></div>")) { daisyModalAction(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -241,16 +134,11 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalActionClasses()
         }
-        assertRendered(html, "modal-action", "ModalActionClasses defaults")
+        assertRendered(html, Expected("ModalActionClasses defaults", "modal-action"))
     }
 
     @Test
-    fun modalActionClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalActionClasses()
-        }
-        assertRendered(html, "modal-action", "ModalActionClasses all flags")
-    }
+    fun modalActionClasses_all_flags() = assertRenders(Expected("ModalActionClasses all flags", "modal-action", content = false)) { daisyModalActionClasses() }
 
     @Test
     fun modalBackdrop_defaults() {
@@ -259,21 +147,12 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal-backdrop", "ModalBackdrop defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalBackdrop defaults", "modal-backdrop", closes = "</div></div>"))
     }
 
     @Test
     fun modalBackdrop_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalBackdrop(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "modal-backdrop zz-extra", "ModalBackdrop all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalBackdrop")
+        val html = allFlags(Expected("ModalBackdrop all flags", "modal-backdrop zz-extra", closes = "</div></div>")) { daisyModalBackdrop(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -281,36 +160,23 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalBackdropClasses()
         }
-        assertRendered(html, "modal-backdrop", "ModalBackdropClasses defaults")
+        assertRendered(html, Expected("ModalBackdropClasses defaults", "modal-backdrop"))
     }
 
     @Test
-    fun modalBackdropClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalBackdropClasses()
-        }
-        assertRendered(html, "modal-backdrop", "ModalBackdropClasses all flags")
-    }
+    fun modalBackdropClasses_all_flags() = assertRenders(Expected("ModalBackdropClasses all flags", "modal-backdrop", content = false)) { daisyModalBackdropClasses() }
 
     @Test
     fun modalToggle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyModalToggle()
         }
-        assertRendered(html, "modal-toggle", "ModalToggle defaults")
+        assertRendered(html, Expected("ModalToggle defaults", "modal-toggle"))
     }
 
     @Test
     fun modalToggle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalToggle(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-            )
-        }
-        assertRendered(html, "modal-toggle zz-extra", "ModalToggle all flags")
-        assertCommonFlags(html, "ModalToggle", content = false)
+        val html = allFlags(Expected("ModalToggle all flags", "modal-toggle zz-extra", content = false)) { daisyModalToggle(id = ID, extraClasses = EXTRA, attrs = ATTRS) }
     }
 
     @Test
@@ -318,16 +184,11 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalToggleClasses()
         }
-        assertRendered(html, "modal-toggle", "ModalToggleClasses defaults")
+        assertRendered(html, Expected("ModalToggleClasses defaults", "modal-toggle"))
     }
 
     @Test
-    fun modalToggleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalToggleClasses()
-        }
-        assertRendered(html, "modal-toggle", "ModalToggleClasses all flags")
-    }
+    fun modalToggleClasses_all_flags() = assertRenders(Expected("ModalToggleClasses all flags", "modal-toggle", content = false)) { daisyModalToggleClasses() }
 
     @Test
     fun modalPopover_defaults() {
@@ -336,21 +197,12 @@ class ModalCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "modal", "ModalPopover defaults", closes = "</div></div>")
+        assertRendered(html, Expected("ModalPopover defaults", "modal", closes = "</div></div>"))
     }
 
     @Test
     fun modalPopover_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalPopover(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "modal zz-extra", "ModalPopover all flags", closes = "</div></div>")
-        assertCommonFlags(html, "ModalPopover")
+        val html = allFlags(Expected("ModalPopover all flags", "modal zz-extra", closes = "</div></div>")) { daisyModalPopover(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -358,14 +210,9 @@ class ModalCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyModalPopoverClasses()
         }
-        assertRendered(html, "modal", "ModalPopoverClasses defaults")
+        assertRendered(html, Expected("ModalPopoverClasses defaults", "modal"))
     }
 
     @Test
-    fun modalPopoverClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalPopoverClasses()
-        }
-        assertRendered(html, "modal", "ModalPopoverClasses all flags")
-    }
+    fun modalPopoverClasses_all_flags() = assertRenders(Expected("ModalPopoverClasses all flags", "modal", content = false)) { daisyModalPopoverClasses() }
 }

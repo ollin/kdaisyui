@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class SelectCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,314 +57,35 @@ class SelectCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "select", "Select defaults", closes = "</select></div>")
+        assertRendered(html, Expected("Select defaults", "select", closes = "</select></div>"))
     }
 
     @Test
     fun select_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                id = htmlId("x-cov-id"),
-                ghost = true,
-                disabled = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "select select-ghost zz-extra", "Select all flags", closes = "</select></div>")
-        assertCommonFlags(html, "Select")
+        val html = allFlags(Expected("Select all flags", "select select-ghost zz-extra", closes = "</select></div>")) { daisySelect(id = ID, ghost = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
         assertTrue(html.contains("disabled=\""), "Select sets disabled")
     }
 
     @Test
-    fun select_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Neutral,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-neutral", "Select color Neutral")
-    }
+    fun select_color() = assertEachEntry("Select color", mapOf(SelectColor.Neutral to "select select-neutral", SelectColor.Primary to "select select-primary", SelectColor.Secondary to "select select-secondary", SelectColor.Accent to "select select-accent", SelectColor.Info to "select select-info", SelectColor.Success to "select select-success", SelectColor.Warning to "select select-warning", SelectColor.Error to "select select-error")) { daisySelect(color = it, content = { }) }
 
     @Test
-    fun select_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Primary,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-primary", "Select color Primary")
-    }
-
-    @Test
-    fun select_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Secondary,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-secondary", "Select color Secondary")
-    }
-
-    @Test
-    fun select_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Accent,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-accent", "Select color Accent")
-    }
-
-    @Test
-    fun select_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Info,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-info", "Select color Info")
-    }
-
-    @Test
-    fun select_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Success,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-success", "Select color Success")
-    }
-
-    @Test
-    fun select_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Warning,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-warning", "Select color Warning")
-    }
-
-    @Test
-    fun select_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                color = SelectColor.Error,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-error", "Select color Error")
-    }
-
-    @Test
-    fun select_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                size = SelectSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-xs", "Select size Xs")
-    }
-
-    @Test
-    fun select_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                size = SelectSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-sm", "Select size Sm")
-    }
-
-    @Test
-    fun select_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                size = SelectSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-md", "Select size Md")
-    }
-
-    @Test
-    fun select_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                size = SelectSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-lg", "Select size Lg")
-    }
-
-    @Test
-    fun select_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelect(
-                size = SelectSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "select select-xl", "Select size Xl")
-    }
+    fun select_size() = assertEachEntry("Select size", mapOf(SelectSize.Xs to "select select-xs", SelectSize.Sm to "select select-sm", SelectSize.Md to "select select-md", SelectSize.Lg to "select select-lg", SelectSize.Xl to "select select-xl")) { daisySelect(size = it, content = { }) }
 
     @Test
     fun selectClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisySelectClasses()
         }
-        assertRendered(html, "select", "SelectClasses defaults")
+        assertRendered(html, Expected("SelectClasses defaults", "select"))
     }
 
     @Test
-    fun selectClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                ghost = true,
-            )
-        }
-        assertRendered(html, "select select-ghost", "SelectClasses all flags")
-    }
+    fun selectClasses_all_flags() = assertRenders(Expected("SelectClasses all flags", "select select-ghost", content = false)) { daisySelectClasses(ghost = true) }
 
     @Test
-    fun selectClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Neutral,
-            )
-        }
-        assertRendered(html, "select select-neutral", "SelectClasses color Neutral")
-    }
+    fun selectClasses_color() = assertEachEntry("SelectClasses color", mapOf(SelectColor.Neutral to "select select-neutral", SelectColor.Primary to "select select-primary", SelectColor.Secondary to "select select-secondary", SelectColor.Accent to "select select-accent", SelectColor.Info to "select select-info", SelectColor.Success to "select select-success", SelectColor.Warning to "select select-warning", SelectColor.Error to "select select-error")) { daisySelectClasses(color = it) }
 
     @Test
-    fun selectClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Primary,
-            )
-        }
-        assertRendered(html, "select select-primary", "SelectClasses color Primary")
-    }
-
-    @Test
-    fun selectClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Secondary,
-            )
-        }
-        assertRendered(html, "select select-secondary", "SelectClasses color Secondary")
-    }
-
-    @Test
-    fun selectClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Accent,
-            )
-        }
-        assertRendered(html, "select select-accent", "SelectClasses color Accent")
-    }
-
-    @Test
-    fun selectClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Info,
-            )
-        }
-        assertRendered(html, "select select-info", "SelectClasses color Info")
-    }
-
-    @Test
-    fun selectClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Success,
-            )
-        }
-        assertRendered(html, "select select-success", "SelectClasses color Success")
-    }
-
-    @Test
-    fun selectClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Warning,
-            )
-        }
-        assertRendered(html, "select select-warning", "SelectClasses color Warning")
-    }
-
-    @Test
-    fun selectClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                color = SelectColor.Error,
-            )
-        }
-        assertRendered(html, "select select-error", "SelectClasses color Error")
-    }
-
-    @Test
-    fun selectClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                size = SelectSize.Xs,
-            )
-        }
-        assertRendered(html, "select select-xs", "SelectClasses size Xs")
-    }
-
-    @Test
-    fun selectClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                size = SelectSize.Sm,
-            )
-        }
-        assertRendered(html, "select select-sm", "SelectClasses size Sm")
-    }
-
-    @Test
-    fun selectClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                size = SelectSize.Md,
-            )
-        }
-        assertRendered(html, "select select-md", "SelectClasses size Md")
-    }
-
-    @Test
-    fun selectClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                size = SelectSize.Lg,
-            )
-        }
-        assertRendered(html, "select select-lg", "SelectClasses size Lg")
-    }
-
-    @Test
-    fun selectClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySelectClasses(
-                size = SelectSize.Xl,
-            )
-        }
-        assertRendered(html, "select select-xl", "SelectClasses size Xl")
-    }
+    fun selectClasses_size() = assertEachEntry("SelectClasses size", mapOf(SelectSize.Xs to "select select-xs", SelectSize.Sm to "select select-sm", SelectSize.Md to "select select-md", SelectSize.Lg to "select select-lg", SelectSize.Xl to "select select-xl")) { daisySelectClasses(size = it) }
 }

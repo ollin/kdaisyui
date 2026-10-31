@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class FabCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,22 +57,12 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fab", "Fab defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Fab defaults", "fab", closes = "</div></div>"))
     }
 
     @Test
     fun fab_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFab(
-                id = htmlId("x-cov-id"),
-                flower = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "fab fab-flower zz-extra", "Fab all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Fab")
+        val html = allFlags(Expected("Fab all flags", "fab fab-flower zz-extra", closes = "</div></div>")) { daisyFab(id = ID, flower = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -54,18 +70,11 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabClasses()
         }
-        assertRendered(html, "fab", "FabClasses defaults")
+        assertRendered(html, Expected("FabClasses defaults", "fab"))
     }
 
     @Test
-    fun fabClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabClasses(
-                flower = true,
-            )
-        }
-        assertRendered(html, "fab fab-flower", "FabClasses all flags")
-    }
+    fun fabClasses_all_flags() = assertRenders(Expected("FabClasses all flags", "fab fab-flower", content = false)) { daisyFabClasses(flower = true) }
 
     @Test
     fun fabClose_defaults() {
@@ -74,21 +83,12 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fab-close", "FabClose defaults", closes = "</div></div>")
+        assertRendered(html, Expected("FabClose defaults", "fab-close", closes = "</div></div>"))
     }
 
     @Test
     fun fabClose_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabClose(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "fab-close zz-extra", "FabClose all flags", closes = "</div></div>")
-        assertCommonFlags(html, "FabClose")
+        val html = allFlags(Expected("FabClose all flags", "fab-close zz-extra", closes = "</div></div>")) { daisyFabClose(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -96,16 +96,11 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabCloseClasses()
         }
-        assertRendered(html, "fab-close", "FabCloseClasses defaults")
+        assertRendered(html, Expected("FabCloseClasses defaults", "fab-close"))
     }
 
     @Test
-    fun fabCloseClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabCloseClasses()
-        }
-        assertRendered(html, "fab-close", "FabCloseClasses all flags")
-    }
+    fun fabCloseClasses_all_flags() = assertRenders(Expected("FabCloseClasses all flags", "fab-close", content = false)) { daisyFabCloseClasses() }
 
     @Test
     fun fabMainAction_defaults() {
@@ -114,21 +109,12 @@ class FabCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "fab-main-action", "FabMainAction defaults", closes = "</button></div>")
+        assertRendered(html, Expected("FabMainAction defaults", "fab-main-action", closes = "</button></div>"))
     }
 
     @Test
     fun fabMainAction_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabMainAction(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "fab-main-action zz-extra", "FabMainAction all flags", closes = "</button></div>")
-        assertCommonFlags(html, "FabMainAction")
+        val html = allFlags(Expected("FabMainAction all flags", "fab-main-action zz-extra", closes = "</button></div>")) { daisyFabMainAction(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -136,14 +122,9 @@ class FabCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyFabMainActionClasses()
         }
-        assertRendered(html, "fab-main-action", "FabMainActionClasses defaults")
+        assertRendered(html, Expected("FabMainActionClasses defaults", "fab-main-action"))
     }
 
     @Test
-    fun fabMainActionClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFabMainActionClasses()
-        }
-        assertRendered(html, "fab-main-action", "FabMainActionClasses all flags")
-    }
+    fun fabMainActionClasses_all_flags() = assertRenders(Expected("FabMainActionClasses all flags", "fab-main-action", content = false)) { daisyFabMainActionClasses() }
 }

@@ -4,25 +4,51 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 import kotlinx.html.ul
 
 class BreadcrumbsCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -32,21 +58,12 @@ class BreadcrumbsCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "breadcrumbs", "Breadcrumbs defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Breadcrumbs defaults", "breadcrumbs", closes = "</div></div>"))
     }
 
     @Test
     fun breadcrumbs_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBreadcrumbs(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "breadcrumbs zz-extra", "Breadcrumbs all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Breadcrumbs")
+        val html = allFlags(Expected("Breadcrumbs all flags", "breadcrumbs zz-extra", closes = "</div></div>")) { daisyBreadcrumbs(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -54,16 +71,11 @@ class BreadcrumbsCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyBreadcrumbsClasses()
         }
-        assertRendered(html, "breadcrumbs", "BreadcrumbsClasses defaults")
+        assertRendered(html, Expected("BreadcrumbsClasses defaults", "breadcrumbs"))
     }
 
     @Test
-    fun breadcrumbsClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBreadcrumbsClasses()
-        }
-        assertRendered(html, "breadcrumbs", "BreadcrumbsClasses all flags")
-    }
+    fun breadcrumbsClasses_all_flags() = assertRenders(Expected("BreadcrumbsClasses all flags", "breadcrumbs", content = false)) { daisyBreadcrumbsClasses() }
 
     @Test
     fun breadcrumbsItems_defaults() {
@@ -78,16 +90,7 @@ class BreadcrumbsCoverageTest {
 
     @Test
     fun breadcrumbsItems_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBreadcrumbsItems(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "zz-extra", "BreadcrumbsItems all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "BreadcrumbsItems")
+        val html = allFlags(Expected("BreadcrumbsItems all flags", "zz-extra", closes = "</ul></div>")) { daisyBreadcrumbsItems(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -111,7 +114,8 @@ class BreadcrumbsCoverageTest {
                 content = { attributes["data-content"] = "yes" },
             )
         }
-        assertRendered(html, "zz-extra", "BreadcrumbsItem all flags", closes = "</li></ul>")
-        assertCommonFlags(html, "BreadcrumbsItem")
+        val expected = Expected("BreadcrumbsItem all flags", "zz-extra", closes = "</li></ul>")
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
     }
 }

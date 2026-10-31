@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class MenuCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,211 +57,48 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu", "Menu defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("Menu defaults", "menu", closes = "</ul></div>"))
     }
 
     @Test
     fun menu_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                id = htmlId("x-cov-id"),
-                focus = true,
-                paged = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "menu menu-focus menu-paged zz-extra", "Menu all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "Menu")
+        val html = allFlags(Expected("Menu all flags", "menu menu-focus menu-paged zz-extra", closes = "</ul></div>")) { daisyMenu(id = ID, focus = true, paged = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun menu_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "menu menu-xs", "Menu size Xs")
-    }
+    fun menu_size() = assertEachEntry("Menu size", mapOf(MenuSize.Xs to "menu menu-xs", MenuSize.Sm to "menu menu-sm", MenuSize.Md to "menu menu-md", MenuSize.Lg to "menu menu-lg", MenuSize.Xl to "menu menu-xl")) { daisyMenu(size = it, content = { }) }
 
     @Test
-    fun menu_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "menu menu-sm", "Menu size Sm")
-    }
-
-    @Test
-    fun menu_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "menu menu-md", "Menu size Md")
-    }
-
-    @Test
-    fun menu_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "menu menu-lg", "Menu size Lg")
-    }
-
-    @Test
-    fun menu_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "menu menu-xl", "Menu size Xl")
-    }
-
-    @Test
-    fun menu_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                direction = MenuDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, "menu menu-vertical", "Menu direction Vertical")
-    }
-
-    @Test
-    fun menu_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                direction = MenuDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, "menu menu-horizontal", "Menu direction Horizontal")
-    }
+    fun menu_direction() = assertEachEntry("Menu direction", mapOf(MenuDirection.Vertical to "menu menu-vertical", MenuDirection.Horizontal to "menu menu-horizontal")) { daisyMenu(direction = it, content = { }) }
 
     @Test
     fun menuClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuClasses()
         }
-        assertRendered(html, "menu", "MenuClasses defaults")
+        assertRendered(html, Expected("MenuClasses defaults", "menu"))
     }
 
     @Test
-    fun menuClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                focus = true,
-                paged = true,
-            )
-        }
-        assertRendered(html, "menu menu-focus menu-paged", "MenuClasses all flags")
-    }
+    fun menuClasses_all_flags() = assertRenders(Expected("MenuClasses all flags", "menu menu-focus menu-paged", content = false)) { daisyMenuClasses(focus = true, paged = true) }
 
     @Test
-    fun menuClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Xs,
-            )
-        }
-        assertRendered(html, "menu menu-xs", "MenuClasses size Xs")
-    }
+    fun menuClasses_size() = assertEachEntry("MenuClasses size", mapOf(MenuSize.Xs to "menu menu-xs", MenuSize.Sm to "menu menu-sm", MenuSize.Md to "menu menu-md", MenuSize.Lg to "menu menu-lg", MenuSize.Xl to "menu menu-xl")) { daisyMenuClasses(size = it) }
 
     @Test
-    fun menuClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Sm,
-            )
-        }
-        assertRendered(html, "menu menu-sm", "MenuClasses size Sm")
-    }
-
-    @Test
-    fun menuClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Md,
-            )
-        }
-        assertRendered(html, "menu menu-md", "MenuClasses size Md")
-    }
-
-    @Test
-    fun menuClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Lg,
-            )
-        }
-        assertRendered(html, "menu menu-lg", "MenuClasses size Lg")
-    }
-
-    @Test
-    fun menuClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Xl,
-            )
-        }
-        assertRendered(html, "menu menu-xl", "MenuClasses size Xl")
-    }
-
-    @Test
-    fun menuClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                direction = MenuDirection.Vertical,
-            )
-        }
-        assertRendered(html, "menu menu-vertical", "MenuClasses direction Vertical")
-    }
-
-    @Test
-    fun menuClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                direction = MenuDirection.Horizontal,
-            )
-        }
-        assertRendered(html, "menu menu-horizontal", "MenuClasses direction Horizontal")
-    }
+    fun menuClasses_direction() = assertEachEntry("MenuClasses direction", mapOf(MenuDirection.Vertical to "menu menu-vertical", MenuDirection.Horizontal to "menu menu-horizontal")) { daisyMenuClasses(direction = it) }
 
     @Test
     fun menuTitle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuTitle()
         }
-        assertRendered(html, "menu-title", "MenuTitle defaults", closes = "</h2></div>")
+        assertRendered(html, Expected("MenuTitle defaults", "menu-title", closes = "</h2></div>"))
     }
 
     @Test
     fun menuTitle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuTitle(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "menu-title zz-extra", "MenuTitle all flags", closes = "</h2></div>")
-        assertCommonFlags(html, "MenuTitle")
+        val html = allFlags(Expected("MenuTitle all flags", "menu-title zz-extra", closes = "</h2></div>")) { daisyMenuTitle(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -245,7 +108,7 @@ class MenuCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "menu-title", "MenuTitle text")
+        assertRendered(html, Expected("MenuTitle text", "menu-title"))
         assertTrue(html.contains("txtmark"), "MenuTitle text content")
     }
 
@@ -254,16 +117,11 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuTitleClasses()
         }
-        assertRendered(html, "menu-title", "MenuTitleClasses defaults")
+        assertRendered(html, Expected("MenuTitleClasses defaults", "menu-title"))
     }
 
     @Test
-    fun menuTitleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuTitleClasses()
-        }
-        assertRendered(html, "menu-title", "MenuTitleClasses all flags")
-    }
+    fun menuTitleClasses_all_flags() = assertRenders(Expected("MenuTitleClasses all flags", "menu-title", content = false)) { daisyMenuTitleClasses() }
 
     @Test
     fun menuDropdown_defaults() {
@@ -272,22 +130,12 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu-dropdown", "MenuDropdown defaults", closes = "</ul></div>")
+        assertRendered(html, Expected("MenuDropdown defaults", "menu-dropdown", closes = "</ul></div>"))
     }
 
     @Test
     fun menuDropdown_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdown(
-                id = htmlId("x-cov-id"),
-                show = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "menu-dropdown menu-dropdown-show zz-extra", "MenuDropdown all flags", closes = "</ul></div>")
-        assertCommonFlags(html, "MenuDropdown")
+        val html = allFlags(Expected("MenuDropdown all flags", "menu-dropdown menu-dropdown-show zz-extra", closes = "</ul></div>")) { daisyMenuDropdown(id = ID, show = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -295,18 +143,11 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdownClasses()
         }
-        assertRendered(html, "menu-dropdown", "MenuDropdownClasses defaults")
+        assertRendered(html, Expected("MenuDropdownClasses defaults", "menu-dropdown"))
     }
 
     @Test
-    fun menuDropdownClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownClasses(
-                show = true,
-            )
-        }
-        assertRendered(html, "menu-dropdown menu-dropdown-show", "MenuDropdownClasses all flags")
-    }
+    fun menuDropdownClasses_all_flags() = assertRenders(Expected("MenuDropdownClasses all flags", "menu-dropdown menu-dropdown-show", content = false)) { daisyMenuDropdownClasses(show = true) }
 
     @Test
     fun menuDropdownToggle_defaults() {
@@ -315,22 +156,12 @@ class MenuCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggle defaults", closes = "</span></div>")
+        assertRendered(html, Expected("MenuDropdownToggle defaults", "menu-dropdown-toggle", closes = "</span></div>"))
     }
 
     @Test
     fun menuDropdownToggle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownToggle(
-                id = htmlId("x-cov-id"),
-                dropdownShow = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "menu-dropdown-show menu-dropdown-toggle zz-extra", "MenuDropdownToggle all flags", closes = "</span></div>")
-        assertCommonFlags(html, "MenuDropdownToggle")
+        val html = allFlags(Expected("MenuDropdownToggle all flags", "menu-dropdown-show menu-dropdown-toggle zz-extra", closes = "</span></div>")) { daisyMenuDropdownToggle(id = ID, dropdownShow = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -338,18 +169,11 @@ class MenuCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyMenuDropdownToggleClasses()
         }
-        assertRendered(html, "menu-dropdown-toggle", "MenuDropdownToggleClasses defaults")
+        assertRendered(html, Expected("MenuDropdownToggleClasses defaults", "menu-dropdown-toggle"))
     }
 
     @Test
-    fun menuDropdownToggleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownToggleClasses(
-                dropdownShow = true,
-            )
-        }
-        assertRendered(html, "menu-dropdown-show menu-dropdown-toggle", "MenuDropdownToggleClasses all flags")
-    }
+    fun menuDropdownToggleClasses_all_flags() = assertRenders(Expected("MenuDropdownToggleClasses all flags", "menu-dropdown-show menu-dropdown-toggle", content = false)) { daisyMenuDropdownToggleClasses(dropdownShow = true) }
 
     @Test
     fun menuItemClasses_defaults() {
@@ -360,13 +184,5 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menuItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuItemClasses(
-                active = true,
-                disabled = true,
-            )
-        }
-        assertRendered(html, "menu-active menu-disabled", "MenuItemClasses all flags")
-    }
+    fun menuItemClasses_all_flags() = assertRenders(Expected("MenuItemClasses all flags", "menu-active menu-disabled", content = false)) { daisyMenuItemClasses(active = true, disabled = true) }
 }

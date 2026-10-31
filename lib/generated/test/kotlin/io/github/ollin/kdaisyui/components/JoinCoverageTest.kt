@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class JoinCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,80 +57,30 @@ class JoinCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "join", "Join defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Join defaults", "join", closes = "</div></div>"))
     }
 
     @Test
     fun join_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoin(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "join zz-extra", "Join all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Join")
+        val html = allFlags(Expected("Join all flags", "join zz-extra", closes = "</div></div>")) { daisyJoin(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun join_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoin(
-                direction = JoinDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, "join join-vertical", "Join direction Vertical")
-    }
-
-    @Test
-    fun join_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoin(
-                direction = JoinDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, "join join-horizontal", "Join direction Horizontal")
-    }
+    fun join_direction() = assertEachEntry("Join direction", mapOf(JoinDirection.Vertical to "join join-vertical", JoinDirection.Horizontal to "join join-horizontal")) { daisyJoin(direction = it, content = { }) }
 
     @Test
     fun joinClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyJoinClasses()
         }
-        assertRendered(html, "join", "JoinClasses defaults")
+        assertRendered(html, Expected("JoinClasses defaults", "join"))
     }
 
     @Test
-    fun joinClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoinClasses()
-        }
-        assertRendered(html, "join", "JoinClasses all flags")
-    }
+    fun joinClasses_all_flags() = assertRenders(Expected("JoinClasses all flags", "join", content = false)) { daisyJoinClasses() }
 
     @Test
-    fun joinClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoinClasses(
-                direction = JoinDirection.Vertical,
-            )
-        }
-        assertRendered(html, "join join-vertical", "JoinClasses direction Vertical")
-    }
-
-    @Test
-    fun joinClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoinClasses(
-                direction = JoinDirection.Horizontal,
-            )
-        }
-        assertRendered(html, "join join-horizontal", "JoinClasses direction Horizontal")
-    }
+    fun joinClasses_direction() = assertEachEntry("JoinClasses direction", mapOf(JoinDirection.Vertical to "join join-vertical", JoinDirection.Horizontal to "join join-horizontal")) { daisyJoinClasses(direction = it) }
 
     @Test
     fun scope_daisyButton() {

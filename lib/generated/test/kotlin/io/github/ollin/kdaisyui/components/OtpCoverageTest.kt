@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class OtpCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,312 +57,34 @@ class OtpCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "otp", "Otp defaults", closes = "</label></div>")
+        assertRendered(html, Expected("Otp defaults", "otp", closes = "</label></div>"))
     }
 
     @Test
     fun otp_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                id = htmlId("x-cov-id"),
-                joined = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "otp otp-joined zz-extra", "Otp all flags", closes = "</label></div>")
-        assertCommonFlags(html, "Otp")
+        val html = allFlags(Expected("Otp all flags", "otp otp-joined zz-extra", closes = "</label></div>")) { daisyOtp(id = ID, joined = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun otp_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Neutral,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-neutral", "Otp color Neutral")
-    }
+    fun otp_color() = assertEachEntry("Otp color", mapOf(OtpColor.Neutral to "otp otp-neutral", OtpColor.Primary to "otp otp-primary", OtpColor.Secondary to "otp otp-secondary", OtpColor.Accent to "otp otp-accent", OtpColor.Success to "otp otp-success", OtpColor.Info to "otp otp-info", OtpColor.Warning to "otp otp-warning", OtpColor.Error to "otp otp-error")) { daisyOtp(color = it, content = { }) }
 
     @Test
-    fun otp_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Primary,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-primary", "Otp color Primary")
-    }
-
-    @Test
-    fun otp_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Secondary,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-secondary", "Otp color Secondary")
-    }
-
-    @Test
-    fun otp_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Accent,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-accent", "Otp color Accent")
-    }
-
-    @Test
-    fun otp_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Success,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-success", "Otp color Success")
-    }
-
-    @Test
-    fun otp_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Info,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-info", "Otp color Info")
-    }
-
-    @Test
-    fun otp_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Warning,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-warning", "Otp color Warning")
-    }
-
-    @Test
-    fun otp_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                color = OtpColor.Error,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-error", "Otp color Error")
-    }
-
-    @Test
-    fun otp_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                size = OtpSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-xs", "Otp size Xs")
-    }
-
-    @Test
-    fun otp_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                size = OtpSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-sm", "Otp size Sm")
-    }
-
-    @Test
-    fun otp_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                size = OtpSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-md", "Otp size Md")
-    }
-
-    @Test
-    fun otp_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                size = OtpSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-lg", "Otp size Lg")
-    }
-
-    @Test
-    fun otp_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                size = OtpSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "otp otp-xl", "Otp size Xl")
-    }
+    fun otp_size() = assertEachEntry("Otp size", mapOf(OtpSize.Xs to "otp otp-xs", OtpSize.Sm to "otp otp-sm", OtpSize.Md to "otp otp-md", OtpSize.Lg to "otp otp-lg", OtpSize.Xl to "otp otp-xl")) { daisyOtp(size = it, content = { }) }
 
     @Test
     fun otpClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyOtpClasses()
         }
-        assertRendered(html, "otp", "OtpClasses defaults")
+        assertRendered(html, Expected("OtpClasses defaults", "otp"))
     }
 
     @Test
-    fun otpClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                joined = true,
-            )
-        }
-        assertRendered(html, "otp otp-joined", "OtpClasses all flags")
-    }
+    fun otpClasses_all_flags() = assertRenders(Expected("OtpClasses all flags", "otp otp-joined", content = false)) { daisyOtpClasses(joined = true) }
 
     @Test
-    fun otpClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Neutral,
-            )
-        }
-        assertRendered(html, "otp otp-neutral", "OtpClasses color Neutral")
-    }
+    fun otpClasses_color() = assertEachEntry("OtpClasses color", mapOf(OtpColor.Neutral to "otp otp-neutral", OtpColor.Primary to "otp otp-primary", OtpColor.Secondary to "otp otp-secondary", OtpColor.Accent to "otp otp-accent", OtpColor.Success to "otp otp-success", OtpColor.Info to "otp otp-info", OtpColor.Warning to "otp otp-warning", OtpColor.Error to "otp otp-error")) { daisyOtpClasses(color = it) }
 
     @Test
-    fun otpClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Primary,
-            )
-        }
-        assertRendered(html, "otp otp-primary", "OtpClasses color Primary")
-    }
-
-    @Test
-    fun otpClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Secondary,
-            )
-        }
-        assertRendered(html, "otp otp-secondary", "OtpClasses color Secondary")
-    }
-
-    @Test
-    fun otpClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Accent,
-            )
-        }
-        assertRendered(html, "otp otp-accent", "OtpClasses color Accent")
-    }
-
-    @Test
-    fun otpClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Success,
-            )
-        }
-        assertRendered(html, "otp otp-success", "OtpClasses color Success")
-    }
-
-    @Test
-    fun otpClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Info,
-            )
-        }
-        assertRendered(html, "otp otp-info", "OtpClasses color Info")
-    }
-
-    @Test
-    fun otpClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Warning,
-            )
-        }
-        assertRendered(html, "otp otp-warning", "OtpClasses color Warning")
-    }
-
-    @Test
-    fun otpClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                color = OtpColor.Error,
-            )
-        }
-        assertRendered(html, "otp otp-error", "OtpClasses color Error")
-    }
-
-    @Test
-    fun otpClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                size = OtpSize.Xs,
-            )
-        }
-        assertRendered(html, "otp otp-xs", "OtpClasses size Xs")
-    }
-
-    @Test
-    fun otpClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                size = OtpSize.Sm,
-            )
-        }
-        assertRendered(html, "otp otp-sm", "OtpClasses size Sm")
-    }
-
-    @Test
-    fun otpClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                size = OtpSize.Md,
-            )
-        }
-        assertRendered(html, "otp otp-md", "OtpClasses size Md")
-    }
-
-    @Test
-    fun otpClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                size = OtpSize.Lg,
-            )
-        }
-        assertRendered(html, "otp otp-lg", "OtpClasses size Lg")
-    }
-
-    @Test
-    fun otpClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyOtpClasses(
-                size = OtpSize.Xl,
-            )
-        }
-        assertRendered(html, "otp otp-xl", "OtpClasses size Xl")
-    }
+    fun otpClasses_size() = assertEachEntry("OtpClasses size", mapOf(OtpSize.Xs to "otp otp-xs", OtpSize.Sm to "otp otp-sm", OtpSize.Md to "otp otp-md", OtpSize.Lg to "otp otp-lg", OtpSize.Xl to "otp otp-xl")) { daisyOtpClasses(size = it) }
 }

@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class RatingCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,146 +57,30 @@ class RatingCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "rating", "Rating defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Rating defaults", "rating", closes = "</div></div>"))
     }
 
     @Test
     fun rating_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRating(
-                id = htmlId("x-cov-id"),
-                half = true,
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "rating rating-half zz-extra", "Rating all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Rating")
+        val html = allFlags(Expected("Rating all flags", "rating rating-half zz-extra", closes = "</div></div>")) { daisyRating(id = ID, half = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun rating_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRating(
-                size = RatingSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "rating rating-xs", "Rating size Xs")
-    }
-
-    @Test
-    fun rating_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRating(
-                size = RatingSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "rating rating-sm", "Rating size Sm")
-    }
-
-    @Test
-    fun rating_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRating(
-                size = RatingSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "rating rating-md", "Rating size Md")
-    }
-
-    @Test
-    fun rating_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRating(
-                size = RatingSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "rating rating-lg", "Rating size Lg")
-    }
-
-    @Test
-    fun rating_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRating(
-                size = RatingSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "rating rating-xl", "Rating size Xl")
-    }
+    fun rating_size() = assertEachEntry("Rating size", mapOf(RatingSize.Xs to "rating rating-xs", RatingSize.Sm to "rating rating-sm", RatingSize.Md to "rating rating-md", RatingSize.Lg to "rating rating-lg", RatingSize.Xl to "rating rating-xl")) { daisyRating(size = it, content = { }) }
 
     @Test
     fun ratingClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyRatingClasses()
         }
-        assertRendered(html, "rating", "RatingClasses defaults")
+        assertRendered(html, Expected("RatingClasses defaults", "rating"))
     }
 
     @Test
-    fun ratingClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingClasses(
-                half = true,
-            )
-        }
-        assertRendered(html, "rating rating-half", "RatingClasses all flags")
-    }
+    fun ratingClasses_all_flags() = assertRenders(Expected("RatingClasses all flags", "rating rating-half", content = false)) { daisyRatingClasses(half = true) }
 
     @Test
-    fun ratingClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingClasses(
-                size = RatingSize.Xs,
-            )
-        }
-        assertRendered(html, "rating rating-xs", "RatingClasses size Xs")
-    }
-
-    @Test
-    fun ratingClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingClasses(
-                size = RatingSize.Sm,
-            )
-        }
-        assertRendered(html, "rating rating-sm", "RatingClasses size Sm")
-    }
-
-    @Test
-    fun ratingClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingClasses(
-                size = RatingSize.Md,
-            )
-        }
-        assertRendered(html, "rating rating-md", "RatingClasses size Md")
-    }
-
-    @Test
-    fun ratingClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingClasses(
-                size = RatingSize.Lg,
-            )
-        }
-        assertRendered(html, "rating rating-lg", "RatingClasses size Lg")
-    }
-
-    @Test
-    fun ratingClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingClasses(
-                size = RatingSize.Xl,
-            )
-        }
-        assertRendered(html, "rating rating-xl", "RatingClasses size Xl")
-    }
+    fun ratingClasses_size() = assertEachEntry("RatingClasses size", mapOf(RatingSize.Xs to "rating rating-xs", RatingSize.Sm to "rating rating-sm", RatingSize.Md to "rating rating-md", RatingSize.Lg to "rating rating-lg", RatingSize.Xl to "rating rating-xl")) { daisyRatingClasses(size = it) }
 
     @Test
     fun ratingItemClasses_defaults() {
@@ -181,12 +91,5 @@ class RatingCoverageTest {
     }
 
     @Test
-    fun ratingItemClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRatingItemClasses(
-                hidden = true,
-            )
-        }
-        assertRendered(html, "rating-hidden", "RatingItemClasses all flags")
-    }
+    fun ratingItemClasses_all_flags() = assertRenders(Expected("RatingItemClasses all flags", "rating-hidden", content = false)) { daisyRatingItemClasses(hidden = true) }
 }

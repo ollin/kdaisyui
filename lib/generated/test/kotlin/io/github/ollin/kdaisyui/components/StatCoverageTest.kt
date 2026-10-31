@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class StatCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,80 +57,30 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stats", "Stats defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Stats defaults", "stats", closes = "</div></div>"))
     }
 
     @Test
     fun stats_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStats(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stats zz-extra", "Stats all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Stats")
+        val html = allFlags(Expected("Stats all flags", "stats zz-extra", closes = "</div></div>")) { daisyStats(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun stats_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStats(
-                direction = StatsDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, "stats stats-horizontal", "Stats direction Horizontal")
-    }
-
-    @Test
-    fun stats_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStats(
-                direction = StatsDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, "stats stats-vertical", "Stats direction Vertical")
-    }
+    fun stats_direction() = assertEachEntry("Stats direction", mapOf(StatsDirection.Horizontal to "stats stats-horizontal", StatsDirection.Vertical to "stats stats-vertical")) { daisyStats(direction = it, content = { }) }
 
     @Test
     fun statsClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatsClasses()
         }
-        assertRendered(html, "stats", "StatsClasses defaults")
+        assertRendered(html, Expected("StatsClasses defaults", "stats"))
     }
 
     @Test
-    fun statsClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatsClasses()
-        }
-        assertRendered(html, "stats", "StatsClasses all flags")
-    }
+    fun statsClasses_all_flags() = assertRenders(Expected("StatsClasses all flags", "stats", content = false)) { daisyStatsClasses() }
 
     @Test
-    fun statsClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatsClasses(
-                direction = StatsDirection.Horizontal,
-            )
-        }
-        assertRendered(html, "stats stats-horizontal", "StatsClasses direction Horizontal")
-    }
-
-    @Test
-    fun statsClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatsClasses(
-                direction = StatsDirection.Vertical,
-            )
-        }
-        assertRendered(html, "stats stats-vertical", "StatsClasses direction Vertical")
-    }
+    fun statsClasses_direction() = assertEachEntry("StatsClasses direction", mapOf(StatsDirection.Horizontal to "stats stats-horizontal", StatsDirection.Vertical to "stats stats-vertical")) { daisyStatsClasses(direction = it) }
 
     @Test
     fun stat_defaults() {
@@ -113,21 +89,12 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stat", "Stat defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Stat defaults", "stat", closes = "</div></div>"))
     }
 
     @Test
     fun stat_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStat(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stat zz-extra", "Stat all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Stat")
+        val html = allFlags(Expected("Stat all flags", "stat zz-extra", closes = "</div></div>")) { daisyStat(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -135,37 +102,23 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatClasses()
         }
-        assertRendered(html, "stat", "StatClasses defaults")
+        assertRendered(html, Expected("StatClasses defaults", "stat"))
     }
 
     @Test
-    fun statClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatClasses()
-        }
-        assertRendered(html, "stat", "StatClasses all flags")
-    }
+    fun statClasses_all_flags() = assertRenders(Expected("StatClasses all flags", "stat", content = false)) { daisyStatClasses() }
 
     @Test
     fun statTitle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatTitle()
         }
-        assertRendered(html, "stat-title", "StatTitle defaults", closes = "</div></div>")
+        assertRendered(html, Expected("StatTitle defaults", "stat-title", closes = "</div></div>"))
     }
 
     @Test
     fun statTitle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatTitle(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stat-title zz-extra", "StatTitle all flags", closes = "</div></div>")
-        assertCommonFlags(html, "StatTitle")
+        val html = allFlags(Expected("StatTitle all flags", "stat-title zz-extra", closes = "</div></div>")) { daisyStatTitle(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -175,7 +128,7 @@ class StatCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "stat-title", "StatTitle text")
+        assertRendered(html, Expected("StatTitle text", "stat-title"))
         assertTrue(html.contains("txtmark"), "StatTitle text content")
     }
 
@@ -184,37 +137,23 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatTitleClasses()
         }
-        assertRendered(html, "stat-title", "StatTitleClasses defaults")
+        assertRendered(html, Expected("StatTitleClasses defaults", "stat-title"))
     }
 
     @Test
-    fun statTitleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatTitleClasses()
-        }
-        assertRendered(html, "stat-title", "StatTitleClasses all flags")
-    }
+    fun statTitleClasses_all_flags() = assertRenders(Expected("StatTitleClasses all flags", "stat-title", content = false)) { daisyStatTitleClasses() }
 
     @Test
     fun statValue_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatValue()
         }
-        assertRendered(html, "stat-value", "StatValue defaults", closes = "</div></div>")
+        assertRendered(html, Expected("StatValue defaults", "stat-value", closes = "</div></div>"))
     }
 
     @Test
     fun statValue_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatValue(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stat-value zz-extra", "StatValue all flags", closes = "</div></div>")
-        assertCommonFlags(html, "StatValue")
+        val html = allFlags(Expected("StatValue all flags", "stat-value zz-extra", closes = "</div></div>")) { daisyStatValue(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -224,7 +163,7 @@ class StatCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "stat-value", "StatValue text")
+        assertRendered(html, Expected("StatValue text", "stat-value"))
         assertTrue(html.contains("txtmark"), "StatValue text content")
     }
 
@@ -233,37 +172,23 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatValueClasses()
         }
-        assertRendered(html, "stat-value", "StatValueClasses defaults")
+        assertRendered(html, Expected("StatValueClasses defaults", "stat-value"))
     }
 
     @Test
-    fun statValueClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatValueClasses()
-        }
-        assertRendered(html, "stat-value", "StatValueClasses all flags")
-    }
+    fun statValueClasses_all_flags() = assertRenders(Expected("StatValueClasses all flags", "stat-value", content = false)) { daisyStatValueClasses() }
 
     @Test
     fun statDesc_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyStatDesc()
         }
-        assertRendered(html, "stat-desc", "StatDesc defaults", closes = "</div></div>")
+        assertRendered(html, Expected("StatDesc defaults", "stat-desc", closes = "</div></div>"))
     }
 
     @Test
     fun statDesc_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatDesc(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stat-desc zz-extra", "StatDesc all flags", closes = "</div></div>")
-        assertCommonFlags(html, "StatDesc")
+        val html = allFlags(Expected("StatDesc all flags", "stat-desc zz-extra", closes = "</div></div>")) { daisyStatDesc(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -273,7 +198,7 @@ class StatCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "stat-desc", "StatDesc text")
+        assertRendered(html, Expected("StatDesc text", "stat-desc"))
         assertTrue(html.contains("txtmark"), "StatDesc text content")
     }
 
@@ -282,16 +207,11 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatDescClasses()
         }
-        assertRendered(html, "stat-desc", "StatDescClasses defaults")
+        assertRendered(html, Expected("StatDescClasses defaults", "stat-desc"))
     }
 
     @Test
-    fun statDescClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatDescClasses()
-        }
-        assertRendered(html, "stat-desc", "StatDescClasses all flags")
-    }
+    fun statDescClasses_all_flags() = assertRenders(Expected("StatDescClasses all flags", "stat-desc", content = false)) { daisyStatDescClasses() }
 
     @Test
     fun statFigure_defaults() {
@@ -300,21 +220,12 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stat-figure", "StatFigure defaults", closes = "</div></div>")
+        assertRendered(html, Expected("StatFigure defaults", "stat-figure", closes = "</div></div>"))
     }
 
     @Test
     fun statFigure_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatFigure(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stat-figure zz-extra", "StatFigure all flags", closes = "</div></div>")
-        assertCommonFlags(html, "StatFigure")
+        val html = allFlags(Expected("StatFigure all flags", "stat-figure zz-extra", closes = "</div></div>")) { daisyStatFigure(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -322,16 +233,11 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatFigureClasses()
         }
-        assertRendered(html, "stat-figure", "StatFigureClasses defaults")
+        assertRendered(html, Expected("StatFigureClasses defaults", "stat-figure"))
     }
 
     @Test
-    fun statFigureClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatFigureClasses()
-        }
-        assertRendered(html, "stat-figure", "StatFigureClasses all flags")
-    }
+    fun statFigureClasses_all_flags() = assertRenders(Expected("StatFigureClasses all flags", "stat-figure", content = false)) { daisyStatFigureClasses() }
 
     @Test
     fun statActions_defaults() {
@@ -340,21 +246,12 @@ class StatCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "stat-actions", "StatActions defaults", closes = "</div></div>")
+        assertRendered(html, Expected("StatActions defaults", "stat-actions", closes = "</div></div>"))
     }
 
     @Test
     fun statActions_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatActions(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "stat-actions zz-extra", "StatActions all flags", closes = "</div></div>")
-        assertCommonFlags(html, "StatActions")
+        val html = allFlags(Expected("StatActions all flags", "stat-actions zz-extra", closes = "</div></div>")) { daisyStatActions(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -362,14 +259,9 @@ class StatCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyStatActionsClasses()
         }
-        assertRendered(html, "stat-actions", "StatActionsClasses defaults")
+        assertRendered(html, Expected("StatActionsClasses defaults", "stat-actions"))
     }
 
     @Test
-    fun statActionsClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatActionsClasses()
-        }
-        assertRendered(html, "stat-actions", "StatActionsClasses all flags")
-    }
+    fun statActionsClasses_all_flags() = assertRenders(Expected("StatActionsClasses all flags", "stat-actions", content = false)) { daisyStatActionsClasses() }
 }

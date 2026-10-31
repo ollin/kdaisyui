@@ -4,24 +4,50 @@ import io.github.ollin.kdaisyui.core.htmlId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.html.FlowContent
+import kotlinx.html.Tag
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 class CardCoverageTest {
 
-    private fun assertRendered(html: String, classes: String, label: String, closes: String = "") {
-        assertEquals(
-            classes,
-            html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "),
-            label,
-        )
-        if (closes.isNotEmpty()) assertTrue(html.endsWith(closes), "$label closes")
+    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
+    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+
+    private fun assertRendered(html: String, expected: Expected) {
+        assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
+        if (expected.closes.isNotEmpty()) assertTrue(html.endsWith(expected.closes), "${expected.label} closes")
     }
 
-    private fun assertCommonFlags(html: String, label: String, content: Boolean = true) {
-        assertTrue(html.contains("id=\"x-cov-id\""), "$label id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "$label attrs")
-        if (content) assertTrue(html.contains("data-content=\"yes\""), "$label content")
+    private val ID = htmlId("x-cov-id")
+    private val EXTRA = "zz-extra"
+    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
+    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+
+    /** Renders one call and asserts the classes it writes. */
+    private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
+        assertRendered(createHTML(prettyPrint = false).div { render() }, expected)
+    }
+
+    /** Renders a call that passes every escape hatch, and asserts its classes and the hatches. */
+    private fun allFlags(expected: Expected, render: FlowContent.() -> Unit): String {
+        val html = createHTML(prettyPrint = false).div { render() }
+        assertRendered(html, expected)
+        assertCommonFlags(html, expected)
+        return html
+    }
+
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
+    private fun assertCommonFlags(html: String, expected: Expected) {
+        assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
+        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
+        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
     }
 
     @Test
@@ -31,248 +57,54 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "card", "Card defaults", closes = "</div></div>")
+        assertRendered(html, Expected("Card defaults", "card", closes = "</div></div>"))
     }
 
     @Test
     fun card_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "card zz-extra", "Card all flags", closes = "</div></div>")
-        assertCommonFlags(html, "Card")
+        val html = allFlags(Expected("Card all flags", "card zz-extra", closes = "</div></div>")) { daisyCard(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
-    fun card_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                size = CardSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-xs", "Card size Xs")
-    }
+    fun card_size() = assertEachEntry("Card size", mapOf(CardSize.Xs to "card card-xs", CardSize.Sm to "card card-sm", CardSize.Md to "card card-md", CardSize.Lg to "card card-lg", CardSize.Xl to "card card-xl")) { daisyCard(size = it, content = { }) }
 
     @Test
-    fun card_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                size = CardSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-sm", "Card size Sm")
-    }
+    fun card_style() = assertEachEntry("Card style", mapOf(CardStyle.Border to "card card-border", CardStyle.Dash to "card card-dash")) { daisyCard(style = it, content = { }) }
 
     @Test
-    fun card_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                size = CardSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-md", "Card size Md")
-    }
-
-    @Test
-    fun card_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                size = CardSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-lg", "Card size Lg")
-    }
-
-    @Test
-    fun card_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                size = CardSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-xl", "Card size Xl")
-    }
-
-    @Test
-    fun card_style_border() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                style = CardStyle.Border,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-border", "Card style Border")
-    }
-
-    @Test
-    fun card_style_dash() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                style = CardStyle.Dash,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-dash", "Card style Dash")
-    }
-
-    @Test
-    fun card_layout_side() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                layout = CardLayout.Side,
-                content = { },
-            )
-        }
-        assertRendered(html, "card card-side", "Card layout Side")
-    }
-
-    @Test
-    fun card_layout_imagefull() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCard(
-                layout = CardLayout.ImageFull,
-                content = { },
-            )
-        }
-        assertRendered(html, "card image-full", "Card layout ImageFull")
-    }
+    fun card_layout() = assertEachEntry("Card layout", mapOf(CardLayout.Side to "card card-side", CardLayout.ImageFull to "card image-full")) { daisyCard(layout = it, content = { }) }
 
     @Test
     fun cardClasses_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyCardClasses()
         }
-        assertRendered(html, "card", "CardClasses defaults")
+        assertRendered(html, Expected("CardClasses defaults", "card"))
     }
 
     @Test
-    fun cardClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses()
-        }
-        assertRendered(html, "card", "CardClasses all flags")
-    }
+    fun cardClasses_all_flags() = assertRenders(Expected("CardClasses all flags", "card", content = false)) { daisyCardClasses() }
 
     @Test
-    fun cardClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                size = CardSize.Xs,
-            )
-        }
-        assertRendered(html, "card card-xs", "CardClasses size Xs")
-    }
+    fun cardClasses_size() = assertEachEntry("CardClasses size", mapOf(CardSize.Xs to "card card-xs", CardSize.Sm to "card card-sm", CardSize.Md to "card card-md", CardSize.Lg to "card card-lg", CardSize.Xl to "card card-xl")) { daisyCardClasses(size = it) }
 
     @Test
-    fun cardClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                size = CardSize.Sm,
-            )
-        }
-        assertRendered(html, "card card-sm", "CardClasses size Sm")
-    }
+    fun cardClasses_style() = assertEachEntry("CardClasses style", mapOf(CardStyle.Border to "card card-border", CardStyle.Dash to "card card-dash")) { daisyCardClasses(style = it) }
 
     @Test
-    fun cardClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                size = CardSize.Md,
-            )
-        }
-        assertRendered(html, "card card-md", "CardClasses size Md")
-    }
-
-    @Test
-    fun cardClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                size = CardSize.Lg,
-            )
-        }
-        assertRendered(html, "card card-lg", "CardClasses size Lg")
-    }
-
-    @Test
-    fun cardClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                size = CardSize.Xl,
-            )
-        }
-        assertRendered(html, "card card-xl", "CardClasses size Xl")
-    }
-
-    @Test
-    fun cardClasses_style_border() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                style = CardStyle.Border,
-            )
-        }
-        assertRendered(html, "card card-border", "CardClasses style Border")
-    }
-
-    @Test
-    fun cardClasses_style_dash() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                style = CardStyle.Dash,
-            )
-        }
-        assertRendered(html, "card card-dash", "CardClasses style Dash")
-    }
-
-    @Test
-    fun cardClasses_layout_side() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                layout = CardLayout.Side,
-            )
-        }
-        assertRendered(html, "card card-side", "CardClasses layout Side")
-    }
-
-    @Test
-    fun cardClasses_layout_imagefull() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardClasses(
-                layout = CardLayout.ImageFull,
-            )
-        }
-        assertRendered(html, "card image-full", "CardClasses layout ImageFull")
-    }
+    fun cardClasses_layout() = assertEachEntry("CardClasses layout", mapOf(CardLayout.Side to "card card-side", CardLayout.ImageFull to "card image-full")) { daisyCardClasses(layout = it) }
 
     @Test
     fun cardTitle_defaults() {
         val html = createHTML(prettyPrint = false).div {
             daisyCardTitle()
         }
-        assertRendered(html, "card-title", "CardTitle defaults", closes = "</h2></div>")
+        assertRendered(html, Expected("CardTitle defaults", "card-title", closes = "</h2></div>"))
     }
 
     @Test
     fun cardTitle_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardTitle(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "card-title zz-extra", "CardTitle all flags", closes = "</h2></div>")
-        assertCommonFlags(html, "CardTitle")
+        val html = allFlags(Expected("CardTitle all flags", "card-title zz-extra", closes = "</h2></div>")) { daisyCardTitle(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -282,7 +114,7 @@ class CardCoverageTest {
                 text = "txtmark",
             )
         }
-        assertRendered(html, "card-title", "CardTitle text")
+        assertRendered(html, Expected("CardTitle text", "card-title"))
         assertTrue(html.contains("txtmark"), "CardTitle text content")
     }
 
@@ -291,16 +123,11 @@ class CardCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCardTitleClasses()
         }
-        assertRendered(html, "card-title", "CardTitleClasses defaults")
+        assertRendered(html, Expected("CardTitleClasses defaults", "card-title"))
     }
 
     @Test
-    fun cardTitleClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardTitleClasses()
-        }
-        assertRendered(html, "card-title", "CardTitleClasses all flags")
-    }
+    fun cardTitleClasses_all_flags() = assertRenders(Expected("CardTitleClasses all flags", "card-title", content = false)) { daisyCardTitleClasses() }
 
     @Test
     fun cardBody_defaults() {
@@ -309,21 +136,12 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "card-body", "CardBody defaults", closes = "</div></div>")
+        assertRendered(html, Expected("CardBody defaults", "card-body", closes = "</div></div>"))
     }
 
     @Test
     fun cardBody_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardBody(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "card-body zz-extra", "CardBody all flags", closes = "</div></div>")
-        assertCommonFlags(html, "CardBody")
+        val html = allFlags(Expected("CardBody all flags", "card-body zz-extra", closes = "</div></div>")) { daisyCardBody(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -331,16 +149,11 @@ class CardCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCardBodyClasses()
         }
-        assertRendered(html, "card-body", "CardBodyClasses defaults")
+        assertRendered(html, Expected("CardBodyClasses defaults", "card-body"))
     }
 
     @Test
-    fun cardBodyClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardBodyClasses()
-        }
-        assertRendered(html, "card-body", "CardBodyClasses all flags")
-    }
+    fun cardBodyClasses_all_flags() = assertRenders(Expected("CardBodyClasses all flags", "card-body", content = false)) { daisyCardBodyClasses() }
 
     @Test
     fun cardActions_defaults() {
@@ -349,21 +162,12 @@ class CardCoverageTest {
                 content = { },
             )
         }
-        assertRendered(html, "card-actions", "CardActions defaults", closes = "</div></div>")
+        assertRendered(html, Expected("CardActions defaults", "card-actions", closes = "</div></div>"))
     }
 
     @Test
     fun cardActions_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardActions(
-                id = htmlId("x-cov-id"),
-                extraClasses = "zz-extra",
-                attrs = { attributes["data-attrs"] = "yes" },
-                content = { attributes["data-content"] = "yes" },
-            )
-        }
-        assertRendered(html, "card-actions zz-extra", "CardActions all flags", closes = "</div></div>")
-        assertCommonFlags(html, "CardActions")
+        val html = allFlags(Expected("CardActions all flags", "card-actions zz-extra", closes = "</div></div>")) { daisyCardActions(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
     }
 
     @Test
@@ -371,14 +175,9 @@ class CardCoverageTest {
         val html = createHTML(prettyPrint = false).div {
             daisyCardActionsClasses()
         }
-        assertRendered(html, "card-actions", "CardActionsClasses defaults")
+        assertRendered(html, Expected("CardActionsClasses defaults", "card-actions"))
     }
 
     @Test
-    fun cardActionsClasses_all_flags() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCardActionsClasses()
-        }
-        assertRendered(html, "card-actions", "CardActionsClasses all flags")
-    }
+    fun cardActionsClasses_all_flags() = assertRenders(Expected("CardActionsClasses all flags", "card-actions", content = false)) { daisyCardActionsClasses() }
 }

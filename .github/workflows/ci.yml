@@ -222,7 +222,7 @@ jobs:
         # for why it is test strength and not mutation score, and in
         # doc-snippets/build.gradle.kts for the documentation extractor. Do not move the
         # number here.
-        run: ./gradlew :lib:pitest :doc-snippets:pitest --no-daemon
+        run: ./gradlew :lib:pitest :doc-snippets:pitest :build-checks:pitest --no-daemon
 
       - name: Upload mutation report
         if: always()
@@ -232,6 +232,7 @@ jobs:
           path: |
             lib/build/reports/pitest/
             doc-snippets/build/reports/pitest/
+            build-checks/build/reports/pitest/
           retention-days: 7
 
   e2e-tests:

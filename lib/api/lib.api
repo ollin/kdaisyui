@@ -1708,8 +1708,8 @@ public abstract class io/github/ollin/kdaisyui/core/NamedAnnotatedIdBase : io/gi
 }
 
 public final class io/github/ollin/kdaisyui/core/PopoverKt {
-	public static final fun popoverTarget (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/PopoverTargetAction;)V
-	public static synthetic fun popoverTarget$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/PopoverTargetAction;ILjava/lang/Object;)V
+	public static final fun popoverTarget (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/PopoverTargetAction;Z)V
+	public static synthetic fun popoverTarget$default (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/PopoverTargetAction;ZILjava/lang/Object;)V
 }
 
 public final class io/github/ollin/kdaisyui/core/PopoverTargetAction : java/lang/Enum {

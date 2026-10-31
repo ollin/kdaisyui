@@ -21,7 +21,7 @@ fun HTML.dropdownPopoverPage() {
     }
     body("bg-base-200 min-h-screen p-10") {
         val menu = Dashboard.DropdownPopover()
-        daisyButton("Open menu", attrs = { popoverTarget(menu) })
+        daisyButton("Open menu", attrs = { popoverTarget(menu, anchored = true) })
         daisyDropdownPopover(id = menu, extraClasses = "bg-base-100 rounded-box w-52 shadow-sm", attrs = { daisyMenuClasses() }) {
             li { a { +"Item 1" } }
             li { a { +"Item 2" } }

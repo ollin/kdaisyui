@@ -32,6 +32,13 @@ class DropdownCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,103 +61,13 @@ class DropdownCoverageTest {
     }
 
     @Test
-    fun dropdown_side_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                side = DropdownSide.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown side Top", "dropdown dropdown-top"))
-    }
+    fun dropdown_side() = assertEachEntry("Dropdown side", mapOf(DropdownSide.Top to "dropdown dropdown-top", DropdownSide.Bottom to "dropdown dropdown-bottom", DropdownSide.Left to "dropdown dropdown-left", DropdownSide.Right to "dropdown dropdown-right")) { daisyDropdown(side = it, content = { }) }
 
     @Test
-    fun dropdown_side_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                side = DropdownSide.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown side Bottom", "dropdown dropdown-bottom"))
-    }
+    fun dropdown_align() = assertEachEntry("Dropdown align", mapOf(DropdownAlign.Start to "dropdown dropdown-start", DropdownAlign.Center to "dropdown dropdown-center", DropdownAlign.End to "dropdown dropdown-end")) { daisyDropdown(align = it, content = { }) }
 
     @Test
-    fun dropdown_side_left() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                side = DropdownSide.Left,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown side Left", "dropdown dropdown-left"))
-    }
-
-    @Test
-    fun dropdown_side_right() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                side = DropdownSide.Right,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown side Right", "dropdown dropdown-right"))
-    }
-
-    @Test
-    fun dropdown_align_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                align = DropdownAlign.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown align Start", "dropdown dropdown-start"))
-    }
-
-    @Test
-    fun dropdown_align_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                align = DropdownAlign.Center,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown align Center", "dropdown dropdown-center"))
-    }
-
-    @Test
-    fun dropdown_align_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                align = DropdownAlign.End,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown align End", "dropdown dropdown-end"))
-    }
-
-    @Test
-    fun dropdown_state_open() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                state = DropdownState.Open,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown state Open", "dropdown dropdown-open"))
-    }
-
-    @Test
-    fun dropdown_state_close() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdown(
-                state = DropdownState.Close,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dropdown state Close", "dropdown dropdown-close"))
-    }
+    fun dropdown_state() = assertEachEntry("Dropdown state", mapOf(DropdownState.Open to "dropdown dropdown-open", DropdownState.Close to "dropdown dropdown-close")) { daisyDropdown(state = it, content = { }) }
 
     @Test
     fun dropdownClasses_defaults() {
@@ -172,94 +89,13 @@ class DropdownCoverageTest {
     }
 
     @Test
-    fun dropdownClasses_side_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                side = DropdownSide.Top,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses side Top", "dropdown dropdown-top"))
-    }
+    fun dropdownClasses_side() = assertEachEntry("DropdownClasses side", mapOf(DropdownSide.Top to "dropdown dropdown-top", DropdownSide.Bottom to "dropdown dropdown-bottom", DropdownSide.Left to "dropdown dropdown-left", DropdownSide.Right to "dropdown dropdown-right")) { daisyDropdownClasses(side = it) }
 
     @Test
-    fun dropdownClasses_side_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                side = DropdownSide.Bottom,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses side Bottom", "dropdown dropdown-bottom"))
-    }
+    fun dropdownClasses_align() = assertEachEntry("DropdownClasses align", mapOf(DropdownAlign.Start to "dropdown dropdown-start", DropdownAlign.Center to "dropdown dropdown-center", DropdownAlign.End to "dropdown dropdown-end")) { daisyDropdownClasses(align = it) }
 
     @Test
-    fun dropdownClasses_side_left() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                side = DropdownSide.Left,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses side Left", "dropdown dropdown-left"))
-    }
-
-    @Test
-    fun dropdownClasses_side_right() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                side = DropdownSide.Right,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses side Right", "dropdown dropdown-right"))
-    }
-
-    @Test
-    fun dropdownClasses_align_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                align = DropdownAlign.Start,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses align Start", "dropdown dropdown-start"))
-    }
-
-    @Test
-    fun dropdownClasses_align_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                align = DropdownAlign.Center,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses align Center", "dropdown dropdown-center"))
-    }
-
-    @Test
-    fun dropdownClasses_align_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                align = DropdownAlign.End,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses align End", "dropdown dropdown-end"))
-    }
-
-    @Test
-    fun dropdownClasses_state_open() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                state = DropdownState.Open,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses state Open", "dropdown dropdown-open"))
-    }
-
-    @Test
-    fun dropdownClasses_state_close() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownClasses(
-                state = DropdownState.Close,
-            )
-        }
-        assertRendered(html, Expected("DropdownClasses state Close", "dropdown dropdown-close"))
-    }
+    fun dropdownClasses_state() = assertEachEntry("DropdownClasses state", mapOf(DropdownState.Open to "dropdown dropdown-open", DropdownState.Close to "dropdown dropdown-close")) { daisyDropdownClasses(state = it) }
 
     @Test
     fun dropdownPopover_defaults() {
@@ -278,88 +114,10 @@ class DropdownCoverageTest {
     }
 
     @Test
-    fun dropdownPopover_side_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(
-                side = DropdownSide.Top,
-                id = htmlId("x-cov-id"),
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("DropdownPopover side Top", "dropdown dropdown-top"))
-    }
+    fun dropdownPopover_side() = assertEachEntry("DropdownPopover side", mapOf(DropdownSide.Top to "dropdown dropdown-top", DropdownSide.Bottom to "dropdown dropdown-bottom", DropdownSide.Left to "dropdown dropdown-left", DropdownSide.Right to "dropdown dropdown-right")) { daisyDropdownPopover(side = it, id = htmlId("x-cov-id"), content = { }) }
 
     @Test
-    fun dropdownPopover_side_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(
-                side = DropdownSide.Bottom,
-                id = htmlId("x-cov-id"),
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("DropdownPopover side Bottom", "dropdown dropdown-bottom"))
-    }
-
-    @Test
-    fun dropdownPopover_side_left() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(
-                side = DropdownSide.Left,
-                id = htmlId("x-cov-id"),
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("DropdownPopover side Left", "dropdown dropdown-left"))
-    }
-
-    @Test
-    fun dropdownPopover_side_right() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(
-                side = DropdownSide.Right,
-                id = htmlId("x-cov-id"),
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("DropdownPopover side Right", "dropdown dropdown-right"))
-    }
-
-    @Test
-    fun dropdownPopover_align_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(
-                align = DropdownAlign.Start,
-                id = htmlId("x-cov-id"),
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("DropdownPopover align Start", "dropdown dropdown-start"))
-    }
-
-    @Test
-    fun dropdownPopover_align_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(
-                align = DropdownAlign.Center,
-                id = htmlId("x-cov-id"),
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("DropdownPopover align Center", "dropdown dropdown-center"))
-    }
-
-    @Test
-    fun dropdownPopover_align_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(
-                align = DropdownAlign.End,
-                id = htmlId("x-cov-id"),
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("DropdownPopover align End", "dropdown dropdown-end"))
-    }
+    fun dropdownPopover_align() = assertEachEntry("DropdownPopover align", mapOf(DropdownAlign.Start to "dropdown dropdown-start", DropdownAlign.Center to "dropdown dropdown-center", DropdownAlign.End to "dropdown dropdown-end")) { daisyDropdownPopover(align = it, id = htmlId("x-cov-id"), content = { }) }
 
     @Test
     fun dropdownPopoverClasses_defaults() {
@@ -379,74 +137,10 @@ class DropdownCoverageTest {
     }
 
     @Test
-    fun dropdownPopoverClasses_side_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses(
-                side = DropdownSide.Top,
-            )
-        }
-        assertRendered(html, Expected("DropdownPopoverClasses side Top", "dropdown dropdown-top"))
-    }
+    fun dropdownPopoverClasses_side() = assertEachEntry("DropdownPopoverClasses side", mapOf(DropdownSide.Top to "dropdown dropdown-top", DropdownSide.Bottom to "dropdown dropdown-bottom", DropdownSide.Left to "dropdown dropdown-left", DropdownSide.Right to "dropdown dropdown-right")) { daisyDropdownPopoverClasses(side = it) }
 
     @Test
-    fun dropdownPopoverClasses_side_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses(
-                side = DropdownSide.Bottom,
-            )
-        }
-        assertRendered(html, Expected("DropdownPopoverClasses side Bottom", "dropdown dropdown-bottom"))
-    }
-
-    @Test
-    fun dropdownPopoverClasses_side_left() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses(
-                side = DropdownSide.Left,
-            )
-        }
-        assertRendered(html, Expected("DropdownPopoverClasses side Left", "dropdown dropdown-left"))
-    }
-
-    @Test
-    fun dropdownPopoverClasses_side_right() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses(
-                side = DropdownSide.Right,
-            )
-        }
-        assertRendered(html, Expected("DropdownPopoverClasses side Right", "dropdown dropdown-right"))
-    }
-
-    @Test
-    fun dropdownPopoverClasses_align_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses(
-                align = DropdownAlign.Start,
-            )
-        }
-        assertRendered(html, Expected("DropdownPopoverClasses align Start", "dropdown dropdown-start"))
-    }
-
-    @Test
-    fun dropdownPopoverClasses_align_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses(
-                align = DropdownAlign.Center,
-            )
-        }
-        assertRendered(html, Expected("DropdownPopoverClasses align Center", "dropdown dropdown-center"))
-    }
-
-    @Test
-    fun dropdownPopoverClasses_align_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopoverClasses(
-                align = DropdownAlign.End,
-            )
-        }
-        assertRendered(html, Expected("DropdownPopoverClasses align End", "dropdown dropdown-end"))
-    }
+    fun dropdownPopoverClasses_align() = assertEachEntry("DropdownPopoverClasses align", mapOf(DropdownAlign.Start to "dropdown dropdown-start", DropdownAlign.Center to "dropdown dropdown-center", DropdownAlign.End to "dropdown dropdown-end")) { daisyDropdownPopoverClasses(align = it) }
 
     @Test
     fun dropdownContent_defaults() {

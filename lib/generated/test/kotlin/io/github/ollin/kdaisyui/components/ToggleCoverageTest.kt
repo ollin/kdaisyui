@@ -32,6 +32,13 @@ class ToggleCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -56,134 +63,10 @@ class ToggleCoverageTest {
     }
 
     @Test
-    fun toggle_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Primary", "toggle toggle-primary"))
-    }
+    fun toggle_color() = assertEachEntry("Toggle color", mapOf(ToggleColor.Primary to "toggle toggle-primary", ToggleColor.Secondary to "toggle toggle-secondary", ToggleColor.Accent to "toggle toggle-accent", ToggleColor.Neutral to "toggle toggle-neutral", ToggleColor.Success to "toggle toggle-success", ToggleColor.Warning to "toggle toggle-warning", ToggleColor.Info to "toggle toggle-info", ToggleColor.Error to "toggle toggle-error")) { daisyToggle(color = it) }
 
     @Test
-    fun toggle_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Secondary", "toggle toggle-secondary"))
-    }
-
-    @Test
-    fun toggle_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Accent", "toggle toggle-accent"))
-    }
-
-    @Test
-    fun toggle_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Neutral", "toggle toggle-neutral"))
-    }
-
-    @Test
-    fun toggle_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Success,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Success", "toggle toggle-success"))
-    }
-
-    @Test
-    fun toggle_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Warning", "toggle toggle-warning"))
-    }
-
-    @Test
-    fun toggle_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Info,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Info", "toggle toggle-info"))
-    }
-
-    @Test
-    fun toggle_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                color = ToggleColor.Error,
-            )
-        }
-        assertRendered(html, Expected("Toggle color Error", "toggle toggle-error"))
-    }
-
-    @Test
-    fun toggle_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                size = ToggleSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("Toggle size Xs", "toggle toggle-xs"))
-    }
-
-    @Test
-    fun toggle_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                size = ToggleSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("Toggle size Sm", "toggle toggle-sm"))
-    }
-
-    @Test
-    fun toggle_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                size = ToggleSize.Md,
-            )
-        }
-        assertRendered(html, Expected("Toggle size Md", "toggle toggle-md"))
-    }
-
-    @Test
-    fun toggle_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                size = ToggleSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("Toggle size Lg", "toggle toggle-lg"))
-    }
-
-    @Test
-    fun toggle_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggle(
-                size = ToggleSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("Toggle size Xl", "toggle toggle-xl"))
-    }
+    fun toggle_size() = assertEachEntry("Toggle size", mapOf(ToggleSize.Xs to "toggle toggle-xs", ToggleSize.Sm to "toggle toggle-sm", ToggleSize.Md to "toggle toggle-md", ToggleSize.Lg to "toggle toggle-lg", ToggleSize.Xl to "toggle toggle-xl")) { daisyToggle(size = it) }
 
     @Test
     fun toggleClasses_defaults() {
@@ -203,132 +86,8 @@ class ToggleCoverageTest {
     }
 
     @Test
-    fun toggleClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Primary", "toggle toggle-primary"))
-    }
+    fun toggleClasses_color() = assertEachEntry("ToggleClasses color", mapOf(ToggleColor.Primary to "toggle toggle-primary", ToggleColor.Secondary to "toggle toggle-secondary", ToggleColor.Accent to "toggle toggle-accent", ToggleColor.Neutral to "toggle toggle-neutral", ToggleColor.Success to "toggle toggle-success", ToggleColor.Warning to "toggle toggle-warning", ToggleColor.Info to "toggle toggle-info", ToggleColor.Error to "toggle toggle-error")) { daisyToggleClasses(color = it) }
 
     @Test
-    fun toggleClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Secondary", "toggle toggle-secondary"))
-    }
-
-    @Test
-    fun toggleClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Accent", "toggle toggle-accent"))
-    }
-
-    @Test
-    fun toggleClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Neutral", "toggle toggle-neutral"))
-    }
-
-    @Test
-    fun toggleClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Success,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Success", "toggle toggle-success"))
-    }
-
-    @Test
-    fun toggleClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Warning", "toggle toggle-warning"))
-    }
-
-    @Test
-    fun toggleClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Info,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Info", "toggle toggle-info"))
-    }
-
-    @Test
-    fun toggleClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                color = ToggleColor.Error,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses color Error", "toggle toggle-error"))
-    }
-
-    @Test
-    fun toggleClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                size = ToggleSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses size Xs", "toggle toggle-xs"))
-    }
-
-    @Test
-    fun toggleClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                size = ToggleSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses size Sm", "toggle toggle-sm"))
-    }
-
-    @Test
-    fun toggleClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                size = ToggleSize.Md,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses size Md", "toggle toggle-md"))
-    }
-
-    @Test
-    fun toggleClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                size = ToggleSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses size Lg", "toggle toggle-lg"))
-    }
-
-    @Test
-    fun toggleClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToggleClasses(
-                size = ToggleSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("ToggleClasses size Xl", "toggle toggle-xl"))
-    }
+    fun toggleClasses_size() = assertEachEntry("ToggleClasses size", mapOf(ToggleSize.Xs to "toggle toggle-xs", ToggleSize.Sm to "toggle toggle-sm", ToggleSize.Md to "toggle toggle-md", ToggleSize.Lg to "toggle toggle-lg", ToggleSize.Xl to "toggle toggle-xl")) { daisyToggleClasses(size = it) }
 }

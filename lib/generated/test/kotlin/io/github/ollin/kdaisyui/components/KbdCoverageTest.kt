@@ -32,6 +32,13 @@ class KbdCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -52,54 +59,7 @@ class KbdCoverageTest {
     }
 
     @Test
-    fun kbd_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbd(
-                size = KbdSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("Kbd size Xs", "kbd kbd-xs"))
-    }
-
-    @Test
-    fun kbd_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbd(
-                size = KbdSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("Kbd size Sm", "kbd kbd-sm"))
-    }
-
-    @Test
-    fun kbd_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbd(
-                size = KbdSize.Md,
-            )
-        }
-        assertRendered(html, Expected("Kbd size Md", "kbd kbd-md"))
-    }
-
-    @Test
-    fun kbd_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbd(
-                size = KbdSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("Kbd size Lg", "kbd kbd-lg"))
-    }
-
-    @Test
-    fun kbd_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbd(
-                size = KbdSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("Kbd size Xl", "kbd kbd-xl"))
-    }
+    fun kbd_size() = assertEachEntry("Kbd size", mapOf(KbdSize.Xs to "kbd kbd-xs", KbdSize.Sm to "kbd kbd-sm", KbdSize.Md to "kbd kbd-md", KbdSize.Lg to "kbd kbd-lg", KbdSize.Xl to "kbd kbd-xl")) { daisyKbd(size = it) }
 
     @Test
     fun kbd_text() {
@@ -130,52 +90,5 @@ class KbdCoverageTest {
     }
 
     @Test
-    fun kbdClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbdClasses(
-                size = KbdSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("KbdClasses size Xs", "kbd kbd-xs"))
-    }
-
-    @Test
-    fun kbdClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbdClasses(
-                size = KbdSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("KbdClasses size Sm", "kbd kbd-sm"))
-    }
-
-    @Test
-    fun kbdClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbdClasses(
-                size = KbdSize.Md,
-            )
-        }
-        assertRendered(html, Expected("KbdClasses size Md", "kbd kbd-md"))
-    }
-
-    @Test
-    fun kbdClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbdClasses(
-                size = KbdSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("KbdClasses size Lg", "kbd kbd-lg"))
-    }
-
-    @Test
-    fun kbdClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyKbdClasses(
-                size = KbdSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("KbdClasses size Xl", "kbd kbd-xl"))
-    }
+    fun kbdClasses_size() = assertEachEntry("KbdClasses size", mapOf(KbdSize.Xs to "kbd kbd-xs", KbdSize.Sm to "kbd kbd-sm", KbdSize.Md to "kbd kbd-md", KbdSize.Lg to "kbd kbd-lg", KbdSize.Xl to "kbd kbd-xl")) { daisyKbdClasses(size = it) }
 }

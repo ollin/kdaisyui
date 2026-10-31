@@ -32,6 +32,13 @@ class FooterCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,26 +61,7 @@ class FooterCoverageTest {
     }
 
     @Test
-    fun footer_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFooter(
-                direction = FooterDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Footer direction Horizontal", "footer footer-horizontal"))
-    }
-
-    @Test
-    fun footer_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFooter(
-                direction = FooterDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Footer direction Vertical", "footer footer-vertical"))
-    }
+    fun footer_direction() = assertEachEntry("Footer direction", mapOf(FooterDirection.Horizontal to "footer footer-horizontal", FooterDirection.Vertical to "footer footer-vertical")) { daisyFooter(direction = it, content = { }) }
 
     @Test
     fun footerClasses_defaults() {
@@ -95,24 +83,7 @@ class FooterCoverageTest {
     }
 
     @Test
-    fun footerClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFooterClasses(
-                direction = FooterDirection.Horizontal,
-            )
-        }
-        assertRendered(html, Expected("FooterClasses direction Horizontal", "footer footer-horizontal"))
-    }
-
-    @Test
-    fun footerClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFooterClasses(
-                direction = FooterDirection.Vertical,
-            )
-        }
-        assertRendered(html, Expected("FooterClasses direction Vertical", "footer footer-vertical"))
-    }
+    fun footerClasses_direction() = assertEachEntry("FooterClasses direction", mapOf(FooterDirection.Horizontal to "footer footer-horizontal", FooterDirection.Vertical to "footer footer-vertical")) { daisyFooterClasses(direction = it) }
 
     @Test
     fun footerTitle_defaults() {

@@ -775,6 +775,13 @@ const COVERAGE_HELPER = `
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("\$label \$entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\\"x-cov-id\\""), "\${expected.label} id")
         assertTrue(html.contains("data-attrs=\\"yes\\""), "\${expected.label} attrs")
@@ -925,6 +932,7 @@ const HATCH_CONSTANTS: Readonly<Record<string, string>> = {
 }
 
 function enumArmTests(ctx) {
+  if (ctx.wrapperFn === 'div') return ctx.params.filter((p) => p.kind === 'enumClass').map(e => enumAxisTest(ctx, e)).join('')
   let tests = ''
   for (const e of ctx.params.filter((p) => p.kind === 'enumClass')) {
     for (const { entry, css } of e.enumEntries) {
@@ -936,6 +944,16 @@ function enumArmTests(ctx) {
     }
   }
   return tests
+}
+
+/** One test for an axis: a table from each entry to the classes it must render. */
+function enumAxisTest(ctx, e) {
+  const table = e.enumEntries.map(({ entry, css }) => `${e.enumType}.${entry} to "${sortedClasses([ctx.base, css])}"`).join(', ')
+  const call = `daisy${ctx.daisyName}(${[`${e.name} = it`, ...requiredArgs(ctx)].join(', ')})`
+  return `
+    @Test
+    fun ${ctx.fnBase}_${e.name}() = assertEachEntry("${ctx.daisyName} ${e.name}", mapOf(${table})) { ${call} }
+`
 }
 
 function textArmTest(ctx) {

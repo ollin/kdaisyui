@@ -32,6 +32,13 @@ class TimelineCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,26 +61,7 @@ class TimelineCoverageTest {
     }
 
     @Test
-    fun timeline_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(
-                direction = TimelineDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Timeline direction Horizontal", "timeline timeline-horizontal"))
-    }
-
-    @Test
-    fun timeline_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(
-                direction = TimelineDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Timeline direction Vertical", "timeline timeline-vertical"))
-    }
+    fun timeline_direction() = assertEachEntry("Timeline direction", mapOf(TimelineDirection.Horizontal to "timeline timeline-horizontal", TimelineDirection.Vertical to "timeline timeline-vertical")) { daisyTimeline(direction = it, content = { }) }
 
     @Test
     fun timelineClasses_defaults() {
@@ -96,24 +84,7 @@ class TimelineCoverageTest {
     }
 
     @Test
-    fun timelineClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimelineClasses(
-                direction = TimelineDirection.Horizontal,
-            )
-        }
-        assertRendered(html, Expected("TimelineClasses direction Horizontal", "timeline timeline-horizontal"))
-    }
-
-    @Test
-    fun timelineClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTimelineClasses(
-                direction = TimelineDirection.Vertical,
-            )
-        }
-        assertRendered(html, Expected("TimelineClasses direction Vertical", "timeline timeline-vertical"))
-    }
+    fun timelineClasses_direction() = assertEachEntry("TimelineClasses direction", mapOf(TimelineDirection.Horizontal to "timeline timeline-horizontal", TimelineDirection.Vertical to "timeline timeline-vertical")) { daisyTimelineClasses(direction = it) }
 
     @Test
     fun timelineStart_defaults() {

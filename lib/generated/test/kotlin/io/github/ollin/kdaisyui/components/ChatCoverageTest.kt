@@ -32,6 +32,13 @@ class ChatCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,26 +61,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chat_placement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChat(
-                placement = ChatPlacement.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Chat placement Start", "chat chat-start"))
-    }
-
-    @Test
-    fun chat_placement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChat(
-                placement = ChatPlacement.End,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Chat placement End", "chat chat-end"))
-    }
+    fun chat_placement() = assertEachEntry("Chat placement", mapOf(ChatPlacement.Start to "chat chat-start", ChatPlacement.End to "chat chat-end")) { daisyChat(placement = it, content = { }) }
 
     @Test
     fun chatClasses_defaults() {
@@ -93,24 +81,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatClasses_placement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatClasses(
-                placement = ChatPlacement.Start,
-            )
-        }
-        assertRendered(html, Expected("ChatClasses placement Start", "chat chat-start"))
-    }
-
-    @Test
-    fun chatClasses_placement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatClasses(
-                placement = ChatPlacement.End,
-            )
-        }
-        assertRendered(html, Expected("ChatClasses placement End", "chat chat-end"))
-    }
+    fun chatClasses_placement() = assertEachEntry("ChatClasses placement", mapOf(ChatPlacement.Start to "chat chat-start", ChatPlacement.End to "chat chat-end")) { daisyChatClasses(placement = it) }
 
     @Test
     fun chatImage_defaults() {
@@ -224,92 +195,7 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatBubble_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Neutral,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Neutral", "chat-bubble chat-bubble-neutral"))
-    }
-
-    @Test
-    fun chatBubble_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Primary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Primary", "chat-bubble chat-bubble-primary"))
-    }
-
-    @Test
-    fun chatBubble_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Secondary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Secondary", "chat-bubble chat-bubble-secondary"))
-    }
-
-    @Test
-    fun chatBubble_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Accent,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Accent", "chat-bubble chat-bubble-accent"))
-    }
-
-    @Test
-    fun chatBubble_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Info,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Info", "chat-bubble chat-bubble-info"))
-    }
-
-    @Test
-    fun chatBubble_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Success,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Success", "chat-bubble chat-bubble-success"))
-    }
-
-    @Test
-    fun chatBubble_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Warning,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Warning", "chat-bubble chat-bubble-warning"))
-    }
-
-    @Test
-    fun chatBubble_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(
-                color = ChatBubbleColor.Error,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("ChatBubble color Error", "chat-bubble chat-bubble-error"))
-    }
+    fun chatBubble_color() = assertEachEntry("ChatBubble color", mapOf(ChatBubbleColor.Neutral to "chat-bubble chat-bubble-neutral", ChatBubbleColor.Primary to "chat-bubble chat-bubble-primary", ChatBubbleColor.Secondary to "chat-bubble chat-bubble-secondary", ChatBubbleColor.Accent to "chat-bubble chat-bubble-accent", ChatBubbleColor.Info to "chat-bubble chat-bubble-info", ChatBubbleColor.Success to "chat-bubble chat-bubble-success", ChatBubbleColor.Warning to "chat-bubble chat-bubble-warning", ChatBubbleColor.Error to "chat-bubble chat-bubble-error")) { daisyChatBubble(color = it, content = { }) }
 
     @Test
     fun chatBubbleClasses_defaults() {
@@ -329,82 +215,5 @@ class ChatCoverageTest {
     }
 
     @Test
-    fun chatBubbleClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Neutral", "chat-bubble chat-bubble-neutral"))
-    }
-
-    @Test
-    fun chatBubbleClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Primary", "chat-bubble chat-bubble-primary"))
-    }
-
-    @Test
-    fun chatBubbleClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Secondary", "chat-bubble chat-bubble-secondary"))
-    }
-
-    @Test
-    fun chatBubbleClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Accent", "chat-bubble chat-bubble-accent"))
-    }
-
-    @Test
-    fun chatBubbleClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Info,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Info", "chat-bubble chat-bubble-info"))
-    }
-
-    @Test
-    fun chatBubbleClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Success,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Success", "chat-bubble chat-bubble-success"))
-    }
-
-    @Test
-    fun chatBubbleClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Warning", "chat-bubble chat-bubble-warning"))
-    }
-
-    @Test
-    fun chatBubbleClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyChatBubbleClasses(
-                color = ChatBubbleColor.Error,
-            )
-        }
-        assertRendered(html, Expected("ChatBubbleClasses color Error", "chat-bubble chat-bubble-error"))
-    }
+    fun chatBubbleClasses_color() = assertEachEntry("ChatBubbleClasses color", mapOf(ChatBubbleColor.Neutral to "chat-bubble chat-bubble-neutral", ChatBubbleColor.Primary to "chat-bubble chat-bubble-primary", ChatBubbleColor.Secondary to "chat-bubble chat-bubble-secondary", ChatBubbleColor.Accent to "chat-bubble chat-bubble-accent", ChatBubbleColor.Info to "chat-bubble chat-bubble-info", ChatBubbleColor.Success to "chat-bubble chat-bubble-success", ChatBubbleColor.Warning to "chat-bubble chat-bubble-warning", ChatBubbleColor.Error to "chat-bubble chat-bubble-error")) { daisyChatBubbleClasses(color = it) }
 }

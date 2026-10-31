@@ -32,6 +32,13 @@ class TextareaCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,147 +61,10 @@ class TextareaCoverageTest {
     }
 
     @Test
-    fun textarea_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Neutral,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Neutral", "textarea textarea-neutral"))
-    }
+    fun textarea_color() = assertEachEntry("Textarea color", mapOf(TextareaColor.Neutral to "textarea textarea-neutral", TextareaColor.Primary to "textarea textarea-primary", TextareaColor.Secondary to "textarea textarea-secondary", TextareaColor.Accent to "textarea textarea-accent", TextareaColor.Info to "textarea textarea-info", TextareaColor.Success to "textarea textarea-success", TextareaColor.Warning to "textarea textarea-warning", TextareaColor.Error to "textarea textarea-error")) { daisyTextarea(color = it, content = { }) }
 
     @Test
-    fun textarea_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Primary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Primary", "textarea textarea-primary"))
-    }
-
-    @Test
-    fun textarea_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Secondary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Secondary", "textarea textarea-secondary"))
-    }
-
-    @Test
-    fun textarea_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Accent,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Accent", "textarea textarea-accent"))
-    }
-
-    @Test
-    fun textarea_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Info,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Info", "textarea textarea-info"))
-    }
-
-    @Test
-    fun textarea_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Success,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Success", "textarea textarea-success"))
-    }
-
-    @Test
-    fun textarea_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Warning,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Warning", "textarea textarea-warning"))
-    }
-
-    @Test
-    fun textarea_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                color = TextareaColor.Error,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea color Error", "textarea textarea-error"))
-    }
-
-    @Test
-    fun textarea_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                size = TextareaSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea size Xs", "textarea textarea-xs"))
-    }
-
-    @Test
-    fun textarea_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                size = TextareaSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea size Sm", "textarea textarea-sm"))
-    }
-
-    @Test
-    fun textarea_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                size = TextareaSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea size Md", "textarea textarea-md"))
-    }
-
-    @Test
-    fun textarea_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                size = TextareaSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea size Lg", "textarea textarea-lg"))
-    }
-
-    @Test
-    fun textarea_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                size = TextareaSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Textarea size Xl", "textarea textarea-xl"))
-    }
+    fun textarea_size() = assertEachEntry("Textarea size", mapOf(TextareaSize.Xs to "textarea textarea-xs", TextareaSize.Sm to "textarea textarea-sm", TextareaSize.Md to "textarea textarea-md", TextareaSize.Lg to "textarea textarea-lg", TextareaSize.Xl to "textarea textarea-xl")) { daisyTextarea(size = it, content = { }) }
 
     @Test
     fun textareaClasses_defaults() {
@@ -216,132 +86,8 @@ class TextareaCoverageTest {
     }
 
     @Test
-    fun textareaClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Neutral", "textarea textarea-neutral"))
-    }
+    fun textareaClasses_color() = assertEachEntry("TextareaClasses color", mapOf(TextareaColor.Neutral to "textarea textarea-neutral", TextareaColor.Primary to "textarea textarea-primary", TextareaColor.Secondary to "textarea textarea-secondary", TextareaColor.Accent to "textarea textarea-accent", TextareaColor.Info to "textarea textarea-info", TextareaColor.Success to "textarea textarea-success", TextareaColor.Warning to "textarea textarea-warning", TextareaColor.Error to "textarea textarea-error")) { daisyTextareaClasses(color = it) }
 
     @Test
-    fun textareaClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Primary", "textarea textarea-primary"))
-    }
-
-    @Test
-    fun textareaClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Secondary", "textarea textarea-secondary"))
-    }
-
-    @Test
-    fun textareaClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Accent", "textarea textarea-accent"))
-    }
-
-    @Test
-    fun textareaClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Info,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Info", "textarea textarea-info"))
-    }
-
-    @Test
-    fun textareaClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Success,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Success", "textarea textarea-success"))
-    }
-
-    @Test
-    fun textareaClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Warning", "textarea textarea-warning"))
-    }
-
-    @Test
-    fun textareaClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                color = TextareaColor.Error,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses color Error", "textarea textarea-error"))
-    }
-
-    @Test
-    fun textareaClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                size = TextareaSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses size Xs", "textarea textarea-xs"))
-    }
-
-    @Test
-    fun textareaClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                size = TextareaSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses size Sm", "textarea textarea-sm"))
-    }
-
-    @Test
-    fun textareaClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                size = TextareaSize.Md,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses size Md", "textarea textarea-md"))
-    }
-
-    @Test
-    fun textareaClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                size = TextareaSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses size Lg", "textarea textarea-lg"))
-    }
-
-    @Test
-    fun textareaClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTextareaClasses(
-                size = TextareaSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("TextareaClasses size Xl", "textarea textarea-xl"))
-    }
+    fun textareaClasses_size() = assertEachEntry("TextareaClasses size", mapOf(TextareaSize.Xs to "textarea textarea-xs", TextareaSize.Sm to "textarea textarea-sm", TextareaSize.Md to "textarea textarea-md", TextareaSize.Lg to "textarea textarea-lg", TextareaSize.Xl to "textarea textarea-xl")) { daisyTextareaClasses(size = it) }
 }

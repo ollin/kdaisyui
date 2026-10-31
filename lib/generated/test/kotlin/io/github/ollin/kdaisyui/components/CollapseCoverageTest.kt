@@ -32,6 +32,13 @@ class CollapseCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,48 +61,10 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapse_icon_arrow() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(
-                icon = CollapseIcon.Arrow,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Collapse icon Arrow", "collapse collapse-arrow"))
-    }
+    fun collapse_icon() = assertEachEntry("Collapse icon", mapOf(CollapseIcon.Arrow to "collapse collapse-arrow", CollapseIcon.Plus to "collapse collapse-plus")) { daisyCollapse(icon = it, content = { }) }
 
     @Test
-    fun collapse_icon_plus() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(
-                icon = CollapseIcon.Plus,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Collapse icon Plus", "collapse collapse-plus"))
-    }
-
-    @Test
-    fun collapse_state_open() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(
-                state = CollapseState.Open,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Collapse state Open", "collapse collapse-open"))
-    }
-
-    @Test
-    fun collapse_state_close() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(
-                state = CollapseState.Close,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Collapse state Close", "collapse collapse-close"))
-    }
+    fun collapse_state() = assertEachEntry("Collapse state", mapOf(CollapseState.Open to "collapse collapse-open", CollapseState.Close to "collapse collapse-close")) { daisyCollapse(state = it, content = { }) }
 
     @Test
     fun collapseClasses_defaults() {
@@ -115,44 +84,10 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapseClasses_icon_arrow() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapseClasses(
-                icon = CollapseIcon.Arrow,
-            )
-        }
-        assertRendered(html, Expected("CollapseClasses icon Arrow", "collapse collapse-arrow"))
-    }
+    fun collapseClasses_icon() = assertEachEntry("CollapseClasses icon", mapOf(CollapseIcon.Arrow to "collapse collapse-arrow", CollapseIcon.Plus to "collapse collapse-plus")) { daisyCollapseClasses(icon = it) }
 
     @Test
-    fun collapseClasses_icon_plus() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapseClasses(
-                icon = CollapseIcon.Plus,
-            )
-        }
-        assertRendered(html, Expected("CollapseClasses icon Plus", "collapse collapse-plus"))
-    }
-
-    @Test
-    fun collapseClasses_state_open() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapseClasses(
-                state = CollapseState.Open,
-            )
-        }
-        assertRendered(html, Expected("CollapseClasses state Open", "collapse collapse-open"))
-    }
-
-    @Test
-    fun collapseClasses_state_close() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyCollapseClasses(
-                state = CollapseState.Close,
-            )
-        }
-        assertRendered(html, Expected("CollapseClasses state Close", "collapse collapse-close"))
-    }
+    fun collapseClasses_state() = assertEachEntry("CollapseClasses state", mapOf(CollapseState.Open to "collapse collapse-open", CollapseState.Close to "collapse collapse-close")) { daisyCollapseClasses(state = it) }
 
     @Test
     fun collapseTitle_defaults() {

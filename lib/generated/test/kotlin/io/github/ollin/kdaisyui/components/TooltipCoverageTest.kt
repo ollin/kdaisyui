@@ -32,6 +32,13 @@ class TooltipCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,158 +61,13 @@ class TooltipCoverageTest {
     }
 
     @Test
-    fun tooltip_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                color = TooltipColor.Primary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip color Primary", "tooltip tooltip-primary"))
-    }
+    fun tooltip_color() = assertEachEntry("Tooltip color", mapOf(TooltipColor.Primary to "tooltip tooltip-primary", TooltipColor.Secondary to "tooltip tooltip-secondary", TooltipColor.Accent to "tooltip tooltip-accent", TooltipColor.Info to "tooltip tooltip-info", TooltipColor.Success to "tooltip tooltip-success", TooltipColor.Warning to "tooltip tooltip-warning", TooltipColor.Error to "tooltip tooltip-error")) { daisyTooltip(color = it, content = { }) }
 
     @Test
-    fun tooltip_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                color = TooltipColor.Secondary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip color Secondary", "tooltip tooltip-secondary"))
-    }
+    fun tooltip_side() = assertEachEntry("Tooltip side", mapOf(TooltipSide.Top to "tooltip tooltip-top", TooltipSide.Bottom to "tooltip tooltip-bottom", TooltipSide.Left to "tooltip tooltip-left", TooltipSide.Right to "tooltip tooltip-right")) { daisyTooltip(side = it, content = { }) }
 
     @Test
-    fun tooltip_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                color = TooltipColor.Accent,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip color Accent", "tooltip tooltip-accent"))
-    }
-
-    @Test
-    fun tooltip_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                color = TooltipColor.Info,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip color Info", "tooltip tooltip-info"))
-    }
-
-    @Test
-    fun tooltip_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                color = TooltipColor.Success,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip color Success", "tooltip tooltip-success"))
-    }
-
-    @Test
-    fun tooltip_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                color = TooltipColor.Warning,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip color Warning", "tooltip tooltip-warning"))
-    }
-
-    @Test
-    fun tooltip_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                color = TooltipColor.Error,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip color Error", "tooltip tooltip-error"))
-    }
-
-    @Test
-    fun tooltip_side_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                side = TooltipSide.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip side Top", "tooltip tooltip-top"))
-    }
-
-    @Test
-    fun tooltip_side_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                side = TooltipSide.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip side Bottom", "tooltip tooltip-bottom"))
-    }
-
-    @Test
-    fun tooltip_side_left() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                side = TooltipSide.Left,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip side Left", "tooltip tooltip-left"))
-    }
-
-    @Test
-    fun tooltip_side_right() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                side = TooltipSide.Right,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip side Right", "tooltip tooltip-right"))
-    }
-
-    @Test
-    fun tooltip_align_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                align = TooltipAlign.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip align Start", "tooltip tooltip-start"))
-    }
-
-    @Test
-    fun tooltip_align_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                align = TooltipAlign.Center,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip align Center", "tooltip tooltip-center"))
-    }
-
-    @Test
-    fun tooltip_align_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(
-                align = TooltipAlign.End,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tooltip align End", "tooltip tooltip-end"))
-    }
+    fun tooltip_align() = assertEachEntry("Tooltip align", mapOf(TooltipAlign.Start to "tooltip tooltip-start", TooltipAlign.Center to "tooltip tooltip-center", TooltipAlign.End to "tooltip tooltip-end")) { daisyTooltip(align = it, content = { }) }
 
     @Test
     fun tooltipClasses_defaults() {
@@ -227,144 +89,13 @@ class TooltipCoverageTest {
     }
 
     @Test
-    fun tooltipClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                color = TooltipColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses color Primary", "tooltip tooltip-primary"))
-    }
+    fun tooltipClasses_color() = assertEachEntry("TooltipClasses color", mapOf(TooltipColor.Primary to "tooltip tooltip-primary", TooltipColor.Secondary to "tooltip tooltip-secondary", TooltipColor.Accent to "tooltip tooltip-accent", TooltipColor.Info to "tooltip tooltip-info", TooltipColor.Success to "tooltip tooltip-success", TooltipColor.Warning to "tooltip tooltip-warning", TooltipColor.Error to "tooltip tooltip-error")) { daisyTooltipClasses(color = it) }
 
     @Test
-    fun tooltipClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                color = TooltipColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses color Secondary", "tooltip tooltip-secondary"))
-    }
+    fun tooltipClasses_side() = assertEachEntry("TooltipClasses side", mapOf(TooltipSide.Top to "tooltip tooltip-top", TooltipSide.Bottom to "tooltip tooltip-bottom", TooltipSide.Left to "tooltip tooltip-left", TooltipSide.Right to "tooltip tooltip-right")) { daisyTooltipClasses(side = it) }
 
     @Test
-    fun tooltipClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                color = TooltipColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses color Accent", "tooltip tooltip-accent"))
-    }
-
-    @Test
-    fun tooltipClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                color = TooltipColor.Info,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses color Info", "tooltip tooltip-info"))
-    }
-
-    @Test
-    fun tooltipClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                color = TooltipColor.Success,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses color Success", "tooltip tooltip-success"))
-    }
-
-    @Test
-    fun tooltipClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                color = TooltipColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses color Warning", "tooltip tooltip-warning"))
-    }
-
-    @Test
-    fun tooltipClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                color = TooltipColor.Error,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses color Error", "tooltip tooltip-error"))
-    }
-
-    @Test
-    fun tooltipClasses_side_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                side = TooltipSide.Top,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses side Top", "tooltip tooltip-top"))
-    }
-
-    @Test
-    fun tooltipClasses_side_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                side = TooltipSide.Bottom,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses side Bottom", "tooltip tooltip-bottom"))
-    }
-
-    @Test
-    fun tooltipClasses_side_left() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                side = TooltipSide.Left,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses side Left", "tooltip tooltip-left"))
-    }
-
-    @Test
-    fun tooltipClasses_side_right() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                side = TooltipSide.Right,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses side Right", "tooltip tooltip-right"))
-    }
-
-    @Test
-    fun tooltipClasses_align_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                align = TooltipAlign.Start,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses align Start", "tooltip tooltip-start"))
-    }
-
-    @Test
-    fun tooltipClasses_align_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                align = TooltipAlign.Center,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses align Center", "tooltip tooltip-center"))
-    }
-
-    @Test
-    fun tooltipClasses_align_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTooltipClasses(
-                align = TooltipAlign.End,
-            )
-        }
-        assertRendered(html, Expected("TooltipClasses align End", "tooltip tooltip-end"))
-    }
+    fun tooltipClasses_align() = assertEachEntry("TooltipClasses align", mapOf(TooltipAlign.Start to "tooltip tooltip-start", TooltipAlign.Center to "tooltip tooltip-center", TooltipAlign.End to "tooltip tooltip-end")) { daisyTooltipClasses(align = it) }
 
     @Test
     fun tooltipContent_defaults() {

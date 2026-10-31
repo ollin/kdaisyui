@@ -32,6 +32,13 @@ class RangeCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -63,134 +70,10 @@ class RangeCoverageTest {
     }
 
     @Test
-    fun range_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("Range color Neutral", "range range-neutral"))
-    }
+    fun range_color() = assertEachEntry("Range color", mapOf(RangeColor.Neutral to "range range-neutral", RangeColor.Primary to "range range-primary", RangeColor.Secondary to "range range-secondary", RangeColor.Accent to "range range-accent", RangeColor.Success to "range range-success", RangeColor.Warning to "range range-warning", RangeColor.Info to "range range-info", RangeColor.Error to "range range-error")) { daisyRange(color = it) }
 
     @Test
-    fun range_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("Range color Primary", "range range-primary"))
-    }
-
-    @Test
-    fun range_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("Range color Secondary", "range range-secondary"))
-    }
-
-    @Test
-    fun range_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("Range color Accent", "range range-accent"))
-    }
-
-    @Test
-    fun range_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Success,
-            )
-        }
-        assertRendered(html, Expected("Range color Success", "range range-success"))
-    }
-
-    @Test
-    fun range_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("Range color Warning", "range range-warning"))
-    }
-
-    @Test
-    fun range_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Info,
-            )
-        }
-        assertRendered(html, Expected("Range color Info", "range range-info"))
-    }
-
-    @Test
-    fun range_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                color = RangeColor.Error,
-            )
-        }
-        assertRendered(html, Expected("Range color Error", "range range-error"))
-    }
-
-    @Test
-    fun range_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                size = RangeSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("Range size Xs", "range range-xs"))
-    }
-
-    @Test
-    fun range_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                size = RangeSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("Range size Sm", "range range-sm"))
-    }
-
-    @Test
-    fun range_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                size = RangeSize.Md,
-            )
-        }
-        assertRendered(html, Expected("Range size Md", "range range-md"))
-    }
-
-    @Test
-    fun range_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                size = RangeSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("Range size Lg", "range range-lg"))
-    }
-
-    @Test
-    fun range_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRange(
-                size = RangeSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("Range size Xl", "range range-xl"))
-    }
+    fun range_size() = assertEachEntry("Range size", mapOf(RangeSize.Xs to "range range-xs", RangeSize.Sm to "range range-sm", RangeSize.Md to "range range-md", RangeSize.Lg to "range range-lg", RangeSize.Xl to "range range-xl")) { daisyRange(size = it) }
 
     @Test
     fun rangeClasses_defaults() {
@@ -212,132 +95,8 @@ class RangeCoverageTest {
     }
 
     @Test
-    fun rangeClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Neutral", "range range-neutral"))
-    }
+    fun rangeClasses_color() = assertEachEntry("RangeClasses color", mapOf(RangeColor.Neutral to "range range-neutral", RangeColor.Primary to "range range-primary", RangeColor.Secondary to "range range-secondary", RangeColor.Accent to "range range-accent", RangeColor.Success to "range range-success", RangeColor.Warning to "range range-warning", RangeColor.Info to "range range-info", RangeColor.Error to "range range-error")) { daisyRangeClasses(color = it) }
 
     @Test
-    fun rangeClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Primary", "range range-primary"))
-    }
-
-    @Test
-    fun rangeClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Secondary", "range range-secondary"))
-    }
-
-    @Test
-    fun rangeClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Accent", "range range-accent"))
-    }
-
-    @Test
-    fun rangeClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Success,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Success", "range range-success"))
-    }
-
-    @Test
-    fun rangeClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Warning", "range range-warning"))
-    }
-
-    @Test
-    fun rangeClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Info,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Info", "range range-info"))
-    }
-
-    @Test
-    fun rangeClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                color = RangeColor.Error,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses color Error", "range range-error"))
-    }
-
-    @Test
-    fun rangeClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                size = RangeSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses size Xs", "range range-xs"))
-    }
-
-    @Test
-    fun rangeClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                size = RangeSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses size Sm", "range range-sm"))
-    }
-
-    @Test
-    fun rangeClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                size = RangeSize.Md,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses size Md", "range range-md"))
-    }
-
-    @Test
-    fun rangeClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                size = RangeSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses size Lg", "range range-lg"))
-    }
-
-    @Test
-    fun rangeClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRangeClasses(
-                size = RangeSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("RangeClasses size Xl", "range range-xl"))
-    }
+    fun rangeClasses_size() = assertEachEntry("RangeClasses size", mapOf(RangeSize.Xs to "range range-xs", RangeSize.Sm to "range range-sm", RangeSize.Md to "range range-md", RangeSize.Lg to "range range-lg", RangeSize.Xl to "range range-xl")) { daisyRangeClasses(size = it) }
 }

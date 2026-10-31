@@ -32,6 +32,13 @@ class LinkCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -52,84 +59,7 @@ class LinkCoverageTest {
     }
 
     @Test
-    fun link_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("Link color Neutral", "link link-neutral"))
-    }
-
-    @Test
-    fun link_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("Link color Primary", "link link-primary"))
-    }
-
-    @Test
-    fun link_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("Link color Secondary", "link link-secondary"))
-    }
-
-    @Test
-    fun link_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("Link color Accent", "link link-accent"))
-    }
-
-    @Test
-    fun link_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Success,
-            )
-        }
-        assertRendered(html, Expected("Link color Success", "link link-success"))
-    }
-
-    @Test
-    fun link_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Info,
-            )
-        }
-        assertRendered(html, Expected("Link color Info", "link link-info"))
-    }
-
-    @Test
-    fun link_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("Link color Warning", "link link-warning"))
-    }
-
-    @Test
-    fun link_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLink(
-                color = LinkColor.Error,
-            )
-        }
-        assertRendered(html, Expected("Link color Error", "link link-error"))
-    }
+    fun link_color() = assertEachEntry("Link color", mapOf(LinkColor.Neutral to "link link-neutral", LinkColor.Primary to "link link-primary", LinkColor.Secondary to "link link-secondary", LinkColor.Accent to "link link-accent", LinkColor.Success to "link link-success", LinkColor.Info to "link link-info", LinkColor.Warning to "link link-warning", LinkColor.Error to "link link-error")) { daisyLink(color = it) }
 
     @Test
     fun link_text() {
@@ -162,82 +92,5 @@ class LinkCoverageTest {
     }
 
     @Test
-    fun linkClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Neutral", "link link-neutral"))
-    }
-
-    @Test
-    fun linkClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Primary", "link link-primary"))
-    }
-
-    @Test
-    fun linkClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Secondary", "link link-secondary"))
-    }
-
-    @Test
-    fun linkClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Accent", "link link-accent"))
-    }
-
-    @Test
-    fun linkClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Success,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Success", "link link-success"))
-    }
-
-    @Test
-    fun linkClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Info,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Info", "link link-info"))
-    }
-
-    @Test
-    fun linkClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Warning", "link link-warning"))
-    }
-
-    @Test
-    fun linkClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyLinkClasses(
-                color = LinkColor.Error,
-            )
-        }
-        assertRendered(html, Expected("LinkClasses color Error", "link link-error"))
-    }
+    fun linkClasses_color() = assertEachEntry("LinkClasses color", mapOf(LinkColor.Neutral to "link link-neutral", LinkColor.Primary to "link link-primary", LinkColor.Secondary to "link link-secondary", LinkColor.Accent to "link link-accent", LinkColor.Success to "link link-success", LinkColor.Info to "link link-info", LinkColor.Warning to "link link-warning", LinkColor.Error to "link link-error")) { daisyLinkClasses(color = it) }
 }

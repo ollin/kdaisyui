@@ -32,6 +32,13 @@ class StatCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,26 +61,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun stats_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStats(
-                direction = StatsDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Stats direction Horizontal", "stats stats-horizontal"))
-    }
-
-    @Test
-    fun stats_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStats(
-                direction = StatsDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Stats direction Vertical", "stats stats-vertical"))
-    }
+    fun stats_direction() = assertEachEntry("Stats direction", mapOf(StatsDirection.Horizontal to "stats stats-horizontal", StatsDirection.Vertical to "stats stats-vertical")) { daisyStats(direction = it, content = { }) }
 
     @Test
     fun statsClasses_defaults() {
@@ -93,24 +81,7 @@ class StatCoverageTest {
     }
 
     @Test
-    fun statsClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatsClasses(
-                direction = StatsDirection.Horizontal,
-            )
-        }
-        assertRendered(html, Expected("StatsClasses direction Horizontal", "stats stats-horizontal"))
-    }
-
-    @Test
-    fun statsClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatsClasses(
-                direction = StatsDirection.Vertical,
-            )
-        }
-        assertRendered(html, Expected("StatsClasses direction Vertical", "stats stats-vertical"))
-    }
+    fun statsClasses_direction() = assertEachEntry("StatsClasses direction", mapOf(StatsDirection.Horizontal to "stats stats-horizontal", StatsDirection.Vertical to "stats stats-vertical")) { daisyStatsClasses(direction = it) }
 
     @Test
     fun stat_defaults() {

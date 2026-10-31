@@ -32,6 +32,13 @@ class TabCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,114 +61,13 @@ class TabCoverageTest {
     }
 
     @Test
-    fun tabs_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                size = TabsSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs size Xs", "tabs tabs-xs"))
-    }
+    fun tabs_size() = assertEachEntry("Tabs size", mapOf(TabsSize.Xs to "tabs tabs-xs", TabsSize.Sm to "tabs tabs-sm", TabsSize.Md to "tabs tabs-md", TabsSize.Lg to "tabs tabs-lg", TabsSize.Xl to "tabs tabs-xl")) { daisyTabs(size = it, content = { }) }
 
     @Test
-    fun tabs_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                size = TabsSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs size Sm", "tabs tabs-sm"))
-    }
+    fun tabs_placement() = assertEachEntry("Tabs placement", mapOf(TabsPlacement.Top to "tabs tabs-top", TabsPlacement.Bottom to "tabs tabs-bottom")) { daisyTabs(placement = it, content = { }) }
 
     @Test
-    fun tabs_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                size = TabsSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs size Md", "tabs tabs-md"))
-    }
-
-    @Test
-    fun tabs_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                size = TabsSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs size Lg", "tabs tabs-lg"))
-    }
-
-    @Test
-    fun tabs_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                size = TabsSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs size Xl", "tabs tabs-xl"))
-    }
-
-    @Test
-    fun tabs_placement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                placement = TabsPlacement.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs placement Top", "tabs tabs-top"))
-    }
-
-    @Test
-    fun tabs_placement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                placement = TabsPlacement.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs placement Bottom", "tabs tabs-bottom"))
-    }
-
-    @Test
-    fun tabs_style_box() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                style = TabsStyle.Box,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs style Box", "tabs tabs-box"))
-    }
-
-    @Test
-    fun tabs_style_border() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                style = TabsStyle.Border,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs style Border", "tabs tabs-border"))
-    }
-
-    @Test
-    fun tabs_style_lift() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                style = TabsStyle.Lift,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Tabs style Lift", "tabs tabs-lift"))
-    }
+    fun tabs_style() = assertEachEntry("Tabs style", mapOf(TabsStyle.Box to "tabs tabs-box", TabsStyle.Border to "tabs tabs-border", TabsStyle.Lift to "tabs tabs-lift")) { daisyTabs(style = it, content = { }) }
 
     @Test
     fun tabsClasses_defaults() {
@@ -181,104 +87,13 @@ class TabCoverageTest {
     }
 
     @Test
-    fun tabsClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                size = TabsSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses size Xs", "tabs tabs-xs"))
-    }
+    fun tabsClasses_size() = assertEachEntry("TabsClasses size", mapOf(TabsSize.Xs to "tabs tabs-xs", TabsSize.Sm to "tabs tabs-sm", TabsSize.Md to "tabs tabs-md", TabsSize.Lg to "tabs tabs-lg", TabsSize.Xl to "tabs tabs-xl")) { daisyTabsClasses(size = it) }
 
     @Test
-    fun tabsClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                size = TabsSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses size Sm", "tabs tabs-sm"))
-    }
+    fun tabsClasses_placement() = assertEachEntry("TabsClasses placement", mapOf(TabsPlacement.Top to "tabs tabs-top", TabsPlacement.Bottom to "tabs tabs-bottom")) { daisyTabsClasses(placement = it) }
 
     @Test
-    fun tabsClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                size = TabsSize.Md,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses size Md", "tabs tabs-md"))
-    }
-
-    @Test
-    fun tabsClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                size = TabsSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses size Lg", "tabs tabs-lg"))
-    }
-
-    @Test
-    fun tabsClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                size = TabsSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses size Xl", "tabs tabs-xl"))
-    }
-
-    @Test
-    fun tabsClasses_placement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                placement = TabsPlacement.Top,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses placement Top", "tabs tabs-top"))
-    }
-
-    @Test
-    fun tabsClasses_placement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                placement = TabsPlacement.Bottom,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses placement Bottom", "tabs tabs-bottom"))
-    }
-
-    @Test
-    fun tabsClasses_style_box() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                style = TabsStyle.Box,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses style Box", "tabs tabs-box"))
-    }
-
-    @Test
-    fun tabsClasses_style_border() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                style = TabsStyle.Border,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses style Border", "tabs tabs-border"))
-    }
-
-    @Test
-    fun tabsClasses_style_lift() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTabsClasses(
-                style = TabsStyle.Lift,
-            )
-        }
-        assertRendered(html, Expected("TabsClasses style Lift", "tabs tabs-lift"))
-    }
+    fun tabsClasses_style() = assertEachEntry("TabsClasses style", mapOf(TabsStyle.Box to "tabs tabs-box", TabsStyle.Border to "tabs tabs-border", TabsStyle.Lift to "tabs tabs-lift")) { daisyTabsClasses(style = it) }
 
     @Test
     fun tab_defaults() {

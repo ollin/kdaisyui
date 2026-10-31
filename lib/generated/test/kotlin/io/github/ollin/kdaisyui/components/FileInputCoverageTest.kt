@@ -32,6 +32,13 @@ class FileInputCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -52,134 +59,10 @@ class FileInputCoverageTest {
     }
 
     @Test
-    fun fileInput_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Neutral", "file-input file-input-neutral"))
-    }
+    fun fileInput_color() = assertEachEntry("FileInput color", mapOf(FileInputColor.Neutral to "file-input file-input-neutral", FileInputColor.Primary to "file-input file-input-primary", FileInputColor.Secondary to "file-input file-input-secondary", FileInputColor.Accent to "file-input file-input-accent", FileInputColor.Info to "file-input file-input-info", FileInputColor.Success to "file-input file-input-success", FileInputColor.Warning to "file-input file-input-warning", FileInputColor.Error to "file-input file-input-error")) { daisyFileInput(color = it) }
 
     @Test
-    fun fileInput_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Primary", "file-input file-input-primary"))
-    }
-
-    @Test
-    fun fileInput_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Secondary", "file-input file-input-secondary"))
-    }
-
-    @Test
-    fun fileInput_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Accent", "file-input file-input-accent"))
-    }
-
-    @Test
-    fun fileInput_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Info,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Info", "file-input file-input-info"))
-    }
-
-    @Test
-    fun fileInput_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Success,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Success", "file-input file-input-success"))
-    }
-
-    @Test
-    fun fileInput_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Warning", "file-input file-input-warning"))
-    }
-
-    @Test
-    fun fileInput_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                color = FileInputColor.Error,
-            )
-        }
-        assertRendered(html, Expected("FileInput color Error", "file-input file-input-error"))
-    }
-
-    @Test
-    fun fileInput_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                size = FileInputSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("FileInput size Xs", "file-input file-input-xs"))
-    }
-
-    @Test
-    fun fileInput_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                size = FileInputSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("FileInput size Sm", "file-input file-input-sm"))
-    }
-
-    @Test
-    fun fileInput_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                size = FileInputSize.Md,
-            )
-        }
-        assertRendered(html, Expected("FileInput size Md", "file-input file-input-md"))
-    }
-
-    @Test
-    fun fileInput_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                size = FileInputSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("FileInput size Lg", "file-input file-input-lg"))
-    }
-
-    @Test
-    fun fileInput_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInput(
-                size = FileInputSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("FileInput size Xl", "file-input file-input-xl"))
-    }
+    fun fileInput_size() = assertEachEntry("FileInput size", mapOf(FileInputSize.Xs to "file-input file-input-xs", FileInputSize.Sm to "file-input file-input-sm", FileInputSize.Md to "file-input file-input-md", FileInputSize.Lg to "file-input file-input-lg", FileInputSize.Xl to "file-input file-input-xl")) { daisyFileInput(size = it) }
 
     @Test
     fun fileInputClasses_defaults() {
@@ -201,132 +84,8 @@ class FileInputCoverageTest {
     }
 
     @Test
-    fun fileInputClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Neutral", "file-input file-input-neutral"))
-    }
+    fun fileInputClasses_color() = assertEachEntry("FileInputClasses color", mapOf(FileInputColor.Neutral to "file-input file-input-neutral", FileInputColor.Primary to "file-input file-input-primary", FileInputColor.Secondary to "file-input file-input-secondary", FileInputColor.Accent to "file-input file-input-accent", FileInputColor.Info to "file-input file-input-info", FileInputColor.Success to "file-input file-input-success", FileInputColor.Warning to "file-input file-input-warning", FileInputColor.Error to "file-input file-input-error")) { daisyFileInputClasses(color = it) }
 
     @Test
-    fun fileInputClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Primary", "file-input file-input-primary"))
-    }
-
-    @Test
-    fun fileInputClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Secondary", "file-input file-input-secondary"))
-    }
-
-    @Test
-    fun fileInputClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Accent", "file-input file-input-accent"))
-    }
-
-    @Test
-    fun fileInputClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Info,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Info", "file-input file-input-info"))
-    }
-
-    @Test
-    fun fileInputClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Success,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Success", "file-input file-input-success"))
-    }
-
-    @Test
-    fun fileInputClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Warning", "file-input file-input-warning"))
-    }
-
-    @Test
-    fun fileInputClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                color = FileInputColor.Error,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses color Error", "file-input file-input-error"))
-    }
-
-    @Test
-    fun fileInputClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                size = FileInputSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses size Xs", "file-input file-input-xs"))
-    }
-
-    @Test
-    fun fileInputClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                size = FileInputSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses size Sm", "file-input file-input-sm"))
-    }
-
-    @Test
-    fun fileInputClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                size = FileInputSize.Md,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses size Md", "file-input file-input-md"))
-    }
-
-    @Test
-    fun fileInputClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                size = FileInputSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses size Lg", "file-input file-input-lg"))
-    }
-
-    @Test
-    fun fileInputClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyFileInputClasses(
-                size = FileInputSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("FileInputClasses size Xl", "file-input file-input-xl"))
-    }
+    fun fileInputClasses_size() = assertEachEntry("FileInputClasses size", mapOf(FileInputSize.Xs to "file-input file-input-xs", FileInputSize.Sm to "file-input file-input-sm", FileInputSize.Md to "file-input file-input-md", FileInputSize.Lg to "file-input file-input-lg", FileInputSize.Xl to "file-input file-input-xl")) { daisyFileInputClasses(size = it) }
 }

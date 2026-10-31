@@ -32,6 +32,13 @@ class AuraCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,125 +61,10 @@ class AuraCoverageTest {
     }
 
     @Test
-    fun aura_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                size = AuraSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura size Xs", "aura aura-xs"))
-    }
+    fun aura_size() = assertEachEntry("Aura size", mapOf(AuraSize.Xs to "aura aura-xs", AuraSize.Sm to "aura aura-sm", AuraSize.Md to "aura aura-md", AuraSize.Lg to "aura aura-lg", AuraSize.Xl to "aura aura-xl")) { daisyAura(size = it, content = { }) }
 
     @Test
-    fun aura_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                size = AuraSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura size Sm", "aura aura-sm"))
-    }
-
-    @Test
-    fun aura_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                size = AuraSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura size Md", "aura aura-md"))
-    }
-
-    @Test
-    fun aura_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                size = AuraSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura size Lg", "aura aura-lg"))
-    }
-
-    @Test
-    fun aura_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                size = AuraSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura size Xl", "aura aura-xl"))
-    }
-
-    @Test
-    fun aura_style_dual() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                style = AuraStyle.Dual,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura style Dual", "aura aura-dual"))
-    }
-
-    @Test
-    fun aura_style_rainbow() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                style = AuraStyle.Rainbow,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura style Rainbow", "aura aura-rainbow"))
-    }
-
-    @Test
-    fun aura_style_holo() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                style = AuraStyle.Holo,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura style Holo", "aura aura-holo"))
-    }
-
-    @Test
-    fun aura_style_gold() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                style = AuraStyle.Gold,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura style Gold", "aura aura-gold"))
-    }
-
-    @Test
-    fun aura_style_silver() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                style = AuraStyle.Silver,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura style Silver", "aura aura-silver"))
-    }
-
-    @Test
-    fun aura_style_glow() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                style = AuraStyle.Glow,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Aura style Glow", "aura aura-glow"))
-    }
+    fun aura_style() = assertEachEntry("Aura style", mapOf(AuraStyle.Dual to "aura aura-dual", AuraStyle.Rainbow to "aura aura-rainbow", AuraStyle.Holo to "aura aura-holo", AuraStyle.Gold to "aura aura-gold", AuraStyle.Silver to "aura aura-silver", AuraStyle.Glow to "aura aura-glow")) { daisyAura(style = it, content = { }) }
 
     @Test
     fun auraClasses_defaults() {
@@ -192,112 +84,8 @@ class AuraCoverageTest {
     }
 
     @Test
-    fun auraClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                size = AuraSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses size Xs", "aura aura-xs"))
-    }
+    fun auraClasses_size() = assertEachEntry("AuraClasses size", mapOf(AuraSize.Xs to "aura aura-xs", AuraSize.Sm to "aura aura-sm", AuraSize.Md to "aura aura-md", AuraSize.Lg to "aura aura-lg", AuraSize.Xl to "aura aura-xl")) { daisyAuraClasses(size = it) }
 
     @Test
-    fun auraClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                size = AuraSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses size Sm", "aura aura-sm"))
-    }
-
-    @Test
-    fun auraClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                size = AuraSize.Md,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses size Md", "aura aura-md"))
-    }
-
-    @Test
-    fun auraClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                size = AuraSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses size Lg", "aura aura-lg"))
-    }
-
-    @Test
-    fun auraClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                size = AuraSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses size Xl", "aura aura-xl"))
-    }
-
-    @Test
-    fun auraClasses_style_dual() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                style = AuraStyle.Dual,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses style Dual", "aura aura-dual"))
-    }
-
-    @Test
-    fun auraClasses_style_rainbow() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                style = AuraStyle.Rainbow,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses style Rainbow", "aura aura-rainbow"))
-    }
-
-    @Test
-    fun auraClasses_style_holo() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                style = AuraStyle.Holo,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses style Holo", "aura aura-holo"))
-    }
-
-    @Test
-    fun auraClasses_style_gold() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                style = AuraStyle.Gold,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses style Gold", "aura aura-gold"))
-    }
-
-    @Test
-    fun auraClasses_style_silver() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                style = AuraStyle.Silver,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses style Silver", "aura aura-silver"))
-    }
-
-    @Test
-    fun auraClasses_style_glow() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAuraClasses(
-                style = AuraStyle.Glow,
-            )
-        }
-        assertRendered(html, Expected("AuraClasses style Glow", "aura aura-glow"))
-    }
+    fun auraClasses_style() = assertEachEntry("AuraClasses style", mapOf(AuraStyle.Dual to "aura aura-dual", AuraStyle.Rainbow to "aura aura-rainbow", AuraStyle.Holo to "aura aura-holo", AuraStyle.Gold to "aura aura-gold", AuraStyle.Silver to "aura aura-silver", AuraStyle.Glow to "aura aura-glow")) { daisyAuraClasses(style = it) }
 }

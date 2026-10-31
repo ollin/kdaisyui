@@ -32,6 +32,13 @@ class IndicatorCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -86,70 +93,10 @@ class IndicatorCoverageTest {
     }
 
     @Test
-    fun indicatorItem_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(
-                horizontalPlacement = IndicatorItemHorizontalPlacement.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("IndicatorItem horizontalPlacement Start", "indicator-item indicator-start"))
-    }
+    fun indicatorItem_horizontalPlacement() = assertEachEntry("IndicatorItem horizontalPlacement", mapOf(IndicatorItemHorizontalPlacement.Start to "indicator-item indicator-start", IndicatorItemHorizontalPlacement.Center to "indicator-center indicator-item", IndicatorItemHorizontalPlacement.End to "indicator-end indicator-item")) { daisyIndicatorItem(horizontalPlacement = it, content = { }) }
 
     @Test
-    fun indicatorItem_horizontalPlacement_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(
-                horizontalPlacement = IndicatorItemHorizontalPlacement.Center,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("IndicatorItem horizontalPlacement Center", "indicator-center indicator-item"))
-    }
-
-    @Test
-    fun indicatorItem_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(
-                horizontalPlacement = IndicatorItemHorizontalPlacement.End,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("IndicatorItem horizontalPlacement End", "indicator-end indicator-item"))
-    }
-
-    @Test
-    fun indicatorItem_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(
-                verticalPlacement = IndicatorItemVerticalPlacement.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("IndicatorItem verticalPlacement Top", "indicator-item indicator-top"))
-    }
-
-    @Test
-    fun indicatorItem_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(
-                verticalPlacement = IndicatorItemVerticalPlacement.Middle,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("IndicatorItem verticalPlacement Middle", "indicator-item indicator-middle"))
-    }
-
-    @Test
-    fun indicatorItem_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(
-                verticalPlacement = IndicatorItemVerticalPlacement.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("IndicatorItem verticalPlacement Bottom", "indicator-bottom indicator-item"))
-    }
+    fun indicatorItem_verticalPlacement() = assertEachEntry("IndicatorItem verticalPlacement", mapOf(IndicatorItemVerticalPlacement.Top to "indicator-item indicator-top", IndicatorItemVerticalPlacement.Middle to "indicator-item indicator-middle", IndicatorItemVerticalPlacement.Bottom to "indicator-bottom indicator-item")) { daisyIndicatorItem(verticalPlacement = it, content = { }) }
 
     @Test
     fun indicatorItemClasses_defaults() {
@@ -169,62 +116,8 @@ class IndicatorCoverageTest {
     }
 
     @Test
-    fun indicatorItemClasses_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItemClasses(
-                horizontalPlacement = IndicatorItemHorizontalPlacement.Start,
-            )
-        }
-        assertRendered(html, Expected("IndicatorItemClasses horizontalPlacement Start", "indicator-item indicator-start"))
-    }
+    fun indicatorItemClasses_horizontalPlacement() = assertEachEntry("IndicatorItemClasses horizontalPlacement", mapOf(IndicatorItemHorizontalPlacement.Start to "indicator-item indicator-start", IndicatorItemHorizontalPlacement.Center to "indicator-center indicator-item", IndicatorItemHorizontalPlacement.End to "indicator-end indicator-item")) { daisyIndicatorItemClasses(horizontalPlacement = it) }
 
     @Test
-    fun indicatorItemClasses_horizontalPlacement_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItemClasses(
-                horizontalPlacement = IndicatorItemHorizontalPlacement.Center,
-            )
-        }
-        assertRendered(html, Expected("IndicatorItemClasses horizontalPlacement Center", "indicator-center indicator-item"))
-    }
-
-    @Test
-    fun indicatorItemClasses_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItemClasses(
-                horizontalPlacement = IndicatorItemHorizontalPlacement.End,
-            )
-        }
-        assertRendered(html, Expected("IndicatorItemClasses horizontalPlacement End", "indicator-end indicator-item"))
-    }
-
-    @Test
-    fun indicatorItemClasses_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItemClasses(
-                verticalPlacement = IndicatorItemVerticalPlacement.Top,
-            )
-        }
-        assertRendered(html, Expected("IndicatorItemClasses verticalPlacement Top", "indicator-item indicator-top"))
-    }
-
-    @Test
-    fun indicatorItemClasses_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItemClasses(
-                verticalPlacement = IndicatorItemVerticalPlacement.Middle,
-            )
-        }
-        assertRendered(html, Expected("IndicatorItemClasses verticalPlacement Middle", "indicator-item indicator-middle"))
-    }
-
-    @Test
-    fun indicatorItemClasses_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItemClasses(
-                verticalPlacement = IndicatorItemVerticalPlacement.Bottom,
-            )
-        }
-        assertRendered(html, Expected("IndicatorItemClasses verticalPlacement Bottom", "indicator-bottom indicator-item"))
-    }
+    fun indicatorItemClasses_verticalPlacement() = assertEachEntry("IndicatorItemClasses verticalPlacement", mapOf(IndicatorItemVerticalPlacement.Top to "indicator-item indicator-top", IndicatorItemVerticalPlacement.Middle to "indicator-item indicator-middle", IndicatorItemVerticalPlacement.Bottom to "indicator-bottom indicator-item")) { daisyIndicatorItemClasses(verticalPlacement = it) }
 }

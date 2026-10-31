@@ -32,6 +32,13 @@ class ModalCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,59 +61,10 @@ class ModalCoverageTest {
     }
 
     @Test
-    fun modal_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                verticalPlacement = ModalVerticalPlacement.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Modal verticalPlacement Top", "modal modal-top"))
-    }
+    fun modal_verticalPlacement() = assertEachEntry("Modal verticalPlacement", mapOf(ModalVerticalPlacement.Top to "modal modal-top", ModalVerticalPlacement.Middle to "modal modal-middle", ModalVerticalPlacement.Bottom to "modal modal-bottom")) { daisyModal(verticalPlacement = it, content = { }) }
 
     @Test
-    fun modal_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                verticalPlacement = ModalVerticalPlacement.Middle,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Modal verticalPlacement Middle", "modal modal-middle"))
-    }
-
-    @Test
-    fun modal_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                verticalPlacement = ModalVerticalPlacement.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Modal verticalPlacement Bottom", "modal modal-bottom"))
-    }
-
-    @Test
-    fun modal_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                horizontalPlacement = ModalHorizontalPlacement.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Modal horizontalPlacement Start", "modal modal-start"))
-    }
-
-    @Test
-    fun modal_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModal(
-                horizontalPlacement = ModalHorizontalPlacement.End,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Modal horizontalPlacement End", "modal modal-end"))
-    }
+    fun modal_horizontalPlacement() = assertEachEntry("Modal horizontalPlacement", mapOf(ModalHorizontalPlacement.Start to "modal modal-start", ModalHorizontalPlacement.End to "modal modal-end")) { daisyModal(horizontalPlacement = it, content = { }) }
 
     @Test
     fun modalClasses_defaults() {
@@ -128,54 +86,10 @@ class ModalCoverageTest {
     }
 
     @Test
-    fun modalClasses_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                verticalPlacement = ModalVerticalPlacement.Top,
-            )
-        }
-        assertRendered(html, Expected("ModalClasses verticalPlacement Top", "modal modal-top"))
-    }
+    fun modalClasses_verticalPlacement() = assertEachEntry("ModalClasses verticalPlacement", mapOf(ModalVerticalPlacement.Top to "modal modal-top", ModalVerticalPlacement.Middle to "modal modal-middle", ModalVerticalPlacement.Bottom to "modal modal-bottom")) { daisyModalClasses(verticalPlacement = it) }
 
     @Test
-    fun modalClasses_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                verticalPlacement = ModalVerticalPlacement.Middle,
-            )
-        }
-        assertRendered(html, Expected("ModalClasses verticalPlacement Middle", "modal modal-middle"))
-    }
-
-    @Test
-    fun modalClasses_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                verticalPlacement = ModalVerticalPlacement.Bottom,
-            )
-        }
-        assertRendered(html, Expected("ModalClasses verticalPlacement Bottom", "modal modal-bottom"))
-    }
-
-    @Test
-    fun modalClasses_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                horizontalPlacement = ModalHorizontalPlacement.Start,
-            )
-        }
-        assertRendered(html, Expected("ModalClasses horizontalPlacement Start", "modal modal-start"))
-    }
-
-    @Test
-    fun modalClasses_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyModalClasses(
-                horizontalPlacement = ModalHorizontalPlacement.End,
-            )
-        }
-        assertRendered(html, Expected("ModalClasses horizontalPlacement End", "modal modal-end"))
-    }
+    fun modalClasses_horizontalPlacement() = assertEachEntry("ModalClasses horizontalPlacement", mapOf(ModalHorizontalPlacement.Start to "modal modal-start", ModalHorizontalPlacement.End to "modal modal-end")) { daisyModalClasses(horizontalPlacement = it) }
 
     @Test
     fun modalBox_defaults() {

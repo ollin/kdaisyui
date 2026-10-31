@@ -32,6 +32,13 @@ class ToastCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,70 +61,10 @@ class ToastCoverageTest {
     }
 
     @Test
-    fun toast_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                horizontalPlacement = ToastHorizontalPlacement.Start,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Toast horizontalPlacement Start", "toast toast-start"))
-    }
+    fun toast_horizontalPlacement() = assertEachEntry("Toast horizontalPlacement", mapOf(ToastHorizontalPlacement.Start to "toast toast-start", ToastHorizontalPlacement.Center to "toast toast-center", ToastHorizontalPlacement.End to "toast toast-end")) { daisyToast(horizontalPlacement = it, content = { }) }
 
     @Test
-    fun toast_horizontalPlacement_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                horizontalPlacement = ToastHorizontalPlacement.Center,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Toast horizontalPlacement Center", "toast toast-center"))
-    }
-
-    @Test
-    fun toast_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                horizontalPlacement = ToastHorizontalPlacement.End,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Toast horizontalPlacement End", "toast toast-end"))
-    }
-
-    @Test
-    fun toast_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                verticalPlacement = ToastVerticalPlacement.Top,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Toast verticalPlacement Top", "toast toast-top"))
-    }
-
-    @Test
-    fun toast_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                verticalPlacement = ToastVerticalPlacement.Middle,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Toast verticalPlacement Middle", "toast toast-middle"))
-    }
-
-    @Test
-    fun toast_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToast(
-                verticalPlacement = ToastVerticalPlacement.Bottom,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Toast verticalPlacement Bottom", "toast toast-bottom"))
-    }
+    fun toast_verticalPlacement() = assertEachEntry("Toast verticalPlacement", mapOf(ToastVerticalPlacement.Top to "toast toast-top", ToastVerticalPlacement.Middle to "toast toast-middle", ToastVerticalPlacement.Bottom to "toast toast-bottom")) { daisyToast(verticalPlacement = it, content = { }) }
 
     @Test
     fun toastClasses_defaults() {
@@ -137,62 +84,8 @@ class ToastCoverageTest {
     }
 
     @Test
-    fun toastClasses_horizontalPlacement_start() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                horizontalPlacement = ToastHorizontalPlacement.Start,
-            )
-        }
-        assertRendered(html, Expected("ToastClasses horizontalPlacement Start", "toast toast-start"))
-    }
+    fun toastClasses_horizontalPlacement() = assertEachEntry("ToastClasses horizontalPlacement", mapOf(ToastHorizontalPlacement.Start to "toast toast-start", ToastHorizontalPlacement.Center to "toast toast-center", ToastHorizontalPlacement.End to "toast toast-end")) { daisyToastClasses(horizontalPlacement = it) }
 
     @Test
-    fun toastClasses_horizontalPlacement_center() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                horizontalPlacement = ToastHorizontalPlacement.Center,
-            )
-        }
-        assertRendered(html, Expected("ToastClasses horizontalPlacement Center", "toast toast-center"))
-    }
-
-    @Test
-    fun toastClasses_horizontalPlacement_end() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                horizontalPlacement = ToastHorizontalPlacement.End,
-            )
-        }
-        assertRendered(html, Expected("ToastClasses horizontalPlacement End", "toast toast-end"))
-    }
-
-    @Test
-    fun toastClasses_verticalPlacement_top() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                verticalPlacement = ToastVerticalPlacement.Top,
-            )
-        }
-        assertRendered(html, Expected("ToastClasses verticalPlacement Top", "toast toast-top"))
-    }
-
-    @Test
-    fun toastClasses_verticalPlacement_middle() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                verticalPlacement = ToastVerticalPlacement.Middle,
-            )
-        }
-        assertRendered(html, Expected("ToastClasses verticalPlacement Middle", "toast toast-middle"))
-    }
-
-    @Test
-    fun toastClasses_verticalPlacement_bottom() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyToastClasses(
-                verticalPlacement = ToastVerticalPlacement.Bottom,
-            )
-        }
-        assertRendered(html, Expected("ToastClasses verticalPlacement Bottom", "toast toast-bottom"))
-    }
+    fun toastClasses_verticalPlacement() = assertEachEntry("ToastClasses verticalPlacement", mapOf(ToastVerticalPlacement.Top to "toast toast-top", ToastVerticalPlacement.Middle to "toast toast-middle", ToastVerticalPlacement.Bottom to "toast toast-bottom")) { daisyToastClasses(verticalPlacement = it) }
 }

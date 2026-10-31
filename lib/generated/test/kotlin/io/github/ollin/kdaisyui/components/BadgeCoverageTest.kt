@@ -32,6 +32,13 @@ class BadgeCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -52,174 +59,16 @@ class BadgeCoverageTest {
     }
 
     @Test
-    fun badge_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("Badge color Neutral", "badge badge-neutral"))
-    }
+    fun badge_color() = assertEachEntry("Badge color", mapOf(BadgeColor.Neutral to "badge badge-neutral", BadgeColor.Primary to "badge badge-primary", BadgeColor.Secondary to "badge badge-secondary", BadgeColor.Accent to "badge badge-accent", BadgeColor.Info to "badge badge-info", BadgeColor.Success to "badge badge-success", BadgeColor.Warning to "badge badge-warning", BadgeColor.Error to "badge badge-error")) { daisyBadge(color = it) }
 
     @Test
-    fun badge_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("Badge color Primary", "badge badge-primary"))
-    }
+    fun badge_size() = assertEachEntry("Badge size", mapOf(BadgeSize.Xs to "badge badge-xs", BadgeSize.Sm to "badge badge-sm", BadgeSize.Md to "badge badge-md", BadgeSize.Lg to "badge badge-lg", BadgeSize.Xl to "badge badge-xl")) { daisyBadge(size = it) }
 
     @Test
-    fun badge_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("Badge color Secondary", "badge badge-secondary"))
-    }
+    fun badge_outlineStyle() = assertEachEntry("Badge outlineStyle", mapOf(BadgeOutlineStyle.Outline to "badge badge-outline", BadgeOutlineStyle.Dash to "badge badge-dash")) { daisyBadge(outlineStyle = it) }
 
     @Test
-    fun badge_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("Badge color Accent", "badge badge-accent"))
-    }
-
-    @Test
-    fun badge_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Info,
-            )
-        }
-        assertRendered(html, Expected("Badge color Info", "badge badge-info"))
-    }
-
-    @Test
-    fun badge_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Success,
-            )
-        }
-        assertRendered(html, Expected("Badge color Success", "badge badge-success"))
-    }
-
-    @Test
-    fun badge_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("Badge color Warning", "badge badge-warning"))
-    }
-
-    @Test
-    fun badge_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                color = BadgeColor.Error,
-            )
-        }
-        assertRendered(html, Expected("Badge color Error", "badge badge-error"))
-    }
-
-    @Test
-    fun badge_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                size = BadgeSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("Badge size Xs", "badge badge-xs"))
-    }
-
-    @Test
-    fun badge_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                size = BadgeSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("Badge size Sm", "badge badge-sm"))
-    }
-
-    @Test
-    fun badge_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                size = BadgeSize.Md,
-            )
-        }
-        assertRendered(html, Expected("Badge size Md", "badge badge-md"))
-    }
-
-    @Test
-    fun badge_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                size = BadgeSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("Badge size Lg", "badge badge-lg"))
-    }
-
-    @Test
-    fun badge_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                size = BadgeSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("Badge size Xl", "badge badge-xl"))
-    }
-
-    @Test
-    fun badge_outlineStyle_outline() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                outlineStyle = BadgeOutlineStyle.Outline,
-            )
-        }
-        assertRendered(html, Expected("Badge outlineStyle Outline", "badge badge-outline"))
-    }
-
-    @Test
-    fun badge_outlineStyle_dash() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                outlineStyle = BadgeOutlineStyle.Dash,
-            )
-        }
-        assertRendered(html, Expected("Badge outlineStyle Dash", "badge badge-dash"))
-    }
-
-    @Test
-    fun badge_fillStyle_soft() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                fillStyle = BadgeFillStyle.Soft,
-            )
-        }
-        assertRendered(html, Expected("Badge fillStyle Soft", "badge badge-soft"))
-    }
-
-    @Test
-    fun badge_fillStyle_ghost() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadge(
-                fillStyle = BadgeFillStyle.Ghost,
-            )
-        }
-        assertRendered(html, Expected("Badge fillStyle Ghost", "badge badge-ghost"))
-    }
+    fun badge_fillStyle() = assertEachEntry("Badge fillStyle", mapOf(BadgeFillStyle.Soft to "badge badge-soft", BadgeFillStyle.Ghost to "badge badge-ghost")) { daisyBadge(fillStyle = it) }
 
     @Test
     fun badge_text() {
@@ -250,172 +99,14 @@ class BadgeCoverageTest {
     }
 
     @Test
-    fun badgeClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Neutral", "badge badge-neutral"))
-    }
+    fun badgeClasses_color() = assertEachEntry("BadgeClasses color", mapOf(BadgeColor.Neutral to "badge badge-neutral", BadgeColor.Primary to "badge badge-primary", BadgeColor.Secondary to "badge badge-secondary", BadgeColor.Accent to "badge badge-accent", BadgeColor.Info to "badge badge-info", BadgeColor.Success to "badge badge-success", BadgeColor.Warning to "badge badge-warning", BadgeColor.Error to "badge badge-error")) { daisyBadgeClasses(color = it) }
 
     @Test
-    fun badgeClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Primary", "badge badge-primary"))
-    }
+    fun badgeClasses_size() = assertEachEntry("BadgeClasses size", mapOf(BadgeSize.Xs to "badge badge-xs", BadgeSize.Sm to "badge badge-sm", BadgeSize.Md to "badge badge-md", BadgeSize.Lg to "badge badge-lg", BadgeSize.Xl to "badge badge-xl")) { daisyBadgeClasses(size = it) }
 
     @Test
-    fun badgeClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Secondary", "badge badge-secondary"))
-    }
+    fun badgeClasses_outlineStyle() = assertEachEntry("BadgeClasses outlineStyle", mapOf(BadgeOutlineStyle.Outline to "badge badge-outline", BadgeOutlineStyle.Dash to "badge badge-dash")) { daisyBadgeClasses(outlineStyle = it) }
 
     @Test
-    fun badgeClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Accent", "badge badge-accent"))
-    }
-
-    @Test
-    fun badgeClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Info,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Info", "badge badge-info"))
-    }
-
-    @Test
-    fun badgeClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Success,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Success", "badge badge-success"))
-    }
-
-    @Test
-    fun badgeClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Warning", "badge badge-warning"))
-    }
-
-    @Test
-    fun badgeClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                color = BadgeColor.Error,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses color Error", "badge badge-error"))
-    }
-
-    @Test
-    fun badgeClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                size = BadgeSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses size Xs", "badge badge-xs"))
-    }
-
-    @Test
-    fun badgeClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                size = BadgeSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses size Sm", "badge badge-sm"))
-    }
-
-    @Test
-    fun badgeClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                size = BadgeSize.Md,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses size Md", "badge badge-md"))
-    }
-
-    @Test
-    fun badgeClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                size = BadgeSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses size Lg", "badge badge-lg"))
-    }
-
-    @Test
-    fun badgeClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                size = BadgeSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses size Xl", "badge badge-xl"))
-    }
-
-    @Test
-    fun badgeClasses_outlineStyle_outline() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                outlineStyle = BadgeOutlineStyle.Outline,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses outlineStyle Outline", "badge badge-outline"))
-    }
-
-    @Test
-    fun badgeClasses_outlineStyle_dash() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                outlineStyle = BadgeOutlineStyle.Dash,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses outlineStyle Dash", "badge badge-dash"))
-    }
-
-    @Test
-    fun badgeClasses_fillStyle_soft() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                fillStyle = BadgeFillStyle.Soft,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses fillStyle Soft", "badge badge-soft"))
-    }
-
-    @Test
-    fun badgeClasses_fillStyle_ghost() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyBadgeClasses(
-                fillStyle = BadgeFillStyle.Ghost,
-            )
-        }
-        assertRendered(html, Expected("BadgeClasses fillStyle Ghost", "badge badge-ghost"))
-    }
+    fun badgeClasses_fillStyle() = assertEachEntry("BadgeClasses fillStyle", mapOf(BadgeFillStyle.Soft to "badge badge-soft", BadgeFillStyle.Ghost to "badge badge-ghost")) { daisyBadgeClasses(fillStyle = it) }
 }

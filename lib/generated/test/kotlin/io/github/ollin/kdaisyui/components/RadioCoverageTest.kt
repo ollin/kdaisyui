@@ -32,6 +32,13 @@ class RadioCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -58,134 +65,10 @@ class RadioCoverageTest {
     }
 
     @Test
-    fun radio_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("Radio color Neutral", "radio radio-neutral"))
-    }
+    fun radio_color() = assertEachEntry("Radio color", mapOf(RadioColor.Neutral to "radio radio-neutral", RadioColor.Primary to "radio radio-primary", RadioColor.Secondary to "radio radio-secondary", RadioColor.Accent to "radio radio-accent", RadioColor.Success to "radio radio-success", RadioColor.Warning to "radio radio-warning", RadioColor.Info to "radio radio-info", RadioColor.Error to "radio radio-error")) { daisyRadio(color = it) }
 
     @Test
-    fun radio_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("Radio color Primary", "radio radio-primary"))
-    }
-
-    @Test
-    fun radio_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("Radio color Secondary", "radio radio-secondary"))
-    }
-
-    @Test
-    fun radio_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("Radio color Accent", "radio radio-accent"))
-    }
-
-    @Test
-    fun radio_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Success,
-            )
-        }
-        assertRendered(html, Expected("Radio color Success", "radio radio-success"))
-    }
-
-    @Test
-    fun radio_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("Radio color Warning", "radio radio-warning"))
-    }
-
-    @Test
-    fun radio_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Info,
-            )
-        }
-        assertRendered(html, Expected("Radio color Info", "radio radio-info"))
-    }
-
-    @Test
-    fun radio_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                color = RadioColor.Error,
-            )
-        }
-        assertRendered(html, Expected("Radio color Error", "radio radio-error"))
-    }
-
-    @Test
-    fun radio_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                size = RadioSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("Radio size Xs", "radio radio-xs"))
-    }
-
-    @Test
-    fun radio_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                size = RadioSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("Radio size Sm", "radio radio-sm"))
-    }
-
-    @Test
-    fun radio_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                size = RadioSize.Md,
-            )
-        }
-        assertRendered(html, Expected("Radio size Md", "radio radio-md"))
-    }
-
-    @Test
-    fun radio_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                size = RadioSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("Radio size Lg", "radio radio-lg"))
-    }
-
-    @Test
-    fun radio_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadio(
-                size = RadioSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("Radio size Xl", "radio radio-xl"))
-    }
+    fun radio_size() = assertEachEntry("Radio size", mapOf(RadioSize.Xs to "radio radio-xs", RadioSize.Sm to "radio radio-sm", RadioSize.Md to "radio radio-md", RadioSize.Lg to "radio radio-lg", RadioSize.Xl to "radio radio-xl")) { daisyRadio(size = it) }
 
     @Test
     fun radioClasses_defaults() {
@@ -205,132 +88,8 @@ class RadioCoverageTest {
     }
 
     @Test
-    fun radioClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Neutral", "radio radio-neutral"))
-    }
+    fun radioClasses_color() = assertEachEntry("RadioClasses color", mapOf(RadioColor.Neutral to "radio radio-neutral", RadioColor.Primary to "radio radio-primary", RadioColor.Secondary to "radio radio-secondary", RadioColor.Accent to "radio radio-accent", RadioColor.Success to "radio radio-success", RadioColor.Warning to "radio radio-warning", RadioColor.Info to "radio radio-info", RadioColor.Error to "radio radio-error")) { daisyRadioClasses(color = it) }
 
     @Test
-    fun radioClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Primary", "radio radio-primary"))
-    }
-
-    @Test
-    fun radioClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Secondary", "radio radio-secondary"))
-    }
-
-    @Test
-    fun radioClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Accent", "radio radio-accent"))
-    }
-
-    @Test
-    fun radioClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Success,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Success", "radio radio-success"))
-    }
-
-    @Test
-    fun radioClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Warning", "radio radio-warning"))
-    }
-
-    @Test
-    fun radioClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Info,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Info", "radio radio-info"))
-    }
-
-    @Test
-    fun radioClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                color = RadioColor.Error,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses color Error", "radio radio-error"))
-    }
-
-    @Test
-    fun radioClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                size = RadioSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses size Xs", "radio radio-xs"))
-    }
-
-    @Test
-    fun radioClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                size = RadioSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses size Sm", "radio radio-sm"))
-    }
-
-    @Test
-    fun radioClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                size = RadioSize.Md,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses size Md", "radio radio-md"))
-    }
-
-    @Test
-    fun radioClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                size = RadioSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses size Lg", "radio radio-lg"))
-    }
-
-    @Test
-    fun radioClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyRadioClasses(
-                size = RadioSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("RadioClasses size Xl", "radio radio-xl"))
-    }
+    fun radioClasses_size() = assertEachEntry("RadioClasses size", mapOf(RadioSize.Xs to "radio radio-xs", RadioSize.Sm to "radio radio-sm", RadioSize.Md to "radio radio-md", RadioSize.Lg to "radio radio-lg", RadioSize.Xl to "radio radio-xl")) { daisyRadioClasses(size = it) }
 }

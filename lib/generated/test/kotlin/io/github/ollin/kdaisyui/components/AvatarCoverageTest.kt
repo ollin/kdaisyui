@@ -32,6 +32,13 @@ class AvatarCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,26 +61,7 @@ class AvatarCoverageTest {
     }
 
     @Test
-    fun avatar_presence_online() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(
-                presence = AvatarPresence.Online,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Avatar presence Online", "avatar avatar-online"))
-    }
-
-    @Test
-    fun avatar_presence_offline() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(
-                presence = AvatarPresence.Offline,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Avatar presence Offline", "avatar avatar-offline"))
-    }
+    fun avatar_presence() = assertEachEntry("Avatar presence", mapOf(AvatarPresence.Online to "avatar avatar-online", AvatarPresence.Offline to "avatar avatar-offline")) { daisyAvatar(presence = it, content = { }) }
 
     @Test
     fun avatarClasses_defaults() {
@@ -95,24 +83,7 @@ class AvatarCoverageTest {
     }
 
     @Test
-    fun avatarClasses_presence_online() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatarClasses(
-                presence = AvatarPresence.Online,
-            )
-        }
-        assertRendered(html, Expected("AvatarClasses presence Online", "avatar avatar-online"))
-    }
-
-    @Test
-    fun avatarClasses_presence_offline() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyAvatarClasses(
-                presence = AvatarPresence.Offline,
-            )
-        }
-        assertRendered(html, Expected("AvatarClasses presence Offline", "avatar avatar-offline"))
-    }
+    fun avatarClasses_presence() = assertEachEntry("AvatarClasses presence", mapOf(AvatarPresence.Online to "avatar avatar-online", AvatarPresence.Offline to "avatar avatar-offline")) { daisyAvatarClasses(presence = it) }
 
     @Test
     fun avatarGroup_defaults() {

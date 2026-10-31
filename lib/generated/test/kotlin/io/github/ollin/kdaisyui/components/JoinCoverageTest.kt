@@ -32,6 +32,13 @@ class JoinCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,26 +61,7 @@ class JoinCoverageTest {
     }
 
     @Test
-    fun join_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoin(
-                direction = JoinDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Join direction Vertical", "join join-vertical"))
-    }
-
-    @Test
-    fun join_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoin(
-                direction = JoinDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Join direction Horizontal", "join join-horizontal"))
-    }
+    fun join_direction() = assertEachEntry("Join direction", mapOf(JoinDirection.Vertical to "join join-vertical", JoinDirection.Horizontal to "join join-horizontal")) { daisyJoin(direction = it, content = { }) }
 
     @Test
     fun joinClasses_defaults() {
@@ -93,24 +81,7 @@ class JoinCoverageTest {
     }
 
     @Test
-    fun joinClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoinClasses(
-                direction = JoinDirection.Vertical,
-            )
-        }
-        assertRendered(html, Expected("JoinClasses direction Vertical", "join join-vertical"))
-    }
-
-    @Test
-    fun joinClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyJoinClasses(
-                direction = JoinDirection.Horizontal,
-            )
-        }
-        assertRendered(html, Expected("JoinClasses direction Horizontal", "join join-horizontal"))
-    }
+    fun joinClasses_direction() = assertEachEntry("JoinClasses direction", mapOf(JoinDirection.Vertical to "join join-vertical", JoinDirection.Horizontal to "join join-horizontal")) { daisyJoinClasses(direction = it) }
 
     @Test
     fun scope_daisyButton() {

@@ -32,6 +32,13 @@ class MenuCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,81 +61,10 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menu_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Menu size Xs", "menu menu-xs"))
-    }
+    fun menu_size() = assertEachEntry("Menu size", mapOf(MenuSize.Xs to "menu menu-xs", MenuSize.Sm to "menu menu-sm", MenuSize.Md to "menu menu-md", MenuSize.Lg to "menu menu-lg", MenuSize.Xl to "menu menu-xl")) { daisyMenu(size = it, content = { }) }
 
     @Test
-    fun menu_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Menu size Sm", "menu menu-sm"))
-    }
-
-    @Test
-    fun menu_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Menu size Md", "menu menu-md"))
-    }
-
-    @Test
-    fun menu_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Menu size Lg", "menu menu-lg"))
-    }
-
-    @Test
-    fun menu_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                size = MenuSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Menu size Xl", "menu menu-xl"))
-    }
-
-    @Test
-    fun menu_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                direction = MenuDirection.Vertical,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Menu direction Vertical", "menu menu-vertical"))
-    }
-
-    @Test
-    fun menu_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenu(
-                direction = MenuDirection.Horizontal,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Menu direction Horizontal", "menu menu-horizontal"))
-    }
+    fun menu_direction() = assertEachEntry("Menu direction", mapOf(MenuDirection.Vertical to "menu menu-vertical", MenuDirection.Horizontal to "menu menu-horizontal")) { daisyMenu(direction = it, content = { }) }
 
     @Test
     fun menuClasses_defaults() {
@@ -151,74 +87,10 @@ class MenuCoverageTest {
     }
 
     @Test
-    fun menuClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("MenuClasses size Xs", "menu menu-xs"))
-    }
+    fun menuClasses_size() = assertEachEntry("MenuClasses size", mapOf(MenuSize.Xs to "menu menu-xs", MenuSize.Sm to "menu menu-sm", MenuSize.Md to "menu menu-md", MenuSize.Lg to "menu menu-lg", MenuSize.Xl to "menu menu-xl")) { daisyMenuClasses(size = it) }
 
     @Test
-    fun menuClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("MenuClasses size Sm", "menu menu-sm"))
-    }
-
-    @Test
-    fun menuClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Md,
-            )
-        }
-        assertRendered(html, Expected("MenuClasses size Md", "menu menu-md"))
-    }
-
-    @Test
-    fun menuClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("MenuClasses size Lg", "menu menu-lg"))
-    }
-
-    @Test
-    fun menuClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                size = MenuSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("MenuClasses size Xl", "menu menu-xl"))
-    }
-
-    @Test
-    fun menuClasses_direction_vertical() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                direction = MenuDirection.Vertical,
-            )
-        }
-        assertRendered(html, Expected("MenuClasses direction Vertical", "menu menu-vertical"))
-    }
-
-    @Test
-    fun menuClasses_direction_horizontal() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMenuClasses(
-                direction = MenuDirection.Horizontal,
-            )
-        }
-        assertRendered(html, Expected("MenuClasses direction Horizontal", "menu menu-horizontal"))
-    }
+    fun menuClasses_direction() = assertEachEntry("MenuClasses direction", mapOf(MenuDirection.Vertical to "menu menu-vertical", MenuDirection.Horizontal to "menu menu-horizontal")) { daisyMenuClasses(direction = it) }
 
     @Test
     fun menuTitle_defaults() {

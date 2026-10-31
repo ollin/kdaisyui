@@ -32,6 +32,13 @@ class ProgressCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,92 +61,7 @@ class ProgressCoverageTest {
     }
 
     @Test
-    fun progress_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Neutral,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Neutral", "progress progress-neutral"))
-    }
-
-    @Test
-    fun progress_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Primary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Primary", "progress progress-primary"))
-    }
-
-    @Test
-    fun progress_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Secondary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Secondary", "progress progress-secondary"))
-    }
-
-    @Test
-    fun progress_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Accent,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Accent", "progress progress-accent"))
-    }
-
-    @Test
-    fun progress_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Info,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Info", "progress progress-info"))
-    }
-
-    @Test
-    fun progress_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Success,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Success", "progress progress-success"))
-    }
-
-    @Test
-    fun progress_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Warning,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Warning", "progress progress-warning"))
-    }
-
-    @Test
-    fun progress_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                color = ProgressColor.Error,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Progress color Error", "progress progress-error"))
-    }
+    fun progress_color() = assertEachEntry("Progress color", mapOf(ProgressColor.Neutral to "progress progress-neutral", ProgressColor.Primary to "progress progress-primary", ProgressColor.Secondary to "progress progress-secondary", ProgressColor.Accent to "progress progress-accent", ProgressColor.Info to "progress progress-info", ProgressColor.Success to "progress progress-success", ProgressColor.Warning to "progress progress-warning", ProgressColor.Error to "progress progress-error")) { daisyProgress(color = it, content = { }) }
 
     @Test
     fun progressClasses_defaults() {
@@ -159,82 +81,5 @@ class ProgressCoverageTest {
     }
 
     @Test
-    fun progressClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Neutral", "progress progress-neutral"))
-    }
-
-    @Test
-    fun progressClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Primary", "progress progress-primary"))
-    }
-
-    @Test
-    fun progressClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Secondary", "progress progress-secondary"))
-    }
-
-    @Test
-    fun progressClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Accent", "progress progress-accent"))
-    }
-
-    @Test
-    fun progressClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Info,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Info", "progress progress-info"))
-    }
-
-    @Test
-    fun progressClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Success,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Success", "progress progress-success"))
-    }
-
-    @Test
-    fun progressClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Warning", "progress progress-warning"))
-    }
-
-    @Test
-    fun progressClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyProgressClasses(
-                color = ProgressColor.Error,
-            )
-        }
-        assertRendered(html, Expected("ProgressClasses color Error", "progress progress-error"))
-    }
+    fun progressClasses_color() = assertEachEntry("ProgressClasses color", mapOf(ProgressColor.Neutral to "progress progress-neutral", ProgressColor.Primary to "progress progress-primary", ProgressColor.Secondary to "progress progress-secondary", ProgressColor.Accent to "progress progress-accent", ProgressColor.Info to "progress progress-info", ProgressColor.Success to "progress progress-success", ProgressColor.Warning to "progress progress-warning", ProgressColor.Error to "progress progress-error")) { daisyProgressClasses(color = it) }
 }

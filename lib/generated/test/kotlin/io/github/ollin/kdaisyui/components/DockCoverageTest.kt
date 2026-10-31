@@ -32,6 +32,13 @@ class DockCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,59 +61,7 @@ class DockCoverageTest {
     }
 
     @Test
-    fun dock_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dock size Xs", "dock dock-xs"))
-    }
-
-    @Test
-    fun dock_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dock size Sm", "dock dock-sm"))
-    }
-
-    @Test
-    fun dock_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dock size Md", "dock dock-md"))
-    }
-
-    @Test
-    fun dock_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dock size Lg", "dock dock-lg"))
-    }
-
-    @Test
-    fun dock_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDock(
-                size = DockSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Dock size Xl", "dock dock-xl"))
-    }
+    fun dock_size() = assertEachEntry("Dock size", mapOf(DockSize.Xs to "dock dock-xs", DockSize.Sm to "dock dock-sm", DockSize.Md to "dock dock-md", DockSize.Lg to "dock dock-lg", DockSize.Xl to "dock dock-xl")) { daisyDock(size = it, content = { }) }
 
     @Test
     fun dockClasses_defaults() {
@@ -126,54 +81,7 @@ class DockCoverageTest {
     }
 
     @Test
-    fun dockClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("DockClasses size Xs", "dock dock-xs"))
-    }
-
-    @Test
-    fun dockClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("DockClasses size Sm", "dock dock-sm"))
-    }
-
-    @Test
-    fun dockClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Md,
-            )
-        }
-        assertRendered(html, Expected("DockClasses size Md", "dock dock-md"))
-    }
-
-    @Test
-    fun dockClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("DockClasses size Lg", "dock dock-lg"))
-    }
-
-    @Test
-    fun dockClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyDockClasses(
-                size = DockSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("DockClasses size Xl", "dock dock-xl"))
-    }
+    fun dockClasses_size() = assertEachEntry("DockClasses size", mapOf(DockSize.Xs to "dock dock-xs", DockSize.Sm to "dock dock-sm", DockSize.Md to "dock dock-md", DockSize.Lg to "dock dock-lg", DockSize.Xl to "dock dock-xl")) { daisyDockClasses(size = it) }
 
     @Test
     fun dockItem_defaults() {

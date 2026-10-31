@@ -32,6 +32,13 @@ class TableCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,59 +61,7 @@ class TableCoverageTest {
     }
 
     @Test
-    fun table_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Table size Xs", "table table-xs"))
-    }
-
-    @Test
-    fun table_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Table size Sm", "table table-sm"))
-    }
-
-    @Test
-    fun table_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Table size Md", "table table-md"))
-    }
-
-    @Test
-    fun table_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Table size Lg", "table table-lg"))
-    }
-
-    @Test
-    fun table_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTable(
-                size = TableSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Table size Xl", "table table-xl"))
-    }
+    fun table_size() = assertEachEntry("Table size", mapOf(TableSize.Xs to "table table-xs", TableSize.Sm to "table table-sm", TableSize.Md to "table table-md", TableSize.Lg to "table table-lg", TableSize.Xl to "table table-xl")) { daisyTable(size = it, content = { }) }
 
     @Test
     fun tableClasses_defaults() {
@@ -130,52 +85,5 @@ class TableCoverageTest {
     }
 
     @Test
-    fun tableClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("TableClasses size Xs", "table table-xs"))
-    }
-
-    @Test
-    fun tableClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("TableClasses size Sm", "table table-sm"))
-    }
-
-    @Test
-    fun tableClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Md,
-            )
-        }
-        assertRendered(html, Expected("TableClasses size Md", "table table-md"))
-    }
-
-    @Test
-    fun tableClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("TableClasses size Lg", "table table-lg"))
-    }
-
-    @Test
-    fun tableClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyTableClasses(
-                size = TableSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("TableClasses size Xl", "table table-xl"))
-    }
+    fun tableClasses_size() = assertEachEntry("TableClasses size", mapOf(TableSize.Xs to "table table-xs", TableSize.Sm to "table table-sm", TableSize.Md to "table table-md", TableSize.Lg to "table table-lg", TableSize.Xl to "table table-xl")) { daisyTableClasses(size = it) }
 }

@@ -32,6 +32,13 @@ class SwapCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,26 +61,7 @@ class SwapCoverageTest {
     }
 
     @Test
-    fun swap_style_rotate() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwap(
-                style = SwapStyle.Rotate,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Swap style Rotate", "swap swap-rotate"))
-    }
-
-    @Test
-    fun swap_style_flip() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwap(
-                style = SwapStyle.Flip,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Swap style Flip", "swap swap-flip"))
-    }
+    fun swap_style() = assertEachEntry("Swap style", mapOf(SwapStyle.Rotate to "swap swap-rotate", SwapStyle.Flip to "swap swap-flip")) { daisySwap(style = it, content = { }) }
 
     @Test
     fun swapClasses_defaults() {
@@ -95,24 +83,7 @@ class SwapCoverageTest {
     }
 
     @Test
-    fun swapClasses_style_rotate() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwapClasses(
-                style = SwapStyle.Rotate,
-            )
-        }
-        assertRendered(html, Expected("SwapClasses style Rotate", "swap swap-rotate"))
-    }
-
-    @Test
-    fun swapClasses_style_flip() {
-        val html = createHTML(prettyPrint = false).div {
-            daisySwapClasses(
-                style = SwapStyle.Flip,
-            )
-        }
-        assertRendered(html, Expected("SwapClasses style Flip", "swap swap-flip"))
-    }
+    fun swapClasses_style() = assertEachEntry("SwapClasses style", mapOf(SwapStyle.Rotate to "swap swap-rotate", SwapStyle.Flip to "swap swap-flip")) { daisySwapClasses(style = it) }
 
     @Test
     fun swapOn_defaults() {

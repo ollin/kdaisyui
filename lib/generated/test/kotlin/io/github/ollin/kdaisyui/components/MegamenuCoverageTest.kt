@@ -32,6 +32,13 @@ class MegamenuCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -54,81 +61,10 @@ class MegamenuCoverageTest {
     }
 
     @Test
-    fun megamenu_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Megamenu size Xs", "megamenu megamenu-xs"))
-    }
+    fun megamenu_size() = assertEachEntry("Megamenu size", mapOf(MegamenuSize.Xs to "megamenu megamenu-xs", MegamenuSize.Sm to "megamenu megamenu-sm", MegamenuSize.Md to "megamenu megamenu-md", MegamenuSize.Lg to "megamenu megamenu-lg", MegamenuSize.Xl to "megamenu megamenu-xl")) { daisyMegamenu(size = it, content = { }) }
 
     @Test
-    fun megamenu_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Megamenu size Sm", "megamenu megamenu-sm"))
-    }
-
-    @Test
-    fun megamenu_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Megamenu size Md", "megamenu megamenu-md"))
-    }
-
-    @Test
-    fun megamenu_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Megamenu size Lg", "megamenu megamenu-lg"))
-    }
-
-    @Test
-    fun megamenu_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                size = MegamenuSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Megamenu size Xl", "megamenu megamenu-xl"))
-    }
-
-    @Test
-    fun megamenu_width_wide() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                width = MegamenuWidth.Wide,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Megamenu width Wide", "megamenu megamenu-wide"))
-    }
-
-    @Test
-    fun megamenu_width_full() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(
-                width = MegamenuWidth.Full,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Megamenu width Full", "megamenu megamenu-full"))
-    }
+    fun megamenu_width() = assertEachEntry("Megamenu width", mapOf(MegamenuWidth.Wide to "megamenu megamenu-wide", MegamenuWidth.Full to "megamenu megamenu-full")) { daisyMegamenu(width = it, content = { }) }
 
     @Test
     fun megamenuClasses_defaults() {
@@ -150,74 +86,10 @@ class MegamenuCoverageTest {
     }
 
     @Test
-    fun megamenuClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("MegamenuClasses size Xs", "megamenu megamenu-xs"))
-    }
+    fun megamenuClasses_size() = assertEachEntry("MegamenuClasses size", mapOf(MegamenuSize.Xs to "megamenu megamenu-xs", MegamenuSize.Sm to "megamenu megamenu-sm", MegamenuSize.Md to "megamenu megamenu-md", MegamenuSize.Lg to "megamenu megamenu-lg", MegamenuSize.Xl to "megamenu megamenu-xl")) { daisyMegamenuClasses(size = it) }
 
     @Test
-    fun megamenuClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("MegamenuClasses size Sm", "megamenu megamenu-sm"))
-    }
-
-    @Test
-    fun megamenuClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Md,
-            )
-        }
-        assertRendered(html, Expected("MegamenuClasses size Md", "megamenu megamenu-md"))
-    }
-
-    @Test
-    fun megamenuClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("MegamenuClasses size Lg", "megamenu megamenu-lg"))
-    }
-
-    @Test
-    fun megamenuClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                size = MegamenuSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("MegamenuClasses size Xl", "megamenu megamenu-xl"))
-    }
-
-    @Test
-    fun megamenuClasses_width_wide() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                width = MegamenuWidth.Wide,
-            )
-        }
-        assertRendered(html, Expected("MegamenuClasses width Wide", "megamenu megamenu-wide"))
-    }
-
-    @Test
-    fun megamenuClasses_width_full() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuClasses(
-                width = MegamenuWidth.Full,
-            )
-        }
-        assertRendered(html, Expected("MegamenuClasses width Full", "megamenu megamenu-full"))
-    }
+    fun megamenuClasses_width() = assertEachEntry("MegamenuClasses width", mapOf(MegamenuWidth.Wide to "megamenu megamenu-wide", MegamenuWidth.Full to "megamenu megamenu-full")) { daisyMegamenuClasses(width = it) }
 
     @Test
     fun megamenuActive_defaults() {

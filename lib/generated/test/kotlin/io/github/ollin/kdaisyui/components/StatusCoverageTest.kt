@@ -32,6 +32,13 @@ class StatusCoverageTest {
         return html
     }
 
+    /** Renders one call per entry of an axis and asserts the classes each must write. */
+    private fun <E> assertEachEntry(label: String, classesOf: Map<E, String>, render: FlowContent.(E) -> Unit) {
+        for ((entry, classes) in classesOf) {
+            assertRendered(createHTML(prettyPrint = false).div { render(entry) }, Expected("$label $entry", classes))
+        }
+    }
+
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
         assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
@@ -56,147 +63,10 @@ class StatusCoverageTest {
     }
 
     @Test
-    fun status_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Neutral,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Neutral", "status status-neutral"))
-    }
+    fun status_color() = assertEachEntry("Status color", mapOf(StatusColor.Neutral to "status status-neutral", StatusColor.Primary to "status status-primary", StatusColor.Secondary to "status status-secondary", StatusColor.Accent to "status status-accent", StatusColor.Info to "status status-info", StatusColor.Success to "status status-success", StatusColor.Warning to "status status-warning", StatusColor.Error to "status status-error")) { daisyStatus(color = it, content = { }) }
 
     @Test
-    fun status_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Primary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Primary", "status status-primary"))
-    }
-
-    @Test
-    fun status_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Secondary,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Secondary", "status status-secondary"))
-    }
-
-    @Test
-    fun status_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Accent,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Accent", "status status-accent"))
-    }
-
-    @Test
-    fun status_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Info,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Info", "status status-info"))
-    }
-
-    @Test
-    fun status_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Success,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Success", "status status-success"))
-    }
-
-    @Test
-    fun status_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Warning,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Warning", "status status-warning"))
-    }
-
-    @Test
-    fun status_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                color = StatusColor.Error,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status color Error", "status status-error"))
-    }
-
-    @Test
-    fun status_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                size = StatusSize.Xs,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status size Xs", "status status-xs"))
-    }
-
-    @Test
-    fun status_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                size = StatusSize.Sm,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status size Sm", "status status-sm"))
-    }
-
-    @Test
-    fun status_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                size = StatusSize.Md,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status size Md", "status status-md"))
-    }
-
-    @Test
-    fun status_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                size = StatusSize.Lg,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status size Lg", "status status-lg"))
-    }
-
-    @Test
-    fun status_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                size = StatusSize.Xl,
-                content = { },
-            )
-        }
-        assertRendered(html, Expected("Status size Xl", "status status-xl"))
-    }
+    fun status_size() = assertEachEntry("Status size", mapOf(StatusSize.Xs to "status status-xs", StatusSize.Sm to "status status-sm", StatusSize.Md to "status status-md", StatusSize.Lg to "status status-lg", StatusSize.Xl to "status status-xl")) { daisyStatus(size = it, content = { }) }
 
     @Test
     fun statusClasses_defaults() {
@@ -216,132 +86,8 @@ class StatusCoverageTest {
     }
 
     @Test
-    fun statusClasses_color_neutral() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Neutral,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Neutral", "status status-neutral"))
-    }
+    fun statusClasses_color() = assertEachEntry("StatusClasses color", mapOf(StatusColor.Neutral to "status status-neutral", StatusColor.Primary to "status status-primary", StatusColor.Secondary to "status status-secondary", StatusColor.Accent to "status status-accent", StatusColor.Info to "status status-info", StatusColor.Success to "status status-success", StatusColor.Warning to "status status-warning", StatusColor.Error to "status status-error")) { daisyStatusClasses(color = it) }
 
     @Test
-    fun statusClasses_color_primary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Primary,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Primary", "status status-primary"))
-    }
-
-    @Test
-    fun statusClasses_color_secondary() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Secondary,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Secondary", "status status-secondary"))
-    }
-
-    @Test
-    fun statusClasses_color_accent() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Accent,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Accent", "status status-accent"))
-    }
-
-    @Test
-    fun statusClasses_color_info() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Info,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Info", "status status-info"))
-    }
-
-    @Test
-    fun statusClasses_color_success() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Success,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Success", "status status-success"))
-    }
-
-    @Test
-    fun statusClasses_color_warning() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Warning,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Warning", "status status-warning"))
-    }
-
-    @Test
-    fun statusClasses_color_error() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                color = StatusColor.Error,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses color Error", "status status-error"))
-    }
-
-    @Test
-    fun statusClasses_size_xs() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                size = StatusSize.Xs,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses size Xs", "status status-xs"))
-    }
-
-    @Test
-    fun statusClasses_size_sm() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                size = StatusSize.Sm,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses size Sm", "status status-sm"))
-    }
-
-    @Test
-    fun statusClasses_size_md() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                size = StatusSize.Md,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses size Md", "status status-md"))
-    }
-
-    @Test
-    fun statusClasses_size_lg() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                size = StatusSize.Lg,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses size Lg", "status status-lg"))
-    }
-
-    @Test
-    fun statusClasses_size_xl() {
-        val html = createHTML(prettyPrint = false).div {
-            daisyStatusClasses(
-                size = StatusSize.Xl,
-            )
-        }
-        assertRendered(html, Expected("StatusClasses size Xl", "status status-xl"))
-    }
+    fun statusClasses_size() = assertEachEntry("StatusClasses size", mapOf(StatusSize.Xs to "status status-xs", StatusSize.Sm to "status status-sm", StatusSize.Md to "status status-md", StatusSize.Lg to "status status-lg", StatusSize.Xl to "status status-xl")) { daisyStatusClasses(size = it) }
 }

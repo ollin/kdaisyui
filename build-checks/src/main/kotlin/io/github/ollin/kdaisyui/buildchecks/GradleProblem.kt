@@ -13,7 +13,8 @@ data class GradleProblem(val id: String, val pluginId: String?)
 fun problemsIn(report: String): List<GradleProblem> {
     val diagnostics = report.substringBefore("\"problemsReport\"")
     val listed = entriesOf(diagnostics).map { GradleProblem(idOf(it), pluginId.find(it)?.groupValues[1]) }
-    val unlisted = entriesOf(report.removePrefix(diagnostics)).map(::idOf).filter { id -> listed.none { it.id == id } }
+    val listedIds = listed.map { it.id }.toSet()
+    val unlisted = entriesOf(report.removePrefix(diagnostics)).map(::idOf).filter { it !in listedIds }
     return listed + unlisted.map { GradleProblem(it, null) }
 }
 

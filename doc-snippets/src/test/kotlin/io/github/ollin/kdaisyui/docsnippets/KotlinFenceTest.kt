@@ -21,4 +21,10 @@ class KotlinFenceTest {
         val markdown = "```kotlin\nval a = 1\nval b = 2\n```\nafter\n"
         assertEquals(listOf("val a = 1\nval b = 2"), kotlinFencesIn(markdown).map { it.code })
     }
+
+    @Test
+    fun aFenceCarriesTheMarkerOnTheLineAboveIt() {
+        val markdown = "<!-- snippet: in Route -->\n```kotlin\nget(\"/\") { }\n```\n"
+        assertEquals(listOf("in Route"), kotlinFencesIn(markdown).map { it.marker })
+    }
 }

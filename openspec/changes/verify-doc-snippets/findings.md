@@ -59,3 +59,15 @@
 - **Cause:** a Kover default nobody had needed to know before this module.
 - **Cost:** one revert, about 2 minutes; the task was split, and the source set is excluded with
   `kover { currentProject { sources { excludedSourceSets } } }`.
+
+## F7 - A skipped build script can still be wrong
+
+- **What happened:** task 3.1. `docs/tutorials/getting-started.md` step 1 tells a reader to
+  `includeBuild("../kdaisyui")` and depend on `project(":lib")`. That cannot work from another
+  build without dependency substitution, and the library has been on Maven Central since 0.1.1,
+  which README shows. The script is marked `skip`, because a Gradle script does not compile
+  against the library.
+- **Cause:** `skip` takes a block out of the check and says why. It does not make the block
+  right.
+- **Cost:** none to this change, which does not fix it: a tutorial setup is a content decision,
+  not a compile error.

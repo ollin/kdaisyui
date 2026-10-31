@@ -50,3 +50,12 @@
   result cannot be null.
 - **Cost:** two reverts, about 3 minutes; each was retried in a form with no unreachable branch
   (`?.groupValues[1]`, `(marker ?: default).removePrefix(…)`).
+
+## F6 - Kover takes in every source set that is not a test
+
+- **What happened:** the first wiring of `compileSnippets` was reverted. `./gradlew build` compiled
+  the new `snippets` source set, and failed on every snippet not yet in step, because Kover
+  instruments and measures every non-test compilation of a module it is applied to.
+- **Cause:** a Kover default nobody had needed to know before this module.
+- **Cost:** one revert, about 2 minutes; the task was split, and the source set is excluded with
+  `kover { currentProject { sources { excludedSourceSets } } }`.

@@ -36,7 +36,7 @@ sections. It stays as it was; the revision is measured as part of the run.
   declarations, the nearest before it winning, else the nearest after it.
 - [x] 2.4 `. F (internal)` `skip - <reason>` excludes a snippet; `skip` without a reason fails.
 - [x] 2.5 `. F (internal)` An unknown directive fails, naming document and line.
-- [ ] 2.6 `. F (internal)` A `compileSnippets` task runs the extractor over the documents and
+- [x] 2.6 `. F (internal)` A `compileSnippets` task runs the extractor over the documents and
   compiles the result. Not yet part of `check`, so the documents can be brought in step first.
 
 ## 3. Make the documentation compile

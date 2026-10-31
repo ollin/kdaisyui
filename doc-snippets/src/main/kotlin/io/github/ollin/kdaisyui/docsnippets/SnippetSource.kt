@@ -7,12 +7,16 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
     val fileName: String get() = "$name.kt"
 
     val text: String get() = "// $document:${fence.line}\npackage snippets.$name\n\n" +
-        defaultImports.joinToString("") { "import $it\n" } + "\n" +
+        imports.joinToString("") { "$it\n" } + "\n" +
         body + "\n"
 
+    private val imports: List<String> get() = defaultImports.map { "import $it" }
+
+    private val code: String get() = fence.code
+
     private val body: String get() =
-        if (fence.code.lines().any { topLevelDeclaration.containsMatchIn(it) }) fence.code
-        else "fun FlowContent.snippet() {\n${fence.code}\n}"
+        if (code.lines().any { topLevelDeclaration.containsMatchIn(it) }) code
+        else "fun FlowContent.snippet() {\n$code\n}"
 }
 
 private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ")

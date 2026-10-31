@@ -43,8 +43,9 @@ repositories {
 }
 
 dependencies {
-    // kdaisyui (via composite build or local project)
-    implementation(project(":lib"))
+    // kdaisyui from Maven Central; replace VERSION with the latest release
+    implementation(platform("io.github.ollin.kdaisyui:kdaisyui-bom:VERSION"))
+    implementation("io.github.ollin.kdaisyui:kdaisyui")
 
     // Ktor server — current version: see gradle/libs.versions.toml → ktor
     implementation("io.ktor:ktor-server-core:«ktorVersion»")

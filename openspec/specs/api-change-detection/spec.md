@@ -41,10 +41,10 @@ baseline, and that check SHALL run in CI on every pull request rather than only 
 machine.
 
 **Verified:** `checkKotlinAbi` inserts itself into `:lib:check` — `:lib:check --dry-run` lists
-`:lib:internalDumpKotlinAbi` and `:lib:checkKotlinAbi`. **Assumed:** that CI runs it. *Wrong if:*
-the workflow's `unit-tests` job invokes `./gradlew :lib:test koverVerify koverXmlReport` rather
-than `check`, in which case the gate exists locally and never runs on a pull request. This is
-checked and closed by task 4.2, and task 4.3 requires the job to have been *seen* to fail.
+`:lib:internalDumpKotlinAbi` and `:lib:checkKotlinAbi`. **Verified** that CI runs it, twice: the
+`api-baseline` job runs `./gradlew :lib:checkKotlinAbi`, and since 2026-10-31 the `unit-tests` job
+runs `check`. Until then `unit-tests` ran a hand-picked task list without it, and only
+`api-baseline` closed the gap.
 
 #### Scenario: An undeclared API change is rejected
 - **WHEN** the public API of `lib` differs from the committed baseline

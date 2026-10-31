@@ -155,7 +155,7 @@ then five — so check the file rather than trusting this count.
 | `generated-sources-drift` | the five `:lib:generate*` tasks, `:lib:checkComponentApi`, and `git status --porcelain` | `submodules: recursive`, Node, JDK |
 | `codegen-tests` | `npm test` in `codegen/` (`node --test test/`) | Node only |
 | `api-baseline` | `:lib:checkKotlinAbi` | JDK |
-| `unit-tests` | `:lib:test koverVerify koverXmlReport :doc-snippets:compileSnippets` | JDK |
+| `unit-tests` | `check -x :e2e-tests:test koverXmlReport`: everything `check` runs but the browser tests | JDK, Docker |
 | `mutation-tests` | `:lib:pitest`, gated at 100% **test strength** | JDK |
 | `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | JDK, **Docker** |
 

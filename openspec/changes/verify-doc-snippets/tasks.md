@@ -70,8 +70,8 @@ must not.
 
 ## 6. Gate and adoption
 
-- [ ] 6.1 Full green per `openspec/config.yaml`: repo-wide compile, the complete suite including
+- [x] 6.1 Full green per `openspec/config.yaml`: repo-wide compile, the complete suite including
   e2e, coverage, `analyze_change_set`, and a mutation run on the extractor (or the reason there is
   none).
-- [ ] 6.2 `openspec validate verify-doc-snippets --strict`.
-- [ ] 6.3 Write the evaluation under `tmp/verify-doc-snippets/` for Oliver to adopt.
+- [x] 6.2 `openspec validate verify-doc-snippets --strict`.
+- [x] 6.3 Write the evaluation under `tmp/verify-doc-snippets/` for Oliver to adopt.

@@ -71,3 +71,23 @@
   right.
 - **Cost:** none to this change, which does not fix it: a tutorial setup is a content decision,
   not a compile error.
+
+## F8 - `check --warning-mode all` is not at zero problems, on main either
+
+- **What happened:** task 6.1. The `kdaisyui-build` skill says the build ends with `Problems: 0`.
+  It reports 15, all one deprecation, `Configuration.setVisible(boolean)`, raised by the Kover
+  plugin. `:ktor-integration:check --rerun` on `origin/main` reports the same 15, so this change
+  added none.
+- **Cause:** a Kover or Gradle bump since the skill was written; nothing checks the skill's claim.
+- **Cost:** about 5 minutes to tell a pre-existing problem from a new one.
+
+## F9 - The mutation gate does not reach the new module
+
+- **What happened:** task 6.1. `:lib:pitest` and CI's `mutation-tests` job cover `:lib` only. The
+  extractor was measured by applying PIT to `:doc-snippets` temporarily, uncommitted: 50 killed,
+  2 survived, 1 without coverage. The survivors led to two refactorings: a multiline regex instead
+  of an inlined `any {}`, and `Skip` as an object, since nothing read its reason. The rerun gave
+  47 killed and 1 survivor, an equivalent mutant: `<` to `<=` in `declarationOf` cannot change
+  the result, because a fence never looks up a name it declares itself.
+- **Cause:** the PIT configuration lives in `lib/build.gradle.kts`, not in the convention plugin.
+- **Cost:** about 10 minutes, and a module that CI does not mutation-test.

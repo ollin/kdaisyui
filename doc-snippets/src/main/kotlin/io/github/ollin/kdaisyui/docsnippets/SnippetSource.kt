@@ -28,7 +28,13 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
 
 private val topLevelDeclaration = Regex("^(fun|suspend fun|val) ")
 
-private val defaultImports = listOf("kotlinx.html.*", "io.github.ollin.kdaisyui.components.*")
+/** What a reader of the documentation is assumed to have imported: the library, kotlinx.html, the Ktor server. */
+private val defaultImports = listOf(
+    "kotlinx.html.*", "kotlinx.html.stream.*",
+    "io.github.ollin.kdaisyui.components.*", "io.github.ollin.kdaisyui.core.*", "io.github.ollin.kdaisyui.icons.*",
+    "io.ktor.http.*", "io.ktor.server.application.*", "io.ktor.server.html.*", "io.ktor.server.response.*",
+    "io.ktor.server.routing.*", "io.ktor.server.webjars.*",
+)
 
 /** The name of a snippet's file and package: its [document] and the line of its [fence]. */
 fun snippetName(document: String, fence: KotlinFence): String = document.replace(Regex("\\W"), "_") + "_L${fence.line}"

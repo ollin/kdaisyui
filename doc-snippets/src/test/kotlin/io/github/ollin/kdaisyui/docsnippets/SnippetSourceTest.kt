@@ -37,8 +37,11 @@ class SnippetSourceTest {
     }
 
     @Test
-    fun kotlinxHtmlAndTheComponentsAreImported() {
-        assertEquals(listOf("import kotlinx.html.*", "import io.github.ollin.kdaisyui.components.*"), importsOf(textOf("")))
+    fun theLibraryKotlinxHtmlAndTheKtorServerAreImported() {
+        val imports = importsOf(textOf(""))
+        assertEquals(11, imports.size)
+        assertEquals(listOf("import kotlinx.html.stream.*", "import io.github.ollin.kdaisyui.core.*", "import io.ktor.server.webjars.*"),
+            imports.filter { it.endsWith("stream.*") || it.endsWith("core.*") || it.endsWith("webjars.*") })
     }
 
     @Test

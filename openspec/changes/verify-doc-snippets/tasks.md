@@ -52,7 +52,7 @@ must not.
 
 ## 4. Wire it into `check`
 
-- [ ] 4.1 `. F (internal)` `check` depends on `compileSnippets`, the root's Kover aggregation
+- [x] 4.1 `. F (internal)` `check` depends on `compileSnippets`, the root's Kover aggregation
   includes `:doc-snippets`, and CI's `unit-tests` job runs `:doc-snippets:compileSnippets` (A5).
   Record the added build time.
 - [ ] 4.2 `. d` Prove the failure: break one snippet, observe `check` fail naming document and

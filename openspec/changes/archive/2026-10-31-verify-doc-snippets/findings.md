@@ -91,3 +91,19 @@
   the result, because a fence never looks up a name it declares itself.
 - **Cause:** the PIT configuration lives in `lib/build.gradle.kts`, not in the convention plugin.
 - **Cost:** about 10 minutes, and a module that CI does not mutation-test.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | fixed - in this change (the plan was revised to compile in place) |
+| F2 | - | fixed - in this change (task 3.5) |
+| F3 | - | fixed - in this change (section 3) |
+| F4 | A CI test fails when a Gradle task that `check` depends on is run by no CI job | open |
+| F5 | The `fwb-tcr` recovery ladder names Kotlin's unreachable safe-call branches as a known cause of a coverage revert | open |
+| F6 | - | none - record only; the exclusion is commented in `doc-snippets/build.gradle.kts` |
+| F7 | getting-started's build script uses the Maven Central coordinates README shows | open |
+| F8 | `kdaisyui-build`'s "Problems: 0" becomes a recorded number that a check compares, instead of a sentence | open |
+| F9 | `:doc-snippets` joins the PIT configuration and CI's `mutation-tests` job | open |

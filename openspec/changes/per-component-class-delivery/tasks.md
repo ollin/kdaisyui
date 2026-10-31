@@ -15,7 +15,7 @@ decides the plugin's place before any of it is written.
 
 ## 2. The map, in the codegen
 
-- [ ] 2.1 `. F (internal)` The codegen writes `kdaisyui-components.txt` into the jar's resources: per
+- [x] 2.1 `. F (internal)` The codegen writes `kdaisyui-components.txt` into the jar's resources: per
   component, its JVM classes and its CSS classes. Regenerated; the drift job covers it.
 
 ## 3. The plugin, under TCR

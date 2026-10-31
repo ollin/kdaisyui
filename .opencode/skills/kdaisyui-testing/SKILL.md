@@ -40,16 +40,21 @@ Nothing automates this. `koverVerify` and `:lib:pitest` both pass happily on an 
 test — one asks whether the line ran, the other whether it was asserted, and neither can ask
 whether a human can follow it. Run the review by hand on any test file you touch.
 
-## 2. Hand-written unit tests — `:lib:test`, `:ktor-integration:test`
+## 2. Hand-written unit tests — `:lib:test`, `:ktor-integration:test`, `:doc-snippets:test`
 
 Framework is **kotlin-test** (`useKotlinTest(versions.kotlin)`), *not* Kotest and not JUnit
-directly. Only three files exist:
-
-- `lib/src/test/kotlin/io/github/ollin/kdaisyui/core/HtmlIdTest.kt`
-- `lib/src/test/kotlin/io/github/ollin/kdaisyui/DashboardTest.kt`
-- `ktor-integration/src/test/kotlin/io/github/ollin/kdaisyui/ktor/ResolvableTest.kt`
+directly. The files live in `lib/src/test/` (10), `ktor-integration/src/test/` (1) and
+`doc-snippets/src/test/` (5).
 
 Style: render with `createHTML().div { … }` and assert against the produced HTML string.
+
+**A coverage revert can come from Kotlin, not from a missing test.** The gate is 100% *branch*,
+measured on bytecode, and Kotlin emits a null check for a safe call whose result can never be
+null: `x?.groupValues?.get(1)`, `a?.removePrefix(p) ?: d`. One branch of it is unreachable, so
+`koverVerify` fails and TCR reverts the step with every test green. Do not add a test. Take the
+form without the dead branch: `x?.groupValues[1]`, `(a ?: default).removePrefix(p)`, or a `when`
+over the type. Two steps of `verify-doc-snippets` were reverted this way before it was named
+(its finding F5).
 
 ## 2a. Documentation snippets — `:doc-snippets:compileSnippets`
 

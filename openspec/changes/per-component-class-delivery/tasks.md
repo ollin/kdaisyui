@@ -1,0 +1,48 @@
+# Tasks
+
+**Estimate, frozen 2026-10-31:** 310 minutes. Block 1: 40, block 2: 30, block 3: 120, block 4: 60,
+block 5: 30, block 6: 30.
+
+Ordered by uncertainty: section 1 settles whether the included build can be released at all, which
+decides the plugin's place before any of it is written.
+
+## 1. Open assumptions
+
+- [ ] 1.1 `. d` (A6, A7) Probe on a throwaway branch: an empty included build with
+  `java-gradle-plugin` and `maven-publish`, staged into the root `build/staging-deploy` by `stageAll`.
+  Record where the artifact and its marker land, and whether `verifyStagingComplete` can see both.
+  If it cannot, revise the design before section 3.
+
+## 2. The map, in the codegen
+
+- [ ] 2.1 `. F (internal)` The codegen writes `kdaisyui-components.txt` into the jar's resources: per
+  component, its JVM classes and its CSS classes. Regenerated; the drift job covers it.
+
+## 3. The plugin, under TCR
+
+- [ ] 3.1 `. F (internal)` The included build `gradle-plugin/`, empty, built and measured.
+- [ ] 3.2 `. F` Find every `io/github/ollin/kdaisyui/components/` class name in a set of class files.
+- [ ] 3.3 `. F` Read the map, and select the CSS classes of the components found.
+- [ ] 3.4 `. F` Fall back to the full list, with a warning, on an unknown class or none found.
+- [ ] 3.5 `. F` The plugin registers `kdaisyuiClasses` over the main source set's classes and the
+  `kdaisyui` artifact on the runtime classpath; a TestKit build proves it.
+
+## 4. The repository uses it
+
+- [ ] 4.1 `. F (internal)` `example-app` applies the plugin; `app.css` says `source(none)` and sources
+  the narrowed list. Measure the stylesheet against the full one.
+- [ ] 4.2 `. d` The full suite, E2E included, on the narrowed stylesheet. If a scenario fails,
+  revise the change: the Assumed requirement was wrong.
+- [ ] 4.3 `! F (internal)` Release wiring: `publishedArtifacts`, `stageAll`, the marker.
+
+## 5. Docs
+
+- [ ] 5.1 `. d` README's CSS section: the plugin first, the `Copy`-from-jar setup for builds
+  without Gradle, both sizes.
+- [ ] 5.2 `. d` `kdaisyui-release` and AGENTS.md: the fourth artifact and its marker.
+
+## 6. Gate and adoption
+
+- [ ] 6.1 Full green: `check` with E2E, `koverVerify`, PIT, `checkGradleProblems`, `analyze_change_set`.
+- [ ] 6.2 `openspec validate per-component-class-delivery --strict`.
+- [ ] 6.3 The evaluation under `tmp/per-component-class-delivery/` for Oliver to adopt.

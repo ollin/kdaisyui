@@ -190,6 +190,8 @@ export interface FunctionShape {
    */
   readonly modifierClasses: readonly CssClass[]
   readonly staticAttributes: readonly StaticAttribute[]
+  /** A popover its trigger anchors: it writes `position-anchor` from its required `id`. */
+  readonly anchoredPopover?: true
   /** Prose sentence preceding the `Renders ...` clause. Empty when there is none. */
   readonly desc: string
   readonly parameters: readonly ParameterShape[]
@@ -285,6 +287,8 @@ const ID_PARAMETER: ParameterShape = {
   doc: 'Type-safe HTML id attribute from [HtmlId] hierarchy',
 }
 
+const REQUIRED_ID_PARAMETER: ParameterShape = { ...ID_PARAMETER, type: 'HtmlId', default: null }
+
 const TEXT_PARAMETER: ParameterShape = {
   name: 'text',
   type: 'String?',
@@ -330,10 +334,10 @@ function contentParameter(element: TagClass, hasTextParam: boolean): ParameterSh
  * either. The check used to sit on the main function's path alone, so `daisyModalToggle`
  * required a content lambda for the same `<input>` that `daisyInput` correctly refuses one for.
  */
-function escapeHatchParameters(element: TagClass, hasTextParam: boolean): ParameterShape[] {
+function escapeHatchParameters(element: TagClass, hasTextParam: boolean, idRequired: boolean): ParameterShape[] {
   return [
     ...(hasTextParam ? [TEXT_PARAMETER] : []),
-    ID_PARAMETER,
+    idRequired ? REQUIRED_ID_PARAMETER : ID_PARAMETER,
     EXTRA_CLASSES_PARAMETER,
     attrsParameter(element),
     ...(isVoidElement(element) ? [] : [contentParameter(element, hasTextParam)]),
@@ -345,13 +349,13 @@ function escapeHatchParameters(element: TagClass, hasTextParam: boolean): Parame
  * parameters, then the escape hatches. Main functions and parts share the frame; a custom part
  * has no own parameters.
  */
-export function functionParameters(element: TagClass, hasTextParam: boolean, own: readonly ParameterShape[]): ParameterShape[] {
-  return withOwnClasses(escapeHatchParameters(element, hasTextParam), own)
+export function functionParameters(element: TagClass, hasTextParam: boolean, own: readonly ParameterShape[], idRequired = false): ParameterShape[] {
+  return withOwnClasses(escapeHatchParameters(element, hasTextParam, idRequired), own)
 }
 
 /** A part's own parameters go after `id`, where the main function puts the same two kinds. */
 function withOwnClasses(escapeHatches: readonly ParameterShape[], own: readonly ParameterShape[]): ParameterShape[] {
-  const afterId = escapeHatches.findIndex(parameter => parameter === ID_PARAMETER) + 1
+  const afterId = escapeHatches.findIndex(parameter => parameter.name === 'id') + 1
   return [...escapeHatches.slice(0, afterId), ...own, ...escapeHatches.slice(afterId)]
 }
 

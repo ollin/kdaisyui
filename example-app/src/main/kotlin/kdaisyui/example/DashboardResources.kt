@@ -8,6 +8,9 @@ class DashboardPage
 @Resource("/popover-modal")
 class PopoverModalDemo
 
+@Resource("/dropdown-popover")
+class DropdownPopoverDemo
+
 @Resource("/megamenu-reference")
 class MegamenuReference
 

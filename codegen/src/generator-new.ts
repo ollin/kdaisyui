@@ -286,9 +286,11 @@ function renderSibling(shape: SiblingShape): string {
 /** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
 function secondaryFunctionBody(shape: FunctionShape): string {
   const hasTextParam = shape.parameters.some(parameter => parameter.name === 'text')
+  const idRequired = shape.parameters.some(parameter => parameter.name === 'id' && parameter.default === null)
 
-  const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
+  const lines: string[] = [idRequired ? '        attributes["id"] = id.id' : '        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
+  if (shape.anchoredPopover) lines.push('        attributes["style"] = "position-anchor:${id.anchorName}"')
   if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
   lines.push(...shape.modifierClasses.map(cssClass => `        addClassNames("${cssClass}")`))
   lines.push(...classValuesLines(shape))
@@ -318,6 +320,7 @@ function functionImports(fn: FunctionShape): string[] {
     // builder would leave the generated file with an import nothing uses.
     ...(fn.contentScope === undefined ? [`${elementPackage(fn.element)}.${fn.tagBuilder}`] : []),
     ...(fn.receiver !== 'FlowContent' ? [`kotlinx.html.${fn.receiver}`] : []),
+    ...(fn.anchoredPopover ? ['io.github.ollin.kdaisyui.core.anchorName'] : []),
   ]
 }
 

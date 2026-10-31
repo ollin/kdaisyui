@@ -31,6 +31,19 @@
       ]
     },
     {
+      "kind": "custom",
+      "name": "daisyDropdownPopover",
+      "receiver": "FlowContent",
+      "element": "UL",
+      "class": "dropdown",
+      "text": false,
+      "parameters": [
+        { "kind": "enum", "name": "side", "enum": "DropdownSide", "doc": "Side variant" },
+        { "kind": "enum", "name": "align", "enum": "DropdownAlign", "doc": "Align variant" }
+      ],
+      "anchoredPopover": true
+    },
+    {
       "kind": "part",
       "name": "daisyDropdownContent",
       "receiver": "FlowContent",

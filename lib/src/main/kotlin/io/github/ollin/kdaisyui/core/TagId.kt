@@ -19,6 +19,13 @@ interface HtmlId {
     val targetGlobal: String get() = "global $target"
 }
 
+/**
+ * The CSS anchor name a popover and its trigger share: `--` and the id, with every character a
+ * dashed-ident does not allow replaced by `_`. The trigger writes it as `anchor-name`, the
+ * popover as `position-anchor`; both derive it here, so they cannot disagree.
+ */
+val HtmlId.anchorName: String get() = "--" + id.replace(Regex("[^A-Za-z0-9_-]"), "_")
+
 /** Create an [HtmlId] from a plain string literal. */
 fun htmlId(id: String): HtmlId = StringHtmlId(id)
 

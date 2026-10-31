@@ -125,12 +125,13 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
+  const rendersDocumentedTag = primary.fn.kind !== 'classes' && rendersTag(primary.fn, element.tag)
   return {
     fn: primary.fn,
-    args: callArguments(primary, others, variants).join(', '),
+    args: [...requiredIdArguments(primary.fn, rendersDocumentedTag), ...callArguments(primary, others, variants)].join(', '),
     expectedClasses: [...new Set(expected)].sort().join(' '),
     tag: element.tag,
-    rendersTag: primary.fn.kind !== 'classes' && rendersTag(primary.fn, element.tag),
+    rendersTag: rendersDocumentedTag,
     onTag: tagStatements([primary, ...others], variants),
   }
 }
@@ -146,6 +147,11 @@ function siblingCall(group: ClaimedGroup): string {
 }
 
 /** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */
+/** An anchored popover's id is required, so a call of it cannot be written without one. */
+function requiredIdArguments(fn: ModelFunction, called: boolean): string[] {
+  return called && fn.anchoredPopover ? ['id = htmlId("documented")'] : []
+}
+
 function callArguments(primary: ClaimedGroup, others: readonly ClaimedGroup[], variants: readonly string[]): string[] {
   const siblings = others.map(siblingCall)
   return [

@@ -5,6 +5,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.anchorName
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.details
@@ -100,6 +101,38 @@ fun Tag.daisyDropdownClasses(
     addClassNames(align)
     addClassNames(state)
     if (hover) addClassNames("dropdown-hover")
+}
+
+/** Renders `<ul class="dropdown ..." popover>`. */
+fun FlowContent.daisyDropdownPopover(
+    id: HtmlId,
+    side: ClassValues<DropdownSide>? = null,
+    align: ClassValues<DropdownAlign>? = null,
+    extraClasses: String? = null,
+    attrs: (UL.() -> Unit)? = null,
+    content: (UL.() -> Unit),
+) {
+    ul {
+        attributes["id"] = id.id
+        attributes["popover"] = ""
+        attributes["style"] = "position-anchor:${id.anchorName}"
+        addClassNames("dropdown")
+        addClassNames(side)
+        addClassNames(align)
+        addClassNames(extraClasses)
+        if (attrs != null) attrs()
+        content()
+    }
+}
+
+/** The classes `daisyDropdownPopover` writes, on the element this is called on. */
+fun Tag.daisyDropdownPopoverClasses(
+    side: ClassValues<DropdownSide>? = null,
+    align: ClassValues<DropdownAlign>? = null,
+) {
+    addClassNames("dropdown")
+    addClassNames(side)
+    addClassNames(align)
 }
 
 /** Renders `<ul class="dropdown-content ...">`. */

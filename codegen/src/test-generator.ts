@@ -127,7 +127,9 @@ function customPartsOf(model: ComponentModel) {
     cssClass: fn.class,
     modifierClasses: fn.always ?? [],
     receiver: fn.receiver,
-    staticAttributes: fn.attributes ?? {},
+    // An anchored popover writes `popover` without declaring it, and its trigger's anchor from its id.
+    staticAttributes: { ...(fn.anchoredPopover ? { popover: '', style: 'position-anchor:--custom-part' } : {}), ...(fn.attributes ?? {}) },
+    anchoredPopover: fn.anchoredPopover === true,
   }))
 }
 
@@ -202,7 +204,7 @@ function generateCustomPartTests(customParts) {
     @Test
     fun ${funcName}() {
         val html = createHTML(prettyPrint = false).${wrapperFn} {
-            ${part.functionName} {
+            ${part.functionName}${part.anchoredPopover ? '(id = htmlId("custom-part"))' : ''} {
             }
         }
 ${customPartAssertions(part, tag)}
@@ -288,6 +290,7 @@ function extraImportLines(customParts, hasAttributeTest: boolean, classTestImpor
   if (customParts.length > 0 || hasAttributeTest) imports.add('import kotlin.test.assertTrue')
   for (const part of customParts) {
     if (part.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(part.receiver))}`)
+    if (part.anchoredPopover) imports.add('import io.github.ollin.kdaisyui.core.htmlId')
   }
   return [...imports].sort().map(line => `\n${line}`).join('')
 }
@@ -324,6 +327,7 @@ function importsOf(call: DocumentedCall): string[] {
   return [
     ...builders.filter(builder => builder !== 'div').map(builder => `import kotlinx.html.${builder}`),
     ...(!call.rendersTag && call.onTag.includes('addClassNames(') ? ['import io.github.ollin.kdaisyui.core.addClassNames'] : []),
+    ...(call.args.includes('htmlId(') ? ['import io.github.ollin.kdaisyui.core.htmlId'] : []),
   ]
 }
 
@@ -813,7 +817,14 @@ function coverageContext(fn, enums, file: string) {
     // A class sibling takes no id, extraClasses or attrs: it adds classes to an element it does
     // not open.
     hasHatches: params.some((p) => p.kind === 'id'),
+    // An anchored popover's id has no default, so even the smallest call names one.
+    idRequired: params.some((p) => p.kind === 'id' && !p.nullable),
   }
+}
+
+/** What every call of the function has to pass: a required id, a required content lambda. */
+function requiredArgs(ctx): string[] {
+  return [...(ctx.idRequired ? ['id = htmlId("x-cov-id")'] : []), ...(ctx.required ? ['content = { }'] : [])]
 }
 
 function wrapTest(ctx, tname, args, asserts) {
@@ -821,7 +832,7 @@ function wrapTest(ctx, tname, args, asserts) {
 }
 
 function defaultsTest(ctx) {
-  const args = ctx.required ? ['content = { }'] : []
+  const args = requiredArgs(ctx)
   const asserts = ctx.base
     ? [renderedAssert(ctx, ctx.base, `${ctx.daisyName} defaults`, true)]
     : [`assertTrue(!html.contains("class=\\""), "${ctx.daisyName} defaults emits no class")`]
@@ -880,7 +891,7 @@ function enumArmTests(ctx) {
     for (const { entry, css } of e.enumEntries) {
       // `enumType`, not `baseType`: the parameter is typed `ClassValues<ButtonSize>?` and the
       // value written into the test is `ButtonSize.Lg`.
-      const args = ctx.required ? [`${e.name} = ${e.enumType}.${entry}`, 'content = { }'] : [`${e.name} = ${e.enumType}.${entry}`]
+      const args = [`${e.name} = ${e.enumType}.${entry}`, ...requiredArgs(ctx)]
       const asserts = [renderedAssert(ctx, sortedClasses([ctx.base, css]), `${ctx.daisyName} ${e.name} ${entry}`, false)]
       tests += wrapTest(ctx, `${ctx.fnBase}_${e.name}_${entry.toLowerCase()}`, args, asserts)
     }

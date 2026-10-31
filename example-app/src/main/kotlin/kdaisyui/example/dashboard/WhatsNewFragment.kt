@@ -2,6 +2,7 @@ package kdaisyui.example.dashboard
 
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
+import io.github.ollin.kdaisyui.core.popoverTarget
 import kdaisyui.example.Dashboard
 import kotlinx.html.*
 
@@ -74,7 +75,7 @@ private fun TagConsumer<*>.megamenuCard() {
             daisyCardTitle("Navigation Preview")
             daisyMegamenu(id = Dashboard.WhatsNew.Megamenu(), width = MegamenuWidth.Wide) {
                 daisyMegamenuActive { }
-                button { attributes["popovertarget"] = Dashboard.WhatsNew.Megamenu.Panel().id; +"Browse" }
+                button { popoverTarget(Dashboard.WhatsNew.Megamenu.Panel()); +"Browse" }
                 daisyMegamenuPanel(id = Dashboard.WhatsNew.Megamenu.Panel()) {
                     daisyMenu(extraClasses = "w-full") {
                         li { a { +"Repositories" } }

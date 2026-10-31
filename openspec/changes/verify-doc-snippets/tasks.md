@@ -55,8 +55,13 @@ must not.
 - [x] 4.1 `. F (internal)` `check` depends on `compileSnippets`, the root's Kover aggregation
   includes `:doc-snippets`, and CI's `unit-tests` job runs `:doc-snippets:compileSnippets` (A5).
   Record the added build time.
-- [ ] 4.2 `. d` Prove the failure: break one snippet, observe `check` fail naming document and
-  line, restore. Record the output.
+- [x] 4.2 `. d` Prove the failure: break one snippet, observe `check` fail naming document and
+  line, restore. Record the output. 2026-10-31, `./gradlew :doc-snippets:check`:
+  - `color =` changed to the removed `variant =` in `docs/how-to.md`'s first snippet:
+    `e: …/generated/snippets/docs/how-to.md/L71.kt:18:25 No parameter with name 'variant' found.`
+  - `<!-- snippet: skip -->` above the same fence:
+    `IllegalStateException: docs/how-to.md:72: skip needs a reason: <!-- snippet: skip - <reason> -->`
+  - Both restored; `:doc-snippets:check` green again.
 
 ## 5. Close the loop
 

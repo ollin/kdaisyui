@@ -165,12 +165,13 @@ jobs:
           java-version: 25.0.5+8.0.LTS
           cache: gradle
 
-      - name: Run unit tests and enforce coverage gate
-        # koverVerify is the aggregated 100% gate — keep it here so CI fails on a
-        # coverage shortfall; reverting this to a bare :lib:test silently disables it.
-        # compileSnippets compiles every Kotlin snippet of README.md and docs/; no job
-        # runs `check` as a whole, so without it here a stale snippet would merge.
-        run: ./gradlew :lib:test koverVerify koverXmlReport :doc-snippets:compileSnippets --no-daemon
+      - name: Run check, without the browser tests
+        # `check`, not a list of its tasks: a list is what let a task `check` depends on
+        # reach no CI job (the documentation snippets, until 2026-10-31). Whatever `check`
+        # gains now runs here by default. It includes koverVerify, the aggregated 100%
+        # gate, and compiles the example app's stylesheet in Docker, which the runner has.
+        # Only the E2E suite is left to its own job, which installs Chromium.
+        run: ./gradlew check -x :e2e-tests:test koverXmlReport --no-daemon
 
       - name: Upload test report
         if: failure()

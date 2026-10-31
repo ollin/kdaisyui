@@ -10,9 +10,11 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
         imports.joinToString("") { "$it\n" } + "\n" +
         body + "\n"
 
-    private val imports: List<String> get() = defaultImports.map { "import $it" }
+    private val lines = fence.code.lines().partition { it.startsWith("import ") }
 
-    private val code: String get() = fence.code
+    private val imports: List<String> get() = defaultImports.map { "import $it" } + lines.first
+
+    private val code: String get() = lines.second.joinToString("\n")
 
     private val body: String get() =
         if (code.lines().any { topLevelDeclaration.containsMatchIn(it) }) code

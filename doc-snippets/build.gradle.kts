@@ -5,3 +5,21 @@ plugins {
     id("kdaisyui.kotlin-library-conventions")
     alias(libs.plugins.kover)
 }
+
+// Every document whose Kotlin snippets are compiled. A document that is not listed is not
+// checked, so a new prose document belongs here.
+val documents: List<String> = listOf("README.md", "docs/how-to.md", "docs/explanation.md") +
+    rootProject.fileTree("docs/tutorials") { include("*.md") }.files.map { it.relativeTo(rootDir).invariantSeparatorsPath }.sorted()
+
+val snippetsDir = layout.buildDirectory.dir("generated/snippets")
+
+tasks.register<JavaExec>("extractSnippets") {
+    description = "Writes one Kotlin file per snippet of the prose documentation."
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("io.github.ollin.kdaisyui.docsnippets.ExtractSnippetsKt")
+    inputs.files(documents.map { rootProject.file(it) })
+    outputs.dir(snippetsDir)
+    args(listOf(rootDir.absolutePath, snippetsDir.get().asFile.absolutePath) + documents)
+    // A fence that was removed must take its file with it.
+    doFirst { snippetsDir.get().asFile.run { deleteRecursively(); mkdirs() } }
+}

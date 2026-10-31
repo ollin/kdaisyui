@@ -23,3 +23,20 @@
   between.
 - **Cost:** none. Both tasks were replaced: `llms.txt` is out of scope, and the stale section is
   deleted rather than injected.
+
+## F3 - Three snippets are broken today, two of them by a bad edit
+
+- **What happened:** task 1.1's compile. `docs/tutorials/getting-started.md` step 5 and
+  `docs/tutorials/build-a-dashboard.md` step 6 each carry a pasted leftover: a second, partial
+  `daisyStats { … }` after the block closes. README's 0.7.x migration note uses `{ … }`, which is
+  not Kotlin.
+- **Cause:** nothing compiles the documentation, which is what this change is for.
+- **Cost:** none to the plan; fixed in section 3.
+
+## F4 - CI does not run `check`
+
+- **What happened:** task 1.2. The plan said a snippet compiled by `check` would fail in CI's
+  `unit-tests` job. That job runs `:lib:test koverVerify koverXmlReport`, and no job runs `check`.
+- **Cause:** an assumption about CI that nobody had written down, so nobody had checked it. It is
+  now A5.
+- **Cost:** a design correction before any code; the job gains one task (task 4.1).

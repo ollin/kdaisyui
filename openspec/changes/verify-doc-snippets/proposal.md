@@ -17,8 +17,8 @@ snippets have an honest home there, because tutorials show code growing step by 
 
 ## What Changes
 
-- Every Kotlin code block in the prose documentation is **compiled by `./gradlew check`**, where
-  it stands. The Markdown stays the single place the snippet is written.
+- Every Kotlin code block in the prose documentation is **compiled by `./gradlew check` and by
+  CI**, where it stands. The Markdown stays the single place the snippet is written.
 - A new, unpublished module **`:doc-snippets`** does it. Its `main` source set is the extractor, a
   small Kotlin program unit-tested under the repository's 100% coverage gate. It writes one Kotlin
   file per snippet, and a second source set compiles those against `:lib`, `:ktor-integration`,
@@ -43,8 +43,9 @@ and `llms.txt` (generated since 0.7.0).
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
 | A1 | No requirement of a main spec this builds on contradicts it. It touches none of `generated-sources`, `coverage-enforcement`, `api-change-detection` or `css-delivery`; it only adds a module that publishes nothing | code | confirmed at proposal - the specs' requirements name `lib/generated/**`, `codegen/`, the published artifacts and the aggregated gate, none of which this changes |
-| A2 | Most usage snippets compile with one default context (a statement inside a `FlowContent` builder, standard imports), so markers stay the exception | code | to check in task 1.1 |
-| A3 | A new module's `main` source set can join the aggregated 100% Kover gate the way `:lib` and `:ktor-integration` do | code | to check in task 1.2 |
+| A2 | Most usage snippets compile with one default context (a statement inside a `FlowContent` builder, standard imports), so markers stay the exception | code | confirmed in task 1.1 - 35 of 68 compile as they stand, 22 need `skip`, 4 a receiver, 4 the document scope; see `design.md` decision 6 |
+| A3 | A new module's `main` source set can join the aggregated 100% Kover gate the way `:lib` and `:ktor-integration` do | code | confirmed in task 1.2 - the root aggregates per module with `kover(project(...))`, so one more line covers `:doc-snippets`; Kover measures only its `main` source set |
+| A5 | CI runs `check`, so a snippet compiled by `check` fails a pull request | code | false - the `unit-tests` job runs `:lib:test koverVerify koverXmlReport` only; the job gains the snippet compile (finding F4) |
 | A4 | `example-app` can be the source of the snippets | code | false - about 12 of 41 have a home there; replaced by compiling in place (finding F1) |
 
 ## Capabilities
@@ -67,4 +68,5 @@ and `llms.txt` (generated since 0.7.0).
   markers and for snippets that no longer compile.
 - **Edited**: root `build.gradle.kts` for the Kover aggregation, if A3 holds.
 - **Edited**: `AGENTS.md` and the `kdaisyui-testing` skill, for the marker convention.
-- No change to `lib`, `ktor-integration`, `bom`, CI workflows or any published artifact.
+- **Edited**: `.github/workflows/ci.yml`, one task added to the `unit-tests` job (A5).
+- No change to `lib`, `ktor-integration`, `bom` or any published artifact.

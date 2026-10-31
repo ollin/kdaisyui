@@ -31,7 +31,9 @@ sections. It stays as it was; the revision is measured as part of the run.
   `kotlin` fence in a document, with the line of its opening fence.
 - [ ] 2.2 `. F (internal)` Wrap a snippet in the default context, in its own package, in a file
   named for document and line.
-- [ ] 2.3 `. F (internal)` The context directive(s) task 1.1 chose.
+- [ ] 2.3 `. F (internal)` `in <Receiver>` wraps a snippet in an extension on that receiver.
+- [ ] 2.3a `. F (internal)` Document scope: a block imports the other blocks' top-level
+  declarations, the nearest before it winning, else the nearest after it.
 - [ ] 2.4 `. F (internal)` `skip - <reason>` excludes a snippet; `skip` without a reason fails.
 - [ ] 2.5 `. F (internal)` An unknown directive fails, naming document and line.
 - [ ] 2.6 `. F (internal)` A `compileSnippets` task runs the extractor over the documents and
@@ -50,7 +52,9 @@ must not.
 
 ## 4. Wire it into `check`
 
-- [ ] 4.1 `. F (internal)` `check` depends on `compileSnippets`. Record the added build time.
+- [ ] 4.1 `. F (internal)` `check` depends on `compileSnippets`, the root's Kover aggregation
+  includes `:doc-snippets`, and CI's `unit-tests` job runs `:doc-snippets:compileSnippets` (A5).
+  Record the added build time.
 - [ ] 4.2 `. d` Prove the failure: break one snippet, observe `check` fail naming document and
   line, restore. Record the output.
 

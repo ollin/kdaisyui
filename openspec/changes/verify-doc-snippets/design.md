@@ -51,18 +51,45 @@ the document and the line of the fence, so a compile error points at the Markdow
 ```kotlin
 ```
 
-An HTML comment renders as nothing on GitHub and in IDEs, so readers never see the machinery. The
-first directives are `skip - <reason>` and a context directive for snippets that are not
-statements inside a `FlowContent` builder. Their exact set is decided by task 1.1's measurement, not
-here. **An unknown directive, or `skip` without a reason, fails the build**: a silent marker would
+An HTML comment renders as nothing on GitHub and in IDEs, so readers never see the machinery. Task 1.1 settled
+the set by measurement (decision 6): `skip - <reason>`, and `in <Receiver>` for a snippet that is
+not a statement inside a `FlowContent` builder. **An unknown directive, or `skip` without a reason, fails the build**: a silent marker would
 be how an unchecked snippet hides.
 
-### 5. Runs in `check`, so there is no drift job
+### 5. Runs in `check` and in CI's `unit-tests` job, so there is no drift job
 
 Nothing generated is committed. The snippet sources live under `build/`, so a stale snippet is a
-compile error in `check`, locally and in CI's existing `unit-tests` job. The first plan's separate
-drift job is not needed, and its open question (join `check` or not) is answered: join it, because
-the extractor needs no Node.
+compile error. The first plan's separate drift job is not needed, and its open question (join
+`check` or not) is answered: join it, because the extractor needs no Node.
+
+**Corrected in task 1.2** (`findings.md` F4): CI never runs `check` as a whole. Its `unit-tests`
+job runs `:lib:test koverVerify koverXmlReport`, so `check` alone would never fail a pull request.
+The job gains `:doc-snippets:compileSnippets`. `koverVerify` already runs the extractor's tests
+once the root aggregates the module, which is one more `kover(project(":doc-snippets"))` line beside
+`:lib` and `:ktor-integration`.
+
+### 6. The directive set, from the measurement
+
+Task 1.1 wrapped all 68 blocks in the default context (a statement inside
+`fun FlowContent.snippet()`, a top-level file when the block declares something at column 0, the
+library's, kotlinx.html's and the Ktor server's imports) and compiled them, 2026-10-31:
+
+| outcome | blocks | handled by |
+|---|---|---|
+| compile as they stand | 35 | nothing |
+| must not compile: 13 migration notes for 0.5.x and 0.6.x, 7 Gradle build scripts, a signature and a hypothetical pattern | 22 | `skip - <reason>` |
+| another receiver: `HTML`, `Application`, `Route` twice | 4 | `in <Receiver>` |
+| call a function another block of the same tutorial defines, earlier or later | 4 | document scope, below |
+| broken today: two tutorial blocks with pasted leftover lines, one `{ … }` ellipsis | 3 | fixed in section 3 |
+
+**Document scope.** A tutorial builds one application across its blocks: step 3 calls
+`shellSidebar()`, which step 4 writes, and `dashboardRoutes` is written at one step and grown at a
+later one. So a block sees the top-level declarations of the other blocks of its document. Where a
+name is declared more than once, it sees the nearest declaration before it, or failing that the
+nearest after it. Each block still keeps its own package, so a redefinition is not a conflict. It
+is done with explicit imports, which Kotlin lets take precedence over the wildcards.
+
+The default imports gain `io.ktor.server.webjars.*`, for README's quick-path snippet.
 
 ## Risks / trade-offs
 

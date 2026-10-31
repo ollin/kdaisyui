@@ -64,11 +64,11 @@ What this change does remove: the four untyped `popovertarget` strings in the ex
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | No requirement of a main spec this builds on contradicts it. It builds on `component-model` (what the model declares, the naming rule, documented-element tests), `daisyui-component-coverage` and `api-change-detection` | code | to check in task 1.1 - read each requirement against an id-derived attribute and a required id |
+| A1 | No requirement of a main spec this builds on contradicts it. It builds on `component-model` (what the model declares, the naming rule, documented-element tests), `daisyui-component-coverage` and `api-change-detection` | code | confirmed in task 1.1 - the model requirement lists what comes from the model, and the anchored-popover flag is one more such fact; the naming rule lets a construction declare its name; two constructions of one component are counted (`modal`); the API baselines take additions |
 | A2 | DaisyUI 5.7.50 documents the popover dropdown on `<ul class="dropdown menu" popover id style="position-anchor:…">` | code | confirmed at proposal - `daisyui/packages/docs/src/routes/(routes)/components/dropdown/+page.md`, "Dropdown using popover API and anchor positioning" |
 | A3 | `dropdown-top`/`-end` etc. place a popover dropdown | code | confirmed at proposal - `daisyui/packages/daisyui/src/components/dropdown.css`: `.dropdown` sets `position-area: var(--anchor-v) var(--anchor-h)`, and the placement classes set those variables |
 | A4 | The E2E browser supports the popover API and CSS anchor positioning | code | confirmed at proposal - Chromium 156 on this machine; anchor positioning shipped in Chrome 125 |
-| A5 | The test generator can call a function whose `id` is required | code | to check in task 1.2 - it may assume every `id` defaults to null |
+| A5 | The test generator can call a function whose `id` is required | code | false - `test-generator.ts` omits `id` in two places: the documented-element call (`daisyModalPopover() {`) and the coverage test's minimal case (`content = { }`). Task 2.4 passes one in both (finding F2) |
 | A6 | `htmlId()` accepts strings a CSS dashed-ident does not | code | confirmed at proposal - `core/TagId.kt`: `htmlId(id: String)` wraps any string |
 
 ## Capabilities

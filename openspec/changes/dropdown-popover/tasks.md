@@ -9,9 +9,9 @@ E2E as early as the function allows.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A1) Read the requirements of `component-model`, `daisyui-component-coverage` and
+- [x] 1.1 `. d` (A1) Read the requirements of `component-model`, `daisyui-component-coverage` and
   `api-change-detection` against a required `id` and an id-derived attribute; record the result.
-- [ ] 1.2 `. d` (A5) Read how `test-generator.ts` passes `id`, and whether a required one needs a
+- [x] 1.2 `. d` (A5) Read how `test-generator.ts` passes `id`, and whether a required one needs a
   change; record the result.
 
 ## 2. The model fact, under TCR
@@ -22,8 +22,8 @@ E2E as early as the function allows.
   writes it unconditionally.
 - [ ] 2.3 `. F (internal)` `"anchoredPopover": true` in a model sets `idRequired` and writes
   `popover` and `style="position-anchor:${id.anchorName}"`.
-- [ ] 2.4 `. F (internal)` The test generator passes an id to a function whose `id` is required
-  (only if 1.2 says it must).
+- [ ] 2.4 `. F (internal)` The test generator passes an id to a function whose `id` is required,
+  in the documented-element call and in the coverage test's minimal case (1.2 found both).
 
 ## 3. Core, under TCR
 

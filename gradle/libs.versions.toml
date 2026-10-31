@@ -8,7 +8,7 @@ kotlin = "2.4.21"
 kotlinx-html = "0.12.0"
 ktor = "3.6.1"
 logback = "1.6.6"
-jreleaser = "1.26.0"
+jreleaser = "1.27.0"
 kover = "0.9.11"
 
 # Mutation testing. `pitest-plugin` is the Gradle plugin; the PIT core version is left at

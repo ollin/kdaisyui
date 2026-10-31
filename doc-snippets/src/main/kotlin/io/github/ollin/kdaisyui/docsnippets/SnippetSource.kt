@@ -8,7 +8,9 @@ class SnippetSource(private val document: String, private val fence: KotlinFence
 
     val text: String get() = "// $document:${fence.line}\npackage snippets.$name\n\n" +
         defaultImports.joinToString("") { "import $it\n" } + "\n" +
-        "fun FlowContent.snippet() {\n${fence.code}\n}\n"
+        body + "\n"
+
+    private val body: String get() = "fun FlowContent.snippet() {\n${fence.code}\n}"
 }
 
 private val defaultImports = listOf("kotlinx.html.*", "io.github.ollin.kdaisyui.components.*")

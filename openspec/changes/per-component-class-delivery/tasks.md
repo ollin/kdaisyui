@@ -8,7 +8,7 @@ decides the plugin's place before any of it is written.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A6, A7) Probe on a throwaway branch: an empty included build with
+- [x] 1.1 `. d` (A6, A7) Probe on a throwaway branch: an empty included build with
   `java-gradle-plugin` and `maven-publish`, staged into the root `build/staging-deploy` by `stageAll`.
   Record where the artifact and its marker land, and whether `verifyStagingComplete` can see both.
   If it cannot, revise the design before section 3.
@@ -33,7 +33,10 @@ decides the plugin's place before any of it is written.
   the narrowed list. Measure the stylesheet against the full one.
 - [ ] 4.2 `. d` The full suite, E2E included, on the narrowed stylesheet. If a scenario fails,
   revise the change: the Assumed requirement was wrong.
-- [ ] 4.3 `! F (internal)` Release wiring: `publishedArtifacts`, `stageAll`, the marker.
+- [ ] 4.3 `! F (internal)` Release wiring: `publishedArtifacts` gains `kdaisyui-gradle-plugin` and
+  `io.github.ollin.kdaisyui.gradle.plugin`; `stageAll` depends on the included build's
+  `publishAllPublicationsToStagingRepository`; both publications carry the POM metadata and the plugin
+  its sources and javadoc jars, which JReleaser's dry run requires (1.1).
 
 ## 5. Docs
 

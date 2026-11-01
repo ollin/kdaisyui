@@ -74,7 +74,7 @@ change: nobody waits on that run, and it is the only record of `main` itself bei
 | A3 | No CI job reads `openspec/`, `.opencode/`, `AGENTS.md`, `CLAUDE.md`, `CREDITS.md`, `LICENSE`, `opencode.jsonc`, `renovate.json`, `justfile`, `.idea/`, `.codeseeker/` or the three other workflow files | grep | verified at proposal: every hit in build scripts, Kotlin and TypeScript is a comment |
 | A4 | Prose documentation is read only by the snippet compile (in `check`, so `unit-tests`) and by the `llms.txt` gate (in `generateReferenceDocs`, so `generated-sources-drift`) | grep | verified at proposal: `doc-snippets/build.gradle.kts` and `codegen/src/index-docs.ts`; the `doc-snippets` and `codegen` tests build their own fixtures. Task 1.1's second grep over `e2e-tests/`, `example-app/` and `gradle-plugin/` found only a UI label reading "Initialize with README" |
 | A5 | On a `pull_request` run, the checked-out merge commit's first parent is the base, so `git diff HEAD^1 HEAD` is exactly what the pull request changes | probe | verified in task 1.1: on PR #439 the checkout's HEAD was `Merge abbce55 into 8b6bd8f`, `8b6bd8f` being `main`, and the diff listed exactly the two files the PR changed |
-| A6 | The `scope` job adds at most about 15 s to the critical path of a `full` run | measurement | open, task 3.4 |
+| A6 | The `scope` job adds at most about 15 s to the critical path of a `full` run | measurement | confirmed in task 3.4: `scope` took 5 s on PR #440, and the jobs after it started within 2 s |
 
 ## Capabilities
 

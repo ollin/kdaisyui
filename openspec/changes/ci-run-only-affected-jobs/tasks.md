@@ -42,24 +42,32 @@ mutants found in the test harness itself (`findings.md`, F1 and F2).
 - [x] 3.2 `! F (internal)` Each of the six jobs gets `needs: scope` and the fail-safe condition of
   its group.
 - [x] 3.3 `! F (internal)` The `concurrency` group.
-- [ ] 3.4 `. d` Record the `scope` job's duration and the critical path of this pull request's own
-  `full` run (A6).
+- [x] 3.4 `. d` Record the `scope` job's duration and the critical path of this pull request's own
+  `full` run (A6). PR #440, 2026-11-01: `scope` 5 s, the other jobs started 1 to 2 s after it;
+  critical path `e2e-tests`, run finished 2 min 58 s after it started.
 
 ## 4. Proof on real pull requests
 
 Each one a draft pull request from a throwaway branch, closed and deleted afterwards. Record the
 jobs that ran, their durations, and whether the pull request showed as mergeable.
 
-- [ ] 4.1 Only `openspec/` changed: no test job runs, every required check is green.
-- [ ] 4.2 Only `docs/how-to.md` changed: `unit-tests` and `generated-sources-drift` run.
-- [ ] 4.3 Classifier forced to exit 1: every test job runs.
-- [ ] 4.4 Two pushes in quick succession to the pull request of 4.2: the first run is cancelled.
-- [ ] 4.5 A broken snippet in `docs/how-to.md`: `unit-tests` runs and fails, so the `prose` scope
+- [x] 4.1 Only `openspec/` changed: no test job runs, every required check is green.
+  PR #441: `scope` 5 s, all six skipped, run 9 s, green. The probe base has no ruleset, so
+  mergeability under required checks rests on A1 (GitHub's docs) until the first real `none` pull request.
+- [x] 4.2 Only `docs/how-to.md` changed: `unit-tests` and `generated-sources-drift` run.
+  PR #443: `unit-tests` 2:41 and `generated-sources-drift` 1:14 ran, the other four skipped; run 2:55.
+- [x] 4.3 Classifier forced to exit 1: every test job runs.
+  PR #442: `scope` failed, all six ran and passed.
+- [x] 4.4 Two pushes in quick succession to the pull request of 4.2: the first run is cancelled.
+  PR #443: the first run was cancelled 5 s into its jobs when the second push arrived.
+- [x] 4.5 A broken snippet in `docs/how-to.md`: `unit-tests` runs and fails, so the `prose` scope
   still catches what it is meant to.
 
 ## 5. Documents, gate and adoption
 
+  PR #444: `unit-tests` failed with `docs/how-to.md/L71.kt:18:25 No parameter with name 'variant'
+  found.`; the drift job passed; the four others skipped.
 - [x] 5.1 `^ d` `kdaisyui-release`, CI section: the three scopes, the fail-safe, and how to add a
   job.
-- [ ] 5.2 `openspec validate ci-run-only-affected-jobs --strict`; findings and evaluation; archive
+- [x] 5.2 `openspec validate ci-run-only-affected-jobs --strict`; findings and evaluation; archive
   on the branch.

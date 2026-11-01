@@ -27,4 +27,4 @@
 | Finding | Proposal | Status |
 |---|---|---|
 | F1 | - | none - record only |
-| F2 | The hand-made mutant list becomes a third script beside the test, run by the `scope` job, so a future rule edit is mutated too | open - decide in task 5.2 |
+| F2 | The hand-made mutant list becomes a third script beside the test, run by the `scope` job, so a future rule edit is mutated too | open - not done here; the 14 mutants are listed in this finding's commit history and can be scripted when a rule next changes |

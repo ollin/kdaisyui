@@ -78,11 +78,11 @@ offered-twice guard and the measured-group completeness check.
 
 **Verified** that the removal direction matters: `mask-square` stayed in the generated API from
 DaisyUI 5.0 until 5.7.19 removed it from the documentation, and was withdrawn in kdaisyui only on
-the 5.7.42 bump (README, "How to migrate from 0.5.x", item 12).
+the 5.7.42 bump (`docs/upgrading.md`, "How to migrate from 0.5.x", item 12).
 
 **Verified** that the placed-twice direction matters: 0.6.0 shipped `daisyDropdown` with five
-placement booleans beside the enums that replaced them (README, "How to migrate from 0.6.x", item
-1).
+placement booleans beside the enums that replaced them (`docs/upgrading.md`, "How to migrate from
+0.6.x", item 1).
 
 **Verified** that the frontmatter is a complete class source, measured 2026-10-18 at the pinned tag
 (task 1.1): of every `$$`-marked class in the fenced examples of all component pages, none is

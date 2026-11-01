@@ -17,7 +17,9 @@ class KdaisyuiPlugin : Plugin<Project> {
             project.tasks.register("kdaisyuiClasses", KdaisyuiClasses::class.java) {
                 description = "Writes the classes of the kdaisyui components this build uses, for Tailwind's @source."
                 classes.from(main.output.classesDirs)
-                runtimeClasspath.from(main.runtimeClasspath)
+                // The dependencies, not main.runtimeClasspath: that holds the project's own resources,
+                // and a build whose stylesheet is a resource would wait on itself.
+                runtimeClasspath.from(project.configurations.getByName(main.runtimeClasspathConfigurationName))
                 output.set(project.layout.buildDirectory.file("kdaisyui/kdaisyui-classes.txt"))
             }
         }

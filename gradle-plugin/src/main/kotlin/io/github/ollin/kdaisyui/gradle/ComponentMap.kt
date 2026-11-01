@@ -13,7 +13,7 @@ class ComponentMap(text: String) {
         return when {
             found.isEmpty() -> Selection(classesOf(components), "the compiled classes name no kdaisyui component")
             unknown.isNotEmpty() -> Selection(classesOf(components), "kdaisyui-components.txt does not know ${unknown.sorted().joinToString()}")
-            else -> Selection(classesOf(components.filter { it.jvmClasses.any(found::contains) }), null)
+            else -> Selection(classesOf(components.filter { (it.jvmClasses intersect found).isNotEmpty() }), null)
         }
     }
 

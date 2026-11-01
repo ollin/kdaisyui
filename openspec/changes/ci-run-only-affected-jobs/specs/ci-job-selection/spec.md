@@ -73,9 +73,9 @@ them answers wrong.
 skipped and may not block merging". Without this requirement a broken classifier would let a pull
 request merge with no test run at all.
 
-**Assumed**: `git diff --name-only HEAD^1 HEAD` on the merge commit a `pull_request` run checks
-out lists exactly the pull request's changes. *Wrong if:* a probe pull request that changes one
-file is classified from a list naming any other file.
+**Verified** 2026-11-01 on the probe PR #439: a `pull_request` run checks out the merge commit,
+whose first parent is `main`, and `git diff --no-renames --name-only HEAD^1 HEAD` listed exactly
+the two files the pull request changed.
 
 #### Scenario: The classifier fails
 

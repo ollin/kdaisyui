@@ -16,21 +16,24 @@ classifier is shell, which `mcp_Tcr` cannot run, so its TCR cycle is run by hand
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A4, A5) On a throwaway draft pull request, print `git diff --no-renames
+- [x] 1.1 `. d` (A4, A5) On a throwaway draft pull request, print `git diff --no-renames
   --name-only HEAD^1 HEAD` in a one-step workflow, change one file, and confirm the list is exactly
   that file. Grep once more for any reader of `README.md` or `docs/` in `e2e-tests/`,
   `example-app/` and `gradle-plugin/`. Close the pull request, delete its branch.
 
 ## 2. The classifier, under a hand-run TCR
 
-- [ ] 2.1 `. F (internal)` `classify.sh` answers `full` for an empty list and for an unknown path,
+- [x] 2.1 `. F (internal)` `classify.sh` answers `full` for an empty list and for an unknown path,
   with its test.
-- [ ] 2.2 `. F (internal)` It answers `none` when every path is a planning or agent file: one
+- [x] 2.2 `. F (internal)` It answers `none` when every path is a planning or agent file: one
   positive control per pattern.
-- [ ] 2.3 `. F (internal)` It answers `prose` for prose documentation: one positive control per
+- [x] 2.3 `. F (internal)` It answers `prose` for prose documentation: one positive control per
   pattern, and `full` for `docs/reference/…`.
-- [ ] 2.4 `. F (internal)` A mixed list takes the widest scope: planning plus prose is `prose`,
+- [x] 2.4 `. F (internal)` A mixed list takes the widest scope: planning plus prose is `prose`,
   anything plus a source path is `full`.
+
+Section 2 took six commits instead of four: one hand-run revert, and a defect the hand-made
+mutants found in the test harness itself (`findings.md`, F1 and F2).
 
 ## 3. The workflow
 

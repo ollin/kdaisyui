@@ -103,18 +103,31 @@ export function linkFindings(index: string, exists: (repositoryPath: string) => 
 export function shapeFindings(index: string): string[] {
   const lines = index.split('\n').map((line, at) => ({ line, at }))
   const firstH2 = lines.findIndex(({ line }) => line.startsWith('## '))
-  const preamble = firstH2 === -1 ? lines : lines.slice(0, firstH2)
-  const lists = firstH2 === -1 ? [] : lines.slice(firstH2)
+  if (firstH2 === -1) return preambleFindings(lines)
+  return [...preambleFindings(lines.slice(0, firstH2)), ...listFindings(lines.slice(firstH2))]
+}
+
+interface NumberedLine {
+  readonly line: string
+  readonly at: number
+}
+
+/** Before the first H2: exactly one H1, and no other heading. */
+function preambleFindings(preamble: readonly NumberedLine[]): string[] {
   const h1Count = preamble.filter(({ line }) => line.startsWith('# ')).length
   return [
     ...preamble
       .filter(({ line }) => line.startsWith('#') && !line.startsWith('# '))
       .map(({ line, at }) => `line ${at + 1}: before the first H2 the only heading is the H1, got "${line}"`),
     ...(h1Count === 1 ? [] : [`the index needs exactly one H1, found ${h1Count}`]),
-    ...lists
-      .filter(({ line }) => line !== '' && !line.startsWith('## ') && !LINK_ITEM.test(line))
-      .map(({ line, at }) => `line ${at + 1}: after the first H2 only H2 headings and link items may appear, got "${line}"`),
   ]
+}
+
+/** From the first H2 on: H2 headings, link items and blank lines, nothing else. */
+function listFindings(lists: readonly NumberedLine[]): string[] {
+  return lists
+    .filter(({ line }) => line !== '' && !line.startsWith('## ') && !LINK_ITEM.test(line))
+    .map(({ line, at }) => `line ${at + 1}: after the first H2 only H2 headings and link items may appear, got "${line}"`)
 }
 
 function componentLink(shape: ComponentShape, docSummary: DocSummary | undefined): string {

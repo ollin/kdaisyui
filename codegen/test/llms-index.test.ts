@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { coverageFindings, documentationPages, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
+import { coverageFindings, documentationPages, generateLlmsIndex, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
@@ -89,5 +89,27 @@ describe('documentationPages', () => {
     }
 
     assert.deepEqual(documentationPages(root), ['README.md', 'docs/how-to.md', 'docs/tutorials/index.md'])
+  })
+})
+
+describe('generateLlmsIndex', () => {
+  const repository = { exists: (file: string) => file === 'README.md' || file === 'docs/reference/kbd.md', pages: ['README.md'] }
+
+  test('returns the rendered index when every gate is quiet', () => {
+    const template = '# kdaisyui\n\n> Summary.\n\n## Docs\n\n- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): start\n\n## Components\n\n{{COMPONENTS}}\n'
+
+    assert.match(generateLlmsIndex(template, [KBD], {}, repository), /^- \[Kbd\]\(.*kbd\.md\): Kbd is used to display keyboard shortcuts$/m)
+  })
+
+  test('refuses an index with findings, listing every one', () => {
+    const template = '# kdaisyui\n\n## Docs\n\n### Start\n- [Gone](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/gone.md)\n{{COMPONENTS}}\n'
+
+    assert.throws(() => generateLlmsIndex(template, [KBD], {}, repository), (error: Error) => {
+      assert.match(error.message, /^llms\.txt is not the index llmstxt\.org specifies:\n/)
+      assert.match(error.message, /line 10: after the first H2 only H2 headings and link items may appear, got "### Start"/)
+      assert.match(error.message, /line 11: links docs\/gone\.md, which does not exist in the repository/)
+      assert.match(error.message, /README\.md is not linked from llms\.txt/)
+      return true
+    })
   })
 })

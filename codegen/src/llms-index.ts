@@ -38,6 +38,25 @@ export function renderLlmsIndex(
   return HEADER + template.replace(PLACEHOLDER, links.join('\n'))
 }
 
+/** What the gates need to know about the repository the index describes. */
+export interface Repository {
+  readonly exists: (repositoryPath: string) => boolean
+  readonly pages: readonly string[]
+}
+
+/** The index, or an error naming every way it falls short; nothing is written on a finding. */
+export function generateLlmsIndex(
+  template: string,
+  shapes: readonly ComponentShape[],
+  docSummaries: Readonly<Record<string, DocSummary>>,
+  repository: Repository,
+): string {
+  const index = renderLlmsIndex(template, shapes, docSummaries)
+  const findings = [...shapeFindings(index), ...linkFindings(index, repository.exists), ...coverageFindings(index, repository.pages)]
+  if (findings.length > 0) throw new Error(`llms.txt is not the index llmstxt.org specifies:\n${findings.join('\n')}`)
+  return index
+}
+
 /** What the reference parsers read as a link item: `- [name](url)`, optionally `: note`. */
 const LINK_ITEM = /^- \[[^\]]+\]\((?<url>[^)]+)\)(: .*)?$/
 

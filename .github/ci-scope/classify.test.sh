@@ -46,6 +46,8 @@ done
 expect full "a generated reference page" docs/reference/button.md
 expect prose "the hand-written reference entry point" docs/reference.md
 expect full "a template name with a suffix" codegen/llms-template.md.orig
+expect full "a docs directory below the root" lib/docs/x.md
+expect none "a blank line between paths" AGENTS.md "" openspec/a.md
 
 expect prose "planning and prose: the wider scope" openspec/a.md README.md
 expect prose "prose and planning, in the other order" README.md openspec/a.md

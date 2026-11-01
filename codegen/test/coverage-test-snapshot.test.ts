@@ -5,6 +5,7 @@ import path from 'path'
 
 import os from 'os'
 
+import { readComponentSet } from '../src/component-set.ts'
 import { repositoryRootAbove } from '../src/submodules.ts'
 import { coverageTestFor, writeCoverageTest } from '../src/test-generator.ts'
 
@@ -21,6 +22,8 @@ const COMPONENTS = path.join(GENERATED, 'main/kotlin/io/github/ollin/kdaisyui/co
 const COVERAGE_TESTS = path.join(GENERATED, 'test/kotlin/io/github/ollin/kdaisyui/components')
 
 const componentFiles = fs.readdirSync(COMPONENTS).filter(file => file.endsWith('.kt')).sort()
+const shapes = new Map(readComponentSet().generated.map(component => [component.classified.componentName as string, component.shape]))
+const KBD = shapes.get('Kbd')!
 
 describe('coverageTestFor reproduces the committed coverage test', () => {
   test('of every committed component, all 66', () => {
@@ -33,14 +36,14 @@ describe('coverageTestFor reproduces the committed coverage test', () => {
       const source = fs.readFileSync(path.join(COMPONENTS, file), 'utf8')
       const committed = fs.readFileSync(path.join(COVERAGE_TESTS, `${className}CoverageTest.kt`), 'utf8')
 
-      assert.equal(coverageTestFor(className, source), committed)
+      assert.equal(coverageTestFor(className, source, shapes.get(className)!), committed)
     })
   }
 })
 
 describe('coverageTestFor', () => {
   test('gives nothing for a source that declares no function', () => {
-    assert.equal(coverageTestFor('Empty', 'package io.github.ollin.kdaisyui.components\n'), null)
+    assert.equal(coverageTestFor('Empty', 'package io.github.ollin.kdaisyui.components\n', KBD), null)
   })
 })
 
@@ -56,8 +59,8 @@ describe('writeCoverageTest', () => {
     const source = fs.readFileSync(path.join(COMPONENTS, 'Kbd.kt'), 'utf8')
     fs.writeFileSync(path.join(dirs.components, 'Kbd.kt'), source)
 
-    assert.deepEqual(writeCoverageTest(dirs.components, dirs.tests, 'Kbd.kt'), { success: true })
-    assert.equal(fs.readFileSync(path.join(dirs.tests, 'KbdCoverageTest.kt'), 'utf8'), coverageTestFor('Kbd', source))
+    assert.deepEqual(writeCoverageTest(dirs.components, dirs.tests, 'Kbd.kt', KBD), { success: true })
+    assert.equal(fs.readFileSync(path.join(dirs.tests, 'KbdCoverageTest.kt'), 'utf8'), coverageTestFor('Kbd', source, KBD))
     fs.rmSync(dirs.root, { recursive: true })
   })
 
@@ -65,7 +68,7 @@ describe('writeCoverageTest', () => {
     const dirs = temporaryDirs()
     fs.writeFileSync(path.join(dirs.components, 'Empty.kt'), 'package io.github.ollin.kdaisyui.components\n')
 
-    assert.deepEqual(writeCoverageTest(dirs.components, dirs.tests, 'Empty.kt'), { success: false, error: 'No functions' })
+    assert.deepEqual(writeCoverageTest(dirs.components, dirs.tests, 'Empty.kt', KBD), { success: false, error: 'No functions' })
     assert.deepEqual(fs.readdirSync(dirs.tests), [])
     fs.rmSync(dirs.root, { recursive: true })
   })

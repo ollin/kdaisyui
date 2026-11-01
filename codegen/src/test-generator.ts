@@ -8,7 +8,7 @@ import {
 import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
 import { documentedCall, pageFirst, type DocumentedCall } from './documented-elements.ts'
-import { isVoidElement, type TagClass } from './component-shape.ts'
+import { isVoidElement, type ComponentShape, type TagClass } from './component-shape.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
@@ -383,27 +383,6 @@ function matchDelimiter(str, openIdx, open, close) {
     else if (str[i] === close && --depth === 0) return i
   }
   throw new Error(`Unbalanced ${open} from index ${openIdx}`)
-}
-
-/** Map enumTypeName -> [{ entry, css }] for class-mapping enums in the file. */
-function parseEnumDefinitions(content) {
-  const enums = {}
-  // `[^{]*` spans the supertype clause every generated enum now carries —
-  // `: ClassValues<ButtonSize>` — without this needing to restate it. The entry pattern below
-  // ignores the `override val classNames` member for the same reason: it matches only lines that
-  // are an identifier followed by a quoted string.
-  const re = /enum class (\w+)\(internal val className: String\)[^{]*\{([\s\S]*?)\n\}/g
-  let m
-  while ((m = re.exec(content)) !== null) {
-    const entries = []
-    const entryRe = /^\s*(\w+)\("([^"]+)"\),?\s*$/gm
-    let em
-    while ((em = entryRe.exec(m[2])) !== null) {
-      entries.push({ entry: em[1], css: em[2] })
-    }
-    enums[m[1]] = entries
-  }
-  return enums
 }
 
 /** Extract every generated `fun <Receiver>.daisy<Name>(...) { ... }` block. */
@@ -983,8 +962,13 @@ function coverageImports(funcs, enums): Set<string> {
  * source declares no function. A pure function of its input: the snapshot test compares it with
  * the committed coverage tests, which need neither the submodule nor a regeneration.
  */
-function coverageTestFor(className: string, content: string): string | null {
-  const enums = parseEnumDefinitions(content)
+/** Each enum of the shape as the coverage tests read it: its entries and the class each writes. */
+function enumTableOf(shape: ComponentShape) {
+  return Object.fromEntries(shape.enums.map(declared => [declared.name, declared.entries.map(entry => ({ entry: entry.name, css: entry.cssClass }))]))
+}
+
+function coverageTestFor(className: string, content: string, shape: ComponentShape): string | null {
+  const enums = enumTableOf(shape)
   const funcs = findFunctions(content)
   if (funcs.length === 0) return null
 
@@ -1004,9 +988,9 @@ ${COVERAGE_HELPER}${body}}
 }
 
 /** Reads one component from `componentsDir` and writes its coverage test to `outputDir`. */
-function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string) {
+function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string, shape: ComponentShape) {
   const className = path.basename(fileName, '.kt')
-  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'))
+  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'), shape)
   if (kotlin === null) return { success: false, error: 'No functions' }
   fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), kotlin)
   return { success: true }

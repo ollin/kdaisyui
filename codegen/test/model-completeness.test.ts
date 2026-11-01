@@ -61,4 +61,14 @@ describe('namingFindings', () => {
 
     assert.deepEqual(namingFindings(mask), ['mask: MaskShape should be called MaskStyle'])
   })
+
+  it('leaves constructions and class-only functions to their declared names, and checks only enum parameters', () => {
+    const modal: ComponentModel = { ...MASK, functions: [
+      { ...MASK.functions[0], parameters: [{ kind: 'toggle', name: 'open', class: 'mask-open' }] },
+      { ...MASK.functions[0], kind: 'custom', name: 'daisyMaskPopover', parameters: [] },
+      { ...MASK.functions[0], kind: 'classes', name: 'daisyMaskItem', class: null, element: null, parameters: [] },
+    ] }
+
+    assert.deepEqual(namingFindings(modal), [])
+  })
 })

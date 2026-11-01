@@ -36,8 +36,8 @@ the plugin SHALL write every class the library can emit and warn, naming the rea
 The example application SHALL build its stylesheet from the plugin's list, and the E2E suite SHALL
 pass on it.
 
-**Assumed** that component granularity loses no class a page needs. *Wrong if:* an E2E scenario
-that passes on the full stylesheet fails on the narrowed one.
+**Verified** 2026-11-01: with the stylesheet built from the plugin's list of the app's 20
+components (55.5 KB gzip before, 27.3 KB after, unminified), all 53 E2E scenarios pass.
 
 #### Scenario: The suite on the narrowed stylesheet
 

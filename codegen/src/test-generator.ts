@@ -702,7 +702,7 @@ ${asserts.map((a) => `        ${a}`).join('\n')}
 `
 }
 
-function coverageContext(fn, enums, file: string) {
+function coverageContext(fn, enums) {
   const params = fn.parameters.map((parameter) => classifyParam(parameter, enums))
   return {
     params,
@@ -713,9 +713,9 @@ function coverageContext(fn, enums, file: string) {
     // because `htmlTagFnFor` renames a few builders away from their tag (`object`
     // becomes `htmlObject`) and `</htmlObject>` is not a thing.
     wrapperTag: wrapperTagOf(fn.receiver),
-    // A scoped function opens its scope instead of a builder, and the scope stands in for the
-    // element it extends — so the closing tag is still assertable.
-    tagFn: parseEmittedBuilder(fn.body) ?? parseScopeBuilder(fn.body, file),
+    // A scoped function opens its scope instead of a builder, and the scope extends the same
+    // element — so the closing tag is still assertable.
+    tagFn: fn.builder,
     fnBase: lowerFirst(fn.name),
     daisyName: fn.name,
     required: params.find((p) => p.kind === 'contentRequired'),
@@ -859,8 +859,8 @@ function textArmTest(ctx) {
   return wrapTest(ctx, `${ctx.fnBase}_text`, ['text = "txtmark"'], asserts)
 }
 
-function buildCoverageTests(fn, enums, file) {
-  const ctx = coverageContext(fn, enums, file)
+function buildCoverageTests(fn, enums) {
+  const ctx = coverageContext(fn, enums)
   return defaultsTest(ctx) + allFlagsTest(ctx) + enumArmTests(ctx) + textArmTest(ctx)
 }
 
@@ -930,10 +930,11 @@ function enumTableOf(shape: ComponentShape) {
 function coverageFunctionsOf(shape: ComponentShape) {
   // A main function writes the component's class; a part, a custom part and a sibling their own.
   const ownClasses = (fn: SiblingShape) => [fn.cssClass, ...fn.modifierClasses]
-  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn), baseClasses: ownClasses(fn) })
+  // A sibling opens no element, so it has no builder.
+  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn), baseClasses: ownClasses(fn), builder: null })
   return [
     ...shape.functions.flatMap(fn => [
-      { name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters, baseClasses: fn.kind === 'main' ? [shape.prefix] : ownClasses(fn) },
+      { name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters, baseClasses: fn.kind === 'main' ? [shape.prefix] : ownClasses(fn), builder: fn.tagBuilder as string as BuilderName },
       ...(hasSibling(fn) ? [sibling(fn)] : []),
     ]),
     ...shape.siblingsOnly.map(sibling),
@@ -949,7 +950,7 @@ function coverageTestFor(className: string, content: string, shape: ComponentSha
   const imports = coverageImports(funcs, enums)
 
   let body = ''
-  for (const fn of funcs) body += buildCoverageTests(fn, enums, content)
+  for (const fn of funcs) body += buildCoverageTests(fn, enums)
   for (const member of parseScopeMembers(content)) body += scopeMemberTest(member)
 
   return `package io.github.ollin.kdaisyui.components

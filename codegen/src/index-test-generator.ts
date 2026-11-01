@@ -10,7 +10,7 @@ import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'node:url'
 import { getAllComponentDirs, parseFrontmatter, readComponentPage, type ComponentName } from './parser/frontmatter.ts'
-import { isSkipped, readModel, type ComponentModel } from './model.ts'
+import { isSkipped, mainFunctionConfig, readModel, type ComponentModel } from './model.ts'
 import { documentedContext, documentedTestFor, toClassName, writeCoverageTest, type DocumentedContext } from './test-generator.ts'
 import { readComponentSet } from './component-set.ts'
 
@@ -75,10 +75,11 @@ function generateAllCoverage() {
   if (files.length === 0) {
     throw new Error(`No .kt files in ${GENERATED_MAIN_DIR}; generateComponents must run first.`)
   }
-  const shapes = new Map(readComponentSet().generated.map(component => [component.classified.componentName as string, component.shape]))
+  const components = new Map(readComponentSet().generated.map(component => [component.classified.componentName as string, component]))
   let generated = 0
   for (const file of files) {
-    const result = writeCoverageTest(GENERATED_MAIN_DIR, OUTPUT_DIR, file, shapes.get(path.basename(file, '.kt'))!)
+    const component = components.get(path.basename(file, '.kt'))!
+    const result = writeCoverageTest(GENERATED_MAIN_DIR, OUTPUT_DIR, file, component.shape, mainFunctionConfig(component.model))
     if (result.success) generated++
     else console.log(`  ⊘ coverage ${file}: ${result.error}`)
   }

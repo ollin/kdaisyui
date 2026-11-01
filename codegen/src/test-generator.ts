@@ -5,7 +5,7 @@ import {
   getAllComponentDirs,
   toPascalCase,
 } from './parser/frontmatter.ts'
-import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
+import { isSkipped, readModel, type ComponentModel, type MainFunctionConfig, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
 import { documentedCall, pageFirst, type DocumentedCall } from './documented-elements.ts'
 import { hasSibling, isVoidElement, siblingParameters, type ComponentShape, type ParameterShape, type SiblingShape, type TagClass } from './component-shape.ts'
@@ -706,7 +706,7 @@ function coverageContext(fn, enums) {
   const params = fn.parameters.map((parameter) => classifyParam(parameter, enums))
   return {
     params,
-    body: fn.body,
+    attributes: fn.attributes,
     base: sortedClasses(fn.baseClasses),
     wrapperFn: htmlTagFnFor(wrapperTagOf(fn.receiver)),
     // The wrapper's CLOSING tag, which is the raw receiver name — not `wrapperFn`,
@@ -743,7 +743,7 @@ function defaultsTest(ctx) {
   const asserts = ctx.base
     ? [renderedAssert(ctx, ctx.base, `${ctx.daisyName} defaults`, true)]
     : [`assertTrue(!html.contains("class=\\""), "${ctx.daisyName} defaults emits no class")`]
-  for (const a of parseAttrProps(ctx.body).unconditional) asserts.push(attrAssert(ctx, a))
+  for (const a of ctx.attributes.unconditional) asserts.push(attrAssert(ctx, a))
   // A component with no base class never reaches the helper, so its closure assertion is
   // still emitted on its own line.
   if (!ctx.base) {
@@ -783,7 +783,7 @@ function allFlagsAsserts(ctx, boolCss) {
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)
   }
-  const attrs = parseAttrProps(ctx.body)
+  const attrs = ctx.attributes
   for (const a of [...attrs.unconditional, ...attrs.guarded]) asserts.push(attrAssert(ctx, a))
   return asserts
 }
@@ -927,14 +927,27 @@ function enumTableOf(shape: ComponentShape) {
  * each function followed by its class sibling, then the class-only siblings. Named without the
  * `daisy` every name starts with, which the tests put back.
  */
-function coverageFunctionsOf(shape: ComponentShape) {
+/**
+ * The attributes a main function's body sets, in body order: its role and input type, then the
+ * extras' fragments, those before the classes first. No other function sets one.
+ */
+function mainAttributesOf(config: MainFunctionConfig) {
+  const extras = [...config.extras.filter(extra => extra.position === 'before_classes'), ...config.extras.filter(extra => extra.position !== 'before_classes')]
+  const fromExtras = parseAttrProps(extras.map(extra => extra.apply).join('\n'))
+  const fixed = [...(config.role ? ['role'] : []), ...(config.inputType ? ['type'] : [])]
+  return { unconditional: new Set([...fixed, ...fromExtras.unconditional]), guarded: fromExtras.guarded }
+}
+
+const NO_ATTRIBUTES = { unconditional: new Set<string>(), guarded: new Set<string>() }
+
+function coverageFunctionsOf(shape: ComponentShape, config: MainFunctionConfig) {
   // A main function writes the component's class; a part, a custom part and a sibling their own.
   const ownClasses = (fn: SiblingShape) => [fn.cssClass, ...fn.modifierClasses]
   // A sibling opens no element, so it has no builder.
-  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn), baseClasses: ownClasses(fn), builder: null })
+  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn), baseClasses: ownClasses(fn), builder: null, attributes: NO_ATTRIBUTES })
   return [
     ...shape.functions.flatMap(fn => [
-      { name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters, baseClasses: fn.kind === 'main' ? [shape.prefix] : ownClasses(fn), builder: fn.tagBuilder as string as BuilderName },
+      { name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters, baseClasses: fn.kind === 'main' ? [shape.prefix] : ownClasses(fn), builder: fn.tagBuilder as string as BuilderName, attributes: fn.kind === 'main' ? mainAttributesOf(config) : NO_ATTRIBUTES },
       ...(hasSibling(fn) ? [sibling(fn)] : []),
     ]),
     ...shape.siblingsOnly.map(sibling),
@@ -953,11 +966,11 @@ function scopeMembersOf(shape: ComponentShape): ScopeMember[] {
   }))
 }
 
-function coverageTestFor(className: string, content: string, shape: ComponentShape): string | null {
+function coverageTestFor(className: string, content: string, shape: ComponentShape, config: MainFunctionConfig): string | null {
   const enums = enumTableOf(shape)
   const parsed = findFunctions(content)
   if (parsed.length === 0) return null
-  const funcs = coverageFunctionsOf(shape).map((fn, index) => ({ ...fn, body: parsed[index].body }))
+  const funcs = coverageFunctionsOf(shape, config)
 
   const imports = coverageImports(funcs, enums)
 
@@ -975,9 +988,9 @@ ${COVERAGE_HELPER}${body}}
 }
 
 /** Reads one component from `componentsDir` and writes its coverage test to `outputDir`. */
-function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string, shape: ComponentShape) {
+function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string, shape: ComponentShape, config: MainFunctionConfig) {
   const className = path.basename(fileName, '.kt')
-  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'), shape)
+  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'), shape, config)
   if (kotlin === null) return { success: false, error: 'No functions' }
   fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), kotlin)
   return { success: true }

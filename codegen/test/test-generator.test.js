@@ -72,6 +72,20 @@ describe('parseTestCases', () => {
     assert.deepEqual(cases, [{ name: 'Truncated', html: '<i>x</i>' }])
   })
 
+  test('reads a heading only at the start of a line', () => {
+    assert.deepEqual(parseTestCases(doc('See ### ~Not a heading', '```html', '<i>x</i>', '```')), [])
+  })
+
+  test('reads the language of a fence with trailing spaces', () => {
+    assert.deepEqual(parseTestCases(doc('### ~Spaced', '```html  ', '<i>x</i>', '```')), [{ name: 'Spaced', html: '<i>x</i>' }])
+  })
+
+  test('emits no unterminated final block without a heading, without a line, or in another language', () => {
+    assert.deepEqual(parseTestCases(doc('```html', '<i>x</i>')), [])
+    assert.deepEqual(parseTestCases(doc('### ~Empty', '```html')), [])
+    assert.deepEqual(parseTestCases(doc('### ~Script', '```js', 'x()')), [])
+  })
+
   test('a heading inside a fenced block is content, not a new case', () => {
     const cases = parseTestCases(
       doc('### ~First', '```html', '<i>1</i>', '### ~Second', '```html', '<i>2</i>', '```'),

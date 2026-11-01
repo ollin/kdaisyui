@@ -52,7 +52,7 @@ what the sentence hides.
 | A1 | Stryker's `command` runner works on TypeScript that Node runs directly, with no build step | probe | verified 2026-11-01: 146 mutants of `llms-index.ts` in 19 s, then the full run above |
 | A2 | Stryker accepts line ranges in `--mutate` and instruments only those lines | probe | verified 2026-11-01: `--mutate src/llms-index.ts:60-70` instrumented 18 mutants and ran in 3 s |
 | A3 | On a `pull_request` run, `git diff -U0 HEAD^1 HEAD` names exactly the pull request's changed lines | probe | verified for file names on PR #439 (`ci-run-only-affected-jobs`); the hunk headers come from the same diff |
-| A4 | A typical pull request's changed lines mutate in under a minute in CI | measurement | open, task 4.2 |
+| A4 | A typical pull request's changed lines mutate in under a minute in CI | measurement | refuted, then fixed, in task 4.2: 54 mutants took 77 s in CI with one process per test file; in one process 81 mutants took 13 s and the job 27 s (finding F4) |
 | A5 | `npm ci --omit=dev` leaves the generators and the codegen tests working | measurement | verified in task 2.2: 6 packages instead of 113, `:lib:testCodegen` 200 green, `just generate` without a diff |
 
 ## Capabilities

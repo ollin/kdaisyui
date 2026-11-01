@@ -13,9 +13,13 @@ without running mutants.
 **Verified** that the scope can be lines: `--mutate src/llms-index.ts:60-70` instrumented 18
 mutants and ran in 3 s (2026-11-01).
 
-**Assumed**: the gate takes under a minute for a typical pull request. *Wrong if:* the
-`codegen-tests` job of a pull request changing fewer than 50 lines of `codegen/src/` takes longer
-than 90 s.
+**Verified** 2026-11-01 on this change's own pull request: 81 mutants on 53 changed lines in 13 s,
+the whole `codegen-tests` job in 27 s, once each mutant's suite runs in one Node process. The
+first run, with one process per test file, took 77 s for 54 mutants. *Wrong if:* the job of a
+pull request changing fewer than 50 lines of `codegen/src/` takes longer than 90 s.
+
+**Verified** on probe PR #446: a new function with a test asserting only its return type failed
+`codegen-tests`, naming the survivors.
 
 #### Scenario: A new function whose test cannot fail
 

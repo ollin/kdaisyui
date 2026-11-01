@@ -46,8 +46,11 @@ rewrites took to 54 of 54 killed (F2). 3.3 needed no code: an empty diff already
 
 - [x] 4.1 `! F (internal)` `codegen-tests`: `fetch-depth: 2`, the scope step, and Stryker on the
   ranges when there are any, failing on a survivor.
-- [ ] 4.2 Probe pull requests: a test that asserts nothing on a new function fails the job; a
+- [x] 4.2 Probe pull requests: a test that asserts nothing on a new function fails the job; a
   change outside `codegen/src` runs no mutant. Record durations (A4). Close and delete them.
+  PR #446: `codegen-tests` failed in 19 s, naming the survivors in `src/probe-weak.ts:3`.
+  PR #447 (`codegen/test/` only): "nothing to mutate", green in 14 s. This PR, first run: 54
+  mutants in 77 s; after `--test-isolation=none` (finding F4): 81 mutants in 13 s, job 27 s.
 
 ## 5. Kill the survivors in `llms-index.ts`
 
@@ -61,4 +64,4 @@ rewrites took to 54 of 54 killed (F2). 3.3 needed no code: an empty diff already
 ## 6. Documents, gate and adoption
 
 - [x] 6.1 `. d` `AGENTS.md` test-quality table, `kdaisyui-codegen`, `kdaisyui-testing`.
-- [ ] 6.2 Full green, `openspec validate --strict`, findings, archive on the branch.
+- [x] 6.2 Full green, `openspec validate --strict`, findings, archive on the branch.

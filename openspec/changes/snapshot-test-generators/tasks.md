@@ -16,15 +16,19 @@ revised plan as well, which was revised before any work.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A1, A2) In a scratch script under `tmp/snapshot-test-generators/`, generate all 66
+- [x] 1.1 `. d` (A1, A2) In a scratch script under `tmp/snapshot-test-generators/`, generate all 66
   components and all 324 icons in memory from the submodules, diff against the committed files,
   and time the run.
-- [ ] 1.2 `. d` (A3) Read `test-generator-heroicons.ts` for anything it reads besides the icon files.
+- [x] 1.2 `. d` (A3) Read `test-generator-heroicons.ts` for anything it reads besides the icon files.
 
 ## 2. Submodules in the job, and a loud absence
 
-- [ ] 2.1 `. F (internal)` A helper the snapshot tests call: the path of a pinned submodule, or an
-  error naming `git submodule update --init` when it is not checked out.
+- [ ] 2.1 `! F (internal)` `src/submodules.ts`: the repository root found upward from the caller
+  (the directory holding `.gitmodules`), and the path of a pinned submodule there, or an error
+  naming `git submodule update --init`. Found in task 1.1: the generators resolve
+  `../../daisyui` from their own file, which points nowhere inside StrykerJS's sandbox under
+  `codegen/.stryker-tmp/`. `frontmatter.ts`, the two Heroicons entry points and the icon test
+  generator read their submodule through it, and their own `existsSync` checks go.
 - [ ] 2.2 `! F (internal)` `codegen-tests` checks out the submodules; record the added time (A4).
 
 ## 3. Three snapshot tests, under TCR

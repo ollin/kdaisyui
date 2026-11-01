@@ -52,9 +52,9 @@ going stale.
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | A full snapshot run, 66 components and 324 icons, is fast enough to rerun per mutant: under 2 s | measurement | open, task 1.1 |
-| A2 | The emitters reproduce the committed files from the submodules with no other input than the committed models | probe | open, task 1.1; the drift job does exactly this on every full run |
-| A3 | The icon test generator is a pure function of the committed icon files | reading | open, task 1.2 |
+| A1 | A full snapshot run, 66 components and 324 icons, is fast enough to rerun per mutant: under 2 s | measurement | verified in task 1.1: generating all 66 components took 13 ms and all 324 icons 12 ms, after 13 ms of imports |
+| A2 | The emitters reproduce the committed files from the submodules with no other input than the committed models | probe | verified in task 1.1: 66 of 66 components and 324 of 324 icons equal their committed files, 0 mismatches |
+| A3 | The icon test generator is a pure function of the committed icon files | reading | refuted in task 1.2: it parses the Heroicons SVGs, like the icon emitter. With the submodule in the job it is tested the same way |
 | A4 | Checking out the submodules adds under 10 s to `codegen-tests` | measurement | open, task 2.2 |
 | A5 | The three tests together kill most of the four files' mutants | measurement | open, task 4.1; *wrong if* more than a third survive in `generator-new.ts` |
 

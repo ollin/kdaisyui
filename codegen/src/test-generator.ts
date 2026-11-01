@@ -140,7 +140,7 @@ function customPartAssertions(part, tag) {
   if (part.cssClass) {
     assertions.push(`        assertTrue(html.contains("class=\\"${part.cssClass}"))`)
   }
-  for (const cssClass of part.modifierClasses || []) {
+  for (const cssClass of part.modifierClasses) {
     assertions.push(`        assertTrue(html.contains("${cssClass}"))`)
   }
   assertions.push(...staticAttributeAssertions(part.staticAttributes))
@@ -169,16 +169,13 @@ ${assertions.join('\n')}
 }
 
 function generateCustomPartTests(customParts) {
-  if (!customParts || customParts.length === 0) return ''
-
   let kotlin = ''
   for (const part of customParts) {
     const funcName = `custom_part_${part.name.toLowerCase()}_renders_${part.element.toLowerCase()}`
     const tag = part.element.toLowerCase()
-    const receiver = part.receiver || 'FlowContent'
     
     // Determine wrapping context based on receiver type
-    const wrapperTag = wrapperTagOf(receiver)
+    const wrapperTag = wrapperTagOf(part.receiver)
     const wrapperFn = htmlTagFnFor(wrapperTag)
 
     kotlin += `
@@ -320,10 +317,11 @@ function firstTime(seen: Set<string>, signature: string): boolean {
 
 function generateKotlinTest(componentName, testCases, componentModel: ComponentModel, context: DocumentedContext) {
   const className = toClassName(componentName)
-  const main = componentModel.functions.find(fn => fn.kind === 'main')
-  const mainName = main?.name ?? `daisy${className}`
+  // Every generated model declares exactly one main function; committed-model.test.ts reads them all.
+  const main = componentModel.functions.find(fn => fn.kind === 'main')!
+  const mainName = main.name
   const customParts = customPartsOf(componentModel)
-  const attributeTest = generateComponentAttributeTest(mainName, main?.attributes ?? {})
+  const attributeTest = generateComponentAttributeTest(mainName, main.attributes ?? {})
   const { kotlin: classTestKotlin, testCount, imports } = classTests(pageFirst(context.models, componentModel.component), context, mainName, testCases)
 
   const kotlin = kotlinTestFile(className, extraImportLines(customParts, attributeTest !== '', imports), `${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}`)

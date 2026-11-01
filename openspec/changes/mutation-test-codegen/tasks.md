@@ -22,10 +22,11 @@ dependency placement depends on it.
 
 ## 2. The dependency
 
-- [ ] 2.1 `. F (internal)` `@stryker-mutator/core` as an exact `devDependency`,
+- [x] 2.1 `. F (internal)` `@stryker-mutator/core` as an exact `devDependency`,
   `codegen/stryker.config.json`, the `mutate` npm script, Stryker's output in `.gitignore`.
-- [ ] 2.2 `. F (internal)` (A5) `installCodegenDeps` runs `npm ci --omit=dev`; `just generate`
-  without a diff and `./gradlew :lib:testCodegen` green after a clean `node_modules`.
+- [x] 2.2 `. F (internal)` (A5) `installCodegenDeps` runs `npm ci --omit=dev`; `just generate`
+  without a diff and `./gradlew :lib:testCodegen` green after a clean `node_modules`. Measured:
+  6 packages installed instead of 113, no Stryker, 200 tests green, no generation diff.
 
 ## 3. The changed-line scope, under TCR
 

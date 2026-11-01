@@ -1176,6 +1176,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 export {
   // Targets of the refactorings in section 2.
   parseTestCases,
+  // The coverage half, compared with its committed output by coverage-test-snapshot.test.ts.
+  coverageTestFor,
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
   parseEmittedBuilder,
   parseScopeBuilder,

@@ -62,13 +62,19 @@ The estimate ledger was not among this session's tools, so the run is to be open
 
 ## 5. Gate and adoption
 
-- [ ] 5.1 Prove each gate fails: add an H3 under `## Docs`, link a page that does not exist, and
-  rename `docs/how-to.md` temporarily; observe each failure name its cause; restore. Record the
-  three outputs here.
-- [ ] 5.2 The specification's own test: a subagent given only the content of `llms.txt` answers
+- [x] 5.1 Prove each gate fails: add an H3 under `## Docs`, link a page that does not exist, and
+  add an unlinked `docs/draft.md` (instead of renaming `how-to.md`, which `check` was compiling
+  at the time); observe each failure name its cause; restore. 2026-11-01, `node src/index-docs.ts`,
+  exit 1 each time, nothing written:
+  - `line 20: after the first H2 only H2 headings and link items may appear, got "### Start"`
+  - `line 98: links docs/gone.md, which does not exist in the repository`
+  - `docs/draft.md is not linked from llms.txt`
+- [x] 5.2 The specification's own test: a subagent given only the content of `llms.txt` answers
   three questions by following links (the dependency block, a primary button, the dropdown
-  content's lambda receiver). Record which link answered each.
-- [ ] 5.3 Full green per `openspec/config.yaml`: `./gradlew check`, `:lib:testCodegen`,
-  `just generate` with no diff, `analyze_change_set`, and the mutation run or the reason there is
-  none (`codegen/` has no mutation tool; say so in the evaluation).
-- [ ] 5.4 `openspec validate llms-txt-index --strict`; evaluation under `tmp/llms-txt-index/`.
+  content's lambda receiver). 2026-11-01: one fetch each, no 404; README.md, reference/button.md,
+  reference/dropdown.md. Its suggestions are findings F2 and F3.
+- [x] 5.3 Full green per `openspec/config.yaml`: `./gradlew check` exit 0 with the e2e reports
+  present; codegen 200 tests green; `just generate` no diff; `analyze_change_set` passed; no
+  mutation run, because `codegen/` has no mutation tool (findings F4).
+- [x] 5.4 `openspec validate llms-txt-index --strict` valid (length warnings only); evaluation
+  under `tmp/llms-txt-index/`.

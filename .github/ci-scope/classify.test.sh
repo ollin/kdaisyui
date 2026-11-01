@@ -6,9 +6,17 @@ set -u
 here="$(dirname "$0")"
 failures=0
 
+# expect <scope> <label> [path...]: the paths go in one per line, in this shell, never through a
+# pipe into expect. A pipe would run expect in a subshell and lose the failure count, which once
+# made every control unable to fail.
 expect() {
   local scope="$1" label="$2" actual
-  actual="$(cat | bash "$here/classify.sh")"
+  shift 2
+  if [ "$#" -gt 0 ]; then
+    actual="$(printf '%s\n' "$@" | bash "$here/classify.sh")"
+  else
+    actual="$(bash "$here/classify.sh" < /dev/null)"
+  fi
   if [ "$actual" = "$scope" ]; then
     echo "ok    $label: $actual"
   else
@@ -17,31 +25,31 @@ expect() {
   fi
 }
 
-printf '' | expect full "an empty list"
-printf 'lib/src/main/kotlin/X.kt\n' | expect full "a source path"
+expect full "an empty list"
+expect full "a source path" lib/src/main/kotlin/X.kt
 
 for planning in openspec/changes/x/tasks.md .opencode/skills/x/SKILL.md .idea/vcs.xml .codeseeker/x \
     AGENTS.md CLAUDE.md CREDITS.md LICENSE opencode.jsonc renovate.json justfile \
     .github/workflows/release.yml .github/workflows/renovate.yml .github/workflows/pr-conventional-commits.yml; do
-  printf '%s\n' "$planning" | expect none "$planning"
+  expect none "$planning" "$planning"
 done
-printf 'openspec/a.md\nAGENTS.md\n' | expect none "two planning files"
-printf 'AGENTS.md.bak\n' | expect full "a planning name with a suffix"
-printf 'lib/AGENTS.md\n' | expect full "a planning name in another directory"
-printf '.github/workflows/ci.yml\n' | expect full "the CI workflow itself"
-printf '.gitignore\n' | expect full ".gitignore, which the drift job's git status reads"
+expect none "two planning files" openspec/a.md AGENTS.md
+expect full "a planning name with a suffix" AGENTS.md.bak
+expect full "a planning name in another directory" lib/AGENTS.md
+expect full "the CI workflow itself" .github/workflows/ci.yml
+expect full ".gitignore, which the drift job's git status reads" .gitignore
 
 for prose in README.md docs/how-to.md docs/tutorials/getting-started.md docs/screenshots/overview.png \
     codegen/llms-template.md codegen/llms-full-template.md llms.txt llms-full.txt; do
-  printf '%s\n' "$prose" | expect prose "$prose"
+  expect prose "$prose" "$prose"
 done
-printf 'docs/reference/button.md\n' | expect full "a generated reference page"
-printf 'docs/reference.md\n' | expect prose "the hand-written reference entry point"
-printf 'codegen/llms-template.md.orig\n' | expect full "a template name with a suffix"
+expect full "a generated reference page" docs/reference/button.md
+expect prose "the hand-written reference entry point" docs/reference.md
+expect full "a template name with a suffix" codegen/llms-template.md.orig
 
-printf 'openspec/a.md\nREADME.md\n' | expect prose "planning and prose: the wider scope"
-printf 'README.md\nopenspec/a.md\n' | expect prose "prose and planning, in the other order"
-printf 'README.md\nlib/build.gradle.kts\nAGENTS.md\n' | expect full "prose, source and planning: full"
-printf 'lib/build.gradle.kts\nREADME.md\n' | expect full "full is not narrowed by a later prose path"
+expect prose "planning and prose: the wider scope" openspec/a.md README.md
+expect prose "prose and planning, in the other order" README.md openspec/a.md
+expect full "prose, source and planning: full" README.md lib/build.gradle.kts AGENTS.md
+expect full "full is not narrowed by a later prose path" lib/build.gradle.kts README.md
 
 [ "$failures" -eq 0 ] || { echo "$failures classifier control(s) failed"; exit 1; }

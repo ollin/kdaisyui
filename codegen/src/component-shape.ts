@@ -93,6 +93,19 @@ const VOID_ELEMENTS: ReadonlySet<string> = new Set([
   'INPUT', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR',
 ])
 
+/**
+ * English collation: case-insensitive first, so `Textarea` sorts before `TextRotate`, digits
+ * before letters, so `Hover3d` keeps its place ahead of `HoverGallery`. A fixed locale, so every
+ * machine agrees. `localeCompare` is not used: once V8 has served one call without a locale, an
+ * empty locale stops being refused, which made a test unable to tell the two apart.
+ */
+const DISPLAY_ORDER = new Intl.Collator('en')
+
+/** Components by display name: the order of the reference index, llms.txt and the API dump. */
+export function byDisplayName(a: Pick<ComponentShape, 'componentName'>, b: Pick<ComponentShape, 'componentName'>): number {
+  return DISPLAY_ORDER.compare(a.componentName, b.componentName)
+}
+
 export function isVoidElement(element: TagClass): boolean {
   return VOID_ELEMENTS.has(element)
 }

@@ -191,8 +191,16 @@ describe('an anchored popover', () => {
 describe('the Tag import', () => {
   const wrapper = component('wrap', 'Wrap', 'wrap', {}, { class: null })
 
-  test('is left out where no function writes a class', () => {
-    assert.doesNotMatch(kotlinFor(wrapper), /^import kotlinx\.html\.Tag$/m)
+  test('is left out where no function writes a class, and nothing takes its place', () => {
+    const imports = kotlinFor(wrapper).split('\n').filter(line => line.startsWith('import '))
+
+    assert.deepEqual(imports, [
+      'import io.github.ollin.kdaisyui.core.addClassNames',
+      'import io.github.ollin.kdaisyui.core.HtmlId',
+      'import kotlinx.html.div',
+      'import kotlinx.html.DIV',
+      'import kotlinx.html.FlowContent',
+    ])
   })
 
   test('is there for a class-only function alone', () => {

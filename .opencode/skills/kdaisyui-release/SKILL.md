@@ -98,6 +98,30 @@ is a local directory, not a remote — the only remote upload path is JReleaser.
 `codegen-tests`, `api-baseline`, `unit-tests` (including the aggregated 100% `koverVerify`
 gate), `mutation-tests` (100% test strength) and `e2e-tests`. See `kdaisyui-testing` for what
 each one needs; this page had the count wrong twice, so read `ci.yml` if it matters.
+**Not every pull request runs all six** (`ci-job-selection`, since `ci-run-only-affected-jobs`).
+A first job, `scope`, classifies the changed files with `.github/ci-scope/classify.sh`:
+
+| Scope | The pull request changes only | Jobs that run |
+|---|---|---|
+| `none` | planning and agent files: `openspec/`, `.opencode/`, `AGENTS.md`, the other workflows, … | none |
+| `prose` | those, or prose: `README.md`, `docs/` outside `docs/reference/`, the `llms` templates and files | `unit-tests`, `generated-sources-drift` |
+| `full` | anything else; every push to `main` | all six |
+
+The lists are in the script; the controls that prove them are in `classify.test.sh`, which the
+`scope` job runs first. Three rules keep this from ever merging untested code:
+
+- **A job is skipped by its own `if`, never by an `on:` path filter.** GitHub counts a job skipped
+  by its condition as a passing required check; a workflow skipped by a path filter leaves the
+  check pending.
+- **A failed `scope` runs everything.** Each condition reads
+  `!cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.<group> == 'true')`.
+- **Unknown means `full`.** A path no rule names, an empty diff, or a diff that could not be read.
+
+**Adding a job:** give it `needs: scope` and the condition of the group whose files can make it
+fail: `full-jobs` unless prose can break it. A job without the condition simply always runs, which
+is safe and slow. **Adding a reader of a file the lists call irrelevant** (a test that reads
+`AGENTS.md`, say) means moving that file out of its list in `classify.sh`, with a control.
+
 `pr-conventional-commits.yml` validates PR titles — and that matters more than usual here,
 because JReleaser builds the release changelog from those commit messages.
 

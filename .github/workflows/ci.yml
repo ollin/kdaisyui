@@ -9,7 +9,53 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+# A newer push to a pull request cancels its older run; every push to main is its own group, so a
+# merge never cancels the previous merge's run.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  # Which jobs this pull request can affect (openspec/specs/ci-job-selection/spec.md). Every test
+  # job below needs it and runs when its group's output is 'true' OR when this job did not
+  # succeed: a skipped job satisfies a required check, so a broken classifier must run
+  # everything, never nothing. Jobs are skipped by their own `if`, never by an `on:` path filter,
+  # which would leave the required checks pending.
+  #
+  #   none   only planning and agent files     no test job
+  #   prose  plus prose documentation          unit-tests, generated-sources-drift
+  #   full   anything else, and every push     all six
+  #
+  # A new test job gets `needs: scope` and the condition of its group, or it simply runs always.
+  scope:
+    name: scope
+    runs-on: ubuntu-latest
+    outputs:
+      prose-jobs: ${{ steps.classify.outputs.prose-jobs }}
+      full-jobs: ${{ steps.classify.outputs.full-jobs }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The merge commit and its first parent, the base branch: HEAD^1..HEAD is exactly what
+          # the pull request changes (verified on PR #439).
+          fetch-depth: 2
+
+      - name: Prove the classifier's rules on fixed paths
+        run: bash .github/ci-scope/classify.test.sh
+
+      - name: Classify the changed files
+        id: classify
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ] && changed="$(git diff --no-renames --name-only HEAD^1 HEAD)"; then
+            printf '%s\n' "$changed"
+            scope="$(printf '%s\n' "$changed" | bash .github/ci-scope/classify.sh)"
+          else
+            scope=full
+          fi
+          echo "scope: $scope"
+          [ "$scope" = none ] && echo "prose-jobs=false" >> "$GITHUB_OUTPUT" || echo "prose-jobs=true" >> "$GITHUB_OUTPUT"
+          [ "$scope" = full ] && echo "full-jobs=true" >> "$GITHUB_OUTPUT" || echo "full-jobs=false" >> "$GITHUB_OUTPUT"
+
   # Keeps the committed lib/generated and docs/reference honest. Before this job
   # existed the build itself regenerated on every compile, so drift was impossible;
   # now that the build reads committed sources instead, this is what replaces that
@@ -25,6 +71,8 @@ jobs:
   # still documented the 0.1.x API that README pointed AI tools at.
   generated-sources-drift:
     name: generated-sources-drift
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.prose-jobs == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -100,6 +148,8 @@ jobs:
   # the rule above is intact — these tests still read no submodule.
   codegen-tests:
     name: codegen-tests
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.full-jobs == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -132,6 +182,8 @@ jobs:
   # submodules; the ABI comes from the committed sources.
   api-baseline:
     name: api-baseline
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.full-jobs == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -151,6 +203,8 @@ jobs:
 
   unit-tests:
     name: unit-tests
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.prose-jobs == 'true') }}
     runs-on: ubuntu-latest
     steps:
       # No submodules: the generated sources are committed and the build does not
@@ -206,6 +260,8 @@ jobs:
   # the drift job.
   mutation-tests:
     name: mutation-tests
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.full-jobs == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -238,6 +294,8 @@ jobs:
 
   e2e-tests:
     name: e2e-tests
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.full-jobs == 'true') }}
     runs-on: ubuntu-latest
     steps:
       # No submodules — see unit-tests.

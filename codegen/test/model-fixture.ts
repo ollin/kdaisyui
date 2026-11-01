@@ -32,3 +32,4 @@ export function toggle(name: string, cssClass: string): ModelParameter {
 export function shapeOf(model: ComponentModel, descriptions: Descriptions = { desc: '', classes: {} }): ComponentShape {
   return shapeFromModel(model, descriptions)
 }
+

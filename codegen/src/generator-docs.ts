@@ -269,7 +269,7 @@ export function generateComponentPage(
   const blocks = [
     signatureBlock(main, enumComments(shape)),
     ...rest.map(fn => signatureBlock(fn, [])),
-    ...(shape.siblingsOnly ?? []).map(sibling => ['```kotlin', '// Classes only, for a child DaisyUI gives no class of its own:', renderSiblingSignature(sibling), '```'].join('\n')),
+    ...shape.siblingsOnly.map(sibling => ['```kotlin', '// Classes only, for a child DaisyUI gives no class of its own:', renderSiblingSignature(sibling), '```'].join('\n')),
     ...(shape.scope === undefined ? [] : [scopeSection(shape, shape.scope)]),
   ]
 

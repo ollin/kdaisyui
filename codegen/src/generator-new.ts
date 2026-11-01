@@ -356,7 +356,7 @@ function collectImports(shape: ComponentShape, componentConfig: MainFunctionConf
     ...shape.functions.flatMap(functionImports),
     ...(shape.scope === undefined ? [] : scopeImports(shape.scope)),
     ...configImports(componentConfig),
-    ...(shape.functions.some(hasSibling) || (shape.siblingsOnly ?? []).length > 0 ? ['kotlinx.html.Tag'] : []),
+    ...(shape.functions.some(hasSibling) || shape.siblingsOnly.length > 0 ? ['kotlinx.html.Tag'] : []),
   ])
 
   // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
@@ -393,7 +393,7 @@ export function generateKotlinFile(shape: ComponentShape, componentConfig: MainF
     ...(hasSibling(fn) ? [renderSibling(fn)] : []),
   ].join('\n\n'))
   const scope = shape.scope === undefined ? '' : renderScope(shape.scope, shape.functions[0].element)
-  const siblingsOnly = (shape.siblingsOnly ?? []).map(renderSibling)
+  const siblingsOnly = shape.siblingsOnly.map(renderSibling)
   const body = [enums, ...functions, ...siblingsOnly, scope].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`

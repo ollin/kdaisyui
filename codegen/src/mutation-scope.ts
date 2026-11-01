@@ -9,7 +9,7 @@
  */
 
 /** `@@ -<old> +<start>[,<count>] @@`: the new side of a hunk. */
-const HUNK = /^@@ -\S+ \+(?<start>\d+)(?:,(?<count>\d+))? @@/gm
+const HUNK = /^@@ -\S+ \+(\d+)(?:,(\d+))? @@/gm
 
 /** The file a diff section is about, from its `+++ b/<path>` line. A deleted file has none. */
 const NEW_FILE = /^\+\+\+ b\/(?<path>.+)$/m
@@ -30,7 +30,7 @@ export function mutationScope(diff: string): string[] {
 function fileRanges(section: string): string[] {
   const file = NEW_FILE.exec(section)?.groups?.path
   if (file === undefined || !isMutated(file)) return []
-  return [...section.matchAll(HUNK)].flatMap(({ groups }) => addedRange(file, Number(groups?.start), groups?.count))
+  return [...section.matchAll(HUNK)].flatMap(([, start, count]) => addedRange(file, Number(start), count))
 }
 
 /** A hunk's added lines as `<file>:<first>-<last>`, or nothing when it only deletes. */

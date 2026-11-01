@@ -8,7 +8,7 @@ import {
 import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
 import { documentedCall, pageFirst, type DocumentedCall } from './documented-elements.ts'
-import { isVoidElement, type ComponentShape, type TagClass } from './component-shape.ts'
+import { hasSibling, isVoidElement, siblingParameters, type ComponentShape, type ParameterShape, type SiblingShape, type TagClass } from './component-shape.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
@@ -398,31 +398,11 @@ function findFunctions(content) {
     funcs.push({
       receiver: m[1],
       name: m[2],
-      paramBlock: content.slice(parenStart + 1, parenEnd),
       body: content.slice(braceStart + 1, braceEnd),
     })
     headerRe.lastIndex = braceEnd
   }
   return funcs
-}
-
-/** Split a param block on top-level commas (parens protect lambda types). */
-function splitParams(block) {
-  const parts = []
-  let depth = 0
-  let last = 0
-  for (let i = 0; i < block.length; i++) {
-    const ch = block[i]
-    if (ch === '(') depth++
-    else if (ch === ')') depth--
-    else if (ch === ',' && depth === 0) {
-      parts.push(block.slice(last, i))
-      last = i + 1
-    }
-  }
-  const tail = block.slice(last)
-  if (tail.trim()) parts.push(tail)
-  return parts.map((p) => p.trim()).filter(Boolean)
 }
 
 const PARAM_KIND_RULES = [
@@ -460,17 +440,13 @@ function groupEnumOf(baseType: string): string {
   return baseType.match(/^ClassValues<(\w+)>$/)?.[1] ?? baseType
 }
 
-function classifyParam(raw, enums) {
-  const colon = raw.indexOf(':')
-  const name = raw.slice(0, colon).trim()
-  const rest = raw.slice(colon + 1).trim()
-  const eq = rest.indexOf('=')
-  const type = (eq >= 0 ? rest.slice(0, eq) : rest).trim()
+function classifyParam({ name, type, default: defaultValue }: ParameterShape, enums) {
   const nullable = type.endsWith('?')
-  const baseType = (nullable ? type.slice(0, -1) : type).trim()
+  const baseType = nullable ? type.slice(0, -1) : type
   const enumType = groupEnumOf(baseType)
-  const kind = paramKind({ name, baseType, enumType, nullable, hasDefault: eq >= 0, enums })
-  return { name, type, baseType, enumType, nullable, hasDefault: eq >= 0, kind, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
+  const hasDefault = defaultValue !== null
+  const kind = paramKind({ name, baseType, enumType, nullable, hasDefault, enums })
+  return { name, type, baseType, enumType, nullable, hasDefault, kind, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
 }
 
 /** The single unguarded `addClassNames("...")` that names this element. */
@@ -748,7 +724,7 @@ ${asserts.map((a) => `        ${a}`).join('\n')}
 }
 
 function coverageContext(fn, enums, file: string) {
-  const params = splitParams(fn.paramBlock).map((raw) => classifyParam(raw, enums))
+  const params = fn.parameters.map((parameter) => classifyParam(parameter, enums))
   return {
     params,
     body: fn.body,
@@ -948,8 +924,8 @@ function coverageImports(funcs, enums): Set<string> {
   ])
   for (const fn of funcs) {
     if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
-    for (const raw of splitParams(fn.paramBlock)) {
-      const parameter = classifyParam(raw, enums)
+    for (const declared of fn.parameters) {
+      const parameter = classifyParam(declared, enums)
       const external = parameter.kind === 'enumExternal' && EXTERNAL_ENUM_IMPORTS[parameter.baseType]
       if (external) imports.add(external)
     }
@@ -967,10 +943,24 @@ function enumTableOf(shape: ComponentShape) {
   return Object.fromEntries(shape.enums.map(declared => [declared.name, declared.entries.map(entry => ({ entry: entry.name, css: entry.cssClass }))]))
 }
 
+/**
+ * Every function the component's file declares, in the order `generateKotlinFile` writes them:
+ * each function followed by its class sibling, then the class-only siblings. Named without the
+ * `daisy` every name starts with, which the tests put back.
+ */
+function coverageFunctionsOf(shape: ComponentShape) {
+  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn) })
+  return [
+    ...shape.functions.flatMap(fn => [{ name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters }, ...(hasSibling(fn) ? [sibling(fn)] : [])]),
+    ...shape.siblingsOnly.map(sibling),
+  ]
+}
+
 function coverageTestFor(className: string, content: string, shape: ComponentShape): string | null {
   const enums = enumTableOf(shape)
-  const funcs = findFunctions(content)
-  if (funcs.length === 0) return null
+  const parsed = findFunctions(content)
+  if (parsed.length === 0) return null
+  const funcs = coverageFunctionsOf(shape).map((fn, index) => ({ ...fn, body: parsed[index].body }))
 
   const imports = coverageImports(funcs, enums)
 

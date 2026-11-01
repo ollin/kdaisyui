@@ -62,11 +62,11 @@ jobs that ran, their durations, and whether the pull request showed as mergeable
   PR #443: the first run was cancelled 5 s into its jobs when the second push arrived.
 - [x] 4.5 A broken snippet in `docs/how-to.md`: `unit-tests` runs and fails, so the `prose` scope
   still catches what it is meant to.
+  PR #444: `unit-tests` failed with `docs/how-to.md/L71.kt:18:25 No parameter with name 'variant'
+  found.`; the drift job passed; the four others skipped.
 
 ## 5. Documents, gate and adoption
 
-  PR #444: `unit-tests` failed with `docs/how-to.md/L71.kt:18:25 No parameter with name 'variant'
-  found.`; the drift job passed; the four others skipped.
 - [x] 5.1 `^ d` `kdaisyui-release`, CI section: the three scopes, the fail-safe, and how to add a
   job.
 - [x] 5.2 `openspec validate ci-run-only-affected-jobs --strict`; findings and evaluation; archive

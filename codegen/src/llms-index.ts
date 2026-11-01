@@ -58,11 +58,11 @@ export function generateLlmsIndex(
 }
 
 /** What the reference parsers read as a link item: `- [name](url)`, optionally `: note`. */
-const LINK_ITEM = /^- \[[^\]]+\]\((?<url>[^)]+)\)(: .*)?$/
+const LINK_ITEM = /^- \[[^\]]+\]\(([^)]+)\)(: .*)?$/
 
 /** A linked repository path, with the line that links it; `null` for a link to another host. */
 function repositoryLink(line: string): string | null {
-  const url = LINK_ITEM.exec(line)?.groups?.url
+  const url = LINK_ITEM.exec(line)?.[1]
   return url !== undefined && url.startsWith(RAW_BASE) ? url.slice(RAW_BASE.length) : null
 }
 

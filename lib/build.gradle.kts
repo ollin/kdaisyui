@@ -276,7 +276,7 @@ val generateComponentTests = tasks.register<Exec>("generateComponentTests") {
     // source of it — a second copy inside the generator once went stale unnoticed.
     val componentsDir = generatedMainDir.dir("io/github/ollin/kdaisyui/components")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/test-generator.ts all --output-dir=\"${outputDir.asFile.absolutePath}\" --components-dir=\"${componentsDir.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/index-test-generator.ts all --output-dir=\"${outputDir.asFile.absolutePath}\" --components-dir=\"${componentsDir.asFile.absolutePath}\"")
     dependsOn(generateComponents)
     inputs.dir(componentsDir)
     inputs.dir(rootProject.file("codegen/src"))
@@ -304,10 +304,10 @@ tasks.register<Exec>("testCodegen") {
     // invocation is defined once. CI runs the same `npm test`, and a change to one cannot
     // leave the other behind.
     //
-    // The `test/` argument in that script is load-bearing: the runner's default patterns
+    // The `test/` argument in that script keeps the runner to the tests: its default patterns
     // include `**/test-*`, which matches `src/test-generator.ts` and
-    // `src/test-generator-heroicons.ts`, so a bare `node --test` EXECUTES both generators
-    // as if they were test files.
+    // `src/test-generator-heroicons.ts`. Both once regenerated everything when executed; since
+    // their entry points moved to index-*.ts they do nothing on import, but they are no tests.
     commandLine("sh", "-c", "npm test")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("codegen/test"))

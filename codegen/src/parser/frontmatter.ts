@@ -116,22 +116,17 @@ interface Line {
   readonly text: string
   /** Whether this is a `- ` list entry. */
   readonly isItem: boolean
-  /** A list entry's text without its `- ` marker; empty for anything else. */
-  readonly itemText: string
 }
 
-/** Null for a blank line, which carries no position and no content. */
-function readLine(raw: string): Line | null {
+/** A blank line reads as indent -1, which the dispatch in `scanLine` drops like any other. */
+function readLine(raw: string): Line {
   const text = raw.trim()
-  if (!text) return null
+  return { indent: raw.search(/\S/), text, isItem: text.startsWith('- ') }
+}
 
-  const isItem = text.startsWith('- ')
-  return {
-    indent: raw.search(/\S/),
-    text,
-    isItem,
-    itemText: isItem ? text.slice(2).trim() : '',
-  }
+/** A list entry's text without its `- ` marker. */
+function itemText(line: Line): string {
+  return line.text.slice(2).trim()
 }
 
 function splitOnFirstColon(text: string): KeyValue | null {
@@ -167,13 +162,15 @@ function setTopLevelScalar(scan: Scan, pair: KeyValue): void {
 function pushCategoryItem(scan: Scan, line: Line): void {
   const category = scan.currentCategory
   const categories = scan.result.classnames as Record<string, Record<string, YamlScalar>[]>
-  // An item before any category has nowhere to go and is dropped, as it always was.
-  if (!category || !categories?.[category]) return
+  // An item before any category has nowhere to go and is dropped, as it always was. A category,
+  // once open, always has its list: `startCategory` creates both together.
+  if (!category) return
 
-  const pair = splitOnFirstColon(line.itemText)
+  const text = itemText(line)
+  const pair = splitOnFirstColon(text)
   const item = pair
     ? { [pair.key]: parseValue(pair.value) }
-    : { class: parseValue(line.itemText) }
+    : { class: parseValue(text) }
   categories[category].push(item)
   // Only a `key: value` item can be extended by the indented lines that follow it.
   scan.currentObject = pair ? item : null
@@ -185,9 +182,9 @@ function startCategory(scan: Scan, pair: KeyValue): void {
   scan.currentObject = null
 }
 
-function extendCurrentObject(scan: Scan, line: Line): void {
+function extendCurrentObject(currentObject: Record<string, YamlScalar>, line: Line): void {
   const pair = splitOnFirstColon(line.text)
-  if (pair && scan.currentObject) scan.currentObject[pair.key] = parseValue(pair.value)
+  if (pair) currentObject[pair.key] = parseValue(pair.value)
 }
 
 function scanTopLevel(scan: Scan, line: Line): void {
@@ -206,12 +203,13 @@ function scanSecondLevel(scan: Scan, line: Line): void {
   }
 
   const openList = scan.result[scan.currentKey as string]
-  if (line.isItem && Array.isArray(openList)) openList.push(parseValue(line.itemText))
+  if (line.isItem && Array.isArray(openList)) openList.push(parseValue(itemText(line)))
 }
 
 function scanThirdLevel(scan: Scan, line: Line): void {
-  if (scan.currentKey === 'classnames' && line.isItem) return pushCategoryItem(scan, line)
-  if (scan.currentObject) extendCurrentObject(scan, line)
+  // Outside `classnames` no category is open, so `pushCategoryItem` drops the item.
+  if (line.isItem) return pushCategoryItem(scan, line)
+  if (scan.currentObject) extendCurrentObject(scan.currentObject, line)
 }
 
 function scanLine(scan: Scan, line: Line): void {
@@ -225,10 +223,7 @@ function scanLine(scan: Scan, line: Line): void {
 function parseYamlFrontmatter(yaml: string): FrontmatterData {
   const scan: Scan = { result: {}, currentKey: null, currentCategory: null, currentObject: null }
 
-  for (const raw of yaml.split('\n')) {
-    const line = readLine(raw)
-    if (line) scanLine(scan, line)
-  }
+  for (const raw of yaml.split('\n')) scanLine(scan, readLine(raw))
 
   return scan.result
 }
@@ -242,11 +237,11 @@ function isQuoted(value: string): boolean {
 }
 
 /**
- * Numeric to YAML's eye. `Number('')` is 0, so the emptiness check is load-bearing rather
- * than defensive — without it an all-whitespace value would parse as the number zero.
+ * Numeric to YAML's eye. Every value arrives trimmed, and `parseValue` returns an empty one
+ * before asking, so `Number('')` being 0 cannot turn an empty value into the number zero.
  */
 function isNumeric(value: string): boolean {
-  return value.trim() !== '' && !isNaN(Number(value))
+  return !isNaN(Number(value))
 }
 
 function parseValue(value: string): YamlScalar {
@@ -272,7 +267,7 @@ export function toPascalCase(name: ComponentName): PascalComponentName {
 
 export function getBaseClass(classnames: Classnames | undefined): string | null {
   if (!classnames?.component?.length) return null
-  return classnames.component[0].class.replace(/^['"]|['"]$/g, '')
+  return classnames.component[0].class
 }
 
 /**
@@ -286,28 +281,19 @@ export function getClassesByCategory(
   category: ClassCategory,
 ): string[] {
   if (!classnames?.[category]) return []
-  return classnames[category].map(entry => {
-    const cls = entry.class
-    return cls.replace(/^['"]|['"]$/g, '')
-  })
+  return classnames[category].map(entry => entry.class)
 }
 
 /**
- * Get full entries by category (class name + description + default flag)
- * @param {Classnames} classnames
- * @param {string} category
- * @returns {Array<{class: string, desc: string, default?: boolean}>}
+ * The entries of one category, class and description. `parseValue` has already unquoted both, so
+ * nothing here strips quotes a second time.
  */
 export function getEntriesByCategory(
   classnames: Classnames | undefined,
   category: ClassCategory,
 ): ClassEntry[] {
   if (!classnames?.[category]) return []
-  return classnames[category].map(entry => ({
-    class: (entry.class || '').replace(/^['"]|['"]$/g, ''),
-    desc: (entry.desc || '').replace(/^['"]|['"]$/g, ''),
-    ...(entry.default != null ? { default: entry.default } : {}),
-  }))
+  return classnames[category].map(entry => ({ class: entry.class || '', desc: entry.desc || '' }))
 }
 
 import fs from 'fs'

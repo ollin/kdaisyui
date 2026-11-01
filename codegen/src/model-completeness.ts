@@ -66,7 +66,8 @@ export function namingFindings(model: ComponentModel): string[] {
   return model.functions
     .filter(fn => fn.kind !== 'custom' && fn.class !== null)
     .flatMap(fn => {
-      const stem = fn.stem ?? toPascalCase(fn.class ?? '')
+      // The filter above let through only functions with a class.
+      const stem = fn.stem ?? toPascalCase(fn.class!)
       const enums = fn.parameters.flatMap(parameter => (parameter.kind === 'enum' ? [{ name: parameter.enum, expected: `${stem}${toPascalCase(parameter.name)}` }] : []))
       return [{ name: fn.name, expected: `daisy${stem}` }, ...enums]
     })

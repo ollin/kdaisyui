@@ -241,16 +241,17 @@ export interface MainFunctionConfig {
 }
 
 export function mainFunctionConfig(model: ComponentModel): MainFunctionConfig {
-  const main = model.functions.find(fn => fn.kind === 'main')
+  // Every generated model declares exactly one main function; committed-model.test.ts reads them all.
+  const main = model.functions.find(fn => fn.kind === 'main')!
   return {
-    extras: (main?.parameters ?? []).flatMap(parameter => {
+    extras: main.parameters.flatMap(parameter => {
       if (parameter.kind !== 'extra') return []
       const { kind, writes, ...extra } = parameter
       return [extra]
     }),
-    hasTextParam: main?.text ?? false,
-    role: main?.role ?? null,
-    inputType: main?.inputType ?? null,
+    hasTextParam: main.text,
+    role: main.role ?? null,
+    inputType: main.inputType ?? null,
   }
 }
 
@@ -260,8 +261,9 @@ export interface DeclaredComponent {
   readonly shape: ComponentShape
 }
 
+/** `joinItem` is declared on a main function only, the one the join scope can name. */
 function isJoinItem(model: ComponentModel): boolean {
-  return model.functions.some(fn => fn.kind === 'main' && fn.joinItem === true)
+  return model.functions.some(fn => fn.joinItem === true)
 }
 
 /**

@@ -48,6 +48,6 @@ decides the plugin's place before any of it is written.
 
 ## 6. Gate and adoption
 
-- [ ] 6.1 Full green: `check` with E2E, `koverVerify`, PIT, `checkGradleProblems`, `analyze_change_set`.
-- [ ] 6.2 `openspec validate per-component-class-delivery --strict`.
-- [ ] 6.3 The evaluation under `tmp/per-component-class-delivery/` for Oliver to adopt.
+- [x] 6.1 Full green: `check` with E2E, `koverVerify`, PIT, `checkGradleProblems`, `analyze_change_set`.
+- [x] 6.2 `openspec validate per-component-class-delivery --strict`.
+- [x] 6.3 The evaluation under `tmp/per-component-class-delivery/` for Oliver to adopt.

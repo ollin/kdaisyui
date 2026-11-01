@@ -31,3 +31,20 @@
   `runtimeClasspath` configuration, the dependencies only.
 - **Cause:** the source set's classpath and the configuration's look alike from the API.
 - **Cost:** one `^ B` step, caught before it bit.
+
+## F4 - PIT's worker JVM does not open java.lang for ProjectBuilder
+
+- **What happened:** the plugin's first PIT run failed "without mutation": a test using
+  `ProjectBuilder` threw `Could not inject synthetic classes`, because ProjectBuilder needs
+  `--add-opens java.base/java.lang=ALL-UNNAMED`, which Gradle's test task passes and PIT's worker
+  JVM does not. The PIT configuration now passes it.
+- **Cause:** a JVM setting the normal test run hides.
+- **Cost:** about 5 minutes.
+
+## F5 - The fallback's reason was only in the log
+
+- **What happened:** PIT's survivors on the fallback warning showed that nothing observable carried
+  the reason a build got every class. The written file's header now states it, which the tests
+  assert, and which a reader of the file sees without the build's log.
+- **Cause:** a warning is the natural first place for a reason, and the least observable one.
+- **Cost:** one `! F` step.

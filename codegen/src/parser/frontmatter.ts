@@ -259,16 +259,6 @@ function parseValue(value: string): YamlScalar {
 }
 
 /**
- * Extract component name from directory path
- * @param {string} dirPath - e.g., '/path/to/components/button'
- * @returns {string} - e.g., 'button'
- */
-export function getComponentName(dirPath: string): ComponentName {
-  // `!` because `split` always yields at least one element, even for the empty string.
-  return dirPath.split('/').pop()! as ComponentName
-}
-
-/**
  * Convert component name to PascalCase
  * @param {string} name - e.g., 'button'
  * @returns {string} - e.g., 'Button'

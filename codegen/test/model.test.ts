@@ -2,7 +2,7 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { entryName, mainFunctionConfig, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
-import { component, enumParameter, mainFunction, part, shapeOf, toggle } from './model-fixture.ts'
+import { component, enumParameter, mainFunction, part, toggle } from './model-fixture.ts'
 
 /** The smallest real component: one function, one enum, inline text. */
 const KBD: ComponentModel = {
@@ -167,16 +167,8 @@ describe('entryName', () => {
     assert.equal(entryName(owned, 'StepColor', 'steps-neutral'), 'Neutral')
   })
 
-  test('keeps a class that fits neither, and names it whole where the component has no class', () => {
+  test('keeps a class that fits neither', () => {
     assert.equal(entryName(owned, 'StepColor', 'join-item'), 'JoinItem')
-    assert.equal(entryName({ ...owned, class: null }, 'Unowned', 'steps-wide'), 'StepsWide')
   })
 })
 
-describe('an enum on a component without a class', () => {
-  test('carries an empty prefix', () => {
-    const model = { ...component('x', 'X', 'x'), class: null, enums: [{ name: 'XSize', label: 'Size', classes: ['x-lg'] }], functions: [mainFunction('daisyX', 'x', { parameters: [enumParameter('size', 'XSize', 'Size')] })] }
-
-    assert.equal(shapeOf(model).enums[0].prefix, '')
-  })
-})

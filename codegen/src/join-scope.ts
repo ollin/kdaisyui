@@ -89,5 +89,5 @@ export function joinScopeMembers(
  * the join has no reason of its own to import it.
  */
 export function isJoinItemComponent(shape: ComponentShape, companionClasses: ReadonlySet<string>): boolean {
-  return shape.prefix !== null && companionClasses.has(shape.prefix)
+  return companionClasses.has(shape.prefix)
 }

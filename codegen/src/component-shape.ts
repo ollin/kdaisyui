@@ -270,7 +270,7 @@ export interface ComponentShape {
   /** DaisyUI's directory name, e.g. `file-input`. */
   readonly componentDir: string
   /** The component's own CSS class, e.g. `card`. */
-  readonly prefix: CssClass | null
+  readonly prefix: CssClass
   readonly enums: readonly EnumShape[]
   /** The main function first, then parts in declaration order, then custom parts. */
   readonly functions: readonly FunctionShape[]

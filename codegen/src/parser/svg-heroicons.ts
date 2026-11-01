@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { pinnedSubmodule } from '../submodules.ts'
 
 /**
  * Two kinds of name live in this file, and both are strings.
@@ -50,39 +51,24 @@ export function fileNameToPascalCase(kebabName: KebabName): PascalName {
     .join('') as PascalName
 }
 
-function processOutlineSvg(svgContent: string): string {
-  const innerMatch = svgContent.match(/<svg[^>]*>([\s\S]*)<\/svg>/)
-  if (!innerMatch) throw new Error('Failed to parse outline SVG: no <svg> wrapper found')
-  const inner = innerMatch[1].trim()
-
-  const pathRegex = /<path\s+([^>]*?)\/>/g
-  const paths = []
-  for (const match of inner.matchAll(pathRegex)) {
-    let attrs = match[1]
-    attrs = attrs.replace(/stroke="#0F172A"/g, 'stroke="currentColor"')
-    if (!attrs.includes('fill=')) {
-      attrs = `fill="none" ${attrs}`
-    }
-    paths.push(`<path ${attrs} />`)
-  }
-
-  return paths.join('')
+/** Every `<path>` inside an SVG, its attributes passed through `rewrite`. */
+function svgPaths(svgContent: string, variant: string, rewrite: (attributes: string) => string): string {
+  const inner = svgContent.match(/<svg[^>]*>([\s\S]*)<\/svg>/)
+  if (!inner) throw new Error(`Failed to parse ${variant} SVG: no <svg> wrapper found`)
+  return [...inner[1].matchAll(/<path ([^>]*?)\/>/g)].map(match => `<path ${rewrite(match[1])} />`).join('')
 }
 
+/** Outline paths draw with the current colour, and fill nothing unless they say otherwise. */
+function processOutlineSvg(svgContent: string): string {
+  return svgPaths(svgContent, 'outline', attributes => {
+    const stroked = attributes.replace(/stroke="#0F172A"/g, 'stroke="currentColor"')
+    return stroked.includes('fill=') ? stroked : `fill="none" ${stroked}`
+  })
+}
+
+/** Solid paths fill with the current colour. */
 function processSolidSvg(svgContent: string): string {
-  const innerMatch = svgContent.match(/<svg[^>]*>([\s\S]*)<\/svg>/)
-  if (!innerMatch) throw new Error('Failed to parse solid SVG: no <svg> wrapper found')
-  const inner = innerMatch[1].trim()
-
-  const pathRegex = /<path\s+([^>]*?)\/>/g
-  const paths = []
-  for (const match of inner.matchAll(pathRegex)) {
-    let attrs = match[1]
-    attrs = attrs.replace(/fill="#0F172A"/g, 'fill="currentColor"')
-    paths.push(`<path ${attrs} />`)
-  }
-
-  return paths.join('')
+  return svgPaths(svgContent, 'solid', attributes => attributes.replace(/fill="#0F172A"/g, 'fill="currentColor"'))
 }
 
 // One of the two places a KebabName comes into existence: a filename with `.svg` removed.
@@ -134,4 +120,15 @@ export function parseIconFiles(directories: IconDirectories): Map<PascalName, Ic
   }
 
   return icons
+}
+
+/** The four Heroicons directories the generators read, in the pinned submodule. */
+export function heroiconDirectories(): IconDirectories {
+  const source = path.join(pinnedSubmodule('heroicons'), 'src')
+  return {
+    outline24Dir: path.join(source, '24', 'outline'),
+    solid16Dir: path.join(source, '16', 'solid'),
+    solid20Dir: path.join(source, '20', 'solid'),
+    solid24Dir: path.join(source, '24', 'solid'),
+  }
 }

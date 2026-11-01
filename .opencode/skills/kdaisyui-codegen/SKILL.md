@@ -59,7 +59,7 @@ A documented tag needs a builder: kotlinx.html's, or one the library defines in 
 | `generateComponents` | `codegen/src/index-new.ts` | components + `kdaisyui-classes.txt` |
 | `generateHeroicons` | `codegen/src/index-heroicons.ts` | icons |
 | `generateComponentTests` | `codegen/src/test-generator.ts` | component tests |
-| `generateHeroiconTests` | `codegen/src/test-generator-heroicons.ts` | icon tests |
+| `generateHeroiconTests` | `codegen/src/index-heroicon-tests.ts` | icon tests |
 | `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/`, `llms-full.txt`, `llms.txt` |
 
 All five declare `codegen/model` as an input. A new generator that reads the model must too, or a
@@ -204,6 +204,13 @@ devDependency, StrykerJS, also pinned exactly, for mutation testing only; genera
 with `--omit=dev`.
 
 ## Mutation testing
+
+**What makes the generators visible to it:** two snapshot test files compare generated output
+with the committed files. `generator-snapshots.test.ts` covers the component emitter (66), the icon
+emitter (324) and the icon render tests; `coverage-test-snapshot.test.ts` covers the coverage tests.
+They read the pinned submodules through `src/submodules.ts`, so a generator change that moves any
+output fails a unit test before the drift job runs. Reading and writing files belongs in an
+`index-*.ts` entry point, which the gate leaves out; the logic stays in a pure function next to it.
 
 CI's `codegen-tests` job mutates **the lines a pull request adds under `codegen/src/`**, entry
 points excepted, and fails on a single survivor. `src/index-mutation-scope.ts` turns the diff into

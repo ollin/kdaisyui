@@ -1,35 +1,4 @@
-import fs from 'fs'
-import path from 'path'
-import { pathToFileURL } from 'node:url'
-import { parseIconFiles, type IconPaths } from './parser/svg-heroicons.ts'
-
-const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
-// `lib/generated/test/`, NOT `lib/src/test/`. This file's output is generated, and the
-// hand-written tree is off-limits to it — `npm run generate:heroicon-tests` passes no
-// --output-dir, so the default is what that command uses, and it is the command this
-// generator's own output header tells you to run.
-const DEFAULT_OUTPUT_DIR = path.resolve(
-  import.meta.dirname,
-  '../../lib/generated/test/kotlin/io/github/ollin/kdaisyui/icons',
-)
-
-function parseOutputDir(): string {
-  for (const arg of process.argv) {
-    if (arg.startsWith('--output-dir=')) {
-      return arg.slice('--output-dir='.length)
-    }
-  }
-  return DEFAULT_OUTPUT_DIR
-}
-
-const OUTPUT_DIR = parseOutputDir()
-
-const directories = {
-  outline24Dir: path.join(HEROICONS_SRC_DIR, '24', 'outline'),
-  solid16Dir: path.join(HEROICONS_SRC_DIR, '16', 'solid'),
-  solid20Dir: path.join(HEROICONS_SRC_DIR, '20', 'solid'),
-  solid24Dir: path.join(HEROICONS_SRC_DIR, '24', 'solid'),
-}
+import type { IconPaths, PascalName } from './parser/svg-heroicons.ts'
 
 // The dimension (width == height) emitted for each size is taken from
 // HeroIconSize.dimension and is independent of the icon's available variants.
@@ -136,24 +105,15 @@ ${body}
 `
 }
 
-function main() {
-  for (const [name, dir] of Object.entries(directories)) {
-    if (!fs.existsSync(dir)) {
-      console.error(`${name} directory not found: ${dir}`)
-      console.error('Ensure the heroicons git submodule is checked out.')
-      process.exit(1)
-    }
-  }
-
-  const icons = parseIconFiles(directories)
-  const sorted = [...icons.keys()].sort()
-
-  const methods = sorted
+/** The whole `HeroIconsGeneratedTest.kt` for the parsed icons, in name order. A pure function. */
+function heroIconsTestFile(icons: ReadonlyMap<PascalName, IconPaths>): string {
+  const methods = [...icons.keys()]
+    .sort()
     // `!` because the key came from `icons.keys()` — present by construction.
     .map((pascalName) => generateIconTest(pascalName, icons.get(pascalName)!))
     .join('\n')
 
-  const kotlin = `// GENERATED — DO NOT EDIT
+  return `// GENERATED — DO NOT EDIT
 // Exhaustive render coverage for every generated heroIcon* function.
 // Regenerate: cd codegen && npm run generate:heroicon-tests
 
@@ -167,20 +127,6 @@ import kotlin.test.assertTrue
 class HeroIconsGeneratedTest {
 ${methods}}
 `
-
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true })
-  const outFile = path.join(OUTPUT_DIR, 'HeroIconsGeneratedTest.kt')
-  fs.writeFileSync(outFile, kotlin)
-  console.log(`Generated render coverage tests for ${sorted.length} heroicons`)
-  console.log(`Output: ${outFile}`)
 }
 
-// Run only when invoked directly. Without this, importing the module to test anything in it
-// regenerates 324 icon tests as a side effect — and `node --test`'s default patterns match
-// `test-*` regardless of extension, so a bare invocation treats this very file as a test and
-// executes it.
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main()
-}
-
-export { DEFAULT_OUTPUT_DIR }
+export { heroIconsTestFile }

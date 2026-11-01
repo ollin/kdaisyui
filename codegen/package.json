@@ -5,7 +5,7 @@
   "scripts": {
     "generate": "node src/index-new.ts",
     "generate:heroicons": "node src/index-heroicons.ts",
-    "generate:heroicon-tests": "node src/test-generator-heroicons.ts",
+    "generate:heroicon-tests": "node src/index-heroicon-tests.ts",
     "test": "node --test test/",
     "mutate": "stryker run"
   },

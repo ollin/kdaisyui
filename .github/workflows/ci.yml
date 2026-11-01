@@ -137,15 +137,11 @@ jobs:
   # promises a clone builds and tests with no Node, so anything needing Node lives in its
   # own job. This and generated-sources-drift are the only two.
   #
-  # Neither submodules nor a JDK, unlike its sibling. These tests import the generator
-  # modules and assert on pure functions — nothing reads the DaisyUI or Heroicons
-  # checkouts, nothing compiles Kotlin. If this job ever needs either, that is the signal
-  # that the tests have drifted into integration territory which generated-sources-drift
-  # already covers end to end.
-  #
-  # It does need `npm ci` since 2026-09-12: the modules under test parse DaisyUI's documented
-  # markup with a real HTML parser. That is a dependency on a package, not on a checkout, so
-  # the rule above is intact — these tests still read no submodule.
+  # No JDK: these tests import the generator modules and run them in memory. Since
+  # snapshot-test-generators they do read the pinned submodules, like the drift job: the
+  # snapshot tests generate every component and icon from them and compare the result with the
+  # committed files, which is what lets the mutation step below see the generators at all. A
+  # missing submodule fails with `git submodule update --init <name>`, never a skip.
   codegen-tests:
     name: codegen-tests
     needs: scope
@@ -157,6 +153,8 @@ jobs:
           # HEAD and its first parent, for the mutation step's diff: on a pull request the merge
           # commit and the base, on main the merge and the previous main.
           fetch-depth: 2
+          # DaisyUI and Heroicons, which the snapshot tests generate from.
+          submodules: recursive
 
       - name: Set up Node
         uses: actions/setup-node@v7

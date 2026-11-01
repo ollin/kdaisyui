@@ -46,8 +46,8 @@ examples do not drive every branch, and the aggregated 100 % line and branch gat
 |---|---|---|---|
 | A1 | The coverage half's output for the committed sources equals the committed `*CoverageTest.kt` byte for byte | drift job | verified: `generated-sources-drift` regenerates all of them on every full run, and `just generate` left no diff on 2026-11-01 |
 | A2 | The coverage half reads nothing but the component source it is given: no model, no frontmatter, no submodule | reading | verified in task 1.1: the coverage half's only file access is `generateCoverageForFile` reading one component and writing its test; everything it calls is a pure function of that text |
-| A3 | The snapshot test kills most of the coverage half's mutants | measurement | open, task 3.2; *wrong if* more than a quarter of that half's mutants survive |
-| A4 | The test runs in well under a second, so StrykerJS's per-mutant reruns stay cheap | measurement | open, task 3.1 |
+| A3 | The snapshot test kills most of the coverage half's mutants | measurement | confirmed in task 3.2: about 80 of the coverage half's roughly 650 mutants survive, an eighth |
+| A4 | The test runs in well under a second, so StrykerJS's per-mutant reruns stay cheap | measurement | confirmed in task 3.1: the test file runs in 113 ms |
 
 ## Capabilities
 

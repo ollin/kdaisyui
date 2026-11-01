@@ -20,23 +20,27 @@ and a check that it left no diff: the Bun suite alone cannot see a changed outpu
 
 ## 2. A pure coverage function, under TCR
 
-- [ ] 2.1 `. r (internal)` `coverageTestFor(className, source)` returns the file's Kotlin;
+- [x] 2.1 `. r (internal)` `coverageTestFor(className, source)` returns the file's Kotlin;
   `generateCoverageForFile` reads, calls it, writes.
-- [ ] 2.2 `. r (internal)` Export it beside the parsers, for tests only.
+- [x] 2.2 `. r (internal)` Export it beside the parsers, for tests only.
 
 ## 3. The snapshot test and its measurement
 
-- [ ] 3.1 `. F (internal)` The snapshot test over all 66 committed component files. Record its
+- [x] 3.1 `. F (internal)` The snapshot test over all 66 committed component files. Record its
   duration (A4).
-- [ ] 3.2 `. d` StrykerJS on `test-generator.ts`, before and after; record per function what
+- [x] 3.2 `. d` StrykerJS on `test-generator.ts`, before and after; record per function what
   survives (A3).
 
 ## 4. The survivors that remain
 
-- [ ] 4.1 For each surviving group: delete code that cannot matter, or add the case that kills it,
+- [x] 4.1 For each surviving group: delete code that cannot matter, or add the case that kills it,
   one commit each. Survivors in the documented-element half stay, as out of scope.
+
+Done as: the writer took its directories as parameters and got a test (the gate's changed
+lines), `VOID_TAGS` gave way to `isVoidElement`, two dead kind rules went; the rest is recorded
+as input-domain equivalents (`findings.md`, F2).
 
 ## 5. Gate and adoption
 
-- [ ] 5.1 `just generate` without a diff, `node --test`, the CI gate locally,
+- [x] 5.1 `just generate` without a diff, `node --test`, the CI gate locally,
   `openspec validate --strict`, findings, archive on the branch, pull request.

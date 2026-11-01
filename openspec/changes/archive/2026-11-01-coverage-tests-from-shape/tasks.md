@@ -30,5 +30,5 @@ in 2.1 and still receives the source until 3.1.
 ## 4. Gates, pull request, archive
 
 - [x] 4.1 Run the StrykerJS gate on the changed lines at 100 %, then a full `codegen` run, and record the before and after survivors of `test-generator.ts`
-- [ ] 4.2 Run `code_health_review` on every changed file (10.0) and `analyze_change_set`, and read the server values for project 14
-- [ ] 4.3 Archive the change on this branch, then push and open the pull request
+- [x] 4.2 Run `code_health_review` on every changed file (10.0) and `analyze_change_set`, and read the server values for project 14
+- [x] 4.3 Archive the change on this branch, then push and open the pull request

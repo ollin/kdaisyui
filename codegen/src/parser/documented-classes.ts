@@ -65,7 +65,7 @@ export class DocumentedClass {
    */
   static parse(token: string): DocumentedClass | null {
     const marker = token.indexOf(MARKER)
-    if (marker < 0) return null
+    // A token without the marker falls through to the `:` check, which refuses it.
     const className = token.slice(marker + MARKER.length)
     if (className.length === 0) return null
     if (marker === 0) return new DocumentedClass(null, className)
@@ -90,7 +90,7 @@ export class DocumentedClass {
  * Shared with `documented-element.ts` so one place knows how a class attribute is tokenised.
  */
 export function classTokensOf(node: TaggedNode): string[] {
-  return (node.attribs?.class ?? '').split(/\s+/).filter(Boolean)
+  return (node.attribs?.class ?? '').split(/\s/).filter(Boolean)
 }
 
 /**

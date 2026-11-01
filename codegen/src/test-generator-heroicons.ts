@@ -12,18 +12,16 @@ type IconSize = keyof typeof SIZE_DIMENSION
 // shape drifts — two declarations, one of them eventually stale.
 
 /**
- * Compute the viewBox the function will emit for a Solid render at a given size,
+ * Compute the viewBox the function will emit for a Solid render at a smaller size, Lg being 24
+ * for every icon,
  * mirroring the branch shape produced by generator-heroicons.js:
  *   - icons with solid16 + solid20: Sm -> 16, Md -> 20, Lg -> 24
  *   - icons with solid20 only:      Sm -> else(24), Md -> 20, Lg -> 24
  *   - icons with neither:           any -> 24
  */
-function solidViewBox(size: IconSize, struct: IconPaths): string {
-  const hasSolid16 = !!struct.solid16
-  const hasSolid20 = !!struct.solid20
-  if (size === 'Sm') return hasSolid16 ? '0 0 16 16' : '0 0 24 24'
-  if (size === 'Md') return hasSolid20 ? '0 0 20 20' : '0 0 24 24'
-  return '0 0 24 24'
+function solidViewBox(size: Exclude<IconSize, 'Lg'>, struct: IconPaths): string {
+  if (size === 'Sm') return struct.solid16 ? '0 0 16 16' : '0 0 24 24'
+  return struct.solid20 ? '0 0 20 20' : '0 0 24 24'
 }
 
 /**
@@ -71,7 +69,8 @@ function generateIconTest(pascalName: string, struct: IconPaths): string {
   // The Lg render also exercises the `if (extraClasses != null)` true branch and
   // asserts the extra class is appended after the size + variant classes.
   const lgExtraFragment = svgOpenFragment(
-    solidViewBox('Lg', struct),
+    // Every icon ships a 24px solid variant or falls back to it.
+    '0 0 24 24',
     'heroicon-lg heroicon-solid custom-extra',
     SIZE_DIMENSION.Lg,
   )

@@ -31,7 +31,7 @@ const JOIN_SCOPE_NAME = 'JoinScope'
 export function withJoinScope(
   shape: ComponentShape,
   members: readonly FunctionShape[],
-  imports: readonly string[] = [],
+  imports: readonly string[],
 ): ComponentShape {
   const [main, ...rest] = shape.functions
   return {

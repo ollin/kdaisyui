@@ -211,8 +211,13 @@ StrykerJS ranges; `stryker.config.json` holds the rest, `thresholds.break: 100` 
 the same gate before pushing:
 
 ```bash
-cd codegen && npm ci && npx stryker run --mutate "$(node src/index-mutation-scope.ts origin/main)"
+cd codegen && npm ci && npm run mutate -- --mutate "$(node src/index-mutation-scope.ts origin/main)"
 ```
+
+Always through `npm run mutate`, never `npx stryker`: `just generate` installs without dev
+dependencies, and `npx stryker` then downloads an unrelated, years-old npm package named
+`stryker`, which crashes with `Cannot find module 'rx'`, and keeps it in the npx cache, where even
+`--no-install` finds it. An npm script looks only in `node_modules/.bin` and says "not found".
 
 `npm run mutate` mutates everything and exits 1 until every survivor is gone: the whole directory
 scored 43.7 % when the gate arrived, mostly generator code only the drift job proves. The exit

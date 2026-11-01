@@ -234,7 +234,9 @@ val installCodegenDeps = tasks.register<Exec>("installCodegenDeps") {
     group = "codegen"
     description = "Install the codegen's npm dependencies (needs network on a cold node_modules)"
     workingDir = rootProject.file("codegen")
-    commandLine("sh", "-c", "npm ci")
+    // --omit=dev: generation and the unit tests need only htmlparser2. StrykerJS, the one
+    // devDependency, is for `npm run mutate` and the codegen-tests job, which run a plain npm ci.
+    commandLine("sh", "-c", "npm ci --omit=dev")
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     outputs.dir(rootProject.file("codegen/node_modules"))

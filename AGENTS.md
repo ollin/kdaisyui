@@ -54,8 +54,8 @@ The build does **not** run the generators: a clone compiles and tests with no No
 git submodules. Regeneration is explicit, and only `just generate` needs that toolchain.
 
 `codegen/` is **TypeScript executed directly by Node** — no build step, no emitted JavaScript.
-Nothing type-checks it, by decision; the gates are its unit tests (`./gradlew :lib:testCodegen`)
-and `generated-sources-drift`. Code there must stay inside *erasable* syntax — no `enum`, no
+Nothing type-checks it, by decision; the gates are its unit tests (`./gradlew :lib:testCodegen`),
+StrykerJS on the lines a pull request changes, and `generated-sources-drift`. Code there must stay inside *erasable* syntax — no `enum`, no
 `namespace` with runtime code, **no constructor parameter properties** (`constructor(readonly x:
 string)`), `import type` mandatory for types, `.ts` mandatory in import specifiers. → skill
 **`kdaisyui-codegen`**.
@@ -71,6 +71,10 @@ the test generator and the bump report read the markup DaisyUI documents, and a 
 is unreadable and — on the three constructs that defeat it — wrong. So regeneration runs `npm ci` first, via
 `installCodegenDeps`, and needs the network on a cold `node_modules`. Adding a second dependency
 is a decision, not a habit: weigh it.
+
+Since `mutation-test-codegen` it also has one **devDependency**, StrykerJS, which only the
+mutation gate and `npm run mutate` need. `installCodegenDeps` installs with `--omit=dev`, so
+generation still fetches one package.
 
 That does **not** change the paragraph above it. `check` still runs no generator, so a clone
 compiles and tests with no Node, no npm and no submodules.
@@ -177,6 +181,7 @@ A new prose document is checked only once `doc-snippets/build.gradle.kts` lists 
 |---|---|---|
 | was the line **executed**? | `koverVerify` — 100% line **and** branch, aggregated | `./gradlew check`, `unit-tests` job |
 | was the executed line **asserted**? | `:lib:pitest`, `:doc-snippets:pitest`, `:build-checks:pitest`, `:gradle-plugin:pitest` — 100% **test strength** | `mutation-tests` job, NOT in `check` |
+| … in `codegen/`? | StrykerJS on the lines a pull request adds under `codegen/src/` — 100%, any survivor fails | `codegen-tests` job; `npm run mutate` measures all of it, and exits 1 while any mutant survives |
 | is the test itself **readable**? | CodeScene, run by hand on the test file | no job — you have to ask |
 
 **A test file is production code and is reviewed as one.** `code_health_review` applies to

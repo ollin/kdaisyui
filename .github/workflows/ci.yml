@@ -153,6 +153,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # HEAD and its first parent, for the mutation step's diff: on a pull request the merge
+          # commit and the base, on main the merge and the previous main.
+          fetch-depth: 2
 
       - name: Set up Node
         uses: actions/setup-node@v7
@@ -174,6 +178,34 @@ jobs:
       - name: Run codegen unit tests
         working-directory: codegen
         run: npm test
+
+      # The lines this change adds under codegen/src, mutated by StrykerJS; a single survivor
+      # fails the job (mutation-testing, "Changed codegen lines are mutation-tested at 100 %").
+      # Only those lines: the whole directory scored 43.7 % when the gate was introduced. The
+      # threshold is `thresholds.break: 100` in codegen/stryker.config.json. An equivalent mutant
+      # is answered by deleting the code or by a `// Stryker disable next-line <mutator>:
+      # <reason>` comment a reviewer can check, never by lowering the threshold.
+      #
+      # The config's command runs each mutant's suite with `--test-isolation=none`: one Node
+      # process per test file made 54 mutants take 77 s here, one process overall 81 in 13 s.
+      - name: Mutation-test the changed lines of codegen/src
+        working-directory: codegen
+        run: |
+          ranges="$(node src/index-mutation-scope.ts)"
+          if [ -z "$ranges" ]; then
+            echo "No added line under codegen/src: nothing to mutate."
+            exit 0
+          fi
+          echo "$ranges" | tr ',' '\n'
+          npx stryker run --mutate "$ranges"
+
+      - name: Upload mutation report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: codegen-mutation-report
+          path: codegen/reports/mutation/
+          retention-days: 7
 
   # The sibling of generated-sources-drift: both compare a committed artefact
   # against what the build produces. Kept separate from unit-tests so an API

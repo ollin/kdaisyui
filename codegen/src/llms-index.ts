@@ -58,11 +58,11 @@ export function generateLlmsIndex(
 }
 
 /** What the reference parsers read as a link item: `- [name](url)`, optionally `: note`. */
-const LINK_ITEM = /^- \[[^\]]+\]\((?<url>[^)]+)\)(: .*)?$/
+const LINK_ITEM = /^- \[[^\]]+\]\(([^)]+)\)(: .*)?$/
 
 /** A linked repository path, with the line that links it; `null` for a link to another host. */
 function repositoryLink(line: string): string | null {
-  const url = LINK_ITEM.exec(line)?.groups?.url
+  const url = LINK_ITEM.exec(line)?.[1]
   return url !== undefined && url.startsWith(RAW_BASE) ? url.slice(RAW_BASE.length) : null
 }
 
@@ -72,12 +72,13 @@ function repositoryLink(line: string): string | null {
  * a finding reads the same on every machine.
  */
 export function documentationPages(repositoryRoot: string): string[] {
-  const underDocs = fs
-    .readdirSync(path.join(repositoryRoot, 'docs'), { recursive: true })
-    .map(String)
-    .filter(file => file.endsWith('.md') && !file.startsWith('reference/'))
-    .map(file => `docs/${file}`)
-  return ['README.md', ...underDocs.sort()]
+  return pagesUnderDocs(fs.readdirSync(path.join(repositoryRoot, 'docs'), { recursive: true }).map(String))
+}
+
+/** The pages among the files under `docs/`, as the directory listed them, in any order. */
+export function pagesUnderDocs(filesUnderDocs: readonly string[]): string[] {
+  const pages = filesUnderDocs.filter(file => file.endsWith('.md') && !file.startsWith('reference/')).map(file => `docs/${file}`)
+  return ['README.md', ...pages.sort()]
 }
 
 /** Documentation pages the index does not link. A page nobody can find is a page nobody reads. */

@@ -51,8 +51,12 @@ rewrites took to 54 of 54 killed (F2). 3.3 needed no code: an empty diff already
 
 ## 5. Kill the survivors in `llms-index.ts`
 
-- [ ] 5.1 `. r (internal)` One test per survivor, or delete code a survivor shows cannot matter;
+- [x] 5.1 `. r (internal)` One test per survivor, or delete code a survivor shows cannot matter;
   `npx stryker run --mutate src/llms-index.ts` at 100 %.
+  Done: 146 of 146 killed. Six survivors needed a test; the optional chaining on a regex group
+  went in a refactoring; `sort()` survived every filesystem test, because this machine's
+  `readdir` already returns sorted entries, so the pure part was split out and tested with an
+  unsorted list.
 
 ## 6. Documents, gate and adoption
 

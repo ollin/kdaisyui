@@ -4,7 +4,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { coverageFindings, documentationPages, generateLlmsIndex, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
+import { coverageFindings, documentationPages, generateLlmsIndex, linkFindings, pagesUnderDocs, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
 import { component, shapeOf } from './model-fixture.ts'
 
 const KBD = shapeOf(component('kbd', 'Kbd', 'kbd'), { desc: 'Kbd is used to display keyboard shortcuts. Second sentence.', classes: {} })
@@ -106,15 +106,13 @@ describe('documentationPages', () => {
     fs.rmSync(root, { recursive: true })
   })
 
-  test('lists the pages sorted, whatever order the directory returns them in', () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'llms-index-'))
-    for (const file of ['README.md', 'docs/zeta.md', 'docs/beta.md', 'docs/omega.md', 'docs/alpha.md', 'docs/mu.md']) {
-      fs.mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
-      fs.writeFileSync(path.join(root, file), '')
-    }
-
-    assert.deepEqual(documentationPages(root), ['README.md', 'docs/alpha.md', 'docs/beta.md', 'docs/mu.md', 'docs/omega.md', 'docs/zeta.md'])
-    fs.rmSync(root, { recursive: true })
+  test('lists the pages sorted, whatever order the directory returned them in', () => {
+    assert.deepEqual(pagesUnderDocs(['zeta.md', 'reference/button.md', 'tutorials/b.md', 'alpha.md', 'screenshots/x.png']), [
+      'README.md',
+      'docs/alpha.md',
+      'docs/tutorials/b.md',
+      'docs/zeta.md',
+    ])
   })
 })
 

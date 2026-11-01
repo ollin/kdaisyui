@@ -272,7 +272,7 @@ export function toPascalCase(name: ComponentName): PascalComponentName {
 
 export function getBaseClass(classnames: Classnames | undefined): string | null {
   if (!classnames?.component?.length) return null
-  return classnames.component[0].class.replace(/^['"]|['"]$/g, '')
+  return classnames.component[0].class
 }
 
 /**
@@ -286,28 +286,19 @@ export function getClassesByCategory(
   category: ClassCategory,
 ): string[] {
   if (!classnames?.[category]) return []
-  return classnames[category].map(entry => {
-    const cls = entry.class
-    return cls.replace(/^['"]|['"]$/g, '')
-  })
+  return classnames[category].map(entry => entry.class)
 }
 
 /**
- * Get full entries by category (class name + description + default flag)
- * @param {Classnames} classnames
- * @param {string} category
- * @returns {Array<{class: string, desc: string, default?: boolean}>}
+ * The entries of one category, class and description. `parseValue` has already unquoted both, so
+ * nothing here strips quotes a second time.
  */
 export function getEntriesByCategory(
   classnames: Classnames | undefined,
   category: ClassCategory,
 ): ClassEntry[] {
   if (!classnames?.[category]) return []
-  return classnames[category].map(entry => ({
-    class: (entry.class || '').replace(/^['"]|['"]$/g, ''),
-    desc: (entry.desc || '').replace(/^['"]|['"]$/g, ''),
-    ...(entry.default != null ? { default: entry.default } : {}),
-  }))
+  return classnames[category].map(entry => ({ class: entry.class || '', desc: entry.desc || '' }))
 }
 
 import fs from 'fs'

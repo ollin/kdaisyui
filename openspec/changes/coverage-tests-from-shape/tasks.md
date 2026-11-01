@@ -14,12 +14,12 @@ Each task changes `codegen/src/test-generator.ts` and keeps `coverage-test-snaps
 and `just generate` diff-free. `coverageTestFor` gains the shape and config as extra parameters
 in 2.1 and still receives the source until 3.1.
 
-- [ ] 2.1 `^ r` Pass the component's shape and main config into `coverageTestFor` beside the source, and read the enums from `shape.enums`
-- [ ] 2.2 `^ r` Read the functions, their siblings and their parameters from the shape instead of `findFunctions` and `splitParams`
-- [ ] 2.3 `^ r` Read each function's base classes and Boolean classes from the shape instead of its body
-- [ ] 2.4 `^ r` Read the builder from `tagBuilder` instead of `parseEmittedBuilder` and `parseScopeBuilder`
-- [ ] 2.5 `^ r` Read the scope members from `shape.scope` instead of `parseScopeMembers`
-- [ ] 2.6 `^ r` Read the attributes from the main config and the extras' fragments instead of the whole body
+- [x] 2.1 `^ r` Pass the component's shape and main config into `coverageTestFor` beside the source, and read the enums from `shape.enums`
+- [x] 2.2 `^ r` Read the functions, their siblings and their parameters from the shape instead of `findFunctions` and `splitParams`
+- [x] 2.3 `^ r` Read each function's base classes and Boolean classes from the shape instead of its body
+- [x] 2.4 `^ r` Read the builder from `tagBuilder` instead of `parseEmittedBuilder` and `parseScopeBuilder`
+- [x] 2.5 `^ r` Read the scope members from `shape.scope` instead of `parseScopeMembers`
+- [x] 2.6 `^ r` Read the attributes from the main config and the extras' fragments instead of the whole body
 
 ## 3. Delete the parser and the file reading
 

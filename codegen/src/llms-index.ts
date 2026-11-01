@@ -1,0 +1,41 @@
+/**
+ * `llms.txt`: the index https://llmstxt.org/ specifies. An H1, a blockquote, a few lines of
+ * prose, then H2 sections that are lists of links an agent fetches on demand. The detail lives
+ * behind the links: the reference pages, the prose documentation and `llms-full.txt`.
+ *
+ * The component list is generated from the same shapes the reference pages are rendered from, so
+ * a new component is linked without anyone editing the template. The rest of the file is
+ * `codegen/llms-template.md`.
+ */
+import type { ComponentShape } from './component-shape.ts'
+import { docFileNameFor, summaryLine, type DocSummary } from './generator-docs.ts'
+
+/** Where GitHub serves the committed Markdown as plain text; `blob` URLs serve HTML. */
+export const RAW_BASE = 'https://raw.githubusercontent.com/ollin/kdaisyui/main/'
+
+/** Where the template takes the component links. */
+const PLACEHOLDER = '{{COMPONENTS}}'
+
+/** Written by the generator rather than the template, so no template edit can drop it. */
+const HEADER = [
+  '<!--',
+  'GENERATED — DO NOT EDIT',
+  'Source: codegen/llms-template.md and the generated component API',
+  'Regenerate: just generate',
+  '-->',
+  '',
+].join('\n')
+
+export function renderLlmsIndex(
+  template: string,
+  shapes: readonly ComponentShape[],
+  docSummaries: Readonly<Record<string, DocSummary>>,
+): string {
+  if (!template.includes(PLACEHOLDER)) throw new Error(`llms template has no ${PLACEHOLDER} line`)
+  const links = shapes.map(shape => componentLink(shape, docSummaries[shape.componentDir]))
+  return HEADER + template.replace(PLACEHOLDER, links.join('\n'))
+}
+
+function componentLink(shape: ComponentShape, docSummary: DocSummary | undefined): string {
+  return `- [${shape.componentName}](${RAW_BASE}docs/reference/${docFileNameFor(shape.componentDir)}.md): ${summaryLine(shape, docSummary)}`
+}

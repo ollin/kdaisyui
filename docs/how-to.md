@@ -4,52 +4,30 @@ Task-oriented recipes for common goals. Each guide assumes you have kdaisyui set
 
 ## Set up a development environment
 
-### With Dev Container (VS Code / IntelliJ / Codespaces)
-
-Clone the repository and open it in a Dev Container-compatible editor. The container definition is in `.devcontainer/devcontainer.json` and provides everything pre-installed:
-
-```bash
-git clone https://github.com/ollin/kdaisyui
-# VS Code: "Reopen in Container"
-# IntelliJ: Dev Containers plugin → "Open Folder in Container"
-# GitHub Codespaces: "Code" → "Open with Codespaces"
-```
-
-After the container starts, port 8080 is forwarded automatically. Run the example:
-
-```bash
-./gradlew :example-app:run
-```
-
-### With asdf (local)
-
-The repository ships a `.tool-versions` file pinning the JDK that runs Gradle. That is all building and testing needs — the generated sources are committed, so no Node and no git submodules are involved:
-
-```bash
-git clone https://github.com/ollin/kdaisyui
-cd kdaisyui
-asdf install    # installs exact versions from .tool-versions
-./gradlew :lib:test
-```
-
-If you do not have an asdf plugin installed yet:
-
-```bash
-asdf plugin add java
-asdf plugin add gradle
-asdf plugin add nodejs
-asdf install
-```
-
-### With any JDK 21+
-
-The Gradle wrapper (`./gradlew`) downloads Gradle automatically (exact version in [`gradle/wrapper/gradle-wrapper.properties`](../gradle/wrapper/gradle-wrapper.properties)). You only need a JDK 21 or newer on your `PATH`:
+Building and testing needs **one JDK, 21 or newer**, and Docker for `./gradlew check`, which
+compiles the example app's stylesheet in a container. The Gradle wrapper downloads Gradle (exact
+version in [`gradle/wrapper/gradle-wrapper.properties`](../gradle/wrapper/gradle-wrapper.properties)),
+and the generated sources are committed, so no Node and no git submodules are involved:
 
 ```bash
 git clone https://github.com/ollin/kdaisyui
 cd kdaisyui
 ./gradlew :lib:test
 ```
+
+### The exact JDK CI uses
+
+[`.tool-versions`](../.tool-versions) names the JDK that runs Gradle in CI and in the release, and
+the Node that `just generate` needs. CI reads it directly, so it is the one pin. To run exactly
+those versions, let a tool that reads the file install them, [asdf](https://asdf-vm.com/) or
+[mise](https://mise.jdx.dev/):
+
+```bash
+asdf install    # or: mise install
+```
+
+Any other JDK 21 or newer builds the same code: the JDK that *compiles* it is a separate pin,
+`jvmToolchain(21)`, which Gradle provisions itself.
 
 ## Run the E2E tests
 

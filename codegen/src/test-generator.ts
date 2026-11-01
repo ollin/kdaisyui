@@ -376,12 +376,11 @@ function lowerFirst(s) {
 const PARAM_KIND_RULES = [
   [(c) => c.baseType === 'Boolean', 'boolean'],
   [(c) => c.name === 'id', 'id'],
-  // Read by nothing: it keeps `extraClasses: String?` out of `nullableString`, whose test would
-  // pass it "x" as if it were a component's own text parameter.
-  [(c) => c.name === 'extraClasses', 'extraClasses'],
   [(c) => c.name === 'content', (c) => (c.nullable ? 'contentOptional' : 'contentRequired')],
-  [(c) => c.name === 'text' && c.baseType === 'String', 'text'],
-  [(c) => c.nullable && c.baseType === 'String', 'nullableString'],
+  [(c) => c.name === 'text', 'text'],
+  // Not `extraClasses: String?`, whose test would otherwise pass it "x" as if it were a
+  // component's own text parameter.
+  [(c) => c.nullable && c.baseType === 'String' && c.name !== 'extraClasses', 'nullableString'],
   [(c) => c.nullable && c.enums[c.enumType], 'enumClass'],
   [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
 ]
@@ -390,7 +389,8 @@ function paramKind(ctx) {
   for (const [matches, kind] of PARAM_KIND_RULES) {
     if (matches(ctx)) return typeof kind === 'function' ? kind(ctx) : kind
   }
-  return 'other'
+  // A parameter no rule names, which no test drives.
+  return null
 }
 
 /**
@@ -405,7 +405,7 @@ function paramKind(ctx) {
  * kotlinx.html enum, never wrapped) matching its own rule.
  */
 function groupEnumOf(baseType: string): string {
-  return baseType.match(/^ClassValues<(\w+)>$/)?.[1] ?? baseType
+  return baseType.match(/ClassValues<(\w+)>/)?.[1] ?? baseType
 }
 
 function classifyParam({ name, type, cssClass, writes }: ParameterShape, enums) {
@@ -465,55 +465,30 @@ function htmlTagForFn(builder: BuilderName): TagName | null {
  * alone and would kill nothing for any div-based component.
  */
 /**
- * The HTML attributes a component body sets, split by whether a guard protects them.
+ * The HTML attributes a model's `apply` fragments set, split by whether a guard protects them.
+ * Every fragment assigns to the tag receiver as `this.<name> = …`, guarded by an `if (…)` or not:
  *
- * Three shapes occur in generated bodies, and all three are attribute assignments to
- * the kotlinx.html tag receiver:
+ *     this.type = type                                          // unconditional
+ *     if (disabled) this.disabled = true                        // Boolean parameter
+ *     if (disabled) { this.disabled = true; addClassNames(…) }   // Boolean parameter, block
+ *     if (type != null) this.type = type                        // nullable parameter
  *
- *     type = InputType.range                                    // unconditional
- *     if (disabled) this.disabled = true                        // boolean param
- *     if (disabled) { this.disabled = true; addClassNames(…) }   // boolean param, block
- *     if (type != null) this.type = type                        // nullable param
- *
- * `attributes["id"] = …` is deliberately NOT matched: `attributes` is followed by `[`
- * rather than `=`, and the id is already asserted separately.
- *
- * Only all-lowercase property names are reported. A kotlinx.html property whose name
- * is camelCase generally renames on the way out — `htmlFor` emits `for=` — and there
- * is no table here to invert. Skipping them asserts nothing rather than something
- * false, the same trade `htmlTagForFn` makes.
+ * Only all-lowercase property names are reported. A kotlinx.html property whose name is camelCase
+ * generally renames on the way out — `htmlFor` emits `for=` — and there is no table here to
+ * invert. Skipping them asserts nothing rather than something false.
  */
-const ATTR_ASSIGN = /(?:this\.)?\b([a-z][a-z0-9]*)\s*=\s*[^=]/g
+const ATTR_ASSIGN = /this\.([a-z][a-z0-9]*) = /g
 
-function parseAttrProps(body) {
-  const unconditional = new Set()
-  const guarded = new Set()
-  for (const line of body.split('\n')) {
-    const trimmed = line.trim()
-    if (!trimmed || trimmed.startsWith('addClassNames')) continue
-    const isGuarded = trimmed.startsWith('if (')
-    // On a guarded line, only look at what follows the condition.
-    const scanned = isGuarded ? trimmed.slice(trimmed.indexOf(')') + 1) : trimmed
-    for (const m of scanned.matchAll(ATTR_ASSIGN)) {
-      ;(isGuarded ? guarded : unconditional).add(m[1])
-    }
+function parseAttrProps(fragments: string) {
+  const unconditional = new Set<string>()
+  const guarded = new Set<string>()
+  for (const line of fragments.split('\n')) {
+    const found = line.startsWith('if (') ? guarded : unconditional
+    for (const m of line.matchAll(ATTR_ASSIGN)) found.add(m[1])
   }
   return { unconditional, guarded }
 }
 
-/**
- * Assert an attribute is PRESENT, by name, without asserting its value.
- *
- * The value is deliberately not checked. Doing so would mean predicting how
- * kotlinx.html renders each enum, and the entry name is not the rendered value —
- * `InputType.checkBox` emits `checkbox`. Replicating that mapping here would be a
- * second source of truth that can disagree with the library.
- *
- * Presence is exactly strong enough for what mutation testing found: every one of
- * these mutants REMOVES the setter call, and a removed call leaves no attribute at
- * all. A negated guard has the same effect on the all-flags case, which sets every
- * parameter.
- */
 function attrAssert(ctx, name) {
   return `assertTrue(html.contains("${name}=\\""), "${ctx.daisyName} sets ${name}")`
 }
@@ -591,7 +566,7 @@ function closesSuffix(ctx) {
 }
 
 /** The `Expected` a case asserts against, as Kotlin. */
-function expectedValue(ctx, classes, label, { withCloses = false, content = true } = {}) {
+function expectedValue(ctx, classes, label, { withCloses, content = true }) {
   const closes = withCloses ? closesSuffix(ctx) : null
   return `Expected("${label}", "${classes}"${closes ? `, closes = "${closes}"` : ''}${content ? '' : ', content = false'})`
 }
@@ -720,8 +695,8 @@ ${rest.map(line => `        ${line}`).join('\n')}${rest.length > 0 ? '\n' : ''} 
 
 /** A class sibling's all-flags test: no hatches, so one call when it asserts nothing else. */
 function siblingAllFlagsTest(ctx, args, asserts) {
+  // A sibling sets no attribute, so its asserts are only the expected classes and their check.
   const expected = asserts[0].replace('val expected = ', '')
-  if (asserts.length > 2) return wrapTest(ctx, `${ctx.fnBase}_all_flags`, args, asserts)
   return `
     @Test
     fun ${ctx.fnBase}_all_flags() = assertRenders(${expected}) { daisy${ctx.daisyName}(${args.join(', ')}) }
@@ -813,10 +788,11 @@ function coverageImports(funcs, enums): Set<string> {
     'import kotlinx.html.Tag',
   ])
   for (const fn of funcs) {
-    if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
+    // `div` for FlowContent and Tag, which the set already holds.
+    imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
     for (const declared of fn.parameters) {
       const parameter = classifyParam(declared, enums)
-      const external = parameter.kind === 'enumExternal' && EXTERNAL_ENUM_IMPORTS[parameter.baseType]
+      const external = EXTERNAL_ENUM_IMPORTS[parameter.baseType]
       if (external) imports.add(external)
     }
   }

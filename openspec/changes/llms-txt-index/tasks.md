@@ -25,7 +25,7 @@ The estimate ledger was not among this session's tools, so the run is to be open
 
 ## 2. The full file
 
-- [ ] 2.1 `! F` The reference-docs generator writes today's content to `llms-full.txt` from
+- [x] 2.1 `! F` The reference-docs generator writes today's content to `llms-full.txt` from
   `codegen/llms-full-template.md` (moved; title changed to say *full*); the generated header, the
   Gradle task's inputs and outputs, the drift job's paths and the `justfile` status paths name it.
   `llms.txt` is not written in this step. Regenerate and commit the output.

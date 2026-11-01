@@ -1,8 +1,9 @@
-# kdaisyui — llms.txt
+# kdaisyui — llms-full.txt
 
 > Type-safe DaisyUI component DSL for Kotlin kotlinx.html.
 > Wraps DaisyUI's CSS classes into compile-time-checked Kotlin extension functions.
 > No JavaScript framework. The library emits class names; your Tailwind build turns them into CSS.
+> This is the full API in one file; the index with links to every page is `llms.txt`.
 
 ## Quick start
 

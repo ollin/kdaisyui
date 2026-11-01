@@ -75,15 +75,15 @@ jobs:
           # counts as drift rather than slipping through as "no diff". It also
           # reports deletions, which is what catches a page the generator no longer
           # produces.
-          if [ -n "$(git status --porcelain -- lib/generated docs/reference llms.txt)" ]; then
-            echo "::error::lib/generated, docs/reference or llms.txt does not match what the generators produce."
+          if [ -n "$(git status --porcelain -- lib/generated docs/reference llms.txt llms-full.txt)" ]; then
+            echo "::error::lib/generated, docs/reference, llms.txt or llms-full.txt does not match what the generators produce."
             echo "Run 'just generate' and commit the result."
             echo
-            git --no-pager diff --stat -- lib/generated docs/reference llms.txt
-            git status --porcelain -- lib/generated docs/reference llms.txt
+            git --no-pager diff --stat -- lib/generated docs/reference llms.txt llms-full.txt
+            git status --porcelain -- lib/generated docs/reference llms.txt llms-full.txt
             exit 1
           fi
-          echo "lib/generated, docs/reference and llms.txt match their inputs."
+          echo "lib/generated, docs/reference, llms.txt and llms-full.txt match their inputs."
 
   # The codegen's own unit tests. Deliberately not part of `./gradlew check`: AGENTS.md
   # promises a clone builds and tests with no Node, so anything needing Node lives in its

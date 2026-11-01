@@ -384,19 +384,20 @@ tasks.register<Exec>("generateReferenceDocs") {
     dependsOn(checkoutDaisyuiTag, installCodegenDeps)
     workingDir = rootProject.file("codegen")
     val outputDir = rootProject.layout.projectDirectory.dir("docs/reference")
-    // llms.txt is written by the same run from the same shapes, so it cannot describe an API
-    // the reference pages do not. Hand-maintained until 0.7.0, it still showed 0.1.x signatures.
-    val llmsTxt = rootProject.layout.projectDirectory.file("llms.txt")
+    // llms-full.txt is written by the same run from the same shapes, so it cannot describe an API
+    // the reference pages do not. Hand-maintained until 0.7.0 (as llms.txt), it still showed
+    // 0.1.x signatures.
+    val llmsFull = rootProject.layout.projectDirectory.file("llms-full.txt")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/index-docs.ts --output-dir=\"${outputDir.asFile.absolutePath}\" --llms-txt=\"${llmsTxt.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/index-docs.ts --output-dir=\"${outputDir.asFile.absolutePath}\" --llms-full=\"${llmsFull.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.dir(rootProject.file("codegen/model"))
-    inputs.file(rootProject.file("codegen/llms-template.md"))
+    inputs.file(rootProject.file("codegen/llms-full-template.md"))
     outputs.dir(outputDir)
-    outputs.file(llmsTxt)
+    outputs.file(llmsFull)
 }
 
 val generateHeroicons = tasks.register<Exec>("generateHeroicons") {

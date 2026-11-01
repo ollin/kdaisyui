@@ -1034,13 +1034,15 @@ function coverageImports(funcs, enums): Set<string> {
   return imports
 }
 
-function generateCoverageForFile(fileName) {
-  const filePath = path.join(GENERATED_MAIN_DIR, fileName)
-  const content = fs.readFileSync(filePath, 'utf8')
-  const className = fileName.replace(/\.kt$/, '')
+/**
+ * The Kotlin of `<className>CoverageTest.kt` for one generated component source, or null when the
+ * source declares no function. A pure function of its input: the snapshot test compares it with
+ * the committed coverage tests, which need neither the submodule nor a regeneration.
+ */
+function coverageTestFor(className: string, content: string): string | null {
   const enums = parseEnumDefinitions(content)
   const funcs = findFunctions(content)
-  if (funcs.length === 0) return { success: false, error: 'No functions' }
+  if (funcs.length === 0) return null
 
   const imports = coverageImports(funcs, enums)
 
@@ -1048,15 +1050,21 @@ function generateCoverageForFile(fileName) {
   for (const fn of funcs) body += buildCoverageTests(fn, enums, content)
   for (const member of parseScopeMembers(content)) body += scopeMemberTest(member)
 
-  const kotlin = `package io.github.ollin.kdaisyui.components
+  return `package io.github.ollin.kdaisyui.components
 
 ${[...imports].sort().join('\n')}
 
 class ${className}CoverageTest {
 ${COVERAGE_HELPER}${body}}
 `
+}
+
+function generateCoverageForFile(fileName) {
+  const className = fileName.replace(/\.kt$/, '')
+  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(GENERATED_MAIN_DIR, fileName), 'utf8'))
+  if (kotlin === null) return { success: false, error: 'No functions' }
   fs.writeFileSync(path.join(OUTPUT_DIR, `${className}CoverageTest.kt`), kotlin)
-  return { success: true, funcCount: funcs.length }
+  return { success: true }
 }
 
 function generateAllCoverage() {

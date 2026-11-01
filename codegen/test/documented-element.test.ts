@@ -83,3 +83,13 @@ describe('documentedElementSetsIn', () => {
     assert.equal(documentedElementSetsIn(`<div class="flex $$card"></div>`).has('flex'), false)
   })
 })
+
+describe('the edges of a page', () => {
+  test('separates two blocks even where one ends without a newline', () => {
+    assert.equal(fencedHtmlBlocks('```html\n<i class="$$a"></i>```\n```html\n<b class="$$b"></b>```'), '<i class="$$a"></i>\n<b class="$$b"></b>')
+  })
+
+  test('passes over an element without a class attribute', () => {
+    assert.deepEqual([...documentedElementSetsIn('<div><span class="$$badge">x</span></div>')], [['badge', new Set(['SPAN'])]])
+  })
+})

@@ -45,4 +45,38 @@ describe('parseIconFiles', () => {
     fs.rmSync(outline.root, { recursive: true })
     fs.rmSync(solid.root, { recursive: true })
   })
+
+  test('reads only .svg files', () => {
+    const { root, directories } = iconDirectories({ outline: '<svg><path d="M1"/></svg>' })
+    fs.writeFileSync(path.join(directories.outline24Dir, 'notes.txt'), 'not an icon')
+
+    assert.deepEqual([...parseIconFiles(directories).keys()], ['Probe'])
+    fs.rmSync(root, { recursive: true })
+  })
+
+  test('keeps an icon with either 24px variant alone', () => {
+    const outlineOnly = iconDirectories({ outline: '<svg><path d="M1"/></svg>' })
+    const solidOnly = iconDirectories({ solid: '<svg><path d="M1"/></svg>' })
+
+    assert.equal(parseIconFiles(outlineOnly.directories).get('Probe' as never)?.solid24, null)
+    assert.equal(parseIconFiles(solidOnly.directories).get('Probe' as never)?.outline24, null)
+    fs.rmSync(outlineOnly.root, { recursive: true })
+    fs.rmSync(solidOnly.root, { recursive: true })
+  })
+
+  test('skips an icon with no 24px variant, and says so', () => {
+    const { root, directories } = iconDirectories({})
+    fs.writeFileSync(path.join(directories.solid16Dir, 'probe.svg'), '<svg><path d="M1"/></svg>')
+    const warnings: unknown[] = []
+    const warn = console.warn
+    console.warn = (message: unknown) => { warnings.push(message) }
+
+    try {
+      assert.equal(parseIconFiles(directories).size, 0)
+    } finally {
+      console.warn = warn
+    }
+    assert.deepEqual(warnings, ['  ⚠ probe: no 24px variant found, skipping'])
+    fs.rmSync(root, { recursive: true })
+  })
 })

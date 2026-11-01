@@ -375,36 +375,6 @@ function lowerFirst(s) {
   return s.charAt(0).toLowerCase() + s.slice(1)
 }
 
-/** Walk from an opening delimiter to its matching close, respecting nesting. */
-function matchDelimiter(str, openIdx, open, close) {
-  let depth = 0
-  for (let i = openIdx; i < str.length; i++) {
-    if (str[i] === open) depth++
-    else if (str[i] === close && --depth === 0) return i
-  }
-  throw new Error(`Unbalanced ${open} from index ${openIdx}`)
-}
-
-/** Extract every generated `fun <Receiver>.daisy<Name>(...) { ... }` block. */
-function findFunctions(content) {
-  const funcs = []
-  const headerRe = /fun\s+(\w+)\.daisy(\w+)\s*\(/g
-  let m
-  while ((m = headerRe.exec(content)) !== null) {
-    const parenStart = headerRe.lastIndex - 1
-    const parenEnd = matchDelimiter(content, parenStart, '(', ')')
-    const braceStart = content.indexOf('{', parenEnd)
-    const braceEnd = matchDelimiter(content, braceStart, '{', '}')
-    funcs.push({
-      receiver: m[1],
-      name: m[2],
-      body: content.slice(braceStart + 1, braceEnd),
-    })
-    headerRe.lastIndex = braceEnd
-  }
-  return funcs
-}
-
 const PARAM_KIND_RULES = [
   [(c) => c.baseType === 'Boolean', 'boolean'],
   [(c) => c.name === 'id', 'id'],
@@ -451,18 +421,6 @@ function classifyParam({ name, type, default: defaultValue, cssClass, writes }: 
   return { name, type, baseType, enumType, nullable, hasDefault, kind, classes, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
 }
 
-/**
- * The kotlinx.html BUILDER the function opens with. Every generated component body
- * starts with exactly one `<builder> {` line.
- *
- * A builder name is not an HTML tag name — see `htmlTagForFn`.
- */
-function parseEmittedBuilder(body: string): BuilderName | null {
-  const m = body.match(/^\s*([a-z][\w]*)\s*\{\s*$/m)
-  // One of the two points a branded name is created: everything downstream is checked.
-  return m ? (m[1] as BuilderName) : null
-}
-
 /** One overload on a generated scope, and what a test needs to call it. */
 interface ScopeMember {
   readonly name: string
@@ -470,51 +428,6 @@ interface ScopeMember {
   readonly requiresContent: boolean
   /** The function whose lambda the member lives in — the call has to be written inside it. */
   readonly opener: string
-}
-
-/**
- * The members of a generated scope, so the coverage tests can reach them.
- *
- * Each member is a generated function with its own parameter defaults, and the aggregated
- * 100% line gate counts every one of those lines. Enumerating them by hand in a test file
- * would put a second copy of a DERIVED list into the repository — which is the duplication
- * that deriving the set was meant to remove, and the one that a DaisyUI bump silently
- * invalidates.
- *
- * Returns nothing for a file with no scope, which is 65 of the 66.
- */
-function parseScopeMembers(file: string): ScopeMember[] {
-  const opener = file.match(/^fun \w+\.(\w+)\(/m)
-  const scope = file.match(/^class \w+ internal constructor\(([\s\S]*)$/m)
-  if (!opener || !scope) return []
-  return [...scope[1].matchAll(/^ {4}fun (\w+)\(([\s\S]*?)^ {4}\) \{/gm)].map(member => ({
-    name: member[1],
-    // A `content` parameter with no `= null` is required — the same reading the emitter uses,
-    // and the reason it can be absent at all is that a void element cannot hold children.
-    requiresContent: /^\s*content: \([^)]*\.\(\) -> Unit\),$/m.test(member[2]),
-    opener: opener[1],
-  }))
-}
-
-/**
- * The builder a SCOPED function stands in for.
- *
- * A function whose `content` runs in a generated scope opens no builder — it constructs the
- * scope and visits it, which is what `div { }` expands to with the scope class in `DIV`'s
- * place. So `parseEmittedBuilder` finds nothing, and the `closes` assertion it feeds silently
- * disappeared from the generated coverage test the day the join gained a scope.
- *
- * The element is not in the body; it is the scope's superclass, declared in the same file.
- * Returns null when the body opens no scope, or when the file declares no such class —
- * refusing to answer beats answering wrongly, which is the rule `htmlTagForFn` already follows.
- */
-function parseScopeBuilder(body: string, file: string): BuilderName | null {
-  const opened = body.match(/^\s*([A-Z]\w*)\(emptyMap\(\), consumer\)\.visit \{\s*$/m)
-  if (!opened) return null
-  const declared = file.match(
-    new RegExp(`^class ${opened[1]} internal constructor\\([\\s\\S]*?\\) : (\\w+)\\(`, 'm'),
-  )
-  return declared ? htmlTagFnFor(declared[1].toLowerCase() as TagName) : null
 }
 
 /**
@@ -966,10 +879,8 @@ function scopeMembersOf(shape: ComponentShape): ScopeMember[] {
   }))
 }
 
-function coverageTestFor(className: string, content: string, shape: ComponentShape, config: MainFunctionConfig): string | null {
+function coverageTestFor(className: string, shape: ComponentShape, config: MainFunctionConfig): string {
   const enums = enumTableOf(shape)
-  const parsed = findFunctions(content)
-  if (parsed.length === 0) return null
   const funcs = coverageFunctionsOf(shape, config)
 
   const imports = coverageImports(funcs, enums)
@@ -987,13 +898,9 @@ ${COVERAGE_HELPER}${body}}
 `
 }
 
-/** Reads one component from `componentsDir` and writes its coverage test to `outputDir`. */
-function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string, shape: ComponentShape, config: MainFunctionConfig) {
-  const className = path.basename(fileName, '.kt')
-  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'), shape, config)
-  if (kotlin === null) return { success: false, error: 'No functions' }
-  fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), kotlin)
-  return { success: true }
+/** Writes one component's coverage test to `outputDir`. */
+function writeCoverageTest(outputDir: string, className: string, shape: ComponentShape, config: MainFunctionConfig): void {
+  fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), coverageTestFor(className, shape, config))
 }
 
 function documentedContext(): DocumentedContext {
@@ -1016,9 +923,6 @@ export {
   coverageTestFor,
   writeCoverageTest,
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
-  parseEmittedBuilder,
-  parseScopeBuilder,
-  parseScopeMembers,
   htmlTagForFn,
   parseAttrProps,
   attrAssert,

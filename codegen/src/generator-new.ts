@@ -146,7 +146,7 @@ function renderScopeMember(shape: FunctionShape, markerClass: CssClass): string 
   return (
     `    /** [${shape.name}], marked \`${markerClass}\` because the call sits directly in the join. */\n` +
     `    fun ${shape.name}(\n${params}\n    ) {\n` +
-    `        ${shape.name.replace(/^daisy/, 'flow.daisy')}(\n${args}\n        )\n` +
+    `        flow.${shape.name}(\n${args}\n        )\n` +
     `    }`
   )
 }
@@ -319,7 +319,8 @@ function functionImports(fn: FunctionShape): string[] {
     // A scoped function constructs its tag rather than calling the builder, so importing the
     // builder would leave the generated file with an import nothing uses.
     ...(fn.contentScope === undefined ? [`${elementPackage(fn.element)}.${fn.tagBuilder}`] : []),
-    ...(fn.receiver !== 'FlowContent' ? [`kotlinx.html.${fn.receiver}`] : []),
+    // FlowContent among them, which the import set already holds.
+    `kotlinx.html.${fn.receiver}`,
     ...(fn.anchoredPopover ? ['io.github.ollin.kdaisyui.core.anchorName'] : []),
   ]
 }

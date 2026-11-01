@@ -49,6 +49,149 @@ This project follows the [Diátaxis](https://diataxis.fr/) documentation framewo
 
 > Published to [Maven Central](https://central.sonatype.com/artifact/io.github.ollin.kdaisyui/kdaisyui). Use the latest version shown on the badge above (or build from source with `just build`).
 
+## Quick start
+
+### 1. Add the dependency
+
+<!-- snippet: skip - a Gradle build script, not code against the library -->
+```kotlin
+// build.gradle.kts
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Import the BOM once (replace VERSION with the latest release), then declare
+    // the artifacts without versions — the BOM keeps them aligned.
+    implementation(platform("io.github.ollin.kdaisyui:kdaisyui-bom:VERSION"))
+    implementation("io.github.ollin.kdaisyui:kdaisyui")
+    implementation("io.github.ollin.kdaisyui:kdaisyui-ktor-integration") // optional: Ktor Resources integration
+}
+```
+
+> **Note:** Released to Maven Central via JReleaser. The latest version is shown on the badge at the top of this README.
+
+**Neither artifact chooses a Ktor version or any web asset for you.** `kdaisyui-ktor-integration`
+compiles against Ktor Resources but does not export it: your application owns its Ktor version,
+and you add `io.ktor:ktor-server-resources` yourself — an application that uses Ktor Resources has
+it already. Its inline functions compile Ktor's own `href` into your code, so a missing module is
+a compile error, never a runtime one. It is built and tested against the `ktor` version in
+[`gradle/libs.versions.toml`](gradle/libs.versions.toml) at the release tag you depend on.
+
+htmx, Tailwind and the DaisyUI stylesheet are likewise yours to add, at the versions you choose —
+see step 3.
+
+### 2. Render your first component
+
+```kotlin
+import io.github.ollin.kdaisyui.components.*
+import kotlinx.html.div
+import kotlinx.html.stream.createHTML
+
+val html = createHTML().div {
+    daisyButton("Click me", color = ButtonColor.Primary, size = ButtonSize.Lg)
+}
+// → <div><button class="btn btn-primary btn-lg">Click me</button></div>
+```
+
+### 3. Give those classes some CSS
+
+**kdaisyui emits class names. It does not produce CSS.** The snippet above renders
+`class="btn btn-primary btn-lg"` and nothing more — turning that into a styled button is your
+application's job, and there is one detail you cannot guess.
+
+#### The detail: your Tailwind cannot see these class names
+
+Tailwind scans your source files for class names. `btn-primary` is assembled at runtime from
+`ButtonColor.Primary`, so it appears in **none** of your files — and the published jar contains
+compiled classes, not Kotlin sources. A scan of your project finds nothing, Tailwind emits no rule,
+and your button renders unstyled with no error anywhere.
+
+So the library ships the list, and its Gradle plugin narrows it to the components your code
+uses. Apply the plugin, at the same version as the library:
+
+<!-- snippet: skip - a Gradle settings script, not code against the library -->
+```kotlin
+// settings.gradle.kts: the plugin is on Maven Central, not the Gradle Plugin Portal
+pluginManagement { repositories { gradlePluginPortal(); mavenCentral() } }
+```
+
+<!-- snippet: skip - a Gradle build script, not code against the library -->
+```kotlin
+// build.gradle.kts
+plugins { id("io.github.ollin.kdaisyui") version "VERSION" }
+
+// Whatever compiles your stylesheet runs after the list is written:
+tasks.named("yourTailwindTask") { dependsOn("kdaisyuiClasses") }
+```
+
+`kdaisyuiClasses` reads your compiled classes and writes `build/kdaisyui/kdaisyui-classes.txt`
+with the classes of every component they use. Point Tailwind at it:
+
+```css
+/* app.css */
+@import "tailwindcss" source(none);
+@plugin "daisyui";
+
+@source "./build/kdaisyui/kdaisyui-classes.txt";  /* the components your code uses */
+@source "./src/main/kotlin";                       /* what you write yourself */
+```
+
+Compile it with the Tailwind CLI, the standalone binary, or a container, whatever suits your
+build. `:example-app` applies the plugin and compiles in a container, so the repository needs no
+Node; see [`example-app/build.gradle.kts`](example-app/build.gradle.kts).
+
+**What it weighs:** `:example-app` uses 20 of the 66 components, and its stylesheet went from
+55 KB to 27 KB gzip (572 KB to 229 KB uncompressed) when it switched to the plugin. When the plugin
+is in doubt, because your compiled classes name no kdaisyui component, or name one the library's
+map does not know, it writes the full list and says why in the build's log and the file's first
+lines. A list that is too long costs bytes; one that is too short leaves a page unstyled with no
+error.
+
+Without Gradle, extract the full list from the jar, `kdaisyui-classes.txt`, and source that
+instead: every class the library can emit, about 550 KB of CSS. **Do not hand-maintain a shorter
+list.** It works until the day someone adds a component and forgets, and the failure is silent.
+
+#### The quick path, and what it costs
+
+For a prototype you can skip the build step and serve DaisyUI's prebuilt stylesheet from its
+webjar, through Ktor's Webjars plugin:
+
+<!-- snippet: skip - a Gradle build script, not code against the library -->
+```kotlin
+// build.gradle.kts — DAISYUI_VERSION: see below
+implementation("io.ktor:ktor-server-webjars")
+implementation("org.webjars.npm:daisyui:DAISYUI_VERSION")
+```
+
+<!-- snippet: in Application -->
+```kotlin
+install(Webjars)
+```
+
+<!-- snippet: in HEAD -->
+```kotlin
+link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
+```
+
+Take `DAISYUI_VERSION` from `daisyui` in [`gradle/libs.versions.toml`](gradle/libs.versions.toml)
+at the release tag you depend on. That is the version the components were generated from, so
+it is the version whose stylesheet has every class they emit; a newer DaisyUI 5 normally does too.
+
+This works and needs no toolchain. **What it cannot do is Tailwind variants of DaisyUI classes,
+beyond the five prefixes DaisyUI pre-generates.** Measured against 5.7.17:
+
+| Variant | Works with the prebuilt stylesheet |
+|---|---|
+| `sm:` `md:` `lg:` `xl:` `hover:` | yes |
+| `max-sm:` `max-lg:` `dark:` `focus:` … | **no — the class does nothing, silently** |
+
+So `lg:btn-lg` behaves and `max-sm:card-side` does not, with nothing to tell you apart. If you use
+responsive or state variants on DaisyUI classes, compile.
+
+> `extraClasses` takes any class you like, but the same rule applies: it must be visible to *your*
+> Tailwind setup. The library cannot account for classes it never sees.
+
 ## Upgrading
 
 Every release that breaks the API says what to change. Read the sections from the version you
@@ -639,149 +782,6 @@ a { daisyButtonClasses(color = ButtonColor.Primary) }
 styles the [cally](https://github.com/WickyNilliams/cally) web component, so a `<div class="cally">`
 rendered nothing to look at. The lambda receiver is now `CALENDAR_DATE`, from
 `io.github.ollin.kdaisyui.core`; load cally's script as DaisyUI's documentation says.
-
-## Quick start
-
-### 1. Add the dependency
-
-<!-- snippet: skip - a Gradle build script, not code against the library -->
-```kotlin
-// build.gradle.kts
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    // Import the BOM once (replace VERSION with the latest release), then declare
-    // the artifacts without versions — the BOM keeps them aligned.
-    implementation(platform("io.github.ollin.kdaisyui:kdaisyui-bom:VERSION"))
-    implementation("io.github.ollin.kdaisyui:kdaisyui")
-    implementation("io.github.ollin.kdaisyui:kdaisyui-ktor-integration") // optional: Ktor Resources integration
-}
-```
-
-> **Note:** Released to Maven Central via JReleaser. The latest version is shown on the badge at the top of this README.
-
-**Neither artifact chooses a Ktor version or any web asset for you.** `kdaisyui-ktor-integration`
-compiles against Ktor Resources but does not export it: your application owns its Ktor version,
-and you add `io.ktor:ktor-server-resources` yourself — an application that uses Ktor Resources has
-it already. Its inline functions compile Ktor's own `href` into your code, so a missing module is
-a compile error, never a runtime one. It is built and tested against the `ktor` version in
-[`gradle/libs.versions.toml`](gradle/libs.versions.toml) at the release tag you depend on.
-
-htmx, Tailwind and the DaisyUI stylesheet are likewise yours to add, at the versions you choose —
-see step 3.
-
-### 2. Render your first component
-
-```kotlin
-import io.github.ollin.kdaisyui.components.*
-import kotlinx.html.div
-import kotlinx.html.stream.createHTML
-
-val html = createHTML().div {
-    daisyButton("Click me", color = ButtonColor.Primary, size = ButtonSize.Lg)
-}
-// → <div><button class="btn btn-primary btn-lg">Click me</button></div>
-```
-
-### 3. Give those classes some CSS
-
-**kdaisyui emits class names. It does not produce CSS.** The snippet above renders
-`class="btn btn-primary btn-lg"` and nothing more — turning that into a styled button is your
-application's job, and there is one detail you cannot guess.
-
-#### The detail: your Tailwind cannot see these class names
-
-Tailwind scans your source files for class names. `btn-primary` is assembled at runtime from
-`ButtonColor.Primary`, so it appears in **none** of your files — and the published jar contains
-compiled classes, not Kotlin sources. A scan of your project finds nothing, Tailwind emits no rule,
-and your button renders unstyled with no error anywhere.
-
-So the library ships the list, and its Gradle plugin narrows it to the components your code
-uses. Apply the plugin, at the same version as the library:
-
-<!-- snippet: skip - a Gradle settings script, not code against the library -->
-```kotlin
-// settings.gradle.kts: the plugin is on Maven Central, not the Gradle Plugin Portal
-pluginManagement { repositories { gradlePluginPortal(); mavenCentral() } }
-```
-
-<!-- snippet: skip - a Gradle build script, not code against the library -->
-```kotlin
-// build.gradle.kts
-plugins { id("io.github.ollin.kdaisyui") version "VERSION" }
-
-// Whatever compiles your stylesheet runs after the list is written:
-tasks.named("yourTailwindTask") { dependsOn("kdaisyuiClasses") }
-```
-
-`kdaisyuiClasses` reads your compiled classes and writes `build/kdaisyui/kdaisyui-classes.txt`
-with the classes of every component they use. Point Tailwind at it:
-
-```css
-/* app.css */
-@import "tailwindcss" source(none);
-@plugin "daisyui";
-
-@source "./build/kdaisyui/kdaisyui-classes.txt";  /* the components your code uses */
-@source "./src/main/kotlin";                       /* what you write yourself */
-```
-
-Compile it with the Tailwind CLI, the standalone binary, or a container, whatever suits your
-build. `:example-app` applies the plugin and compiles in a container, so the repository needs no
-Node; see [`example-app/build.gradle.kts`](example-app/build.gradle.kts).
-
-**What it weighs:** `:example-app` uses 20 of the 66 components, and its stylesheet went from
-55 KB to 27 KB gzip (572 KB to 229 KB uncompressed) when it switched to the plugin. When the plugin
-is in doubt, because your compiled classes name no kdaisyui component, or name one the library's
-map does not know, it writes the full list and says why in the build's log and the file's first
-lines. A list that is too long costs bytes; one that is too short leaves a page unstyled with no
-error.
-
-Without Gradle, extract the full list from the jar, `kdaisyui-classes.txt`, and source that
-instead: every class the library can emit, about 550 KB of CSS. **Do not hand-maintain a shorter
-list.** It works until the day someone adds a component and forgets, and the failure is silent.
-
-#### The quick path, and what it costs
-
-For a prototype you can skip the build step and serve DaisyUI's prebuilt stylesheet from its
-webjar, through Ktor's Webjars plugin:
-
-<!-- snippet: skip - a Gradle build script, not code against the library -->
-```kotlin
-// build.gradle.kts — DAISYUI_VERSION: see below
-implementation("io.ktor:ktor-server-webjars")
-implementation("org.webjars.npm:daisyui:DAISYUI_VERSION")
-```
-
-<!-- snippet: in Application -->
-```kotlin
-install(Webjars)
-```
-
-<!-- snippet: in HEAD -->
-```kotlin
-link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
-```
-
-Take `DAISYUI_VERSION` from `daisyui` in [`gradle/libs.versions.toml`](gradle/libs.versions.toml)
-at the release tag you depend on. That is the version the components were generated from, so
-it is the version whose stylesheet has every class they emit; a newer DaisyUI 5 normally does too.
-
-This works and needs no toolchain. **What it cannot do is Tailwind variants of DaisyUI classes,
-beyond the five prefixes DaisyUI pre-generates.** Measured against 5.7.17:
-
-| Variant | Works with the prebuilt stylesheet |
-|---|---|
-| `sm:` `md:` `lg:` `xl:` `hover:` | yes |
-| `max-sm:` `max-lg:` `dark:` `focus:` … | **no — the class does nothing, silently** |
-
-So `lg:btn-lg` behaves and `max-sm:card-side` does not, with nothing to tell you apart. If you use
-responsive or state variants on DaisyUI classes, compile.
-
-> `extraClasses` takes any class you like, but the same rule applies: it must be visible to *your*
-> Tailwind setup. The library cannot account for classes it never sees.
 
 ## Modules
 

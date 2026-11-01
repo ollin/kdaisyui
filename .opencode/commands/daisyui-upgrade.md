@@ -49,7 +49,7 @@ If omitted, ask — do not guess, and do not read "latest" from the network with
    just update-api
    ```
 
-7. **Write the migration note** in `README.md` if anything broke. A breaking change with no
+7. **Write the migration note** in `docs/upgrading.md` if anything broke. A breaking change with no
    entry does not ship.
 
 8. **Run the gates.**

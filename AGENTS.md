@@ -155,7 +155,7 @@ Say which step you are on, and name the assertion that failed.
 ## The documentation's Kotlin snippets compile
 
 `check`, and CI's `unit-tests` job, compile every ` ```kotlin ` block of `README.md`,
-`docs/how-to.md`, `docs/explanation.md` and `docs/tutorials/*.md` against the library
+`docs/how-to.md`, `docs/explanation.md`, `docs/upgrading.md` and `docs/tutorials/*.md` against the library
 (`./gradlew :doc-snippets:compileSnippets`). Until 2026-10-31 nothing did, and three snippets
 had stopped compiling unnoticed: two tutorial steps carried pasted leftover lines, and one used
 an ellipsis that is not Kotlin. A failure names the snippet as
@@ -295,7 +295,7 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 - Swapping `testStrengthThreshold` for `mutationThreshold`: it cannot reach 100 here, and the
   build file says why
 - Re-dumping `lib/api/lib.api` to make the `api-baseline` job green without reading the diff —
-  and shipping a breaking change in it with no **How to migrate** entry in `README.md`
+  and shipping a breaking change in it with no **How to migrate** entry in `docs/upgrading.md`
 - Package `com.github.ollin`
 - Shipping a UI change without E2E
 - Writing a constructor parameter property in `codegen/` — Node rejects it outright

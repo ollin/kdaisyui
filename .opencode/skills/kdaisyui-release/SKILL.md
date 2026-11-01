@@ -141,7 +141,7 @@ passed" are different statements, and this is the case where they come apart.
 change to it therefore cannot arrive silently — but a *failing gate* only says the surface moved,
 and a consumer needs to be told what to do about it.
 
-So: **a breaking API change requires a "How to migrate" entry in `README.md` before the release
+So: **a breaking API change requires a "How to migrate" entry in `docs/upgrading.md` before the release
 that ships it.** The 0.2.0 entry is the shape to copy; it was written after the fact, from
 recollection, which is the habit this rule replaces.
 
@@ -149,7 +149,7 @@ recollection, which is the habit this rule replaces.
 
 - `:lib:checkKotlinAbi` is green, or the baseline was re-dumped **deliberately** with
   `just update-api` and the diff was read;
-- every removal or signature change in that diff is either non-breaking or has its `README.md`
+- every removal or signature change in that diff is either non-breaking or has its `docs/upgrading.md`
   migration entry;
 - the PR body's `BREAKING CHANGE:` footer points at that entry — see the next section for why
   its position matters;

@@ -199,7 +199,24 @@ refuses the file:
 `import type` is mandatory for type-only imports, and `.ts` is mandatory in import specifiers.
 
 One dependency, `htmlparser2`, pinned exactly: the test generator and the bump report read
-DaisyUI's marked examples with it. A second dependency is a decision, not a habit.
+DaisyUI's marked examples with it. A second dependency is a decision, not a habit. One
+devDependency, StrykerJS, also pinned exactly, for mutation testing only; generation installs
+with `--omit=dev`.
+
+## Mutation testing
+
+CI's `codegen-tests` job mutates **the lines a pull request adds under `codegen/src/`**, entry
+points excepted, and fails on a single survivor. `src/index-mutation-scope.ts` turns the diff into
+StrykerJS ranges; `stryker.config.mjs` holds the rest. Run the same gate before pushing:
+
+```bash
+cd codegen && npm ci && STRYKER_BREAK=100 npx stryker run --mutate "$(node src/index-mutation-scope.ts origin/main)"
+```
+
+`npm run mutate` mutates everything and gates nothing: the whole directory scored 43.7 % when the
+gate arrived, mostly generator code only the drift job proves. A survivor on a changed line is a
+missing assertion, or code that cannot matter and should go; a Stryker disable comment needs a
+reason a reviewer can check, and `STRYKER_BREAK` is never lowered.
 
 ## Verifying a codegen change
 

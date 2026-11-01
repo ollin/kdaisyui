@@ -60,5 +60,5 @@ rewrites took to 54 of 54 killed (F2). 3.3 needed no code: an empty diff already
 
 ## 6. Documents, gate and adoption
 
-- [ ] 6.1 `. d` `AGENTS.md` test-quality table, `kdaisyui-codegen`, `kdaisyui-testing`.
+- [x] 6.1 `. d` `AGENTS.md` test-quality table, `kdaisyui-codegen`, `kdaisyui-testing`.
 - [ ] 6.2 Full green, `openspec validate --strict`, findings, archive on the branch.

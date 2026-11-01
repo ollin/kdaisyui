@@ -102,6 +102,20 @@ jreleaser {
             changelog {
                 formatted.set(org.jreleaser.model.Active.ALWAYS)
                 preset.set("conventional-commits")
+                // The preset's format without its `, closes #N` suffix. JReleaser fills that from
+                // every `#N` anywhere in a commit message (ChangelogProvider.extractIssues), so it
+                // cannot tell a closing reference from a mention: v0.8.1 said "closes #423" for a
+                // PR whose title only named it, and every line "closed" its own PR. The PR number
+                // is already in each description, `(#431)`.
+                format.set(
+                    "- {{commitShortHash}} {{#commitIsConventional}}" +
+                        "{{#conventionalCommitIsBreakingChange}}🚨 {{/conventionalCommitIsBreakingChange}}" +
+                        "{{#conventionalCommitScope}}**{{conventionalCommitScope}}**: {{/conventionalCommitScope}}" +
+                        "{{conventionalCommitDescription}}" +
+                        "{{#conventionalCommitBreakingChangeContent}} - *{{conventionalCommitBreakingChangeContent}}*" +
+                        "{{/conventionalCommitBreakingChangeContent}}{{/commitIsConventional}}" +
+                        "{{^commitIsConventional}}{{commitTitle}}{{/commitIsConventional}}",
+                )
                 contributors {
                     enabled.set(false)
                 }

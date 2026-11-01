@@ -11,8 +11,8 @@
 /** `@@ -<old> +<start>[,<count>] @@`: the new side of a hunk. */
 const HUNK = /^@@ -\S+ \+(\d+)(?:,(\d+))? @@/gm
 
-/** The file a diff section is about, from its `+++ b/<path>` line. A deleted file has none. */
-const NEW_FILE = /^\+\+\+ b\/(?<path>.+)$/m
+/** The header naming a section's file on its new side; a deleted file's reads `+++ /dev/null`. */
+const NEW_FILE = '+++ b/'
 
 /** TypeScript under `src/`, which the gate mutates. */
 const SOURCE = /^src\/.+\.ts$/
@@ -28,8 +28,10 @@ export function mutationScope(diff: string): string[] {
 
 /** The ranges of one file's section of the diff. */
 function fileRanges(section: string): string[] {
-  const file = NEW_FILE.exec(section)?.groups?.path
-  if (file === undefined || !isMutated(file)) return []
+  const header = section.split('\n').find(line => line.startsWith(NEW_FILE))
+  if (header === undefined) return []
+  const file = header.slice(NEW_FILE.length)
+  if (!isMutated(file)) return []
   return [...section.matchAll(HUNK)].flatMap(([, start, count]) => addedRange(file, Number(start), count))
 }
 

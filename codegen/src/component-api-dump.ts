@@ -98,9 +98,8 @@ export function generateComponentApiDump(shapes: readonly ComponentShape[]): str
     '',
   ]
 
-  // Component names are unique, each one a model file, so the map loses none.
-  const byName = new Map(shapes.map(shape => [shape.componentName.toLowerCase(), shape]))
-  const sorted = [...byName.keys()].sort().map(name => byName.get(name)!)
+  // Ignoring case, which puts Textarea before TextRotate; a fixed locale, so every machine agrees.
+  const sorted = [...shapes].sort((a, b) => a.componentName.localeCompare(b.componentName, 'en'))
 
   return [...header, ...sorted.flatMap(renderComponent)].join('\n')
 }

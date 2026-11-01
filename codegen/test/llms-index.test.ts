@@ -1,13 +1,16 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-
-import { coverageFindings, documentationPages, generateLlmsIndex, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
+
+import { coverageFindings, documentationPages, generateLlmsIndex, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
 import { component, shapeOf } from './model-fixture.ts'
 
 const KBD = shapeOf(component('kbd', 'Kbd', 'kbd'), { desc: 'Kbd is used to display keyboard shortcuts. Second sentence.', classes: {} })
+
+/** A link item into this repository, as the index writes it. */
+const raw = (file: string, note?: string) => `- [${file}](https://raw.githubusercontent.com/ollin/kdaisyui/main/${file})${note ? `: ${note}` : ''}`
 
 describe('renderLlmsIndex', () => {
   test('links each component to the raw Markdown of its reference page, with its summary as the note', () => {
@@ -37,7 +40,7 @@ describe('renderLlmsIndex', () => {
 
 describe('shapeFindings', () => {
   test('accepts H2 headings, blank lines and link items with or without a note after the first H2', () => {
-    const index = '# kdaisyui\n\n> Summary.\n\nProse here.\n\n## Docs\n\n- [README](https://x/README.md): the start\n\n- [How-to](https://x/docs/how-to.md)\n\n## Optional\n\n- [DaisyUI](https://daisyui.com)\n'
+    const index = `# kdaisyui\n\n> Summary.\n\nProse here.\n\n## Docs\n\n${raw('README.md', 'the start')}\n\n${raw('docs/how-to.md')}\n\n## Optional\n\n- [DaisyUI](https://daisyui.com)\n`
 
     assert.deepEqual(shapeFindings(index), [])
   })
@@ -50,10 +53,8 @@ describe('shapeFindings', () => {
       'line 7: after the first H2 only H2 headings and link items may appear, got "A sentence."',
     ])
   })
-})
 
-describe('shapeFindings, before the first H2', () => {
-  test('names a heading that is not the one H1, and counts the H1s', () => {
+  test('before the first H2, names a heading that is not the one H1 and counts the H1s', () => {
     const index = '<!--\ngenerated\n-->\n# kdaisyui\n\n### Rules\n\n# Again\n\n## Docs\n'
 
     assert.deepEqual(shapeFindings(index), [
@@ -65,8 +66,8 @@ describe('shapeFindings, before the first H2', () => {
 
 describe('linkFindings', () => {
   test('names a repository link whose path does not exist, and leaves other hosts alone', () => {
-    const index = '## Docs\n\n- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): start\n- [Gone](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/gone.md)\n- [DaisyUI](https://daisyui.com)\n'
-    const exists = (path: string) => path === 'README.md'
+    const index = `## Docs\n\n${raw('README.md', 'start')}\n${raw('docs/gone.md')}\n- [DaisyUI](https://daisyui.com)\n`
+    const exists = (file: string) => file === 'README.md'
 
     assert.deepEqual(linkFindings(index, exists), ['line 4: links docs/gone.md, which does not exist in the repository'])
   })
@@ -74,7 +75,7 @@ describe('linkFindings', () => {
 
 describe('coverageFindings', () => {
   test('names each documentation page no repository link targets', () => {
-    const index = '## Docs\n\n- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): start\n- [DaisyUI](https://daisyui.com)\n'
+    const index = `## Docs\n\n${raw('README.md', 'start')}\n- [DaisyUI](https://daisyui.com)\n`
 
     assert.deepEqual(coverageFindings(index, ['README.md', 'docs/how-to.md']), ['docs/how-to.md is not linked from llms.txt'])
   })
@@ -89,6 +90,7 @@ describe('documentationPages', () => {
     }
 
     assert.deepEqual(documentationPages(root), ['README.md', 'docs/how-to.md', 'docs/tutorials/index.md'])
+    fs.rmSync(root, { recursive: true })
   })
 })
 
@@ -96,13 +98,13 @@ describe('generateLlmsIndex', () => {
   const repository = { exists: (file: string) => file === 'README.md' || file === 'docs/reference/kbd.md', pages: ['README.md'] }
 
   test('returns the rendered index when every gate is quiet', () => {
-    const template = '# kdaisyui\n\n> Summary.\n\n## Docs\n\n- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): start\n\n## Components\n\n{{COMPONENTS}}\n'
+    const template = `# kdaisyui\n\n> Summary.\n\n## Docs\n\n${raw('README.md', 'start')}\n\n## Components\n\n{{COMPONENTS}}\n`
 
     assert.match(generateLlmsIndex(template, [KBD], {}, repository), /^- \[Kbd\]\(.*kbd\.md\): Kbd is used to display keyboard shortcuts$/m)
   })
 
   test('refuses an index with findings, listing every one', () => {
-    const template = '# kdaisyui\n\n## Docs\n\n### Start\n- [Gone](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/gone.md)\n{{COMPONENTS}}\n'
+    const template = `# kdaisyui\n\n## Docs\n\n### Start\n${raw('docs/gone.md')}\n{{COMPONENTS}}\n`
 
     assert.throws(() => generateLlmsIndex(template, [KBD], {}, repository), (error: Error) => {
       assert.match(error.message, /^llms\.txt is not the index llmstxt\.org specifies:\n/)

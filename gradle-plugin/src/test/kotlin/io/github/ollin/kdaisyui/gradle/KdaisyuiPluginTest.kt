@@ -17,6 +17,7 @@ class KdaisyuiPluginTest {
         val task = project.tasks.getByName("kdaisyuiClasses") as KdaisyuiClasses
         assertEquals(project.layout.buildDirectory.file("kdaisyui/kdaisyui-classes.txt").get().asFile, task.output.get().asFile)
         assertTrue(task.classes.files.any { it.path.endsWith("classes/java/main") })
+        assertEquals("Writes the classes of the kdaisyui components this build uses, for Tailwind's @source.", task.description)
         assertTrue(task.runtimeClasspath.none { it.path.contains("resources/main") }, "reads the dependencies, not the project's own resources")
     }
 

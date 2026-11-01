@@ -29,6 +29,7 @@ class KdaisyuiClassesTest {
         task.runtimeClasspath.from(dir.resolve("missing"), resources)
         task.write()
         assertEquals(listOf("btn", "btn-primary"), writtenClasses())
+        assertEquals(2, comments().size, "a narrowed list gives no reason")
     }
 
     @Test
@@ -36,6 +37,7 @@ class KdaisyuiClassesTest {
         task.runtimeClasspath.from(resources)
         task.write()
         assertEquals(listOf("btn", "btn-primary", "card"), writtenClasses())
+        assertEquals("# Every class, because the compiled classes name no kdaisyui component.", comments().last())
     }
 
     @Test
@@ -45,4 +47,6 @@ class KdaisyuiClassesTest {
     }
 
     private fun writtenClasses() = task.output.get().asFile.readLines().filterNot { it.startsWith("#") }
+
+    private fun comments() = task.output.get().asFile.readLines().filter { it.startsWith("#") }
 }

@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { getBaseClass, getClassesByCategory, getEntriesByCategory, parseFrontmatter } from '../src/parser/frontmatter.ts'
+import { everyDeclaredClass, getBaseClass, getClassesByCategory, getEntriesByCategory, parseFrontmatter, readComponentFrontmatter, type ComponentName } from '../src/parser/frontmatter.ts'
 
 /**
  * Characterization tests for the hand-rolled YAML reader.
@@ -170,5 +170,36 @@ describe('the classnames getters', () => {
     assert.equal(getBaseClass({ color: [] } as never), null)
     assert.deepEqual(getClassesByCategory(classnames, 'size'), [])
     assert.deepEqual(getEntriesByCategory(undefined, 'size'), [])
+  })
+})
+
+describe('parseFrontmatter, on lines it ignores', () => {
+  test('ignores a category line without a colon, and an item line without one under an open item', () => {
+    const fm = parseFrontmatter(doc('classnames:', '  nonsense', '  color:', '  - class: btn-primary', '    nonsense'))
+
+    assert.deepEqual(fm?.classnames, { color: [{ class: 'btn-primary' }] })
+  })
+
+  test('ignores an indented line under a scalar, a non-item under a list, and continuation with no open item', () => {
+    const fm = parseFrontmatter(doc('title: Button', '  - stray', 'tags:', '  nonsense', '    desc: orphan', '  - one'))
+
+    assert.equal(fm?.title, 'Button')
+    assert.deepEqual(fm?.tags, ['one'])
+  })
+})
+
+describe('the classnames readers, on what a page may lack', () => {
+  test('give an empty class for an item that names none', () => {
+    const classnames = parseFrontmatter(doc('classnames:', '  color:', '  - desc: no class'))?.classnames
+
+    assert.deepEqual(getEntriesByCategory(classnames, 'color'), [{ class: '', desc: 'no class' }])
+    assert.deepEqual(getClassesByCategory(undefined, 'color'), [])
+  })
+
+  test('read nothing for a component DaisyUI does not have', () => {
+    const missing = 'no-such-component' as ComponentName
+
+    assert.equal(readComponentFrontmatter(missing), null)
+    assert.deepEqual([...everyDeclaredClass([missing])], [])
   })
 })

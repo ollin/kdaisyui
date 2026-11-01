@@ -12,7 +12,20 @@ import { coverageTestFor } from '../src/test-generator.ts'
  * the drift job keeps in step. So this needs neither the DaisyUI submodule nor a regeneration, and
  * any change to the generated Kotlin of any component fails here, on the component that moved.
  */
-const GENERATED = path.resolve(import.meta.dirname, '../../lib/generated')
+/**
+ * The nearest `lib/generated` above this file. Not a fixed `../../`: StrykerJS runs the tests from
+ * a sandbox copy of `codegen/` nested inside it (`codegen/.stryker-tmp/sandbox-…/`), where the fixed
+ * path finds nothing and the initial test run fails.
+ */
+function generatedRoot(from: string): string {
+  const candidate = path.join(from, 'lib/generated')
+  if (fs.existsSync(candidate)) return candidate
+  const parent = path.dirname(from)
+  if (parent === from) throw new Error('No lib/generated above the codegen tests')
+  return generatedRoot(parent)
+}
+
+const GENERATED = generatedRoot(import.meta.dirname)
 const COMPONENTS = path.join(GENERATED, 'main/kotlin/io/github/ollin/kdaisyui/components')
 const COVERAGE_TESTS = path.join(GENERATED, 'test/kotlin/io/github/ollin/kdaisyui/components')
 

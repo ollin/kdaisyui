@@ -1,7 +1,10 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { coverageFindings, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
+import { coverageFindings, documentationPages, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
 import { component, shapeOf } from './model-fixture.ts'
 
 const KBD = shapeOf(component('kbd', 'Kbd', 'kbd'), { desc: 'Kbd is used to display keyboard shortcuts. Second sentence.', classes: {} })
@@ -74,5 +77,17 @@ describe('coverageFindings', () => {
     const index = '## Docs\n\n- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): start\n- [DaisyUI](https://daisyui.com)\n'
 
     assert.deepEqual(coverageFindings(index, ['README.md', 'docs/how-to.md']), ['docs/how-to.md is not linked from llms.txt'])
+  })
+})
+
+describe('documentationPages', () => {
+  test('is README and every Markdown file under docs/ except the generated reference pages', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'llms-index-'))
+    for (const file of ['README.md', 'docs/how-to.md', 'docs/tutorials/index.md', 'docs/reference/button.md', 'docs/screenshots/page.png']) {
+      fs.mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
+      fs.writeFileSync(path.join(root, file), '')
+    }
+
+    assert.deepEqual(documentationPages(root), ['README.md', 'docs/how-to.md', 'docs/tutorials/index.md'])
   })
 })

@@ -7,6 +7,8 @@
  * a new component is linked without anyone editing the template. The rest of the file is
  * `codegen/llms-template.md`.
  */
+import fs from 'fs'
+import path from 'path'
 import type { ComponentShape } from './component-shape.ts'
 import { byDisplayName, docFileNameFor, summaryLine, type DocSummary } from './generator-docs.ts'
 
@@ -43,6 +45,20 @@ const LINK_ITEM = /^- \[[^\]]+\]\((?<url>[^)]+)\)(: .*)?$/
 function repositoryLink(line: string): string | null {
   const url = LINK_ITEM.exec(line)?.groups?.url
   return url !== undefined && url.startsWith(RAW_BASE) ? url.slice(RAW_BASE.length) : null
+}
+
+/**
+ * The hand-written pages a reader is meant to find: README and every Markdown file under `docs/`
+ * except `docs/reference/`, whose pages the component list covers by construction. Sorted, so
+ * a finding reads the same on every machine.
+ */
+export function documentationPages(repositoryRoot: string): string[] {
+  const underDocs = fs
+    .readdirSync(path.join(repositoryRoot, 'docs'), { recursive: true })
+    .map(String)
+    .filter(file => file.endsWith('.md') && !file.startsWith('reference/'))
+    .map(file => `docs/${file}`)
+  return ['README.md', ...underDocs.sort()]
 }
 
 /** Documentation pages the index does not link. A page nobody can find is a page nobody reads. */

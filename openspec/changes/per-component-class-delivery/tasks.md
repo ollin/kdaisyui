@@ -42,9 +42,9 @@ decides the plugin's place before any of it is written.
 
 ## 5. Docs
 
-- [ ] 5.1 `. d` README's CSS section: the plugin first, the `Copy`-from-jar setup for builds
+- [x] 5.1 `. d` README's CSS section: the plugin first, the `Copy`-from-jar setup for builds
   without Gradle, both sizes.
-- [ ] 5.2 `. d` `kdaisyui-release` and AGENTS.md: the fourth artifact and its marker.
+- [x] 5.2 `. d` `kdaisyui-release` and AGENTS.md: the fourth artifact and its marker.
 
 ## 6. Gate and adoption
 

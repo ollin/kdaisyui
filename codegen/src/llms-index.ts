@@ -36,6 +36,25 @@ export function renderLlmsIndex(
   return HEADER + template.replace(PLACEHOLDER, links.join('\n'))
 }
 
+/** What the reference parsers read as a link item: `- [name](url)`, optionally `: note`. */
+const LINK_ITEM = /^- \[[^\]]+\]\([^)]+\)(: .*)?$/
+
+/**
+ * Where the rendered index breaks the shape https://llmstxt.org/ specifies. The reference
+ * parsers would not object, since they only collect the link items they find; a paragraph or
+ * sub-heading after the first H2 would be silently dropped, which is why the gate is here.
+ */
+export function shapeFindings(index: string): string[] {
+  const lines = index.split('\n')
+  const firstH2 = lines.findIndex(line => line.startsWith('## '))
+  if (firstH2 === -1) return []
+  return lines
+    .map((line, at) => ({ line, at }))
+    .slice(firstH2)
+    .filter(({ line }) => line !== '' && !line.startsWith('## ') && !LINK_ITEM.test(line))
+    .map(({ line, at }) => `line ${at + 1}: after the first H2 only H2 headings and link items may appear, got "${line}"`)
+}
+
 function componentLink(shape: ComponentShape, docSummary: DocSummary | undefined): string {
   return `- [${shape.componentName}](${RAW_BASE}docs/reference/${docFileNameFor(shape.componentDir)}.md): ${summaryLine(shape, docSummary)}`
 }

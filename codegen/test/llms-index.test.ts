@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { renderLlmsIndex } from '../src/llms-index.ts'
+import { renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
 import { component, shapeOf } from './model-fixture.ts'
 
 const KBD = shapeOf(component('kbd', 'Kbd', 'kbd'), { desc: 'Kbd is used to display keyboard shortcuts. Second sentence.', classes: {} })
@@ -29,5 +29,22 @@ describe('renderLlmsIndex', () => {
 
   test('refuses a template that has lost its placeholder', () => {
     assert.throws(() => renderLlmsIndex('no placeholder here\n', [KBD], {}), /\{\{COMPONENTS\}\}/)
+  })
+})
+
+describe('shapeFindings', () => {
+  test('accepts H2 headings, blank lines and link items with or without a note after the first H2', () => {
+    const index = '# kdaisyui\n\n> Summary.\n\nProse here.\n\n## Docs\n\n- [README](https://x/README.md): the start\n\n- [How-to](https://x/docs/how-to.md)\n\n## Optional\n\n- [DaisyUI](https://daisyui.com)\n'
+
+    assert.deepEqual(shapeFindings(index), [])
+  })
+
+  test('names the line that is neither an H2 nor a link item after the first H2', () => {
+    const index = '# kdaisyui\n\n## Docs\n\n### Tutorials\n- [One](https://x/one.md)\nA sentence.\n'
+
+    assert.deepEqual(shapeFindings(index), [
+      'line 5: after the first H2 only H2 headings and link items may appear, got "### Tutorials"',
+      'line 7: after the first H2 only H2 headings and link items may appear, got "A sentence."',
+    ])
   })
 })

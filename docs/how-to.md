@@ -70,7 +70,7 @@ Every component is a `FlowContent` extension function. Call it inside any kotlin
 
 ```kotlin
 createHTML().div {
-    daisyButton("Save", color = ButtonColor.Primary)
+    daisyButton("Save", variant = ButtonColor.Primary)
 }
 ```
 

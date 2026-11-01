@@ -28,3 +28,4 @@
 |---|---|---|
 | F1 | - | none - record only |
 | F2 | The hand-made mutant list becomes a third script beside the test, run by the `scope` job, so a future rule edit is mutated too | open - decide in task 5.2 |
+probe

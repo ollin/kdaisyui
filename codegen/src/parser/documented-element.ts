@@ -23,9 +23,6 @@
 import { parseDocument, DomUtils } from 'htmlparser2'
 import { DocumentedClass } from './documented-classes.ts'
 
-/** The sentinel DaisyUI's documentation puts in front of its OWN class names. */
-const MARKER = '$$'
-
 /** Every fenced ```html block in a documentation page, concatenated in document order. */
 export function fencedHtmlBlocks(markdown: string): string {
   return [...markdown.matchAll(/```html\n([\s\S]*?)```/g)].map(match => match[1]).join('\n')
@@ -36,28 +33,17 @@ export function fencedHtmlBlocks(markdown: string): string {
 /**
  * EVERY element each marked class is shown on: `dropdown` is shown on a `<div>` and a
  * `<details>`, and a class shown on either of those is on the dropdown.
+ *
+ * Every class attribute is read, and `DocumentedClass.parse` drops each token without the marker.
  */
 export function documentedElementSetsIn(html: string): ReadonlyMap<string, ReadonlySet<string>> {
-  const sets = new Map<string, ReadonlySet<string>>()
-  for (const [className, tally] of documentedElementTalliesIn(html)) sets.set(className, new Set(tally.keys()))
-  return sets
-}
-
-/** How many times each marked class is shown on each element. */
-function documentedElementTalliesIn(html: string): ReadonlyMap<string, ReadonlyMap<string, number>> {
-  const tallies = new Map<string, Map<string, number>>()
-  DomUtils.findAll(
-    node => (node.attribs?.class ?? '').includes(MARKER),
-    parseDocument(html).children,
-  ).forEach(element => {
-    for (const token of (element.attribs.class ?? '').split(/\s+/)) {
+  const sets = new Map<string, Set<string>>()
+  for (const element of DomUtils.findAll(node => node.attribs.class !== undefined, parseDocument(html).children)) {
+    for (const token of element.attribs.class.split(/\s/)) {
       const parsed = DocumentedClass.parse(token)
       if (parsed === null || parsed.isPrefixed) continue
-      const tally = tallies.get(parsed.className) ?? new Map()
-      const tag = element.name.toUpperCase()
-      tally.set(tag, (tally.get(tag) ?? 0) + 1)
-      tallies.set(parsed.className, tally)
+      sets.set(parsed.className, (sets.get(parsed.className) ?? new Set()).add(element.name.toUpperCase()))
     }
-  })
-  return tallies
+  }
+  return sets
 }

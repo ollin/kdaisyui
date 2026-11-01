@@ -1,5 +1,42 @@
 import type { IconPaths, PascalName } from './parser/svg-heroicons.ts'
 
+// A PascalName starts with a capital, so the result starts with the one hyphen to drop.
+function kebabFromPascal(pascal: string): string {
+  return pascal.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1)
+}
+
+/** One variant's paths as a Kotlin constant, one string per path; '' for a variant not shipped. */
+function constVal(valName: string, content: string | null): string {
+  // A variant without paths is '' already, as svgPaths returns it.
+  if (!content) return ''
+  // svgPaths writes every path as `<path ` and one space.
+  const parts = [...content.matchAll(/<path [^>]*\/>/g)].map(match => `"""${match[0]}"""`)
+  const continued = parts.slice(1).map(part => `${' '.repeat(8)}${part}`)
+  return `\ninternal const val ${valName} = ${[parts[0], ...continued].join('+\n')}\n`
+}
+
+/** The solid variant's `svgContent` branch, by which smaller sizes the icon ships. */
+function solidContentBranch(fnName: string, hasSolid16: boolean, hasSolid20: boolean): string[] {
+  if (hasSolid16 && hasSolid20) {
+    return ['        HeroIconVariant.Solid -> when (size) {', `            HeroIconSize.Sm -> ${fnName}Solid16`, `            HeroIconSize.Md -> ${fnName}Solid20`, `            HeroIconSize.Lg -> ${fnName}Solid24`, '        }']
+  }
+  if (hasSolid20) {
+    return ['        HeroIconVariant.Solid -> when (size) {', `            HeroIconSize.Md -> ${fnName}Solid20`, `            HeroIconSize.Lg -> ${fnName}Solid24`, `            else -> ${fnName}Solid24`, '        }']
+  }
+  return [`        HeroIconVariant.Solid -> ${fnName}Solid24`]
+}
+
+/** The solid variant's `viewBox` branch, by which smaller sizes the icon ships. */
+function solidViewBoxBranch(hasSolid16: boolean, hasSolid20: boolean): string[] {
+  if (hasSolid16 && hasSolid20) {
+    return ['        HeroIconVariant.Solid -> when (size) {', '            HeroIconSize.Sm -> "0 0 16 16"', '            HeroIconSize.Md -> "0 0 20 20"', '            HeroIconSize.Lg -> "0 0 24 24"', '        }']
+  }
+  if (hasSolid20) {
+    return ['        HeroIconVariant.Solid -> when (size) {', '            HeroIconSize.Md -> "0 0 20 20"', '            else -> "0 0 24 24"', '        }']
+  }
+  return ['        HeroIconVariant.Solid -> "0 0 24 24"']
+}
+
 /**
  * Emit one `heroIcon*` function. `struct` carries a null per variant the icon does not
  * ship, and the `when` branches below read exactly those fields — so the nullability in
@@ -7,76 +44,19 @@ import type { IconPaths, PascalName } from './parser/svg-heroicons.ts'
  */
 export function generateKotlinFile(pascalName: PascalName, struct: IconPaths): string {
   const fnName = `heroIcon${pascalName}`
-
-  function kebabFromPascal(pascal) {
-    return pascal.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '')
-  }
-
   const kebabName = kebabFromPascal(pascalName)
   const spacedName = pascalName.replace(/([A-Z])/g, ' $1').trim()
-
-  function buildConstVal(valName, content, indent) {
-    if (!content) return ''
-    const pathRegex = /<path\s+[^>]*\/>/g
-    const parts = []
-    for (const m of content.matchAll(pathRegex)) {
-      parts.push(`"""${m[0]}"""`)
-    }
-    if (parts.length === 0) return ''
-    if (parts.length === 1) {
-      return `\n${indent}internal const val ${valName} = ${parts[0]}\n`
-    }
-    return `\n${indent}internal const val ${valName} = ${parts[0]}+\n` +
-      parts.slice(1, -1).map(p => `${indent}${' '.repeat(8)}${p}+\n`).join('') +
-      `${indent}${' '.repeat(8)}${parts[parts.length - 1]}\n`
-  }
-
-  const outline24Const = buildConstVal(`${fnName}Outline24`, struct.outline24, '')
-  const solid16Const = buildConstVal(`${fnName}Solid16`, struct.solid16, '')
-  const solid20Const = buildConstVal(`${fnName}Solid20`, struct.solid20, '')
-  const solid24Const = buildConstVal(`${fnName}Solid24`, struct.solid24, '')
-
+  const constants = [
+    constVal(`${fnName}Outline24`, struct.outline24),
+    constVal(`${fnName}Solid16`, struct.solid16),
+    constVal(`${fnName}Solid20`, struct.solid20),
+    constVal(`${fnName}Solid24`, struct.solid24),
+  ].join('')
   const hasSolid16 = !!struct.solid16
   const hasSolid20 = !!struct.solid20
-
-  const svgContentBranches = []
-  svgContentBranches.push('        HeroIconVariant.Outline -> FNOutline24')
-  if (hasSolid16 && hasSolid20) {
-    svgContentBranches.push('        HeroIconVariant.Solid -> when (size) {')
-    svgContentBranches.push('            HeroIconSize.Sm -> FNSolid16')
-    svgContentBranches.push('            HeroIconSize.Md -> FNSolid20')
-    svgContentBranches.push('            HeroIconSize.Lg -> FNSolid24')
-    svgContentBranches.push('        }')
-  } else if (hasSolid20) {
-    svgContentBranches.push('        HeroIconVariant.Solid -> when (size) {')
-    svgContentBranches.push('            HeroIconSize.Md -> FNSolid20')
-    svgContentBranches.push('            HeroIconSize.Lg -> FNSolid24')
-    svgContentBranches.push('            else -> FNSolid24')
-    svgContentBranches.push('        }')
-  } else {
-    svgContentBranches.push('        HeroIconVariant.Solid -> FNSolid24')
-  }
-
-  const viewBoxBranches = []
-  viewBoxBranches.push('        HeroIconVariant.Outline -> "0 0 24 24"')
-  if (hasSolid16 && hasSolid20) {
-    viewBoxBranches.push('        HeroIconVariant.Solid -> when (size) {')
-    viewBoxBranches.push('            HeroIconSize.Sm -> "0 0 16 16"')
-    viewBoxBranches.push('            HeroIconSize.Md -> "0 0 20 20"')
-    viewBoxBranches.push('            HeroIconSize.Lg -> "0 0 24 24"')
-    viewBoxBranches.push('        }')
-  } else if (hasSolid20) {
-    viewBoxBranches.push('        HeroIconVariant.Solid -> when (size) {')
-    viewBoxBranches.push('            HeroIconSize.Md -> "0 0 20 20"')
-    viewBoxBranches.push('            else -> "0 0 24 24"')
-    viewBoxBranches.push('        }')
-  } else {
-    viewBoxBranches.push('        HeroIconVariant.Solid -> "0 0 24 24"')
-  }
-
+  const svgContentBranches = [`        HeroIconVariant.Outline -> ${fnName}Outline24`, ...solidContentBranch(fnName, hasSolid16, hasSolid20)]
+  const viewBoxBranches = ['        HeroIconVariant.Outline -> "0 0 24 24"', ...solidViewBoxBranch(hasSolid16, hasSolid20)]
   const svgContentWhen = `val svgContent = when (variant) {\n${svgContentBranches.join('\n')}\n    }`
-    .replaceAll('FN', fnName)
-
   const viewBoxWhen = `val viewBox = when (variant) {\n${viewBoxBranches.join('\n')}\n    }`
 
   return `// GENERATED — DO NOT EDIT
@@ -115,6 +95,6 @@ fun FlowContent.${fnName}(
             raw("""<svg xmlns="http://www.w3.org/2000/svg" viewBox="\$viewBox" class="\$classes" width="\${size.dimension}" height="\${size.dimension}">\$svgContent</svg>""")
         }
     }
-}${outline24Const}${solid16Const}${solid20Const}${solid24Const}
+}${constants}
 `
 }

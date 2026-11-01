@@ -664,7 +664,8 @@ function allFlagsAsserts(ctx, boolCss) {
   const asserts = [
     `val expected = ${expectedValue(ctx, classes, `${ctx.daisyName} all flags`, { withCloses: true, content: ctx.hasContent })}`,
     'assertRendered(html, expected)',
-    ...(ctx.hasHatches ? ['assertCommonFlags(html, expected)'] : []),
+    // Read only where the function has hatches: a sibling's test keeps the expected classes alone.
+    'assertCommonFlags(html, expected)',
   ]
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)

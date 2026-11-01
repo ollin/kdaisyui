@@ -170,7 +170,7 @@ function rank(models: readonly ComponentModel[], group: ClaimedGroup): number {
 
 /** The named arguments that make a group's function write the group's classes. */
 function groupArguments({ model, fn, classes }: ClaimedGroup): string[] {
-  return classes.filter(cls => cls !== fn.class && cls !== JOIN_ITEM_CLASS && !(fn.always ?? []).includes(cls)).map(cls => argumentFor(model, fn, cls))
+  return classes.filter(cls => cls !== fn.class && cls !== JOIN_ITEM_CLASS && fn.always?.includes(cls) !== true).map(cls => argumentFor(model, fn, cls))
 }
 
 /**

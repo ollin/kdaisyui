@@ -3,10 +3,12 @@ import assert from 'node:assert/strict'
 import fs from 'fs'
 import path from 'path'
 
+import { classListFile, componentMapFile, componentMapLine } from '../src/component-map.ts'
 import { readComponentSet } from '../src/component-set.ts'
 import { generateKotlinFile as componentKotlin } from '../src/generator-new.ts'
 import { generateKotlinFile as iconKotlin } from '../src/generator-heroicons.ts'
 import { mainFunctionConfig } from '../src/model.ts'
+import { offeredClasses } from '../src/model-completeness.ts'
 import { heroiconDirectories, parseIconFiles } from '../src/parser/svg-heroicons.ts'
 import { repositoryRootAbove } from '../src/submodules.ts'
 import { heroIconsTestFile } from '../src/test-generator-heroicons.ts'
@@ -34,6 +36,25 @@ describe('the component emitter reproduces every committed component', () => {
       assert.equal(componentKotlin(component.shape, mainFunctionConfig(component.model)), committed('main', PACKAGE, 'components', `${name}.kt`))
     })
   }
+})
+
+describe('the class list and the component map reproduce the committed resources', () => {
+  // What Tailwind and the Gradle plugin read: every class a component can emit, and per component
+  // its JVM classes and CSS classes. Nothing else compares them before the drift job.
+  const components = readComponentSet().generated
+
+  test('kdaisyui-classes.txt', () => {
+    const classes = components.flatMap(component => offeredClasses(component.model))
+    assert.equal(classListFile(classes), committed('main', 'resources', 'kdaisyui-classes.txt'))
+  })
+
+  test('kdaisyui-components.txt', () => {
+    const lines = components.map(component => {
+      const kotlin = componentKotlin(component.shape, mainFunctionConfig(component.model))
+      return componentMapLine(component.componentDir, component.classified.componentName, kotlin, offeredClasses(component.model))
+    })
+    assert.equal(componentMapFile(lines), committed('main', 'resources', 'kdaisyui-components.txt'))
+  })
 })
 
 describe('the icon emitter reproduces every committed icon', () => {

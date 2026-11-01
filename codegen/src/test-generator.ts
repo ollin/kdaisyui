@@ -410,15 +410,15 @@ function groupEnumOf(baseType: string): string {
   return baseType.match(/^ClassValues<(\w+)>$/)?.[1] ?? baseType
 }
 
-function classifyParam({ name, type, default: defaultValue, cssClass, writes }: ParameterShape, enums) {
+function classifyParam({ name, type, cssClass, writes }: ParameterShape, enums) {
   const nullable = type.endsWith('?')
   const baseType = nullable ? type.slice(0, -1) : type
   const enumType = groupEnumOf(baseType)
-  const hasDefault = defaultValue !== null
-  const kind = paramKind({ name, baseType, enumType, nullable, hasDefault, enums })
+  const kind = paramKind({ name, baseType, enumType, nullable, enums })
   // The classes a Boolean adds when true: a toggle's own, or those an extra writes.
   const classes = cssClass === undefined ? [...(writes ?? [])] : [cssClass]
-  return { name, type, baseType, enumType, nullable, hasDefault, kind, classes, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
+  // Read only for an enum parameter, where it is the enum's entries.
+  return { name, type, baseType, enumType, nullable, kind, classes, enumEntries: enums[enumType] }
 }
 
 /** One overload on a generated scope, and what a test needs to call it. */

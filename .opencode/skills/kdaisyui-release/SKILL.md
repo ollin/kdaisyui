@@ -35,6 +35,11 @@ The plugin is on Maven Central only, not the Gradle Plugin Portal, so a consumer
 `mavenCentral()` to `pluginManagement`; README shows it. It is an included build because
 `example-app` applies it and a plugin cannot be applied from a sibling subproject. Its version is
 the root `gradle.properties` one, or the tag's `-Pversion`, which reaches included builds too.
+**The plugin and the library always share one version number, by decision (Oliver,
+2026-11-01).** The plugin reads its map from the `kdaisyui` it runs against, and README tells
+users to apply both at the same version. So never give the plugin its own version, its own tag
+or its own release; `verifyStagingComplete` already refuses a release where any of the five POMs
+is at another version.
 Both its POMs need the metadata Maven Central checks, and it needs sources and javadoc jars:
 JReleaser's dry run rejects it otherwise (`per-component-class-delivery`, task 1.1).
 

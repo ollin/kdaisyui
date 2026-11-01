@@ -72,12 +72,13 @@ function repositoryLink(line: string): string | null {
  * a finding reads the same on every machine.
  */
 export function documentationPages(repositoryRoot: string): string[] {
-  const underDocs = fs
-    .readdirSync(path.join(repositoryRoot, 'docs'), { recursive: true })
-    .map(String)
-    .filter(file => file.endsWith('.md') && !file.startsWith('reference/'))
-    .map(file => `docs/${file}`)
-  return ['README.md', ...underDocs.sort()]
+  return pagesUnderDocs(fs.readdirSync(path.join(repositoryRoot, 'docs'), { recursive: true }).map(String))
+}
+
+/** The pages among the files under `docs/`, as the directory listed them, in any order. */
+export function pagesUnderDocs(filesUnderDocs: readonly string[]): string[] {
+  const pages = filesUnderDocs.filter(file => file.endsWith('.md') && !file.startsWith('reference/')).map(file => `docs/${file}`)
+  return ['README.md', ...pages.sort()]
 }
 
 /** Documentation pages the index does not link. A page nobody can find is a page nobody reads. */

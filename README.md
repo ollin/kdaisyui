@@ -850,9 +850,13 @@ This project ships AI-ready context files so AI tools can work with kdaisyui eff
 |---|---|---|
 | Contributors (all AI tools) | [`AGENTS.md`](AGENTS.md) | Single source of truth: conventions, codegen, tooling, anti-patterns |
 | Claude Code | [`CLAUDE.md`](CLAUDE.md) | Thin pointer to AGENTS.md |
-| Library users (any AI) | [`llms.txt`](llms.txt) | API reference for consuming the library — generated from the library itself |
+| Library users (any AI) | [`llms.txt`](llms.txt) | The index [llmstxt.org](https://llmstxt.org/) specifies: links to the tutorials, how-to, explanation and every component's reference page, as raw Markdown |
+| Library users (any AI) | [`llms-full.txt`](llms-full.txt) | Every component's enums and signatures in one file — generated from the library itself |
 
-If you're using kdaisyui as a dependency and want AI assistance, point your AI tool to [`llms.txt`](llms.txt).
+If you're using kdaisyui as a dependency and want AI assistance, point your AI tool to
+`https://raw.githubusercontent.com/ollin/kdaisyui/main/llms.txt`; it follows the links from there.
+A tool that takes one file takes [`llms-full.txt`](llms-full.txt). Both are generated and
+drift-checked, so they describe the API that ships.
 
 ## License
 

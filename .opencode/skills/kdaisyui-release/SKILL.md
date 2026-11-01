@@ -152,7 +152,22 @@ recollection, which is the habit this rule replaces.
 - every removal or signature change in that diff is either non-breaking or has its `README.md`
   migration entry;
 - the PR body's `BREAKING CHANGE:` footer points at that entry — see the next section for why
-  its position matters.
+  its position matters;
+- **`llms.txt` and `llms-full.txt` know every feature the tag ships.** List the `feat` merges
+  since the last tag (`git log --oneline --merges v<last>..main | grep feat`). A generated
+  component is already in both files, and the drift job proves it. A **hand-written** feature is
+  not — a new core type, a new module, a new Gradle plugin option, a new way to deliver CSS — and
+  no gate can see that it is missing. For each one, say where `codegen/llms-template.md` (the
+  index: a link, or one of its five rules) or `codegen/llms-full-template.md` (the full file: its
+  quick start, core utility or requirements section) mentions it, or add it; then `just generate`
+  and commit the regenerated files. A new documentation page needs no judgement: the index
+  generator refuses to run until the template links it.
+
+The llms step is there because the files are what a library user's AI tool reads first, and
+their hand-written halves have gone stale before: until 0.7.0 `llms.txt` described the 0.1.x API,
+and README's *What's new in 0.2.0* table outlived two minor versions (`verify-doc-snippets`,
+finding F2). The generated halves cannot drift; the templates can, and only a person reading the
+feature list can tell.
 
 Why the API check and the migration note are one rule rather than two: the check is what makes
 the breaking change *knowable* before release, and the note is the only part a consumer ever

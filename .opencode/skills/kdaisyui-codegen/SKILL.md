@@ -9,8 +9,8 @@ description: >-
 
 # kdaisyui — Codegen
 
-All components, the Heroicons wrappers, most component tests, every page under `docs/reference/`
-and `llms.txt` are **generated**. Since `declare-the-component-model` (0.8.0) the component API is
+All components, the Heroicons wrappers, most component tests, every page under `docs/reference/`,
+`llms.txt` and `llms-full.txt` are **generated**. Since `declare-the-component-model` (0.8.0) the component API is
 **declared** in `codegen/model/`, one JSON file per DaisyUI component directory, and nothing about
 it is inferred from DaisyUI's prose or example markup.
 
@@ -25,7 +25,10 @@ DaisyUI frontmatter ───────┤   the class list (for the completen
               model.ts  shapeFromModel  →  component-shape.ts (the shape both emitters render)
                            ├→ generator-new.ts       → lib/generated/main/**   (Kotlin)
                            ├→ generator-docs.ts      → docs/reference/**       (Markdown)
-                           ├→ generator-llms.ts      → llms.txt                (from llms-template.md)
+                           ├→ generator-llms.ts      → llms-full.txt           (from llms-full-template.md)
+                           ├→ llms-index.ts          → llms.txt                (from llms-template.md; refuses an
+                           │                                                     unlinked docs page, a dead link,
+                           │                                                     a non-link line after the first H2)
                            └→ component-api-dump.ts  → lib/api/components.api  (explicit update only)
 documented-elements.ts ← every model + DaisyUI's documented examples: which function expresses
                          each $$-marked element, or which gap it is; read by both of
@@ -57,7 +60,7 @@ A documented tag needs a builder: kotlinx.html's, or one the library defines in 
 | `generateHeroicons` | `codegen/src/index-heroicons.ts` | icons |
 | `generateComponentTests` | `codegen/src/test-generator.ts` | component tests |
 | `generateHeroiconTests` | `codegen/src/test-generator-heroicons.ts` | icon tests |
-| `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/`, `llms.txt` |
+| `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/`, `llms-full.txt`, `llms.txt` |
 
 All five declare `codegen/model` as an input. A new generator that reads the model must too, or a
 model edit leaves it UP-TO-DATE — that happened once, between the switch and the fix.
@@ -162,7 +165,8 @@ is deleted. To accept one, declare it with a reason a reviewer can check.
 | a component's element, parts, parameters, names, attributes | its model file |
 | a class group as one choice, or a class as an on/off toggle | its model file: `enum` vs `toggle` |
 | a new DaisyUI component | a new model file; generation fails until it exists |
-| a reference page's one-line description | `summary` in the model file |
+| a reference page's one-line description, also the component's note in `llms.txt` | `summary` in the model file |
+| the prose of `llms.txt` (the index) or `llms-full.txt` (the full API) | `codegen/llms-template.md`, `codegen/llms-full-template.md` |
 | the shape every function shares | `component-shape.ts` (`functionParameters`) |
 | how Kotlin says it | `generator-new.ts` |
 | how a reference page says it | `generator-docs.ts` |
@@ -201,7 +205,7 @@ DaisyUI's marked examples with it. A second dependency is a decision, not a habi
 
 1. `cd codegen && node --test test/` — Node, not only Bun: Bun accepts syntax Node refuses.
 2. Regenerate (`just generate`, or the four `node src/…` entry points) and read
-   `git status -- lib/generated docs/reference llms.txt`. A refactoring shows no diff.
+   `git status -- lib/generated docs/reference llms.txt llms-full.txt`. A refactoring shows no diff.
 3. `./gradlew :lib:test` whenever generated Kotlin changed, and compile `:example-app` and
    `:e2e-tests` when a public name changed.
 4. `just update-api` when a signature moved; read both diffs; a breaking one needs a

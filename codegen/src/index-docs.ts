@@ -8,7 +8,8 @@ import {
   generateIndexPage,
   type DocSummary,
 } from './generator-docs.ts'
-import { generateLlmsTxt } from './generator-llms.ts'
+import { generateLlmsFull } from './generator-llms.ts'
+import { documentationPages, generateLlmsIndex } from './llms-index.ts'
 
 // Committed prose tree, not build output — the same argument as `lib/generated/`: a reader of a
 // fresh clone gets the reference documentation without running anything.
@@ -22,7 +23,10 @@ function parseArg(flag: string, fallback: string): string {
 }
 
 const OUTPUT_DIR = parseArg('--output-dir', DEFAULT_OUTPUT_DIR)
-const LLMS_TXT = parseArg('--llms-txt', path.resolve(import.meta.dirname, '../../llms.txt'))
+const REPOSITORY_ROOT = path.resolve(import.meta.dirname, '../..')
+const LLMS_FULL = parseArg('--llms-full', path.join(REPOSITORY_ROOT, 'llms-full.txt'))
+const LLMS_FULL_TEMPLATE = path.resolve(import.meta.dirname, '../llms-full-template.md')
+const LLMS_TXT = parseArg('--llms-txt', path.join(REPOSITORY_ROOT, 'llms.txt'))
 const LLMS_TEMPLATE = path.resolve(import.meta.dirname, '../llms-template.md')
 
 interface Written {
@@ -106,8 +110,12 @@ function main() {
   const written = writeComponentPages(generated, skipped.length, docSummaries)
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.md'), generateIndexPage(written.shapes, docSummaries))
   const removed = removeStalePages(written.fileNames)
-  // Same shapes, same summaries, same run: llms.txt cannot describe a different API than the pages.
-  fs.writeFileSync(LLMS_TXT, generateLlmsTxt(fs.readFileSync(LLMS_TEMPLATE, 'utf8'), written.shapes, docSummaries))
+  // Same shapes, same summaries, same run: llms-full.txt cannot describe a different API than the pages.
+  fs.writeFileSync(LLMS_FULL, generateLlmsFull(fs.readFileSync(LLMS_FULL_TEMPLATE, 'utf8'), written.shapes, docSummaries))
+  console.log(`llms-full.txt: ${LLMS_FULL}`)
+  // After the pages, so the link gate sees them; the gates throw before anything is written.
+  const repository = { exists: (file: string) => fs.existsSync(path.join(REPOSITORY_ROOT, file)), pages: documentationPages(REPOSITORY_ROOT) }
+  fs.writeFileSync(LLMS_TXT, generateLlmsIndex(fs.readFileSync(LLMS_TEMPLATE, 'utf8'), written.shapes, docSummaries, repository))
   console.log(`llms.txt: ${LLMS_TXT}`)
 
   console.log(`\nGenerated ${written.shapes.length} pages plus index.md, skipped ${written.skipped}`)

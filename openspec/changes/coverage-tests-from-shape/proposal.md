@@ -43,7 +43,11 @@ None. The generated test files do not change, so no requirement changes; `.opens
   `readComponentSet()` instead of the `.kt` files.
 - `codegen/test/coverage-test-snapshot.test.ts` and `test-generator.test.ts`: call the new
   signature.
-- No generated file changes. No Kotlin, no Gradle file, no dependency.
+- `lib/build.gradle.kts`: `generateComponentTests` stops passing `--components-dir`, stops
+  depending on `generateComponents` and stops declaring its output as an input. **Corrected
+  during apply:** this list first said no Gradle file would change; the flag only existed to feed
+  the parser this change deletes.
+- No generated file changes. No Kotlin and no dependency.
 
 **Out of scope:**
 

@@ -23,11 +23,12 @@ in 2.1 and still receives the source until 3.1.
 
 ## 3. Delete the parser and the file reading
 
-- [ ] 3.1 `^ r` Drop the source parameter, `writeCoverageTest`'s file read and every parser and regex only it used; the entry point iterates `readComponentSet()`
-- [ ] 3.2 `. r` Move the unit tests of the deleted parsers onto the shape-based context, keeping what they pinned where it still exists
+- [x] 3.1 `^ r` Drop the source parameter, `writeCoverageTest`'s file read and every parser and regex only it used; the entry point iterates `readComponentSet()`
+- [x] 3.2 `. r` Move the unit tests of the deleted parsers onto the shape-based context, keeping what they pinned where it still exists
+  - Done differently: the parsers' tests went with the parsers in 3.1, because what they pinned (a scope's superclass, members read from Kotlin text) no longer exists. `coverage-test-generator.test.ts` instead pins the rules the mutation gate showed no committed model distinguishes: the main class, the role's owner, extras in body order and a member's required parameters.
 
 ## 4. Gates, pull request, archive
 
-- [ ] 4.1 Run the StrykerJS gate on the changed lines at 100 %, then a full `codegen` run, and record the before and after survivors of `test-generator.ts`
+- [x] 4.1 Run the StrykerJS gate on the changed lines at 100 %, then a full `codegen` run, and record the before and after survivors of `test-generator.ts`
 - [ ] 4.2 Run `code_health_review` on every changed file (10.0) and `analyze_change_set`, and read the server values for project 14
 - [ ] 4.3 Archive the change on this branch, then push and open the pull request

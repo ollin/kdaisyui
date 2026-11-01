@@ -1,6 +1,10 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+
 import { isSkipped, modelFileNames, readModel, shapeFromModel, type ComponentModel } from '../src/model.ts'
 
 /**
@@ -14,5 +18,20 @@ describe('the committed model', () => {
 
     assert.ok(files.length > 60, `${files.length} model files`)
     assert.ok(built.every(shape => shape.functions.length > 0))
+  })
+
+  it('gives every generated component exactly one main function, which mainFunctionConfig relies on', () => {
+    const mains = modelFileNames().map(file => readModel(file)).filter(model => !isSkipped(model))
+      .map(model => [(model as ComponentModel).component, (model as ComponentModel).functions.filter(fn => fn.kind === 'main').length])
+
+    assert.deepEqual(mains.filter(([, count]) => count !== 1), [])
+  })
+
+  it('lists the model files by directory name, sorted, ignoring anything that is not JSON', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'model-dir-'))
+    for (const file of ['zeta.json', 'alpha.json', 'notes.md']) fs.writeFileSync(path.join(dir, file), '{}')
+
+    assert.deepEqual(modelFileNames(dir), ['alpha', 'zeta'])
+    fs.rmSync(dir, { recursive: true })
   })
 })

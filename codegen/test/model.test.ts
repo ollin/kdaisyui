@@ -1,7 +1,8 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { mainFunctionConfig, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
+import { entryName, mainFunctionConfig, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
+import { component, enumParameter, mainFunction, part, shapeOf, toggle } from './model-fixture.ts'
 
 /** The smallest real component: one function, one enum, inline text. */
 const KBD: ComponentModel = {
@@ -142,5 +143,40 @@ describe('shapeFromModel', () => {
     ] }
 
     assert.equal(shapeFromModel(steps, DESCRIPTIONS).enums[0].entries[0].name, 'Primary')
+  })
+
+  test('hands the body the main function even where a part is declared before it', () => {
+    const model = { ...component('steps', 'Steps', 'steps', {}, { text: true }), functions: [part('daisyStep', 'step'), mainFunction('daisySteps', 'steps', { text: true })] }
+
+    assert.equal(mainFunctionConfig(model).hasTextParam, true)
+  })
+})
+
+describe('entryName', () => {
+  const owned = { ...component('step', 'Steps', 'steps'), functions: [
+    mainFunction('daisySteps', 'steps', { parameters: [toggle('vertical', 'steps-vertical')] }),
+    part('daisyStep', 'step', { parameters: [enumParameter('color', 'StepColor', 'Color')] }),
+  ] }
+
+  test("strips the class of the function that owns the enum, not of the first function with parameters", () => {
+    assert.equal(entryName(owned, 'StepColor', 'step-primary'), 'Primary')
+  })
+
+  test("falls back to the component's class where no function owns the enum, or the owner's does not fit", () => {
+    assert.equal(entryName(owned, 'Unowned', 'steps-wide'), 'Wide')
+    assert.equal(entryName(owned, 'StepColor', 'steps-neutral'), 'Neutral')
+  })
+
+  test('keeps a class that fits neither, and names it whole where the component has no class', () => {
+    assert.equal(entryName(owned, 'StepColor', 'join-item'), 'JoinItem')
+    assert.equal(entryName({ ...owned, class: null }, 'Unowned', 'steps-wide'), 'StepsWide')
+  })
+})
+
+describe('an enum on a component without a class', () => {
+  test('carries an empty prefix', () => {
+    const model = { ...component('x', 'X', 'x'), class: null, enums: [{ name: 'XSize', label: 'Size', classes: ['x-lg'] }], functions: [mainFunction('daisyX', 'x', { parameters: [enumParameter('size', 'XSize', 'Size')] })] }
+
+    assert.equal(shapeOf(model).enums[0].prefix, '')
   })
 })

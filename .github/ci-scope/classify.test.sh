@@ -31,4 +31,12 @@ printf 'lib/AGENTS.md\n' | expect full "a planning name in another directory"
 printf '.github/workflows/ci.yml\n' | expect full "the CI workflow itself"
 printf '.gitignore\n' | expect full ".gitignore, which the drift job's git status reads"
 
+for prose in README.md docs/how-to.md docs/tutorials/getting-started.md docs/screenshots/overview.png \
+    codegen/llms-template.md codegen/llms-full-template.md llms.txt llms-full.txt; do
+  printf '%s\n' "$prose" | expect prose "$prose"
+done
+printf 'docs/reference/button.md\n' | expect full "a generated reference page"
+printf 'docs/reference.md\n' | expect prose "the hand-written reference entry point"
+printf 'codegen/llms-template.md.orig\n' | expect full "a template name with a suffix"
+
 [ "$failures" -eq 0 ] || { echo "$failures classifier control(s) failed"; exit 1; }

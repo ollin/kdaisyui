@@ -1051,7 +1051,7 @@ ${COVERAGE_HELPER}${body}}
 
 /** Reads one component from `componentsDir` and writes its coverage test to `outputDir`. */
 function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string) {
-  const className = fileName.replace(/\.kt$/, '')
+  const className = path.basename(fileName, '.kt')
   const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'))
   if (kotlin === null) return { success: false, error: 'No functions' }
   fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), kotlin)

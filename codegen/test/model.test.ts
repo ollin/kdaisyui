@@ -99,6 +99,19 @@ describe('shapeFromModel', () => {
     assert.deepEqual([joined.scope?.members.map(fn => fn.name), joined.functions[0].contentScope], [['daisyKbd'], 'JoinScope'])
   })
 
+  test("imports what the join items' main functions need, and nothing their parts need", () => {
+    const extra = (name: string, imports: string[]) => ({ kind: 'extra' as const, name, type: 'X', default: 'null', apply: '', imports })
+    const item: ComponentModel = { ...KBD, functions: [
+      { ...KBD.functions[0], joinItem: true, parameters: [extra('type', ['kotlinx.html.ButtonType'])] },
+      { ...KBD.functions[0], kind: 'part', name: 'daisyKbdPart', class: 'kbd-part', parameters: [extra('method', ['kotlinx.html.FormMethod'])] },
+    ] }
+    const join: ComponentModel = { component: 'join', name: 'Join', class: 'join', enums: [], joinScope: true, functions: [{ ...KBD.functions[0], name: 'daisyJoin', element: 'DIV', class: 'join', text: false, parameters: [] }] }
+
+    const [, joined] = withDeclaredScopes([item, join].map(model => ({ model, shape: shapeFromModel(model, DESCRIPTIONS) })))
+
+    assert.deepEqual(joined.scope?.imports, ['kotlinx.html.ButtonType'])
+  })
+
   test('hands the main function body its extras, text, role and input type', () => {
     const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
     const checkbox: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'INPUT', parameters: [disabled], role: 'switch', inputType: 'checkBox' }] }
@@ -165,6 +178,12 @@ describe('entryName', () => {
   test("falls back to the component's class where no function owns the enum, or the owner's does not fit", () => {
     assert.equal(entryName(owned, 'Unowned', 'steps-wide'), 'Wide')
     assert.equal(entryName(owned, 'StepColor', 'steps-neutral'), 'Neutral')
+  })
+
+  test("falls back to the component's class where the owning function has no class of its own", () => {
+    const classless = { ...owned, functions: [owned.functions[0], { ...owned.functions[1], kind: 'classes' as const, class: null }] }
+
+    assert.equal(entryName(classless, 'StepColor', 'steps-neutral'), 'Neutral')
   })
 
   test('keeps a class that fits neither', () => {

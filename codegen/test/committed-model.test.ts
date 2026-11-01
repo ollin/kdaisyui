@@ -45,7 +45,8 @@ describe('the committed model', () => {
 
   it('lists the model files by directory name, sorted, ignoring anything that is not JSON', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'model-dir-'))
-    for (const file of ['zeta.json', 'alpha.json', 'notes.md']) fs.writeFileSync(path.join(dir, file), '{}')
+    // Written in name order: tmpfs lists a directory newest first, so only the sort restores it.
+    for (const file of ['alpha.json', 'notes.md', 'zeta.json']) fs.writeFileSync(path.join(dir, file), '{}')
 
     assert.deepEqual(modelFileNames(dir), ['alpha', 'zeta'])
     fs.rmSync(dir, { recursive: true })

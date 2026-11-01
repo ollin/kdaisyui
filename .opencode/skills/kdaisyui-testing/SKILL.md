@@ -56,6 +56,13 @@ form without the dead branch: `x?.groupValues[1]`, `(a ?: default).removePrefix(
 over the type. Two steps of `verify-doc-snippets` were reverted this way before it was named
 (its finding F5).
 
+Inlined standard-library functions do the same, out of sight: `bufferedReader()` checks
+`this is BufferedReader`, which an `InputStreamReader` never is, so `readBytes().decodeToString()`
+is the form without it. Before guessing which call it is, read the line Kover's report names:
+`per-component-class-delivery` lost two reverts by blaming `use {}`, which was innocent (its
+finding F1). The same inlining shows up in PIT as a survivor no test can kill, `any {}` there;
+take the non-inline form (`intersect`) rather than a weaker threshold.
+
 ## 2a. Documentation snippets — `:doc-snippets:compileSnippets`
 
 Every Kotlin snippet of `README.md` and `docs/` is compiled against the library, in `check` and

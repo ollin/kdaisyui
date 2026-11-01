@@ -37,11 +37,11 @@ mutants found in the test harness itself (`findings.md`, F1 and F2).
 
 ## 3. The workflow
 
-- [ ] 3.1 `! F (internal)` A `scope` job: shallow checkout with `fetch-depth: 2`, the self-test,
+- [x] 3.1 `! F (internal)` A `scope` job: shallow checkout with `fetch-depth: 2`, the self-test,
   the classification, the two outputs; `full` for a `push`.
-- [ ] 3.2 `! F (internal)` Each of the six jobs gets `needs: scope` and the fail-safe condition of
+- [x] 3.2 `! F (internal)` Each of the six jobs gets `needs: scope` and the fail-safe condition of
   its group.
-- [ ] 3.3 `! F (internal)` The `concurrency` group.
+- [x] 3.3 `! F (internal)` The `concurrency` group.
 - [ ] 3.4 `. d` Record the `scope` job's duration and the critical path of this pull request's own
   `full` run (A6).
 

@@ -29,14 +29,14 @@ must keep it green, and `just generate` must leave no diff.
 
 | Parsed today | From the shape | Status |
 |---|---|---|
-| `parseEnumDefinitions`: enum name, entries and class | `shape.enums[].name`, `entries[].name`, `entries[].cssClass` | Assumed: the entries' order and classes match the emitted enum exactly. **Wrong if** a task 1.1 comparison over all 66 components differs. |
-| `findFunctions`: each `fun R.daisyX(...)`, in file order, siblings included | for each of `shape.functions`, the function, then its class sibling where `hasSibling`; then `shape.siblingsOnly` | Assumed: the order matches `generateKotlinFile`'s, which is the line `functions.map(fn => [renderFunction, renderSibling])` followed by `siblingsOnly`. **Wrong if** the 1.1 comparison of names differs. |
-| `splitParams` + `classifyParam`: name, type, default per parameter | `FunctionShape.parameters`, or `siblingParameters(fn)` for a sibling; type and default are already strings there | Assumed: the shape's `type` string equals the emitted one, e.g. `ClassValues<ButtonSize>?`. **Wrong if** 1.1 differs. |
-| `parseBaseClass`: unguarded `addClassNames("…")` | main: `shape.prefix`; part, custom and sibling: `cssClass` and `modifierClasses` | Assumed: read from `generator-new.ts` lines 231, 278 and 294-295. **Wrong if** 1.2 finds a function whose sorted classes differ. |
-| `boolClassesFor`: classes a `Boolean` parameter adds | the toggle's `cssClass`, or the extra's `writes` | Assumed. **Wrong if** 1.2 differs. |
-| `parseEmittedBuilder` / `parseScopeBuilder`: the builder | `fn.tagBuilder` for a function; none for a sibling | Assumed: a scoped function's element is its own `element`, so its `tagBuilder` is what the scope's superclass resolves to. **Wrong if** 1.2 differs for `Join`. |
-| `parseScopeMembers`: name, whether content is required, opener | `shape.scope.members[]`; required = a `content` parameter whose `default` is null; opener = `shape.functions[0].name` | Assumed. **Wrong if** 1.2 differs. |
-| `parseAttrProps`: attributes the body sets, guarded or not | unconditional: `role` and `type` from `MainFunctionConfig`; guarded or not: the extras' `apply` fragments (D3) | Assumed: no other line of a body assigns an attribute. **Wrong if** 1.3 differs. |
+| `parseEnumDefinitions`: enum name, entries and class | `shape.enums[].name`, `entries[].name`, `entries[].cssClass` | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
+| `findFunctions`: each `fun R.daisyX(...)`, in file order, siblings included | for each of `shape.functions`, the function, then its class sibling where `hasSibling`; then `shape.siblingsOnly` | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
+| `splitParams` + `classifyParam`: name, type, default per parameter | `FunctionShape.parameters`, or `siblingParameters(fn)` for a sibling; type and default are already strings there | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
+| `parseBaseClass`: unguarded `addClassNames("…")` | main: `shape.prefix`; part, custom and sibling: `cssClass` and `modifierClasses` | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
+| `boolClassesFor`: classes a `Boolean` parameter adds | the toggle's `cssClass`, or the extra's `writes` | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
+| `parseEmittedBuilder` / `parseScopeBuilder`: the builder | `fn.tagBuilder` for a function; none for a sibling | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
+| `parseScopeMembers`: name, whether content is required, opener | `shape.scope.members[]`; required = a `content` parameter whose `default` is null; opener = `shape.functions[0].name` | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
+| `parseAttrProps`: attributes the body sets, guarded or not | unconditional: `role` and `type` from `MainFunctionConfig`; guarded or not: the extras' `apply` fragments (D3) | Verified: task 1.x probe, 0 differences over 66 components, with a positive control. |
 | receiver | `fn.receiver` | Verified: it is the same string the emitter writes, `generator-new.ts` `renderFunction`. |
 
 ### D2. One context builder, switched field by field

@@ -4,9 +4,9 @@ A throwaway script under `tmp/coverage-tests-from-shape/` computes each field bo
 from the committed `.kt` and derived from `readComponentSet()`, for all 66 components, and lists
 every difference. A refuted assumption revises design.md D1 before section 2 starts.
 
-- [ ] 1.1 Compare enums (name, entry order, entry class), function order including siblings, and each parameter's name, type and default (D1 rows 1-3)
-- [ ] 1.2 Compare base classes, Boolean parameter classes, the builder (`Join` included) and the scope members (D1 rows 4-7)
-- [ ] 1.3 Compare the attribute sets: body parse against `role`, `inputType` and the extras' `apply` fragments (D1 row 8, D3)
+- [x] 1.1 Compare enums (name, entry order, entry class), function order including siblings, and each parameter's name, type and default (D1 rows 1-3)
+- [x] 1.2 Compare base classes, Boolean parameter classes, the builder (`Join` included) and the scope members (D1 rows 4-7)
+- [x] 1.3 Compare the attribute sets: body parse against `role`, `inputType` and the extras' `apply` fragments (D1 row 8, D3)
 
 ## 2. Switch the coverage inputs to the shape, one field per commit
 

@@ -34,10 +34,17 @@ of it from DaisyUI's prose and markup, and September 2026 went into guarding tho
 eleven emitted classes that did not exist surfaced only when the inference was replaced.
 → skills **`kdaisyui-codegen`**, **`kdaisyui-daisyui-upgrade`**.
 
-**`llms.txt` joined that rule in 0.7.0.** It is what the README tells library users to point
-their AI tools at, and while hand-maintained it still showed the 0.1.x API a release after 0.6.0
-had replaced it. `generateReferenceDocs` now writes it whole; its prose lives in
-**`codegen/llms-template.md`** — edit that, never `llms.txt`.
+**`llms.txt` and `llms-full.txt` joined that rule in 0.7.0 and `llms-txt-index`.** `llms.txt` is the index
+https://llmstxt.org/ specifies: links to every documentation page, every reference page and
+`llms-full.txt`, which holds the whole API in one file. The README tells library users to point
+their AI tools at them, and while the full file was hand-maintained it still showed the 0.1.x API
+a release after 0.6.0 had replaced it. `generateReferenceDocs` writes both whole; their prose
+lives in **`codegen/llms-template.md`** and **`codegen/llms-full-template.md`** — edit those,
+never the outputs. The index generator refuses a `docs/**/*.md` page that is not linked, a link
+whose path does not exist, and any content after the first H2 that is not a link list; so a new
+page fails `just generate` until the template links it. What no gate can see is a new
+**hand-written** feature the two templates should mention — that is a *Ready to tag* step in
+`kdaisyui-release`.
 
 Note the singular: **`docs/reference.md`** is the hand-written entry point and is NOT generated.
 Nothing else under `docs/` is either. One editorial fact per page is hand-written too — its
@@ -272,7 +279,8 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 
 ## Anti-patterns
 
-- Editing `lib/generated/**`, `docs/reference/**` or `llms.txt` — edit `codegen/model/` instead
+- Editing `lib/generated/**`, `docs/reference/**`, `llms.txt` or `llms-full.txt` — edit
+  `codegen/model/` or the two `codegen/llms*-template.md` instead
 - Teaching a generator to infer structure from DaisyUI's prose or markup — declare it in the
   model; the bump report and `documented-elements.ts`, for the gate and the tests, are the only
   readers of DaisyUI's examples, and neither decides the API

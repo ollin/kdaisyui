@@ -53,7 +53,7 @@ The estimate ledger was not among this session's tools, so the run is to be open
 
 ## 4. Documents and skills
 
-- [ ] 4.1 `. d` `AGENTS.md`: the `llms.txt` paragraph names both files and both templates;
+- [x] 4.1 `. d` `AGENTS.md`: the `llms.txt` paragraph names both files and both templates;
   `README.md` *AI support*: one row per file, and the sentence pointing users at `llms.txt` says
   what the index links.
 - [ ] 4.2 `^ d` `kdaisyui-release` *Ready to tag* gains the llms step (design, decision 6);

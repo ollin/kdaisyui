@@ -343,7 +343,7 @@ function escapeHatchParameters(element: TagClass, hasTextParam: boolean, idRequi
  * parameters, then the escape hatches. Main functions and parts share the frame; a custom part
  * has no own parameters.
  */
-export function functionParameters(element: TagClass, hasTextParam: boolean, own: readonly ParameterShape[], idRequired = false): ParameterShape[] {
+export function functionParameters(element: TagClass, hasTextParam: boolean, own: readonly ParameterShape[], idRequired: boolean): ParameterShape[] {
   return withOwnClasses(escapeHatchParameters(element, hasTextParam, idRequired), own)
 }
 

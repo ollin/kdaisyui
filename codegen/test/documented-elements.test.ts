@@ -91,6 +91,29 @@ describe('documentedCall', () => {
   it('makes no call for a gap', () => {
     assert.equal(callFor('<li class="$$list-row">x</li>'), null)
   })
+
+  it('makes no call for an element its functions express only in part', () => {
+    assert.equal(callFor('<button class="$$btn $$list-row">x</button>'), null)
+  })
+
+  it('writes every variant class and every other sibling, each separated', () => {
+    const item = { ...part('daisyMenuItem', 'unused'), kind: 'classes' as const, class: null, parameters: [toggle('active', 'menu-active')] }
+    const menu = { ...component('menu', 'Menu', 'menu'), functions: [item] }
+    const call = documentedCall([CARD_WITH_BODY, sized, menu], markedElements('<div class="$$card-body $$btn $$menu-active md:$$btn-lg lg:$$btn-sm">x</div>')[0], new Set([...classes, 'card-body', 'menu-active']))
+
+    assert.equal(call?.args, 'extraClasses = "md:btn-lg lg:btn-sm", attrs = { daisyButtonClasses(); daisyMenuItemClasses(active = true) }')
+    assert.equal(call?.onTag, 'daisyCardBodyClasses(); daisyButtonClasses(); daisyMenuItemClasses(active = true); addClassNames("md:btn-lg lg:btn-sm")')
+  })
+
+  it('refuses an element only class-only functions express, more than one of them', () => {
+    const owned = { ...component('glass', 'Glass', 'glass'), functions: [{ ...part('daisyGlass', 'glass'), kind: 'classes' as const }] }
+    const item = { ...part('daisyMenuItem', 'unused'), kind: 'classes' as const, class: null, parameters: [toggle('active', 'menu-active')] }
+    const menu = { ...component('menu', 'Menu', 'menu'), functions: [item] }
+
+    assert.throws(() => documentedCall([owned, menu], markedElements('<div class="$$glass $$menu-active">x</div>')[0], new Set(['glass', 'menu-active'])), {
+      message: 'glass menu-active: several class-only groups and no function rendering the element',
+    })
+  })
 })
 
 describe('pageFirst', () => {
@@ -101,7 +124,7 @@ describe('pageFirst', () => {
 
 describe('claimingGroups', () => {
   const claims = (models, counted) => {
-    const { groups, unclaimed } = claimingGroups(models, counted)
+    const { groups, unclaimed } = claimingGroups(models, counted, 'div')
     return { groups: groups.map(group => `${group.fn.name}: ${group.classes.join(' ')}`), unclaimed }
   }
   const MENU_ITEM = { ...component('menu', 'Menu', 'menu'), functions: [{ ...part('daisyMenuItem', 'unused'), class: null, parameters: [toggle('active', 'menu-active')] }] }
@@ -131,6 +154,15 @@ describe('claimingGroups', () => {
 
   it('leaves unclaimed what no function offers', () => {
     assert.deepEqual(claims([BUTTON], ['btn', 'btn-ghost']).unclaimed, ['btn-ghost'])
+  })
+
+  it('lets no function with an own class claim what remains, nor a free one offering only part of it', () => {
+    assert.deepEqual(claims([BUTTON], ['btn-active']), { groups: [], unclaimed: ['btn-active'] })
+    assert.deepEqual(claims([MENU_ITEM], ['menu-active', 'menu-disabled']), { groups: [], unclaimed: ['menu-active', 'menu-disabled'] })
+  })
+
+  it('lets join-item be claimed only by a join member', () => {
+    assert.deepEqual(claims([CARD], ['card', 'join-item']).unclaimed, ['join-item'])
   })
 })
 

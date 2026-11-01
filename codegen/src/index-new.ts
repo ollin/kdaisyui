@@ -7,7 +7,7 @@ import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
 import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
-import { componentMapLine } from './component-map.ts'
+import { classListFile, componentMapFile, componentMapLine } from './component-map.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -39,29 +39,14 @@ function documentedGapFindings(page: Pick<ComponentModel, 'component' | 'notExpr
   return [...gapFindings(page, gapsIn(html, pageFirst(models, page.component), componentClasses)), ...tagFindings(page.component, html)]
 }
 
-function writeClassList(classes) {
-  const sorted = [...new Set(classes)].sort()
-  const header = [
-    '# Every DaisyUI class kdaisyui can emit. Generated - do not edit.',
-    '#',
-    '# Point your Tailwind @source at this file. Scanning your own sources is not enough:',
-    '# a class like btn-primary is assembled at runtime from ButtonColor.Primary, so it',
-    '# appears nowhere in your code, and the published jar carries no Kotlin sources.',
-    '',
-  ]
+function writeClassList(classes: readonly string[]): number {
   fs.mkdirSync(path.dirname(CLASS_LIST_FILE), { recursive: true })
-  fs.writeFileSync(CLASS_LIST_FILE, `${header.join('\n')}${sorted.join('\n')}\n`)
-  return sorted.length
+  fs.writeFileSync(CLASS_LIST_FILE, classListFile(classes))
+  return new Set(classes).size
 }
 
-/** The component map beside the class list, for the Gradle plugin that narrows it. */
 function writeComponentMap(lines: readonly string[]): void {
-  const header = [
-    '# Per component: its name, the JVM classes a consumer names when using it, and the CSS classes',
-    '# it can emit, tab-separated. Read by the kdaisyui Gradle plugin. Generated - do not edit.',
-    '',
-  ]
-  fs.writeFileSync(path.join(path.dirname(CLASS_LIST_FILE), 'kdaisyui-components.txt'), `${header.join('\n')}${[...lines].sort().join('\n')}\n`)
+  fs.writeFileSync(path.join(path.dirname(CLASS_LIST_FILE), 'kdaisyui-components.txt'), componentMapFile(lines))
 }
 
 /**

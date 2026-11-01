@@ -12,12 +12,13 @@ Five rules before following a link:
 
 ## Docs
 
-- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): Quick start with the Gradle dependency block, CSS delivery through the Gradle plugin, and how to migrate between releases
+- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): Quick start with the Gradle dependency block, and CSS delivery through the Gradle plugin
 - [Getting started](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/getting-started.md): Set up a project and render buttons, cards, stats, a form and an alert, in ten minutes
 - [Build a dashboard with Ktor](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/build-a-dashboard.md): A full admin dashboard with a sidebar, header, stats fragments and htmx lazy loading, in thirty minutes
 - [Tutorials](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/index.md): The learning path through the two tutorials
 - [How-to guides](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/how-to.md): Recipes: add a component, custom classes and attributes, nest components, build a form, a sidebar layout, htmx partial loading, a dropdown, validation feedback
 - [Explanation](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/explanation.md): What DaisyUI, kotlinx.html and htmx are, how class merging works, the common parameters, and why the wrappers are thin
+- [Upgrade guide](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/upgrading.md): What to change at the call site for every release that broke the API, one section per version
 - [Component reference](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference.md): The hand-written entry point to the per-component pages
 - [Reference index](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/index.md): One table of every component, its summary and the element it renders
 

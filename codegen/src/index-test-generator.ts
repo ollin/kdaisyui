@@ -1,17 +1,18 @@
 /**
- * The test generator's entry point: reads the arguments, the DaisyUI pages and the generated
- * component sources, and writes the documented-element and coverage tests. Everything it writes
+ * The test generator's entry point: reads the arguments, the DaisyUI pages and the component
+ * set, and writes the documented-element and coverage tests. Everything it writes
  * is computed by pure functions in `test-generator.ts`; reading and writing live here, in an
  * `index-*.ts` the mutation gate leaves out.
  *
- *   node src/index-test-generator.ts <component|all> [--output-dir=…] [--components-dir=…]
+ *   node src/index-test-generator.ts <component|all> [--output-dir=…]
  */
 import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'node:url'
 import { getAllComponentDirs, parseFrontmatter, readComponentPage, type ComponentName } from './parser/frontmatter.ts'
-import { isSkipped, readModel, type ComponentModel } from './model.ts'
+import { isSkipped, mainFunctionConfig, readModel, type ComponentModel } from './model.ts'
 import { documentedContext, documentedTestFor, toClassName, writeCoverageTest, type DocumentedContext } from './test-generator.ts'
+import { readComponentSet } from './component-set.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -29,17 +30,6 @@ function parseArg(flag, fallback) {
 
 const OUTPUT_DIR = parseArg('output-dir', DEFAULT_OUTPUT_DIR)
 
-
-// Where the generated component sources are READ BACK from, to drive every branch
-// of every function. Gradle passes --components-dir so lib/build.gradle.kts stays
-// the single source of that path; the default only serves a bare `node` run.
-//
-// This used to be a second hardcoded copy of the path, and when the real one moved
-// it silently produced no coverage tests at all — see generateAllCoverage below.
-const GENERATED_MAIN_DIR = parseArg(
-  'components-dir',
-  path.resolve(import.meta.dirname, '../../lib/generated/main/kotlin/io/github/ollin/kdaisyui/components'),
-)
 
 function generateForSkippedPage(componentName, context: DocumentedContext): number {
   const { kotlin, testCount } = documentedTestFor(componentName, readComponentPage(componentName as ComponentName) ?? '', null, context)!
@@ -59,28 +49,11 @@ function generateForComponent(componentName, componentModel: ComponentModel, con
 }
 
 function generateAllCoverage() {
-  // FAIL, never skip. This used to warn and return, so a wrong path produced zero
-  // coverage tests while the build stayed green and the other generators kept the
-  // test count looking plausible. That cost 8% line and 9% branch coverage without
-  // turning anything red. A missing input is a broken build, not a warning.
-  if (!fs.existsSync(GENERATED_MAIN_DIR)) {
-    throw new Error(
-      `Generated component sources not found at ${GENERATED_MAIN_DIR}. ` +
-      `Coverage tests are read back from them, so this cannot be skipped. ` +
-      `Pass --components-dir=<path>, or check generatedMainDir in lib/build.gradle.kts.`
-    )
+  const components = readComponentSet().generated
+  for (const component of components) {
+    writeCoverageTest(OUTPUT_DIR, component.classified.componentName, component.shape, mainFunctionConfig(component.model))
   }
-  const files = fs.readdirSync(GENERATED_MAIN_DIR).filter((f) => f.endsWith('.kt')).sort()
-  if (files.length === 0) {
-    throw new Error(`No .kt files in ${GENERATED_MAIN_DIR}; generateComponents must run first.`)
-  }
-  let generated = 0
-  for (const file of files) {
-    const result = writeCoverageTest(GENERATED_MAIN_DIR, OUTPUT_DIR, file)
-    if (result.success) generated++
-    else console.log(`  ⊘ coverage ${file}: ${result.error}`)
-  }
-  console.log(`Generated coverage tests for ${generated} component files`)
+  console.log(`Generated coverage tests for ${components.length} component files`)
 }
 
 /**

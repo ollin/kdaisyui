@@ -5,10 +5,10 @@ import {
   getAllComponentDirs,
   toPascalCase,
 } from './parser/frontmatter.ts'
-import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
+import { isSkipped, readModel, type ComponentModel, type MainFunctionConfig, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
 import { documentedCall, pageFirst, type DocumentedCall } from './documented-elements.ts'
-import { isVoidElement, type TagClass } from './component-shape.ts'
+import { hasSibling, isVoidElement, siblingParameters, type ComponentShape, type ParameterShape, type SiblingShape, type TagClass } from './component-shape.ts'
 
 /**
  * `BuilderName` and `TagName` are the defect that motivated the whole TypeScript port:
@@ -375,77 +375,6 @@ function lowerFirst(s) {
   return s.charAt(0).toLowerCase() + s.slice(1)
 }
 
-/** Walk from an opening delimiter to its matching close, respecting nesting. */
-function matchDelimiter(str, openIdx, open, close) {
-  let depth = 0
-  for (let i = openIdx; i < str.length; i++) {
-    if (str[i] === open) depth++
-    else if (str[i] === close && --depth === 0) return i
-  }
-  throw new Error(`Unbalanced ${open} from index ${openIdx}`)
-}
-
-/** Map enumTypeName -> [{ entry, css }] for class-mapping enums in the file. */
-function parseEnumDefinitions(content) {
-  const enums = {}
-  // `[^{]*` spans the supertype clause every generated enum now carries —
-  // `: ClassValues<ButtonSize>` — without this needing to restate it. The entry pattern below
-  // ignores the `override val classNames` member for the same reason: it matches only lines that
-  // are an identifier followed by a quoted string.
-  const re = /enum class (\w+)\(internal val className: String\)[^{]*\{([\s\S]*?)\n\}/g
-  let m
-  while ((m = re.exec(content)) !== null) {
-    const entries = []
-    const entryRe = /^\s*(\w+)\("([^"]+)"\),?\s*$/gm
-    let em
-    while ((em = entryRe.exec(m[2])) !== null) {
-      entries.push({ entry: em[1], css: em[2] })
-    }
-    enums[m[1]] = entries
-  }
-  return enums
-}
-
-/** Extract every generated `fun <Receiver>.daisy<Name>(...) { ... }` block. */
-function findFunctions(content) {
-  const funcs = []
-  const headerRe = /fun\s+(\w+)\.daisy(\w+)\s*\(/g
-  let m
-  while ((m = headerRe.exec(content)) !== null) {
-    const parenStart = headerRe.lastIndex - 1
-    const parenEnd = matchDelimiter(content, parenStart, '(', ')')
-    const braceStart = content.indexOf('{', parenEnd)
-    const braceEnd = matchDelimiter(content, braceStart, '{', '}')
-    funcs.push({
-      receiver: m[1],
-      name: m[2],
-      paramBlock: content.slice(parenStart + 1, parenEnd),
-      body: content.slice(braceStart + 1, braceEnd),
-    })
-    headerRe.lastIndex = braceEnd
-  }
-  return funcs
-}
-
-/** Split a param block on top-level commas (parens protect lambda types). */
-function splitParams(block) {
-  const parts = []
-  let depth = 0
-  let last = 0
-  for (let i = 0; i < block.length; i++) {
-    const ch = block[i]
-    if (ch === '(') depth++
-    else if (ch === ')') depth--
-    else if (ch === ',' && depth === 0) {
-      parts.push(block.slice(last, i))
-      last = i + 1
-    }
-  }
-  const tail = block.slice(last)
-  if (tail.trim()) parts.push(tail)
-  return parts.map((p) => p.trim()).filter(Boolean)
-}
-
 const PARAM_KIND_RULES = [
   [(c) => c.baseType === 'Boolean', 'boolean'],
   [(c) => c.name === 'id', 'id'],
@@ -481,42 +410,15 @@ function groupEnumOf(baseType: string): string {
   return baseType.match(/^ClassValues<(\w+)>$/)?.[1] ?? baseType
 }
 
-function classifyParam(raw, enums) {
-  const colon = raw.indexOf(':')
-  const name = raw.slice(0, colon).trim()
-  const rest = raw.slice(colon + 1).trim()
-  const eq = rest.indexOf('=')
-  const type = (eq >= 0 ? rest.slice(0, eq) : rest).trim()
+function classifyParam({ name, type, cssClass, writes }: ParameterShape, enums) {
   const nullable = type.endsWith('?')
-  const baseType = (nullable ? type.slice(0, -1) : type).trim()
+  const baseType = nullable ? type.slice(0, -1) : type
   const enumType = groupEnumOf(baseType)
-  const kind = paramKind({ name, baseType, enumType, nullable, hasDefault: eq >= 0, enums })
-  return { name, type, baseType, enumType, nullable, hasDefault: eq >= 0, kind, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
-}
-
-/** The single unguarded `addClassNames("...")` that names this element. */
-/**
- * Every class the body writes unconditionally, as the sorted string the assertion compares to.
- *
- * All of them, not the first: a `customParts` entry with `modifierClasses` emits two literal
- * `addClassNames` lines — `daisySkeletonText` renders `class="skeleton skeleton-text"` — and
- * reading only the first asserted a class list the function does not produce.
- */
-function parseBaseClass(body) {
-  const classes = [...body.matchAll(/^\s*addClassNames\("([^"]+)"\)\s*$/gm)].map(match => match[1])
-  return classes.length > 0 ? sortedClasses(classes) : null
-}
-
-/**
- * The kotlinx.html BUILDER the function opens with. Every generated component body
- * starts with exactly one `<builder> {` line.
- *
- * A builder name is not an HTML tag name — see `htmlTagForFn`.
- */
-function parseEmittedBuilder(body: string): BuilderName | null {
-  const m = body.match(/^\s*([a-z][\w]*)\s*\{\s*$/m)
-  // One of the two points a branded name is created: everything downstream is checked.
-  return m ? (m[1] as BuilderName) : null
+  const kind = paramKind({ name, baseType, enumType, nullable, enums })
+  // The classes a Boolean adds when true: a toggle's own, or those an extra writes.
+  const classes = cssClass === undefined ? [...(writes ?? [])] : [cssClass]
+  // Read only for an enum parameter, where it is the enum's entries.
+  return { name, type, baseType, enumType, nullable, kind, classes, enumEntries: enums[enumType] }
 }
 
 /** One overload on a generated scope, and what a test needs to call it. */
@@ -526,51 +428,6 @@ interface ScopeMember {
   readonly requiresContent: boolean
   /** The function whose lambda the member lives in — the call has to be written inside it. */
   readonly opener: string
-}
-
-/**
- * The members of a generated scope, so the coverage tests can reach them.
- *
- * Each member is a generated function with its own parameter defaults, and the aggregated
- * 100% line gate counts every one of those lines. Enumerating them by hand in a test file
- * would put a second copy of a DERIVED list into the repository — which is the duplication
- * that deriving the set was meant to remove, and the one that a DaisyUI bump silently
- * invalidates.
- *
- * Returns nothing for a file with no scope, which is 65 of the 66.
- */
-function parseScopeMembers(file: string): ScopeMember[] {
-  const opener = file.match(/^fun \w+\.(\w+)\(/m)
-  const scope = file.match(/^class \w+ internal constructor\(([\s\S]*)$/m)
-  if (!opener || !scope) return []
-  return [...scope[1].matchAll(/^ {4}fun (\w+)\(([\s\S]*?)^ {4}\) \{/gm)].map(member => ({
-    name: member[1],
-    // A `content` parameter with no `= null` is required — the same reading the emitter uses,
-    // and the reason it can be absent at all is that a void element cannot hold children.
-    requiresContent: /^\s*content: \([^)]*\.\(\) -> Unit\),$/m.test(member[2]),
-    opener: opener[1],
-  }))
-}
-
-/**
- * The builder a SCOPED function stands in for.
- *
- * A function whose `content` runs in a generated scope opens no builder — it constructs the
- * scope and visits it, which is what `div { }` expands to with the scope class in `DIV`'s
- * place. So `parseEmittedBuilder` finds nothing, and the `closes` assertion it feeds silently
- * disappeared from the generated coverage test the day the join gained a scope.
- *
- * The element is not in the body; it is the scope's superclass, declared in the same file.
- * Returns null when the body opens no scope, or when the file declares no such class —
- * refusing to answer beats answering wrongly, which is the rule `htmlTagForFn` already follows.
- */
-function parseScopeBuilder(body: string, file: string): BuilderName | null {
-  const opened = body.match(/^\s*([A-Z]\w*)\(emptyMap\(\), consumer\)\.visit \{\s*$/m)
-  if (!opened) return null
-  const declared = file.match(
-    new RegExp(`^class ${opened[1]} internal constructor\\([\\s\\S]*?\\) : (\\w+)\\(`, 'm'),
-  )
-  return declared ? htmlTagFnFor(declared[1].toLowerCase() as TagName) : null
 }
 
 /**
@@ -670,16 +527,6 @@ function closesTagAssert(ctx) {
 }
 
 /** CSS class(es) a boolean modifier adds via `if (param) addClassNames("...")`. */
-function boolClassesFor(body, param) {
-  const line = body.match(new RegExp(`^\\s*if \\(${param}\\)(.*)$`, 'm'))
-  if (!line) return []
-  const css = []
-  const re = /addClassNames\("([^"]+)"\)/g
-  let m
-  while ((m = re.exec(line[1])) !== null) css.push(m[1])
-  return css
-}
-
 function sortedClasses(arr) {
   return [...new Set(arr.filter(Boolean))].sort().join(' ')
 }
@@ -768,20 +615,20 @@ ${asserts.map((a) => `        ${a}`).join('\n')}
 `
 }
 
-function coverageContext(fn, enums, file: string) {
-  const params = splitParams(fn.paramBlock).map((raw) => classifyParam(raw, enums))
+function coverageContext(fn, enums) {
+  const params = fn.parameters.map((parameter) => classifyParam(parameter, enums))
   return {
     params,
-    body: fn.body,
-    base: parseBaseClass(fn.body) || '',
+    attributes: fn.attributes,
+    base: sortedClasses(fn.baseClasses),
     wrapperFn: htmlTagFnFor(wrapperTagOf(fn.receiver)),
     // The wrapper's CLOSING tag, which is the raw receiver name — not `wrapperFn`,
     // because `htmlTagFnFor` renames a few builders away from their tag (`object`
     // becomes `htmlObject`) and `</htmlObject>` is not a thing.
     wrapperTag: wrapperTagOf(fn.receiver),
-    // A scoped function opens its scope instead of a builder, and the scope stands in for the
-    // element it extends — so the closing tag is still assertable.
-    tagFn: parseEmittedBuilder(fn.body) ?? parseScopeBuilder(fn.body, file),
+    // A scoped function opens its scope instead of a builder, and the scope extends the same
+    // element — so the closing tag is still assertable.
+    tagFn: fn.builder,
     fnBase: lowerFirst(fn.name),
     daisyName: fn.name,
     required: params.find((p) => p.kind === 'contentRequired'),
@@ -809,7 +656,7 @@ function defaultsTest(ctx) {
   const asserts = ctx.base
     ? [renderedAssert(ctx, ctx.base, `${ctx.daisyName} defaults`, true)]
     : [`assertTrue(!html.contains("class=\\""), "${ctx.daisyName} defaults emits no class")`]
-  for (const a of parseAttrProps(ctx.body).unconditional) asserts.push(attrAssert(ctx, a))
+  for (const a of ctx.attributes.unconditional) asserts.push(attrAssert(ctx, a))
   // A component with no base class never reaches the helper, so its closure assertion is
   // still emitted on its own line.
   if (!ctx.base) {
@@ -823,7 +670,7 @@ function allFlagsArgs(ctx, boolCss) {
   const args = ctx.hasHatches ? ['id = htmlId("x-cov-id")'] : []
   for (const b of ctx.params.filter((p) => p.kind === 'boolean')) {
     args.push(`${b.name} = true`)
-    boolCss.push(...boolClassesFor(ctx.body, b.name))
+    boolCss.push(...b.classes)
   }
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
   for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
@@ -849,7 +696,7 @@ function allFlagsAsserts(ctx, boolCss) {
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) {
     asserts.push(`assertTrue(html.contains("${s.name}=\\"x\\""), "${ctx.daisyName} ${s.name}")`)
   }
-  const attrs = parseAttrProps(ctx.body)
+  const attrs = ctx.attributes
   for (const a of [...attrs.unconditional, ...attrs.guarded]) asserts.push(attrAssert(ctx, a))
   return asserts
 }
@@ -925,8 +772,8 @@ function textArmTest(ctx) {
   return wrapTest(ctx, `${ctx.fnBase}_text`, ['text = "txtmark"'], asserts)
 }
 
-function buildCoverageTests(fn, enums, file) {
-  const ctx = coverageContext(fn, enums, file)
+function buildCoverageTests(fn, enums) {
+  const ctx = coverageContext(fn, enums)
   return defaultsTest(ctx) + allFlagsTest(ctx) + enumArmTests(ctx) + textArmTest(ctx)
 }
 
@@ -969,8 +816,8 @@ function coverageImports(funcs, enums): Set<string> {
   ])
   for (const fn of funcs) {
     if (fn.receiver !== 'FlowContent') imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
-    for (const raw of splitParams(fn.paramBlock)) {
-      const parameter = classifyParam(raw, enums)
+    for (const declared of fn.parameters) {
+      const parameter = classifyParam(declared, enums)
       const external = parameter.kind === 'enumExternal' && EXTERNAL_ENUM_IMPORTS[parameter.baseType]
       if (external) imports.add(external)
     }
@@ -983,16 +830,65 @@ function coverageImports(funcs, enums): Set<string> {
  * source declares no function. A pure function of its input: the snapshot test compares it with
  * the committed coverage tests, which need neither the submodule nor a regeneration.
  */
-function coverageTestFor(className: string, content: string): string | null {
-  const enums = parseEnumDefinitions(content)
-  const funcs = findFunctions(content)
-  if (funcs.length === 0) return null
+/** Each enum of the shape as the coverage tests read it: its entries and the class each writes. */
+function enumTableOf(shape: ComponentShape) {
+  return Object.fromEntries(shape.enums.map(declared => [declared.name, declared.entries.map(entry => ({ entry: entry.name, css: entry.cssClass }))]))
+}
+
+/**
+ * Every function the component's file declares, in the order `generateKotlinFile` writes them:
+ * each function followed by its class sibling, then the class-only siblings. Named without the
+ * `daisy` every name starts with, which the tests put back.
+ */
+/**
+ * The attributes a main function's body sets, in body order: its role and input type, then the
+ * extras' fragments, those before the classes first. No other function sets one.
+ */
+function mainAttributesOf(config: MainFunctionConfig) {
+  // The extras before the classes, then every extra: an attribute counts once, where it is first set.
+  const extras = [...config.extras.filter(extra => extra.position === 'before_classes'), ...config.extras]
+  const fromExtras = parseAttrProps(extras.map(extra => extra.apply).join('\n'))
+  const fixed = [...(config.role ? ['role'] : []), ...(config.inputType ? ['type'] : [])]
+  return { unconditional: new Set([...fixed, ...fromExtras.unconditional]), guarded: fromExtras.guarded }
+}
+
+const NO_ATTRIBUTES = { unconditional: new Set<string>(), guarded: new Set<string>() }
+
+function coverageFunctionsOf(shape: ComponentShape, config: MainFunctionConfig) {
+  // A main function writes the component's class; a part, a custom part and a sibling their own.
+  const ownClasses = (fn: SiblingShape) => [fn.cssClass, ...fn.modifierClasses]
+  // A sibling opens no element, so it has no builder.
+  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn), baseClasses: ownClasses(fn), builder: null, attributes: NO_ATTRIBUTES })
+  return [
+    ...shape.functions.flatMap(fn => [
+      { name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters, baseClasses: fn.kind === 'main' ? [shape.prefix] : ownClasses(fn), builder: fn.tagBuilder as string as BuilderName, attributes: fn.kind === 'main' ? mainAttributesOf(config) : NO_ATTRIBUTES },
+      ...(hasSibling(fn) ? [sibling(fn)] : []),
+    ]),
+    ...shape.siblingsOnly.map(sibling),
+  ]
+}
+
+/**
+ * The members of the component's scope, so the coverage tests can reach them: each is called
+ * inside the main function's lambda, with a `content` lambda where its element requires one.
+ */
+function scopeMembersOf(shape: ComponentShape): ScopeMember[] {
+  return (shape.scope?.members ?? []).map(member => ({
+    name: member.name,
+    requiresContent: member.parameters.some(parameter => parameter.name === 'content' && parameter.default === null),
+    opener: shape.functions[0].name,
+  }))
+}
+
+function coverageTestFor(className: string, shape: ComponentShape, config: MainFunctionConfig): string {
+  const enums = enumTableOf(shape)
+  const funcs = coverageFunctionsOf(shape, config)
 
   const imports = coverageImports(funcs, enums)
 
   let body = ''
-  for (const fn of funcs) body += buildCoverageTests(fn, enums, content)
-  for (const member of parseScopeMembers(content)) body += scopeMemberTest(member)
+  for (const fn of funcs) body += buildCoverageTests(fn, enums)
+  for (const member of scopeMembersOf(shape)) body += scopeMemberTest(member)
 
   return `package io.github.ollin.kdaisyui.components
 
@@ -1003,13 +899,9 @@ ${COVERAGE_HELPER}${body}}
 `
 }
 
-/** Reads one component from `componentsDir` and writes its coverage test to `outputDir`. */
-function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string) {
-  const className = path.basename(fileName, '.kt')
-  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'))
-  if (kotlin === null) return { success: false, error: 'No functions' }
-  fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), kotlin)
-  return { success: true }
+/** Writes one component's coverage test to `outputDir`. */
+function writeCoverageTest(outputDir: string, className: string, shape: ComponentShape, config: MainFunctionConfig): void {
+  fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), coverageTestFor(className, shape, config))
 }
 
 function documentedContext(): DocumentedContext {
@@ -1032,9 +924,6 @@ export {
   coverageTestFor,
   writeCoverageTest,
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
-  parseEmittedBuilder,
-  parseScopeBuilder,
-  parseScopeMembers,
   htmlTagForFn,
   parseAttrProps,
   attrAssert,

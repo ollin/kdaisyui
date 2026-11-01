@@ -58,6 +58,7 @@ describe('docFileNameFor', () => {
     assert.equal(docFileNameFor('file-input'), 'fileInput')
     assert.equal(docFileNameFor('card'), 'card')
     assert.equal(docFileNameFor('mockup-browser'), 'mockupBrowser')
+    assert.equal(docFileNameFor('a-b-c'), 'aBC')
   })
 })
 
@@ -332,5 +333,20 @@ describe('a class-only function on a reference page', () => {
     const menu = { ...component('menu', 'Menu', 'menu'), functions: [...component('menu', 'Menu', 'menu').functions, { kind: 'classes' as const, name: 'daisyMenuItem', receiver: 'Tag', element: null as unknown as string, class: null, text: false, parameters: [toggle('active', 'menu-active')] }] }
 
     assert.ok(generateComponentPage(shapeOf(menu), undefined).endsWith("```kotlin\n// Classes only, for a child DaisyUI gives no class of its own:\nfun Tag.daisyMenuItemClasses(active: Boolean = false)\n```\n"))
+  })
+})
+
+describe('the opening paragraph without a committed summary', () => {
+  const opening = (desc: string, main = {}) => page(component('kbd', 'Kbd', 'kbd', {}, main), undefined, { desc, classes: {} }).split('/components/kbd/)\n\n')[1].split('\n\n')[0]
+
+  test("takes DaisyUI's first sentence, without its full stop", () => {
+    assert.equal(opening('Shows a key. Use it inline.'), 'Shows a key. Renders `<div class="kbd ...">`.')
+    assert.equal(opening('Version 1.5 keys.'), 'Version 1.5 keys. Renders `<div class="kbd ...">`.')
+    assert.equal(opening('Keyboard key'), 'Keyboard key. Renders `<div class="kbd ...">`.')
+  })
+
+  test('names a structural wrapper by its element alone, and every class a function always writes', () => {
+    assert.equal(opening('', { class: null }), 'Structural wrapper. Renders `<div>`.')
+    assert.equal(opening('', { always: ['kbd-lg'] }), 'Renders `<div class="kbd kbd-lg ...">`.')
   })
 })

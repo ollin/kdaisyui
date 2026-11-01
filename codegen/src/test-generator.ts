@@ -641,18 +641,6 @@ function htmlTagForFn(builder: BuilderName): TagName | null {
 }
 
 /**
- * HTML void elements. They have no closing tag, so the "element is closed"
- * assertion below does not apply to them and would assert something false.
- */
-// Deliberately `Set<string>` rather than `Set<TagName>`: it is only ever queried with a
-// `TagName`, which is assignable to `string`, so branding the literals would buy nothing
-// and cost fourteen casts.
-const VOID_TAGS: Set<string> = new Set([
-  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-  'link', 'meta', 'param', 'source', 'track', 'wbr',
-])
-
-/**
  * Assert the emitted element is actually CLOSED.
  *
  * Every other assertion in these tests reads the class attribute, and a class
@@ -797,7 +785,9 @@ const COVERAGE_HELPER = `
 /** The exact tail a correctly closed component leaves, or null when there is none to assert. */
 function closesSuffix(ctx) {
   const tag = ctx.tagFn ? htmlTagForFn(ctx.tagFn) : null
-  if (!tag || VOID_TAGS.has(tag)) return null
+  // A void element has no closing tag, so the "element is closed" assertion would assert
+  // something false. `isVoidElement` is the generator's own list, in kotlinx.html's casing.
+  if (!tag || isVoidElement(tag.toUpperCase() as TagClass)) return null
   return `</${tag}></${ctx.wrapperTag}>`
 }
 

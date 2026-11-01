@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
+import { linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
 import { component, shapeOf } from './model-fixture.ts'
 
 const KBD = shapeOf(component('kbd', 'Kbd', 'kbd'), { desc: 'Kbd is used to display keyboard shortcuts. Second sentence.', classes: {} })
@@ -57,5 +57,14 @@ describe('shapeFindings, before the first H2', () => {
       'line 6: before the first H2 the only heading is the H1, got "### Rules"',
       'the index needs exactly one H1, found 2',
     ])
+  })
+})
+
+describe('linkFindings', () => {
+  test('names a repository link whose path does not exist, and leaves other hosts alone', () => {
+    const index = '## Docs\n\n- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): start\n- [Gone](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/gone.md)\n- [DaisyUI](https://daisyui.com)\n'
+    const exists = (path: string) => path === 'README.md'
+
+    assert.deepEqual(linkFindings(index, exists), ['line 4: links docs/gone.md, which does not exist in the repository'])
   })
 })

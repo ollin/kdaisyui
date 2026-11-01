@@ -37,7 +37,22 @@ export function renderLlmsIndex(
 }
 
 /** What the reference parsers read as a link item: `- [name](url)`, optionally `: note`. */
-const LINK_ITEM = /^- \[[^\]]+\]\([^)]+\)(: .*)?$/
+const LINK_ITEM = /^- \[[^\]]+\]\((?<url>[^)]+)\)(: .*)?$/
+
+/** A linked repository path, with the line that links it; `null` for a link to another host. */
+function repositoryLink(line: string): string | null {
+  const url = LINK_ITEM.exec(line)?.groups?.url
+  return url !== undefined && url.startsWith(RAW_BASE) ? url.slice(RAW_BASE.length) : null
+}
+
+/** Repository links whose target does not exist. Another host's reachability is not ours to know. */
+export function linkFindings(index: string, exists: (repositoryPath: string) => boolean): string[] {
+  return index
+    .split('\n')
+    .map((line, at) => ({ path: repositoryLink(line), at }))
+    .filter(({ path }) => path !== null && !exists(path))
+    .map(({ path, at }) => `line ${at + 1}: links ${path}, which does not exist in the repository`)
+}
 
 /**
  * Where the rendered index breaks the shape https://llmstxt.org/ specifies. The reference

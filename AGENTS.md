@@ -99,7 +99,7 @@ Hand-written Kotlin exists only here:
   `gradle/allowed-gradle-problems.txt` does not accept
 - `gradle-plugin/src/main/kotlin/…` — the published Gradle plugin that narrows a build's class list
   to the components it uses, from the map `kdaisyui-components.txt` the codegen writes
-- tests: `lib/src/test/…` (10 files), `ktor-integration/src/test/…` (1), `doc-snippets/src/test/…`,
+- tests: `lib/src/test/…` (11 files), `ktor-integration/src/test/…` (1), `doc-snippets/src/test/…`,
   `build-checks/src/test/…`, `gradle-plugin/src/test/…`, `e2e-tests/src/test/…`
 - `example-app/…`
 
@@ -219,8 +219,8 @@ run `pre_commit_code_health_safeguard` and only stop when it passes.
 kdaisyui is analysed on the self-hosted server as project **`kdaisyui`** (id 14). **Before every
 push**, read its values there as the skill **`codescene-health`** describes: the project's Code
 Health and hotspot Code Health, and for each touched file that is a hotspot or carries a goal, that
-it got no worse. On 2026-11-01 the one hotspot was `lib/src/test/.../DashboardTest.kt` at 6.90, a
-recommended refactoring target.
+it got no worse. The one hotspot on 2026-11-01, `lib/src/test/.../DashboardTest.kt` at 6.90, was
+deleted the same day: a demo page inside a test that no coverage or mutation gate needed.
 
 ## Skills
 

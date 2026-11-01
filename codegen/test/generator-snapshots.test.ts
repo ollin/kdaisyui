@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'fs'
 import path from 'path'
 
+import { generateComponentApiDump } from '../src/component-api-dump.ts'
 import { classListFile, componentMapFile, componentMapLine } from '../src/component-map.ts'
 import { readComponentSet } from '../src/component-set.ts'
 import { generateKotlinFile as componentKotlin } from '../src/generator-new.ts'
@@ -54,6 +55,14 @@ describe('the class list and the component map reproduce the committed resources
       return componentMapLine(component.componentDir, component.classified.componentName, kotlin, offeredClasses(component.model))
     })
     assert.equal(componentMapFile(lines), committed('main', 'resources', 'kdaisyui-components.txt'))
+  })
+})
+
+describe('the API dump reproduces the committed baseline', () => {
+  // `:lib:updateComponentApi` writes it and the api-baseline job compares it; nothing here did.
+  test('lib/api/components.api', () => {
+    const baseline = fs.readFileSync(path.join(GENERATED, '..', 'api', 'components.api'), 'utf8')
+    assert.equal(generateComponentApiDump(readComponentSet().generated.map(component => component.shape)), baseline)
   })
 })
 

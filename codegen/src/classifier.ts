@@ -112,23 +112,3 @@ export function toCamelCase(suffix: string): string {
   const pascal = toPascalCase(suffix)
   return pascal.charAt(0).toLowerCase() + pascal.slice(1)
 }
-
-export function hasVariants(classified: ClassifiedComponent): boolean {
-  return classified.colors.length > 0 || classified.styles.length > 0
-}
-
-export function hasSizes(classified: ClassifiedComponent): boolean {
-  return classified.sizes.length > 0
-}
-
-export function hasModifiers(classified: ClassifiedComponent): boolean {
-  return classified.modifiers.length > 0 || classified.behaviors.length > 0
-}
-
-export function hasParts(classified: ClassifiedComponent): boolean {
-  return classified.parts.length > 0
-}
-
-export function getAllBooleanParams(classified: ClassifiedComponent): string[] {
-  return [...classified.modifiers, ...classified.behaviors].sort()
-}

@@ -14,6 +14,14 @@ const HUNK = /^@@ -\S+ \+(?<start>\d+)(?:,(?<count>\d+))? @@/
 /** The file a diff section is about, from its `+++ b/<path>` line. */
 const NEW_FILE = /^\+\+\+ b\/(?<path>.+)$/
 
+/** TypeScript under `src/`, which the gate mutates. */
+const SOURCE = /^src\/.+\.ts$/
+
+/** The entry points, which run only as scripts that no unit test imports. */
+const ENTRY_POINT = /^src\/index-[^/]+\.ts$/
+
+const isMutated = (file: string) => SOURCE.test(file) && !ENTRY_POINT.test(file)
+
 export function mutationScope(diff: string): string[] {
   let file = ''
   const ranges: string[] = []
@@ -21,10 +29,10 @@ export function mutationScope(diff: string): string[] {
     const path = NEW_FILE.exec(line)?.groups?.path
     if (path !== undefined) file = path
     const hunk = HUNK.exec(line)?.groups
-    if (hunk === undefined) continue
+    if (hunk === undefined || !isMutated(file)) continue
     const start = Number(hunk.start)
     const count = hunk.count === undefined ? 1 : Number(hunk.count)
-    ranges.push(`${file}:${start}-${start + count - 1}`)
+    if (count > 0) ranges.push(`${file}:${start}-${start + count - 1}`)
   }
   return ranges
 }

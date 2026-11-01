@@ -14,6 +14,21 @@ describe('mutationScope', () => {
     assert.deepEqual(mutationScope(diff), ['src/model.ts:11-13', 'src/model.ts:44-45'])
   })
 
+  test('skips a hunk that only deletes, since a deleted line has nothing to mutate', () => {
+    assert.deepEqual(mutationScope(diffOf('src/model.ts', '@@ -12,4 +11,0 @@')), [])
+  })
+
+  test('skips what the gate does not mutate: tests, entry points, files outside src/', () => {
+    const diff = [
+      diffOf('test/model.test.ts', '@@ -1,0 +2,1 @@'),
+      diffOf('src/index-docs.ts', '@@ -1,0 +2,1 @@'),
+      diffOf('stryker.config.json', '@@ -1,0 +2,1 @@'),
+      diffOf('src/parser/frontmatter.ts', '@@ -1,0 +2,1 @@'),
+    ].join('\n')
+
+    assert.deepEqual(mutationScope(diff), ['src/parser/frontmatter.ts:2-2'])
+  })
+
   test('reads a hunk without a count as one line', () => {
     assert.deepEqual(mutationScope(diffOf('src/model.ts', '@@ -7 +7 @@')), ['src/model.ts:7-7'])
   })

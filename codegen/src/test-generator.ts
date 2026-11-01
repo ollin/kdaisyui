@@ -306,8 +306,8 @@ interface DocumentedContext {
  * One test per expressible documented element of the page, whichever function expresses it,
  * deduplicated across the page, with how many there were and the imports they need.
  */
-function classTests(page: Pick<ComponentModel, 'component'>, context: DocumentedContext, mainName: string, testCases): { kotlin: string, testCount: number, imports: Set<string> } {
-  const models = pageFirst(context.models, page.component)
+/** `models` in claiming order, the page's own model first; `mainName` absent for a skipped page. */
+function classTests(models: readonly ComponentModel[], context: DocumentedContext, mainName: string | undefined, testCases): { kotlin: string, testCount: number, imports: Set<string> } {
   const seen = new Set<string>()
   const usedNames = new Set()
   const tests = testCases.flatMap(tc => markedElements(tc.html)
@@ -344,7 +344,7 @@ function generateKotlinTest(componentName, testCases, componentModel: ComponentM
   const mainName = main?.name ?? `daisy${className}`
   const customParts = customPartsOf(componentModel)
   const attributeTest = generateComponentAttributeTest(mainName, main?.attributes ?? {})
-  const { kotlin: classTestKotlin, testCount, imports } = classTests(componentModel, context, mainName, testCases)
+  const { kotlin: classTestKotlin, testCount, imports } = classTests(pageFirst(context.models, componentModel.component), context, mainName, testCases)
 
   const kotlin = kotlinTestFile(className, extraImportLines(customParts, attributeTest !== '', imports), `${classTestKotlin}${attributeTest}${generateCustomPartTests(customParts)}`)
   return { kotlin, testCount }
@@ -374,7 +374,8 @@ function documentedTestFor(componentName: string, page: string, model: Component
   const testCases = parseTestCases(page)
   const className = toClassName(componentName)
   if (model === null) {
-    const { kotlin, testCount, imports } = classTests({ component: componentName }, context, '', testCases)
+    // A skipped page has no model to put first and no main function to name tests after.
+    const { kotlin, testCount, imports } = classTests(context.models, context, undefined, testCases)
     return { kotlin: kotlinTestFile(className, extraImportLines([], false, imports), kotlin), testCount }
   }
   if (testCases.length === 0) return null

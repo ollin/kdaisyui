@@ -333,3 +333,4 @@ daisyInput(placeholder = "Email", extraClasses = "input-error w-full")
 
 DaisyUI provides `input-error`, `input-success`, `input-warning` classes.
 
+

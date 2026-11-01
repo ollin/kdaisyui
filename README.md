@@ -211,24 +211,21 @@ Read its sections from the version you have up to the one you move to; the
 
 ## Development environment
 
-### Option A — Local with asdf
+Building and testing needs **one JDK, 21 or newer**, and Docker for `./gradlew check`. The
+Gradle wrapper downloads Gradle (version in [`gradle/wrapper/gradle-wrapper.properties`](gradle/wrapper/gradle-wrapper.properties)),
+and the generated sources are committed, so a clone needs no Node, no npm and no git submodule.
+Only `just generate`, regenerating after a DaisyUI or Heroicons bump, needs Node and the
+submodules.
 
 ```bash
 git clone https://github.com/ollin/kdaisyui
 cd kdaisyui
-asdf install   # reads .tool-versions — installs the JDK
 just test      # run unit tests
 just dev       # start dev server → http://localhost:8080
 ```
 
-Building and testing needs **only a JDK**. The components and icons are generated, but the
-generated sources are committed, so there is no Node, no npm and no git submodule in the way
-of a clone. Only `just generate` — regenerating after a DaisyUI or Heroicons bump — needs
-Node and the submodules.
-
-### Option B — Any JDK 21+
-
-The Gradle wrapper downloads Gradle automatically (version in [`gradle/wrapper/gradle-wrapper.properties`](gradle/wrapper/gradle-wrapper.properties)). Just bring your own JDK 21+.
+[`.tool-versions`](.tool-versions) is the one pin of the JDK CI runs and of the Node `just generate`
+needs; CI reads it directly. `asdf install` or `mise install` installs exactly those versions.
 
 ## Requirements
 

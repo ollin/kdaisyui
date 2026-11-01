@@ -216,6 +216,12 @@ After changing code, run `code_health_review` on the changed files. If Code Heal
 issues, run the review again, and use `code_health_score` to confirm the result. Before finishing,
 run `pre_commit_code_health_safeguard` and only stop when it passes.
 
+kdaisyui is analysed on the self-hosted server as project **`kdaisyui`** (id 14). **Before every
+push**, read its values there as the skill **`codescene-health`** describes: the project's Code
+Health and hotspot Code Health, and for each touched file that is a hotspot or carries a goal, that
+it got no worse. On 2026-11-01 the one hotspot was `lib/src/test/.../DashboardTest.kt` at 6.90, a
+recommended refactoring target.
+
 ## Skills
 
 | Task | Skill |

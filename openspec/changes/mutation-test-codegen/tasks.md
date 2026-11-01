@@ -30,17 +30,21 @@ dependency placement depends on it.
 
 ## 3. The changed-line scope, under TCR
 
-- [ ] 3.1 `^ F (internal)` `mutationScope(diff)` returns one range per added hunk of a
+- [x] 3.1 `^ F (internal)` `mutationScope(diff)` returns one range per added hunk of a
   `codegen/src/` file.
-- [ ] 3.2 `^ F (internal)` It skips pure deletions, files outside `src/`, test files and
+- [x] 3.2 `^ F (internal)` It skips pure deletions, files outside `src/`, test files and
   `index-*.ts`.
-- [ ] 3.3 `^ F (internal)` It merges a file's hunks into one argument list and returns nothing for
+- [x] 3.3 `^ F (internal)` It merges a file's hunks into one argument list and returns nothing for
   an empty diff.
-- [ ] 3.4 `! F (internal)` A CLI wrapper prints the `--mutate` arguments for `HEAD^1..HEAD`.
+- [x] 3.4 `! F (internal)` A CLI wrapper prints the `--mutate` arguments for `HEAD^1..HEAD`.
+
+Section 3 landed as one `!` feature, one `!` scope rule, the CLI and five refactorings: one
+revert (finding F1), and StrykerJS on the module itself left 14 survivors, which tests and
+rewrites took to 54 of 54 killed (F2). 3.3 needed no code: an empty diff already gave nothing.
 
 ## 4. The CI gate and its proof
 
-- [ ] 4.1 `! F (internal)` `codegen-tests`: `fetch-depth: 2`, the scope step, and Stryker on the
+- [x] 4.1 `! F (internal)` `codegen-tests`: `fetch-depth: 2`, the scope step, and Stryker on the
   ranges when there are any, failing on a survivor.
 - [ ] 4.2 Probe pull requests: a test that asserts nothing on a new function fails the job; a
   change outside `codegen/src` runs no mutant. Record durations (A4). Close and delete them.

@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { pinnedSubmodule } from '../submodules.ts'
 
 /**
  * Two kinds of name live in this file, and both are strings.
@@ -134,4 +135,15 @@ export function parseIconFiles(directories: IconDirectories): Map<PascalName, Ic
   }
 
   return icons
+}
+
+/** The four Heroicons directories the generators read, in the pinned submodule. */
+export function heroiconDirectories(): IconDirectories {
+  const source = path.join(pinnedSubmodule('heroicons'), 'src')
+  return {
+    outline24Dir: path.join(source, '24', 'outline'),
+    solid16Dir: path.join(source, '16', 'solid'),
+    solid20Dir: path.join(source, '20', 'solid'),
+    solid24Dir: path.join(source, '24', 'solid'),
+  }
 }

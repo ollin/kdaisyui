@@ -1,9 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import { parseIconFiles } from './parser/svg-heroicons.ts'
+import { heroiconDirectories, parseIconFiles } from './parser/svg-heroicons.ts'
 import { generateKotlinFile } from './generator-heroicons.ts'
 
-const HEROICONS_SRC_DIR = path.resolve(import.meta.dirname, '../../heroicons/src')
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
 const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generated/main/kotlin/io/github/ollin/kdaisyui/icons')
@@ -19,25 +18,11 @@ function parseOutputDir(): string {
 
 const OUTPUT_DIR = parseOutputDir()
 
-const directories = {
-  outline24Dir: path.join(HEROICONS_SRC_DIR, '24', 'outline'),
-  solid16Dir: path.join(HEROICONS_SRC_DIR, '16', 'solid'),
-  solid20Dir: path.join(HEROICONS_SRC_DIR, '20', 'solid'),
-  solid24Dir: path.join(HEROICONS_SRC_DIR, '24', 'solid'),
-}
-
 function main() {
   console.log('Generating Heroicons Kotlin source files...\n')
 
-  for (const [name, dir] of Object.entries(directories)) {
-    if (!fs.existsSync(dir)) {
-      console.error(`${name} directory not found: ${dir}`)
-      console.error('Ensure the heroicons git submodule is checked out.')
-      process.exit(1)
-    }
-  }
-
-  const icons = parseIconFiles(directories)
+  // Throws, naming `git submodule update --init heroicons`, when the submodule is absent.
+  const icons = parseIconFiles(heroiconDirectories())
   const totalVariants = [...icons.values()].reduce((sum, s) => {
     return sum + [s.outline24, s.solid16, s.solid20, s.solid24].filter(Boolean).length
   }, 0)

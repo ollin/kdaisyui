@@ -27,7 +27,7 @@ for planning in openspec/changes/x/tasks.md .opencode/skills/x/SKILL.md .idea/vc
 done
 printf 'openspec/a.md\nAGENTS.md\n' | expect none "two planning files"
 printf 'AGENTS.md.bak\n' | expect full "a planning name with a suffix"
-printf 'docs/AGENTS.md\n' | expect full "a planning name in another directory"
+printf 'lib/AGENTS.md\n' | expect full "a planning name in another directory"
 printf '.github/workflows/ci.yml\n' | expect full "the CI workflow itself"
 printf '.gitignore\n' | expect full ".gitignore, which the drift job's git status reads"
 

@@ -18,7 +18,7 @@ The estimate ledger was not among this session's tools, so the run is to be open
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A6) Read the specification's JavaScript implementation
+- [x] 1.1 `. d` (A6) Read the specification's JavaScript implementation
   (https://llmstxt.org/llmstxt-js.html) and record in `design.md`, decision 3, whether its parser
   accepts a link item without `: note` and blank lines between items. Adjust the shape regex in
   the design if not.

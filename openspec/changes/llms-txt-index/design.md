@@ -70,6 +70,15 @@ or page. Generation fails; nothing is written.
   `docs/reference/`, compared against the set of linked repository paths. Generated reference pages
   are covered by construction and not scanned.
 
+**A6, checked 2026-11-01 (task 1.1).** The reference parsers at https://llmstxt.org/llmstxt-js.html
+and https://llmstxt.org/core.html split the text at `^##\s*(.*?)$` and then collect, inside each
+section, every match of `-\s*\[title\]\(url\)(?::\s*desc)?$`. So the note is optional, blank
+lines between items are ignored, and so is anything else in a section: the canonical parser
+tolerates what our shape gate refuses, which is the point of having the gate. Two consequences
+for the template: the H1 is matched as `^#\s*title$` anywhere (the attribution comment before it
+is harmless), and the summary is **one** `> ` line, because the parser captures a single line
+and would push a second blockquote line into the free-form info.
+
 **Rejected: a check in CI only.** The drift job would catch a changed output, not a missing link;
 and a failing generation names the cause, a failing diff names a file.
 

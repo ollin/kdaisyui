@@ -117,7 +117,7 @@ export interface SkippedModel {
 export const MODEL_DIR = path.resolve(import.meta.dirname, '../model')
 
 export function readModel(componentDir: string, modelDir = MODEL_DIR): ComponentModel | SkippedModel {
-  return JSON.parse(fs.readFileSync(path.join(modelDir, `${componentDir}.json`), 'utf8'))
+  return JSON.parse(String(fs.readFileSync(path.join(modelDir, `${componentDir}.json`))))
 }
 
 /** The DaisyUI directory each committed model file names. */
@@ -281,6 +281,7 @@ export function withDeclaredScopes(components: readonly DeclaredComponent[]): Co
   const members = joinScopeMembers(items.map(component => component.shape), new Set(items.map(component => component.model.class)))
   const imports = items.flatMap(component => component.model.functions.filter(fn => fn.kind === 'main'))
     .flatMap(fn => fn.parameters)
-    .flatMap(parameter => (parameter.kind === 'extra' ? parameter.imports ?? [] : []))
+    // Only an extra parameter carries `imports`.
+    .flatMap(parameter => (parameter as ModelExtraParameter).imports ?? [])
   return components.map(component => (component.model.joinScope ? withJoinScope(component.shape, members, imports) : component.shape))
 }

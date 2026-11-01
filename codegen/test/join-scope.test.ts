@@ -105,6 +105,12 @@ describe('withJoinScope', () => {
     assert.deepEqual(joined.scope?.members.map(fn => fn.name), ['daisyButton', 'daisySelect'])
   })
 
+  test('an optional content lambda stays optional on the scope', () => {
+    const joined = withJoinScope(shapeOf(component('join', 'Join', 'join', {}, { text: true })), [member('daisyButton')], [])
+
+    assert.equal(parameterNamed(joined, 'content')?.type, '(JoinScope.() -> Unit)?')
+  })
+
   test('nothing else about the component moves', () => {
     const before = joinShape()
     const after = withJoinScope(before, [member('daisyButton')], [])

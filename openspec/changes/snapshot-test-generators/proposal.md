@@ -10,49 +10,53 @@ component emitter and the Heroicons pipeline. Full StrykerJS run, 2026-11-01:
 | `test-generator-heroicons.ts` | 88 |
 | `parser/svg-heroicons.ts` | 76 |
 
-Their outputs are committed and drift-checked, like the coverage tests were. Their inputs are not
-all in the repository: the component emitter takes descriptions from DaisyUI's `+page.md`, and the
-icon emitter takes four SVGs per icon from the Heroicons submodule. Neither submodule is checked
-out in `codegen-tests`, and codegen tests read none by decision (`kdaisyui-testing`). Oliver chose
-on 2026-11-01 to vendor a few inputs as fixtures instead of changing that decision.
+Their outputs are committed and drift-checked. Their inputs are partly in the submodules: the
+component emitter takes descriptions from DaisyUI's `+page.md`, the icon emitter four SVGs per icon
+from Heroicons. The `codegen-tests` job checks out neither, and `kdaisyui-testing` says codegen
+tests read no submodule.
+
+**Revised 2026-11-01, before any work.** The first version vendored three pages and two icons as
+fixtures. Reconsidered with Oliver: the rule exists only because the job had no submodules (a test
+reading one died with `ENOENT`, which reads like a broken checkout), and the no-submodule promise
+in `AGENTS.md` is about `./gradlew check`, which the codegen tests are deliberately not part of.
+Checking the submodules out in the job removes the rule's reason, costs about 4 s (the drift job's
+checkout takes 6 s with them, about 2 s without), and lets every component and every icon be
+compared, with no fixture to keep fresh.
 
 ## What Changes
 
-- **Fixtures under `codegen/test/fixtures/`**, copied verbatim from the pinned submodules: the
-  frontmatter of three DaisyUI pages (`kbd`, `card`, `dropdown`: a small one, one with parts and
-  enums, one with custom constructions), and the four SVGs of two icons. Each fixture directory
-  says where it came from and how to refresh it.
-- **Three snapshot tests**, each comparing a generator with committed output:
-  1. the component emitter, from the committed model and a fixture's descriptions, against
+- **`codegen-tests` checks out the submodules**, as `generated-sources-drift` does.
+- **Three snapshot tests**, each comparing a generator with committed output, for all of it:
+  1. the component emitter, from the committed models and the pinned DaisyUI pages, against all 66
      `lib/generated/main/…/components/<Name>.kt`;
-  2. the icon emitter, from a fixture's four SVGs, against `lib/generated/main/…/icons/<Name>.kt`;
-  3. the icon test generator, from the committed icon files, against the committed
-     `HeroIconsGeneratedTest.kt`. It needs no fixture.
-- **A refresh recipe**, `just refresh-codegen-fixtures`, copies the fixtures from the submodules
-  again. `kdaisyui-daisyui-upgrade` runs it after a bump; a stale fixture fails its snapshot test
-  with a message naming the recipe.
+  2. the icon emitter, from the pinned Heroicons SVGs, against all 324 `…/icons/<Name>.kt`;
+  3. the icon test generator, from the committed icon files, against `HeroIconsGeneratedTest.kt`.
+- **A missing submodule fails loudly, never skips.** One helper checks for the checkout and throws
+  `the DaisyUI submodule is not checked out: git submodule update --init` (or Heroicons), so the
+  failure names its fix instead of an `ENOENT` deep in a parser.
+- **The rule is rewritten** in `kdaisyui-testing`: codegen tests may read the pinned submodules,
+  the job checks them out, and a test never skips when one is absent.
 - What still survives is measured and recorded, as before.
 
-**Subtractive option considered:** check the submodules out in `codegen-tests` and compare every
-component and icon, with no fixtures. Rejected by Oliver: it reverses the documented decision, and
-`node --test` would fail on a clone without submodules unless the tests skipped there, which the
-house rule forbids.
+**Rejected: vendored fixtures** (the first version of this change). Three pages and two icons where
+the job can compare all of them, plus a refresh recipe and an upgrade step to keep the copies from
+going stale.
 
 ## Deliberately out of scope
 
-- The documented-element half of `test-generator.ts` (267 survivors). It reads the examples of a
-  whole page, not just its frontmatter; vendoring those is a larger fixture decision.
-- Join-scope components. `withDeclaredScopes` needs every join item's model, which is committed,
-  but the fixture set stays small; the three chosen components are in no join scope.
+- The documented-element half of `test-generator.ts` (267 survivors). With the submodule in the
+  job it becomes testable the same way, but it compares documented examples, not one file per
+  component, and is its own change.
 
 ## Assumptions
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | A component's frontmatter alone yields the descriptions its generated file carries | probe | open, task 1.1 |
-| A2 | `parseIconFiles` given four fixture directories yields the icon the committed file was generated from | probe | open, task 1.1 |
+| A1 | A full snapshot run, 66 components and 324 icons, is fast enough to rerun per mutant: under 2 s | measurement | open, task 1.1 |
+| A2 | The emitters reproduce the committed files from the submodules with no other input than the committed models | probe | open, task 1.1; the drift job does exactly this on every full run |
 | A3 | The icon test generator is a pure function of the committed icon files | reading | open, task 1.2 |
-| A4 | The three tests together kill most of the four files' mutants | measurement | open, task 4.1; *wrong if* more than a third survive in `generator-new.ts` |
+| A4 | Checking out the submodules adds under 10 s to `codegen-tests` | measurement | open, task 2.2 |
+| A5 | The three tests together kill most of the four files' mutants | measurement | open, task 4.1; *wrong if* more than a third survive in `generator-new.ts` |
 
 ## Capabilities
 
@@ -60,8 +64,8 @@ house rule forbids.
 
 ## Impact
 
-- **New**: `codegen/test/fixtures/daisyui/<component>/+page.md` (frontmatter only),
-  `codegen/test/fixtures/heroicons/<size>/<style>/<icon>.svg`, three test files, one `just` recipe.
-- **Edited**: generator entry points only where a pure function has to be split out; the
-  `kdaisyui-daisyui-upgrade` skill (the refresh step); `kdaisyui-codegen` (the fixtures).
+- **Edited**: `.github/workflows/ci.yml` (`codegen-tests`: `submodules: recursive`), generator entry
+  points only where a pure function has to be split out.
+- **New**: three test files and one helper that locates the submodules.
+- **Edited**: `kdaisyui-testing` (the rule), `kdaisyui-codegen` (the tests).
 - No generated file changes.

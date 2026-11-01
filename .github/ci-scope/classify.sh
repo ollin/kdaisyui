@@ -18,7 +18,7 @@ count=0
 while IFS= read -r path; do
   [ -n "$path" ] || continue
   count=$((count + 1))
-  if [[ "$path" =~ $prose ]] && ! [[ "$path" =~ $generated ]]; then scope=prose
+  if [[ "$path" =~ $prose ]] && ! [[ "$path" =~ $generated ]]; then [ "$scope" = full ] || scope=prose
   elif ! [[ "$path" =~ $planning ]]; then scope=full
   fi
 done

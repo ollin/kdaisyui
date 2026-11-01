@@ -39,4 +39,9 @@ printf 'docs/reference/button.md\n' | expect full "a generated reference page"
 printf 'docs/reference.md\n' | expect prose "the hand-written reference entry point"
 printf 'codegen/llms-template.md.orig\n' | expect full "a template name with a suffix"
 
+printf 'openspec/a.md\nREADME.md\n' | expect prose "planning and prose: the wider scope"
+printf 'README.md\nopenspec/a.md\n' | expect prose "prose and planning, in the other order"
+printf 'README.md\nlib/build.gradle.kts\nAGENTS.md\n' | expect full "prose, source and planning: full"
+printf 'lib/build.gradle.kts\nREADME.md\n' | expect full "full is not narrowed by a later prose path"
+
 [ "$failures" -eq 0 ] || { echo "$failures classifier control(s) failed"; exit 1; }

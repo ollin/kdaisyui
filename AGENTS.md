@@ -181,7 +181,7 @@ A new prose document is checked only once `doc-snippets/build.gradle.kts` lists 
 |---|---|---|
 | was the line **executed**? | `koverVerify` — 100% line **and** branch, aggregated | `./gradlew check`, `unit-tests` job |
 | was the executed line **asserted**? | `:lib:pitest`, `:doc-snippets:pitest`, `:build-checks:pitest`, `:gradle-plugin:pitest` — 100% **test strength** | `mutation-tests` job, NOT in `check` |
-| … in `codegen/`? | StrykerJS on the lines a pull request adds under `codegen/src/` — 100%, any survivor fails | `codegen-tests` job; `npm run mutate` measures all of it and gates nothing |
+| … in `codegen/`? | StrykerJS on the lines a pull request adds under `codegen/src/` — 100%, any survivor fails | `codegen-tests` job; `npm run mutate` measures all of it, and exits 1 while any mutant survives |
 | is the test itself **readable**? | CodeScene, run by hand on the test file | no job — you have to ask |
 
 **A test file is production code and is reviewed as one.** `code_health_review` applies to

@@ -41,7 +41,7 @@ what the sentence hides.
 - **Raising the baseline.** Killing 1,986 survivors, or deciding which are generator code that only
   the drift job should prove, is file-by-file work for later changes.
 - **Per-test coverage** through the `tap-runner`. It would be faster, but the house rule names the
-  `command` runner; a full run takes 7 minutes and gates nothing.
+  `command` runner; a full run takes 7 minutes and is not part of CI.
 - **Mutating `codegen/test/` or the `index-*.ts` entry points.** Tests are not mutated, and the
   entry points run only as scripts, which no unit test imports.
 

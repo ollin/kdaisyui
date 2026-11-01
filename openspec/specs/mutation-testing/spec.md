@@ -113,12 +113,16 @@ pull request changing fewer than 50 lines of `codegen/src/` takes longer than 90
 ### Requirement: The whole codegen can be mutated on demand
 
 `npm run mutate` in `codegen/` SHALL mutate all of `codegen/src/`, entry points excluded, and
-report the score per file without failing on it.
+report the score per file. It SHALL use the same threshold as the gate, so it exits non-zero while
+any mutant survives; the report is printed either way.
 
 **Verified**: the full run of 2026-11-01 took 418 s on 8 workers and printed the score per file.
+One threshold rather than one per use, decided by Oliver on 2026-11-01: the CLI has no flag for
+it, and a second setting existed only to make the local run exit 0. Measured with the fixed
+threshold: `src/classifier.ts` exits 1 at 7.06 %, `src/mutation-scope.ts` exits 0.
 
 #### Scenario: Measuring the baseline
 
 - **WHEN** a contributor runs `npm run mutate` in `codegen/`
 - **THEN** every file's mutation score is reported
-- **AND** the command does not fail for a score below 100 %
+- **AND** it exits non-zero while any mutant survives

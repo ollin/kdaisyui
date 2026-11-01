@@ -181,13 +181,15 @@ jobs:
 
       # The lines this change adds under codegen/src, mutated by StrykerJS; a single survivor
       # fails the job (mutation-testing, "Changed codegen lines are mutation-tested at 100 %").
-      # Only those lines: the whole directory scored 43.7 % when the gate was introduced. An
-      # equivalent mutant is answered by deleting the code or by a `// Stryker disable next-line
-      # <mutator>: <reason>` comment a reviewer can check, never by lowering STRYKER_BREAK.
+      # Only those lines: the whole directory scored 43.7 % when the gate was introduced. The
+      # threshold is `thresholds.break: 100` in codegen/stryker.config.json. An equivalent mutant
+      # is answered by deleting the code or by a `// Stryker disable next-line <mutator>:
+      # <reason>` comment a reviewer can check, never by lowering the threshold.
+      #
+      # The config's command runs each mutant's suite with `--test-isolation=none`: one Node
+      # process per test file made 54 mutants take 77 s here, one process overall 81 in 13 s.
       - name: Mutation-test the changed lines of codegen/src
         working-directory: codegen
-        env:
-          STRYKER_BREAK: '100'
         run: |
           ranges="$(node src/index-mutation-scope.ts)"
           if [ -z "$ranges" ]; then

@@ -207,16 +207,19 @@ with `--omit=dev`.
 
 CI's `codegen-tests` job mutates **the lines a pull request adds under `codegen/src/`**, entry
 points excepted, and fails on a single survivor. `src/index-mutation-scope.ts` turns the diff into
-StrykerJS ranges; `stryker.config.mjs` holds the rest. Run the same gate before pushing:
+StrykerJS ranges; `stryker.config.json` holds the rest, `thresholds.break: 100` included. Run
+the same gate before pushing:
 
 ```bash
-cd codegen && npm ci && STRYKER_BREAK=100 npx stryker run --mutate "$(node src/index-mutation-scope.ts origin/main)"
+cd codegen && npm ci && npx stryker run --mutate "$(node src/index-mutation-scope.ts origin/main)"
 ```
 
-`npm run mutate` mutates everything and gates nothing: the whole directory scored 43.7 % when the
-gate arrived, mostly generator code only the drift job proves. A survivor on a changed line is a
+`npm run mutate` mutates everything and exits 1 until every survivor is gone: the whole directory
+scored 43.7 % when the gate arrived, mostly generator code only the drift job proves. The exit
+code states that debt; the report is printed either way. A survivor on a changed line is a
 missing assertion, or code that cannot matter and should go; a Stryker disable comment needs a
-reason a reviewer can check, and `STRYKER_BREAK` is never lowered.
+reason a reviewer can check, and the threshold is never lowered. The suite runs in one process per
+mutant (`--test-isolation=none` in the config), which made CI runs about six times faster.
 
 ## Verifying a codegen change
 

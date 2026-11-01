@@ -19,9 +19,12 @@
 
 ## F3 - StrykerJS has no command-line flag for the break threshold
 
-- **What happened:** task 4.1. `stryker run --help` lists none, so the JSON config became
-  `stryker.config.mjs`, reading `STRYKER_BREAK`.
-- **Cost:** a few minutes, and one module instead of a JSON file.
+- **What happened:** task 4.1. `stryker run --help` lists none, and `--thresholds.break` is
+  refused as an unknown option, so the JSON config became `stryker.config.mjs`, reading
+  `STRYKER_BREAK`.
+- **Cost:** a few minutes, and one module instead of a JSON file. Reverted on 2026-11-01 after
+  Oliver chose the subtractive answer: one fixed `thresholds.break: 100` in JSON, at the price of
+  a local full run that exits 1 while survivors remain.
 
 ## F4 - One process per test file made CI mutation ten times slower
 
@@ -39,5 +42,5 @@
 |---|---|---|
 | F1 | - | none - record only |
 | F2 | - | none - fixed in this change |
-| F3 | - | none - recorded in `stryker.config.mjs` |
-| F4 | - | none - fixed in this change, and recorded in `stryker.config.mjs` |
+| F3 | Drop the variable and the module: one fixed threshold in JSON | fixed - in this change, Oliver's call |
+| F4 | - | none - fixed in this change, and recorded at the CI step |

@@ -101,7 +101,7 @@ describe('pageFirst', () => {
 
 describe('claimingGroups', () => {
   const claims = (models, counted) => {
-    const { groups, unclaimed } = claimingGroups(models, counted)
+    const { groups, unclaimed } = claimingGroups(models, counted, 'div')
     return { groups: groups.map(group => `${group.fn.name}: ${group.classes.join(' ')}`), unclaimed }
   }
   const MENU_ITEM = { ...component('menu', 'Menu', 'menu'), functions: [{ ...part('daisyMenuItem', 'unused'), class: null, parameters: [toggle('active', 'menu-active')] }] }

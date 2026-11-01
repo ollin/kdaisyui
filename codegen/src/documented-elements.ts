@@ -39,7 +39,7 @@ export interface Claims {
  * classes claims what it offers; what remains is claimed whole by a function with no own class,
  * or by nobody.
  */
-export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[], tag = ''): Claims {
+export function claimingGroups(models: readonly ComponentModel[], counted: readonly string[], tag: string): Claims {
   const candidates = models.flatMap(model => model.functions.map(fn => ({ model, fn })))
   const owned = counted.flatMap(own => ownerOf(candidates, own, counted, tag)).map(owner => ({ ...owner, classes: counted.filter(cls => offers(owner.model, owner.fn, cls)) }))
   const rest = counted.filter(cls => !owned.some(group => group.classes.includes(cls)))
@@ -59,7 +59,8 @@ function ownerOf(candidates: readonly ModelledFunction[], own: string, counted: 
 
 
 function offers(model: ComponentModel, fn: ModelFunction, cls: string): boolean {
-  return offeredBy(model, fn).includes(cls) || (cls === JOIN_ITEM_CLASS && fn.kind === 'main' && fn.joinItem === true)
+  // Only a main function declares `joinItem`.
+  return offeredBy(model, fn).includes(cls) || (cls === JOIN_ITEM_CLASS && fn.joinItem === true)
 }
 
 /**
@@ -85,7 +86,8 @@ export interface DocumentedGap {
 export function gapsIn(html: string, models: readonly ComponentModel[], componentClasses: ReadonlySet<string>): DocumentedGap[] {
   return markedElements(html)
     .map(element => ({ tag: element.tag, counted: countedClasses(element, componentClasses) }))
-    .filter(({ tag, counted }) => counted.length > 0 && claimingGroups(models, counted, tag).unclaimed.length > 0)
+    // An element with no counted class leaves nothing unclaimed.
+    .filter(({ tag, counted }) => claimingGroups(models, counted, tag).unclaimed.length > 0)
     .map(({ tag, counted }) => ({ tag, key: gapKey(models, counted) }))
 }
 
@@ -125,7 +127,7 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   if (primary.fn.kind === 'classes' && others.length > 0) throw new Error(`${counted.join(' ')}: several class-only groups and no function rendering the element`)
   const variants = element.classes.filter(cls => cls.isPrefixed && componentClasses.has(cls.className)).map(cls => cls.rendered)
   const expected = [...counted.filter(cls => cls !== JOIN_ITEM_CLASS), ...variants]
-  const rendersDocumentedTag = primary.fn.kind !== 'classes' && rendersTag(primary.fn, element.tag)
+  const rendersDocumentedTag = rendersTag(primary.fn, element.tag)
   return {
     fn: primary.fn,
     args: [...requiredIdArguments(primary.fn, rendersDocumentedTag), ...callArguments(primary, others, variants)].join(', '),
@@ -171,10 +173,12 @@ function groupArguments({ model, fn, classes }: ClaimedGroup): string[] {
   return classes.filter(cls => cls !== fn.class && cls !== JOIN_ITEM_CLASS && !(fn.always ?? []).includes(cls)).map(cls => argumentFor(model, fn, cls))
 }
 
-/** The named argument that makes `fn` write `cls`; the classifier has already found that one does. */
+/**
+ * The named argument that makes `fn` write `cls`. One exists: `fn` offers `cls`, and of what it
+ * offers only its parameters write what is not its own class, `join-item` or always written.
+ */
 function argumentFor(model: ComponentModel, fn: ModelFunction, cls: string): string {
-  const parameter = fn.parameters.find(candidate => writtenBy(model, candidate).includes(cls))
-  if (parameter === undefined) throw new Error(`${fn.name} offers no parameter writing ${cls}`)
+  const parameter = fn.parameters.find(candidate => writtenBy(model, candidate).includes(cls))!
   return `${parameter.name} = ${parameter.kind === 'enum' ? `${parameter.enum}.${entryName(model, parameter.enum, cls)}` : 'true'}`
 }
 

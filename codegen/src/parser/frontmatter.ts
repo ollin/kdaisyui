@@ -312,15 +312,19 @@ export function getEntriesByCategory(
 
 import fs from 'fs'
 import path from 'path'
+import { pinnedSubmodule } from '../submodules.ts'
 
-const DAISYUI_DOCS_PATH = path.resolve(import.meta.dirname, '../../../daisyui/packages/docs')
-const COMPONENTS_PATH = path.join(DAISYUI_DOCS_PATH, 'src/routes/(routes)/components')
+/** DaisyUI's component pages, located at the first read so importing this module needs no checkout. */
+function componentsPath(): string {
+  return path.join(pinnedSubmodule('daisyui'), 'packages/docs/src/routes/(routes)/components')
+}
 
 export function getAllComponentDirs(): ComponentName[] {
-  return fs.readdirSync(COMPONENTS_PATH)
+  const components = componentsPath()
+  return fs.readdirSync(components)
     .filter((f) => {
-      const stat = fs.statSync(path.join(COMPONENTS_PATH, f))
-      return stat.isDirectory() && fs.existsSync(path.join(COMPONENTS_PATH, f, '+page.md'))
+      const stat = fs.statSync(path.join(components, f))
+      return stat.isDirectory() && fs.existsSync(path.join(components, f, '+page.md'))
     })
     .sort() as ComponentName[]
 }
@@ -332,7 +336,7 @@ export function readComponentFrontmatter(componentName: ComponentName): Frontmat
 
 /** A component's whole `+page.md`, frontmatter and examples, or null where it has none. */
 export function readComponentPage(componentName: ComponentName): string | null {
-  const filePath = path.join(COMPONENTS_PATH, componentName, '+page.md')
+  const filePath = path.join(componentsPath(), componentName, '+page.md')
   return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : null
 }
 

@@ -37,12 +37,6 @@ export type HtmlTagName = string & { readonly __brand: 'HtmlTagName' }
 /** A CSS class name, e.g. `card` or `card-title`. */
 export type CssClass = string & { readonly __brand: 'CssClass' }
 
-const KOTLIN_KEYWORDS = new Set(['object', 'class', 'fun', 'val', 'var', 'if', 'else', 'when', 'for', 'while', 'return', 'true', 'false', 'null'])
-
-export function escapeKotlinKeyword(name: string): string {
-  return KOTLIN_KEYWORDS.has(name) ? `_${name}` : name
-}
-
 /** kotlinx.html names three builders differently from their tag class. */
 const TAG_BUILDER_EXCEPTIONS: Record<string, string> = {
   FIELDSET: 'fieldSet',

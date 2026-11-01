@@ -197,7 +197,7 @@ jobs:
             exit 0
           fi
           echo "$ranges" | tr ',' '\n'
-          npx stryker run --mutate "$ranges"
+          npm run mutate -- --mutate "$ranges"
 
       - name: Upload mutation report
         if: failure()

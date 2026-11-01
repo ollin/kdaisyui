@@ -1,9 +1,7 @@
 import {
   toPascalCase as toPascalCaseBase,
   getBaseClass,
-  getClassesByCategory,
   getEntriesByCategory,
-  getDefaultSize,
   type ComponentName,
   type PascalComponentName,
   type Classnames,
@@ -28,58 +26,27 @@ export function toPascalCase(name: string): PascalComponentName {
 }
 
 /**
- * A component reduced to what the Kotlin generator needs.
- *
- * This was a JSDoc `@typedef`, and it had ALREADY GONE STALE: it did not list
- * `componentClass`, which `classifyFromFrontmatter` has been returning all along. That is
- * the argument for this whole port in one field — documentation nobody checks drifts from
- * the code it describes, and nothing says so.
+ * What generation still reads from a component's frontmatter: its name, its description and the
+ * descriptions of its classes. Everything else about the API is declared in `codegen/model/`
+ * since 0.8.0; the class categories this used to sort out went with the inference they fed.
  */
 export interface ClassifiedComponent {
   /** PascalCase component name, e.g. `Button`. */
   componentName: PascalComponentName
-  /** PascalCase of the CSS prefix, e.g. `Btn`. Missing from the original typedef. */
-  componentClass: PascalComponentName
   desc: string
-  /** CSS prefix, e.g. `btn`. Null when the component declares no component class. */
-  prefix: string | null
-  colors: string[]
-  styles: string[]
-  sizes: string[]
-  modifiers: string[]
-  behaviors: string[]
-  parts: string[]
-  directions: string[]
-  placements: string[]
-  defaultSize: string | null
-  /** Stripped class name → its description from the frontmatter. */
+  /** Class name without the component prefix → its description from the frontmatter. */
   descs: Record<string, string>
 }
+
 export function classifyFromFrontmatter(
   frontmatter: FrontmatterData,
   componentName: ComponentName,
 ): ClassifiedComponent {
   const classnames = frontmatter.classnames
-  const prefix = getBaseClass(classnames)
-  const componentClass = prefix || componentName
-
-  const descs = buildDescMap(classnames, prefix)
-
   return {
     componentName: toPascalCase(componentName),
-    componentClass: toPascalCase(componentClass),
     desc: frontmatter.desc || '',
-    prefix,
-    colors: getClassesByCategory(classnames, 'color').map(stripPrefix(prefix)),
-    styles: getClassesByCategory(classnames, 'style').map(stripPrefix(prefix)),
-    sizes: getClassesByCategory(classnames, 'size').map(stripPrefix(prefix)),
-    modifiers: getClassesByCategory(classnames, 'modifier').map(stripPrefix(prefix)),
-    behaviors: getClassesByCategory(classnames, 'behavior').map(stripPrefix(prefix)),
-    parts: getClassesByCategory(classnames, 'part'),
-    directions: getClassesByCategory(classnames, 'direction').map(stripPrefix(prefix)),
-    placements: getClassesByCategory(classnames, 'placement').map(stripPrefix(prefix)),
-    defaultSize: getDefaultSize(classnames),
-    descs,
+    descs: buildDescMap(classnames, getBaseClass(classnames)),
   }
 }
 
@@ -99,36 +66,7 @@ function buildDescMap(classnames: Classnames | undefined, prefix: string | null)
   return descs
 }
 
-function stripPrefix(prefix: string | null): (cls: string) => string {
-  return (className) => {
-    if (className.startsWith(prefix + '-')) {
-      return className.slice(prefix.length + 1)
-    }
-    return className
-  }
-}
-
 export function toCamelCase(suffix: string): string {
   const pascal = toPascalCase(suffix)
   return pascal.charAt(0).toLowerCase() + pascal.slice(1)
-}
-
-export function hasVariants(classified: ClassifiedComponent): boolean {
-  return classified.colors.length > 0 || classified.styles.length > 0
-}
-
-export function hasSizes(classified: ClassifiedComponent): boolean {
-  return classified.sizes.length > 0
-}
-
-export function hasModifiers(classified: ClassifiedComponent): boolean {
-  return classified.modifiers.length > 0 || classified.behaviors.length > 0
-}
-
-export function hasParts(classified: ClassifiedComponent): boolean {
-  return classified.parts.length > 0
-}
-
-export function getAllBooleanParams(classified: ClassifiedComponent): string[] {
-  return [...classified.modifiers, ...classified.behaviors].sort()
 }

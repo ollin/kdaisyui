@@ -259,16 +259,6 @@ function parseValue(value: string): YamlScalar {
 }
 
 /**
- * Extract component name from directory path
- * @param {string} dirPath - e.g., '/path/to/components/button'
- * @returns {string} - e.g., 'button'
- */
-export function getComponentName(dirPath: string): ComponentName {
-  // `!` because `split` always yields at least one element, even for the empty string.
-  return dirPath.split('/').pop()! as ComponentName
-}
-
-/**
  * Convert component name to PascalCase
  * @param {string} name - e.g., 'button'
  * @returns {string} - e.g., 'Button'
@@ -318,13 +308,6 @@ export function getEntriesByCategory(
     desc: (entry.desc || '').replace(/^['"]|['"]$/g, ''),
     ...(entry.default != null ? { default: entry.default } : {}),
   }))
-}
-
-export function getDefaultSize(classnames: Classnames | undefined): string | null {
-  if (!classnames?.size) return null
-  const defaultEntry = classnames.size.find(entry => entry.default === true)
-  if (!defaultEntry) return null
-  return defaultEntry.class.replace(/^['"]|['"]$/g, '')
 }
 
 import fs from 'fs'

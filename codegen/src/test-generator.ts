@@ -845,7 +845,8 @@ function enumTableOf(shape: ComponentShape) {
  * extras' fragments, those before the classes first. No other function sets one.
  */
 function mainAttributesOf(config: MainFunctionConfig) {
-  const extras = [...config.extras.filter(extra => extra.position === 'before_classes'), ...config.extras.filter(extra => extra.position !== 'before_classes')]
+  // The extras before the classes, then every extra: an attribute counts once, where it is first set.
+  const extras = [...config.extras.filter(extra => extra.position === 'before_classes'), ...config.extras]
   const fromExtras = parseAttrProps(extras.map(extra => extra.apply).join('\n'))
   const fixed = [...(config.role ? ['role'] : []), ...(config.inputType ? ['type'] : [])]
   return { unconditional: new Set([...fixed, ...fromExtras.unconditional]), guarded: fromExtras.guarded }

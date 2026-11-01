@@ -171,7 +171,8 @@ jreleaser {
 // Every publishable module the release must contain. The staging step below
 // fails if any of these is missing, so JReleaser can never upload a partial
 // bundle to Maven Central (where every version is published exactly once).
-val publishedArtifacts = listOf("kdaisyui", "kdaisyui-ktor-integration", "kdaisyui-bom")
+val publishedArtifacts =
+    listOf("kdaisyui", "kdaisyui-ktor-integration", "kdaisyui-bom", "kdaisyui-gradle-plugin", "io.github.ollin.kdaisyui.gradle.plugin")
 
 // Guarantee EVERY subproject has fully staged into staging-deploy BEFORE
 // JReleaser signs/deploys. Without this edge, Gradle is free to interleave
@@ -189,6 +190,8 @@ val stageAll =
                 sub.tasks.matching { it.name == "publishAllPublicationsToStagingRepository" }
             },
         )
+        // The Gradle plugin is an included build, which subprojects does not reach.
+        dependsOn(gradle.includedBuild("gradle-plugin").task(":publishAllPublicationsToStagingRepository"))
     }
 
 // Fail the release if not all expected artifacts are staged for THIS version,

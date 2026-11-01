@@ -15,7 +15,7 @@ and a check that it left no diff: the Bun suite alone cannot see a changed outpu
 
 ## 1. Open assumption
 
-- [ ] 1.1 `. d` (A2) Read every function the coverage half calls and list what it reads besides
+- [x] 1.1 `. d` (A2) Read every function the coverage half calls and list what it reads besides
   the component source. Revise the plan if it reads the model, the frontmatter or the submodule.
 
 ## 2. A pure coverage function, under TCR

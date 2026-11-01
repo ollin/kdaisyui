@@ -4,6 +4,7 @@ plugins {
     `kotlin-dsl`
     `maven-publish`
     alias(libs.plugins.kover)
+    alias(libs.plugins.pitest)
 }
 
 group = "io.github.ollin.kdaisyui"
@@ -80,3 +81,20 @@ kover {
 }
 
 tasks.check { dependsOn(tasks.named("koverVerify")) }
+
+// Mutation testing at 100% test strength, as for every hand-written module; CI's mutation-tests job
+// runs it. lib/build.gradle.kts holds why it is test strength and not mutation score.
+pitest {
+    targetClasses.set(setOf("io.github.ollin.kdaisyui.gradle.*"))
+    targetTests.set(setOf("io.github.ollin.kdaisyui.gradle.*"))
+    junit5PluginVersion.set(libs.versions.pitest.junit5.get())
+    // Calls whose removal no test can observe: Kotlin's parameter null checks; closing the jar the
+    // map is read from (nothing on Linux notices a leaked handle); and the fallback's warning, whose
+    // reason the written file also states, which is what the tests assert.
+    avoidCallsTo.set(setOf("kotlin.jvm.internal", "java.util.zip.ZipFile", "org.gradle.api.logging"))
+    outputFormats.set(setOf("HTML", "XML"))
+    testStrengthThreshold.set(100)
+    // ProjectBuilder injects classes into java.lang; Gradle's own test task opens it for the test
+    // JVM, PIT's worker JVM needs it said.
+    jvmArgs.set(listOf("--add-opens", "java.base/java.lang=ALL-UNNAMED"))
+}

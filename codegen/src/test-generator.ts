@@ -1,13 +1,9 @@
 import fs from 'fs'
 import path from 'path'
-import { pathToFileURL } from 'node:url'
 import {
   everyDeclaredClass,
   getAllComponentDirs,
-  parseFrontmatter,
-  readComponentPage,
   toPascalCase,
-  type ComponentName,
 } from './parser/frontmatter.ts'
 import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
@@ -30,22 +26,6 @@ import { isVoidElement, type TagClass } from './component-shape.ts'
  * receiver type). Everything downstream is checked.
  */
 import type { BuilderName, TagName } from './html-names.ts'
-
-// Committed generated root — a sibling of lib/src/, never inside it.
-// Gradle passes --output-dir explicitly; this default is for a bare `node` run.
-const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generated/test/kotlin/io/github/ollin/kdaisyui/components')
-
-function parseArg(flag, fallback) {
-  const prefix = `--${flag}=`
-  for (const arg of process.argv) {
-    if (arg.startsWith(prefix)) {
-      return arg.slice(prefix.length)
-    }
-  }
-  return fallback
-}
-
-const OUTPUT_DIR = parseArg('output-dir', DEFAULT_OUTPUT_DIR)
 
 // A doc page is scanned line by line, and until now the position in that scan lived in four
 // mutable locals threaded through one loop. Collecting them into one object is what lets each
@@ -382,36 +362,9 @@ function documentedTestFor(componentName: string, page: string, model: Component
   return generateKotlinTest(componentName, testCases, model, context)
 }
 
-function generateForSkippedPage(componentName, context: DocumentedContext): number {
-  const { kotlin, testCount } = documentedTestFor(componentName, readComponentPage(componentName as ComponentName) ?? '', null, context)!
-  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), kotlin)
-  return testCount
-}
-
-function generateForComponent(componentName, componentModel: ComponentModel, context: DocumentedContext) {
-  const page = readComponentPage(componentName as ComponentName)
-  if (page === null) return { success: false, error: 'File not found' }
-  if (!parseFrontmatter(page)) return { success: false, error: 'No frontmatter' }
-
-  const result = documentedTestFor(componentName, page, componentModel, context)
-  if (result === null) return { success: false, error: 'No test cases' }
-  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), result.kotlin)
-  return { success: true, testCount: result.testCount }
-}
-
 // Exhaustive branch-coverage tests: parse each generated component source and
 // drive every branch of every function with assertions on the rendered HTML.
 
-// Where the generated component sources are READ BACK from, to drive every branch
-// of every function. Gradle passes --components-dir so lib/build.gradle.kts stays
-// the single source of that path; the default only serves a bare `node` run.
-//
-// This used to be a second hardcoded copy of the path, and when the real one moved
-// it silently produced no coverage tests at all — see generateAllCoverage below.
-const GENERATED_MAIN_DIR = parseArg(
-  'components-dir',
-  path.resolve(import.meta.dirname, '../../lib/generated/main/kotlin/io/github/ollin/kdaisyui/components'),
-)
 
 // Enum types from kotlinx.html (not declared in the source): arms can't be
 // enumerated, so the `!= null` branch is driven once with a known value.
@@ -1059,112 +1012,15 @@ function writeCoverageTest(componentsDir: string, outputDir: string, fileName: s
   return { success: true }
 }
 
-function generateAllCoverage() {
-  // FAIL, never skip. This used to warn and return, so a wrong path produced zero
-  // coverage tests while the build stayed green and the other generators kept the
-  // test count looking plausible. That cost 8% line and 9% branch coverage without
-  // turning anything red. A missing input is a broken build, not a warning.
-  if (!fs.existsSync(GENERATED_MAIN_DIR)) {
-    throw new Error(
-      `Generated component sources not found at ${GENERATED_MAIN_DIR}. ` +
-      `Coverage tests are read back from them, so this cannot be skipped. ` +
-      `Pass --components-dir=<path>, or check generatedMainDir in lib/build.gradle.kts.`
-    )
-  }
-  const files = fs.readdirSync(GENERATED_MAIN_DIR).filter((f) => f.endsWith('.kt')).sort()
-  if (files.length === 0) {
-    throw new Error(`No .kt files in ${GENERATED_MAIN_DIR}; generateComponents must run first.`)
-  }
-  let generated = 0
-  for (const file of files) {
-    const result = writeCoverageTest(GENERATED_MAIN_DIR, OUTPUT_DIR, file)
-    if (result.success) generated++
-    else console.log(`  ⊘ coverage ${file}: ${result.error}`)
-  }
-  console.log(`Generated coverage tests for ${generated} component files`)
-}
-
-/**
- * Generate one component and print its progress line.
- * @returns whether it produced tests — the caller only needs the tally.
- */
-function generateAndReport(componentName, context: DocumentedContext) {
-  const model = readModel(componentName)
-  if (isSkipped(model)) {
-    console.log(`  ⊘ ${componentName}: Skipped (alias), ${generateForSkippedPage(componentName, context)} documented-element tests`)
-    return false
-  }
-  const result = generateForComponent(componentName, model, context)
-  console.log(
-    result.success
-      ? `  ✓ ${componentName}: ${result.testCount} tests`
-      : `  ⊘ ${componentName}: ${result.error}`,
-  )
-  return result.success
-}
-
 function documentedContext(): DocumentedContext {
   const directories = getAllComponentDirs()
   const models = directories.map(directory => readModel(directory)).filter((model): model is ComponentModel => !isSkipped(model))
   return { models, componentClasses: everyDeclaredClass(directories) }
 }
 
-function generateAllComponents() {
-  console.log('Generating tests for all components...\n')
-
-  let generated = 0
-  let skipped = 0
-  const context = documentedContext()
-  for (const componentName of getAllComponentDirs()) {
-    if (generateAndReport(componentName, context)) generated++
-    else skipped++
-  }
-
-  console.log(`\nGenerated tests for ${generated} components, skipped ${skipped}`)
-  generateAllCoverage()
-}
-
-/** Single-component mode. Unlike the bulk mode, a failure here is fatal: it was asked for. */
-function generateSingleComponent(componentName) {
-  const model = readModel(componentName)
-  if (isSkipped(model)) {
-    console.error(`Error: ${componentName} is skipped (alias)`)
-    process.exit(1)
-  }
-  const result = generateForComponent(componentName, model, documentedContext())
-  if (!result.success) {
-    console.error(`Error: ${result.error}`)
-    process.exit(1)
-  }
-  console.log(`Generated ${result.testCount} tests for ${componentName}`)
-}
-
-function printUsageAndExit() {
-  console.log('Usage: node test-generator.ts <component-name|all>')
-  console.log('Examples:')
-  console.log('  node test-generator.ts dropdown')
-  console.log('  node test-generator.ts all')
-  process.exit(1)
-}
-
-function main() {
-  const [mode] = process.argv.slice(2)
-
-  if (mode === 'all') return generateAllComponents()
-  if (mode) return generateSingleComponent(mode)
-  printUsageAndExit()
-}
-
-// Run only when invoked directly — `node src/test-generator.ts all …`, which is how Gradle
-// calls it. Without this guard, importing the module to test one function would regenerate
-// all 66 components as a side effect, so no unit test could exist. That is why this file
-// has none today.
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main()
-}
-
-// Exported for tests only. This module has no other consumer: Gradle runs it as a script,
-// and nothing in codegen/ imports it.
+// Its consumers are the entry point index-test-generator.ts, which reads and writes, and the
+// unit tests.
+export type { DocumentedContext }
 export {
   // Targets of the refactorings in section 2.
   parseTestCases,

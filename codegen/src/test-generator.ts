@@ -1167,6 +1167,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 export {
   // Targets of the refactorings in section 2.
   parseTestCases,
+  // The documented-element half, compared with its committed output by documented-test-snapshot.test.ts.
+  documentedTestFor,
+  documentedContext,
+  toClassName,
   // The coverage half, compared with its committed output by coverage-test-snapshot.test.ts.
   coverageTestFor,
   writeCoverageTest,

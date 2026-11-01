@@ -48,9 +48,9 @@ describe('mutationScope', () => {
   })
 
   test('mutates only TypeScript directly under src/, whatever a path merely contains', () => {
-    const diff = [diffOf('test/src/helper.ts', '@@ -1,0 +2,1 @@'), diffOf('src/model.ts.orig', '@@ -1,0 +2,1 @@'), diffOf('src/parser/index-like.ts', '@@ -1,0 +2,1 @@')].join('\n')
+    const diff = [diffOf('test/src/helper.ts', '@@ -1,0 +2,1 @@'), diffOf('src/model.ts.orig', '@@ -1,0 +2,1 @@'), diffOf('src/parser/index-like.ts', '@@ -1,0 +2,1 @@'), diffOf('src/index-like/model.ts', '@@ -1,0 +2,1 @@')].join('\n')
 
-    assert.deepEqual(mutationScope(diff), ['src/parser/index-like.ts:2-2'])
+    assert.deepEqual(mutationScope(diff), ['src/parser/index-like.ts:2-2', 'src/index-like/model.ts:2-2'])
   })
 
   test('skips a deleted file, whose new side is /dev/null', () => {

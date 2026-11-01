@@ -121,9 +121,10 @@ export function elementChanges(older: ComponentDocs, newer: ComponentDocs): Elem
   return componentsInBoth(older, newer).flatMap(component => {
     const before = elementSets(listedPage(older, component))
     const after = elementSets(listedPage(newer, component))
-    return [...after].sort(([left], [right]) => (left < right ? -1 : 1)).flatMap(([cssClass, elements]) => {
+    return [...after.keys()].sort().flatMap(cssClass => {
       const was = [...(before.get(cssClass) ?? [])].sort()
-      const is = [...elements].sort()
+      // A key of `after`, so present.
+      const is = [...after.get(cssClass)!].sort()
       return was.length === 0 || was.join() === is.join() ? [] : [{ component, cssClass, before: was, after: is }]
     })
   })

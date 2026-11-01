@@ -1049,11 +1049,12 @@ ${COVERAGE_HELPER}${body}}
 `
 }
 
-function generateCoverageForFile(fileName) {
+/** Reads one component from `componentsDir` and writes its coverage test to `outputDir`. */
+function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string) {
   const className = fileName.replace(/\.kt$/, '')
-  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(GENERATED_MAIN_DIR, fileName), 'utf8'))
+  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'))
   if (kotlin === null) return { success: false, error: 'No functions' }
-  fs.writeFileSync(path.join(OUTPUT_DIR, `${className}CoverageTest.kt`), kotlin)
+  fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), kotlin)
   return { success: true }
 }
 
@@ -1075,7 +1076,7 @@ function generateAllCoverage() {
   }
   let generated = 0
   for (const file of files) {
-    const result = generateCoverageForFile(file)
+    const result = writeCoverageTest(GENERATED_MAIN_DIR, OUTPUT_DIR, file)
     if (result.success) generated++
     else console.log(`  ⊘ coverage ${file}: ${result.error}`)
   }
@@ -1168,6 +1169,7 @@ export {
   parseTestCases,
   // The coverage half, compared with its committed output by coverage-test-snapshot.test.ts.
   coverageTestFor,
+  writeCoverageTest,
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
   parseEmittedBuilder,
   parseScopeBuilder,

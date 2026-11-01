@@ -29,6 +29,40 @@ describe('mutationScope', () => {
     assert.deepEqual(mutationScope(diff), ['src/parser/frontmatter.ts:2-2'])
   })
 
+  test('reads a count of more than one digit', () => {
+    assert.deepEqual(mutationScope(diffOf('src/model.ts', '@@ -1,0 +5,12 @@')), ['src/model.ts:5-16'])
+  })
+
+  test('takes no hunk header or file header from inside an added line', () => {
+    const file = [
+      'diff --git a/src/model.ts b/src/model.ts',
+      '--- a/src/model.ts',
+      '+++ b/src/model.ts',
+      '@@ -1,0 +2,1 @@',
+      "+const marker = '@@ -1 +90 @@ and diff --git a/x b/x'",
+      '@@ -9,0 +10,1 @@',
+      '+const next = 1',
+    ].join('\n')
+
+    assert.deepEqual(mutationScope(file), ['src/model.ts:2-2', 'src/model.ts:10-10'])
+  })
+
+  test('mutates only TypeScript directly under src/, whatever a path merely contains', () => {
+    const diff = [diffOf('test/src/helper.ts', '@@ -1,0 +2,1 @@'), diffOf('src/model.ts.orig', '@@ -1,0 +2,1 @@'), diffOf('src/parser/index-like.ts', '@@ -1,0 +2,1 @@')].join('\n')
+
+    assert.deepEqual(mutationScope(diff), ['src/parser/index-like.ts:2-2'])
+  })
+
+  test('skips a deleted file, whose new side is /dev/null', () => {
+    const deleted = ['diff --git a/src/gone.ts b/src/gone.ts', 'deleted file mode 100644', '--- a/src/gone.ts', '+++ /dev/null', '@@ -1,3 +0,0 @@'].join('\n')
+
+    assert.deepEqual(mutationScope(deleted), [])
+  })
+
+  test('gives nothing for an empty diff', () => {
+    assert.deepEqual(mutationScope(''), [])
+  })
+
   test('reads a hunk without a count as one line', () => {
     assert.deepEqual(mutationScope(diffOf('src/model.ts', '@@ -7 +7 @@')), ['src/model.ts:7-7'])
   })

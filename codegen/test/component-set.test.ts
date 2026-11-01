@@ -6,7 +6,7 @@ import { isSkipped, modelFileNames, readModel } from '../src/model.ts'
 
 describe('readComponentSet', () => {
   test('lists every component its model skips, with the reason the model gives', () => {
-    const expected = modelFileNames().flatMap(componentDir => {
+    const expected = modelFileNames().sort().flatMap(componentDir => {
       const model = readModel(componentDir)
       return isSkipped(model) ? [{ componentDir, reason: model.skip }] : []
     })

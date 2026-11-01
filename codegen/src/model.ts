@@ -120,9 +120,9 @@ export function readModel(componentDir: string, modelDir = MODEL_DIR): Component
   return JSON.parse(String(fs.readFileSync(path.join(modelDir, `${componentDir}.json`))))
 }
 
-/** The DaisyUI directory each committed model file names. */
+/** The DaisyUI directory each committed model file names, in no particular order. */
 export function modelFileNames(modelDir = MODEL_DIR): string[] {
-  return fs.readdirSync(modelDir).filter(file => file.endsWith('.json')).map(file => file.slice(0, -'.json'.length)).sort()
+  return fs.readdirSync(modelDir).filter(file => file.endsWith('.json')).map(file => file.slice(0, -'.json'.length))
 }
 
 export function isSkipped(model: ComponentModel | SkippedModel): model is SkippedModel {

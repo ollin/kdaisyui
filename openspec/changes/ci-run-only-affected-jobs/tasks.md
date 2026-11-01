@@ -59,7 +59,7 @@ jobs that ran, their durations, and whether the pull request showed as mergeable
 
 ## 5. Documents, gate and adoption
 
-- [ ] 5.1 `^ d` `kdaisyui-release`, CI section: the three scopes, the fail-safe, and how to add a
+- [x] 5.1 `^ d` `kdaisyui-release`, CI section: the three scopes, the fail-safe, and how to add a
   job.
 - [ ] 5.2 `openspec validate ci-run-only-affected-jobs --strict`; findings and evaluation; archive
   on the branch.

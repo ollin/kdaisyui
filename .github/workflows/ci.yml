@@ -146,7 +146,7 @@ jobs:
       - name: Fail if the public API no longer matches its baseline
         # Run `./gradlew :lib:updateKotlinAbi` and commit lib/api/lib.api when the
         # change is intended. A breaking change also needs a "How to migrate"
-        # entry in README.md before the release that ships it.
+        # entry in docs/upgrading.md before the release that ships it.
         run: ./gradlew :lib:checkKotlinAbi --no-daemon
 
   unit-tests:

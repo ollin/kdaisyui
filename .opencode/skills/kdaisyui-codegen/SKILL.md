@@ -209,7 +209,7 @@ DaisyUI's marked examples with it. A second dependency is a decision, not a habi
 3. `./gradlew :lib:test` whenever generated Kotlin changed, and compile `:example-app` and
    `:e2e-tests` when a public name changed.
 4. `just update-api` when a signature moved; read both diffs; a breaking one needs a
-   **How to migrate** entry in `README.md`.
+   **How to migrate** entry in `docs/upgrading.md`.
 
 Run `mcp_Tcr` at the repository root: it runs `./gradlew build`, which includes `:lib:test`,
 E2E and `koverVerify`, and `bun test`, which the root `bunfig.toml` confines to `codegen/`.

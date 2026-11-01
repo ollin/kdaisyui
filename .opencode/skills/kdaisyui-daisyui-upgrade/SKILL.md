@@ -37,7 +37,7 @@ diff throws away the one signal the repository has.
 4. edit codegen/model/                  place every new class, drop every removed one
 5. just generate                        components, tests, icons, reference pages, llms.txt, llms-full.txt
 6. just update-api                      both Kotlin API baselines; read the diff
-7. README.md                            a "How to migrate" entry, if anything broke
+7. docs/upgrading.md                    a "How to migrate" entry, if anything broke
 8. ./gradlew check                      plus ./gradlew :lib:pitest
 ```
 
@@ -101,7 +101,7 @@ submodule. Run `just generate` and commit the result. It reports untracked files
 component counts as drift.
 
 **`checkComponentApi` or `api-baseline` failed.** Read the diff before re-dumping. A breaking
-change needs a **How to migrate** entry in `README.md` before it is released.
+change needs a **How to migrate** entry in `docs/upgrading.md` before it is released.
 
 ## What CI checks
 

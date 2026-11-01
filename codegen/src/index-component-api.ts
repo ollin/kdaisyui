@@ -79,7 +79,7 @@ function main() {
       'nothing — which is why it is checked separately.',
       '',
       'If the change is intended: run :lib:updateComponentApi, READ the diff, and commit it.',
-      'A breaking change also needs a "How to migrate" entry in README.md.',
+      'A breaking change also needs a "How to migrate" entry in docs/upgrading.md.',
     ].join('\n'),
   )
   process.exitCode = 1

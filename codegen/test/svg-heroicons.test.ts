@@ -24,6 +24,18 @@ function iconDirectories(svgs: { outline?: string, solid?: string }) {
   return { root, directories }
 }
 
+/** What `run` returns, and every warning it printed. */
+function withWarnings<T>(run: () => T): { result: T, warnings: unknown[] } {
+  const warnings: unknown[] = []
+  const warn = console.warn
+  console.warn = (message: unknown) => { warnings.push(message) }
+  try {
+    return { result: run(), warnings }
+  } finally {
+    console.warn = warn
+  }
+}
+
 describe('parseIconFiles', () => {
   test('keeps every path of an icon, in order, each rewritten for its variant', () => {
     const svg = '<svg viewBox="0 0 24 24"><path d="M1" stroke="#0F172A"/><path d="M2" fill="#0F172A"/></svg>'
@@ -50,7 +62,8 @@ describe('parseIconFiles', () => {
     const { root, directories } = iconDirectories({ outline: '<svg><path d="M1"/></svg>' })
     fs.writeFileSync(path.join(directories.outline24Dir, 'notes.txt'), 'not an icon')
 
-    assert.deepEqual([...parseIconFiles(directories).keys()], ['Probe'])
+    // Read as an icon, notes.txt would be skipped, with a warning, for having no 24px variant.
+    assert.deepEqual(withWarnings(() => [...parseIconFiles(directories).keys()]), { result: ['Probe'], warnings: [] })
     fs.rmSync(root, { recursive: true })
   })
 
@@ -67,16 +80,8 @@ describe('parseIconFiles', () => {
   test('skips an icon with no 24px variant, and says so', () => {
     const { root, directories } = iconDirectories({})
     fs.writeFileSync(path.join(directories.solid16Dir, 'probe.svg'), '<svg><path d="M1"/></svg>')
-    const warnings: unknown[] = []
-    const warn = console.warn
-    console.warn = (message: unknown) => { warnings.push(message) }
 
-    try {
-      assert.equal(parseIconFiles(directories).size, 0)
-    } finally {
-      console.warn = warn
-    }
-    assert.deepEqual(warnings, ['  ⚠ probe: no 24px variant found, skipping'])
+    assert.deepEqual(withWarnings(() => parseIconFiles(directories).size), { result: 0, warnings: ['  ⚠ probe: no 24px variant found, skipping'] })
     fs.rmSync(root, { recursive: true })
   })
 })

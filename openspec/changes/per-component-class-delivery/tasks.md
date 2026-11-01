@@ -35,7 +35,7 @@ decides the plugin's place before any of it is written.
   the narrowed list. Measure the stylesheet against the full one.
 - [x] 4.2 `. d` The full suite, E2E included, on the narrowed stylesheet. If a scenario fails,
   revise the change: the Assumed requirement was wrong.
-- [ ] 4.3 `! F (internal)` Release wiring: `publishedArtifacts` gains `kdaisyui-gradle-plugin` and
+- [x] 4.3 `! F (internal)` Release wiring: `publishedArtifacts` gains `kdaisyui-gradle-plugin` and
   `io.github.ollin.kdaisyui.gradle.plugin`; `stageAll` depends on the included build's
   `publishAllPublicationsToStagingRepository`; both publications carry the POM metadata and the plugin
   its sources and javadoc jars, which JReleaser's dry run requires (1.1).

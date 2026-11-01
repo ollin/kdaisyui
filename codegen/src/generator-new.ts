@@ -146,7 +146,7 @@ function renderScopeMember(shape: FunctionShape, markerClass: CssClass): string 
   return (
     `    /** [${shape.name}], marked \`${markerClass}\` because the call sits directly in the join. */\n` +
     `    fun ${shape.name}(\n${params}\n    ) {\n` +
-    `        ${shape.name.replace(/^daisy/, 'flow.daisy')}(\n${args}\n        )\n` +
+    `        flow.${shape.name}(\n${args}\n        )\n` +
     `    }`
   )
 }
@@ -319,7 +319,8 @@ function functionImports(fn: FunctionShape): string[] {
     // A scoped function constructs its tag rather than calling the builder, so importing the
     // builder would leave the generated file with an import nothing uses.
     ...(fn.contentScope === undefined ? [`${elementPackage(fn.element)}.${fn.tagBuilder}`] : []),
-    ...(fn.receiver !== 'FlowContent' ? [`kotlinx.html.${fn.receiver}`] : []),
+    // FlowContent among them, which the import set already holds.
+    `kotlinx.html.${fn.receiver}`,
     ...(fn.anchoredPopover ? ['io.github.ollin.kdaisyui.core.anchorName'] : []),
   ]
 }
@@ -356,7 +357,7 @@ function collectImports(shape: ComponentShape, componentConfig: MainFunctionConf
     ...shape.functions.flatMap(functionImports),
     ...(shape.scope === undefined ? [] : scopeImports(shape.scope)),
     ...configImports(componentConfig),
-    ...(shape.functions.some(hasSibling) || (shape.siblingsOnly ?? []).length > 0 ? ['kotlinx.html.Tag'] : []),
+    ...(shape.functions.some(hasSibling) || shape.siblingsOnly.length > 0 ? ['kotlinx.html.Tag'] : []),
   ])
 
   // Plain collation. The kdaisyui package (io.github.ollin.kdaisyui) already sorts
@@ -393,7 +394,7 @@ export function generateKotlinFile(shape: ComponentShape, componentConfig: MainF
     ...(hasSibling(fn) ? [renderSibling(fn)] : []),
   ].join('\n\n'))
   const scope = shape.scope === undefined ? '' : renderScope(shape.scope, shape.functions[0].element)
-  const siblingsOnly = (shape.siblingsOnly ?? []).map(renderSibling)
+  const siblingsOnly = shape.siblingsOnly.map(renderSibling)
   const body = [enums, ...functions, ...siblingsOnly, scope].filter(Boolean).join('\n\n')
 
   return `${header}\n\n${body}\n`

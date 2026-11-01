@@ -187,3 +187,33 @@ describe('an anchored popover', () => {
   })
 })
 
+
+describe('the Tag import', () => {
+  const wrapper = component('wrap', 'Wrap', 'wrap', {}, { class: null })
+
+  test('is left out where no function writes a class, and nothing takes its place', () => {
+    const imports = kotlinFor(wrapper).split('\n').filter(line => line.startsWith('import '))
+
+    assert.deepEqual(imports, [
+      'import io.github.ollin.kdaisyui.core.addClassNames',
+      'import io.github.ollin.kdaisyui.core.HtmlId',
+      'import kotlinx.html.div',
+      'import kotlinx.html.DIV',
+      'import kotlinx.html.FlowContent',
+    ])
+  })
+
+  test('is there for a class-only function alone', () => {
+    const item = { kind: 'classes' as const, name: 'daisyWrapItem', receiver: 'Tag', element: null as unknown as string, class: null, text: false, parameters: [toggle('active', 'wrap-active')] }
+
+    assert.match(kotlinFor(withParts(wrapper, item)), /^import kotlinx\.html\.Tag$/m)
+  })
+})
+
+describe("an extra's fragment", () => {
+  test('is written as its lines, without the whitespace around them', () => {
+    const loud = component('wrap', 'Wrap', 'wrap', {}, { parameters: [{ kind: 'extra', name: 'loud', type: 'Boolean', default: 'false', apply: '\n  if (loud) attributes["aria-live"] = "assertive"\n' }] })
+
+    assert.match(kotlinFor(loud), /\n {8}if \(loud\) attributes\["aria-live"\] = "assertive"\n/)
+  })
+})

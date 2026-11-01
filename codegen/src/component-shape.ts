@@ -268,7 +268,7 @@ export interface ComponentShape {
    * `menu-active` on the `<a>` inside a `<li>`. Each generates its class sibling and nothing else,
    * so they are kept out of `functions`, which every emitter reads as rendering an element.
    */
-  readonly siblingsOnly?: readonly SiblingShape[]
+  readonly siblingsOnly: readonly SiblingShape[]
 }
 
 /** What a class sibling is emitted from: a rendering function, or a class-only one. */

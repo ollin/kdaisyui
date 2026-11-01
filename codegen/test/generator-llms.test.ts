@@ -14,6 +14,7 @@ const KBD = {
   prefix: 'kbd',
   enums: [{ name: 'KbdSize', entries: [{ name: 'Sm', cssClass: 'kbd-sm' }, { name: 'Lg', cssClass: 'kbd-lg' }] }],
   functions: [{ kind: 'main', name: 'daisyKbd', receiver: 'FlowContent', htmlTag: 'kbd', desc: '', parameters: [SIZE, CONTENT] }],
+  siblingsOnly: [],
 } as unknown as ComponentShape
 
 describe('generateLlmsFull', () => {

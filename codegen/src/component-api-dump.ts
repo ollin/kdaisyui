@@ -54,7 +54,7 @@ export function renderSignatures(shape: FunctionShape): string[] {
 
 /** Every signature of a component: its functions with their siblings, then its class-only functions. */
 export function componentSignatures(shape: ComponentShape): string[] {
-  return [...shape.functions.flatMap(renderSignatures), ...(shape.siblingsOnly ?? []).map(renderSiblingSignature)]
+  return [...shape.functions.flatMap(renderSignatures), ...shape.siblingsOnly.map(renderSiblingSignature)]
 }
 
 /** The enum entries a caller can name, which are as much API as the functions are. */

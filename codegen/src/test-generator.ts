@@ -495,14 +495,14 @@ function splitParams(block) {
 const PARAM_KIND_RULES = [
   [(c) => c.baseType === 'Boolean', 'boolean'],
   [(c) => c.name === 'id', 'id'],
+  // Read by nothing: it keeps `extraClasses: String?` out of `nullableString`, whose test would
+  // pass it "x" as if it were a component's own text parameter.
   [(c) => c.name === 'extraClasses', 'extraClasses'],
-  [(c) => c.name === 'attrs', 'attrs'],
   [(c) => c.name === 'content', (c) => (c.nullable ? 'contentOptional' : 'contentRequired')],
   [(c) => c.name === 'text' && c.baseType === 'String', 'text'],
   [(c) => c.nullable && c.baseType === 'String', 'nullableString'],
   [(c) => c.nullable && c.enums[c.enumType], 'enumClass'],
   [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
-  [(c) => !c.nullable && c.hasDefault, 'presetNonNull'],
 ]
 
 function paramKind(ctx) {
@@ -639,18 +639,6 @@ function htmlTagForFn(builder: BuilderName): TagName | null {
   const tag = builder.toLowerCase() as TagName
   return htmlTagFnFor(tag) === builder ? tag : null
 }
-
-/**
- * HTML void elements. They have no closing tag, so the "element is closed"
- * assertion below does not apply to them and would assert something false.
- */
-// Deliberately `Set<string>` rather than `Set<TagName>`: it is only ever queried with a
-// `TagName`, which is assignable to `string`, so branding the literals would buy nothing
-// and cost fourteen casts.
-const VOID_TAGS: Set<string> = new Set([
-  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-  'link', 'meta', 'param', 'source', 'track', 'wbr',
-])
 
 /**
  * Assert the emitted element is actually CLOSED.
@@ -797,7 +785,9 @@ const COVERAGE_HELPER = `
 /** The exact tail a correctly closed component leaves, or null when there is none to assert. */
 function closesSuffix(ctx) {
   const tag = ctx.tagFn ? htmlTagForFn(ctx.tagFn) : null
-  if (!tag || VOID_TAGS.has(tag)) return null
+  // A void element has no closing tag, so the "element is closed" assertion would assert
+  // something false. `isVoidElement` is the generator's own list, in kotlinx.html's casing.
+  if (!tag || isVoidElement(tag.toUpperCase() as TagClass)) return null
   return `</${tag}></${ctx.wrapperTag}>`
 }
 
@@ -1034,13 +1024,15 @@ function coverageImports(funcs, enums): Set<string> {
   return imports
 }
 
-function generateCoverageForFile(fileName) {
-  const filePath = path.join(GENERATED_MAIN_DIR, fileName)
-  const content = fs.readFileSync(filePath, 'utf8')
-  const className = fileName.replace(/\.kt$/, '')
+/**
+ * The Kotlin of `<className>CoverageTest.kt` for one generated component source, or null when the
+ * source declares no function. A pure function of its input: the snapshot test compares it with
+ * the committed coverage tests, which need neither the submodule nor a regeneration.
+ */
+function coverageTestFor(className: string, content: string): string | null {
   const enums = parseEnumDefinitions(content)
   const funcs = findFunctions(content)
-  if (funcs.length === 0) return { success: false, error: 'No functions' }
+  if (funcs.length === 0) return null
 
   const imports = coverageImports(funcs, enums)
 
@@ -1048,15 +1040,22 @@ function generateCoverageForFile(fileName) {
   for (const fn of funcs) body += buildCoverageTests(fn, enums, content)
   for (const member of parseScopeMembers(content)) body += scopeMemberTest(member)
 
-  const kotlin = `package io.github.ollin.kdaisyui.components
+  return `package io.github.ollin.kdaisyui.components
 
 ${[...imports].sort().join('\n')}
 
 class ${className}CoverageTest {
 ${COVERAGE_HELPER}${body}}
 `
-  fs.writeFileSync(path.join(OUTPUT_DIR, `${className}CoverageTest.kt`), kotlin)
-  return { success: true, funcCount: funcs.length }
+}
+
+/** Reads one component from `componentsDir` and writes its coverage test to `outputDir`. */
+function writeCoverageTest(componentsDir: string, outputDir: string, fileName: string) {
+  const className = path.basename(fileName, '.kt')
+  const kotlin = coverageTestFor(className, fs.readFileSync(path.join(componentsDir, fileName), 'utf8'))
+  if (kotlin === null) return { success: false, error: 'No functions' }
+  fs.writeFileSync(path.join(outputDir, `${className}CoverageTest.kt`), kotlin)
+  return { success: true }
 }
 
 function generateAllCoverage() {
@@ -1077,7 +1076,7 @@ function generateAllCoverage() {
   }
   let generated = 0
   for (const file of files) {
-    const result = generateCoverageForFile(file)
+    const result = writeCoverageTest(GENERATED_MAIN_DIR, OUTPUT_DIR, file)
     if (result.success) generated++
     else console.log(`  ⊘ coverage ${file}: ${result.error}`)
   }
@@ -1168,6 +1167,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 export {
   // Targets of the refactorings in section 2.
   parseTestCases,
+  // The coverage half, compared with its committed output by coverage-test-snapshot.test.ts.
+  coverageTestFor,
+  writeCoverageTest,
   // Added by add-mutation-testing and still untested — the gap that motivated this change.
   parseEmittedBuilder,
   parseScopeBuilder,

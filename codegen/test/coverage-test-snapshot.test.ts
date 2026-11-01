@@ -1,0 +1,83 @@
+import { test, describe } from 'node:test'
+import assert from 'node:assert/strict'
+import fs from 'fs'
+import path from 'path'
+
+import os from 'os'
+
+import { coverageTestFor, writeCoverageTest } from '../src/test-generator.ts'
+
+/**
+ * The coverage half of the test generator, against its committed output.
+ *
+ * Both sides are committed: the component sources it reads and the coverage tests it wrote, which
+ * the drift job keeps in step. So this needs neither the DaisyUI submodule nor a regeneration, and
+ * any change to the generated Kotlin of any component fails here, on the component that moved.
+ */
+/**
+ * The nearest `lib/generated` above this file. Not a fixed `../../`: StrykerJS runs the tests from
+ * a sandbox copy of `codegen/` nested inside it (`codegen/.stryker-tmp/sandbox-…/`), where the fixed
+ * path finds nothing and the initial test run fails.
+ */
+function generatedRoot(from: string): string {
+  const candidate = path.join(from, 'lib/generated')
+  if (fs.existsSync(candidate)) return candidate
+  const parent = path.dirname(from)
+  if (parent === from) throw new Error('No lib/generated above the codegen tests')
+  return generatedRoot(parent)
+}
+
+const GENERATED = generatedRoot(import.meta.dirname)
+const COMPONENTS = path.join(GENERATED, 'main/kotlin/io/github/ollin/kdaisyui/components')
+const COVERAGE_TESTS = path.join(GENERATED, 'test/kotlin/io/github/ollin/kdaisyui/components')
+
+const componentFiles = fs.readdirSync(COMPONENTS).filter(file => file.endsWith('.kt')).sort()
+
+describe('coverageTestFor reproduces the committed coverage test', () => {
+  test('of every committed component, all 66', () => {
+    assert.equal(componentFiles.length, 66)
+  })
+
+  for (const file of componentFiles) {
+    const className = file.replace(/\.kt$/, '')
+    test(className, () => {
+      const source = fs.readFileSync(path.join(COMPONENTS, file), 'utf8')
+      const committed = fs.readFileSync(path.join(COVERAGE_TESTS, `${className}CoverageTest.kt`), 'utf8')
+
+      assert.equal(coverageTestFor(className, source), committed)
+    })
+  }
+})
+
+describe('coverageTestFor', () => {
+  test('gives nothing for a source that declares no function', () => {
+    assert.equal(coverageTestFor('Empty', 'package io.github.ollin.kdaisyui.components\n'), null)
+  })
+})
+
+describe('writeCoverageTest', () => {
+  const temporaryDirs = () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'coverage-writer-'))
+    for (const dir of ['components', 'tests']) fs.mkdirSync(path.join(root, dir))
+    return { root, components: path.join(root, 'components'), tests: path.join(root, 'tests') }
+  }
+
+  test('writes <Class>CoverageTest.kt with what coverageTestFor returns for the file', () => {
+    const dirs = temporaryDirs()
+    const source = fs.readFileSync(path.join(COMPONENTS, 'Kbd.kt'), 'utf8')
+    fs.writeFileSync(path.join(dirs.components, 'Kbd.kt'), source)
+
+    assert.deepEqual(writeCoverageTest(dirs.components, dirs.tests, 'Kbd.kt'), { success: true })
+    assert.equal(fs.readFileSync(path.join(dirs.tests, 'KbdCoverageTest.kt'), 'utf8'), coverageTestFor('Kbd', source))
+    fs.rmSync(dirs.root, { recursive: true })
+  })
+
+  test('writes nothing for a source without a function, and says why', () => {
+    const dirs = temporaryDirs()
+    fs.writeFileSync(path.join(dirs.components, 'Empty.kt'), 'package io.github.ollin.kdaisyui.components\n')
+
+    assert.deepEqual(writeCoverageTest(dirs.components, dirs.tests, 'Empty.kt'), { success: false, error: 'No functions' })
+    assert.deepEqual(fs.readdirSync(dirs.tests), [])
+    fs.rmSync(dirs.root, { recursive: true })
+  })
+})

@@ -72,6 +72,10 @@ describe('parseTestCases', () => {
     assert.deepEqual(cases, [{ name: 'Truncated', html: '<i>x</i>' }])
   })
 
+  test('keeps a non-html block of a case out of the html block after it', () => {
+    assert.deepEqual(parseTestCases(doc('### ~Both', '```js', 'x()', '```', '```html', '<i>x</i>', '```')), [{ name: 'Both', html: '<i>x</i>' }])
+  })
+
   test('reads a heading only at the start of a line', () => {
     assert.deepEqual(parseTestCases(doc('See ### ~Not a heading', '```html', '<i>x</i>', '```')), [])
   })

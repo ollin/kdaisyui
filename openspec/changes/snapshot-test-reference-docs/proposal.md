@@ -15,8 +15,8 @@ the `codegen-tests` job has every input they need.
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | The pages, the index and both llms files equal what the exported functions produce in memory | probe | open, task 1.1; the drift job compares the same files on every full run |
-| A2 | The test kills most of `generator-docs.ts`'s 58 survivors | measurement | open, task 2.1; *wrong if* more than a third survive |
+| A1 | The pages, the index and both llms files equal what the exported functions produce in memory | probe | verified in task 1.1: 66 pages, the index and both llms files equal, in 107 ms |
+| A2 | The test kills most of `generator-docs.ts`'s 58 survivors | measurement | confirmed in task 2.1: 13 of 58 survive; `generator-llms.ts` reached 100 % |
 
 ## Capabilities
 

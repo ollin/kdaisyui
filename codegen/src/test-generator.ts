@@ -495,14 +495,14 @@ function splitParams(block) {
 const PARAM_KIND_RULES = [
   [(c) => c.baseType === 'Boolean', 'boolean'],
   [(c) => c.name === 'id', 'id'],
+  // Read by nothing: it keeps `extraClasses: String?` out of `nullableString`, whose test would
+  // pass it "x" as if it were a component's own text parameter.
   [(c) => c.name === 'extraClasses', 'extraClasses'],
-  [(c) => c.name === 'attrs', 'attrs'],
   [(c) => c.name === 'content', (c) => (c.nullable ? 'contentOptional' : 'contentRequired')],
   [(c) => c.name === 'text' && c.baseType === 'String', 'text'],
   [(c) => c.nullable && c.baseType === 'String', 'nullableString'],
   [(c) => c.nullable && c.enums[c.enumType], 'enumClass'],
   [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
-  [(c) => !c.nullable && c.hasDefault, 'presetNonNull'],
 ]
 
 function paramKind(ctx) {

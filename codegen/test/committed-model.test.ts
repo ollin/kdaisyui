@@ -27,6 +27,15 @@ describe('the committed model', () => {
     assert.deepEqual(mains.filter(([, count]) => count !== 1), [])
   })
 
+  it('names a declared enum in every enum parameter, which writtenBy relies on', () => {
+    const undeclared = modelFileNames().map(file => readModel(file)).filter(model => !isSkipped(model)).flatMap(model => {
+      const declared = new Set((model as ComponentModel).enums.map(e => e.name))
+      return (model as ComponentModel).functions.flatMap(fn => fn.parameters).filter(parameter => parameter.kind === 'enum' && !declared.has(parameter.enum))
+    })
+
+    assert.deepEqual(undeclared, [])
+  })
+
   it('lists the model files by directory name, sorted, ignoring anything that is not JSON', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'model-dir-'))
     for (const file of ['zeta.json', 'alpha.json', 'notes.md']) fs.writeFileSync(path.join(dir, file), '{}')

@@ -9,10 +9,10 @@
  */
 
 /** `@@ -<old> +<start>[,<count>] @@`: the new side of a hunk. */
-const HUNK = /^@@ -\S+ \+(?<start>\d+)(?:,(?<count>\d+))? @@/
+const HUNK = /^@@ -\S+ \+(?<start>\d+)(?:,(?<count>\d+))? @@/gm
 
-/** The file a diff section is about, from its `+++ b/<path>` line. */
-const NEW_FILE = /^\+\+\+ b\/(?<path>.+)$/
+/** The file a diff section is about, from its `+++ b/<path>` line. A deleted file has none. */
+const NEW_FILE = /^\+\+\+ b\/(?<path>.+)$/m
 
 /** TypeScript under `src/`, which the gate mutates. */
 const SOURCE = /^src\/.+\.ts$/
@@ -23,16 +23,18 @@ const ENTRY_POINT = /^src\/index-[^/]+\.ts$/
 const isMutated = (file: string) => SOURCE.test(file) && !ENTRY_POINT.test(file)
 
 export function mutationScope(diff: string): string[] {
-  let file = ''
-  const ranges: string[] = []
-  for (const line of diff.split('\n')) {
-    const path = NEW_FILE.exec(line)?.groups?.path
-    if (path !== undefined) file = path
-    const hunk = HUNK.exec(line)?.groups
-    if (hunk === undefined || !isMutated(file)) continue
-    const start = Number(hunk.start)
-    const count = hunk.count === undefined ? 1 : Number(hunk.count)
-    if (count > 0) ranges.push(`${file}:${start}-${start + count - 1}`)
-  }
-  return ranges
+  return diff.split(/^(?=diff --git )/m).flatMap(fileRanges)
+}
+
+/** The ranges of one file's section of the diff. */
+function fileRanges(section: string): string[] {
+  const file = NEW_FILE.exec(section)?.groups?.path
+  if (file === undefined || !isMutated(file)) return []
+  return [...section.matchAll(HUNK)].flatMap(({ groups }) => addedRange(file, Number(groups?.start), groups?.count))
+}
+
+/** A hunk's added lines as `<file>:<first>-<last>`, or nothing when it only deletes. */
+function addedRange(file: string, start: number, count: string | undefined): string[] {
+  const lines = count === undefined ? 1 : Number(count)
+  return lines > 0 ? [`${file}:${start}-${start + lines - 1}`] : []
 }

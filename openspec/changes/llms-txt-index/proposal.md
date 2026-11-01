@@ -66,7 +66,7 @@ now gets the index, whose `## Full API` section is one link away from what it fe
 |---|---|---|---|
 | A1 | The specification's shape is as read on 2026-11-01: H1, blockquote, non-heading prose, then H2 link lists; `## Optional` by convention for skippable links | reading | verified at proposal, https://llmstxt.org/ section *Format*, quoted in `specs/llms-txt/spec.md` |
 | A2 | `raw.githubusercontent.com` serves the repository's Markdown as plain text | measurement | verified at proposal: `curl -I` on `docs/reference/button.md` returned `content-type: text/plain; charset=utf-8` |
-| A3 | The index with 66 component links stays well inside a context window: under 16 KB | measurement | open, task 3.6 records the size of the regenerated file |
+| A3 | The index with 66 component links stays well inside a context window: under 16 KB | measurement | confirmed in task 3.6: 106 lines, 11,482 bytes, against 49,555 for the full file |
 | A4 | The hand-written documentation is exactly `README.md`, `docs/reference.md`, `docs/how-to.md`, `docs/explanation.md` and `docs/tutorials/*.md`; nothing else under `docs/` is a page | `ls` | verified at proposal; the gate reads the directory, so the list is not baked in |
 | A5 | The reference-docs generator is the one the drift job already runs, so a second output file needs no new job | reading | verified at proposal: `.github/workflows/ci.yml` runs `:lib:generateReferenceDocs`; `lib/build.gradle.kts:381-400` declares `llms.txt` as its output |
 | A6 | The canonical parser (the specification's JavaScript implementation) accepts a link item with and without the `: note` suffix and tolerates blank lines between items | reading | open, task 1.1 |

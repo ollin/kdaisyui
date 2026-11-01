@@ -388,16 +388,24 @@ tasks.register<Exec>("generateReferenceDocs") {
     // the reference pages do not. Hand-maintained until 0.7.0 (as llms.txt), it still showed
     // 0.1.x signatures.
     val llmsFull = rootProject.layout.projectDirectory.file("llms-full.txt")
+    // llms.txt is the index llmstxt.org specifies: links to the pages, the prose docs and
+    // llms-full.txt. Its generator refuses a missing page, a dead link or a broken shape.
+    val llmsTxt = rootProject.layout.projectDirectory.file("llms.txt")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/index-docs.ts --output-dir=\"${outputDir.asFile.absolutePath}\" --llms-full=\"${llmsFull.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/index-docs.ts --output-dir=\"${outputDir.asFile.absolutePath}\" --llms-full=\"${llmsFull.asFile.absolutePath}\" --llms-txt=\"${llmsTxt.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("daisyui/packages/docs"))
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.dir(rootProject.file("codegen/model"))
     inputs.file(rootProject.file("codegen/llms-full-template.md"))
+    inputs.file(rootProject.file("codegen/llms-template.md"))
+    // The coverage gate reads these, so a new page must re-run the task to be refused.
+    inputs.file(rootProject.file("README.md"))
+    inputs.files(rootProject.fileTree("docs") { include("**/*.md"); exclude("reference/**") })
     outputs.dir(outputDir)
     outputs.file(llmsFull)
+    outputs.file(llmsTxt)
 }
 
 val generateHeroicons = tasks.register<Exec>("generateHeroicons") {

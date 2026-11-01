@@ -1,0 +1,106 @@
+<!--
+GENERATED — DO NOT EDIT
+Source: codegen/llms-template.md and the generated component API
+Regenerate: just generate
+-->
+# kdaisyui
+
+> Type-safe DaisyUI component DSL for Kotlin kotlinx.html: compile-time-checked extension functions that emit DaisyUI class names for server-rendered HTML, with no JavaScript framework. Published on Maven Central as `io.github.ollin.kdaisyui:kdaisyui`. This index describes the `main` branch; for a released version, replace `main` in every URL below with its tag, such as `v0.8.1`.
+
+Five rules before following a link:
+
+- Always use named arguments. Parameter order is generated and changes between releases.
+- An enum parameter is a choice of one DaisyUI class group (`color = ButtonColor.Primary` emits `btn-primary`). A `Boolean` parameter is named after the class it toggles (`soft = true` emits `alert-soft`).
+- Every function takes `id: HtmlId?`, `extraClasses: String?`, `attrs` for the underlying kotlinx.html tag, and a `content` lambda whose receiver is the element the function renders.
+- Every function has a class sibling, `Tag.daisy<Name>Classes(…)`, which adds the same classes to an element you write yourself.
+- The library emits class names only. Your Tailwind build needs the class list, which the Gradle plugin `io.github.ollin.kdaisyui` writes (README, Quick start, step 3).
+
+## Docs
+
+- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): Quick start with the Gradle dependency block, CSS delivery through the Gradle plugin, and how to migrate between releases
+- [Getting started](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/getting-started.md): Set up a project and render buttons, cards, stats, a form and an alert, in ten minutes
+- [Build a dashboard with Ktor](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/build-a-dashboard.md): A full admin dashboard with a sidebar, header, stats fragments and htmx lazy loading, in thirty minutes
+- [Tutorials](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/index.md): The learning path through the two tutorials
+- [How-to guides](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/how-to.md): Recipes: add a component, custom classes and attributes, nest components, build a form, a sidebar layout, htmx partial loading, a dropdown, validation feedback
+- [Explanation](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/explanation.md): What DaisyUI, kotlinx.html and htmx are, how class merging works, the common parameters, and why the wrappers are thin
+- [Component reference](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference.md): The hand-written entry point to the per-component pages
+- [Reference index](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/index.md): One table of every component, its summary and the element it renders
+
+## Components
+
+- [Alert](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/alert.md): Status messages and notifications
+- [Aura](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/aura.md): Border light effect wrapping a component
+- [Avatar](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/avatar.md): User and entity representations
+- [Badge](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/badge.md): Labels, counts, and status tags
+- [Breadcrumbs](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/breadcrumbs.md): Navigation trail showing current location
+- [Button](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/button.md): Actions and triggers
+- [Calendar](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/calendar.md): Calendar date picker widget
+- [Card](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/card.md): Content containers with body and title
+- [Carousel](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/carousel.md): Slideshow of images or content
+- [Chat](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/chat.md): Chat bubble layout for conversations
+- [Checkbox](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/checkbox.md): Boolean toggles for forms
+- [Collapse](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/collapse.md): Collapsible content sections
+- [Countdown](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/countdown.md): Timer countdown display
+- [Diff](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/diff.md): Side-by-side diff viewer
+- [Divider](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/divider.md): Visual separator between sections
+- [Dock](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/dock.md): macOS-style dock navigation
+- [Drawer](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/drawer.md): Sidebar layout with toggle
+- [Dropdown](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/dropdown.md): Context menus and action lists
+- [Fab](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/fab.md): Floating action button with expandable actions
+- [Fieldset](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/fieldset.md): Groups related form controls
+- [FileInput](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/fileInput.md): File upload input field
+- [Filter](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/filter.md): Filter reset for search and forms
+- [Footer](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/footer.md): Page footer layout
+- [Hero](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/hero.md): Hero banner with overlay
+- [Hover3d](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/hover3d.md): 3D hover effect container
+- [HoverGallery](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/hoverGallery.md): Gallery with hover effects
+- [Indicator](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/indicator.md): Overlays badges on elements
+- [Input](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/input.md): Text entry fields
+- [Join](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/join.md): Groups buttons and inputs together
+- [Kbd](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/kbd.md): Keyboard key display
+- [Label](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/label.md): Field labels and helper text
+- [Link](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/link.md): Styled anchor elements
+- [List](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/list.md): Styled list layout
+- [Loading](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/loading.md): Loading spinners and indicators
+- [Mask](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/mask.md): CSS masks for cropping images to shapes
+- [Megamenu](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/megamenu.md): Horizontal menu with popover navigation blocks
+- [Menu](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/menu.md): Navigation lists with submenus
+- [MockupBrowser](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/mockupBrowser.md): Browser window mockup frame
+- [MockupCode](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/mockupCode.md): Code block mockup frame
+- [MockupPhone](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/mockupPhone.md): Phone mockup frame
+- [MockupWindow](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/mockupWindow.md): Desktop window mockup frame
+- [Modal](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/modal.md): Modal dialogs
+- [Navbar](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/navbar.md): Navigation bar layout
+- [Otp](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/otp.md): One-time password / verification code input
+- [Progress](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/progress.md): Progress bar indicator
+- [RadialProgress](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/radialProgress.md): Circular progress indicator
+- [Radio](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/radio.md): Single-choice option groups
+- [Range](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/range.md): Slider for numeric ranges
+- [Rating](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/rating.md): Star rating input
+- [Select](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/select.md): Dropdown option pickers
+- [Skeleton](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/skeleton.md): Content placeholder loading indicator
+- [Stack](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/stack.md): Stack overlapping elements
+- [Stat](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/stat.md): Key metrics and numbers
+- [Status](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/status.md): Small status indicator dot
+- [Steps](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/steps.md): Step-by-step progress indicator
+- [Swap](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/swap.md): Toggle between two states
+- [Tab](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/tab.md): Tabbed navigation
+- [Table](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/table.md): Structured data in rows and columns
+- [Textarea](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/textarea.md): Multi-line text input
+- [TextRotate](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/textRotate.md): Rotated text display
+- [ThemeController](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/themeController.md): DaisyUI theme controller toggle
+- [Timeline](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/timeline.md): Vertical or horizontal timeline
+- [Toast](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/toast.md): Toast notification container
+- [Toggle](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/toggle.md): Switch-style boolean input
+- [Tooltip](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/tooltip.md): Hover tooltip on elements
+- [Validator](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/validator.md): Form validation wrapper
+
+## Full API
+
+- [llms-full.txt](https://raw.githubusercontent.com/ollin/kdaisyui/main/llms-full.txt): Every component's enums and function signatures in one file, generated from the library, with the full reading rules
+
+## Optional
+
+- [DaisyUI components](https://daisyui.com/components/): The CSS classes the functions wrap, with rendered examples
+- [kotlinx.html](https://github.com/Kotlin/kotlinx.html): The HTML builder DSL the functions extend
+- [Releases](https://github.com/ollin/kdaisyui/releases): Release notes, one per tag

@@ -32,21 +32,24 @@ The estimate ledger was not among this session's tools, so the run is to be open
 
 ## 3. The index, under TCR
 
-- [ ] 3.1 `^ F` `llms-index.ts` renders the index: the template's prose, `{{COMPONENTS}}`
+- [x] 3.1 `^ F` `llms-index.ts` renders the index: the template's prose, `{{COMPONENTS}}`
   replaced by one `- [Name](<raw base>/docs/reference/<file>.md): <summary>` line per component,
-  sorted by display name; a template without the placeholder fails.
-- [ ] 3.2 `^ F` Shape gate: after the first H2, a non-blank line that is neither an H2 nor a link
-  item fails generation, naming the line.
-- [ ] 3.3 `^ F` Link gate: a raw-base URL whose repository path does not exist fails generation,
+  sorted by display name; a template without the placeholder fails. Two commits: the links, then
+  the order. One revert on the way, from a test that expected a trailing period `summaryLine`
+  strips; the step was split instead of retyped.
+- [x] 3.2 `^ F` Shape gate: after the first H2, a non-blank line that is neither an H2 nor a link
+  item fails generation, naming the line. Plus: exactly one H1 and no other heading before it.
+- [x] 3.3 `^ F` Link gate: a raw-base URL whose repository path does not exist fails generation,
   naming the link.
-- [ ] 3.4 `^ F` Completeness gate: `README.md` or a `docs/**/*.md` outside `docs/reference/` that
+- [x] 3.4 `^ F` Completeness gate: `README.md` or a `docs/**/*.md` outside `docs/reference/` that
   no link targets fails generation, naming the page.
-- [ ] 3.5 `^ F` `index-docs.ts` writes `llms.txt` from the index generator in the same run as the
+- [x] 3.5 `^ F` `index-docs.ts` writes `llms.txt` from the index generator in the same run as the
   pages and the full file; the Gradle task declares both templates as inputs and both files as
-  outputs.
-- [ ] 3.6 `. d` Write `codegen/llms-template.md` as the index: H1, blockquote (naming `main` and
+  outputs. Also as inputs: README and the docs pages, which the coverage gate reads.
+- [x] 3.6 `. d` Write `codegen/llms-template.md` as the index: H1, blockquote (naming `main` and
   how to pin a tag), five reading rules, `## Docs`, `## Components` placeholder, `## Full API`,
-  `## Optional`. Regenerate; record the file's size and line count in `design.md` (A3).
+  `## Optional`. Regenerated 2026-11-01: **106 lines, 11,482 bytes**, 78 link items (A3 holds;
+  the full file is 49,555 bytes).
 
 ## 4. Documents and skills
 

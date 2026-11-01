@@ -166,7 +166,7 @@ const INDEX_PREAMBLE = [
  * lower-cased names rather than through `localeCompare`, so `Hover3d` keeps its place ahead of
  * `HoverGallery` regardless of locale.
  */
-function byDisplayName(a: ComponentShape, b: ComponentShape): number {
+export function byDisplayName(a: ComponentShape, b: ComponentShape): number {
   const left = a.componentName.toLowerCase()
   const right = b.componentName.toLowerCase()
   if (left < right) return -1

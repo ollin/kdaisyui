@@ -54,6 +54,19 @@ describe('shapeFindings', () => {
     ])
   })
 
+  test('names a line that holds a link item but more than one', () => {
+    const index = '# kdaisyui\n\n## Docs\n\nSee - [One](https://x/one.md)\n- [Two](https://x/two.md) and more\n'
+
+    assert.deepEqual(shapeFindings(index), [
+      'line 5: after the first H2 only H2 headings and link items may appear, got "See - [One](https://x/one.md)"',
+      'line 6: after the first H2 only H2 headings and link items may appear, got "- [Two](https://x/two.md) and more"',
+    ])
+  })
+
+  test('reads an index without an H2 as all preamble, down to its last line', () => {
+    assert.deepEqual(shapeFindings('# kdaisyui\n\n> Summary.'), [])
+  })
+
   test('before the first H2, names a heading that is not the one H1 and counts the H1s', () => {
     const index = '<!--\ngenerated\n-->\n# kdaisyui\n\n### Rules\n\n# Again\n\n## Docs\n'
 
@@ -92,6 +105,17 @@ describe('documentationPages', () => {
     assert.deepEqual(documentationPages(root), ['README.md', 'docs/how-to.md', 'docs/tutorials/index.md'])
     fs.rmSync(root, { recursive: true })
   })
+
+  test('lists the pages sorted, whatever order the directory returns them in', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'llms-index-'))
+    for (const file of ['README.md', 'docs/zeta.md', 'docs/beta.md', 'docs/omega.md', 'docs/alpha.md', 'docs/mu.md']) {
+      fs.mkdirSync(path.dirname(path.join(root, file)), { recursive: true })
+      fs.writeFileSync(path.join(root, file), '')
+    }
+
+    assert.deepEqual(documentationPages(root), ['README.md', 'docs/alpha.md', 'docs/beta.md', 'docs/mu.md', 'docs/omega.md', 'docs/zeta.md'])
+    fs.rmSync(root, { recursive: true })
+  })
 })
 
 describe('generateLlmsIndex', () => {
@@ -107,10 +131,12 @@ describe('generateLlmsIndex', () => {
     const template = `# kdaisyui\n\n## Docs\n\n### Start\n${raw('docs/gone.md')}\n{{COMPONENTS}}\n`
 
     assert.throws(() => generateLlmsIndex(template, [KBD], {}, repository), (error: Error) => {
-      assert.match(error.message, /^llms\.txt is not the index llmstxt\.org specifies:\n/)
-      assert.match(error.message, /line 10: after the first H2 only H2 headings and link items may appear, got "### Start"/)
-      assert.match(error.message, /line 11: links docs\/gone\.md, which does not exist in the repository/)
-      assert.match(error.message, /README\.md is not linked from llms\.txt/)
+      assert.deepEqual(error.message.split('\n'), [
+        'llms.txt is not the index llmstxt.org specifies:',
+        'line 10: after the first H2 only H2 headings and link items may appear, got "### Start"',
+        'line 11: links docs/gone.md, which does not exist in the repository',
+        'README.md is not linked from llms.txt',
+      ])
       return true
     })
   })

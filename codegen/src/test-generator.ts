@@ -941,6 +941,18 @@ function coverageFunctionsOf(shape: ComponentShape) {
   ]
 }
 
+/**
+ * The members of the component's scope, so the coverage tests can reach them: each is called
+ * inside the main function's lambda, with a `content` lambda where its element requires one.
+ */
+function scopeMembersOf(shape: ComponentShape): ScopeMember[] {
+  return (shape.scope?.members ?? []).map(member => ({
+    name: member.name,
+    requiresContent: member.parameters.some(parameter => parameter.name === 'content' && parameter.default === null),
+    opener: shape.functions[0].name,
+  }))
+}
+
 function coverageTestFor(className: string, content: string, shape: ComponentShape): string | null {
   const enums = enumTableOf(shape)
   const parsed = findFunctions(content)
@@ -951,7 +963,7 @@ function coverageTestFor(className: string, content: string, shape: ComponentSha
 
   let body = ''
   for (const fn of funcs) body += buildCoverageTests(fn, enums)
-  for (const member of parseScopeMembers(content)) body += scopeMemberTest(member)
+  for (const member of scopeMembersOf(shape)) body += scopeMemberTest(member)
 
   return `package io.github.ollin.kdaisyui.components
 

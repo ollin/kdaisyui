@@ -39,11 +39,11 @@ revised plan as well, which was revised before any work.
 
 ## 4. Measure, and what survives
 
-- [ ] 4.1 `. d` StrykerJS on the four files before and after (A5); per surviving group, delete code
+- [x] 4.1 `. d` StrykerJS on the four files before and after (A5); per surviving group, delete code
   that cannot matter or add the case that kills it.
 
 ## 5. Documents, gate and adoption
 
 - [x] 5.1 `^ d` `kdaisyui-testing`: the rewritten rule; `kdaisyui-codegen`: the snapshot tests.
-- [ ] 5.2 Gate: `just generate` without a diff, `node --test`, the mutation gate on changed lines,
+- [x] 5.2 Gate: `just generate` without a diff, `node --test`, the mutation gate on changed lines,
   CodeScene before the push, `openspec validate --strict`, findings, archive, pull request.

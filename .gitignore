@@ -39,3 +39,7 @@ tmp/
 # sweep, full of absolute paths and host details. Never commit it.
 opencode.json
 opencode.jsonc
+
+# StrykerJS, run in codegen/ (npm run mutate): its sandbox and its reports.
+codegen/.stryker-tmp/
+codegen/reports/

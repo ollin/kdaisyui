@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
+import { coverageFindings, linkFindings, renderLlmsIndex, shapeFindings } from '../src/llms-index.ts'
 import { component, shapeOf } from './model-fixture.ts'
 
 const KBD = shapeOf(component('kbd', 'Kbd', 'kbd'), { desc: 'Kbd is used to display keyboard shortcuts. Second sentence.', classes: {} })
@@ -66,5 +66,13 @@ describe('linkFindings', () => {
     const exists = (path: string) => path === 'README.md'
 
     assert.deepEqual(linkFindings(index, exists), ['line 4: links docs/gone.md, which does not exist in the repository'])
+  })
+})
+
+describe('coverageFindings', () => {
+  test('names each documentation page no repository link targets', () => {
+    const index = '## Docs\n\n- [README](https://raw.githubusercontent.com/ollin/kdaisyui/main/README.md): start\n- [DaisyUI](https://daisyui.com)\n'
+
+    assert.deepEqual(coverageFindings(index, ['README.md', 'docs/how-to.md']), ['docs/how-to.md is not linked from llms.txt'])
   })
 })

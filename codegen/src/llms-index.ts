@@ -45,6 +45,12 @@ function repositoryLink(line: string): string | null {
   return url !== undefined && url.startsWith(RAW_BASE) ? url.slice(RAW_BASE.length) : null
 }
 
+/** Documentation pages the index does not link. A page nobody can find is a page nobody reads. */
+export function coverageFindings(index: string, pages: readonly string[]): string[] {
+  const linked = new Set(index.split('\n').map(repositoryLink))
+  return pages.filter(page => !linked.has(page)).map(page => `${page} is not linked from llms.txt`)
+}
+
 /** Repository links whose target does not exist. Another host's reachability is not ours to know. */
 export function linkFindings(index: string, exists: (repositoryPath: string) => boolean): string[] {
   return index

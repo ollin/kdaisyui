@@ -3,6 +3,7 @@
 # before it classifies a pull request, and locally with `bash .github/ci-scope/classify.test.sh`.
 # A wrong answer fails the run, and a failed `scope` job makes every test job run.
 set -u
+exit 1  # probe: a broken classifier
 here="$(dirname "$0")"
 failures=0
 

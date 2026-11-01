@@ -20,22 +20,32 @@ there is no manual publish step and no release-please.
 
 ## What gets published
 
-Three artifacts under `io.github.ollin.kdaisyui`, all listed in `build.gradle.kts` as
-`publishedArtifacts`:
+Four artifacts and one plugin marker under `io.github.ollin.kdaisyui`, all listed in
+`build.gradle.kts` as `publishedArtifacts`:
 
 | Artifact | Module |
 |---|---|
 | `kdaisyui` | `:lib` |
 | `kdaisyui-ktor-integration` | `:ktor-integration` |
-| `kdaisyui-bom` | `:bom` — a `java-platform` BOM that pins the other two |
+| `kdaisyui-bom` | `:bom` — a `java-platform` BOM that pins `kdaisyui` and `kdaisyui-ktor-integration` |
+| `kdaisyui-gradle-plugin` | `gradle-plugin/`, an included build, not a subproject |
+| `io.github.ollin.kdaisyui.gradle.plugin` | its plugin marker, which `plugins { id(...) }` resolves |
+
+The plugin is on Maven Central only, not the Gradle Plugin Portal, so a consumer adds
+`mavenCentral()` to `pluginManagement`; README shows it. It is an included build because
+`example-app` applies it and a plugin cannot be applied from a sibling subproject. Its version is
+the root `gradle.properties` one, or the tag's `-Pversion`, which reaches included builds too.
+Both its POMs need the metadata Maven Central checks, and it needs sources and javadoc jars:
+JReleaser's dry run rejects it otherwise (`per-component-class-delivery`, task 1.1).
 
 Consumers import the BOM once and then declare the artifacts without versions; that is what
 `README.md` shows.
 
 ## The pipeline, in order
 
-1. `stageAll` publishes every subproject into `build/staging-deploy/`.
-2. `verifyStagingComplete` fails the release if any of the three artifacts is missing a `.pom`
+1. `stageAll` publishes every subproject, and the included `gradle-plugin` build, into
+   `build/staging-deploy/`.
+2. `verifyStagingComplete` fails the release if any of the five is missing a `.pom`
    for **this** version.
 3. JReleaser signs (GPG, armored), deploys to Maven Central via
    `https://central.sonatype.com/api/v1/publisher`, and creates the GitHub release with a

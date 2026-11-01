@@ -260,6 +260,7 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     inputs.dir(rootProject.file("codegen/model"))
     outputs.dir(outputDir)
     outputs.file(classList)
+    outputs.file(generatedResourcesDir.file("kdaisyui-components.txt"))
 }
 
 val generateComponentTests = tasks.register<Exec>("generateComponentTests") {

@@ -7,6 +7,8 @@
  */
 
 pluginManagement {
+    // The kdaisyui Gradle plugin, so example-app can apply it; see gradle-plugin/settings.gradle.kts.
+    includeBuild("gradle-plugin")
     // `pluginManagement` runs before the version catalog (`libs`) exists, so the
     // type-safe `libs.*` accessors are not available here. Read the Kotlin version
     // directly from the catalog TOML to keep libs.versions.toml the single source

@@ -47,9 +47,11 @@ val html = createHTML().div {
 
 ### CSS
 
-kdaisyui emits class names only. The jar ships `kdaisyui-classes.txt`, the list of every class it
-can emit; point your Tailwind `@source` at it, because a class assembled at runtime from an enum
-appears in none of your source files. See the README's Quick start, step 3.
+kdaisyui emits class names only, and a class assembled at runtime from an enum appears in none of
+your source files, so Tailwind needs the list. The Gradle plugin `io.github.ollin.kdaisyui` (Maven
+Central) writes `build/kdaisyui/kdaisyui-classes.txt` with the classes of the components your
+compiled code uses; point your Tailwind `@source` at it. Without Gradle, the jar's own
+`kdaisyui-classes.txt` lists every class. See the README's Quick start, step 3.
 
 ## Reading the signatures below
 

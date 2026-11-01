@@ -698,37 +698,50 @@ Tailwind scans your source files for class names. `btn-primary` is assembled at 
 compiled classes, not Kotlin sources. A scan of your project finds nothing, Tailwind emits no rule,
 and your button renders unstyled with no error anywhere.
 
-So the library ships the list. Extract it and point Tailwind at it:
+So the library ships the list, and its Gradle plugin narrows it to the components your code
+uses. Apply the plugin, at the same version as the library:
+
+<!-- snippet: skip - a Gradle settings script, not code against the library -->
+```kotlin
+// settings.gradle.kts: the plugin is on Maven Central, not the Gradle Plugin Portal
+pluginManagement { repositories { gradlePluginPortal(); mavenCentral() } }
+```
 
 <!-- snippet: skip - a Gradle build script, not code against the library -->
 ```kotlin
 // build.gradle.kts
-val kdaisyuiClasses by configurations.creating
-dependencies { kdaisyuiClasses("io.github.ollin.kdaisyui:kdaisyui:VERSION") }
+plugins { id("io.github.ollin.kdaisyui") version "VERSION" }
 
-tasks.register<Copy>("extractKdaisyuiClasses") {
-    from(zipTree(kdaisyuiClasses.singleFile)) { include("kdaisyui-classes.txt") }
-    into(layout.buildDirectory.dir("kdaisyui"))
-}
+// Whatever compiles your stylesheet runs after the list is written:
+tasks.named("yourTailwindTask") { dependsOn("kdaisyuiClasses") }
 ```
+
+`kdaisyuiClasses` reads your compiled classes and writes `build/kdaisyui/kdaisyui-classes.txt`
+with the classes of every component they use. Point Tailwind at it:
 
 ```css
 /* app.css */
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @plugin "daisyui";
 
-@source "./build/kdaisyui/kdaisyui-classes.txt";  /* what kdaisyui can emit */
+@source "./build/kdaisyui/kdaisyui-classes.txt";  /* the components your code uses */
 @source "./src/main/kotlin";                       /* what you write yourself */
 ```
 
-Compile it with the Tailwind CLI, the standalone binary, or a container — whatever suits your
-build. `:example-app` compiles in a container so the repository needs no Node; see
-[`example-app/build.gradle.kts`](example-app/build.gradle.kts).
+Compile it with the Tailwind CLI, the standalone binary, or a container, whatever suits your
+build. `:example-app` applies the plugin and compiles in a container, so the repository needs no
+Node; see [`example-app/build.gradle.kts`](example-app/build.gradle.kts).
 
-Expect roughly **550 KB**. The list covers every class the library can emit, not the subset you
-use, because nothing yet knows which components your code calls. Narrowing that is a known
-follow-up; **do not hand-maintain a shorter list** — it works until the day someone adds a
-component and forgets, and the failure is silent.
+**What it weighs:** `:example-app` uses 20 of the 66 components, and its stylesheet went from
+55 KB to 27 KB gzip (572 KB to 229 KB uncompressed) when it switched to the plugin. When the plugin
+is in doubt, because your compiled classes name no kdaisyui component, or name one the library's
+map does not know, it writes the full list and says why in the build's log and the file's first
+lines. A list that is too long costs bytes; one that is too short leaves a page unstyled with no
+error.
+
+Without Gradle, extract the full list from the jar, `kdaisyui-classes.txt`, and source that
+instead: every class the library can emit, about 550 KB of CSS. **Do not hand-maintain a shorter
+list.** It works until the day someone adds a component and forgets, and the failure is silent.
 
 #### The quick path, and what it costs
 
@@ -777,6 +790,7 @@ responsive or state variants on DaisyUI classes, compile.
 | `:lib` | Core library — DSL component wrappers (published as `kdaisyui`) |
 | `:ktor-integration` | Ktor Resources integration (published as `kdaisyui-ktor-integration`). Depends on `kdaisyui` only — Ktor and every web asset are yours to add |
 | `:bom` | Bill of Materials aligning the two artifact versions (published as `kdaisyui-bom`) |
+| `gradle-plugin/` | Gradle plugin `io.github.ollin.kdaisyui`, which narrows the CSS class list to the components a build uses (published as `kdaisyui-gradle-plugin`, Maven Central only) |
 | `:example-app` | Ktor + htmx demo dashboard |
 
 ## Development environment

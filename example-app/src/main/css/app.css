@@ -7,12 +7,15 @@
  *
  * Both sources are needed, and the second is the interesting one: a class like
  * `btn-primary` never appears in this application's code. It is assembled at runtime
- * from ButtonVariant.Primary, so its only textual form is the string literal in the
- * library's generated enum. A consumer of the published jar has no equivalent, which
- * is what the css-delivery capability is about.
+ * from ButtonColor.Primary, so the app's sources cannot tell Tailwind about it. The
+ * kdaisyui Gradle plugin writes the classes of the components the compiled app uses,
+ * which is what a consumer of the published jar does too (the css-delivery capability).
+ *
+ * `source(none)`: Tailwind otherwise also scans whatever else is mounted under its
+ * working directory, and the stylesheet would depend on more than these two sources.
  */
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @plugin "daisyui";
 
 @source "../app-kotlin";
-@source "../lib-kotlin";
+@source "../kdaisyui/kdaisyui-classes.txt";

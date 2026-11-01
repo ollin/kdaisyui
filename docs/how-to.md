@@ -31,16 +31,25 @@ Any other JDK 21 or newer builds the same code: the JDK that *compiles* it is a 
 
 ## Run the E2E tests
 
-The E2E tests use Playwright and require Node. Install dependencies once, then run:
+The E2E tests drive a real Chromium through Playwright for Java, with Kotest and Cucumber. They
+need no Node: Gradle runs them, and the example app's Ktor server starts in the test process, so
+there is nothing to start first.
 
 ```bash
-cd e2e-tests
-npm install
-npx playwright install chromium
-npx playwright test
+just e2e                         # or: ./gradlew :e2e-tests:test
 ```
 
-The server starts automatically via the `webServer` config in `playwright.config.ts`. If the server is already running on port 8080, it is reused.
+The build uses a Chromium already on the machine: the first of `chromium`, `chromium-browser`,
+`google-chrome-stable` and `google-chrome` on the `PATH`, or the one
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` names. On a machine with none, install Playwright's own
+once:
+
+```bash
+./gradlew :e2e-tests:playwrightInstall
+```
+
+Like `check`, the run needs Docker, because the example app compiles its stylesheet in a
+container. The report lands in `e2e-tests/build/reports/tests/test/`.
 
 ## Add a component to your page
 

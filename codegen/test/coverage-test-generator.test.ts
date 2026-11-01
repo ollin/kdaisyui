@@ -39,13 +39,15 @@ describe("a main function's extras", () => {
   test('are expected in body order, those before the classes first', () => {
     const model = component('wrap', 'Wrap', 'wrap', {}, {
       parameters: [
-        { kind: 'extra', name: 'later', type: 'Boolean', default: 'false', apply: 'if (later) this.later = true' },
+        { kind: 'extra', name: 'later', type: 'String', default: '"x"', apply: 'this.later = later' },
         { kind: 'extra', name: 'early', type: 'String', default: '"x"', apply: 'this.early = early', position: 'before_classes' },
       ],
     })
 
-    assert.deepEqual(linesOf(coverageOf(model), /all flags|sets /).filter(line => line.includes('sets ')), [
+    // Both set unconditionally, so only their position orders them, in the defaults and in all flags.
+    assert.deepEqual(linesOf(coverageOf(model), /sets /), [
       'assertTrue(html.contains("early=\\""), "Wrap sets early")',
+      'assertTrue(html.contains("later=\\""), "Wrap sets later")',
       'assertTrue(html.contains("early=\\""), "Wrap sets early")',
       'assertTrue(html.contains("later=\\""), "Wrap sets later")',
     ])

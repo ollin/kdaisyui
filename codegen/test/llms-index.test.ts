@@ -14,6 +14,13 @@ describe('renderLlmsIndex', () => {
     assert.doesNotMatch(index, /\{\{COMPONENTS\}\}/)
   })
 
+  test('lists components in display order and falls back to the first DaisyUI sentence', () => {
+    const fileInput = shapeOf(component('file-input', 'FileInput', 'file-input'))
+    const index = renderLlmsIndex('{{COMPONENTS}}', [KBD, fileInput], {})
+
+    assert.match(index, /^- \[FileInput\]\(.*\/docs\/reference\/fileInput\.md\): \n- \[Kbd\]\(.*\): Kbd is used to display keyboard shortcuts$/m)
+  })
+
   test('opens with a header saying the file is generated and from what', () => {
     const index = renderLlmsIndex('{{COMPONENTS}}', [KBD], {})
 

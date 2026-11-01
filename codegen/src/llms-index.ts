@@ -8,7 +8,7 @@
  * `codegen/llms-template.md`.
  */
 import type { ComponentShape } from './component-shape.ts'
-import { docFileNameFor, summaryLine, type DocSummary } from './generator-docs.ts'
+import { byDisplayName, docFileNameFor, summaryLine, type DocSummary } from './generator-docs.ts'
 
 /** Where GitHub serves the committed Markdown as plain text; `blob` URLs serve HTML. */
 export const RAW_BASE = 'https://raw.githubusercontent.com/ollin/kdaisyui/main/'
@@ -32,7 +32,7 @@ export function renderLlmsIndex(
   docSummaries: Readonly<Record<string, DocSummary>>,
 ): string {
   if (!template.includes(PLACEHOLDER)) throw new Error(`llms template has no ${PLACEHOLDER} line`)
-  const links = shapes.map(shape => componentLink(shape, docSummaries[shape.componentDir]))
+  const links = [...shapes].sort(byDisplayName).map(shape => componentLink(shape, docSummaries[shape.componentDir]))
   return HEADER + template.replace(PLACEHOLDER, links.join('\n'))
 }
 

@@ -440,26 +440,15 @@ function groupEnumOf(baseType: string): string {
   return baseType.match(/^ClassValues<(\w+)>$/)?.[1] ?? baseType
 }
 
-function classifyParam({ name, type, default: defaultValue }: ParameterShape, enums) {
+function classifyParam({ name, type, default: defaultValue, cssClass, writes }: ParameterShape, enums) {
   const nullable = type.endsWith('?')
   const baseType = nullable ? type.slice(0, -1) : type
   const enumType = groupEnumOf(baseType)
   const hasDefault = defaultValue !== null
   const kind = paramKind({ name, baseType, enumType, nullable, hasDefault, enums })
-  return { name, type, baseType, enumType, nullable, hasDefault, kind, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
-}
-
-/** The single unguarded `addClassNames("...")` that names this element. */
-/**
- * Every class the body writes unconditionally, as the sorted string the assertion compares to.
- *
- * All of them, not the first: a `customParts` entry with `modifierClasses` emits two literal
- * `addClassNames` lines — `daisySkeletonText` renders `class="skeleton skeleton-text"` — and
- * reading only the first asserted a class list the function does not produce.
- */
-function parseBaseClass(body) {
-  const classes = [...body.matchAll(/^\s*addClassNames\("([^"]+)"\)\s*$/gm)].map(match => match[1])
-  return classes.length > 0 ? sortedClasses(classes) : null
+  // The classes a Boolean adds when true: a toggle's own, or those an extra writes.
+  const classes = cssClass === undefined ? [...(writes ?? [])] : [cssClass]
+  return { name, type, baseType, enumType, nullable, hasDefault, kind, classes, enumEntries: kind === 'enumClass' ? enums[enumType] : null }
 }
 
 /**
@@ -625,16 +614,6 @@ function closesTagAssert(ctx) {
 }
 
 /** CSS class(es) a boolean modifier adds via `if (param) addClassNames("...")`. */
-function boolClassesFor(body, param) {
-  const line = body.match(new RegExp(`^\\s*if \\(${param}\\)(.*)$`, 'm'))
-  if (!line) return []
-  const css = []
-  const re = /addClassNames\("([^"]+)"\)/g
-  let m
-  while ((m = re.exec(line[1])) !== null) css.push(m[1])
-  return css
-}
-
 function sortedClasses(arr) {
   return [...new Set(arr.filter(Boolean))].sort().join(' ')
 }
@@ -728,7 +707,7 @@ function coverageContext(fn, enums, file: string) {
   return {
     params,
     body: fn.body,
-    base: parseBaseClass(fn.body) || '',
+    base: sortedClasses(fn.baseClasses),
     wrapperFn: htmlTagFnFor(wrapperTagOf(fn.receiver)),
     // The wrapper's CLOSING tag, which is the raw receiver name — not `wrapperFn`,
     // because `htmlTagFnFor` renames a few builders away from their tag (`object`
@@ -778,7 +757,7 @@ function allFlagsArgs(ctx, boolCss) {
   const args = ctx.hasHatches ? ['id = htmlId("x-cov-id")'] : []
   for (const b of ctx.params.filter((p) => p.kind === 'boolean')) {
     args.push(`${b.name} = true`)
-    boolCss.push(...boolClassesFor(ctx.body, b.name))
+    boolCss.push(...b.classes)
   }
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
   for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
@@ -949,9 +928,14 @@ function enumTableOf(shape: ComponentShape) {
  * `daisy` every name starts with, which the tests put back.
  */
 function coverageFunctionsOf(shape: ComponentShape) {
-  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn) })
+  // A main function writes the component's class; a part, a custom part and a sibling their own.
+  const ownClasses = (fn: SiblingShape) => [fn.cssClass, ...fn.modifierClasses]
+  const sibling = (fn: SiblingShape) => ({ name: `${fn.name.slice('daisy'.length)}Classes`, receiver: 'Tag', parameters: siblingParameters(fn), baseClasses: ownClasses(fn) })
   return [
-    ...shape.functions.flatMap(fn => [{ name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters }, ...(hasSibling(fn) ? [sibling(fn)] : [])]),
+    ...shape.functions.flatMap(fn => [
+      { name: fn.name.slice('daisy'.length), receiver: fn.receiver, parameters: fn.parameters, baseClasses: fn.kind === 'main' ? [shape.prefix] : ownClasses(fn) },
+      ...(hasSibling(fn) ? [sibling(fn)] : []),
+    ]),
     ...shape.siblingsOnly.map(sibling),
   ]
 }

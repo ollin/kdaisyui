@@ -55,7 +55,7 @@ export function fileNameToPascalCase(kebabName: KebabName): PascalName {
 function svgPaths(svgContent: string, variant: string, rewrite: (attributes: string) => string): string {
   const inner = svgContent.match(/<svg[^>]*>([\s\S]*)<\/svg>/)
   if (!inner) throw new Error(`Failed to parse ${variant} SVG: no <svg> wrapper found`)
-  return [...inner[1].trim().matchAll(/<path\s+([^>]*?)\/>/g)].map(match => `<path ${rewrite(match[1])} />`).join('')
+  return [...inner[1].matchAll(/<path ([^>]*?)\/>/g)].map(match => `<path ${rewrite(match[1])} />`).join('')
 }
 
 /** Outline paths draw with the current colour, and fill nothing unless they say otherwise. */

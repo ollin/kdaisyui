@@ -102,6 +102,13 @@ describe('classChanges', () => {
     assert.deepEqual(classChanges(older, newer), [{ component: 'mask', added: ['mask-star'], removed: ['mask-square'] }])
   })
 
+  it('reads a page without frontmatter as one that declares no class', () => {
+    const older = release({ mask: '# Mask, no frontmatter' })
+    const newer = release({ mask: frontmatter('mask') })
+
+    assert.deepEqual(classChanges(older, newer), [{ component: 'mask', added: ['mask'], removed: [] }])
+  })
+
   it('says nothing about a component whose classes did not change', () => {
     const page = release({ btn: frontmatter('btn') })
 

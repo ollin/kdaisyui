@@ -35,10 +35,11 @@ import type { BuilderName, TagName } from './html-names.ts'
 // `language` is deliberately NOT reset when a fence closes. That is load-bearing: the final
 // flush consults it, and a heading inside an open fence leaves it standing. Both behaviours
 // are pinned by tests in codegen/test/.
-const TEST_CASE_HEADING = /^### ~(.+)$/
+const TEST_CASE_HEADING = /^### ~(.+)/
 
 function newScan() {
-  return { cases: [], current: null, insideBlock: false, blockLines: [], language: null }
+  // `blockLines` is set by the first heading or fence; nothing reads it before either.
+  return { cases: [], current: null, insideBlock: false, language: null }
 }
 
 function flushCurrentCase(scan) {
@@ -46,8 +47,9 @@ function flushCurrentCase(scan) {
   scan.cases.push(scan.current)
 }
 
+// No flush here: a heading is only read outside a block, and closing an html block already
+// flushed its case.
 function startCase(scan, name) {
-  if (scan.current && scan.blockLines.length > 0) flushCurrentCase(scan)
   scan.current = { name: name.trim(), html: null }
   scan.blockLines = []
 }
@@ -64,7 +66,6 @@ function closeBlock(scan) {
     flushCurrentCase(scan)
     scan.current = null
   }
-  scan.blockLines = []
 }
 
 // Order matters and is the fix for a real defect. A fence is decided first, then whether we
@@ -119,7 +120,6 @@ function toTestFunctionName(name) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_|_$/g, '')
-    .replace(/_+/g, '_')
   
   if (/^[0-9]/.test(funcName)) {
     funcName = `test_${funcName}`

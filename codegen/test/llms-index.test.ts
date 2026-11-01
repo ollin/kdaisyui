@@ -48,3 +48,14 @@ describe('shapeFindings', () => {
     ])
   })
 })
+
+describe('shapeFindings, before the first H2', () => {
+  test('names a heading that is not the one H1, and counts the H1s', () => {
+    const index = '<!--\ngenerated\n-->\n# kdaisyui\n\n### Rules\n\n# Again\n\n## Docs\n'
+
+    assert.deepEqual(shapeFindings(index), [
+      'line 6: before the first H2 the only heading is the H1, got "### Rules"',
+      'the index needs exactly one H1, found 2',
+    ])
+  })
+})

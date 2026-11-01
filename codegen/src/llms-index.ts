@@ -45,14 +45,20 @@ const LINK_ITEM = /^- \[[^\]]+\]\([^)]+\)(: .*)?$/
  * sub-heading after the first H2 would be silently dropped, which is why the gate is here.
  */
 export function shapeFindings(index: string): string[] {
-  const lines = index.split('\n')
-  const firstH2 = lines.findIndex(line => line.startsWith('## '))
-  if (firstH2 === -1) return []
-  return lines
-    .map((line, at) => ({ line, at }))
-    .slice(firstH2)
-    .filter(({ line }) => line !== '' && !line.startsWith('## ') && !LINK_ITEM.test(line))
-    .map(({ line, at }) => `line ${at + 1}: after the first H2 only H2 headings and link items may appear, got "${line}"`)
+  const lines = index.split('\n').map((line, at) => ({ line, at }))
+  const firstH2 = lines.findIndex(({ line }) => line.startsWith('## '))
+  const preamble = firstH2 === -1 ? lines : lines.slice(0, firstH2)
+  const lists = firstH2 === -1 ? [] : lines.slice(firstH2)
+  const h1Count = preamble.filter(({ line }) => line.startsWith('# ')).length
+  return [
+    ...preamble
+      .filter(({ line }) => line.startsWith('#') && !line.startsWith('# '))
+      .map(({ line, at }) => `line ${at + 1}: before the first H2 the only heading is the H1, got "${line}"`),
+    ...(h1Count === 1 ? [] : [`the index needs exactly one H1, found ${h1Count}`]),
+    ...lists
+      .filter(({ line }) => line !== '' && !line.startsWith('## ') && !LINK_ITEM.test(line))
+      .map(({ line, at }) => `line ${at + 1}: after the first H2 only H2 headings and link items may appear, got "${line}"`),
+  ]
 }
 
 function componentLink(shape: ComponentShape, docSummary: DocSummary | undefined): string {

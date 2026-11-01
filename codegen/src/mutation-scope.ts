@@ -17,10 +17,10 @@ const NEW_FILE = '+++ b/'
 /** TypeScript under `src/`, which the gate mutates. */
 const SOURCE = /^src\/.+\.ts$/
 
-/** The entry points, which run only as scripts that no unit test imports. */
-const ENTRY_POINT = /^src\/index-[^/]+\.ts$/
+/** An entry point, `src/index-*.ts`, read below `src/`: it runs only as a script no test imports. */
+const ENTRY_POINT = /^index-[^/]+$/
 
-const isMutated = (file: string) => SOURCE.test(file) && !ENTRY_POINT.test(file)
+const isMutated = (file: string) => SOURCE.test(file) && !ENTRY_POINT.test(file.slice('src/'.length))
 
 export function mutationScope(diff: string): string[] {
   return diff.split(/^(?=diff --git )/m).flatMap(fileRanges)

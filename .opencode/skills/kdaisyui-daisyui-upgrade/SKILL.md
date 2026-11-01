@@ -21,7 +21,7 @@ Three committed artefacts are compared against their inputs:
 
 | Committed artefact | Guard | Regenerate with |
 |---|---|---|
-| `lib/generated/**`, `docs/reference/**`, `llms.txt` | `generated-sources-drift` | `just generate` |
+| `lib/generated/**`, `docs/reference/**`, `llms.txt`, `llms-full.txt` | `generated-sources-drift` | `just generate` |
 | `lib/api/lib.api` | `api-baseline` | `just update-api` |
 | `lib/api/components.api` | `:lib:checkComponentApi` | `just update-api` |
 
@@ -35,7 +35,7 @@ diff throws away the one signal the repository has.
 2. just sync-daisyui                    check out the matching submodule tag
 3. just daisyui-delta v<old> v<new>     what changed in DaisyUI's documentation
 4. edit codegen/model/                  place every new class, drop every removed one
-5. just generate                        components, tests, icons, reference pages, llms.txt
+5. just generate                        components, tests, icons, reference pages, llms.txt, llms-full.txt
 6. just update-api                      both Kotlin API baselines; read the diff
 7. README.md                            a "How to migrate" entry, if anything broke
 8. ./gradlew check                      plus ./gradlew :lib:pitest

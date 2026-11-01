@@ -65,7 +65,7 @@ If omitted, ask — do not guess, and do not read "latest" from the network with
 **Guardrails**
 
 - Never re-dump an artefact to make a guard green without reading its diff first.
-- Never hand-edit `lib/generated/**`, `docs/reference/**`, `llms.txt` or either `lib/api/*.api`.
+- Never hand-edit `lib/generated/**`, `docs/reference/**`, `llms.txt`, `llms-full.txt` or either `lib/api/*.api`.
   `codegen/model/` is the one place to edit.
 - Stop and report if a prerequisite is missing (Node, submodules, Docker) rather than skipping a
   step.

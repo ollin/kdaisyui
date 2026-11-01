@@ -24,8 +24,10 @@ decides the plugin's place before any of it is written.
 - [x] 3.2 `. F` Find every `io/github/ollin/kdaisyui/components/` class name in a set of class files.
 - [x] 3.3 `. F` Read the map, and select the CSS classes of the components found.
 - [x] 3.4 `. F` Fall back to the full list, with a warning, on an unknown class or none found.
-- [ ] 3.5 `. F` The plugin registers `kdaisyuiClasses` over the main source set's classes and the
-  `kdaisyui` artifact on the runtime classpath; a TestKit build proves it.
+- [x] 3.5 `. F` The plugin registers `kdaisyuiClasses` over the main source set's classes and the
+  `kdaisyui` artifact on the runtime classpath. Proven with `ProjectBuilder`, not TestKit: a TestKit
+  build runs in another process, which the plugin's 100% Kover gate cannot measure; the real wiring
+  is proven by `example-app` applying the plugin (4.1).
 
 ## 4. The repository uses it
 

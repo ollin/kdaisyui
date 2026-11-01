@@ -28,9 +28,9 @@ test").
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | Generated in memory, all 68 test files equal their committed files, quickly enough to rerun per mutant (under 2 s) | probe | open, task 1.1 |
-| A2 | The half reads nothing but the page, the models and the pages' class set | reading | open, task 1.1 |
-| A3 | The snapshot test kills most of the half's 267 survivors | measurement | open, task 4.1; *wrong if* more than a third survive |
+| A1 | Generated in memory, all 68 test files equal their committed files, quickly enough to rerun per mutant (under 2 s) | probe | verified by the snapshot test itself: 68 of 68 equal their committed files, in 160 ms |
+| A2 | The half reads nothing but the page, the models and the pages' class set | reading | verified in task 1.1: the page, its frontmatter for presence only, the models and the class set through the context |
+| A3 | The snapshot test kills most of the half's 267 survivors | measurement | confirmed in task 4.1: the file went from 418 survivors to 104 |
 
 ## Capabilities
 

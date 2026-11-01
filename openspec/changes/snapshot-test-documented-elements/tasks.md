@@ -15,24 +15,24 @@ a check that it left no diff.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A1, A2) Generate all 68 in memory in a scratch script, diff, time; read what the
+- [x] 1.1 `. d` (A1, A2) Generate all 68 in memory in a scratch script, diff, time; read what the
   half touches besides its inputs.
 
 ## 2. A pure function and the submodule path, under TCR
 
-- [ ] 2.1 `. r (internal)` The pages through `pinnedSubmodule('daisyui')`.
-- [ ] 2.2 `. r (internal)` `documentedTestFor` returns the file; the two writers only read and write.
+- [x] 2.1 `. r (internal)` The pages through `pinnedSubmodule('daisyui')`.
+- [x] 2.2 `. r (internal)` `documentedTestFor` returns the file; the two writers only read and write.
 
 ## 3. The snapshot test
 
-- [ ] 3.1 `. r (internal)` All 68 committed `<Name>Test.kt` reproduced.
+- [x] 3.1 `. r (internal)` All 68 committed `<Name>Test.kt` reproduced.
 
 ## 4. Measure, and what survives
 
-- [ ] 4.1 `. d` StrykerJS on `test-generator.ts` before and after (A3); per surviving group, delete
+- [x] 4.1 `. d` StrykerJS on `test-generator.ts` before and after (A3); per surviving group, delete
   or kill. The changed lines reach 100 %.
 
 ## 5. Gate and adoption
 
-- [ ] 5.1 `just generate` without a diff, `node --test`, the mutation gate, CodeScene before the
+- [x] 5.1 `just generate` without a diff, `node --test`, the mutation gate, CodeScene before the
   push, `openspec validate --strict`, findings, archive, pull request.

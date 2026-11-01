@@ -4,8 +4,10 @@ import { pathToFileURL } from 'node:url'
 import {
   everyDeclaredClass,
   getAllComponentDirs,
-  readComponentFrontmatter,
+  parseFrontmatter,
+  readComponentPage,
   toPascalCase,
+  type ComponentName,
 } from './parser/frontmatter.ts'
 import { isSkipped, readModel, type ComponentModel, type ModelFunction } from './model.ts'
 import { markedElements } from './parser/documented-classes.ts'
@@ -29,7 +31,6 @@ import { isVoidElement, type TagClass } from './component-shape.ts'
  */
 import type { BuilderName, TagName } from './html-names.ts'
 
-const DOCS_DIR = path.resolve(import.meta.dirname, '../../daisyui/packages/docs/src/routes/(routes)/components')
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
 const DEFAULT_OUTPUT_DIR = path.resolve(import.meta.dirname, '../../lib/generated/test/kotlin/io/github/ollin/kdaisyui/components')
@@ -363,39 +364,38 @@ ${tests.includes('assertDocumented(html') ? DOCUMENTED_HELPER : ''}${tests}}
 `
 }
 
-/** A skipped page has no functions of its own, but its examples are DaisyUI's: test them alone. */
+/**
+ * The Kotlin of `<Name>Test.kt` for one DaisyUI page, with its test count, or null when a
+ * component's page documents no example. A skipped page (no model) has no functions of its own,
+ * but its examples are DaisyUI's, so they are tested alone. A pure function of its inputs: the
+ * snapshot test compares it with the committed test files.
+ */
+function documentedTestFor(componentName: string, page: string, model: ComponentModel | null, context: DocumentedContext) {
+  const testCases = parseTestCases(page)
+  const className = toClassName(componentName)
+  if (model === null) {
+    const { kotlin, testCount, imports } = classTests({ component: componentName }, context, '', testCases)
+    return { kotlin: kotlinTestFile(className, extraImportLines([], false, imports), kotlin), testCount }
+  }
+  if (testCases.length === 0) return null
+  return generateKotlinTest(componentName, testCases, model, context)
+}
+
 function generateForSkippedPage(componentName, context: DocumentedContext): number {
-  const testCases = parseTestCases(fs.readFileSync(path.join(DOCS_DIR, componentName, '+page.md'), 'utf8'))
-  const { kotlin, testCount, imports } = classTests({ component: componentName }, context, '', testCases)
-  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), kotlinTestFile(toClassName(componentName), extraImportLines([], false, imports), kotlin))
+  const { kotlin, testCount } = documentedTestFor(componentName, readComponentPage(componentName as ComponentName) ?? '', null, context)!
+  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), kotlin)
   return testCount
 }
 
 function generateForComponent(componentName, componentModel: ComponentModel, context: DocumentedContext) {
-  const pageFile = path.join(DOCS_DIR, componentName, '+page.md')
-  
-  if (!fs.existsSync(pageFile)) {
-    return { success: false, error: 'File not found' }
-  }
-  
-  const frontmatter = readComponentFrontmatter(componentName)
-  if (!frontmatter) {
-    return { success: false, error: 'No frontmatter' }
-  }
-  
-  const content = fs.readFileSync(pageFile, 'utf8')
-  const testCases = parseTestCases(content)
-  
-  if (testCases.length === 0) {
-    return { success: false, error: 'No test cases' }
-  }
-  
-  const { kotlin, testCount } = generateKotlinTest(componentName, testCases, componentModel, context)
-  const className = toClassName(componentName)
-  const outFile = path.join(OUTPUT_DIR, `${className}Test.kt`)
-  
-  fs.writeFileSync(outFile, kotlin)
-  return { success: true, testCount }
+  const page = readComponentPage(componentName as ComponentName)
+  if (page === null) return { success: false, error: 'File not found' }
+  if (!parseFrontmatter(page)) return { success: false, error: 'No frontmatter' }
+
+  const result = documentedTestFor(componentName, page, componentModel, context)
+  if (result === null) return { success: false, error: 'No test cases' }
+  fs.writeFileSync(path.join(OUTPUT_DIR, `${toClassName(componentName)}Test.kt`), result.kotlin)
+  return { success: true, testCount: result.testCount }
 }
 
 // Exhaustive branch-coverage tests: parse each generated component source and

@@ -19,3 +19,4 @@ before the first edit, as 50 minutes across the three sections below.
 ## 3. Gate
 
 - [x] 3.1 `./gradlew check`, `just generate` without a diff, `openspec validate --strict`.
+probe

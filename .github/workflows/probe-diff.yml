@@ -1,0 +1,16 @@
+name: probe-diff
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - run: |
+          git log --oneline -3 --format='%H %P %s'
+          echo "--- diff HEAD^1 HEAD"
+          git diff --no-renames --name-only HEAD^1 HEAD
+          echo "exit=$?"

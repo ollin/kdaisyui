@@ -27,6 +27,13 @@ describe('the committed model', () => {
     assert.deepEqual(mains.filter(([, count]) => count !== 1), [])
   })
 
+  it('gives every generated component its own class, which the shape types as always present', () => {
+    const classless = modelFileNames().map(file => readModel(file)).filter(model => !isSkipped(model))
+      .filter(model => typeof (model as ComponentModel).class !== 'string' || (model as ComponentModel).class === '')
+
+    assert.deepEqual(classless, [])
+  })
+
   it('names a declared enum in every enum parameter, which writtenBy relies on', () => {
     const undeclared = modelFileNames().map(file => readModel(file)).filter(model => !isSkipped(model)).flatMap(model => {
       const declared = new Set((model as ComponentModel).enums.map(e => e.name))

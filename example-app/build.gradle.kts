@@ -6,6 +6,8 @@ plugins {
     id("kdaisyui.kotlin-library-conventions")
     kotlin("plugin.serialization")
     application
+    // This repository's own plugin: the stylesheet below covers only the components the app uses.
+    id("io.github.ollin.kdaisyui")
 }
 
 application {
@@ -56,12 +58,14 @@ val compileTailwind = tasks.register<Exec>("compileTailwind") {
     dependsOn(buildTailwindImage)
 
     val appKotlin = layout.projectDirectory.dir("src/main/kotlin")
-    val libKotlin = rootProject.layout.projectDirectory.dir("lib/generated/main/kotlin")
+    // The classes of the components the app uses, written by the kdaisyui plugin from its compiled
+    // classes; a consumer's build does exactly this.
+    val kdaisyuiClasses = tasks.named<io.github.ollin.kdaisyui.gradle.KdaisyuiClasses>("kdaisyuiClasses").flatMap { it.output }
     val cssDir = layout.projectDirectory.dir("src/main/css")
     val outDir = layout.buildDirectory.dir("tailwind/out")
 
     inputs.dir(appKotlin)
-    inputs.dir(libKotlin)
+    inputs.file(kdaisyuiClasses)
     inputs.dir(cssDir)
     outputs.file(outDir.map { it.file("app.css") })
 
@@ -73,7 +77,7 @@ val compileTailwind = tasks.register<Exec>("compileTailwind") {
             listOf(
                 "-v", "${cssDir.asFile.absolutePath}:/deps/project/css:ro",
                 "-v", "${appKotlin.asFile.absolutePath}:/deps/project/app-kotlin:ro",
-                "-v", "${libKotlin.asFile.absolutePath}:/deps/project/lib-kotlin:ro",
+                "-v", "${kdaisyuiClasses.get().asFile.parentFile.absolutePath}:/deps/project/kdaisyui:ro",
                 "-v", "${outDir.get().asFile.absolutePath}:/deps/project/out",
                 tailwindImageTag,
                 "--input", "css/app.css",

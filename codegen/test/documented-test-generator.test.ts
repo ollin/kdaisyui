@@ -65,6 +65,6 @@ describe('the documented-element tests', () => {
   })
 
   test('leave the helper out of a file without one', () => {
-    assert.ok(!testFileFor(component('x', 'X', 'x'), ['x', 'x-unknown'], '<div class="$$x-unknown">x</div>').includes('assertDocumented'))
+    assert.ok(testFileFor(component('x', 'X', 'x'), ['x', 'x-unknown'], '<div class="$$x-unknown">x</div>').endsWith('\nclass XTest {\n}\n'))
   })
 })

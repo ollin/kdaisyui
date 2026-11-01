@@ -76,6 +76,10 @@ describe('parseTestCases', () => {
     assert.deepEqual(parseTestCases(doc('### ~Both', '```js', 'x()', '```', '```html', '<i>x</i>', '```')), [{ name: 'Both', html: '<i>x</i>' }])
   })
 
+  test('emits nothing for a final heading after an html case, whatever that case left behind', () => {
+    assert.deepEqual(parseTestCases(doc('### ~Done', '```html', '<i>x</i>', '```', '### ~Lonely')), [{ name: 'Done', html: '<i>x</i>' }])
+  })
+
   test('reads a heading only at the start of a line', () => {
     assert.deepEqual(parseTestCases(doc('See ### ~Not a heading', '```html', '<i>x</i>', '```')), [])
   })

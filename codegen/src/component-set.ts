@@ -63,7 +63,7 @@ export function readComponentSet(): ComponentSet {
 
   const shapes = withDeclaredScopes(declared.map(({ model, component }) => ({
     model,
-    shape: shapeFromModel(model, { desc: component.classified.desc ?? '', classes: component.classified.descs ?? {} }),
+    shape: shapeFromModel(model, { desc: component.classified.desc, classes: component.classified.descs }),
   })))
   return { generated: declared.map(({ component }, index) => ({ ...component, shape: shapes[index] })), skipped }
 }

@@ -9,20 +9,22 @@ export function generateKotlinFile(pascalName: PascalName, struct: IconPaths): s
   const fnName = `heroIcon${pascalName}`
 
   function kebabFromPascal(pascal) {
-    return pascal.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '')
+    // A PascalName starts with a capital, so the result starts with the one hyphen to drop.
+    return pascal.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1)
   }
 
   const kebabName = kebabFromPascal(pascalName)
   const spacedName = pascalName.replace(/([A-Z])/g, ' $1').trim()
 
   function buildConstVal(valName, content, indent) {
+    // A variant without paths is '' already, as svgPaths returns it.
     if (!content) return ''
-    const pathRegex = /<path\s+[^>]*\/>/g
+    // svgPaths writes every path as `<path ` and one space.
+    const pathRegex = /<path [^>]*\/>/g
     const parts = []
     for (const m of content.matchAll(pathRegex)) {
       parts.push(`"""${m[0]}"""`)
     }
-    if (parts.length === 0) return ''
     if (parts.length === 1) {
       return `\n${indent}internal const val ${valName} = ${parts[0]}\n`
     }

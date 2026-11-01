@@ -73,7 +73,6 @@ function processSolidSvg(svgContent: string): string {
 
 // One of the two places a KebabName comes into existence: a filename with `.svg` removed.
 function readDirNames(dir: string): KebabName[] {
-  if (!fs.existsSync(dir)) return []
   return fs
     .readdirSync(dir)
     .filter((f) => f.endsWith('.svg'))

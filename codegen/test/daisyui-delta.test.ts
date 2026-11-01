@@ -64,6 +64,27 @@ describe('DocsAtTag', () => {
   })
 })
 
+describe('DocsAtTag, on a tree with more than pages in it', () => {
+  const repository = new FixtureRepository()
+
+  before(() => {
+    repository.init()
+    // git lists `a-b/+page.md` before `a/+page.md`: `-` sorts below `/`.
+    repository.writePage('a-b', 'page')
+    repository.writePage('a', 'page')
+    repository.writePage('a/nested', 'a page one level too deep')
+    const notes = path.join(repository.dir, COMPONENTS_IN_REPO, 'a', 'notes.md')
+    fs.writeFileSync(notes, 'not a page')
+    repository.tag('v1')
+  })
+
+  after(() => repository.remove())
+
+  it('lists only the directories with a page of their own, in name order', () => {
+    assert.deepEqual(new DocsAtTag(repository.dir, 'v1').componentDirs(), ['a', 'a-b'])
+  })
+})
+
 /** A release held in memory: directory to page markdown. */
 function release(pages: Record<string, string>): ComponentDocs {
   return { componentDirs: () => Object.keys(pages).sort(), page: dir => pages[dir] ?? null }
@@ -79,6 +100,13 @@ describe('classChanges', () => {
     const newer = release({ mask: frontmatter('mask', 'mask-circle', 'mask-star') })
 
     assert.deepEqual(classChanges(older, newer), [{ component: 'mask', added: ['mask-star'], removed: ['mask-square'] }])
+  })
+
+  it('reads a page without frontmatter as one that declares no class', () => {
+    const older = release({ mask: '# Mask, no frontmatter' })
+    const newer = release({ mask: frontmatter('mask') })
+
+    assert.deepEqual(classChanges(older, newer), [{ component: 'mask', added: ['mask'], removed: [] }])
   })
 
   it('says nothing about a component whose classes did not change', () => {
@@ -143,6 +171,36 @@ describe('renderDelta', () => {
     const page = release({ btn: frontmatter('btn') })
 
     assert.match(renderDelta(page, page, 'v1', 'v1'), /No class, element, component or join-item change found\.$/)
+  })
+})
+
+describe('the report, with more than one of everything', () => {
+  it('sorts what changed and separates every list', () => {
+    const older = release({
+      mask: frontmatter('mask', 'mask-z', 'mask-y'),
+      join: example('<div class="$$join"><button class="$$btn $$join-item"></button><a class="$$link $$join-item"></a></div>'),
+      otp: example('<i class="$$otp-b"></i><i class="$$otp-a"></i>'),
+      zoo: frontmatter('zoo'),
+      yak: frontmatter('yak'),
+    })
+    const newer = release({
+      mask: frontmatter('mask', 'mask-b', 'mask-a'),
+      join: example('<div class="$$join"><select class="$$select $$join-item"></select><input class="$$input $$join-item"></div>'),
+      otp: example('<b class="$$otp-b"></b><span class="$$otp-b"></span><a class="$$otp-a"></a><em class="$$otp-new"></em>'),
+      dog: frontmatter('dog'),
+      cat: frontmatter('cat'),
+    })
+
+    assert.equal(renderDelta(older, newer, 'v1', 'v2'), [
+      'DaisyUI documentation, v1 to v2',
+      '',
+      'Components: added cat, dog; removed yak, zoo',
+      'Classes of mask: added mask-a, mask-b; removed mask-y, mask-z',
+      'Elements of join-item (join): A, BUTTON became INPUT, SELECT',
+      'Elements of otp-a (otp): I became A',
+      'Elements of otp-b (otp): I became B, SPAN',
+      'Join items: added input, select; removed btn, link',
+    ].join('\n'))
   })
 })
 

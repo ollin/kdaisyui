@@ -41,7 +41,8 @@ export class DocsAtTag implements ComponentDocs {
     const prefix = `${COMPONENTS_IN_REPO}/`
     return this.git('ls-tree', '-r', '--name-only', this.tag, '--', COMPONENTS_IN_REPO)
       .split('\n')
-      .filter(file => file.startsWith(prefix) && file.endsWith('/+page.md'))
+      // `ls-tree` already lists only paths under COMPONENTS_IN_REPO, so every one starts with `prefix`.
+      .filter(file => file.endsWith('/+page.md'))
       .map(file => file.slice(prefix.length, -'/+page.md'.length))
       .filter(dir => !dir.includes('/'))
       .sort()
@@ -82,15 +83,23 @@ export interface ClassChange extends SetChange {
   readonly component: string
 }
 
-function declaredClasses(markdown: string | null): Set<string> {
-  const classnames = (markdown === null ? null : parseFrontmatter(markdown))?.classnames ?? {}
+/**
+ * The page of a directory `componentDirs()` listed. It exists by construction, which is why the
+ * readers below take a page and never a missing one.
+ */
+function listedPage(docs: ComponentDocs, componentDir: string): string {
+  return docs.page(componentDir)!
+}
+
+function declaredClasses(markdown: string): Set<string> {
+  const classnames = parseFrontmatter(markdown)?.classnames ?? {}
   return new Set(Object.keys(classnames).flatMap(category => getClassesByCategory(classnames, category)))
 }
 
 /** Per component documented in both releases, the classes its frontmatter gained and lost. */
 export function classChanges(older: ComponentDocs, newer: ComponentDocs): ClassChange[] {
   return componentsInBoth(older, newer).flatMap(component => {
-    const { added, removed } = setChange(declaredClasses(older.page(component)), declaredClasses(newer.page(component)))
+    const { added, removed } = setChange(declaredClasses(listedPage(older, component)), declaredClasses(listedPage(newer, component)))
     return added.length + removed.length === 0 ? [] : [{ component, added, removed }]
   })
 }
@@ -103,18 +112,19 @@ export interface ElementChange {
   readonly after: readonly string[]
 }
 
-function elementSets(markdown: string | null): ReadonlyMap<string, ReadonlySet<string>> {
-  return documentedElementSetsIn(fencedHtmlBlocks(markdown ?? ''))
+function elementSets(markdown: string): ReadonlyMap<string, ReadonlySet<string>> {
+  return documentedElementSetsIn(fencedHtmlBlocks(markdown))
 }
 
 /** Per class marked in both releases, where the elements it is documented on changed. */
 export function elementChanges(older: ComponentDocs, newer: ComponentDocs): ElementChange[] {
   return componentsInBoth(older, newer).flatMap(component => {
-    const before = elementSets(older.page(component))
-    const after = elementSets(newer.page(component))
+    const before = elementSets(listedPage(older, component))
+    const after = elementSets(listedPage(newer, component))
     return [...after.keys()].sort().flatMap(cssClass => {
       const was = [...(before.get(cssClass) ?? [])].sort()
-      const is = [...(after.get(cssClass) ?? [])].sort()
+      // A key of `after`, so present.
+      const is = [...after.get(cssClass)!].sort()
       return was.length === 0 || was.join() === is.join() ? [] : [{ component, cssClass, before: was, after: is }]
     })
   })
@@ -150,7 +160,7 @@ export function classesJoinedWith(html: string): ReadonlySet<string> {
 }
 
 function joinItemCompanions(docs: ComponentDocs): string[] {
-  return docs.componentDirs().flatMap(dir => [...classesJoinedWith(fencedHtmlBlocks(docs.page(dir) ?? ''))])
+  return docs.componentDirs().flatMap(dir => [...classesJoinedWith(fencedHtmlBlocks(listedPage(docs, dir)))])
 }
 
 /** The component classes DaisyUI documents beside `join-item` in one release and not the other. */

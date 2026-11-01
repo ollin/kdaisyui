@@ -98,8 +98,9 @@ export function generateComponentApiDump(shapes: readonly ComponentShape[]): str
     '',
   ]
 
-  // Component names are unique, each one a model file, so no two compare equal.
-  const sorted = [...shapes].sort((a, b) => (a.componentName.toLowerCase() < b.componentName.toLowerCase() ? -1 : 1))
+  // Component names are unique, each one a model file, so the map loses none.
+  const byName = new Map(shapes.map(shape => [shape.componentName.toLowerCase(), shape]))
+  const sorted = [...byName.keys()].sort().map(name => byName.get(name)!)
 
   return [...header, ...sorted.flatMap(renderComponent)].join('\n')
 }

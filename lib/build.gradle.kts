@@ -324,7 +324,7 @@ val generateHeroiconTests = tasks.register<Exec>("generateHeroiconTests") {
     workingDir = rootProject.file("codegen")
     val outputDir = generatedTestDir.dir("io/github/ollin/kdaisyui/icons")
     doFirst { outputDir.asFile.mkdirs() }
-    commandLine("sh", "-c", "node src/test-generator-heroicons.ts --output-dir=\"${outputDir.asFile.absolutePath}\"")
+    commandLine("sh", "-c", "node src/index-heroicon-tests.ts --output-dir=\"${outputDir.asFile.absolutePath}\"")
     inputs.dir(rootProject.file("codegen/src"))
     inputs.dir(rootProject.file("heroicons/src"))
     inputs.file(rootProject.file("codegen/package.json"))

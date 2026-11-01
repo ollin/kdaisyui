@@ -59,7 +59,7 @@ A documented tag needs a builder: kotlinx.html's, or one the library defines in 
 | `generateComponents` | `codegen/src/index-new.ts` | components + `kdaisyui-classes.txt` |
 | `generateHeroicons` | `codegen/src/index-heroicons.ts` | icons |
 | `generateComponentTests` | `codegen/src/test-generator.ts` | component tests |
-| `generateHeroiconTests` | `codegen/src/test-generator-heroicons.ts` | icon tests |
+| `generateHeroiconTests` | `codegen/src/index-heroicon-tests.ts` | icon tests |
 | `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/`, `llms-full.txt`, `llms.txt` |
 
 All five declare `codegen/model` as an input. A new generator that reads the model must too, or a

@@ -23,19 +23,19 @@ revised plan as well, which was revised before any work.
 
 ## 2. Submodules in the job, and a loud absence
 
-- [ ] 2.1 `! F (internal)` `src/submodules.ts`: the repository root found upward from the caller
+- [x] 2.1 `! F (internal)` `src/submodules.ts`: the repository root found upward from the caller
   (the directory holding `.gitmodules`), and the path of a pinned submodule there, or an error
   naming `git submodule update --init`. Found in task 1.1: the generators resolve
   `../../daisyui` from their own file, which points nowhere inside StrykerJS's sandbox under
   `codegen/.stryker-tmp/`. `frontmatter.ts`, the two Heroicons entry points and the icon test
   generator read their submodule through it, and their own `existsSync` checks go.
-- [ ] 2.2 `! F (internal)` `codegen-tests` checks out the submodules; record the added time (A4).
+- [x] 2.2 `! F (internal)` `codegen-tests` checks out the submodules; record the added time (A4).
 
 ## 3. Three snapshot tests, under TCR
 
-- [ ] 3.1 `. r (internal)` The component emitter against all 66 committed components.
-- [ ] 3.2 `. r (internal)` The icon emitter against all 324 committed icons.
-- [ ] 3.3 `. r (internal)` The icon test generator against the committed `HeroIconsGeneratedTest.kt`.
+- [x] 3.1 `. r (internal)` The component emitter against all 66 committed components.
+- [x] 3.2 `. r (internal)` The icon emitter against all 324 committed icons.
+- [x] 3.3 `. r (internal)` The icon test generator against the committed `HeroIconsGeneratedTest.kt`.
 
 ## 4. Measure, and what survives
 
@@ -44,6 +44,6 @@ revised plan as well, which was revised before any work.
 
 ## 5. Documents, gate and adoption
 
-- [ ] 5.1 `^ d` `kdaisyui-testing`: the rewritten rule; `kdaisyui-codegen`: the snapshot tests.
+- [x] 5.1 `^ d` `kdaisyui-testing`: the rewritten rule; `kdaisyui-codegen`: the snapshot tests.
 - [ ] 5.2 Gate: `just generate` without a diff, `node --test`, the mutation gate on changed lines,
   CodeScene before the push, `openspec validate --strict`, findings, archive, pull request.

@@ -205,6 +205,13 @@ with `--omit=dev`.
 
 ## Mutation testing
 
+**What makes the generators visible to it:** two snapshot test files compare generated output
+with the committed files. `generator-snapshots.test.ts` covers the component emitter (66), the icon
+emitter (324) and the icon render tests; `coverage-test-snapshot.test.ts` covers the coverage tests.
+They read the pinned submodules through `src/submodules.ts`, so a generator change that moves any
+output fails a unit test before the drift job runs. Reading and writing files belongs in an
+`index-*.ts` entry point, which the gate leaves out; the logic stays in a pure function next to it.
+
 CI's `codegen-tests` job mutates **the lines a pull request adds under `codegen/src/`**, entry
 points excepted, and fails on a single survivor. `src/index-mutation-scope.ts` turns the diff into
 StrykerJS ranges; `stryker.config.json` holds the rest, `thresholds.break: 100` included. Run

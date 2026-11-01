@@ -165,7 +165,7 @@ then five — so check the file rather than trusting this count.
 | Job | Runs | Needs |
 |---|---|---|
 | `generated-sources-drift` | the five `:lib:generate*` tasks, `:lib:checkComponentApi`, and `git status --porcelain` | `submodules: recursive`, Node, JDK |
-| `codegen-tests` | `npm test` in `codegen/` (`node --test test/`), then StrykerJS on the lines the change adds under `codegen/src/`, at 100% | Node only |
+| `codegen-tests` | `npm test` in `codegen/` (`node --test test/`), then StrykerJS on the lines the change adds under `codegen/src/`, at 100% | Node, `submodules: recursive` |
 | `api-baseline` | `:lib:checkKotlinAbi` | JDK |
 | `unit-tests` | `check -x :e2e-tests:test koverXmlReport`: everything `check` runs but the browser tests; then `:build-checks:checkGradleProblems` | JDK, Docker |
 | `mutation-tests` | `:lib:pitest :doc-snippets:pitest :build-checks:pitest :gradle-plugin:pitest`, each gated at 100% **test strength** | JDK |
@@ -176,23 +176,34 @@ says the line ran, PIT says an assertion would have noticed if it ran differentl
 `AGENTS.md` for the short version and `lib/build.gradle.kts` for why the threshold is test
 strength rather than mutation score.
 
-**Only the drift job needs submodules** — the others build from committed sources, which is the
-point of committing them. **`codegen-tests` is the only job with no JDK at all**: it imports the
+**The drift job and `codegen-tests` need the submodules** — the Kotlin jobs build from committed
+sources, which is the point of committing them. **`codegen-tests` is the only job with no JDK at all**: it imports the
 generator modules and asserts on pure functions, so it needs neither a compiler nor the DaisyUI
 checkout.
 
-### A codegen unit test never reads the submodule
+### Codegen tests read the pinned submodules, and never skip without them
 
-`codegen/test/` runs in `codegen-tests`, which checks out no submodule. A test that reads one does
-not fail an assertion there — it dies with `ENOENT` on a path inside `daisyui/`, which reads like
-a broken checkout. There is no integration-test directory any more: since
-`declare-the-component-model` nothing on the generation path needs one, and what used to live
-there went with the exclusivity measurement. The committed model in `codegen/model/` is not a
-submodule, so `codegen/test/committed-model.test.ts` reads every model file in this job.
+Until `snapshot-test-generators` (2026-11-01) the rule was the opposite: `codegen-tests` checked out
+no submodule, so a test reading one died there with `ENOENT` on a path inside `daisyui/`, which
+read like a broken checkout. The job now checks out DaisyUI and Heroicons, as the drift job does
+(about 4 s), because the snapshot tests need them: `codegen/test/generator-snapshots.test.ts`
+generates every component and every icon in memory and compares each with its committed file, and
+`coverage-test-snapshot.test.ts` does the same for the coverage tests. Without them StrykerJS could
+not see the generators at all.
 
-**Do not "fix" such a test by skipping it when the submodule is absent.** That produces a test
-CI can never fail. Pass the input in instead: the bump report's tests build a two-tag fixture
-repository in a temporary directory rather than reading DaisyUI's tags.
+Two rules come with it:
+
+- **Find a submodule through `src/submodules.ts`**, never as `../../daisyui` from a source file. That
+  path points nowhere inside StrykerJS's sandbox under `codegen/.stryker-tmp/`; `pinnedSubmodule`
+  looks from the repository root, the directory holding `.gitmodules`.
+- **A missing submodule fails, with the command that fixes it**: `pinnedSubmodule` throws
+  `The heroicons submodule is not checked out: git submodule update --init heroicons`. Never skip a
+  test when it is absent: that produces a test CI can never fail. A clone without submodules does
+  not run these tests anyway, because they are not part of `check`; `just generate` needs the same
+  checkout.
+
+The committed model in `codegen/model/` is not a submodule, so `committed-model.test.ts` needs
+neither.
 
 Its Node version comes from `node-version-file: .tool-versions`, not a literal — the test
 runner's default file patterns have changed between majors, and a mismatch there fails quietly.

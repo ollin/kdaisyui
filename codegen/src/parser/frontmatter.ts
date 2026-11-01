@@ -310,13 +310,6 @@ export function getEntriesByCategory(
   }))
 }
 
-export function getDefaultSize(classnames: Classnames | undefined): string | null {
-  if (!classnames?.size) return null
-  const defaultEntry = classnames.size.find(entry => entry.default === true)
-  if (!defaultEntry) return null
-  return defaultEntry.class.replace(/^['"]|['"]$/g, '')
-}
-
 import fs from 'fs'
 import path from 'path'
 

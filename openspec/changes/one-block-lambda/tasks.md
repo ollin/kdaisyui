@@ -33,10 +33,11 @@ An informal "about half a day" (240m) was given in conversation before the scope
   statements, where the function takes no `text` and renders a non-void element. `attrs` ran
   directly before `content`, so the output is unchanged. Leave the void and `text` cases for 3.2.
   `^ r`
-- [ ] 2.3 Let `test-generator.ts` take the hatch names (`attrs`, `content`) and their constants
-  from the shape's parameters instead of literals. Regeneration shows no diff. `. r (internal)`
-- [ ] 2.4 Let `documented-elements.ts` take the name of the lambda that carries sibling calls from
-  the shape. Regeneration shows no diff. `. r (internal)`
+- [x] 2.3 ~~Let `test-generator.ts` take the hatch names from the shape.~~ **Dropped 2026-11-02.**
+  Task 3.2 rewrites the same lines anyway, mostly by deleting the required-lambda and `ATTRS`
+  paths, and a lookup with one value left afterwards is an indirection, not an enabler.
+- [x] 2.4 ~~Let `documented-elements.ts` take the sibling lambda's name from the shape.~~
+  **Dropped 2026-11-02**, for the same reason: one literal in `callArguments` changes in 3.2.
 
 ## 3. The behaviour change
 

@@ -68,8 +68,9 @@ the consumers move ahead of the API wherever today's API already allows the targ
 
 - **Enablers, no output change:** hand-written calls pass `content` as a trailing lambda, and
   `attrs` moves into that lambda wherever the function has no `text` and its element is not void,
-  since `attrs` ran directly before `content` anyway. The test generator and the documented-element
-  generator read the lambda names from the shape. Each is provable by unchanged output.
+  since `attrs` ran directly before `content` anyway. Provable by unchanged output. (Two further
+  enablers, reading the lambda names in the test generators from the shape, were dropped during
+  apply: 3.2 deletes most of those lines, and the lookup would have had one value left.)
 - **Desired change 1:** `text` and `content` add up. Small, and its test is the rewritten
   precedence test.
 - **Desired change 2:** the frame drops `attrs`, renames `content` to `block` with a `{}` default,

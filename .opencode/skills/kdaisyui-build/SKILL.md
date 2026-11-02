@@ -138,6 +138,30 @@ Two facts worth knowing before adding one:
 An opt-in flag that has become the default is not harmless: it is a warning that trains everyone
 to ignore the warning list, which is what makes the "zero problems" standard above worth having.
 
+## The build cache, in CI
+
+Every Gradle call in `ci.yml` passes `--build-cache`. `gradle/actions/setup-gradle` restores the
+local build cache, together with the rest of Gradle's user home, in every Gradle job. `main` writes
+it and a pull request only reads it, so no branch can poison what another branch restores. The
+provider is `cache-provider: basic`, the MIT wrapper around `actions/cache`: Oliver decided against
+the proprietary default on 2026-11-02. `gradle.properties` does not set `org.gradle.caching`,
+because it holds only the version line.
+
+So **a cached result now replaces a run**. A task that reads a file it does not declare as an input
+returns a stale result in CI whenever that file changes alone. The audit of 2026-11-02 found none:
+
+- Two clean `check -x :e2e-tests:test` runs. The second one restored compile, every unit-test task,
+  the Kover reports and the ABI dump from the cache, and re-ran only jars, Kover artifacts,
+  lifecycle tasks and the Docker Tailwind tasks.
+- `KdaisyuiClasses`, the only cacheable task the repository writes itself, declares its classes,
+  its runtime classpath and its output.
+- The tests read only classpath resources or temp files they write themselves.
+
+Keep it that way. A new `@CacheableTask` declares every file it reads. A test that reads a file
+from the repository gets it onto its classpath or declares it with `inputs.file`, the way the
+codegen tasks in `lib/build.gradle.kts` do. Plain `Exec` tasks, which every generator is, are not
+cacheable and always run.
+
 ## Adding a plugin
 
 1. Version into `gradle/libs.versions.toml` `[versions]`, id into `[plugins]`. Nothing anywhere

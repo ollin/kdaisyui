@@ -56,7 +56,7 @@ An informal "about half a day" (240m) was given in conversation before the scope
 
 - [x] 4.1 `codegen/llms-template.md`, `codegen/llms-full-template.md`: the frame is `id`,
   `extraClasses` and one `block`; regenerate `llms.txt` and `llms-full.txt`. `. d`
-- [ ] 4.2 `docs/explanation.md` (common parameters, escape hatches) and `docs/how-to.md`
+- [x] 4.2 `docs/explanation.md` (common parameters, escape hatches) and `docs/how-to.md`
   (custom attributes: write attributes before children). `. d`
 - [ ] 4.3 `docs/upgrading.md` "How to migrate from 0.8.x", the text change first; version 0.9.0 in
   `gradle.properties`. `. d`

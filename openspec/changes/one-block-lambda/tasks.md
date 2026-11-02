@@ -49,7 +49,7 @@ An informal "about half a day" (240m) was given in conversation before the scope
   `join-scope.ts` follows. Move the remaining hand-written `attrs` calls (void elements, `text`
   functions) into the block, regenerate, run `just update-api`, read both API diffs, run TCR at
   the repository root. `! F`
-- [ ] 3.3 Add a hand-written test for the scenario "No second lambda": no public function in
+- [x] 3.3 Add a hand-written test for the scenario "No second lambda": no public function in
   `io.github.ollin.kdaisyui.components` declares a parameter named `attrs` or `content`. `. r (internal)`
 
 ## 4. Documentation

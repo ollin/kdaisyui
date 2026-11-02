@@ -2,7 +2,7 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 
 import { entryName, mainFunctionConfig, shapeFromModel, withDeclaredScopes, type ComponentModel, type Descriptions } from '../src/model.ts'
-import { component, enumParameter, mainFunction, part, shapeOf, toggle } from './model-fixture.ts'
+import { component, enumParameter, mainFunction, part, toggle } from './model-fixture.ts'
 
 /** The smallest real component: one function, one enum, inline text. */
 const KBD: ComponentModel = {
@@ -99,6 +99,19 @@ describe('shapeFromModel', () => {
     assert.deepEqual([joined.scope?.members.map(fn => fn.name), joined.functions[0].contentScope], [['daisyKbd'], 'JoinScope'])
   })
 
+  test("imports what the join items' main functions need, and nothing their parts need", () => {
+    const extra = (name: string, imports: string[]) => ({ kind: 'extra' as const, name, type: 'X', default: 'null', apply: '', imports })
+    const item: ComponentModel = { ...KBD, functions: [
+      { ...KBD.functions[0], joinItem: true, parameters: [extra('type', ['kotlinx.html.ButtonType'])] },
+      { ...KBD.functions[0], kind: 'part', name: 'daisyKbdPart', class: 'kbd-part', parameters: [extra('method', ['kotlinx.html.FormMethod'])] },
+    ] }
+    const join: ComponentModel = { component: 'join', name: 'Join', class: 'join', enums: [], joinScope: true, functions: [{ ...KBD.functions[0], name: 'daisyJoin', element: 'DIV', class: 'join', text: false, parameters: [] }] }
+
+    const [, joined] = withDeclaredScopes([item, join].map(model => ({ model, shape: shapeFromModel(model, DESCRIPTIONS) })))
+
+    assert.deepEqual(joined.scope?.imports, ['kotlinx.html.ButtonType'])
+  })
+
   test('hands the main function body its extras, text, role and input type', () => {
     const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
     const checkbox: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'INPUT', parameters: [disabled], role: 'switch', inputType: 'checkBox' }] }
@@ -167,16 +180,14 @@ describe('entryName', () => {
     assert.equal(entryName(owned, 'StepColor', 'steps-neutral'), 'Neutral')
   })
 
-  test('keeps a class that fits neither, and names it whole where the component has no class', () => {
+  test("falls back to the component's class where the owning function has no class of its own", () => {
+    const classless = { ...owned, functions: [owned.functions[0], { ...owned.functions[1], kind: 'classes' as const, class: null }] }
+
+    assert.equal(entryName(classless, 'StepColor', 'steps-neutral'), 'Neutral')
+  })
+
+  test('keeps a class that fits neither', () => {
     assert.equal(entryName(owned, 'StepColor', 'join-item'), 'JoinItem')
-    assert.equal(entryName({ ...owned, class: null }, 'Unowned', 'steps-wide'), 'StepsWide')
   })
 })
 
-describe('an enum on a component without a class', () => {
-  test('carries an empty prefix', () => {
-    const model = { ...component('x', 'X', 'x'), class: null, enums: [{ name: 'XSize', label: 'Size', classes: ['x-lg'] }], functions: [mainFunction('daisyX', 'x', { parameters: [enumParameter('size', 'XSize', 'Size')] })] }
-
-    assert.equal(shapeOf(model).enums[0].prefix, '')
-  })
-})

@@ -92,7 +92,7 @@ export interface ComponentModel {
   /** The stem functions and enums are named with, e.g. `FileInput`. */
   readonly name: string
   /** The component's own class, e.g. `file-input`. */
-  readonly class: string | null
+  readonly class: string
   readonly enums: readonly ModelEnum[]
   readonly functions: readonly ModelFunction[]
   /** The main function's content runs in the join scope, whose members are the join items. */
@@ -117,12 +117,12 @@ export interface SkippedModel {
 export const MODEL_DIR = path.resolve(import.meta.dirname, '../model')
 
 export function readModel(componentDir: string, modelDir = MODEL_DIR): ComponentModel | SkippedModel {
-  return JSON.parse(fs.readFileSync(path.join(modelDir, `${componentDir}.json`), 'utf8'))
+  return JSON.parse(String(fs.readFileSync(path.join(modelDir, `${componentDir}.json`))))
 }
 
-/** The DaisyUI directory each committed model file names. */
+/** The DaisyUI directory each committed model file names, in no particular order. */
 export function modelFileNames(modelDir = MODEL_DIR): string[] {
-  return fs.readdirSync(modelDir).filter(file => file.endsWith('.json')).map(file => file.slice(0, -'.json'.length)).sort()
+  return fs.readdirSync(modelDir).filter(file => file.endsWith('.json')).map(file => file.slice(0, -'.json'.length))
 }
 
 export function isSkipped(model: ComponentModel | SkippedModel): model is SkippedModel {
@@ -135,25 +135,30 @@ export interface Descriptions {
   readonly classes: Readonly<Record<string, string>>
 }
 
-function stripped(prefix: string | null, cls: string): string {
-  return prefix !== null && cls.startsWith(`${prefix}-`) ? cls.slice(prefix.length + 1) : cls
+function stripped(prefix: string, cls: string): string {
+  return cls.startsWith(`${prefix}-`) ? cls.slice(prefix.length + 1) : cls
 }
 
-/** The class of the function whose parameter chooses from this enum. */
-function ownerClass(model: ComponentModel, enumName: string): string | null {
-  return model.functions.find(fn => fn.parameters.some(parameter => parameter.kind === 'enum' && parameter.enum === enumName))?.class ?? null
+/**
+ * The class of the function whose parameter chooses from this enum, or the component's where
+ * none does or the owner has no class of its own.
+ */
+function ownerClass(model: ComponentModel, enumName: string): string {
+  // Only an enum parameter carries `enum`; on any other the comparison is simply false.
+  const owner = model.functions.find(fn => fn.parameters.some(parameter => (parameter as ModelEnumParameter).enum === enumName))
+  return owner?.class ?? model.class
 }
 
 /** An entry is its class's suffix after the owning function's class, else the component's. */
 export function entryName(model: ComponentModel, enumName: string, cls: string): string {
   const owner = ownerClass(model, enumName)
-  return toPascalCase(owner !== null && cls.startsWith(`${owner}-`) ? stripped(owner, cls) : stripped(model.class, cls))
+  return toPascalCase(stripped(cls.startsWith(`${owner}-`) ? owner : model.class, cls))
 }
 
 function enumShape(model: ComponentModel, declared: ModelEnum, descriptions: Descriptions): EnumShape {
   return {
     name: declared.name,
-    prefix: model.class ?? '',
+    prefix: model.class,
     categoryLabel: declared.label,
     documented: Object.keys(descriptions.classes).length > 0,
     entries: declared.classes.map(cls => ({
@@ -193,7 +198,8 @@ function parameterShape(model: ComponentModel, parameter: ModelParameter, descri
  */
 function functionDesc(declared: ModelFunction, descriptions: Descriptions): string {
   if (declared.kind === 'main') return descriptions.desc
-  if (declared.kind === 'part' && declared.class !== null) return descriptions.classes[declared.class] ?? ''
+  // A part without a class of its own, a structural wrapper, finds no entry: no class is named `null`.
+  if (declared.kind === 'part') return descriptions.classes[declared.class as string] ?? ''
   return ''
 }
 
@@ -220,7 +226,7 @@ export function shapeFromModel(model: ComponentModel, descriptions: Descriptions
   return {
     componentName: model.name,
     componentDir: model.component,
-    prefix: model.class as CssClass | null,
+    prefix: model.class as CssClass,
     enums: model.enums.map(declared => enumShape(model, declared, descriptions)),
     functions: model.functions.filter(declared => declared.kind !== 'classes').map(declared => functionShape(model, declared, descriptions)),
     siblingsOnly: model.functions.filter(declared => declared.kind === 'classes').map(declared => ({
@@ -272,9 +278,10 @@ function isJoinItem(model: ComponentModel): boolean {
  */
 export function withDeclaredScopes(components: readonly DeclaredComponent[]): ComponentShape[] {
   const items = components.filter(component => isJoinItem(component.model))
-  const members = joinScopeMembers(items.map(component => component.shape), new Set(items.map(component => component.model.class ?? '')))
+  const members = joinScopeMembers(items.map(component => component.shape), new Set(items.map(component => component.model.class)))
   const imports = items.flatMap(component => component.model.functions.filter(fn => fn.kind === 'main'))
     .flatMap(fn => fn.parameters)
-    .flatMap(parameter => (parameter.kind === 'extra' ? parameter.imports ?? [] : []))
+    // Only an extra parameter carries `imports`.
+    .flatMap(parameter => (parameter as ModelExtraParameter).imports ?? [])
   return components.map(component => (component.model.joinScope ? withJoinScope(component.shape, members, imports) : component.shape))
 }

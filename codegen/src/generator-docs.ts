@@ -14,6 +14,7 @@
 
 import { renderSiblingSignature, renderSignatures } from './component-api-dump.ts'
 import {
+  byDisplayName,
   hasSibling,
   staticAttributeDoc,
   type ComponentShape,
@@ -157,21 +158,6 @@ const INDEX_PREAMBLE = [
   '## All components',
   '',
 ]
-
-/**
- * Case-insensitively by display name, which is the order the hand-written index already uses.
- *
- * Not by directory name, and the difference is visible: `text-rotate` sorts before `textarea` by
- * code unit because `-` is below `a`, while the page lists Textarea first. Compared on the
- * lower-cased names rather than through `localeCompare`, so `Hover3d` keeps its place ahead of
- * `HoverGallery` regardless of locale.
- */
-export function byDisplayName(a: ComponentShape, b: ComponentShape): number {
-  const left = a.componentName.toLowerCase()
-  const right = b.componentName.toLowerCase()
-  if (left < right) return -1
-  return left > right ? 1 : 0
-}
 
 /** One row: the component, its one-line summary, and the element it renders. */
 function indexRow(shape: ComponentShape, docSummary: DocSummary | undefined): string {

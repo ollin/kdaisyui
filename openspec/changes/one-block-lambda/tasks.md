@@ -26,10 +26,10 @@ An informal "about half a day" (240m) was given in conversation before the scope
 
 ## 2. Enablers, no rendered output changes
 
-- [ ] 2.1 Rewrite every hand-written call that passes `content = { … }` as a trailing lambda, in
+- [x] 2.1 Rewrite every hand-written call that passes `content = { … }` as a trailing lambda, in
   `example-app/`, `e2e-tests/`, `lib/src/test/`, `README.md` and `docs/`. The compiler proves the
   binding; the suite proves the output. `. r`
-- [ ] 2.2 Move every hand-written `attrs = { … }` into the call's existing lambda, as its first
+- [x] 2.2 Move every hand-written `attrs = { … }` into the call's existing lambda, as its first
   statements, where the function takes no `text` and renders a non-void element. `attrs` ran
   directly before `content`, so the output is unchanged. Leave the void and `text` cases for 3.2.
   `^ r`

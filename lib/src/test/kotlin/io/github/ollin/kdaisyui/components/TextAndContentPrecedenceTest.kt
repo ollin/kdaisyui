@@ -37,7 +37,7 @@ class TextAndContentPrecedenceTest {
     @Test
     fun content_alone_is_rendered() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(content = { +"Save" })
+            daisyButton { +"Save" }
         }
         assertTrue(html.contains(">Save<"), "expected the content to be rendered, got: $html")
     }

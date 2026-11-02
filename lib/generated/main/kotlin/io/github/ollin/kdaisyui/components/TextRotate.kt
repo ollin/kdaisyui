@@ -15,21 +15,18 @@ import kotlinx.html.Tag
  * Text Rotate can show up to 6 lines of text, one at a time, with an infinite loop animation. Duration is 10 seconds by default. The animation will pause on hover. Renders `<span class="text-rotate ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyTextRotate(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 ) {
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("text-rotate")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

@@ -14,8 +14,7 @@ Hero banner with overlay. Renders `<div class="hero ...">`.
 fun FlowContent.daisyHero(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,8 +25,7 @@ fun Tag.daisyHeroClasses()
 fun FlowContent.daisyHeroContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -38,8 +36,7 @@ fun Tag.daisyHeroContentClasses()
 fun FlowContent.daisyHeroOverlay(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

@@ -53,13 +53,11 @@ fun HTML.disabledStatePage() {
         div("flex items-start gap-4") {
             daisyButton(
                 text = "Enabled",
-                attrs = { attributes["id"] = "disabled-enabled" },
-            )
+            ) { attributes["id"] = "disabled-enabled" }
             daisyButton(
                 text = "Native",
                 disabled = true,
-                attrs = { attributes["id"] = "disabled-native" },
-            )
+            ) { attributes["id"] = "disabled-native" }
             button(classes = "btn btn-disabled") {
                 attributes["id"] = "disabled-class"
                 +"Class"

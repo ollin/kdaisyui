@@ -41,23 +41,20 @@ enum class ProgressColor(internal val className: String) : ClassValues<ProgressC
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyProgress(
     id: HtmlId? = null,
     color: ClassValues<ProgressColor>? = null,
     extraClasses: String? = null,
-    attrs: (PROGRESS.() -> Unit)? = null,
-    content: (PROGRESS.() -> Unit),
+    block: (PROGRESS.() -> Unit) = {},
 ) {
     progress {
         if (id != null) attributes["id"] = id.id
         addClassNames("progress")
         addClassNames(color)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

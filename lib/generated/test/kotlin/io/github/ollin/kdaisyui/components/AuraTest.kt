@@ -15,8 +15,7 @@ class AuraTest {
     @Test
     fun aura() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura() {
-            }
+            daisyAura()
         }
         assertDocumented(html, "div", "aura", "Aura")
     }
@@ -24,8 +23,7 @@ class AuraTest {
     @Test
     fun aura_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
-            }
+            daisyCard()
         }
         assertDocumented(html, "div", "card", "Aura")
     }
@@ -33,8 +31,7 @@ class AuraTest {
     @Test
     fun aura_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardBody() {
-            }
+            daisyCardBody()
         }
         assertDocumented(html, "div", "card-body", "Aura")
     }
@@ -42,8 +39,7 @@ class AuraTest {
     @Test
     fun aura_around_a_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Aura around a button")
     }
@@ -51,8 +47,7 @@ class AuraTest {
     @Test
     fun aura_dual() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Dual) {
-            }
+            daisyAura(style = AuraStyle.Dual)
         }
         assertDocumented(html, "div", "aura aura-dual", "Aura dual")
     }
@@ -60,8 +55,7 @@ class AuraTest {
     @Test
     fun aura_rainbow() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Rainbow) {
-            }
+            daisyAura(style = AuraStyle.Rainbow)
         }
         assertDocumented(html, "div", "aura aura-rainbow", "Aura rainbow")
     }
@@ -69,8 +63,7 @@ class AuraTest {
     @Test
     fun aura_holo() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Holo) {
-            }
+            daisyAura(style = AuraStyle.Holo)
         }
         assertDocumented(html, "div", "aura aura-holo", "Aura holo")
     }
@@ -78,8 +71,7 @@ class AuraTest {
     @Test
     fun aura_glow() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Glow) {
-            }
+            daisyAura(style = AuraStyle.Glow)
         }
         assertDocumented(html, "div", "aura aura-glow", "Aura glow")
     }
@@ -87,8 +79,7 @@ class AuraTest {
     @Test
     fun aura_gold() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Gold) {
-            }
+            daisyAura(style = AuraStyle.Gold)
         }
         assertDocumented(html, "div", "aura aura-gold", "Aura gold")
     }
@@ -96,8 +87,7 @@ class AuraTest {
     @Test
     fun aura_silver() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(style = AuraStyle.Silver) {
-            }
+            daisyAura(style = AuraStyle.Silver)
         }
         assertDocumented(html, "div", "aura aura-silver", "Aura silver")
     }
@@ -105,8 +95,7 @@ class AuraTest {
     @Test
     fun aura_rainbow_around_a_pricing_card_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning) {
-            }
+            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning)
         }
         assertDocumented(html, "span", "badge badge-warning badge-xs", "Aura rainbow around a pricing card")
     }
@@ -114,8 +103,7 @@ class AuraTest {
     @Test
     fun aura_rainbow_around_a_pricing_card_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block) {
-            }
+            daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block)
         }
         assertDocumented(html, "button", "btn btn-block btn-primary", "Aura rainbow around a pricing card")
     }
@@ -123,8 +111,7 @@ class AuraTest {
     @Test
     fun aura_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(size = AuraSize.Xs) {
-            }
+            daisyAura(size = AuraSize.Xs)
         }
         assertDocumented(html, "div", "aura aura-xs", "Aura sizes")
     }
@@ -132,8 +119,7 @@ class AuraTest {
     @Test
     fun aura_sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(size = AuraSize.Sm) {
-            }
+            daisyAura(size = AuraSize.Sm)
         }
         assertDocumented(html, "div", "aura aura-sm", "Aura sizes")
     }
@@ -141,8 +127,7 @@ class AuraTest {
     @Test
     fun aura_sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(size = AuraSize.Lg) {
-            }
+            daisyAura(size = AuraSize.Lg)
         }
         assertDocumented(html, "div", "aura aura-lg", "Aura sizes")
     }
@@ -150,8 +135,7 @@ class AuraTest {
     @Test
     fun aura_sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(size = AuraSize.Xl) {
-            }
+            daisyAura(size = AuraSize.Xl)
         }
         assertDocumented(html, "div", "aura aura-xl", "Aura sizes")
     }

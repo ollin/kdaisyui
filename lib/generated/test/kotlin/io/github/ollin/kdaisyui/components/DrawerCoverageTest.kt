@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class DrawerCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class DrawerCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,23 +45,20 @@ class DrawerCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun drawer_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawer(
-                content = { },
-            )
+            daisyDrawer()
         }
         assertRendered(html, Expected("Drawer defaults", "drawer", closes = "</div></div>"))
     }
 
     @Test
     fun drawer_all_flags() {
-        val html = allFlags(Expected("Drawer all flags", "drawer drawer-end drawer-open zz-extra", closes = "</div></div>")) { daisyDrawer(id = ID, end = true, open = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Drawer all flags", "drawer drawer-end drawer-open zz-extra", closes = "</div></div>")) { daisyDrawer(id = ID, end = true, open = true, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -74,7 +70,7 @@ class DrawerCoverageTest {
     }
 
     @Test
-    fun drawerClasses_all_flags() = assertRenders(Expected("DrawerClasses all flags", "drawer drawer-end drawer-open", content = false)) { daisyDrawerClasses(end = true, open = true) }
+    fun drawerClasses_all_flags() = assertRenders(Expected("DrawerClasses all flags", "drawer drawer-end drawer-open")) { daisyDrawerClasses(end = true, open = true) }
 
     @Test
     fun drawerToggle_defaults() {
@@ -86,7 +82,7 @@ class DrawerCoverageTest {
 
     @Test
     fun drawerToggle_all_flags() {
-        val html = allFlags(Expected("DrawerToggle all flags", "drawer-toggle zz-extra", content = false)) { daisyDrawerToggle(id = ID, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("DrawerToggle all flags", "drawer-toggle zz-extra")) { daisyDrawerToggle(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -98,21 +94,19 @@ class DrawerCoverageTest {
     }
 
     @Test
-    fun drawerToggleClasses_all_flags() = assertRenders(Expected("DrawerToggleClasses all flags", "drawer-toggle", content = false)) { daisyDrawerToggleClasses() }
+    fun drawerToggleClasses_all_flags() = assertRenders(Expected("DrawerToggleClasses all flags", "drawer-toggle")) { daisyDrawerToggleClasses() }
 
     @Test
     fun drawerContent_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerContent(
-                content = { },
-            )
+            daisyDrawerContent()
         }
         assertRendered(html, Expected("DrawerContent defaults", "drawer-content", closes = "</div></div>"))
     }
 
     @Test
     fun drawerContent_all_flags() {
-        val html = allFlags(Expected("DrawerContent all flags", "drawer-content zz-extra", closes = "</div></div>")) { daisyDrawerContent(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("DrawerContent all flags", "drawer-content zz-extra", closes = "</div></div>")) { daisyDrawerContent(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -124,21 +118,19 @@ class DrawerCoverageTest {
     }
 
     @Test
-    fun drawerContentClasses_all_flags() = assertRenders(Expected("DrawerContentClasses all flags", "drawer-content", content = false)) { daisyDrawerContentClasses() }
+    fun drawerContentClasses_all_flags() = assertRenders(Expected("DrawerContentClasses all flags", "drawer-content")) { daisyDrawerContentClasses() }
 
     @Test
     fun drawerSide_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerSide(
-                content = { },
-            )
+            daisyDrawerSide()
         }
         assertRendered(html, Expected("DrawerSide defaults", "drawer-side", closes = "</div></div>"))
     }
 
     @Test
     fun drawerSide_all_flags() {
-        val html = allFlags(Expected("DrawerSide all flags", "drawer-side zz-extra", closes = "</div></div>")) { daisyDrawerSide(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("DrawerSide all flags", "drawer-side zz-extra", closes = "</div></div>")) { daisyDrawerSide(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -150,21 +142,19 @@ class DrawerCoverageTest {
     }
 
     @Test
-    fun drawerSideClasses_all_flags() = assertRenders(Expected("DrawerSideClasses all flags", "drawer-side", content = false)) { daisyDrawerSideClasses() }
+    fun drawerSideClasses_all_flags() = assertRenders(Expected("DrawerSideClasses all flags", "drawer-side")) { daisyDrawerSideClasses() }
 
     @Test
     fun drawerOverlay_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerOverlay(
-                content = { },
-            )
+            daisyDrawerOverlay()
         }
         assertRendered(html, Expected("DrawerOverlay defaults", "drawer-overlay", closes = "</label></div>"))
     }
 
     @Test
     fun drawerOverlay_all_flags() {
-        val html = allFlags(Expected("DrawerOverlay all flags", "drawer-overlay zz-extra", closes = "</label></div>")) { daisyDrawerOverlay(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("DrawerOverlay all flags", "drawer-overlay zz-extra", closes = "</label></div>")) { daisyDrawerOverlay(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -176,21 +166,19 @@ class DrawerCoverageTest {
     }
 
     @Test
-    fun drawerOverlayClasses_all_flags() = assertRenders(Expected("DrawerOverlayClasses all flags", "drawer-overlay", content = false)) { daisyDrawerOverlayClasses() }
+    fun drawerOverlayClasses_all_flags() = assertRenders(Expected("DrawerOverlayClasses all flags", "drawer-overlay")) { daisyDrawerOverlayClasses() }
 
     @Test
     fun drawerButton_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerButton(
-                content = { },
-            )
+            daisyDrawerButton()
         }
         assertRendered(html, Expected("DrawerButton defaults", "drawer-button", closes = "</label></div>"))
     }
 
     @Test
     fun drawerButton_all_flags() {
-        val html = allFlags(Expected("DrawerButton all flags", "drawer-button zz-extra", closes = "</label></div>")) { daisyDrawerButton(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("DrawerButton all flags", "drawer-button zz-extra", closes = "</label></div>")) { daisyDrawerButton(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -202,5 +190,5 @@ class DrawerCoverageTest {
     }
 
     @Test
-    fun drawerButtonClasses_all_flags() = assertRenders(Expected("DrawerButtonClasses all flags", "drawer-button", content = false)) { daisyDrawerButtonClasses() }
+    fun drawerButtonClasses_all_flags() = assertRenders(Expected("DrawerButtonClasses all flags", "drawer-button")) { daisyDrawerButtonClasses() }
 }

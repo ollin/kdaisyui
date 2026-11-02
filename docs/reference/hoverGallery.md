@@ -14,8 +14,7 @@ Gallery with hover effects. Renders `<figure class="hover-gallery ...">`.
 fun FlowContent.daisyHoverGallery(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FIGURE.() -> Unit)? = null,
-    content: (FIGURE.() -> Unit),
+    block: (FIGURE.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

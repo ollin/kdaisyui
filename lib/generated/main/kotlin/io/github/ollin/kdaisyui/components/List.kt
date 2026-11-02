@@ -17,21 +17,18 @@ import kotlinx.html.UL
  * List is a vertical layout to display information in rows. Renders `<ul class="list ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyList(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("list")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -44,15 +41,13 @@ fun Tag.daisyListClasses() {
 fun UL.daisyListRow(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LI.() -> Unit)? = null,
-    content: (LI.() -> Unit),
+    block: (LI.() -> Unit) = {},
 ) {
     li {
         if (id != null) attributes["id"] = id.id
         addClassNames("list-row")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

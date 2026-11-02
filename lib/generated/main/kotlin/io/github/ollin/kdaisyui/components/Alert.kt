@@ -59,8 +59,7 @@ enum class AlertDirection(internal val className: String) : ClassValues<AlertDir
  * @param direction — Direction variant
  * @param soft — soft style
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyAlert(
     id: HtmlId? = null,
@@ -69,8 +68,7 @@ fun FlowContent.daisyAlert(
     direction: ClassValues<AlertDirection>? = null,
     soft: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -81,8 +79,7 @@ fun FlowContent.daisyAlert(
         addClassNames(direction)
         if (soft) addClassNames("alert-soft")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

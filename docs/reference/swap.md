@@ -17,8 +17,7 @@ fun FlowContent.daisySwap(
     style: ClassValues<SwapStyle>? = null,
     active: Boolean = false,  // Activates the swap (no need for checkbox)
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -29,8 +28,7 @@ fun Tag.daisySwapClasses(style: ClassValues<SwapStyle>? = null, active: Boolean 
 fun FlowContent.daisySwapOn(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -41,8 +39,7 @@ fun Tag.daisySwapOnClasses()
 fun FlowContent.daisySwapOff(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -53,8 +50,7 @@ fun Tag.daisySwapOffClasses()
 fun FlowContent.daisySwapIndeterminate(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

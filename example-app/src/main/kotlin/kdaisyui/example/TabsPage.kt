@@ -22,8 +22,8 @@ fun HTML.tabsPage() {
     }
     body("bg-base-200 min-h-screen p-10") {
         daisyTabs(style = TabsStyle.Lift) {
-            daisyTab(active = true, attrs = { attributes["id"] = "tab-active" }) { +"Overview" }
-            daisyTab(attrs = { attributes["id"] = "tab-inactive" }) { +"Portfolios" }
+            daisyTab(active = true) { attributes["id"] = "tab-active"; +"Overview" }
+            daisyTab { attributes["id"] = "tab-inactive"; +"Portfolios" }
         }
     }
 }

@@ -15,8 +15,7 @@ class ProgressTest {
     @Test
     fun progress() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress() {
-            }
+            daisyProgress()
         }
         assertDocumented(html, "progress", "progress", "Progress")
     }
@@ -24,8 +23,7 @@ class ProgressTest {
     @Test
     fun primary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Primary) {
-            }
+            daisyProgress(color = ProgressColor.Primary)
         }
         assertDocumented(html, "progress", "progress progress-primary", "Primary color")
     }
@@ -33,8 +31,7 @@ class ProgressTest {
     @Test
     fun secondary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Secondary) {
-            }
+            daisyProgress(color = ProgressColor.Secondary)
         }
         assertDocumented(html, "progress", "progress progress-secondary", "Secondary color")
     }
@@ -42,8 +39,7 @@ class ProgressTest {
     @Test
     fun accent_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Accent) {
-            }
+            daisyProgress(color = ProgressColor.Accent)
         }
         assertDocumented(html, "progress", "progress progress-accent", "Accent color")
     }
@@ -51,8 +47,7 @@ class ProgressTest {
     @Test
     fun neutral_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Neutral) {
-            }
+            daisyProgress(color = ProgressColor.Neutral)
         }
         assertDocumented(html, "progress", "progress progress-neutral", "Neutral color")
     }
@@ -60,8 +55,7 @@ class ProgressTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Info) {
-            }
+            daisyProgress(color = ProgressColor.Info)
         }
         assertDocumented(html, "progress", "progress progress-info", "Info color")
     }
@@ -69,8 +63,7 @@ class ProgressTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Success) {
-            }
+            daisyProgress(color = ProgressColor.Success)
         }
         assertDocumented(html, "progress", "progress progress-success", "Success color")
     }
@@ -78,8 +71,7 @@ class ProgressTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Warning) {
-            }
+            daisyProgress(color = ProgressColor.Warning)
         }
         assertDocumented(html, "progress", "progress progress-warning", "Warning color")
     }
@@ -87,8 +79,7 @@ class ProgressTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(color = ProgressColor.Error) {
-            }
+            daisyProgress(color = ProgressColor.Error)
         }
         assertDocumented(html, "progress", "progress progress-error", "Error color")
     }

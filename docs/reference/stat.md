@@ -16,8 +16,7 @@ fun FlowContent.daisyStats(
     id: HtmlId? = null,
     direction: ClassValues<StatsDirection>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -28,8 +27,7 @@ fun Tag.daisyStatsClasses(direction: ClassValues<StatsDirection>? = null)
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -41,8 +39,7 @@ fun FlowContent.daisyStatTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit)? = null,
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -54,8 +51,7 @@ fun FlowContent.daisyStatValue(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit)? = null,
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -67,8 +63,7 @@ fun FlowContent.daisyStatDesc(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit)? = null,
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -79,8 +74,7 @@ fun Tag.daisyStatDescClasses()
 fun FlowContent.daisyStatFigure(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -91,8 +85,7 @@ fun Tag.daisyStatFigureClasses()
 fun FlowContent.daisyStatActions(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

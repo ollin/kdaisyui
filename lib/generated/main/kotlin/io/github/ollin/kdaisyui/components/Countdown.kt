@@ -15,21 +15,18 @@ import kotlinx.html.Tag
  * Countdown gives you a transition effect when you change a number between 0 to 999. Renders `<span class="countdown ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyCountdown(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 ) {
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("countdown")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

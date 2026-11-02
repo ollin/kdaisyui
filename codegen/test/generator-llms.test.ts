@@ -5,7 +5,7 @@ import { generateLlmsFull } from '../src/generator-llms.ts'
 import type { ComponentShape, ParameterShape } from '../src/component-shape.ts'
 
 const SIZE: ParameterShape = { name: 'size', type: 'ClassValues<KbdSize>?', default: 'null', doc: null, enumName: 'KbdSize' }
-const CONTENT: ParameterShape = { name: 'content', type: '(KBD.() -> Unit)', default: null, doc: null }
+const BLOCK: ParameterShape = { name: 'block', type: '(KBD.() -> Unit)', default: '{}', doc: null }
 
 /** A component reduced to what llms-full.txt renders: name, directory, enums and functions. */
 const KBD = {
@@ -13,7 +13,7 @@ const KBD = {
   componentDir: 'kbd',
   prefix: 'kbd',
   enums: [{ name: 'KbdSize', entries: [{ name: 'Sm', cssClass: 'kbd-sm' }, { name: 'Lg', cssClass: 'kbd-lg' }] }],
-  functions: [{ kind: 'main', name: 'daisyKbd', receiver: 'FlowContent', htmlTag: 'kbd', desc: '', parameters: [SIZE, CONTENT] }],
+  functions: [{ kind: 'main', name: 'daisyKbd', receiver: 'FlowContent', htmlTag: 'kbd', desc: '', parameters: [SIZE, BLOCK] }],
   siblingsOnly: [],
 } as unknown as ComponentShape
 
@@ -21,7 +21,7 @@ describe('generateLlmsFull', () => {
   test('replaces the placeholder with each component signature', () => {
     const llms = generateLlmsFull('before\n{{COMPONENTS}}\nafter\n', [KBD], {})
 
-    assert.match(llms, /^fun FlowContent\.daisyKbd\(size: ClassValues<KbdSize>\? = null, content: \(KBD\.\(\) -> Unit\)\)$/m)
+    assert.match(llms, /^fun FlowContent\.daisyKbd\(size: ClassValues<KbdSize>\? = null, block: \(KBD\.\(\) -> Unit\) = \{\}\)$/m)
     assert.doesNotMatch(llms, /\{\{COMPONENTS\}\}/)
   })
 

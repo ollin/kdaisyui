@@ -15,8 +15,7 @@ class StackTest {
     @Test
     fun test_3_divs_in_a_stack() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack() {
-            }
+            daisyStack()
         }
         assertDocumented(html, "div", "stack", "3 divs in a stack")
     }
@@ -24,8 +23,7 @@ class StackTest {
     @Test
     fun stacked_cards_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
-            }
+            daisyCard()
         }
         assertDocumented(html, "div", "card", "stacked cards")
     }
@@ -33,8 +31,7 @@ class StackTest {
     @Test
     fun stacked_cards_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardBody() {
-            }
+            daisyCardBody()
         }
         assertDocumented(html, "div", "card-body", "stacked cards")
     }
@@ -42,8 +39,7 @@ class StackTest {
     @Test
     fun stacked_cards_top_direction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack(placement = StackPlacement.Top) {
-            }
+            daisyStack(placement = StackPlacement.Top)
         }
         assertDocumented(html, "div", "stack stack-top", "stacked cards (top direction)")
     }
@@ -51,8 +47,7 @@ class StackTest {
     @Test
     fun stacked_cards_start_direction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack(placement = StackPlacement.Start) {
-            }
+            daisyStack(placement = StackPlacement.Start)
         }
         assertDocumented(html, "div", "stack stack-start", "stacked cards (start direction)")
     }
@@ -60,8 +55,7 @@ class StackTest {
     @Test
     fun stacked_cards_end_direction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack(placement = StackPlacement.End) {
-            }
+            daisyStack(placement = StackPlacement.End)
         }
         assertDocumented(html, "div", "stack stack-end", "stacked cards (end direction)")
     }
@@ -69,8 +63,7 @@ class StackTest {
     @Test
     fun stacked_cards_daisyCardTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardTitle() {
-            }
+            daisyCardTitle()
         }
         assertDocumented(html, "h2", "card-title", "stacked cards")
     }

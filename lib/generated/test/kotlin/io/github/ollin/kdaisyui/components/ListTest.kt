@@ -17,8 +17,7 @@ class ListTest {
     @Test
     fun list_second_column_grows_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyList() {
-            }
+            daisyList()
         }
         assertDocumented(html, "ul", "list", "List (second column grows - default)")
     }
@@ -26,8 +25,7 @@ class ListTest {
     @Test
     fun list_second_column_grows_default_daisyListRow() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyListRow() {
-            }
+            daisyListRow()
         }
         assertDocumented(html, "li", "list-row", "List (second column grows - default)")
     }
@@ -35,8 +33,7 @@ class ListTest {
     @Test
     fun list_second_column_grows_default_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(shape = ButtonShape.Square, style = ButtonStyle.Ghost) {
-            }
+            daisyButton(shape = ButtonShape.Square, style = ButtonStyle.Ghost)
         }
         assertDocumented(html, "button", "btn btn-ghost btn-square", "List (second column grows - default)")
     }

@@ -18,8 +18,7 @@ class MenuTest {
     @Test
     fun menu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu() {
-            }
+            daisyMenu()
         }
         assertDocumented(html, "ul", "menu", "Menu")
     }
@@ -27,8 +26,7 @@ class MenuTest {
     @Test
     fun responsive_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(direction = MenuDirection.Vertical, extraClasses = "lg:menu-horizontal") {
-            }
+            daisyMenu(direction = MenuDirection.Vertical, extraClasses = "lg:menu-horizontal")
         }
         assertDocumented(html, "ul", "lg:menu-horizontal menu menu-vertical", "Responsive: vertical on small screen, horizontal on large screen")
     }
@@ -36,8 +34,7 @@ class MenuTest {
     @Test
     fun paged_menu_with_nested_submenus() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(paged = true, direction = MenuDirection.Vertical) {
-            }
+            daisyMenu(paged = true, direction = MenuDirection.Vertical)
         }
         assertDocumented(html, "ul", "menu menu-paged menu-vertical", "Paged menu with nested submenus")
     }
@@ -45,8 +42,7 @@ class MenuTest {
     @Test
     fun menu_with_icon_only_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(direction = MenuDirection.Horizontal) {
-            }
+            daisyMenu(direction = MenuDirection.Horizontal)
         }
         assertDocumented(html, "ul", "menu menu-horizontal", "Menu with icon only (horizontal)")
     }
@@ -70,8 +66,7 @@ class MenuTest {
     @Test
     fun menu_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(size = MenuSize.Xs) {
-            }
+            daisyMenu(size = MenuSize.Xs)
         }
         assertDocumented(html, "ul", "menu menu-xs", "Menu sizes")
     }
@@ -79,8 +74,7 @@ class MenuTest {
     @Test
     fun menu_sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(size = MenuSize.Sm) {
-            }
+            daisyMenu(size = MenuSize.Sm)
         }
         assertDocumented(html, "ul", "menu menu-sm", "Menu sizes")
     }
@@ -88,8 +82,7 @@ class MenuTest {
     @Test
     fun menu_sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(size = MenuSize.Md) {
-            }
+            daisyMenu(size = MenuSize.Md)
         }
         assertDocumented(html, "ul", "menu menu-md", "Menu sizes")
     }
@@ -97,8 +90,7 @@ class MenuTest {
     @Test
     fun menu_sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(size = MenuSize.Lg) {
-            }
+            daisyMenu(size = MenuSize.Lg)
         }
         assertDocumented(html, "ul", "menu menu-lg", "Menu sizes")
     }
@@ -106,8 +98,7 @@ class MenuTest {
     @Test
     fun menu_sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(size = MenuSize.Xl) {
-            }
+            daisyMenu(size = MenuSize.Xl)
         }
         assertDocumented(html, "ul", "menu menu-xl", "Menu sizes")
     }
@@ -123,8 +114,7 @@ class MenuTest {
     @Test
     fun menu_with_icons_and_badge_responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(extraClasses = "lg:menu-horizontal") {
-            }
+            daisyMenu(extraClasses = "lg:menu-horizontal")
         }
         assertDocumented(html, "ul", "lg:menu-horizontal menu", "Menu with icons and badge (responsive)")
     }
@@ -132,8 +122,7 @@ class MenuTest {
     @Test
     fun menu_with_icons_and_badge_responsive_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(size = BadgeSize.Xs) {
-            }
+            daisyBadge(size = BadgeSize.Xs)
         }
         assertDocumented(html, "span", "badge badge-xs", "Menu with icons and badge (responsive)")
     }
@@ -141,8 +130,7 @@ class MenuTest {
     @Test
     fun menu_with_icons_and_badge_responsive_daisyBadge_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning) {
-            }
+            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Warning)
         }
         assertDocumented(html, "span", "badge badge-warning badge-xs", "Menu with icons and badge (responsive)")
     }
@@ -150,8 +138,7 @@ class MenuTest {
     @Test
     fun menu_with_icons_and_badge_responsive_daisyBadge_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Info) {
-            }
+            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Info)
         }
         assertDocumented(html, "span", "badge badge-info badge-xs", "Menu with icons and badge (responsive)")
     }
@@ -167,8 +154,7 @@ class MenuTest {
     @Test
     fun collapsible_submenu_that_works_with_class_names_daisyMenuDropdownToggle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownToggle() {
-            }
+            daisyMenuDropdownToggle()
         }
         assertDocumented(html, "span", "menu-dropdown-toggle", "Collapsible submenu that works with class names")
     }
@@ -176,8 +162,7 @@ class MenuTest {
     @Test
     fun collapsible_submenu_that_works_with_class_names_daisyMenuDropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdown() {
-            }
+            daisyMenuDropdown()
         }
         assertDocumented(html, "ul", "menu-dropdown", "Collapsible submenu that works with class names")
     }
@@ -185,8 +170,7 @@ class MenuTest {
     @Test
     fun collapsible_submenu_that_works_with_class_names_daisyMenuDropdownToggle_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdownToggle(dropdownShow = true) {
-            }
+            daisyMenuDropdownToggle(dropdownShow = true)
         }
         assertDocumented(html, "span", "menu-dropdown-show menu-dropdown-toggle", "Collapsible submenu that works with class names")
     }
@@ -194,8 +178,7 @@ class MenuTest {
     @Test
     fun collapsible_submenu_that_works_with_class_names_daisyMenuDropdown_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenuDropdown(show = true) {
-            }
+            daisyMenuDropdown(show = true)
         }
         assertDocumented(html, "ul", "menu-dropdown menu-dropdown-show", "Collapsible submenu that works with class names")
     }
@@ -211,8 +194,7 @@ class MenuTest {
     @Test
     fun mega_menu_with_submenu_responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(extraClasses = "xl:menu-horizontal") {
-            }
+            daisyMenu(extraClasses = "xl:menu-horizontal")
         }
         assertDocumented(html, "ul", "menu xl:menu-horizontal", "Mega menu with submenu (responsive)")
     }

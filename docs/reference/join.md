@@ -16,8 +16,7 @@ fun FlowContent.daisyJoin(
     id: HtmlId? = null,
     direction: ClassValues<JoinDirection>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (JoinScope.() -> Unit),
+    block: (JoinScope.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

@@ -197,6 +197,15 @@ pitest {
     // on name alone — "getTarget" would take out `HtmlId::getTarget`, the one place the
     // real logic lives, which IS killed.
     excludedClasses.set(setOf("*${'$'}DefaultImpls"))
+    // Every generated function's default `block = {}` compiles to `daisy<Name>$lambda$0`, a
+    // method that returns `Unit.INSTANCE` and nothing else. PIT's only mutant on it returns
+    // null instead, and the function that calls the block discards the return value, so the
+    // mutant is equivalent: no test of any kind can kill it. Measured on 2026-11-02 when 0.9.0
+    // introduced the default: 13 survivors, one per function in the five component classes
+    // below, and nothing else survived. The glob cannot reach a real lambda: the generated
+    // bodies call kotlinx.html's inline builders, so a component class holds no other
+    // lambda, and no lambda in `core` is named `daisy*` (checked with javap the same day).
+    excludedMethods.set(setOf("daisy*${'$'}lambda${'$'}*"))
     // XML alongside the HTML report: the surviving-mutant list is read mechanically in
     // the next step, and parsing HTML for it would be its own small disaster.
     outputFormats.set(setOf("HTML", "XML"))

@@ -16,8 +16,7 @@ class FilterTest {
     @Test
     fun filter_using_html_form_radio_buttons_and_reset_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFilter() {
-            }
+            daisyFilter()
         }
         assertDocumented(html, "form", "filter", "Filter using HTML form, radio buttons and reset button")
     }
@@ -41,7 +40,7 @@ class FilterTest {
     @Test
     fun filter_without_html_form_daisyFilterReset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFilterReset(attrs = { daisyButtonClasses() })
+            daisyFilterReset { daisyButtonClasses() }
         }
         assertDocumented(html, "input", "btn filter-reset", "Filter without HTML form")
     }

@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class TextareaCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class TextareaCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,30 +45,27 @@ class TextareaCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun textarea_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(
-                content = { },
-            )
+            daisyTextarea()
         }
         assertRendered(html, Expected("Textarea defaults", "textarea", closes = "</textarea></div>"))
     }
 
     @Test
     fun textarea_all_flags() {
-        val html = allFlags(Expected("Textarea all flags", "textarea textarea-ghost zz-extra", closes = "</textarea></div>")) { daisyTextarea(id = ID, ghost = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Textarea all flags", "textarea textarea-ghost zz-extra", closes = "</textarea></div>")) { daisyTextarea(id = ID, ghost = true, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun textarea_color() = assertEachEntry("Textarea color", mapOf(TextareaColor.Neutral to "textarea textarea-neutral", TextareaColor.Primary to "textarea textarea-primary", TextareaColor.Secondary to "textarea textarea-secondary", TextareaColor.Accent to "textarea textarea-accent", TextareaColor.Info to "textarea textarea-info", TextareaColor.Success to "textarea textarea-success", TextareaColor.Warning to "textarea textarea-warning", TextareaColor.Error to "textarea textarea-error")) { daisyTextarea(color = it, content = { }) }
+    fun textarea_color() = assertEachEntry("Textarea color", mapOf(TextareaColor.Neutral to "textarea textarea-neutral", TextareaColor.Primary to "textarea textarea-primary", TextareaColor.Secondary to "textarea textarea-secondary", TextareaColor.Accent to "textarea textarea-accent", TextareaColor.Info to "textarea textarea-info", TextareaColor.Success to "textarea textarea-success", TextareaColor.Warning to "textarea textarea-warning", TextareaColor.Error to "textarea textarea-error")) { daisyTextarea(color = it) }
 
     @Test
-    fun textarea_size() = assertEachEntry("Textarea size", mapOf(TextareaSize.Xs to "textarea textarea-xs", TextareaSize.Sm to "textarea textarea-sm", TextareaSize.Md to "textarea textarea-md", TextareaSize.Lg to "textarea textarea-lg", TextareaSize.Xl to "textarea textarea-xl")) { daisyTextarea(size = it, content = { }) }
+    fun textarea_size() = assertEachEntry("Textarea size", mapOf(TextareaSize.Xs to "textarea textarea-xs", TextareaSize.Sm to "textarea textarea-sm", TextareaSize.Md to "textarea textarea-md", TextareaSize.Lg to "textarea textarea-lg", TextareaSize.Xl to "textarea textarea-xl")) { daisyTextarea(size = it) }
 
     @Test
     fun textareaClasses_defaults() {
@@ -80,7 +76,7 @@ class TextareaCoverageTest {
     }
 
     @Test
-    fun textareaClasses_all_flags() = assertRenders(Expected("TextareaClasses all flags", "textarea textarea-ghost", content = false)) { daisyTextareaClasses(ghost = true) }
+    fun textareaClasses_all_flags() = assertRenders(Expected("TextareaClasses all flags", "textarea textarea-ghost")) { daisyTextareaClasses(ghost = true) }
 
     @Test
     fun textareaClasses_color() = assertEachEntry("TextareaClasses color", mapOf(TextareaColor.Neutral to "textarea textarea-neutral", TextareaColor.Primary to "textarea textarea-primary", TextareaColor.Secondary to "textarea textarea-secondary", TextareaColor.Accent to "textarea textarea-accent", TextareaColor.Info to "textarea textarea-info", TextareaColor.Success to "textarea textarea-success", TextareaColor.Warning to "textarea textarea-warning", TextareaColor.Error to "textarea textarea-error")) { daisyTextareaClasses(color = it) }

@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class ProgressCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class ProgressCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,27 +45,24 @@ class ProgressCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun progress_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyProgress(
-                content = { },
-            )
+            daisyProgress()
         }
         assertRendered(html, Expected("Progress defaults", "progress", closes = "</progress></div>"))
     }
 
     @Test
     fun progress_all_flags() {
-        val html = allFlags(Expected("Progress all flags", "progress zz-extra", closes = "</progress></div>")) { daisyProgress(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Progress all flags", "progress zz-extra", closes = "</progress></div>")) { daisyProgress(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun progress_color() = assertEachEntry("Progress color", mapOf(ProgressColor.Neutral to "progress progress-neutral", ProgressColor.Primary to "progress progress-primary", ProgressColor.Secondary to "progress progress-secondary", ProgressColor.Accent to "progress progress-accent", ProgressColor.Info to "progress progress-info", ProgressColor.Success to "progress progress-success", ProgressColor.Warning to "progress progress-warning", ProgressColor.Error to "progress progress-error")) { daisyProgress(color = it, content = { }) }
+    fun progress_color() = assertEachEntry("Progress color", mapOf(ProgressColor.Neutral to "progress progress-neutral", ProgressColor.Primary to "progress progress-primary", ProgressColor.Secondary to "progress progress-secondary", ProgressColor.Accent to "progress progress-accent", ProgressColor.Info to "progress progress-info", ProgressColor.Success to "progress progress-success", ProgressColor.Warning to "progress progress-warning", ProgressColor.Error to "progress progress-error")) { daisyProgress(color = it) }
 
     @Test
     fun progressClasses_defaults() {
@@ -77,7 +73,7 @@ class ProgressCoverageTest {
     }
 
     @Test
-    fun progressClasses_all_flags() = assertRenders(Expected("ProgressClasses all flags", "progress", content = false)) { daisyProgressClasses() }
+    fun progressClasses_all_flags() = assertRenders(Expected("ProgressClasses all flags", "progress")) { daisyProgressClasses() }
 
     @Test
     fun progressClasses_color() = assertEachEntry("ProgressClasses color", mapOf(ProgressColor.Neutral to "progress progress-neutral", ProgressColor.Primary to "progress progress-primary", ProgressColor.Secondary to "progress progress-secondary", ProgressColor.Accent to "progress progress-accent", ProgressColor.Info to "progress progress-info", ProgressColor.Success to "progress progress-success", ProgressColor.Warning to "progress progress-warning", ProgressColor.Error to "progress progress-error")) { daisyProgressClasses(color = it) }

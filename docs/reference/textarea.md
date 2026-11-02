@@ -19,8 +19,7 @@ fun FlowContent.daisyTextarea(
     size: ClassValues<TextareaSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
-    attrs: (TEXTAREA.() -> Unit)? = null,
-    content: (TEXTAREA.() -> Unit),
+    block: (TEXTAREA.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

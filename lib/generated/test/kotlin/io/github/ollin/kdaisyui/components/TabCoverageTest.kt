@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class TabCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class TabCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,33 +45,30 @@ class TabCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun tabs_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(
-                content = { },
-            )
+            daisyTabs()
         }
         assertRendered(html, Expected("Tabs defaults", "tabs", closes = "</div></div>"))
     }
 
     @Test
     fun tabs_all_flags() {
-        val html = allFlags(Expected("Tabs all flags", "tabs zz-extra", closes = "</div></div>")) { daisyTabs(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Tabs all flags", "tabs zz-extra", closes = "</div></div>")) { daisyTabs(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun tabs_size() = assertEachEntry("Tabs size", mapOf(TabsSize.Xs to "tabs tabs-xs", TabsSize.Sm to "tabs tabs-sm", TabsSize.Md to "tabs tabs-md", TabsSize.Lg to "tabs tabs-lg", TabsSize.Xl to "tabs tabs-xl")) { daisyTabs(size = it, content = { }) }
+    fun tabs_size() = assertEachEntry("Tabs size", mapOf(TabsSize.Xs to "tabs tabs-xs", TabsSize.Sm to "tabs tabs-sm", TabsSize.Md to "tabs tabs-md", TabsSize.Lg to "tabs tabs-lg", TabsSize.Xl to "tabs tabs-xl")) { daisyTabs(size = it) }
 
     @Test
-    fun tabs_placement() = assertEachEntry("Tabs placement", mapOf(TabsPlacement.Top to "tabs tabs-top", TabsPlacement.Bottom to "tabs tabs-bottom")) { daisyTabs(placement = it, content = { }) }
+    fun tabs_placement() = assertEachEntry("Tabs placement", mapOf(TabsPlacement.Top to "tabs tabs-top", TabsPlacement.Bottom to "tabs tabs-bottom")) { daisyTabs(placement = it) }
 
     @Test
-    fun tabs_style() = assertEachEntry("Tabs style", mapOf(TabsStyle.Box to "tabs tabs-box", TabsStyle.Border to "tabs tabs-border", TabsStyle.Lift to "tabs tabs-lift")) { daisyTabs(style = it, content = { }) }
+    fun tabs_style() = assertEachEntry("Tabs style", mapOf(TabsStyle.Box to "tabs tabs-box", TabsStyle.Border to "tabs tabs-border", TabsStyle.Lift to "tabs tabs-lift")) { daisyTabs(style = it) }
 
     @Test
     fun tabsClasses_defaults() {
@@ -83,7 +79,7 @@ class TabCoverageTest {
     }
 
     @Test
-    fun tabsClasses_all_flags() = assertRenders(Expected("TabsClasses all flags", "tabs", content = false)) { daisyTabsClasses() }
+    fun tabsClasses_all_flags() = assertRenders(Expected("TabsClasses all flags", "tabs")) { daisyTabsClasses() }
 
     @Test
     fun tabsClasses_size() = assertEachEntry("TabsClasses size", mapOf(TabsSize.Xs to "tabs tabs-xs", TabsSize.Sm to "tabs tabs-sm", TabsSize.Md to "tabs tabs-md", TabsSize.Lg to "tabs tabs-lg", TabsSize.Xl to "tabs tabs-xl")) { daisyTabsClasses(size = it) }
@@ -97,16 +93,14 @@ class TabCoverageTest {
     @Test
     fun tab_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(
-                content = { },
-            )
+            daisyTab()
         }
         assertRendered(html, Expected("Tab defaults", "tab", closes = "</a></div>"))
     }
 
     @Test
     fun tab_all_flags() {
-        val html = allFlags(Expected("Tab all flags", "tab tab-active tab-disabled zz-extra", closes = "</a></div>")) { daisyTab(id = ID, active = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Tab all flags", "tab tab-active tab-disabled zz-extra", closes = "</a></div>")) { daisyTab(id = ID, active = true, disabled = true, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -118,7 +112,7 @@ class TabCoverageTest {
     }
 
     @Test
-    fun tabClasses_all_flags() = assertRenders(Expected("TabClasses all flags", "tab tab-active tab-disabled", content = false)) { daisyTabClasses(active = true, disabled = true) }
+    fun tabClasses_all_flags() = assertRenders(Expected("TabClasses all flags", "tab tab-active tab-disabled")) { daisyTabClasses(active = true, disabled = true) }
 
     @Test
     fun tabRadio_defaults() {
@@ -130,7 +124,7 @@ class TabCoverageTest {
 
     @Test
     fun tabRadio_all_flags() {
-        val html = allFlags(Expected("TabRadio all flags", "tab tab-active tab-disabled zz-extra", content = false)) { daisyTabRadio(id = ID, active = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("TabRadio all flags", "tab tab-active tab-disabled zz-extra")) { daisyTabRadio(id = ID, active = true, disabled = true, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -142,21 +136,19 @@ class TabCoverageTest {
     }
 
     @Test
-    fun tabRadioClasses_all_flags() = assertRenders(Expected("TabRadioClasses all flags", "tab tab-active tab-disabled", content = false)) { daisyTabRadioClasses(active = true, disabled = true) }
+    fun tabRadioClasses_all_flags() = assertRenders(Expected("TabRadioClasses all flags", "tab tab-active tab-disabled")) { daisyTabRadioClasses(active = true, disabled = true) }
 
     @Test
     fun tabContent_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabContent(
-                content = { },
-            )
+            daisyTabContent()
         }
         assertRendered(html, Expected("TabContent defaults", "tab-content", closes = "</div></div>"))
     }
 
     @Test
     fun tabContent_all_flags() {
-        val html = allFlags(Expected("TabContent all flags", "tab-content zz-extra", closes = "</div></div>")) { daisyTabContent(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("TabContent all flags", "tab-content zz-extra", closes = "</div></div>")) { daisyTabContent(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -168,5 +160,5 @@ class TabCoverageTest {
     }
 
     @Test
-    fun tabContentClasses_all_flags() = assertRenders(Expected("TabContentClasses all flags", "tab-content", content = false)) { daisyTabContentClasses() }
+    fun tabContentClasses_all_flags() = assertRenders(Expected("TabContentClasses all flags", "tab-content")) { daisyTabContentClasses() }
 }

@@ -15,8 +15,7 @@ class DividerTest {
     @Test
     fun divider_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
-            }
+            daisyCard()
         }
         assertDocumented(html, "div", "card", "Divider")
     }
@@ -24,8 +23,7 @@ class DividerTest {
     @Test
     fun divider() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider() {
-            }
+            daisyDivider()
         }
         assertDocumented(html, "div", "divider", "Divider")
     }
@@ -33,8 +31,7 @@ class DividerTest {
     @Test
     fun divider_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(direction = DividerDirection.Horizontal) {
-            }
+            daisyDivider(direction = DividerDirection.Horizontal)
         }
         assertDocumented(html, "div", "divider divider-horizontal", "Divider horizontal")
     }
@@ -42,8 +39,7 @@ class DividerTest {
     @Test
     fun responsive_lg_divider_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(extraClasses = "lg:divider-horizontal") {
-            }
+            daisyDivider(extraClasses = "lg:divider-horizontal")
         }
         assertDocumented(html, "div", "divider lg:divider-horizontal", "responsive (lg:divider-horizontal)")
     }
@@ -51,8 +47,7 @@ class DividerTest {
     @Test
     fun divider_with_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Neutral) {
-            }
+            daisyDivider(color = DividerColor.Neutral)
         }
         assertDocumented(html, "div", "divider divider-neutral", "Divider with colors")
     }
@@ -60,8 +55,7 @@ class DividerTest {
     @Test
     fun divider_with_colors_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Primary) {
-            }
+            daisyDivider(color = DividerColor.Primary)
         }
         assertDocumented(html, "div", "divider divider-primary", "Divider with colors")
     }
@@ -69,8 +63,7 @@ class DividerTest {
     @Test
     fun divider_with_colors_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Secondary) {
-            }
+            daisyDivider(color = DividerColor.Secondary)
         }
         assertDocumented(html, "div", "divider divider-secondary", "Divider with colors")
     }
@@ -78,8 +71,7 @@ class DividerTest {
     @Test
     fun divider_with_colors_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Accent) {
-            }
+            daisyDivider(color = DividerColor.Accent)
         }
         assertDocumented(html, "div", "divider divider-accent", "Divider with colors")
     }
@@ -87,8 +79,7 @@ class DividerTest {
     @Test
     fun divider_with_colors_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Success) {
-            }
+            daisyDivider(color = DividerColor.Success)
         }
         assertDocumented(html, "div", "divider divider-success", "Divider with colors")
     }
@@ -96,8 +87,7 @@ class DividerTest {
     @Test
     fun divider_with_colors_6() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Warning) {
-            }
+            daisyDivider(color = DividerColor.Warning)
         }
         assertDocumented(html, "div", "divider divider-warning", "Divider with colors")
     }
@@ -105,8 +95,7 @@ class DividerTest {
     @Test
     fun divider_with_colors_7() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Info) {
-            }
+            daisyDivider(color = DividerColor.Info)
         }
         assertDocumented(html, "div", "divider divider-info", "Divider with colors")
     }
@@ -114,8 +103,7 @@ class DividerTest {
     @Test
     fun divider_with_colors_8() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(color = DividerColor.Error) {
-            }
+            daisyDivider(color = DividerColor.Error)
         }
         assertDocumented(html, "div", "divider divider-error", "Divider with colors")
     }
@@ -123,8 +111,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(placement = DividerPlacement.Start) {
-            }
+            daisyDivider(placement = DividerPlacement.Start)
         }
         assertDocumented(html, "div", "divider divider-start", "Divider in different positions")
     }
@@ -132,8 +119,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(placement = DividerPlacement.End) {
-            }
+            daisyDivider(placement = DividerPlacement.End)
         }
         assertDocumented(html, "div", "divider divider-end", "Divider in different positions")
     }
@@ -141,8 +127,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions_horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.Start) {
-            }
+            daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.Start)
         }
         assertDocumented(html, "div", "divider divider-horizontal divider-start", "Divider in different positions (horizontal)")
     }
@@ -150,8 +135,7 @@ class DividerTest {
     @Test
     fun divider_in_different_positions_horizontal_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.End) {
-            }
+            daisyDivider(direction = DividerDirection.Horizontal, placement = DividerPlacement.End)
         }
         assertDocumented(html, "div", "divider divider-end divider-horizontal", "Divider in different positions (horizontal)")
     }

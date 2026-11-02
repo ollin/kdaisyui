@@ -63,8 +63,7 @@ enum class DropdownState(internal val className: String) : ClassValues<DropdownS
  * @param state — State variant
  * @param hover — Opens on hover too
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyDropdown(
     id: HtmlId? = null,
@@ -73,8 +72,7 @@ fun FlowContent.daisyDropdown(
     state: ClassValues<DropdownState>? = null,
     hover: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DETAILS.() -> Unit)? = null,
-    content: (DETAILS.() -> Unit),
+    block: (DETAILS.() -> Unit) = {},
 ) {
     details {
         if (id != null) attributes["id"] = id.id
@@ -84,8 +82,7 @@ fun FlowContent.daisyDropdown(
         addClassNames(state)
         if (hover) addClassNames("dropdown-hover")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -109,8 +106,7 @@ fun FlowContent.daisyDropdownPopover(
     side: ClassValues<DropdownSide>? = null,
     align: ClassValues<DropdownAlign>? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         attributes["id"] = id.id
@@ -120,8 +116,7 @@ fun FlowContent.daisyDropdownPopover(
         addClassNames(side)
         addClassNames(align)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -139,15 +134,13 @@ fun Tag.daisyDropdownPopoverClasses(
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("dropdown-content")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

@@ -14,8 +14,7 @@ Side-by-side diff viewer. Renders `<figure class="diff ...">`.
 fun FlowContent.daisyDiff(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FIGURE.() -> Unit)? = null,
-    content: (FIGURE.() -> Unit),
+    block: (FIGURE.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,8 +25,7 @@ fun Tag.daisyDiffClasses()
 fun FlowContent.daisyDiffItem1(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -38,8 +36,7 @@ fun Tag.daisyDiffItem1Classes()
 fun FlowContent.daisyDiffItem2(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -50,8 +47,7 @@ fun Tag.daisyDiffItem2Classes()
 fun FlowContent.daisyDiffResizer(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

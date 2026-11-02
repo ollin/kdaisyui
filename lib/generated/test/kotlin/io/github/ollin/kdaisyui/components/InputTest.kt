@@ -26,8 +26,7 @@ class InputTest {
     @Test
     fun text_input_with_text_label_inside_daisyKbd() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd(size = KbdSize.Sm) {
-            }
+            daisyKbd(size = KbdSize.Sm)
         }
         assertDocumented(html, "kbd", "kbd kbd-sm", "Text input with text label inside")
     }
@@ -35,8 +34,7 @@ class InputTest {
     @Test
     fun text_input_with_text_label_inside_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(color = BadgeColor.Neutral, size = BadgeSize.Xs) {
-            }
+            daisyBadge(color = BadgeColor.Neutral, size = BadgeSize.Xs)
         }
         assertDocumented(html, "span", "badge badge-neutral badge-xs", "Text input with text label inside")
     }
@@ -52,8 +50,7 @@ class InputTest {
     @Test
     fun with_fieldset_and_fieldset_legend_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFieldset() {
-            }
+            daisyFieldset()
         }
         assertDocumented(html, "fieldset", "fieldset", "With fieldset and fieldset-legend")
     }
@@ -61,8 +58,7 @@ class InputTest {
     @Test
     fun with_fieldset_and_fieldset_legend_daisyFieldsetLegend() {
         val html = createHTML(prettyPrint = false).fieldSet {
-            daisyFieldsetLegend() {
-            }
+            daisyFieldsetLegend()
         }
         assertDocumented(html, "legend", "fieldset-legend", "With fieldset and fieldset-legend")
     }
@@ -190,8 +186,7 @@ class InputTest {
     @Test
     fun username_text_input_with_icon_and_validator_daisyValidatorHint() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidatorHint() {
-            }
+            daisyValidatorHint()
         }
         assertDocumented(html, "p", "validator-hint", "Username text input with icon and validator")
     }
@@ -199,8 +194,7 @@ class InputTest {
     @Test
     fun email_input_with_icon_validator_button_join_daisyJoin() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin() {
-            }
+            daisyJoin()
         }
         assertDocumented(html, "div", "join", "Email input with icon, validator, button, join")
     }
@@ -208,8 +202,7 @@ class InputTest {
     @Test
     fun email_input_with_icon_validator_button_join_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Neutral) {
-            }
+            daisyButton(color = ButtonColor.Neutral)
         }
         assertDocumented(html, "button", "btn btn-neutral", "Email input with icon, validator, button, join")
     }

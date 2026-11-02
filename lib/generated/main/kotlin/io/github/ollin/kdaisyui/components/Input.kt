@@ -63,7 +63,7 @@ enum class InputSize(internal val className: String) : ClassValues<InputSize> {
  * @param value
  * @param disabled
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyInput(
     id: HtmlId? = null,
@@ -75,7 +75,7 @@ fun FlowContent.daisyInput(
     value: String? = null,
     disabled: Boolean = false,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
@@ -88,7 +88,7 @@ fun FlowContent.daisyInput(
         if (value != null) this.value = value
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 

@@ -38,8 +38,7 @@ fun HTML.megamenuReferencePage() {
         daisyButton(
             text = "Menu",
             extraClasses = "sm:hidden",
-            attrs = { popoverTarget(Megamenu.Reference()) },
-        )
+        ) { popoverTarget(Megamenu.Reference()) }
 
         daisyMegamenu(
             id = Megamenu.Reference(),

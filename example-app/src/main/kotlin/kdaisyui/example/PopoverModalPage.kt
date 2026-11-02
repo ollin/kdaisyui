@@ -28,8 +28,7 @@ fun HTML.popoverModalPage() {
         daisyButton(
             text = "Open modal",
             color = ButtonColor.Primary,
-            attrs = { popoverTarget(modalId) },
-        )
+        ) { popoverTarget(modalId) }
         daisyModalPopover(id = modalId) {
             daisyModalBox {
                 h3("text-lg font-bold") { +"Opened without JavaScript" }
@@ -37,8 +36,7 @@ fun HTML.popoverModalPage() {
                 daisyModalAction {
                     daisyButton(
                         text = "Close",
-                        attrs = { popoverTarget(modalId, PopoverTargetAction.Hide) },
-                    )
+                    ) { popoverTarget(modalId, PopoverTargetAction.Hide) }
                 }
             }
         }

@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class IndicatorCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class IndicatorCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,23 +45,20 @@ class IndicatorCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun indicator_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator(
-                content = { },
-            )
+            daisyIndicator()
         }
         assertRendered(html, Expected("Indicator defaults", "indicator", closes = "</div></div>"))
     }
 
     @Test
     fun indicator_all_flags() {
-        val html = allFlags(Expected("Indicator all flags", "indicator zz-extra", closes = "</div></div>")) { daisyIndicator(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Indicator all flags", "indicator zz-extra", closes = "</div></div>")) { daisyIndicator(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -74,28 +70,26 @@ class IndicatorCoverageTest {
     }
 
     @Test
-    fun indicatorClasses_all_flags() = assertRenders(Expected("IndicatorClasses all flags", "indicator", content = false)) { daisyIndicatorClasses() }
+    fun indicatorClasses_all_flags() = assertRenders(Expected("IndicatorClasses all flags", "indicator")) { daisyIndicatorClasses() }
 
     @Test
     fun indicatorItem_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicatorItem(
-                content = { },
-            )
+            daisyIndicatorItem()
         }
         assertRendered(html, Expected("IndicatorItem defaults", "indicator-item", closes = "</span></div>"))
     }
 
     @Test
     fun indicatorItem_all_flags() {
-        val html = allFlags(Expected("IndicatorItem all flags", "indicator-item zz-extra", closes = "</span></div>")) { daisyIndicatorItem(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("IndicatorItem all flags", "indicator-item zz-extra", closes = "</span></div>")) { daisyIndicatorItem(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun indicatorItem_horizontalPlacement() = assertEachEntry("IndicatorItem horizontalPlacement", mapOf(IndicatorItemHorizontalPlacement.Start to "indicator-item indicator-start", IndicatorItemHorizontalPlacement.Center to "indicator-center indicator-item", IndicatorItemHorizontalPlacement.End to "indicator-end indicator-item")) { daisyIndicatorItem(horizontalPlacement = it, content = { }) }
+    fun indicatorItem_horizontalPlacement() = assertEachEntry("IndicatorItem horizontalPlacement", mapOf(IndicatorItemHorizontalPlacement.Start to "indicator-item indicator-start", IndicatorItemHorizontalPlacement.Center to "indicator-center indicator-item", IndicatorItemHorizontalPlacement.End to "indicator-end indicator-item")) { daisyIndicatorItem(horizontalPlacement = it) }
 
     @Test
-    fun indicatorItem_verticalPlacement() = assertEachEntry("IndicatorItem verticalPlacement", mapOf(IndicatorItemVerticalPlacement.Top to "indicator-item indicator-top", IndicatorItemVerticalPlacement.Middle to "indicator-item indicator-middle", IndicatorItemVerticalPlacement.Bottom to "indicator-bottom indicator-item")) { daisyIndicatorItem(verticalPlacement = it, content = { }) }
+    fun indicatorItem_verticalPlacement() = assertEachEntry("IndicatorItem verticalPlacement", mapOf(IndicatorItemVerticalPlacement.Top to "indicator-item indicator-top", IndicatorItemVerticalPlacement.Middle to "indicator-item indicator-middle", IndicatorItemVerticalPlacement.Bottom to "indicator-bottom indicator-item")) { daisyIndicatorItem(verticalPlacement = it) }
 
     @Test
     fun indicatorItemClasses_defaults() {
@@ -106,7 +100,7 @@ class IndicatorCoverageTest {
     }
 
     @Test
-    fun indicatorItemClasses_all_flags() = assertRenders(Expected("IndicatorItemClasses all flags", "indicator-item", content = false)) { daisyIndicatorItemClasses() }
+    fun indicatorItemClasses_all_flags() = assertRenders(Expected("IndicatorItemClasses all flags", "indicator-item")) { daisyIndicatorItemClasses() }
 
     @Test
     fun indicatorItemClasses_horizontalPlacement() = assertEachEntry("IndicatorItemClasses horizontalPlacement", mapOf(IndicatorItemHorizontalPlacement.Start to "indicator-item indicator-start", IndicatorItemHorizontalPlacement.Center to "indicator-center indicator-item", IndicatorItemHorizontalPlacement.End to "indicator-end indicator-item")) { daisyIndicatorItemClasses(horizontalPlacement = it) }

@@ -21,8 +21,7 @@ fun FlowContent.daisyAlert(
     direction: ClassValues<AlertDirection>? = null,
     soft: Boolean = false,  // soft style
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

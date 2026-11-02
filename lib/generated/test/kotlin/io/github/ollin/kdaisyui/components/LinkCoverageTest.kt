@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class LinkCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class LinkCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class LinkCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -60,7 +58,7 @@ class LinkCoverageTest {
 
     @Test
     fun link_all_flags() {
-        val html = allFlags(Expected("Link all flags", "link link-hover zz-extra", closes = "</a></div>")) { daisyLink(id = ID, hover = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Link all flags", "link link-hover zz-extra", closes = "</a></div>")) { daisyLink(id = ID, hover = true, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -86,7 +84,7 @@ class LinkCoverageTest {
     }
 
     @Test
-    fun linkClasses_all_flags() = assertRenders(Expected("LinkClasses all flags", "link link-hover", content = false)) { daisyLinkClasses(hover = true) }
+    fun linkClasses_all_flags() = assertRenders(Expected("LinkClasses all flags", "link link-hover")) { daisyLinkClasses(hover = true) }
 
     @Test
     fun linkClasses_color() = assertEachEntry("LinkClasses color", mapOf(LinkColor.Neutral to "link link-neutral", LinkColor.Primary to "link link-primary", LinkColor.Secondary to "link link-secondary", LinkColor.Accent to "link link-accent", LinkColor.Success to "link link-success", LinkColor.Info to "link link-info", LinkColor.Warning to "link link-warning", LinkColor.Error to "link link-error")) { daisyLinkClasses(color = it) }

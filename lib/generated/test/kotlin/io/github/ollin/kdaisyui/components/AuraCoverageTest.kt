@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class AuraCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class AuraCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,30 +45,27 @@ class AuraCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun aura_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAura(
-                content = { },
-            )
+            daisyAura()
         }
         assertRendered(html, Expected("Aura defaults", "aura", closes = "</div></div>"))
     }
 
     @Test
     fun aura_all_flags() {
-        val html = allFlags(Expected("Aura all flags", "aura zz-extra", closes = "</div></div>")) { daisyAura(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Aura all flags", "aura zz-extra", closes = "</div></div>")) { daisyAura(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun aura_size() = assertEachEntry("Aura size", mapOf(AuraSize.Xs to "aura aura-xs", AuraSize.Sm to "aura aura-sm", AuraSize.Md to "aura aura-md", AuraSize.Lg to "aura aura-lg", AuraSize.Xl to "aura aura-xl")) { daisyAura(size = it, content = { }) }
+    fun aura_size() = assertEachEntry("Aura size", mapOf(AuraSize.Xs to "aura aura-xs", AuraSize.Sm to "aura aura-sm", AuraSize.Md to "aura aura-md", AuraSize.Lg to "aura aura-lg", AuraSize.Xl to "aura aura-xl")) { daisyAura(size = it) }
 
     @Test
-    fun aura_style() = assertEachEntry("Aura style", mapOf(AuraStyle.Dual to "aura aura-dual", AuraStyle.Rainbow to "aura aura-rainbow", AuraStyle.Holo to "aura aura-holo", AuraStyle.Gold to "aura aura-gold", AuraStyle.Silver to "aura aura-silver", AuraStyle.Glow to "aura aura-glow")) { daisyAura(style = it, content = { }) }
+    fun aura_style() = assertEachEntry("Aura style", mapOf(AuraStyle.Dual to "aura aura-dual", AuraStyle.Rainbow to "aura aura-rainbow", AuraStyle.Holo to "aura aura-holo", AuraStyle.Gold to "aura aura-gold", AuraStyle.Silver to "aura aura-silver", AuraStyle.Glow to "aura aura-glow")) { daisyAura(style = it) }
 
     @Test
     fun auraClasses_defaults() {
@@ -80,7 +76,7 @@ class AuraCoverageTest {
     }
 
     @Test
-    fun auraClasses_all_flags() = assertRenders(Expected("AuraClasses all flags", "aura", content = false)) { daisyAuraClasses() }
+    fun auraClasses_all_flags() = assertRenders(Expected("AuraClasses all flags", "aura")) { daisyAuraClasses() }
 
     @Test
     fun auraClasses_size() = assertEachEntry("AuraClasses size", mapOf(AuraSize.Xs to "aura aura-xs", AuraSize.Sm to "aura aura-sm", AuraSize.Md to "aura aura-md", AuraSize.Lg to "aura aura-lg", AuraSize.Xl to "aura aura-xl")) { daisyAuraClasses(size = it) }

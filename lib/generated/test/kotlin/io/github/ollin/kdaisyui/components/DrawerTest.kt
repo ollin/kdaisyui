@@ -15,8 +15,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawer() {
-            }
+            daisyDrawer()
         }
         assertDocumented(html, "div", "drawer", "Drawer sidebar")
     }
@@ -32,8 +31,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_daisyDrawerContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerContent() {
-            }
+            daisyDrawerContent()
         }
         assertDocumented(html, "div", "drawer-content", "Drawer sidebar")
     }
@@ -41,8 +39,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_daisyDrawerButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerButton(attrs = { daisyButtonClasses() }) {
-            }
+            daisyDrawerButton { daisyButtonClasses() }
         }
         assertDocumented(html, "label", "btn drawer-button", "Drawer sidebar")
     }
@@ -50,8 +47,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_daisyDrawerSide() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerSide() {
-            }
+            daisyDrawerSide()
         }
         assertDocumented(html, "div", "drawer-side", "Drawer sidebar")
     }
@@ -59,8 +55,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_daisyDrawerOverlay() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerOverlay() {
-            }
+            daisyDrawerOverlay()
         }
         assertDocumented(html, "label", "drawer-overlay", "Drawer sidebar")
     }
@@ -68,8 +63,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu() {
-            }
+            daisyMenu()
         }
         assertDocumented(html, "ul", "menu", "Drawer sidebar")
     }
@@ -77,8 +71,7 @@ class DrawerTest {
     @Test
     fun navbar_menu_for_desktop_sidebar_drawer_for_mobile_daisyNavbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbar() {
-            }
+            daisyNavbar()
         }
         assertDocumented(html, "div", "navbar", "Navbar menu for desktop + sidebar drawer for mobile")
     }
@@ -86,8 +79,7 @@ class DrawerTest {
     @Test
     fun navbar_menu_for_desktop_sidebar_drawer_for_mobile_daisyDrawerButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerButton(attrs = { daisyButtonClasses(shape = ButtonShape.Square, style = ButtonStyle.Ghost) }) {
-            }
+            daisyDrawerButton { daisyButtonClasses(shape = ButtonShape.Square, style = ButtonStyle.Ghost) }
         }
         assertDocumented(html, "label", "btn btn-ghost btn-square drawer-button", "Navbar menu for desktop + sidebar drawer for mobile")
     }
@@ -95,8 +87,7 @@ class DrawerTest {
     @Test
     fun navbar_menu_for_desktop_sidebar_drawer_for_mobile_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(direction = MenuDirection.Horizontal) {
-            }
+            daisyMenu(direction = MenuDirection.Horizontal)
         }
         assertDocumented(html, "ul", "menu menu-horizontal", "Navbar menu for desktop + sidebar drawer for mobile")
     }
@@ -104,8 +95,7 @@ class DrawerTest {
     @Test
     fun responsive_sidebar_is_always_visible_on_large_screen_can_be_toggled_on_small_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawer(extraClasses = "lg:drawer-open") {
-            }
+            daisyDrawer(extraClasses = "lg:drawer-open")
         }
         assertDocumented(html, "div", "drawer lg:drawer-open", "Responsive: Sidebar is always visible on large screen, can be toggled on small screen")
     }
@@ -113,8 +103,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_that_opens_from_right_side_of_page() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawer(end = true) {
-            }
+            daisyDrawer(end = true)
         }
         assertDocumented(html, "div", "drawer drawer-end", "Drawer sidebar that opens from right side of page")
     }
@@ -122,8 +111,7 @@ class DrawerTest {
     @Test
     fun drawer_sidebar_that_opens_from_right_side_of_page_daisyDrawerButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDrawerButton(attrs = { daisyButtonClasses(color = ButtonColor.Primary) }) {
-            }
+            daisyDrawerButton { daisyButtonClasses(color = ButtonColor.Primary) }
         }
         assertDocumented(html, "label", "btn btn-primary drawer-button", "Drawer sidebar that opens from right side of page")
     }

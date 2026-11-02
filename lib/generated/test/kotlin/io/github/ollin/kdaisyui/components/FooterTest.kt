@@ -15,8 +15,7 @@ class FooterTest {
     @Test
     fun footer_vertical_by_default_horizontal_for_sm_and_up() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(extraClasses = "sm:footer-horizontal") {
-            }
+            daisyFooter(extraClasses = "sm:footer-horizontal")
         }
         assertDocumented(html, "footer", "footer sm:footer-horizontal", "Footer (vertical by default, horizontal for sm and up)")
     }
@@ -24,8 +23,7 @@ class FooterTest {
     @Test
     fun footer_vertical_by_default_horizontal_for_sm_and_up_daisyFooterTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooterTitle() {
-            }
+            daisyFooterTitle()
         }
         assertDocumented(html, "h6", "footer-title", "Footer (vertical by default, horizontal for sm and up)")
     }
@@ -33,8 +31,7 @@ class FooterTest {
     @Test
     fun footer_vertical_by_default_horizontal_for_sm_and_up_daisyLink() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(hover = true) {
-            }
+            daisyLink(hover = true)
         }
         assertDocumented(html, "a", "link link-hover", "Footer (vertical by default, horizontal for sm and up)")
     }
@@ -42,8 +39,7 @@ class FooterTest {
     @Test
     fun footer_with_a_form_daisyJoin() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin() {
-            }
+            daisyJoin()
         }
         assertDocumented(html, "div", "join", "Footer with a form")
     }
@@ -59,8 +55,7 @@ class FooterTest {
     @Test
     fun footer_with_a_form_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Primary) {
-            }
+            daisyButton(color = ButtonColor.Primary)
         }
         assertDocumented(html, "button", "btn btn-primary", "Footer with a form")
     }
@@ -68,8 +63,7 @@ class FooterTest {
     @Test
     fun footer_with_copyright_text() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(center = true, extraClasses = "sm:footer-horizontal") {
-            }
+            daisyFooter(center = true, extraClasses = "sm:footer-horizontal")
         }
         assertDocumented(html, "footer", "footer footer-center sm:footer-horizontal", "Footer with copyright text")
     }
@@ -77,8 +71,7 @@ class FooterTest {
     @Test
     fun centered_footer_with_logo_and_social_icons() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter(direction = FooterDirection.Horizontal, center = true) {
-            }
+            daisyFooter(direction = FooterDirection.Horizontal, center = true)
         }
         assertDocumented(html, "footer", "footer footer-center footer-horizontal", "Centered footer with logo and social icons")
     }
@@ -86,8 +79,7 @@ class FooterTest {
     @Test
     fun two_footer() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFooter() {
-            }
+            daisyFooter()
         }
         assertDocumented(html, "footer", "footer", "Two footer")
     }

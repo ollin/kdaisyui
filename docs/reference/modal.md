@@ -19,8 +19,7 @@ fun FlowContent.daisyModal(
     horizontalPlacement: ClassValues<ModalHorizontalPlacement>? = null,
     open: Boolean = false,  // Keeps the modal open (you can add this class using JS)
     extraClasses: String? = null,
-    attrs: (DIALOG.() -> Unit)? = null,
-    content: (DIALOG.() -> Unit),
+    block: (DIALOG.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -31,8 +30,7 @@ fun Tag.daisyModalClasses(verticalPlacement: ClassValues<ModalVerticalPlacement>
 fun FlowContent.daisyModalBox(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -43,8 +41,7 @@ fun Tag.daisyModalBoxClasses()
 fun FlowContent.daisyModalAction(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -55,8 +52,7 @@ fun Tag.daisyModalActionClasses()
 fun FlowContent.daisyModalBackdrop(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -67,7 +63,7 @@ fun Tag.daisyModalBackdropClasses()
 fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -78,8 +74,7 @@ fun Tag.daisyModalToggleClasses()
 fun FlowContent.daisyModalPopover(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

@@ -14,7 +14,7 @@ DaisyUI theme controller toggle. Renders `<input class="theme-controller ...">`.
 fun FlowContent.daisyThemeController(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

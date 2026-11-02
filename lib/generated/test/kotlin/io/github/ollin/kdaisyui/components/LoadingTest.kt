@@ -15,8 +15,7 @@ class LoadingTest {
     @Test
     fun loading_spinner() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Xs) {
-            }
+            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Xs)
         }
         assertDocumented(html, "span", "loading loading-spinner loading-xs", "Loading spinner")
     }
@@ -24,8 +23,7 @@ class LoadingTest {
     @Test
     fun loading_spinner_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Sm) {
-            }
+            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Sm)
         }
         assertDocumented(html, "span", "loading loading-sm loading-spinner", "Loading spinner")
     }
@@ -33,8 +31,7 @@ class LoadingTest {
     @Test
     fun loading_spinner_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Md) {
-            }
+            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Md)
         }
         assertDocumented(html, "span", "loading loading-md loading-spinner", "Loading spinner")
     }
@@ -42,8 +39,7 @@ class LoadingTest {
     @Test
     fun loading_spinner_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Lg) {
-            }
+            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Lg)
         }
         assertDocumented(html, "span", "loading loading-lg loading-spinner", "Loading spinner")
     }
@@ -51,8 +47,7 @@ class LoadingTest {
     @Test
     fun loading_spinner_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Xl) {
-            }
+            daisyLoading(style = LoadingStyle.Spinner, size = LoadingSize.Xl)
         }
         assertDocumented(html, "span", "loading loading-spinner loading-xl", "Loading spinner")
     }
@@ -60,8 +55,7 @@ class LoadingTest {
     @Test
     fun loading_dots() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Xs) {
-            }
+            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Xs)
         }
         assertDocumented(html, "span", "loading loading-dots loading-xs", "Loading dots")
     }
@@ -69,8 +63,7 @@ class LoadingTest {
     @Test
     fun loading_dots_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Sm) {
-            }
+            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Sm)
         }
         assertDocumented(html, "span", "loading loading-dots loading-sm", "Loading dots")
     }
@@ -78,8 +71,7 @@ class LoadingTest {
     @Test
     fun loading_dots_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Md) {
-            }
+            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Md)
         }
         assertDocumented(html, "span", "loading loading-dots loading-md", "Loading dots")
     }
@@ -87,8 +79,7 @@ class LoadingTest {
     @Test
     fun loading_dots_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Lg) {
-            }
+            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Lg)
         }
         assertDocumented(html, "span", "loading loading-dots loading-lg", "Loading dots")
     }
@@ -96,8 +87,7 @@ class LoadingTest {
     @Test
     fun loading_dots_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Xl) {
-            }
+            daisyLoading(style = LoadingStyle.Dots, size = LoadingSize.Xl)
         }
         assertDocumented(html, "span", "loading loading-dots loading-xl", "Loading dots")
     }
@@ -105,8 +95,7 @@ class LoadingTest {
     @Test
     fun loading_ring() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Xs) {
-            }
+            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Xs)
         }
         assertDocumented(html, "span", "loading loading-ring loading-xs", "Loading ring")
     }
@@ -114,8 +103,7 @@ class LoadingTest {
     @Test
     fun loading_ring_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Sm) {
-            }
+            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Sm)
         }
         assertDocumented(html, "span", "loading loading-ring loading-sm", "Loading ring")
     }
@@ -123,8 +111,7 @@ class LoadingTest {
     @Test
     fun loading_ring_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Md) {
-            }
+            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Md)
         }
         assertDocumented(html, "span", "loading loading-md loading-ring", "Loading ring")
     }
@@ -132,8 +119,7 @@ class LoadingTest {
     @Test
     fun loading_ring_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Lg) {
-            }
+            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Lg)
         }
         assertDocumented(html, "span", "loading loading-lg loading-ring", "Loading ring")
     }
@@ -141,8 +127,7 @@ class LoadingTest {
     @Test
     fun loading_ring_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Xl) {
-            }
+            daisyLoading(style = LoadingStyle.Ring, size = LoadingSize.Xl)
         }
         assertDocumented(html, "span", "loading loading-ring loading-xl", "Loading ring")
     }
@@ -150,8 +135,7 @@ class LoadingTest {
     @Test
     fun loading_ball() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Xs) {
-            }
+            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Xs)
         }
         assertDocumented(html, "span", "loading loading-ball loading-xs", "Loading ball")
     }
@@ -159,8 +143,7 @@ class LoadingTest {
     @Test
     fun loading_ball_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Sm) {
-            }
+            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Sm)
         }
         assertDocumented(html, "span", "loading loading-ball loading-sm", "Loading ball")
     }
@@ -168,8 +151,7 @@ class LoadingTest {
     @Test
     fun loading_ball_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Md) {
-            }
+            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Md)
         }
         assertDocumented(html, "span", "loading loading-ball loading-md", "Loading ball")
     }
@@ -177,8 +159,7 @@ class LoadingTest {
     @Test
     fun loading_ball_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Lg) {
-            }
+            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Lg)
         }
         assertDocumented(html, "span", "loading loading-ball loading-lg", "Loading ball")
     }
@@ -186,8 +167,7 @@ class LoadingTest {
     @Test
     fun loading_ball_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Xl) {
-            }
+            daisyLoading(style = LoadingStyle.Ball, size = LoadingSize.Xl)
         }
         assertDocumented(html, "span", "loading loading-ball loading-xl", "Loading ball")
     }
@@ -195,8 +175,7 @@ class LoadingTest {
     @Test
     fun loading_bars() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Xs) {
-            }
+            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Xs)
         }
         assertDocumented(html, "span", "loading loading-bars loading-xs", "Loading bars")
     }
@@ -204,8 +183,7 @@ class LoadingTest {
     @Test
     fun loading_bars_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Sm) {
-            }
+            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Sm)
         }
         assertDocumented(html, "span", "loading loading-bars loading-sm", "Loading bars")
     }
@@ -213,8 +191,7 @@ class LoadingTest {
     @Test
     fun loading_bars_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Md) {
-            }
+            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Md)
         }
         assertDocumented(html, "span", "loading loading-bars loading-md", "Loading bars")
     }
@@ -222,8 +199,7 @@ class LoadingTest {
     @Test
     fun loading_bars_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Lg) {
-            }
+            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Lg)
         }
         assertDocumented(html, "span", "loading loading-bars loading-lg", "Loading bars")
     }
@@ -231,8 +207,7 @@ class LoadingTest {
     @Test
     fun loading_bars_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Xl) {
-            }
+            daisyLoading(style = LoadingStyle.Bars, size = LoadingSize.Xl)
         }
         assertDocumented(html, "span", "loading loading-bars loading-xl", "Loading bars")
     }
@@ -240,8 +215,7 @@ class LoadingTest {
     @Test
     fun loading_infinity() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Xs) {
-            }
+            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Xs)
         }
         assertDocumented(html, "span", "loading loading-infinity loading-xs", "Loading infinity")
     }
@@ -249,8 +223,7 @@ class LoadingTest {
     @Test
     fun loading_infinity_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Sm) {
-            }
+            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Sm)
         }
         assertDocumented(html, "span", "loading loading-infinity loading-sm", "Loading infinity")
     }
@@ -258,8 +231,7 @@ class LoadingTest {
     @Test
     fun loading_infinity_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Md) {
-            }
+            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Md)
         }
         assertDocumented(html, "span", "loading loading-infinity loading-md", "Loading infinity")
     }
@@ -267,8 +239,7 @@ class LoadingTest {
     @Test
     fun loading_infinity_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Lg) {
-            }
+            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Lg)
         }
         assertDocumented(html, "span", "loading loading-infinity loading-lg", "Loading infinity")
     }
@@ -276,8 +247,7 @@ class LoadingTest {
     @Test
     fun loading_infinity_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Xl) {
-            }
+            daisyLoading(style = LoadingStyle.Infinity, size = LoadingSize.Xl)
         }
         assertDocumented(html, "span", "loading loading-infinity loading-xl", "Loading infinity")
     }
@@ -285,8 +255,7 @@ class LoadingTest {
     @Test
     fun loading_with_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLoading(style = LoadingStyle.Spinner) {
-            }
+            daisyLoading(style = LoadingStyle.Spinner)
         }
         assertDocumented(html, "span", "loading loading-spinner", "Loading with colors")
     }

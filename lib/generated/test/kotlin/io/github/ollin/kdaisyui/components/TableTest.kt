@@ -15,8 +15,7 @@ class TableTest {
     @Test
     fun table() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable() {
-            }
+            daisyTable()
         }
         assertDocumented(html, "table", "table", "Table")
     }
@@ -24,8 +23,7 @@ class TableTest {
     @Test
     fun zebra() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable(zebra = true) {
-            }
+            daisyTable(zebra = true)
         }
         assertDocumented(html, "table", "table table-zebra", "Zebra")
     }
@@ -41,8 +39,7 @@ class TableTest {
     @Test
     fun table_with_visual_elements_daisyAvatar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
-            }
+            daisyAvatar()
         }
         assertDocumented(html, "div", "avatar", "Table with visual elements")
     }
@@ -58,8 +55,7 @@ class TableTest {
     @Test
     fun table_with_visual_elements_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(fillStyle = BadgeFillStyle.Ghost, size = BadgeSize.Sm) {
-            }
+            daisyBadge(fillStyle = BadgeFillStyle.Ghost, size = BadgeSize.Sm)
         }
         assertDocumented(html, "span", "badge badge-ghost badge-sm", "Table with visual elements")
     }
@@ -67,8 +63,7 @@ class TableTest {
     @Test
     fun table_with_visual_elements_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost, size = ButtonSize.Xs) {
-            }
+            daisyButton(style = ButtonStyle.Ghost, size = ButtonSize.Xs)
         }
         assertDocumented(html, "button", "btn btn-ghost btn-xs", "Table with visual elements")
     }
@@ -76,8 +71,7 @@ class TableTest {
     @Test
     fun table_xs() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable(size = TableSize.Xs) {
-            }
+            daisyTable(size = TableSize.Xs)
         }
         assertDocumented(html, "table", "table table-xs", "Table xs")
     }
@@ -85,8 +79,7 @@ class TableTest {
     @Test
     fun table_with_pinned_rows() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable(pinRows = true) {
-            }
+            daisyTable(pinRows = true)
         }
         assertDocumented(html, "table", "table table-pin-rows", "Table with pinned-rows")
     }
@@ -94,8 +87,7 @@ class TableTest {
     @Test
     fun table_with_pinned_rows_and_pinned_cols() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTable(size = TableSize.Xs, pinRows = true, pinCols = true) {
-            }
+            daisyTable(size = TableSize.Xs, pinRows = true, pinCols = true)
         }
         assertDocumented(html, "table", "table table-pin-cols table-pin-rows table-xs", "Table with pinned-rows and pinned-cols")
     }

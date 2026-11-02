@@ -53,8 +53,7 @@ enum class MenuDirection(internal val className: String) : ClassValues<MenuDirec
  * @param focus — For the element inside <li> to look focused
  * @param paged — Shows one level at a time and turns the open summary into a back button
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyMenu(
     id: HtmlId? = null,
@@ -63,8 +62,7 @@ fun FlowContent.daisyMenu(
     focus: Boolean = false,
     paged: Boolean = false,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         if (id != null) attributes["id"] = id.id
@@ -74,8 +72,7 @@ fun FlowContent.daisyMenu(
         if (focus) addClassNames("menu-focus")
         if (paged) addClassNames("menu-paged")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -98,18 +95,14 @@ fun FlowContent.daisyMenuTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    block: (H2.() -> Unit) = {},
 ) {
     h2 {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu-title")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 
@@ -123,16 +116,14 @@ fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
     show: Boolean = false,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu-dropdown")
         if (show) addClassNames("menu-dropdown-show")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -149,16 +140,14 @@ fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
     dropdownShow: Boolean = false,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 ) {
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("menu-dropdown-toggle")
         if (dropdownShow) addClassNames("menu-dropdown-show")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

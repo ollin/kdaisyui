@@ -105,6 +105,8 @@ export function gapFindings(model: Pick<ComponentModel, 'component' | 'notExpres
 export interface DocumentedCall {
   readonly fn: ModelFunction
   readonly args: string
+  /** What the call's block writes: the other groups' siblings, or nothing. */
+  readonly block: string
   readonly expectedClasses: string
   /** DaisyUI's tag for the element, e.g. `a`. */
   readonly tag: string
@@ -117,7 +119,7 @@ export interface DocumentedCall {
 /**
  * The call reproducing an expressible element, or null for a gap. Prefixed component classes go
  * through `extraClasses` and are expected as written; `join-item` is neither passed nor expected,
- * because only a join's content adds it.
+ * because only a join's block adds it.
  */
 export function documentedCall(models: readonly ComponentModel[], element: MarkedElement, componentClasses: ReadonlySet<string>): DocumentedCall | null {
   const counted = countedClasses(element, componentClasses)
@@ -130,7 +132,8 @@ export function documentedCall(models: readonly ComponentModel[], element: Marke
   const rendersDocumentedTag = rendersTag(primary.fn, element.tag)
   return {
     fn: primary.fn,
-    args: [...requiredIdArguments(primary.fn, rendersDocumentedTag), ...callArguments(primary, others, variants)].join(', '),
+    args: [...requiredIdArguments(primary.fn, rendersDocumentedTag), ...callArguments(primary, variants)].join(', '),
+    block: others.map(siblingCall).join('; '),
     expectedClasses: [...new Set(expected)].sort().join(' '),
     tag: element.tag,
     rendersTag: rendersDocumentedTag,
@@ -148,19 +151,14 @@ function siblingCall(group: ClaimedGroup): string {
   return `${group.fn.name}Classes(${groupArguments(group).join(', ')})`
 }
 
-/** The primary call's arguments: its group's, the variant classes, and the other groups' siblings. */
 /** An anchored popover's id is required, so a call of it cannot be written without one. */
 function requiredIdArguments(fn: ModelFunction, called: boolean): string[] {
   return called && fn.anchoredPopover ? ['id = htmlId("documented")'] : []
 }
 
-function callArguments(primary: ClaimedGroup, others: readonly ClaimedGroup[], variants: readonly string[]): string[] {
-  const siblings = others.map(siblingCall)
-  return [
-    ...groupArguments(primary),
-    ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : []),
-    ...(siblings.length > 0 ? [`attrs = { ${siblings.join('; ')} }`] : []),
-  ]
+/** The primary call's arguments: its group's, and the variant classes. */
+function callArguments(primary: ClaimedGroup, variants: readonly string[]): string[] {
+  return [...groupArguments(primary), ...(variants.length > 0 ? [`extraClasses = "${variants.join(' ')}"`] : [])]
 }
 
 /** A rendering function's group before any class-only one, then the page's own model first. */

@@ -105,8 +105,7 @@ Every component accepts these escape-hatch parameters:
 | Parameter | Type | Description |
 |---|---|---|
 | `extraClasses` | `String?` | Additional CSS classes, merged safely (no duplicates) |
-| `attrs` | `(TAG.() -> Unit)?` | Direct access to the underlying kotlinx.html tag |
-| `content` | `(TAG.() -> Unit)?` | Nested HTML content (not all components) |
+| `block` | `(TAG.() -> Unit) = {}` | The element's attributes and children, as in any kotlinx.html builder |
 
 ---
 
@@ -159,16 +158,16 @@ fun FlowContent.daisyComponent(
     disabled: Boolean = false,
     // Escape hatches
     extraClasses: String? = null,        // add any CSS class
-    attrs: (TAG.() -> Unit)? = null,     // set any HTML attribute
-    content: (TAG.() -> Unit)? = null,   // add any nested HTML
+    block: (TAG.() -> Unit) = {},        // set any attribute, add any nested HTML
 )
 ```
 
 The escape hatches ensure the DSL never limits you:
 
 - **`extraClasses`**: add Tailwind utilities (`"w-full mt-4"`), custom classes, or responsive variants (`"lg:btn-lg"`)
-- **`attrs`**: set `id`, `data-*` attributes, event handlers — anything the raw tag supports
-- **`content`**: nest arbitrary HTML inside the component — icons, images, other components
+- **`block`**: the same lambda every kotlinx.html builder takes, last so a trailing lambda binds to it. Set `data-*` attributes and event handlers first, then nest any HTML: icons, images, other components. On an element that cannot hold children, such as `<input>`, it sets attributes only.
+
+A component that takes `text` appends it after the block, so `daisyButton("Save") { popoverTarget(menu) }` renders both the label and the attribute. The block runs first because kotlinx.html accepts an attribute only until the element's first text or child.
 
 If DaisyUI adds a new modifier tomorrow, you can use it immediately via `extraClasses` without waiting for a kdaisyui update.
 

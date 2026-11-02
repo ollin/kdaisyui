@@ -56,23 +56,20 @@ enum class StepsDirection(internal val className: String) : ClassValues<StepsDir
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisySteps(
     id: HtmlId? = null,
     direction: ClassValues<StepsDirection>? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames("steps")
         addClassNames(direction)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -89,16 +86,14 @@ fun UL.daisyStep(
     id: HtmlId? = null,
     color: ClassValues<StepColor>? = null,
     extraClasses: String? = null,
-    attrs: (LI.() -> Unit)? = null,
-    content: (LI.() -> Unit),
+    block: (LI.() -> Unit) = {},
 ) {
     li {
         if (id != null) attributes["id"] = id.id
         addClassNames("step")
         addClassNames(color)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -114,15 +109,13 @@ fun Tag.daisyStepClasses(
 fun FlowContent.daisyStepIcon(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 ) {
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("step-icon")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

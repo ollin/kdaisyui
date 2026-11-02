@@ -19,8 +19,7 @@ class MegamenuTest {
     @Test
     fun responsive_megamenu_with_small_vertical_menus_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Responsive megamenu with small vertical menus")
     }
@@ -28,8 +27,7 @@ class MegamenuTest {
     @Test
     fun responsive_megamenu_with_small_vertical_menus() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(extraClasses = "max-sm:megamenu-vertical") {
-            }
+            daisyMegamenu(extraClasses = "max-sm:megamenu-vertical")
         }
         assertDocumented(html, "div", "max-sm:megamenu-vertical megamenu", "Responsive megamenu with small vertical menus")
     }
@@ -37,8 +35,7 @@ class MegamenuTest {
     @Test
     fun responsive_megamenu_with_small_vertical_menus_daisyMegamenuActive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenuActive() {
-            }
+            daisyMegamenuActive()
         }
         assertDocumented(html, "span", "megamenu-active", "Responsive megamenu with small vertical menus")
     }
@@ -46,8 +43,7 @@ class MegamenuTest {
     @Test
     fun responsive_megamenu_with_small_vertical_menus_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu() {
-            }
+            daisyMenu()
         }
         assertDocumented(html, "ul", "menu", "Responsive megamenu with small vertical menus")
     }
@@ -55,8 +51,7 @@ class MegamenuTest {
     @Test
     fun megamenu_with_wide_popovers_and_horizontal_menus() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(width = MegamenuWidth.Wide, extraClasses = "max-sm:megamenu-vertical") {
-            }
+            daisyMegamenu(width = MegamenuWidth.Wide, extraClasses = "max-sm:megamenu-vertical")
         }
         assertDocumented(html, "div", "max-sm:megamenu-vertical megamenu megamenu-wide", "Megamenu with wide popovers and horizontal menus")
     }
@@ -64,8 +59,7 @@ class MegamenuTest {
     @Test
     fun megamenu_with_wide_popovers_and_horizontal_menus_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(direction = MenuDirection.Horizontal) {
-            }
+            daisyMenu(direction = MenuDirection.Horizontal)
         }
         assertDocumented(html, "ul", "menu menu-horizontal", "Megamenu with wide popovers and horizontal menus")
     }
@@ -73,8 +67,7 @@ class MegamenuTest {
     @Test
     fun megamenu_with_a_menus_and_lots_of_links_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(extraClasses = "md:menu-horizontal") {
-            }
+            daisyMenu(extraClasses = "md:menu-horizontal")
         }
         assertDocumented(html, "ul", "md:menu-horizontal menu", "Megamenu with a menus and lots of links")
     }
@@ -90,8 +83,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_a_navbar_daisyNavbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbar() {
-            }
+            daisyNavbar()
         }
         assertDocumented(html, "div", "navbar", "Megamenu in a navbar")
     }
@@ -99,8 +91,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_a_navbar_daisyNavbarStart() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarStart() {
-            }
+            daisyNavbarStart()
         }
         assertDocumented(html, "div", "navbar-start", "Megamenu in a navbar")
     }
@@ -116,8 +107,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_a_navbar_daisyNavbarCenter() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarCenter() {
-            }
+            daisyNavbarCenter()
         }
         assertDocumented(html, "div", "navbar-center", "Megamenu in a navbar")
     }
@@ -125,8 +115,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_a_navbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(width = MegamenuWidth.Full, extraClasses = "max-sm:megamenu-vertical") {
-            }
+            daisyMegamenu(width = MegamenuWidth.Full, extraClasses = "max-sm:megamenu-vertical")
         }
         assertDocumented(html, "div", "max-sm:megamenu-vertical megamenu megamenu-full", "Megamenu in a navbar")
     }
@@ -134,8 +123,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_a_navbar_daisyNavbarEnd() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarEnd() {
-            }
+            daisyNavbarEnd()
         }
         assertDocumented(html, "div", "navbar-end", "Megamenu in a navbar")
     }
@@ -143,8 +131,7 @@ class MegamenuTest {
     @Test
     fun megamenu_without_arrows() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu() {
-            }
+            daisyMegamenu()
         }
         assertDocumented(html, "div", "megamenu", "megamenu without arrows")
     }
@@ -152,8 +139,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_different_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(size = MegamenuSize.Xs) {
-            }
+            daisyMegamenu(size = MegamenuSize.Xs)
         }
         assertDocumented(html, "div", "megamenu megamenu-xs", "Megamenu in different sizes")
     }
@@ -161,8 +147,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_different_sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(size = MegamenuSize.Sm) {
-            }
+            daisyMegamenu(size = MegamenuSize.Sm)
         }
         assertDocumented(html, "div", "megamenu megamenu-sm", "Megamenu in different sizes")
     }
@@ -170,8 +155,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_different_sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(size = MegamenuSize.Md) {
-            }
+            daisyMegamenu(size = MegamenuSize.Md)
         }
         assertDocumented(html, "div", "megamenu megamenu-md", "Megamenu in different sizes")
     }
@@ -179,8 +163,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_different_sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(size = MegamenuSize.Lg) {
-            }
+            daisyMegamenu(size = MegamenuSize.Lg)
         }
         assertDocumented(html, "div", "megamenu megamenu-lg", "Megamenu in different sizes")
     }
@@ -188,8 +171,7 @@ class MegamenuTest {
     @Test
     fun megamenu_in_different_sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMegamenu(size = MegamenuSize.Xl) {
-            }
+            daisyMegamenu(size = MegamenuSize.Xl)
         }
         assertDocumented(html, "div", "megamenu megamenu-xl", "Megamenu in different sizes")
     }

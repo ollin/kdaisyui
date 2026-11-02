@@ -15,8 +15,7 @@ class MockupBrowserTest {
     @Test
     fun browser_mockup_with_border() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupBrowser() {
-            }
+            daisyMockupBrowser()
         }
         assertDocumented(html, "div", "mockup-browser", "browser mockup with border")
     }
@@ -24,8 +23,7 @@ class MockupBrowserTest {
     @Test
     fun browser_mockup_with_border_daisyMockupBrowserToolbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupBrowserToolbar() {
-            }
+            daisyMockupBrowserToolbar()
         }
         assertDocumented(html, "div", "mockup-browser-toolbar", "browser mockup with border")
     }

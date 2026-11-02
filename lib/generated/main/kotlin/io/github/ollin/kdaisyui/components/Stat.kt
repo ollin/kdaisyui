@@ -28,23 +28,20 @@ enum class StatsDirection(internal val className: String) : ClassValues<StatsDir
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyStats(
     id: HtmlId? = null,
     direction: ClassValues<StatsDirection>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stats")
         addClassNames(direction)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -60,15 +57,13 @@ fun Tag.daisyStatsClasses(
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stat")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -82,18 +77,14 @@ fun FlowContent.daisyStatTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit)? = null,
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stat-title")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 
@@ -107,18 +98,14 @@ fun FlowContent.daisyStatValue(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit)? = null,
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stat-value")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 
@@ -132,18 +119,14 @@ fun FlowContent.daisyStatDesc(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit)? = null,
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stat-desc")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 
@@ -156,15 +139,13 @@ fun Tag.daisyStatDescClasses() {
 fun FlowContent.daisyStatFigure(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stat-figure")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -177,15 +158,13 @@ fun Tag.daisyStatFigureClasses() {
 fun FlowContent.daisyStatActions(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("stat-actions")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

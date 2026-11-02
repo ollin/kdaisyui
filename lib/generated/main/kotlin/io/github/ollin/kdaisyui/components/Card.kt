@@ -61,8 +61,7 @@ enum class CardLayout(internal val className: String) : ClassValues<CardLayout> 
  * @param style — Style variant
  * @param layout — Layout variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyCard(
     id: HtmlId? = null,
@@ -70,8 +69,7 @@ fun FlowContent.daisyCard(
     style: ClassValues<CardStyle>? = null,
     layout: ClassValues<CardLayout>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -80,8 +78,7 @@ fun FlowContent.daisyCard(
         addClassNames(style)
         addClassNames(layout)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -102,18 +99,14 @@ fun FlowContent.daisyCardTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    block: (H2.() -> Unit) = {},
 ) {
     h2 {
         if (id != null) attributes["id"] = id.id
         addClassNames("card-title")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 
@@ -126,15 +119,13 @@ fun Tag.daisyCardTitleClasses() {
 fun FlowContent.daisyCardBody(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("card-body")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -147,15 +138,13 @@ fun Tag.daisyCardBodyClasses() {
 fun FlowContent.daisyCardActions(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("card-actions")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

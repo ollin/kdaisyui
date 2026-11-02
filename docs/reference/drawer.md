@@ -16,8 +16,7 @@ fun FlowContent.daisyDrawer(
     end: Boolean = false,
     open: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -28,7 +27,7 @@ fun Tag.daisyDrawerClasses(end: Boolean = false, open: Boolean = false)
 fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -39,8 +38,7 @@ fun Tag.daisyDrawerToggleClasses()
 fun FlowContent.daisyDrawerContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -51,8 +49,7 @@ fun Tag.daisyDrawerContentClasses()
 fun FlowContent.daisyDrawerSide(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -63,8 +60,7 @@ fun Tag.daisyDrawerSideClasses()
 fun FlowContent.daisyDrawerOverlay(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -75,8 +71,7 @@ fun Tag.daisyDrawerOverlayClasses()
 fun FlowContent.daisyDrawerButton(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

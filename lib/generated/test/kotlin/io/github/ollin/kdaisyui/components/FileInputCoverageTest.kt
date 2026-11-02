@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class FileInputCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class FileInputCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class FileInputCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -60,7 +58,7 @@ class FileInputCoverageTest {
 
     @Test
     fun fileInput_all_flags() {
-        val html = allFlags(Expected("FileInput all flags", "file-input file-input-ghost zz-extra", content = false)) { daisyFileInput(id = ID, ghost = true, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("FileInput all flags", "file-input file-input-ghost zz-extra")) { daisyFileInput(id = ID, ghost = true, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -78,7 +76,7 @@ class FileInputCoverageTest {
     }
 
     @Test
-    fun fileInputClasses_all_flags() = assertRenders(Expected("FileInputClasses all flags", "file-input file-input-ghost", content = false)) { daisyFileInputClasses(ghost = true) }
+    fun fileInputClasses_all_flags() = assertRenders(Expected("FileInputClasses all flags", "file-input file-input-ghost")) { daisyFileInputClasses(ghost = true) }
 
     @Test
     fun fileInputClasses_color() = assertEachEntry("FileInputClasses color", mapOf(FileInputColor.Neutral to "file-input file-input-neutral", FileInputColor.Primary to "file-input file-input-primary", FileInputColor.Secondary to "file-input file-input-secondary", FileInputColor.Accent to "file-input file-input-accent", FileInputColor.Info to "file-input file-input-info", FileInputColor.Success to "file-input file-input-success", FileInputColor.Warning to "file-input file-input-warning", FileInputColor.Error to "file-input file-input-error")) { daisyFileInputClasses(color = it) }

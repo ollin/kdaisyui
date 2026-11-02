@@ -15,8 +15,7 @@ class KbdTest {
     @Test
     fun kbd() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd() {
-            }
+            daisyKbd()
         }
         assertDocumented(html, "kbd", "kbd", "Kbd")
     }
@@ -24,8 +23,7 @@ class KbdTest {
     @Test
     fun kbd_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd(size = KbdSize.Xs) {
-            }
+            daisyKbd(size = KbdSize.Xs)
         }
         assertDocumented(html, "kbd", "kbd kbd-xs", "Kbd sizes")
     }
@@ -33,8 +31,7 @@ class KbdTest {
     @Test
     fun kbd_sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd(size = KbdSize.Sm) {
-            }
+            daisyKbd(size = KbdSize.Sm)
         }
         assertDocumented(html, "kbd", "kbd kbd-sm", "Kbd sizes")
     }
@@ -42,8 +39,7 @@ class KbdTest {
     @Test
     fun kbd_sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd(size = KbdSize.Md) {
-            }
+            daisyKbd(size = KbdSize.Md)
         }
         assertDocumented(html, "kbd", "kbd kbd-md", "Kbd sizes")
     }
@@ -51,8 +47,7 @@ class KbdTest {
     @Test
     fun kbd_sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd(size = KbdSize.Lg) {
-            }
+            daisyKbd(size = KbdSize.Lg)
         }
         assertDocumented(html, "kbd", "kbd kbd-lg", "Kbd sizes")
     }
@@ -60,8 +55,7 @@ class KbdTest {
     @Test
     fun kbd_sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyKbd(size = KbdSize.Xl) {
-            }
+            daisyKbd(size = KbdSize.Xl)
         }
         assertDocumented(html, "kbd", "kbd kbd-xl", "Kbd sizes")
     }

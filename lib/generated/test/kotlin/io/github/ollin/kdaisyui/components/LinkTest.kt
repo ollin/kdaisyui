@@ -15,8 +15,7 @@ class LinkTest {
     @Test
     fun link() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink() {
-            }
+            daisyLink()
         }
         assertDocumented(html, "a", "link", "Link")
     }
@@ -24,8 +23,7 @@ class LinkTest {
     @Test
     fun primary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(color = LinkColor.Primary) {
-            }
+            daisyLink(color = LinkColor.Primary)
         }
         assertDocumented(html, "a", "link link-primary", "Primary color")
     }
@@ -33,8 +31,7 @@ class LinkTest {
     @Test
     fun secondary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(color = LinkColor.Secondary) {
-            }
+            daisyLink(color = LinkColor.Secondary)
         }
         assertDocumented(html, "a", "link link-secondary", "Secondary color")
     }
@@ -42,8 +39,7 @@ class LinkTest {
     @Test
     fun accent_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(color = LinkColor.Accent) {
-            }
+            daisyLink(color = LinkColor.Accent)
         }
         assertDocumented(html, "a", "link link-accent", "Accent color")
     }
@@ -51,8 +47,7 @@ class LinkTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(color = LinkColor.Success) {
-            }
+            daisyLink(color = LinkColor.Success)
         }
         assertDocumented(html, "a", "link link-success", "Success color")
     }
@@ -60,8 +55,7 @@ class LinkTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(color = LinkColor.Info) {
-            }
+            daisyLink(color = LinkColor.Info)
         }
         assertDocumented(html, "a", "link link-info", "Info color")
     }
@@ -69,8 +63,7 @@ class LinkTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(color = LinkColor.Warning) {
-            }
+            daisyLink(color = LinkColor.Warning)
         }
         assertDocumented(html, "a", "link link-warning", "Warning color")
     }
@@ -78,8 +71,7 @@ class LinkTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(color = LinkColor.Error) {
-            }
+            daisyLink(color = LinkColor.Error)
         }
         assertDocumented(html, "a", "link link-error", "Error color")
     }
@@ -87,8 +79,7 @@ class LinkTest {
     @Test
     fun show_underline_only_on_hover() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(hover = true) {
-            }
+            daisyLink(hover = true)
         }
         assertDocumented(html, "a", "link link-hover", "Show underline only on hover")
     }

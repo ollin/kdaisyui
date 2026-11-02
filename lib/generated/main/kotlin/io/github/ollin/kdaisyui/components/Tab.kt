@@ -65,8 +65,7 @@ enum class TabsStyle(internal val className: String) : ClassValues<TabsStyle> {
  * @param placement — Placement variant
  * @param style — Style variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyTabs(
     id: HtmlId? = null,
@@ -74,8 +73,7 @@ fun FlowContent.daisyTabs(
     placement: ClassValues<TabsPlacement>? = null,
     style: ClassValues<TabsStyle>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -85,8 +83,7 @@ fun FlowContent.daisyTabs(
         addClassNames(placement)
         addClassNames(style)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -108,8 +105,7 @@ fun FlowContent.daisyTab(
     active: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
-    attrs: (A.() -> Unit)? = null,
-    content: (A.() -> Unit),
+    block: (A.() -> Unit) = {},
 ) {
     a {
         if (id != null) attributes["id"] = id.id
@@ -118,8 +114,7 @@ fun FlowContent.daisyTab(
         if (active) addClassNames("tab-active")
         if (disabled) addClassNames("tab-disabled")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -139,7 +134,7 @@ fun FlowContent.daisyTabRadio(
     active: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
@@ -149,7 +144,7 @@ fun FlowContent.daisyTabRadio(
         if (active) addClassNames("tab-active")
         if (disabled) addClassNames("tab-disabled")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 
@@ -167,15 +162,13 @@ fun Tag.daisyTabRadioClasses(
 fun FlowContent.daisyTabContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("tab-content")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

@@ -15,8 +15,7 @@ class OtpTest {
     @Test
     fun otp() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp() {
-            }
+            daisyOtp()
         }
         assertDocumented(html, "label", "otp", "OTP")
     }
@@ -24,8 +23,7 @@ class OtpTest {
     @Test
     fun otp_joined() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(joined = true) {
-            }
+            daisyOtp(joined = true)
         }
         assertDocumented(html, "label", "otp otp-joined", "OTP joined")
     }
@@ -33,8 +31,7 @@ class OtpTest {
     @Test
     fun otp_with_different_sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(size = OtpSize.Xs) {
-            }
+            daisyOtp(size = OtpSize.Xs)
         }
         assertDocumented(html, "label", "otp otp-xs", "OTP with different sizes")
     }
@@ -42,8 +39,7 @@ class OtpTest {
     @Test
     fun otp_with_different_sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(size = OtpSize.Sm) {
-            }
+            daisyOtp(size = OtpSize.Sm)
         }
         assertDocumented(html, "label", "otp otp-sm", "OTP with different sizes")
     }
@@ -51,8 +47,7 @@ class OtpTest {
     @Test
     fun otp_with_different_sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(size = OtpSize.Md) {
-            }
+            daisyOtp(size = OtpSize.Md)
         }
         assertDocumented(html, "label", "otp otp-md", "OTP with different sizes")
     }
@@ -60,8 +55,7 @@ class OtpTest {
     @Test
     fun otp_with_different_sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(size = OtpSize.Lg) {
-            }
+            daisyOtp(size = OtpSize.Lg)
         }
         assertDocumented(html, "label", "otp otp-lg", "OTP with different sizes")
     }
@@ -69,8 +63,7 @@ class OtpTest {
     @Test
     fun otp_with_different_sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(size = OtpSize.Xl) {
-            }
+            daisyOtp(size = OtpSize.Xl)
         }
         assertDocumented(html, "label", "otp otp-xl", "OTP with different sizes")
     }
@@ -78,8 +71,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Neutral) {
-            }
+            daisyOtp(color = OtpColor.Neutral)
         }
         assertDocumented(html, "label", "otp otp-neutral", "OTP with different colors")
     }
@@ -87,8 +79,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Primary) {
-            }
+            daisyOtp(color = OtpColor.Primary)
         }
         assertDocumented(html, "label", "otp otp-primary", "OTP with different colors")
     }
@@ -96,8 +87,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Secondary) {
-            }
+            daisyOtp(color = OtpColor.Secondary)
         }
         assertDocumented(html, "label", "otp otp-secondary", "OTP with different colors")
     }
@@ -105,8 +95,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Accent) {
-            }
+            daisyOtp(color = OtpColor.Accent)
         }
         assertDocumented(html, "label", "otp otp-accent", "OTP with different colors")
     }
@@ -114,8 +103,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Info) {
-            }
+            daisyOtp(color = OtpColor.Info)
         }
         assertDocumented(html, "label", "otp otp-info", "OTP with different colors")
     }
@@ -123,8 +111,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors_6() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Success) {
-            }
+            daisyOtp(color = OtpColor.Success)
         }
         assertDocumented(html, "label", "otp otp-success", "OTP with different colors")
     }
@@ -132,8 +119,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors_7() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Warning) {
-            }
+            daisyOtp(color = OtpColor.Warning)
         }
         assertDocumented(html, "label", "otp otp-warning", "OTP with different colors")
     }
@@ -141,8 +127,7 @@ class OtpTest {
     @Test
     fun otp_with_different_colors_8() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(color = OtpColor.Error) {
-            }
+            daisyOtp(color = OtpColor.Error)
         }
         assertDocumented(html, "label", "otp otp-error", "OTP with different colors")
     }

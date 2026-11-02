@@ -58,8 +58,7 @@ enum class TextareaSize(internal val className: String) : ClassValues<TextareaSi
  * @param size — Size variant
  * @param ghost
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyTextarea(
     id: HtmlId? = null,
@@ -67,8 +66,7 @@ fun FlowContent.daisyTextarea(
     size: ClassValues<TextareaSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
-    attrs: (TEXTAREA.() -> Unit)? = null,
-    content: (TEXTAREA.() -> Unit),
+    block: (TEXTAREA.() -> Unit) = {},
 ) {
     textArea {
         if (id != null) attributes["id"] = id.id
@@ -77,8 +75,7 @@ fun FlowContent.daisyTextarea(
         addClassNames(size)
         if (ghost) addClassNames("textarea-ghost")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

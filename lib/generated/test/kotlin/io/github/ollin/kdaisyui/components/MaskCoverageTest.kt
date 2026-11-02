@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class MaskCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class MaskCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class MaskCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -60,7 +58,7 @@ class MaskCoverageTest {
 
     @Test
     fun mask_all_flags() {
-        val html = allFlags(Expected("Mask all flags", "mask zz-extra", content = false)) { daisyMask(id = ID, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("Mask all flags", "mask zz-extra")) { daisyMask(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -78,7 +76,7 @@ class MaskCoverageTest {
     }
 
     @Test
-    fun maskClasses_all_flags() = assertRenders(Expected("MaskClasses all flags", "mask", content = false)) { daisyMaskClasses() }
+    fun maskClasses_all_flags() = assertRenders(Expected("MaskClasses all flags", "mask")) { daisyMaskClasses() }
 
     @Test
     fun maskClasses_style() = assertEachEntry("MaskClasses style", mapOf(MaskStyle.Squircle to "mask mask-squircle", MaskStyle.Heart to "mask mask-heart", MaskStyle.Hexagon to "mask mask-hexagon", MaskStyle.Hexagon2 to "mask mask-hexagon-2", MaskStyle.Decagon to "mask mask-decagon", MaskStyle.Pentagon to "mask mask-pentagon", MaskStyle.Diamond to "mask mask-diamond", MaskStyle.Circle to "mask mask-circle", MaskStyle.Star to "mask mask-star", MaskStyle.Star2 to "mask mask-star-2", MaskStyle.Triangle to "mask mask-triangle", MaskStyle.Triangle2 to "mask mask-triangle-2", MaskStyle.Triangle3 to "mask mask-triangle-3", MaskStyle.Triangle4 to "mask mask-triangle-4")) { daisyMaskClasses(style = it) }

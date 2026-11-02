@@ -15,21 +15,18 @@ import kotlinx.html.Tag
  * Hover Gallery is container of images. The first image is visible by default and when we hover it horizontally, other images show up. Hover Gallery is useful for product cards in ecommerce sites, portfolios or in image galleries. Hover Gallery can include up to 10 images. Renders `<figure class="hover-gallery ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyHoverGallery(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FIGURE.() -> Unit)? = null,
-    content: (FIGURE.() -> Unit),
+    block: (FIGURE.() -> Unit) = {},
 ) {
     figure {
         if (id != null) attributes["id"] = id.id
         addClassNames("hover-gallery")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

@@ -18,8 +18,7 @@ fun FlowContent.daisyStatus(
     color: ClassValues<StatusColor>? = null,
     size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

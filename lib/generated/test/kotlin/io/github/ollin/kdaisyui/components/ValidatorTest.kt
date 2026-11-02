@@ -18,7 +18,7 @@ class ValidatorTest {
     @Test
     fun validator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidator(attrs = { daisyInputClasses() })
+            daisyValidator { daisyInputClasses() }
         }
         assertDocumented(html, "input", "input validator", "Validator")
     }
@@ -34,7 +34,7 @@ class ValidatorTest {
     @Test
     fun checkbox_requirement_validator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidator(attrs = { daisyCheckboxClasses() })
+            daisyValidator { daisyCheckboxClasses() }
         }
         assertDocumented(html, "input", "checkbox validator", "Checkbox requirement validator")
     }
@@ -42,7 +42,7 @@ class ValidatorTest {
     @Test
     fun toggle_requirement_validator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidator(attrs = { daisyToggleClasses() })
+            daisyValidator { daisyToggleClasses() }
         }
         assertDocumented(html, "input", "toggle validator", "Toggle requirement validator")
     }
@@ -58,8 +58,7 @@ class ValidatorTest {
     @Test
     fun select_requirement_validator_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Select requirement validator")
     }
@@ -83,8 +82,7 @@ class ValidatorTest {
     @Test
     fun form_requirement_validator_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Neutral) {
-            }
+            daisyButton(color = ButtonColor.Neutral)
         }
         assertDocumented(html, "button", "btn btn-neutral", "Form requirement validator")
     }
@@ -92,8 +90,7 @@ class ValidatorTest {
     @Test
     fun form_requirement_validator_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Ghost) {
-            }
+            daisyButton(style = ButtonStyle.Ghost)
         }
         assertDocumented(html, "button", "btn btn-ghost", "Form requirement validator")
     }

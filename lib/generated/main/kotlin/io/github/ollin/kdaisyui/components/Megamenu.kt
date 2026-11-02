@@ -50,8 +50,7 @@ enum class MegamenuWidth(internal val className: String) : ClassValues<MegamenuW
  * @param width — Width variant
  * @param vertical — Hides horizontal megamenu so we can open a vertical megamenu in small screens
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyMegamenu(
     id: HtmlId? = null,
@@ -59,8 +58,7 @@ fun FlowContent.daisyMegamenu(
     width: ClassValues<MegamenuWidth>? = null,
     vertical: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -70,8 +68,7 @@ fun FlowContent.daisyMegamenu(
         addClassNames(width)
         if (vertical) addClassNames("megamenu-vertical")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -91,15 +88,13 @@ fun Tag.daisyMegamenuClasses(
 fun FlowContent.daisyMegamenuActive(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 ) {
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("megamenu-active")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -112,14 +107,12 @@ fun Tag.daisyMegamenuActiveClasses() {
 fun FlowContent.daisyMegamenuPanel(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         attributes["popover"] = ""
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }

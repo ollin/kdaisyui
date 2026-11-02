@@ -16,8 +16,7 @@ class HeroTest {
     @Test
     fun centered_hero() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHero() {
-            }
+            daisyHero()
         }
         assertDocumented(html, "div", "hero", "Centered hero")
     }
@@ -25,8 +24,7 @@ class HeroTest {
     @Test
     fun centered_hero_daisyHeroContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHeroContent() {
-            }
+            daisyHeroContent()
         }
         assertDocumented(html, "div", "hero-content", "Centered hero")
     }
@@ -34,8 +32,7 @@ class HeroTest {
     @Test
     fun centered_hero_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Primary) {
-            }
+            daisyButton(color = ButtonColor.Primary)
         }
         assertDocumented(html, "button", "btn btn-primary", "Centered hero")
     }
@@ -43,8 +40,7 @@ class HeroTest {
     @Test
     fun hero_with_form_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
-            }
+            daisyCard()
         }
         assertDocumented(html, "div", "card", "Hero with form")
     }
@@ -52,8 +48,7 @@ class HeroTest {
     @Test
     fun hero_with_form_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardBody() {
-            }
+            daisyCardBody()
         }
         assertDocumented(html, "div", "card-body", "Hero with form")
     }
@@ -61,8 +56,7 @@ class HeroTest {
     @Test
     fun hero_with_form_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFieldset() {
-            }
+            daisyFieldset()
         }
         assertDocumented(html, "fieldset", "fieldset", "Hero with form")
     }
@@ -86,8 +80,7 @@ class HeroTest {
     @Test
     fun hero_with_form_daisyLink() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLink(hover = true) {
-            }
+            daisyLink(hover = true)
         }
         assertDocumented(html, "a", "link link-hover", "Hero with form")
     }
@@ -95,8 +88,7 @@ class HeroTest {
     @Test
     fun hero_with_form_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Neutral) {
-            }
+            daisyButton(color = ButtonColor.Neutral)
         }
         assertDocumented(html, "button", "btn btn-neutral", "Hero with form")
     }
@@ -104,8 +96,7 @@ class HeroTest {
     @Test
     fun hero_with_overlay_image_daisyHeroOverlay() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHeroOverlay() {
-            }
+            daisyHeroOverlay()
         }
         assertDocumented(html, "div", "hero-overlay", "Hero with overlay image")
     }

@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class ToggleCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class ToggleCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class ToggleCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -61,7 +59,7 @@ class ToggleCoverageTest {
 
     @Test
     fun toggle_all_flags() {
-        val html = allFlags(Expected("Toggle all flags", "toggle zz-extra", content = false)) { daisyToggle(id = ID, checked = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("Toggle all flags", "toggle zz-extra")) { daisyToggle(id = ID, checked = true, disabled = true, extraClasses = EXTRA, block = BLOCK) }
         assertTrue(html.contains("type=\""), "Toggle sets type")
         assertTrue(html.contains("checked=\""), "Toggle sets checked")
         assertTrue(html.contains("disabled=\""), "Toggle sets disabled")
@@ -82,7 +80,7 @@ class ToggleCoverageTest {
     }
 
     @Test
-    fun toggleClasses_all_flags() = assertRenders(Expected("ToggleClasses all flags", "toggle", content = false)) { daisyToggleClasses() }
+    fun toggleClasses_all_flags() = assertRenders(Expected("ToggleClasses all flags", "toggle")) { daisyToggleClasses() }
 
     @Test
     fun toggleClasses_color() = assertEachEntry("ToggleClasses color", mapOf(ToggleColor.Primary to "toggle toggle-primary", ToggleColor.Secondary to "toggle toggle-secondary", ToggleColor.Accent to "toggle toggle-accent", ToggleColor.Neutral to "toggle toggle-neutral", ToggleColor.Success to "toggle toggle-success", ToggleColor.Warning to "toggle toggle-warning", ToggleColor.Info to "toggle toggle-info", ToggleColor.Error to "toggle toggle-error")) { daisyToggleClasses(color = it) }

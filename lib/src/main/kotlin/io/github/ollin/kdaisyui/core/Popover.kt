@@ -3,7 +3,7 @@ package io.github.ollin.kdaisyui.core
 import kotlinx.html.Tag
 
 /**
- * Makes this tag the trigger of [popover]: `daisyButton("Menu", attrs = { popoverTarget(menu, anchored = true) })`.
+ * Makes this tag the trigger of [popover]: `daisyButton("Menu") { popoverTarget(menu, anchored = true) }`.
  *
  * [anchored] also writes the anchor name an anchored popover such as `daisyDropdownPopover`
  * positions itself against. Off by default: DaisyUI's megamenu sets its triggers' anchor itself.

@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class NavbarCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class NavbarCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,23 +45,20 @@ class NavbarCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun navbar_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbar(
-                content = { },
-            )
+            daisyNavbar()
         }
         assertRendered(html, Expected("Navbar defaults", "navbar", closes = "</div></div>"))
     }
 
     @Test
     fun navbar_all_flags() {
-        val html = allFlags(Expected("Navbar all flags", "navbar zz-extra", closes = "</div></div>")) { daisyNavbar(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Navbar all flags", "navbar zz-extra", closes = "</div></div>")) { daisyNavbar(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -74,21 +70,19 @@ class NavbarCoverageTest {
     }
 
     @Test
-    fun navbarClasses_all_flags() = assertRenders(Expected("NavbarClasses all flags", "navbar", content = false)) { daisyNavbarClasses() }
+    fun navbarClasses_all_flags() = assertRenders(Expected("NavbarClasses all flags", "navbar")) { daisyNavbarClasses() }
 
     @Test
     fun navbarStart_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarStart(
-                content = { },
-            )
+            daisyNavbarStart()
         }
         assertRendered(html, Expected("NavbarStart defaults", "navbar-start", closes = "</div></div>"))
     }
 
     @Test
     fun navbarStart_all_flags() {
-        val html = allFlags(Expected("NavbarStart all flags", "navbar-start zz-extra", closes = "</div></div>")) { daisyNavbarStart(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("NavbarStart all flags", "navbar-start zz-extra", closes = "</div></div>")) { daisyNavbarStart(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -100,21 +94,19 @@ class NavbarCoverageTest {
     }
 
     @Test
-    fun navbarStartClasses_all_flags() = assertRenders(Expected("NavbarStartClasses all flags", "navbar-start", content = false)) { daisyNavbarStartClasses() }
+    fun navbarStartClasses_all_flags() = assertRenders(Expected("NavbarStartClasses all flags", "navbar-start")) { daisyNavbarStartClasses() }
 
     @Test
     fun navbarCenter_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarCenter(
-                content = { },
-            )
+            daisyNavbarCenter()
         }
         assertRendered(html, Expected("NavbarCenter defaults", "navbar-center", closes = "</div></div>"))
     }
 
     @Test
     fun navbarCenter_all_flags() {
-        val html = allFlags(Expected("NavbarCenter all flags", "navbar-center zz-extra", closes = "</div></div>")) { daisyNavbarCenter(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("NavbarCenter all flags", "navbar-center zz-extra", closes = "</div></div>")) { daisyNavbarCenter(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -126,21 +118,19 @@ class NavbarCoverageTest {
     }
 
     @Test
-    fun navbarCenterClasses_all_flags() = assertRenders(Expected("NavbarCenterClasses all flags", "navbar-center", content = false)) { daisyNavbarCenterClasses() }
+    fun navbarCenterClasses_all_flags() = assertRenders(Expected("NavbarCenterClasses all flags", "navbar-center")) { daisyNavbarCenterClasses() }
 
     @Test
     fun navbarEnd_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarEnd(
-                content = { },
-            )
+            daisyNavbarEnd()
         }
         assertRendered(html, Expected("NavbarEnd defaults", "navbar-end", closes = "</div></div>"))
     }
 
     @Test
     fun navbarEnd_all_flags() {
-        val html = allFlags(Expected("NavbarEnd all flags", "navbar-end zz-extra", closes = "</div></div>")) { daisyNavbarEnd(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("NavbarEnd all flags", "navbar-end zz-extra", closes = "</div></div>")) { daisyNavbarEnd(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -152,5 +142,5 @@ class NavbarCoverageTest {
     }
 
     @Test
-    fun navbarEndClasses_all_flags() = assertRenders(Expected("NavbarEndClasses all flags", "navbar-end", content = false)) { daisyNavbarEndClasses() }
+    fun navbarEndClasses_all_flags() = assertRenders(Expected("NavbarEndClasses all flags", "navbar-end")) { daisyNavbarEndClasses() }
 }

@@ -14,8 +14,7 @@ Navigation trail showing current location. Renders `<div class="breadcrumbs ..."
 fun FlowContent.daisyBreadcrumbs(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,8 +25,7 @@ fun Tag.daisyBreadcrumbsClasses()
 fun FlowContent.daisyBreadcrumbsItems(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 ```
 
@@ -35,7 +33,6 @@ fun FlowContent.daisyBreadcrumbsItems(
 fun UL.daisyBreadcrumbsItem(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LI.() -> Unit)? = null,
-    content: (LI.() -> Unit),
+    block: (LI.() -> Unit) = {},
 )
 ```

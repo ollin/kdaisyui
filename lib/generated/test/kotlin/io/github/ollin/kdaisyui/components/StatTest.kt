@@ -15,8 +15,7 @@ class StatTest {
     @Test
     fun stat() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats() {
-            }
+            daisyStats()
         }
         assertDocumented(html, "div", "stats", "Stat")
     }
@@ -24,8 +23,7 @@ class StatTest {
     @Test
     fun stat_daisyStat() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStat() {
-            }
+            daisyStat()
         }
         assertDocumented(html, "div", "stat", "Stat")
     }
@@ -33,8 +31,7 @@ class StatTest {
     @Test
     fun stat_daisyStatTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStatTitle() {
-            }
+            daisyStatTitle()
         }
         assertDocumented(html, "div", "stat-title", "Stat")
     }
@@ -42,8 +39,7 @@ class StatTest {
     @Test
     fun stat_daisyStatValue() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStatValue() {
-            }
+            daisyStatValue()
         }
         assertDocumented(html, "div", "stat-value", "Stat")
     }
@@ -51,8 +47,7 @@ class StatTest {
     @Test
     fun stat_daisyStatDesc() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStatDesc() {
-            }
+            daisyStatDesc()
         }
         assertDocumented(html, "div", "stat-desc", "Stat")
     }
@@ -60,8 +55,7 @@ class StatTest {
     @Test
     fun stat_with_icons_or_image_daisyStatFigure() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStatFigure() {
-            }
+            daisyStatFigure()
         }
         assertDocumented(html, "div", "stat-figure", "Stat with icons or image")
     }
@@ -69,8 +63,7 @@ class StatTest {
     @Test
     fun stat_with_icons_or_image_daisyAvatar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(presence = AvatarPresence.Online) {
-            }
+            daisyAvatar(presence = AvatarPresence.Online)
         }
         assertDocumented(html, "div", "avatar avatar-online", "Stat with icons or image")
     }
@@ -78,8 +71,7 @@ class StatTest {
     @Test
     fun vertical() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats(direction = StatsDirection.Vertical) {
-            }
+            daisyStats(direction = StatsDirection.Vertical)
         }
         assertDocumented(html, "div", "stats stats-vertical", "Vertical")
     }
@@ -87,8 +79,7 @@ class StatTest {
     @Test
     fun responsive_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStats(direction = StatsDirection.Vertical, extraClasses = "lg:stats-horizontal") {
-            }
+            daisyStats(direction = StatsDirection.Vertical, extraClasses = "lg:stats-horizontal")
         }
         assertDocumented(html, "div", "lg:stats-horizontal stats stats-vertical", "Responsive (vertical on small screen, horizontal on large screen)")
     }
@@ -96,8 +87,7 @@ class StatTest {
     @Test
     fun with_custom_colors_and_button_daisyStatActions() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStatActions() {
-            }
+            daisyStatActions()
         }
         assertDocumented(html, "div", "stat-actions", "With custom colors and button")
     }
@@ -105,8 +95,7 @@ class StatTest {
     @Test
     fun with_custom_colors_and_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Xs, color = ButtonColor.Success) {
-            }
+            daisyButton(size = ButtonSize.Xs, color = ButtonColor.Success)
         }
         assertDocumented(html, "button", "btn btn-success btn-xs", "With custom colors and button")
     }
@@ -114,8 +103,7 @@ class StatTest {
     @Test
     fun with_custom_colors_and_button_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Xs) {
-            }
+            daisyButton(size = ButtonSize.Xs)
         }
         assertDocumented(html, "button", "btn btn-xs", "With custom colors and button")
     }

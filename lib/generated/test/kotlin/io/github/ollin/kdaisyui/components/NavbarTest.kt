@@ -16,8 +16,7 @@ class NavbarTest {
     @Test
     fun navbar_with_title_only() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbar() {
-            }
+            daisyNavbar()
         }
         assertDocumented(html, "div", "navbar", "Navbar with title only")
     }
@@ -33,8 +32,7 @@ class NavbarTest {
     @Test
     fun navbar_with_title_and_icon_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(shape = ButtonShape.Square, style = ButtonStyle.Ghost) {
-            }
+            daisyButton(shape = ButtonShape.Square, style = ButtonStyle.Ghost)
         }
         assertDocumented(html, "button", "btn btn-ghost btn-square", "Navbar with title and icon")
     }
@@ -42,8 +40,7 @@ class NavbarTest {
     @Test
     fun navbar_with_menu_and_submenu_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu(direction = MenuDirection.Horizontal) {
-            }
+            daisyMenu(direction = MenuDirection.Horizontal)
         }
         assertDocumented(html, "ul", "menu menu-horizontal", "Navbar with menu and submenu")
     }
@@ -67,8 +64,7 @@ class NavbarTest {
     @Test
     fun navbar_with_search_input_and_dropdown_daisyAvatar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(attrs = { daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) }) {
-            }
+            daisyAvatar { daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle) }
         }
         assertDocumented(html, "div", "avatar btn btn-circle btn-ghost", "Navbar with search input and dropdown")
     }
@@ -76,8 +72,7 @@ class NavbarTest {
     @Test
     fun navbar_with_search_input_and_dropdown_daisyDropdownContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) {
-            }
+            daisyDropdownContent { daisyMenuClasses(size = MenuSize.Sm) }
         }
         assertDocumented(html, "ul", "dropdown-content menu menu-sm", "Navbar with search input and dropdown")
     }
@@ -85,8 +80,7 @@ class NavbarTest {
     @Test
     fun navbar_with_search_input_and_dropdown_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge() {
-            }
+            daisyBadge()
         }
         assertDocumented(html, "span", "badge", "Navbar with search input and dropdown")
     }
@@ -102,8 +96,7 @@ class NavbarTest {
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyIndicator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyIndicator() {
-            }
+            daisyIndicator()
         }
         assertDocumented(html, "div", "indicator", "Navbar with icon, indicator and dropdown")
     }
@@ -111,8 +104,7 @@ class NavbarTest {
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(size = BadgeSize.Sm, attrs = { daisyIndicatorItemClasses() }) {
-            }
+            daisyBadge(size = BadgeSize.Sm) { daisyIndicatorItemClasses() }
         }
         assertDocumented(html, "span", "badge badge-sm indicator-item", "Navbar with icon, indicator and dropdown")
     }
@@ -120,8 +112,7 @@ class NavbarTest {
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(size = CardSize.Sm, attrs = { daisyDropdownContentClasses() }) {
-            }
+            daisyCard(size = CardSize.Sm) { daisyDropdownContentClasses() }
         }
         assertDocumented(html, "div", "card card-sm dropdown-content", "Navbar with icon, indicator and dropdown")
     }
@@ -129,8 +120,7 @@ class NavbarTest {
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardBody() {
-            }
+            daisyCardBody()
         }
         assertDocumented(html, "div", "card-body", "Navbar with icon, indicator and dropdown")
     }
@@ -138,8 +128,7 @@ class NavbarTest {
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyCardActions() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardActions() {
-            }
+            daisyCardActions()
         }
         assertDocumented(html, "div", "card-actions", "Navbar with icon, indicator and dropdown")
     }
@@ -147,8 +136,7 @@ class NavbarTest {
     @Test
     fun navbar_with_icon_indicator_and_dropdown_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block) {
-            }
+            daisyButton(color = ButtonColor.Primary, width = ButtonWidth.Block)
         }
         assertDocumented(html, "button", "btn btn-block btn-primary", "Navbar with icon, indicator and dropdown")
     }
@@ -156,8 +144,7 @@ class NavbarTest {
     @Test
     fun navbar_with_dropdown_center_logo_and_icon_daisyNavbarStart() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarStart() {
-            }
+            daisyNavbarStart()
         }
         assertDocumented(html, "div", "navbar-start", "Navbar with dropdown, center logo and icon")
     }
@@ -173,8 +160,7 @@ class NavbarTest {
     @Test
     fun navbar_with_dropdown_center_logo_and_icon_daisyNavbarCenter() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarCenter() {
-            }
+            daisyNavbarCenter()
         }
         assertDocumented(html, "div", "navbar-center", "Navbar with dropdown, center logo and icon")
     }
@@ -182,8 +168,7 @@ class NavbarTest {
     @Test
     fun navbar_with_dropdown_center_logo_and_icon_daisyNavbarEnd() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbarEnd() {
-            }
+            daisyNavbarEnd()
         }
         assertDocumented(html, "div", "navbar-end", "Navbar with dropdown, center logo and icon")
     }
@@ -191,8 +176,7 @@ class NavbarTest {
     @Test
     fun navbar_with_dropdown_center_logo_and_icon_daisyBadge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Primary, attrs = { daisyIndicatorItemClasses() }) {
-            }
+            daisyBadge(size = BadgeSize.Xs, color = BadgeColor.Primary) { daisyIndicatorItemClasses() }
         }
         assertDocumented(html, "span", "badge badge-primary badge-xs indicator-item", "Navbar with dropdown, center logo and icon")
     }
@@ -208,8 +192,7 @@ class NavbarTest {
     @Test
     fun responsive_collapse_on_small_screen_full_content_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbar(attrs = { daisyCollapseTitleClasses() }) {
-            }
+            daisyNavbar { daisyCollapseTitleClasses() }
         }
         assertDocumented(html, "div", "collapse-title navbar", "Responsive (collapse on small screen, full content on large screen)")
     }
@@ -217,8 +200,7 @@ class NavbarTest {
     @Test
     fun responsive_collapse_on_small_screen_full_content_on_large_screen_daisyCollapseContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapseContent() {
-            }
+            daisyCollapseContent()
         }
         assertDocumented(html, "div", "collapse-content", "Responsive (collapse on small screen, full content on large screen)")
     }
@@ -226,8 +208,7 @@ class NavbarTest {
     @Test
     fun responsive_collapse_on_small_screen_full_content_on_large_screen_daisyMenu() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMenu() {
-            }
+            daisyMenu()
         }
         assertDocumented(html, "ul", "menu", "Responsive (collapse on small screen, full content on large screen)")
     }

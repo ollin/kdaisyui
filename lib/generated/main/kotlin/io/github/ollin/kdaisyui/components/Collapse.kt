@@ -39,16 +39,14 @@ enum class CollapseState(internal val className: String) : ClassValues<CollapseS
  * @param icon — Icon variant
  * @param state — State variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyCollapse(
     id: HtmlId? = null,
     icon: ClassValues<CollapseIcon>? = null,
     state: ClassValues<CollapseState>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -56,8 +54,7 @@ fun FlowContent.daisyCollapse(
         addClassNames(icon)
         addClassNames(state)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -76,18 +73,14 @@ fun FlowContent.daisyCollapseTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit)? = null,
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("collapse-title")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 
@@ -100,15 +93,13 @@ fun Tag.daisyCollapseTitleClasses() {
 fun FlowContent.daisyCollapseContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("collapse-content")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

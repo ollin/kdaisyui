@@ -65,14 +65,14 @@ enum class MaskHalf(internal val className: String) : ClassValues<MaskHalf> {
  * @param style — Style variant
  * @param half — Half variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyMask(
     id: HtmlId? = null,
     style: ClassValues<MaskStyle>? = null,
     half: ClassValues<MaskHalf>? = null,
     extraClasses: String? = null,
-    attrs: (IMG.() -> Unit)? = null,
+    block: (IMG.() -> Unit) = {},
 ) {
     img {
         if (id != null) attributes["id"] = id.id
@@ -80,7 +80,7 @@ fun FlowContent.daisyMask(
         addClassNames(style)
         addClassNames(half)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 

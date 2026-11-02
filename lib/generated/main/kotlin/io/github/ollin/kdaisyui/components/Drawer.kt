@@ -21,16 +21,14 @@ import kotlinx.html.Tag
  * @param end
  * @param open
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyDrawer(
     id: HtmlId? = null,
     end: Boolean = false,
     open: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -38,8 +36,7 @@ fun FlowContent.daisyDrawer(
         if (end) addClassNames("drawer-end")
         if (open) addClassNames("drawer-open")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -57,13 +54,13 @@ fun Tag.daisyDrawerClasses(
 fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-toggle")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 
@@ -76,15 +73,13 @@ fun Tag.daisyDrawerToggleClasses() {
 fun FlowContent.daisyDrawerContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-content")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -97,15 +92,13 @@ fun Tag.daisyDrawerContentClasses() {
 fun FlowContent.daisyDrawerSide(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-side")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -118,15 +111,13 @@ fun Tag.daisyDrawerSideClasses() {
 fun FlowContent.daisyDrawerOverlay(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 ) {
     label {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-overlay")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -139,15 +130,13 @@ fun Tag.daisyDrawerOverlayClasses() {
 fun FlowContent.daisyDrawerButton(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 ) {
     label {
         if (id != null) attributes["id"] = id.id
         addClassNames("drawer-button")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

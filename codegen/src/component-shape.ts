@@ -12,7 +12,7 @@
 
 
 /**
- * A kotlinx.html tag CLASS, e.g. `DIV`. Also the lambda receiver type in `attrs` and `content`.
+ * A kotlinx.html tag CLASS, e.g. `DIV`. Also the receiver type of `block`.
  *
  * Branded for the same reason `frontmatter.ts` brands `ComponentName`: the mistake produces a
  * plausible value rather than an error. Passing a builder name where a class is wanted emits
@@ -184,7 +184,7 @@ export interface FunctionShape {
   readonly name: string
   /** Extension receiver, e.g. `FlowContent`. */
   readonly receiver: string
-  /** The tag class, which is also the lambda receiver type in `attrs` and `content`. */
+  /** The tag class, which is also the receiver type of `block`. */
   readonly element: TagClass
   /** What the generated Kotlin calls to open the tag. */
   readonly tagBuilder: TagBuilder
@@ -208,17 +208,17 @@ export interface FunctionShape {
   readonly desc: string
   readonly parameters: readonly ParameterShape[]
   /**
-   * The lambda receiver of `content`, when it is a generated SCOPE rather than the element.
+   * The receiver of `block`, when it is a generated SCOPE rather than the element.
    *
    * Absent for every function whose children are ordinary content. Present on `daisyJoin`,
    * whose body opens a `JoinScope` instead of a plain `div` so that a component call written
    * directly in the lambda reaches a member that marks it `join-item`.
    */
-  readonly contentScope?: string
+  readonly blockScope?: string
 }
 
 /**
- * A generated class that a component's `content` lambda runs in, carrying member overloads.
+ * A generated class that a component's `block` runs in, carrying member overloads.
  *
  * The one instance is the join's. `.join` writes four corner-radius variables onto its direct
  * children and `.join-item` reads them, so the class is harmful anywhere else — which rules out
@@ -275,7 +275,7 @@ export interface ComponentShape {
   /** The main function first, then parts in declaration order, then custom parts. */
   readonly functions: readonly FunctionShape[]
   /**
-   * The scope the main function's `content` runs in, when it has one.
+   * The scope the main function's `block` runs in, when it has one.
    *
    * Attached after the per-component build rather than by `buildComponentShape`, because a
    * scope's members are OTHER components' functions and this shape knows only its own.
@@ -305,7 +305,7 @@ const TEXT_PARAMETER: ParameterShape = {
   name: 'text',
   type: 'String?',
   default: 'null',
-  doc: 'Shortcut for inline text content (mutually exclusive with [content])',
+  doc: 'Inline text, appended after anything [block] writes',
 }
 
 const EXTRA_CLASSES_PARAMETER: ParameterShape = {
@@ -315,44 +315,29 @@ const EXTRA_CLASSES_PARAMETER: ParameterShape = {
   doc: 'Additional CSS classes appended after the generated ones',
 }
 
-function attrsParameter(element: TagClass): ParameterShape {
-  return {
-    name: 'attrs',
-    type: `(${element}.() -> Unit)?`,
-    default: 'null',
-    doc: 'Direct access to the underlying kotlinx.html tag attributes',
-  }
-}
-
-/** Optional when a `text` parameter competes with it, required otherwise. */
-function contentParameter(element: TagClass, hasTextParam: boolean): ParameterShape {
-  if (hasTextParam) {
-    return {
-      name: 'content',
-      type: `(${element}.() -> Unit)?`,
-      default: 'null',
-      doc: 'Nested HTML content (takes precedence over [text] if both are set)',
-    }
-  }
-  return { name: 'content', type: `(${element}.() -> Unit)`, default: null, doc: 'Nested HTML content' }
-}
-
-/** The four parameters every part and custom part shares, in declaration order. */
 /**
- * The four parameters every generated function has, plus `text` where the component takes it.
+ * The one lambda every rendering function takes, as kotlinx.html's own builders take it: last, so
+ * a trailing lambda binds to it, and doing nothing by default, so no call has to pass one.
  *
- * `content` is absent for a void element, here rather than at each call site: an element the
- * HTML specification says cannot hold children cannot hold them on a part or a custom part
- * either. The check used to sit on the main function's path alone, so `daisyModalToggle`
- * required a content lambda for the same `<input>` that `daisyInput` correctly refuses one for.
+ * A void element takes it too. It cannot hold children, so there the block writes attributes
+ * only; until 0.9.0 that was a second lambda, `attrs`, on every function.
  */
+function blockParameter(element: TagClass): ParameterShape {
+  return {
+    name: 'block',
+    type: `(${element}.() -> Unit)`,
+    default: '{}',
+    doc: "Writes the element's attributes, and its children where it can hold any",
+  }
+}
+
+/** The parameters every generated function has, plus `text` where the component takes it. */
 function escapeHatchParameters(element: TagClass, hasTextParam: boolean, idRequired: boolean): ParameterShape[] {
   return [
     ...(hasTextParam ? [TEXT_PARAMETER] : []),
     idRequired ? REQUIRED_ID_PARAMETER : ID_PARAMETER,
     EXTRA_CLASSES_PARAMETER,
-    attrsParameter(element),
-    ...(isVoidElement(element) ? [] : [contentParameter(element, hasTextParam)]),
+    blockParameter(element),
   ]
 }
 

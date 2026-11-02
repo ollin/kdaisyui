@@ -15,18 +15,18 @@ import kotlinx.html.Tag
  * If a checked checkbox input or a checked radio input with theme-controller class exists in the page, The page will have the same theme as that input's value. Renders `<input class="theme-controller ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyThemeController(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("theme-controller")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 

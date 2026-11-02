@@ -60,16 +60,14 @@ enum class StatusSize(internal val className: String) : ClassValues<StatusSize> 
  * @param color — Color variant
  * @param size — Size variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyStatus(
     id: HtmlId? = null,
     color: ClassValues<StatusColor>? = null,
     size: ClassValues<StatusSize>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -78,8 +76,7 @@ fun FlowContent.daisyStatus(
         addClassNames(color)
         addClassNames(size)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

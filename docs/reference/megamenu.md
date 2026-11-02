@@ -19,8 +19,7 @@ fun FlowContent.daisyMegamenu(
     width: ClassValues<MegamenuWidth>? = null,
     vertical: Boolean = false,  // Hides horizontal megamenu so we can open a vertical megamenu in small screens
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -31,8 +30,7 @@ fun Tag.daisyMegamenuClasses(size: ClassValues<MegamenuSize>? = null, width: Cla
 fun FlowContent.daisyMegamenuActive(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -43,7 +41,6 @@ fun Tag.daisyMegamenuActiveClasses()
 fun FlowContent.daisyMegamenuPanel(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 ```

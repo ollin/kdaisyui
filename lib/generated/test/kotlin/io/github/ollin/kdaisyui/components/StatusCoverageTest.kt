@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class StatusCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class StatusCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,16 +45,13 @@ class StatusCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun status_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStatus(
-                content = { },
-            )
+            daisyStatus()
         }
         assertRendered(html, Expected("Status defaults", "status", closes = "</div></div>"))
         assertTrue(html.contains("role=\""), "Status sets role")
@@ -63,15 +59,15 @@ class StatusCoverageTest {
 
     @Test
     fun status_all_flags() {
-        val html = allFlags(Expected("Status all flags", "status zz-extra", closes = "</div></div>")) { daisyStatus(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Status all flags", "status zz-extra", closes = "</div></div>")) { daisyStatus(id = ID, extraClasses = EXTRA, block = BLOCK) }
         assertTrue(html.contains("role=\""), "Status sets role")
     }
 
     @Test
-    fun status_color() = assertEachEntry("Status color", mapOf(StatusColor.Neutral to "status status-neutral", StatusColor.Primary to "status status-primary", StatusColor.Secondary to "status status-secondary", StatusColor.Accent to "status status-accent", StatusColor.Info to "status status-info", StatusColor.Success to "status status-success", StatusColor.Warning to "status status-warning", StatusColor.Error to "status status-error")) { daisyStatus(color = it, content = { }) }
+    fun status_color() = assertEachEntry("Status color", mapOf(StatusColor.Neutral to "status status-neutral", StatusColor.Primary to "status status-primary", StatusColor.Secondary to "status status-secondary", StatusColor.Accent to "status status-accent", StatusColor.Info to "status status-info", StatusColor.Success to "status status-success", StatusColor.Warning to "status status-warning", StatusColor.Error to "status status-error")) { daisyStatus(color = it) }
 
     @Test
-    fun status_size() = assertEachEntry("Status size", mapOf(StatusSize.Xs to "status status-xs", StatusSize.Sm to "status status-sm", StatusSize.Md to "status status-md", StatusSize.Lg to "status status-lg", StatusSize.Xl to "status status-xl")) { daisyStatus(size = it, content = { }) }
+    fun status_size() = assertEachEntry("Status size", mapOf(StatusSize.Xs to "status status-xs", StatusSize.Sm to "status status-sm", StatusSize.Md to "status status-md", StatusSize.Lg to "status status-lg", StatusSize.Xl to "status status-xl")) { daisyStatus(size = it) }
 
     @Test
     fun statusClasses_defaults() {
@@ -82,7 +78,7 @@ class StatusCoverageTest {
     }
 
     @Test
-    fun statusClasses_all_flags() = assertRenders(Expected("StatusClasses all flags", "status", content = false)) { daisyStatusClasses() }
+    fun statusClasses_all_flags() = assertRenders(Expected("StatusClasses all flags", "status")) { daisyStatusClasses() }
 
     @Test
     fun statusClasses_color() = assertEachEntry("StatusClasses color", mapOf(StatusColor.Neutral to "status status-neutral", StatusColor.Primary to "status status-primary", StatusColor.Secondary to "status status-secondary", StatusColor.Accent to "status status-accent", StatusColor.Info to "status status-info", StatusColor.Success to "status status-success", StatusColor.Warning to "status status-warning", StatusColor.Error to "status status-error")) { daisyStatusClasses(color = it) }

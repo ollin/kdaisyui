@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class StackCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class StackCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,27 +45,24 @@ class StackCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun stack_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStack(
-                content = { },
-            )
+            daisyStack()
         }
         assertRendered(html, Expected("Stack defaults", "stack", closes = "</div></div>"))
     }
 
     @Test
     fun stack_all_flags() {
-        val html = allFlags(Expected("Stack all flags", "stack zz-extra", closes = "</div></div>")) { daisyStack(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Stack all flags", "stack zz-extra", closes = "</div></div>")) { daisyStack(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun stack_placement() = assertEachEntry("Stack placement", mapOf(StackPlacement.Top to "stack stack-top", StackPlacement.Bottom to "stack stack-bottom", StackPlacement.Start to "stack stack-start", StackPlacement.End to "stack stack-end")) { daisyStack(placement = it, content = { }) }
+    fun stack_placement() = assertEachEntry("Stack placement", mapOf(StackPlacement.Top to "stack stack-top", StackPlacement.Bottom to "stack stack-bottom", StackPlacement.Start to "stack stack-start", StackPlacement.End to "stack stack-end")) { daisyStack(placement = it) }
 
     @Test
     fun stackClasses_defaults() {
@@ -77,7 +73,7 @@ class StackCoverageTest {
     }
 
     @Test
-    fun stackClasses_all_flags() = assertRenders(Expected("StackClasses all flags", "stack", content = false)) { daisyStackClasses() }
+    fun stackClasses_all_flags() = assertRenders(Expected("StackClasses all flags", "stack")) { daisyStackClasses() }
 
     @Test
     fun stackClasses_placement() = assertEachEntry("StackClasses placement", mapOf(StackPlacement.Top to "stack stack-top", StackPlacement.Bottom to "stack stack-bottom", StackPlacement.Start to "stack stack-start", StackPlacement.End to "stack stack-end")) { daisyStackClasses(placement = it) }

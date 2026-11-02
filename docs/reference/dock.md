@@ -16,8 +16,7 @@ fun FlowContent.daisyDock(
     id: HtmlId? = null,
     size: ClassValues<DockSize>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -29,8 +28,7 @@ fun FlowContent.daisyDockItem(
     id: HtmlId? = null,
     active: Boolean = false,  // Makes the Dock Item look active
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit),
+    block: (BUTTON.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -41,8 +39,7 @@ fun Tag.daisyDockItemClasses(active: Boolean = false)
 fun FlowContent.daisyDockLabel(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

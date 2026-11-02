@@ -14,8 +14,7 @@ Filter reset for search and forms. Renders `<form class="filter ...">`.
 fun FlowContent.daisyFilter(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FORM.() -> Unit)? = null,
-    content: (FORM.() -> Unit),
+    block: (FORM.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,7 +25,7 @@ fun Tag.daisyFilterClasses()
 fun FlowContent.daisyFilterReset(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

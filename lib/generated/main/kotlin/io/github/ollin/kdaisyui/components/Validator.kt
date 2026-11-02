@@ -17,18 +17,18 @@ import kotlinx.html.Tag
  * Validator class changes the color of form elements to error or success based on input's validation rules. Renders `<input class="validator ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyValidator(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("validator")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 
@@ -41,15 +41,13 @@ fun Tag.daisyValidatorClasses() {
 fun FlowContent.daisyValidatorHint(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (P.() -> Unit)? = null,
-    content: (P.() -> Unit),
+    block: (P.() -> Unit) = {},
 ) {
     p {
         if (id != null) attributes["id"] = id.id
         addClassNames("validator-hint")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

@@ -95,7 +95,7 @@ enum class ButtonWidth(internal val className: String) : ClassValues<ButtonWidth
 
 /**
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
- * @param text — Shortcut for inline text content (mutually exclusive with [content])
+ * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant
@@ -106,8 +106,7 @@ enum class ButtonWidth(internal val className: String) : ClassValues<ButtonWidth
  * @param disabled
  * @param type
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content (takes precedence over [text] if both are set)
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyButton(
     text: String? = null,
@@ -121,8 +120,7 @@ fun FlowContent.daisyButton(
     disabled: Boolean = false,
     type: ButtonType? = null,
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit)? = null,
+    block: (BUTTON.() -> Unit) = {},
 ) {
     button {
         if (id != null) attributes["id"] = id.id
@@ -136,11 +134,8 @@ fun FlowContent.daisyButton(
         if (disabled) { this.disabled = true; addClassNames("btn-disabled") }
         if (type != null) this.type = type
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 

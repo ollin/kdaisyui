@@ -222,6 +222,19 @@ Health and hotspot Code Health, and for each touched file that is a hotspot or c
 it got no worse. The one hotspot on 2026-11-01, `lib/src/test/.../DashboardTest.kt` at 6.90, was
 deleted the same day: a demo page inside a test that no coverage or mutation gate needed.
 
+## Before every push: rebase onto `origin/main`
+
+Immediately before **every** push, the first one included, run `git fetch` and
+`git rebase origin/main` on the topic branch, run the suite on the rebased branch, then push
+(`--force-with-lease` once the branch exists remotely). Never merge `main` in, and never use
+GitHub's "Update branch" button, which does exactly that.
+
+`main`'s ruleset requires a pull request to be up to date with `main` before it merges. A branch
+pushed on a stale base therefore runs CI twice: once on the push, and again after the rebase the
+ruleset then demands. Renovate merges dependency updates on its own schedule, so `main` moves
+without anyone here touching it, and a fetch from an hour ago is already stale. If `main` moves
+after the push anyway, rebase and force-push once, before CI has finished the stale run.
+
 ## Skills
 
 | Task | Skill |

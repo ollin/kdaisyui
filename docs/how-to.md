@@ -82,20 +82,18 @@ daisyBadge("New", extraClasses = "indicator-item")
 
 ## Add custom HTML attributes
 
-Use the `attrs` lambda to access the raw kotlinx.html tag:
+Set them at the start of the component's lambda, where `this` is the raw kotlinx.html tag:
 
 ```kotlin
-daisyButton(
-    attrs = {
-        id = "save-btn"
-        attributes["data-action"] = "submit"
-        attributes["aria-label"] = "Save changes"
-    },
-    content = { +"Save" }
-)
+daisyButton {
+    id = "save-btn"
+    attributes["data-action"] = "submit"
+    attributes["aria-label"] = "Save changes"
+    +"Save"
+}
 ```
 
-Inside `attrs`, `this` is the underlying HTML tag (`BUTTON`, `DIV`, etc.) with full access to all kotlinx.html properties.
+`this` is the underlying HTML tag (`BUTTON`, `DIV`, etc.) with full access to all kotlinx.html properties. Write attributes before the first child or text: kotlinx.html rejects an attribute once the element's content has started.
 
 ## Nest components
 
@@ -276,7 +274,8 @@ daisyDropdown(align = DropdownAlign.End) {
             +"🔔"
         }
     }
-    daisyDropdownContent(extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl", attrs = { daisyMenuClasses() }) {
+    daisyDropdownContent(extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl") {
+        daisyMenuClasses()
         li { a { b { +"New message" }; +" Alice: Hi!" } }
     }
 }
@@ -289,8 +288,9 @@ places it next to its trigger through CSS anchor positioning:
 <!-- snippet: in FlowContent -->
 ```kotlin
 val notifications = htmlId("notifications")
-daisyButton("🔔", attrs = { popoverTarget(notifications, anchored = true) })
-daisyDropdownPopover(id = notifications, align = DropdownAlign.End, extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl", attrs = { daisyMenuClasses() }) {
+daisyButton("🔔") { popoverTarget(notifications, anchored = true) }
+daisyDropdownPopover(id = notifications, align = DropdownAlign.End, extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl") {
+    daisyMenuClasses()
     li { a { b { +"New message" }; +" Alice: Hi!" } }
 }
 ```

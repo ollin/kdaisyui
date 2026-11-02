@@ -18,8 +18,7 @@ fun FlowContent.daisyCarousel(
     snap: ClassValues<CarouselSnap>? = null,
     direction: ClassValues<CarouselDirection>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -30,8 +29,7 @@ fun Tag.daisyCarouselClasses(snap: ClassValues<CarouselSnap>? = null, direction:
 fun FlowContent.daisyCarouselItem(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

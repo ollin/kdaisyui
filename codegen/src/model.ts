@@ -76,7 +76,7 @@ export interface ModelFunction {
   readonly attributes?: Readonly<Record<string, string>>
   /** A popover its trigger anchors: its `id` is required, since a trigger has to name it. */
   readonly anchoredPopover?: true
-  /** On a main function: inside a join's content, this call marks itself `join-item`. */
+  /** On a main function: inside a join's block, this call marks itself `join-item`. */
   readonly joinItem?: true
   /** On a main function: the ARIA role it always sets, e.g. `alert`. */
   readonly role?: string
@@ -95,7 +95,7 @@ export interface ComponentModel {
   readonly class: string
   readonly enums: readonly ModelEnum[]
   readonly functions: readonly ModelFunction[]
-  /** The main function's content runs in the join scope, whose members are the join items. */
+  /** The main function's block runs in the join scope, whose members are the join items. */
   readonly joinScope?: true
   /** The hand-written line for the reference index, and the optional longer opening. */
   readonly summary?: DocSummary

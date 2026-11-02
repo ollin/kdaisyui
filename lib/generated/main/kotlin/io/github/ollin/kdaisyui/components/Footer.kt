@@ -32,16 +32,14 @@ enum class FooterDirection(internal val className: String) : ClassValues<FooterD
  * @param direction — Direction variant
  * @param center — Aligns footer content to center
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyFooter(
     id: HtmlId? = null,
     direction: ClassValues<FooterDirection>? = null,
     center: Boolean = false,
     extraClasses: String? = null,
-    attrs: (FOOTER.() -> Unit)? = null,
-    content: (FOOTER.() -> Unit),
+    block: (FOOTER.() -> Unit) = {},
 ) {
     footer {
         if (id != null) attributes["id"] = id.id
@@ -49,8 +47,7 @@ fun FlowContent.daisyFooter(
         addClassNames(direction)
         if (center) addClassNames("footer-center")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -69,18 +66,14 @@ fun FlowContent.daisyFooterTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H6.() -> Unit)? = null,
-    content: (H6.() -> Unit)? = null,
+    block: (H6.() -> Unit) = {},
 ) {
     h6 {
         if (id != null) attributes["id"] = id.id
         addClassNames("footer-title")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        block()
+        if (text != null) +text
     }
 }
 

@@ -15,8 +15,7 @@ class TimelineTest {
     @Test
     fun timeline_with_text_on_both_sides_and_icon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline() {
-            }
+            daisyTimeline()
         }
         assertDocumented(html, "ul", "timeline", "Timeline with text on both sides and icon")
     }
@@ -24,8 +23,7 @@ class TimelineTest {
     @Test
     fun timeline_with_text_on_both_sides_and_icon_daisyTimelineStart() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimelineStart() {
-            }
+            daisyTimelineStart()
         }
         assertDocumented(html, "div", "timeline-start", "Timeline with text on both sides and icon")
     }
@@ -33,8 +31,7 @@ class TimelineTest {
     @Test
     fun timeline_with_text_on_both_sides_and_icon_daisyTimelineMiddle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimelineMiddle() {
-            }
+            daisyTimelineMiddle()
         }
         assertDocumented(html, "div", "timeline-middle", "Timeline with text on both sides and icon")
     }
@@ -42,8 +39,7 @@ class TimelineTest {
     @Test
     fun timeline_with_text_on_both_sides_and_icon_daisyTimelineEnd() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimelineEnd(box = true) {
-            }
+            daisyTimelineEnd(box = true)
         }
         assertDocumented(html, "div", "timeline-box timeline-end", "Timeline with text on both sides and icon")
     }
@@ -51,8 +47,7 @@ class TimelineTest {
     @Test
     fun timeline_with_top_side_only_daisyTimelineStart() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimelineStart(box = true) {
-            }
+            daisyTimelineStart(box = true)
         }
         assertDocumented(html, "div", "timeline-box timeline-start", "Timeline with top side only")
     }
@@ -60,8 +55,7 @@ class TimelineTest {
     @Test
     fun vertical_timeline_with_text_on_both_sides_and_icon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(direction = TimelineDirection.Vertical) {
-            }
+            daisyTimeline(direction = TimelineDirection.Vertical)
         }
         assertDocumented(html, "ul", "timeline timeline-vertical", "Vertical timeline with text on both sides and icon")
     }
@@ -69,8 +63,7 @@ class TimelineTest {
     @Test
     fun responsive_vertical_by_default_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(direction = TimelineDirection.Vertical, extraClasses = "lg:timeline-horizontal") {
-            }
+            daisyTimeline(direction = TimelineDirection.Vertical, extraClasses = "lg:timeline-horizontal")
         }
         assertDocumented(html, "ul", "lg:timeline-horizontal timeline timeline-vertical", "Responsive: vertical by default, horizontal on large screen")
     }
@@ -78,8 +71,7 @@ class TimelineTest {
     @Test
     fun timeline_with_icon_snapped_to_the_start() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimeline(snapIcon = true, direction = TimelineDirection.Vertical, extraClasses = "max-md:timeline-compact") {
-            }
+            daisyTimeline(snapIcon = true, direction = TimelineDirection.Vertical, extraClasses = "max-md:timeline-compact")
         }
         assertDocumented(html, "ul", "max-md:timeline-compact timeline timeline-snap-icon timeline-vertical", "Timeline with icon snapped to the start")
     }
@@ -87,8 +79,7 @@ class TimelineTest {
     @Test
     fun timeline_with_icon_snapped_to_the_start_daisyTimelineEnd() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTimelineEnd() {
-            }
+            daisyTimelineEnd()
         }
         assertDocumented(html, "div", "timeline-end", "Timeline with icon snapped to the start")
     }

@@ -60,7 +60,7 @@ enum class ToggleSize(internal val className: String) : ClassValues<ToggleSize> 
  * @param checked
  * @param disabled
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyToggle(
     id: HtmlId? = null,
@@ -69,7 +69,7 @@ fun FlowContent.daisyToggle(
     checked: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
@@ -80,7 +80,7 @@ fun FlowContent.daisyToggle(
         if (checked) this.checked = true
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 

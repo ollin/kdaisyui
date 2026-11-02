@@ -19,21 +19,18 @@ import kotlinx.html.UL
  * Breadcrumbs helps users to navigate through the website. Renders `<div class="breadcrumbs ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyBreadcrumbs(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("breadcrumbs")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -46,14 +43,12 @@ fun Tag.daisyBreadcrumbsClasses() {
 fun FlowContent.daisyBreadcrumbsItems(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         if (id != null) attributes["id"] = id.id
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -61,13 +56,11 @@ fun FlowContent.daisyBreadcrumbsItems(
 fun UL.daisyBreadcrumbsItem(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LI.() -> Unit)? = null,
-    content: (LI.() -> Unit),
+    block: (LI.() -> Unit) = {},
 ) {
     li {
         if (id != null) attributes["id"] = id.id
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }

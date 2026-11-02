@@ -16,8 +16,7 @@ class CalendarTest {
     @Test
     fun cally_calendar_example() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCalendar() {
-            }
+            daisyCalendar()
         }
         assertDocumented(html, "calendar-date", "cally", "Cally calendar example")
     }

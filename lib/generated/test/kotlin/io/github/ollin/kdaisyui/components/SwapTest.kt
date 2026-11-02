@@ -15,8 +15,7 @@ class SwapTest {
     @Test
     fun swap_text() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap() {
-            }
+            daisySwap()
         }
         assertDocumented(html, "label", "swap", "Swap text")
     }
@@ -24,8 +23,7 @@ class SwapTest {
     @Test
     fun swap_text_daisySwapOn() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwapOn() {
-            }
+            daisySwapOn()
         }
         assertDocumented(html, "div", "swap-on", "Swap text")
     }
@@ -33,8 +31,7 @@ class SwapTest {
     @Test
     fun swap_text_daisySwapOff() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwapOff() {
-            }
+            daisySwapOff()
         }
         assertDocumented(html, "div", "swap-off", "Swap text")
     }
@@ -42,8 +39,7 @@ class SwapTest {
     @Test
     fun swap_icons_with_rotate_effect() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(style = SwapStyle.Rotate) {
-            }
+            daisySwap(style = SwapStyle.Rotate)
         }
         assertDocumented(html, "label", "swap swap-rotate", "Swap icons with rotate effect")
     }
@@ -51,8 +47,7 @@ class SwapTest {
     @Test
     fun hamburger_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(style = SwapStyle.Rotate, attrs = { daisyButtonClasses(shape = ButtonShape.Circle) }) {
-            }
+            daisySwap(style = SwapStyle.Rotate) { daisyButtonClasses(shape = ButtonShape.Circle) }
         }
         assertDocumented(html, "label", "btn btn-circle swap swap-rotate", "Hamburger button")
     }
@@ -60,8 +55,7 @@ class SwapTest {
     @Test
     fun swap_icons_with_flip_effect() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(style = SwapStyle.Flip) {
-            }
+            daisySwap(style = SwapStyle.Flip)
         }
         assertDocumented(html, "label", "swap swap-flip", "Swap icons with flip effect")
     }
@@ -69,8 +63,7 @@ class SwapTest {
     @Test
     fun activate_using_class_name_instead_of_checkbox() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(active = true) {
-            }
+            daisySwap(active = true)
         }
         assertDocumented(html, "label", "swap swap-active", "Activate using class name instead of checkbox")
     }

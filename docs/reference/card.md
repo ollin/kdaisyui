@@ -20,8 +20,7 @@ fun FlowContent.daisyCard(
     style: ClassValues<CardStyle>? = null,
     layout: ClassValues<CardLayout>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -33,8 +32,7 @@ fun FlowContent.daisyCardTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    block: (H2.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -45,8 +43,7 @@ fun Tag.daisyCardTitleClasses()
 fun FlowContent.daisyCardBody(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -57,8 +54,7 @@ fun Tag.daisyCardBodyClasses()
 fun FlowContent.daisyCardActions(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

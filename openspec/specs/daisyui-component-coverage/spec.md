@@ -102,7 +102,7 @@ Every new component wrapper and every new modifier branch introduced by this cha
 
 #### Scenario: New components are covered by generated tests
 - **WHEN** the codegen test generators run for the pinned DaisyUI release
-- **THEN** generated tests exercise every variant, size, modifier, color, `id`, `extraClasses`, and content/attrs branch of each new component
+- **THEN** generated tests exercise every variant, size, modifier, color, `id`, `extraClasses`, `text` and block branch of each new component
 - **AND** no new user-facing component class is added to a coverage exclusion filter
 
 ### Requirement: New components have E2E smoke coverage
@@ -222,46 +222,6 @@ assertion that measured the rendered page caught it.
 - **WHEN** a component gains a construction method that adds no new CSS class
 - **THEN** an example-app route uses it
 - **AND** an end-to-end assertion covers the attribute that defines it, not only its classes
-
-### Requirement: A generated function never requires content its element cannot hold
-
-A generated component function SHALL NOT declare a `content` parameter when the element it
-renders is an HTML void element. This SHALL be derived from the element, not configured per
-component.
-
-The void elements are fixed by the HTML specification: `area`, `base`, `br`, `col`, `embed`,
-`hr`, `img`, `input`, `link`, `meta`, `param`, `source`, `track`, `wbr`.
-
-**Verified** that deriving lost nothing. Measured over all 66 non-skipped components on
-2026-09-12, before the list was deleted: its eight entries were exactly the components whose
-element is void, and no listed component rendered a non-void element.
-
-**Verified** that transcribing it by hand failed in both possible directions. Two entries were
-written as DaisyUI directory names (`file-input`, `theme-controller`) while the lookup used the
-lower-cased PascalCase name, so neither ever matched; and `mask`, which renders `<img>`, was never
-listed. All three declared a **required** trailing `content` lambda on an element that cannot have
-children.
-
-*Wrong if:* a component must suppress `content` for a reason other than its element being void.
-The rule is then too narrow and an exception list has to return — carrying a stated reason per
-entry, rather than restating HTML.
-
-#### Scenario: A component rendering a void element
-
-- **WHEN** the codegen generates a component whose element is `<input>`, `<img>` or any other
-  HTML void element
-- **THEN** the generated function declares no `content` parameter
-- **AND** its body emits no content call
-
-#### Scenario: A component rendering an element that may have children
-
-- **WHEN** the codegen generates a component whose element is not a void element
-- **THEN** the generated function declares a `content` parameter
-
-#### Scenario: A DaisyUI release adds a component rendering a void element
-
-- **WHEN** a new component's element is a void element
-- **THEN** its generated function takes no `content` parameter without anyone configuring it
 
 ### Requirement: A typed class can be applied at a Tailwind variant
 
@@ -639,3 +599,79 @@ top edge meets the trigger's bottom edge within 4px. The check was seen to fail 
 - **WHEN** the trigger is clicked
 - **THEN** the menu is visible
 - **AND** its top edge is at the trigger's bottom edge, within a few pixels
+
+### Requirement: Every generated function takes one optional block
+
+Every generated rendering function SHALL take exactly one lambda, named `block`, whose receiver is
+the element the function renders, and which defaults to doing nothing. It SHALL be the function's
+last parameter, so a trailing lambda binds to it. No generated rendering function SHALL take a
+second lambda on the same element.
+
+The block SHALL run after the function has written its own id, attributes and classes and the
+caller's `extraClasses`, so an attribute or class the block writes is added to them. On an element
+that can hold children the block may also write them. On an HTML void element (`area`, `base`,
+`br`, `col`, `embed`, `hr`, `img`, `input`, `link`, `meta`, `param`, `source`, `track`, `wbr`) the
+block exists all the same and writes attributes only; whether the element is void SHALL still be
+derived from the element, never configured per component.
+
+**Verified** that this is the shape kotlinx.html gives its own builders, read 2026-11-02 in
+kotlinx-html-jvm 0.12.0's sources: `FlowContent.div` (`gen-tag-groups.kt:68`),
+`button` (`gen-tag-unions.kt:772`) and the void `input` (`gen-tag-unions.kt:896`) each take
+`block: T.() -> Unit = {}` as their last parameter.
+
+**Verified** that a block running after the function's own classes reaches the same element as
+`attrs` did, read 2026-11-02 in `codegen/src/generator-new.ts:236-238` and `:298-300`: `attrs()`
+already ran after `addClassNames(extraClasses)` and directly before `content()`, on the same
+receiver.
+
+#### Scenario: A container takes a trailing block
+- **WHEN** `daisyCard { daisyCardBody { +"Hello" } }` is rendered
+- **THEN** the `div.card` contains the `div.card-body` with `Hello`
+
+#### Scenario: The block is optional
+- **WHEN** `daisyCard()` is rendered
+- **THEN** an empty `<div class="card"></div>` is emitted and nothing fails
+
+#### Scenario: A void element takes attributes through its block
+- **WHEN** `daisyInput { name = "email" }` is rendered
+- **THEN** the `input.input` carries `name="email"` and the following sibling stays at the same
+  nesting level
+
+#### Scenario: The block adds to the function's classes
+- **WHEN** `daisyButton(color = ButtonColor.Primary, extraClasses = "w-full") { daisyMenuClasses() }`
+  is rendered
+- **THEN** the button carries `btn btn-primary w-full menu`
+
+#### Scenario: No second lambda
+- **WHEN** the generated sources are compiled
+- **THEN** no generated rendering function declares a parameter named `attrs` or `content`
+
+### Requirement: A function's text and block add up
+
+Where a generated function takes `text`, passing both `text` and a block SHALL render both: the
+block runs first, then the text is appended to the element. Neither SHALL replace or drop the
+other.
+
+**Verified** why the block has to run first, read 2026-11-02 in kotlinx-html-jvm 0.12.0
+`commonMain/delayed-consumer.kt:14-23`: the consumers `createHTML` and `appendHTML` return
+(`stream.kt:147`, `:150`) delay a tag's start only until its first content, and an attribute set
+after that throws `IllegalStateException`. Text written before the block would make
+`daisyButton("Save") { popoverTarget(menu) }` throw.
+
+**Assumed** that appending the text after the block's children is what a caller who combines both
+wants, because the block's main use is attributes. *Wrong if:* a call site in the example app,
+the documentation or the tests passes `text` together with a block that writes children which
+must follow the text; such a call is then rendered in the wrong order, and the order has to be
+reconsidered before the change is built on.
+
+#### Scenario: Text with an attribute block
+- **WHEN** `daisyButton("Save") { attributes["data-probe"] = "yes" }` is rendered
+- **THEN** the button carries `data-probe="yes"` and contains `Save`
+
+#### Scenario: Text with children
+- **WHEN** `daisyButton("Save") { span { +"icon" } }` is rendered
+- **THEN** the button contains the `span` followed by `Save`
+
+#### Scenario: Text alone
+- **WHEN** `daisyButton("Save")` is rendered
+- **THEN** the output is `<button class="btn">Save</button>`

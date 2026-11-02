@@ -63,8 +63,8 @@ An informal "about half a day" (240m) was given in conversation before the scope
 
 ## 5. Gates and archive
 
-- [ ] 5.1 `./gradlew check` including E2E, `:lib:pitest` at 100% test strength, and StrykerJS on
+- [x] 5.1 `./gradlew check` including E2E, `:lib:pitest` at 100% test strength, and StrykerJS on
   the changed lines under `codegen/src/` with no survivor.
-- [ ] 5.2 `code_health_review` on every changed hand-written and codegen file, then
+- [x] 5.2 `code_health_review` on every changed hand-written and codegen file, then
   `pre_commit_code_health_safeguard`; read the server's project values before the push.
-- [ ] 5.3 Archive the change on this branch and commit the archival. `. d (internal)`
+- [x] 5.3 Archive the change on this branch and commit the archival. `. d (internal)`

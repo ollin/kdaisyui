@@ -359,7 +359,7 @@ renders it on DaisyUI's tag and asserts both the tag and that the element carrie
 counted classes, with two adjustments. Where the claiming function of one group renders the
 documented tag, the test calls that function, the page's own functions first, with each class of
 the group through its typed parameter, and adds every other group through its function's class
-sibling in the call's `attrs`. Otherwise the test writes the documented tag with its kotlinx.html
+sibling in the call's `block`. Otherwise the test writes the documented tag with its kotlinx.html
 builder, inside the parent the builder needs (`ul` for `li`, `fieldSet` for `legend`), and adds
 every group through its class sibling. The element's variant-prefixed classes that some component
 declares, such as `lg:$$menu-horizontal`, are passed through `extraClasses` and expected as
@@ -401,7 +401,7 @@ an extra class would be a defect in the model.
 
 #### Scenario: Two components on one element become a call and a sibling
 - **WHEN** the dropdown page shows `<ul class="$$dropdown-content $$menu">`
-- **THEN** a generated test calls `daisyDropdownContent(attrs = { daisyMenuClasses() })` and
+- **THEN** a generated test calls `daisyDropdownContent { daisyMenuClasses() }` and
   asserts `dropdown-content menu`
 
 #### Scenario: A child with no own class
@@ -428,7 +428,7 @@ extra parameters. An extra parameter that writes a class also sets an attribute 
 its function; the sibling writes only the class. The sibling writes no attribute and no content.
 
 A sibling puts one component's typed classes on an element another function renders, or on an
-element no function renders: `daisyMenu(attrs = { daisyDropdownContentClasses() })`,
+element no function renders: `daisyMenu { daisyDropdownContentClasses() }`,
 `a { daisyButtonClasses(color = ButtonColor.Primary) }`.
 
 **Verified** that the names are free, read 2026-10-18 from `lib/generated/main`: no generated
@@ -440,7 +440,7 @@ structural wrappers write no class and get none.
 `daisyButton`'s `disabled`, which sets `disabled` and writes `btn-disabled`. Every other extra sets
 a property and writes no class.
 
-**Verified** that a sibling can be called in every function's `attrs` and `content` lambda, read
+**Verified** that a sibling can be called in every function's `block`, read
 2026-10-18 in kotlinx-html-jvm 0.12.0's sources: every element class the model uses is an
 `HTMLTag`, and `HTMLTag` implements `Tag`.
 
@@ -449,7 +449,7 @@ a property and writes no class.
 - **THEN** the `div` carries `btn btn-primary btn-active`, and no attribute besides `class`
 
 #### Scenario: Two components on one element
-- **WHEN** `daisyMenu(attrs = { daisyDropdownContentClasses() }) { }` is rendered
+- **WHEN** `daisyMenu { daisyDropdownContentClasses() }` is rendered
 - **THEN** the `ul` carries `menu dropdown-content`
 
 #### Scenario: An extra's class without its property

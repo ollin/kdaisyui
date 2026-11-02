@@ -378,7 +378,6 @@ function lowerFirst(s) {
 const PARAM_KIND_RULES = [
   [(c) => c.baseType === 'Boolean', 'boolean'],
   [(c) => c.name === 'id', 'id'],
-  [(c) => c.name === 'block', 'block'],
   [(c) => c.name === 'text', 'text'],
   // Not `extraClasses: String?`, whose test would otherwise pass it "x" as if it were a
   // component's own text parameter.

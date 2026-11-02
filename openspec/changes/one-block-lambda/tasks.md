@@ -15,7 +15,7 @@ An informal "about half a day" (240m) was given in conversation before the scope
 
 ## 1. Verify the assumptions
 
-- [ ] 1.1 Count every call in `example-app/`, `e2e-tests/`, `lib/src/test/`, `README.md` and
+- [x] 1.1 Count every call in `example-app/`, `e2e-tests/`, `lib/src/test/`, `README.md` and
   `docs/` that passes `text` together with a lambda, and note for each whether its lambda writes
   children that must follow the text. Record the count and the verdict in design.md, Risks. Any
   such call refutes the Assumed requirement "A function's text and block add up": stop and revise

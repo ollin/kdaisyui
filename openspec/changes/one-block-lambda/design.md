@@ -87,8 +87,12 @@ a lambda for nothing else, the sibling calls are the whole block.
 ## Risks / Trade-offs
 
 - [A trailing lambda that used to drop `text` now renders it] → It is the behaviour the precedence
-  test documented as a trap. Task 1 counts the call sites that combine both, and the upgrading
-  entry names the change first, as 0.8.0 did with the tab rename.
+  test documented as a trap. The upgrading entry names the change first, as 0.8.0 did with the
+  tab rename. **Measured 2026-11-02 (task 1.1)** over every hand-written `.kt` and `.md` file
+  outside `lib/generated`, `docs/reference`, the submodules and `openspec/`: 3 calls of a `text`
+  function pass text together with a lambda, all 3 in `TextAndContentPrecedenceTest`, which pins
+  the trap on purpose. No call writes children that must follow the text, so the Assumed order
+  stands.
 - [Every consumer call naming `attrs =` or `content =` stops compiling] → A compile error at the
   call site, with a one-line migration. Per the project's stance, API stability ranks below
   correctness.

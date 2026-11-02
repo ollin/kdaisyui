@@ -54,7 +54,7 @@ An informal "about half a day" (240m) was given in conversation before the scope
 
 ## 4. Documentation
 
-- [ ] 4.1 `codegen/llms-template.md`, `codegen/llms-full-template.md`: the frame is `id`,
+- [x] 4.1 `codegen/llms-template.md`, `codegen/llms-full-template.md`: the frame is `id`,
   `extraClasses` and one `block`; regenerate `llms.txt` and `llms-full.txt`. `. d`
 - [ ] 4.2 `docs/explanation.md` (common parameters, escape hatches) and `docs/how-to.md`
   (custom attributes: write attributes before children). `. d`

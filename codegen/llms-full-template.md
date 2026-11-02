@@ -68,11 +68,15 @@ shipped with.
 - **A `Boolean` parameter is named after its DaisyUI class**: `soft = true` emits `alert-soft`.
 - **CSS class to Kotlin**: `btn-primary` → `ButtonColor.Primary`, `btn-lg` → `ButtonSize.Lg`.
 - **Always use named arguments.** Parameter order is generated and changes between releases.
-- **The lambda receiver is the element the function renders** — `daisyDropdownContent` renders
-  `<ul>`, so its `content` lambda runs on `UL`.
+- **Every function takes one lambda, `block`, last and optional.** Its receiver is the element the
+  function renders — `daisyDropdownContent` renders `<ul>`, so its block runs on `UL`. It writes the
+  element's attributes and children; on an element that cannot hold children, attributes only.
+  Write attributes before the first child or text, which kotlinx.html requires.
+- **`text` and `block` add up:** `daisyButton("Save") { popoverTarget(menu) }` renders the label and
+  the attribute. The block runs first and the text is appended after it.
 - **Every function has a class sibling, `Tag.daisy<Name>Classes(…)`,** which adds the same classes
   to the element it is called on. Use it where DaisyUI puts two components on one element,
-  `daisyDropdownContent(attrs = { daisyMenuClasses() })`, or a component's classes on an element you
+  `daisyDropdownContent { daisyMenuClasses() }`, or a component's classes on an element you
   write yourself, `a { daisyButtonClasses(color = ButtonColor.Primary) }`. Classes DaisyUI puts on a
   child without a class of its own have a sibling only: `li { a { daisyMenuItemClasses(active = true) } }`.
 
@@ -82,8 +86,7 @@ Every function also takes these:
 |---|---|---|
 | `id` | `HtmlId?` | Type-safe HTML id from the `HtmlId` hierarchy |
 | `extraClasses` | `String?` | Additional CSS classes, merged without duplicates |
-| `attrs` | `(TAG.() -> Unit)?` | Direct access to the underlying kotlinx.html tag |
-| `content` | `(TAG.() -> Unit)` | Nested HTML content — required, except where the function also takes `text: String?` (then optional) or renders an element that cannot hold children (then absent) |
+| `block` | `(TAG.() -> Unit) = {}` | The element's attributes and children, as in any kotlinx.html builder; last, so a trailing lambda binds to it |
 
 ## Type-safe HTML IDs
 

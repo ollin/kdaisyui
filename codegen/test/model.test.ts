@@ -96,7 +96,7 @@ describe('shapeFromModel', () => {
 
     const [, joined] = withDeclaredScopes(declared)
 
-    assert.deepEqual([joined.scope?.members.map(fn => fn.name), joined.functions[0].contentScope], [['daisyKbd'], 'JoinScope'])
+    assert.deepEqual([joined.scope?.members.map(fn => fn.name), joined.functions[0].blockScope], [['daisyKbd'], 'JoinScope'])
   })
 
   test("imports what the join items' main functions need, and nothing their parts need", () => {

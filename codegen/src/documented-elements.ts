@@ -119,7 +119,7 @@ export interface DocumentedCall {
 /**
  * The call reproducing an expressible element, or null for a gap. Prefixed component classes go
  * through `extraClasses` and are expected as written; `join-item` is neither passed nor expected,
- * because only a join's content adds it.
+ * because only a join's block adds it.
  */
 export function documentedCall(models: readonly ComponentModel[], element: MarkedElement, componentClasses: ReadonlySet<string>): DocumentedCall | null {
   const counted = countedClasses(element, componentClasses)

@@ -106,8 +106,8 @@ function renderKdoc(shape: FunctionShape): string {
  * would put an element between the two and the variables would not reach it.
  */
 function tagOpening(shape: FunctionShape): string {
-  if (shape.contentScope === undefined) return `${shape.tagBuilder} {`
-  return `${shape.contentScope}(emptyMap(), consumer).visit {`
+  if (shape.blockScope === undefined) return `${shape.tagBuilder} {`
+  return `${shape.blockScope}(emptyMap(), consumer).visit {`
 }
 
 function renderFunction(shape: FunctionShape, body: string): string {
@@ -304,7 +304,7 @@ function functionImports(fn: FunctionShape): string[] {
     `${elementPackage(fn.element)}.${fn.element}`,
     // A scoped function constructs its tag rather than calling the builder, so importing the
     // builder would leave the generated file with an import nothing uses.
-    ...(fn.contentScope === undefined ? [`${elementPackage(fn.element)}.${fn.tagBuilder}`] : []),
+    ...(fn.blockScope === undefined ? [`${elementPackage(fn.element)}.${fn.tagBuilder}`] : []),
     // FlowContent among them, which the import set already holds.
     `kotlinx.html.${fn.receiver}`,
     ...(fn.anchoredPopover ? ['io.github.ollin.kdaisyui.core.anchorName'] : []),

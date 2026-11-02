@@ -44,7 +44,7 @@ export function withJoinScope(
 function inScope(fn: FunctionShape): FunctionShape {
   return {
     ...fn,
-    contentScope: JOIN_SCOPE_NAME,
+    blockScope: JOIN_SCOPE_NAME,
     parameters: fn.parameters.map(parameter =>
       parameter.name === 'block' ? received(parameter) : parameter,
     ),

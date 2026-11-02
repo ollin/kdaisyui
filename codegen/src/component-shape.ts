@@ -12,7 +12,7 @@
 
 
 /**
- * A kotlinx.html tag CLASS, e.g. `DIV`. Also the lambda receiver type in `attrs` and `content`.
+ * A kotlinx.html tag CLASS, e.g. `DIV`. Also the receiver type of `block`.
  *
  * Branded for the same reason `frontmatter.ts` brands `ComponentName`: the mistake produces a
  * plausible value rather than an error. Passing a builder name where a class is wanted emits
@@ -208,17 +208,17 @@ export interface FunctionShape {
   readonly desc: string
   readonly parameters: readonly ParameterShape[]
   /**
-   * The lambda receiver of `content`, when it is a generated SCOPE rather than the element.
+   * The receiver of `block`, when it is a generated SCOPE rather than the element.
    *
    * Absent for every function whose children are ordinary content. Present on `daisyJoin`,
    * whose body opens a `JoinScope` instead of a plain `div` so that a component call written
    * directly in the lambda reaches a member that marks it `join-item`.
    */
-  readonly contentScope?: string
+  readonly blockScope?: string
 }
 
 /**
- * A generated class that a component's `content` lambda runs in, carrying member overloads.
+ * A generated class that a component's `block` runs in, carrying member overloads.
  *
  * The one instance is the join's. `.join` writes four corner-radius variables onto its direct
  * children and `.join-item` reads them, so the class is harmful anywhere else — which rules out
@@ -275,7 +275,7 @@ export interface ComponentShape {
   /** The main function first, then parts in declaration order, then custom parts. */
   readonly functions: readonly FunctionShape[]
   /**
-   * The scope the main function's `content` runs in, when it has one.
+   * The scope the main function's `block` runs in, when it has one.
    *
    * Attached after the per-component build rather than by `buildComponentShape`, because a
    * scope's members are OTHER components' functions and this shape knows only its own.

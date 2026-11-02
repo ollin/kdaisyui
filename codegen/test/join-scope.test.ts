@@ -86,7 +86,7 @@ describe('withJoinScope', () => {
   test('the main function says which scope its body must open', () => {
     const joined = withJoinScope(joinShape(), [member('daisyButton')], [])
 
-    assert.equal(joined.functions[0].contentScope, 'JoinScope')
+    assert.equal(joined.functions[0].blockScope, 'JoinScope')
   })
 
   test('the scope carries its members and the class each of them adds', () => {

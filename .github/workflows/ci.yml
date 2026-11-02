@@ -338,11 +338,10 @@ jobs:
           java-version-file: .tool-versions
           cache: gradle
 
-      - name: Install Playwright browsers
-        run: ./gradlew :e2e-tests:playwrightInstall --no-daemon
-
-      - name: Run E2E tests
-        run: ./gradlew :e2e-tests:test --no-daemon
+      # One Gradle call: each extra --no-daemon call pays a cold start and the up-to-date checks
+      # again (about 14 s on 2026-11-02). Gradle runs the two in the order given here.
+      - name: Install Playwright browsers and run E2E tests
+        run: ./gradlew :e2e-tests:playwrightInstall :e2e-tests:test --no-daemon
 
       - name: Upload test report
         if: always()

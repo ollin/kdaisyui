@@ -590,3 +590,47 @@ a { daisyButtonClasses(color = ButtonColor.Primary) }
 styles the [cally](https://github.com/WickyNilliams/cally) web component, so a `<div class="cally">`
 rendered nothing to look at. The lambda receiver is now `CALENDAR_DATE`, from
 `io.github.ollin.kdaisyui.core`; load cally's script as DaisyUI's documentation says.
+
+## How to migrate from 0.8.x
+
+0.9.0 gives every generated function one lambda, `block`, in place of the two it had, `attrs` and
+`content`. Most calls keep compiling, because a trailing lambda binds to `block` as it bound to
+`content`. **One change does not show as a compile error** — read it first.
+
+**1. `text` and a trailing lambda now render both.** In 0.8.x the lambda replaced the text, so
+this rendered a button with no label. It now renders the label too, appended after whatever the
+block writes:
+
+```kotlin
+daisyButton("Save") { attributes["data-action"] = "submit" }
+// 0.8.x: <button class="btn" data-action="submit"></button>
+// 0.9.0: <button class="btn" data-action="submit">Save</button>
+```
+
+A call that relied on the old behaviour, passing `text` only to have the lambda replace it, drops
+the `text` argument.
+
+**2. `attrs` is gone.** Move its statements to the start of the block. On a component that takes
+children, put them before the first child or text, which kotlinx.html requires:
+
+<!-- snippet: skip - the 0.8.x API, shown for migration -->
+```kotlin
+// before
+daisyButton("Save", attrs = { attributes["data-action"] = "submit" })
+daisyDropdownContent(attrs = { daisyMenuClasses() }) { li { a { +"Item" } } }
+daisyInput(attrs = { name = "email" })
+```
+
+```kotlin
+// after
+daisyButton("Save") { attributes["data-action"] = "submit" }
+daisyDropdownContent { daisyMenuClasses(); li { a { +"Item" } } }
+daisyInput { name = "email" }
+```
+
+`<input>` and the other void elements take the block as well. It sets attributes only, since the
+element cannot hold children.
+
+**3. `content` is called `block`, and no call has to pass one.** Only a call that names it changes:
+`content = { … }` becomes `block = { … }`, or a trailing lambda. `daisyCard()` now compiles and
+renders an empty card.

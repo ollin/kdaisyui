@@ -24,8 +24,7 @@ class LabelTest {
     @Test
     fun label_for_input() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            daisyLabel()
         }
         assertDocumented(html, "span", "label", "Label for input")
     }
@@ -41,8 +40,7 @@ class LabelTest {
     @Test
     fun floating_label_daisyFloatingLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFloatingLabel() {
-            }
+            daisyFloatingLabel()
         }
         assertDocumented(html, "label", "floating-label", "Floating Label")
     }
@@ -98,8 +96,7 @@ class LabelTest {
     @Test
     fun responsive_size_floating_label_daisyTextarea() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(size = TextareaSize.Xs, extraClasses = "sm:textarea-sm md:textarea-md lg:textarea-lg xl:textarea-xl") {
-            }
+            daisyTextarea(size = TextareaSize.Xs, extraClasses = "sm:textarea-sm md:textarea-md lg:textarea-lg xl:textarea-xl")
         }
         assertDocumented(html, "textarea", "lg:textarea-lg md:textarea-md sm:textarea-sm textarea textarea-xs xl:textarea-xl", "Responsive Size Floating Label")
     }
@@ -107,8 +104,7 @@ class LabelTest {
     @Test
     fun responsive_size_floating_label_daisySelect() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(size = SelectSize.Xs, extraClasses = "sm:select-sm md:select-md lg:select-lg xl:select-xl") {
-            }
+            daisySelect(size = SelectSize.Xs, extraClasses = "sm:select-sm md:select-md lg:select-lg xl:select-xl")
         }
         assertDocumented(html, "select", "lg:select-lg md:select-md select select-xs sm:select-sm xl:select-xl", "Responsive Size Floating Label")
     }

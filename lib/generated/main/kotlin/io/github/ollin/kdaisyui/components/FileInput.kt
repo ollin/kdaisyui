@@ -58,7 +58,7 @@ enum class FileInputSize(internal val className: String) : ClassValues<FileInput
  * @param size — Size variant
  * @param ghost
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyFileInput(
     id: HtmlId? = null,
@@ -66,7 +66,7 @@ fun FlowContent.daisyFileInput(
     size: ClassValues<FileInputSize>? = null,
     ghost: Boolean = false,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
@@ -75,7 +75,7 @@ fun FlowContent.daisyFileInput(
         addClassNames(size)
         if (ghost) addClassNames("file-input-ghost")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 

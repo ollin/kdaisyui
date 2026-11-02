@@ -18,23 +18,20 @@ import kotlinx.html.Tag
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param flower
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyFab(
     id: HtmlId? = null,
     flower: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("fab")
         if (flower) addClassNames("fab-flower")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -50,15 +47,13 @@ fun Tag.daisyFabClasses(
 fun FlowContent.daisyFabClose(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("fab-close")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -71,15 +66,13 @@ fun Tag.daisyFabCloseClasses() {
 fun FlowContent.daisyFabMainAction(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit),
+    block: (BUTTON.() -> Unit) = {},
 ) {
     button {
         if (id != null) attributes["id"] = id.id
         addClassNames("fab-main-action")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

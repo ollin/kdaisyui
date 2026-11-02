@@ -77,15 +77,14 @@ enum class BadgeFillStyle(internal val className: String) : ClassValues<BadgeFil
 
 /**
  * Badges are used to inform the user of the status of specific data. Renders `<span class="badge ...">`.
- * @param text — Inline text, appended after anything [content] writes
+ * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant
  * @param outlineStyle — OutlineStyle variant
  * @param fillStyle — FillStyle variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content; [text], if given, is appended after it
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyBadge(
     text: String? = null,
@@ -95,8 +94,7 @@ fun FlowContent.daisyBadge(
     outlineStyle: ClassValues<BadgeOutlineStyle>? = null,
     fillStyle: ClassValues<BadgeFillStyle>? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit)? = null,
+    block: (SPAN.() -> Unit) = {},
 ) {
     span {
         if (id != null) attributes["id"] = id.id
@@ -106,8 +104,7 @@ fun FlowContent.daisyBadge(
         addClassNames(outlineStyle)
         addClassNames(fillStyle)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        if (content != null) content()
+        block()
         if (text != null) +text
     }
 }

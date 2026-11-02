@@ -18,8 +18,7 @@ fun FlowContent.daisyAura(
     size: ClassValues<AuraSize>? = null,
     style: ClassValues<AuraStyle>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

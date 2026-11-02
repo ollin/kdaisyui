@@ -15,8 +15,7 @@ class Hover3dTest {
     @Test
     fun test_3d_image_hover_effect() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHover3d() {
-            }
+            daisyHover3d()
         }
         assertDocumented(html, "div", "hover-3d", "3D image hover effect")
     }
@@ -24,8 +23,7 @@ class Hover3dTest {
     @Test
     fun test_3d_card_hover_effect_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard() {
-            }
+            daisyCard()
         }
         assertDocumented(html, "div", "card", "3D card hover effect")
     }
@@ -33,8 +31,7 @@ class Hover3dTest {
     @Test
     fun test_3d_card_hover_effect_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardBody() {
-            }
+            daisyCardBody()
         }
         assertDocumented(html, "div", "card-body", "3D card hover effect")
     }

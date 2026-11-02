@@ -17,8 +17,7 @@ class FieldsetTest {
     @Test
     fun fieldset_fieldset_legend_and_label() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFieldset() {
-            }
+            daisyFieldset()
         }
         assertDocumented(html, "fieldset", "fieldset", "Fieldset fieldset-legend and label")
     }
@@ -26,8 +25,7 @@ class FieldsetTest {
     @Test
     fun fieldset_fieldset_legend_and_label_daisyFieldsetLegend() {
         val html = createHTML(prettyPrint = false).fieldSet {
-            daisyFieldsetLegend() {
-            }
+            daisyFieldsetLegend()
         }
         assertDocumented(html, "legend", "fieldset-legend", "Fieldset fieldset-legend and label")
     }
@@ -51,8 +49,7 @@ class FieldsetTest {
     @Test
     fun fieldset_with_multiple_join_items_daisyJoin() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin() {
-            }
+            daisyJoin()
         }
         assertDocumented(html, "div", "join", "Fieldset with multiple join items")
     }
@@ -60,8 +57,7 @@ class FieldsetTest {
     @Test
     fun fieldset_with_multiple_join_items_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Fieldset with multiple join items")
     }
@@ -69,8 +65,7 @@ class FieldsetTest {
     @Test
     fun login_form_with_fieldset_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Neutral) {
-            }
+            daisyButton(color = ButtonColor.Neutral)
         }
         assertDocumented(html, "button", "btn btn-neutral", "Login form with fieldset")
     }

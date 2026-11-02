@@ -33,8 +33,7 @@ class FileInputTest {
     @Test
     fun with_fieldset_and_label_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFieldset() {
-            }
+            daisyFieldset()
         }
         assertDocumented(html, "fieldset", "fieldset", "With fieldset and label")
     }
@@ -42,8 +41,7 @@ class FileInputTest {
     @Test
     fun with_fieldset_and_label_daisyFieldsetLegend() {
         val html = createHTML(prettyPrint = false).fieldSet {
-            daisyFieldsetLegend() {
-            }
+            daisyFieldsetLegend()
         }
         assertDocumented(html, "legend", "fieldset-legend", "With fieldset and label")
     }

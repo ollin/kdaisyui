@@ -15,8 +15,7 @@ class BadgeTest {
     @Test
     fun badge() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBadge() {
-            }
+            daisyBadge()
         }
         assertDocumented(html, "span", "badge", "Badge")
     }
@@ -352,8 +351,7 @@ class BadgeTest {
     @Test
     fun badge_in_a_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Badge in a button")
     }

@@ -17,8 +17,7 @@ fun FlowContent.daisyFooter(
     direction: ClassValues<FooterDirection>? = null,
     center: Boolean = false,  // Aligns footer content to center
     extraClasses: String? = null,
-    attrs: (FOOTER.() -> Unit)? = null,
-    content: (FOOTER.() -> Unit),
+    block: (FOOTER.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -30,8 +29,7 @@ fun FlowContent.daisyFooterTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H6.() -> Unit)? = null,
-    content: (H6.() -> Unit)? = null,
+    block: (H6.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

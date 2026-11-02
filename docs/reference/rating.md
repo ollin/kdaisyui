@@ -17,8 +17,7 @@ fun FlowContent.daisyRating(
     size: ClassValues<RatingSize>? = null,
     half: Boolean = false,  // To shows half of the shapes. Useful for half star ratings
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

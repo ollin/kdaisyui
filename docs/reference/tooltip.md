@@ -21,8 +21,7 @@ fun FlowContent.daisyTooltip(
     align: ClassValues<TooltipAlign>? = null,
     open: Boolean = false,  // Force open tooltip
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -33,8 +32,7 @@ fun Tag.daisyTooltipClasses(color: ClassValues<TooltipColor>? = null, side: Clas
 fun FlowContent.daisyTooltipContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

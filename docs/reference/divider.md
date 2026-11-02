@@ -20,8 +20,7 @@ fun FlowContent.daisyDivider(
     direction: ClassValues<DividerDirection>? = null,
     placement: ClassValues<DividerPlacement>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

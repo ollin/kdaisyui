@@ -38,8 +38,7 @@ enum class TableSize(internal val className: String) : ClassValues<TableSize> {
  * @param pinRows — For <table> to make all the rows inside <thead> and <tfoot> sticky
  * @param zebra — For <table> to show zebra stripe rows
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyTable(
     id: HtmlId? = null,
@@ -48,8 +47,7 @@ fun FlowContent.daisyTable(
     pinRows: Boolean = false,
     zebra: Boolean = false,
     extraClasses: String? = null,
-    attrs: (TABLE.() -> Unit)? = null,
-    content: (TABLE.() -> Unit),
+    block: (TABLE.() -> Unit) = {},
 ) {
     table {
         if (id != null) attributes["id"] = id.id
@@ -59,8 +57,7 @@ fun FlowContent.daisyTable(
         if (pinRows) addClassNames("table-pin-rows")
         if (zebra) addClassNames("table-zebra")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

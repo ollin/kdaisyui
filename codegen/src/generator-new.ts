@@ -99,7 +99,7 @@ function renderKdoc(shape: FunctionShape): string {
 /**
  * How the body opens its element.
  *
- * Normally the kotlinx.html builder. A function whose `content` runs in a generated scope
+ * Normally the kotlinx.html builder. A function whose `block` runs in a generated scope
  * constructs that scope instead and `visit`s it — which is what `div { }` itself expands to,
  * with the scope class in place of `DIV`. The tag is the scope, rather than the scope wrapping
  * a tag, because `.join` writes its corner-radius variables onto DIRECT children: a wrapper
@@ -195,19 +195,12 @@ function applyLines(extras: readonly ExtraParameter[]): string[] {
 }
 
 /**
- * How the body writes the children — read off the SIGNATURE, like the classes above it.
- *
- * A function with no `content` parameter writes none: its element is void and cannot hold any.
- * The body used to call `content()` unconditionally, so the day the void rule reached parts and
- * custom parts, three generated files stopped compiling.
- *
- * Content and text add up, content first: kotlinx.html rejects an attribute once an element's
- * text is written, so text first would make `daisyButton("Save") { popoverTarget(menu) }` throw.
+ * The caller's block, then the text. They add up, block first: kotlinx.html rejects an attribute
+ * once an element's text is written, so text first would make
+ * `daisyButton("Save") { popoverTarget(menu) }` throw.
  */
-function contentLines(shape: FunctionShape, hasTextParam: boolean): string[] {
-  if (!shape.parameters.some(parameter => parameter.name === 'content')) return []
-  if (!hasTextParam) return ['        content()']
-  return ['        if (content != null) content()', '        if (text != null) +text']
+function blockLines(hasTextParam: boolean): string[] {
+  return ['        block()', ...(hasTextParam ? ['        if (text != null) +text'] : [])]
 }
 
 function mainFunctionBody(
@@ -216,8 +209,6 @@ function mainFunctionBody(
   componentConfig: MainFunctionConfig,
 ): string {
   const { extras, hasTextParam, role, inputType } = componentConfig
-  // The body follows the SIGNATURE rather than re-deriving the rule: if the shape declares no
-  // `content` parameter, there is nothing to call, and the two can never disagree.
 
   const lines: string[] = ['        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
@@ -231,8 +222,7 @@ function mainFunctionBody(
   lines.push(...applyLines(extras.filter(extra => extra.position !== 'before_classes')))
 
   lines.push('        addClassNames(extraClasses)')
-  lines.push('        if (attrs != null) attrs()')
-  lines.push(...contentLines(shape, hasTextParam))
+  lines.push(...blockLines(hasTextParam))
 
   return lines.join('\n')
 }
@@ -280,7 +270,7 @@ function renderSibling(shape: SiblingShape): string {
   return `/** The classes \`${shape.name}\` writes, on the element this is called on. */\nfun Tag.${shape.name}Classes${signature} {\n${lines.map(line => `    ${line}`).join('\n')}\n}`
 }
 
-/** Parts and custom parts share one body: id, attributes, classes, attrs, content. */
+/** Parts and custom parts share one body: id, attributes, classes, the block, the text. */
 function secondaryFunctionBody(shape: FunctionShape): string {
   const hasTextParam = shape.parameters.some(parameter => parameter.name === 'text')
   const idRequired = shape.parameters.some(parameter => parameter.name === 'id' && parameter.default === null)
@@ -293,8 +283,7 @@ function secondaryFunctionBody(shape: FunctionShape): string {
   lines.push(...classValuesLines(shape))
   lines.push(...booleanLines(shape))
   lines.push('        addClassNames(extraClasses)')
-  lines.push('        if (attrs != null) attrs()')
-  lines.push(...contentLines(shape, hasTextParam))
+  lines.push(...blockLines(hasTextParam))
 
   return lines.join('\n')
 }

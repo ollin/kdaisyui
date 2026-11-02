@@ -223,16 +223,18 @@ function uniqueTestName(usedNames, funcName) {
   return name
 }
 
-/** Asserts the function emits exactly the classes the doc example shows, inside the builder its receiver needs. */
+/** The call of a documented element's function: its arguments, then the other groups' siblings as its block. */
+function callStatement({ fn, args, block }: DocumentedCall): string {
+  if (block === '') return `${fn.name}(${args})`
+  return args === '' ? `${fn.name} { ${block} }` : `${fn.name}(${args}) { ${block} }`
+}
+
 /** The builder a test needs around a tag it writes itself: `li` and `legend` take one parent only. */
 const TAG_PARENTS: Readonly<Record<string, string>> = { li: 'ul', legend: 'fieldSet' }
 
 /** The builder and statement that render a documented element: its function, or its tag with siblings. */
 function renderingOf(call: DocumentedCall): { wrapper: string, statement: string } {
-  if (call.rendersTag) {
-    const content = isVoidElement(call.fn.element as TagClass) ? '' : ' {\n            }'
-    return { wrapper: htmlTagFnFor(wrapperTagOf(call.fn.receiver)), statement: `${call.fn.name}(${call.args})${content}` }
-  }
+  if (call.rendersTag) return { wrapper: htmlTagFnFor(wrapperTagOf(call.fn.receiver)), statement: callStatement(call) }
   return { wrapper: TAG_PARENTS[call.tag] ?? 'div', statement: `${htmlTagFnFor(call.tag as TagName)} { ${call.onTag} }` }
 }
 
@@ -376,7 +378,7 @@ function lowerFirst(s) {
 const PARAM_KIND_RULES = [
   [(c) => c.baseType === 'Boolean', 'boolean'],
   [(c) => c.name === 'id', 'id'],
-  [(c) => c.name === 'content', (c) => (c.nullable ? 'contentOptional' : 'contentRequired')],
+  [(c) => c.name === 'block', 'block'],
   [(c) => c.name === 'text', 'text'],
   // Not `extraClasses: String?`, whose test would otherwise pass it "x" as if it were a
   // component's own text parameter.
@@ -422,8 +424,6 @@ function classifyParam({ name, type, cssClass, writes }: ParameterShape, enums) 
 /** One overload on a generated scope, and what a test needs to call it. */
 interface ScopeMember {
   readonly name: string
-  /** Whether its element can hold children, so the call must pass a `content` lambda. */
-  readonly requiresContent: boolean
   /** The function whose lambda the member lives in — the call has to be written inside it. */
   readonly opener: string
 }
@@ -516,8 +516,8 @@ function sortedClasses(arr) {
  * doing so here: this is a refactoring, and a refactoring does not change an assertion.
  */
 const COVERAGE_HELPER = `
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\\"").substringBefore("\\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -526,8 +526,7 @@ const COVERAGE_HELPER = `
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -551,8 +550,7 @@ const COVERAGE_HELPER = `
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\\"x-cov-id\\""), "\${expected.label} id")
-        assertTrue(html.contains("data-attrs=\\"yes\\""), "\${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\\"yes\\""), "\${expected.label} content")
+        assertTrue(html.contains("data-block=\\"yes\\""), "\${expected.label} block")
     }
 `
 
@@ -566,9 +564,9 @@ function closesSuffix(ctx) {
 }
 
 /** The `Expected` a case asserts against, as Kotlin. */
-function expectedValue(ctx, classes, label, { withCloses, content = true }) {
+function expectedValue(ctx, classes, label, { withCloses }) {
   const closes = withCloses ? closesSuffix(ctx) : null
-  return `Expected("${label}", "${classes}"${closes ? `, closes = "${closes}"` : ''}${content ? '' : ', content = false'})`
+  return `Expected("${label}", "${classes}"${closes ? `, closes = "${closes}"` : ''})`
 }
 
 function renderedAssert(ctx, classes, label, withCloses) {
@@ -604,10 +602,8 @@ function coverageContext(fn, enums) {
     tagFn: fn.builder,
     fnBase: lowerFirst(fn.name),
     daisyName: fn.name,
-    required: params.find((p) => p.kind === 'contentRequired'),
-    hasContent: params.some((p) => p.kind === 'contentRequired' || p.kind === 'contentOptional'),
     textParam: params.find((p) => p.kind === 'text'),
-    // A class sibling takes no id, extraClasses or attrs: it adds classes to an element it does
+    // A class sibling takes no id, extraClasses or block: it adds classes to an element it does
     // not open.
     hasHatches: params.some((p) => p.kind === 'id'),
     // An anchored popover's id has no default, so even the smallest call names one.
@@ -615,9 +611,9 @@ function coverageContext(fn, enums) {
   }
 }
 
-/** What every call of the function has to pass: a required id, a required content lambda. */
+/** What every call of the function has to pass: a required id. */
 function requiredArgs(ctx): string[] {
-  return [...(ctx.idRequired ? ['id = htmlId("x-cov-id")'] : []), ...(ctx.required ? ['content = { }'] : [])]
+  return ctx.idRequired ? ['id = htmlId("x-cov-id")'] : []
 }
 
 function wrapTest(ctx, tname, args, asserts) {
@@ -647,14 +643,13 @@ function allFlagsArgs(ctx, boolCss) {
   }
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
   for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
-  if (ctx.hasHatches) args.push('extraClasses = "zz-extra"', 'attrs = { attributes["data-attrs"] = "yes" }')
-  if (ctx.hasContent) args.push('content = { attributes["data-content"] = "yes" }')
+  if (ctx.hasHatches) args.push('extraClasses = "zz-extra"', 'block = { attributes["data-block"] = "yes" }')
   return args
 }
 
 function allFlagsAsserts(ctx, boolCss) {
-  // The id/attrs/content trio is identical in every all-flags case, so it lives in
-  // `assertCommonFlags` rather than being repeated three times per component.
+  // The id/block pair is identical in every all-flags case, so it lives in
+  // `assertCommonFlags` rather than being repeated in every case.
   //
   // Kept SEPARATE from `assertRendered` on purpose. Folding both into one helper was tried
   // and reverted: it needed five parameters against Kotlin's threshold of four and traded
@@ -662,7 +657,7 @@ function allFlagsAsserts(ctx, boolCss) {
   // and four parameters say the same thing and trip neither rule.
   const classes = sortedClasses([ctx.base, ...boolCss, ...(ctx.hasHatches ? ['zz-extra'] : [])])
   const asserts = [
-    `val expected = ${expectedValue(ctx, classes, `${ctx.daisyName} all flags`, { withCloses: true, content: ctx.hasContent })}`,
+    `val expected = ${expectedValue(ctx, classes, `${ctx.daisyName} all flags`, { withCloses: true })}`,
     'assertRendered(html, expected)',
     // Read only where the function has hatches: a sibling's test keeps the expected classes alone.
     'assertCommonFlags(html, expected)',
@@ -708,8 +703,7 @@ function siblingAllFlagsTest(ctx, args, asserts) {
 const HATCH_CONSTANTS: Readonly<Record<string, string>> = {
   'id = htmlId("x-cov-id")': 'id = ID',
   'extraClasses = "zz-extra"': 'extraClasses = EXTRA',
-  'attrs = { attributes["data-attrs"] = "yes" }': 'attrs = ATTRS',
-  'content = { attributes["data-content"] = "yes" }': 'content = CONTENT',
+  'block = { attributes["data-block"] = "yes" }': 'block = BLOCK',
 }
 
 function enumArmTests(ctx) {
@@ -762,13 +756,12 @@ function buildCoverageTests(fn, enums) {
  * top-level function its own component already tests.
  */
 function scopeMemberTest(member): string {
-  const args = member.requiresContent ? 'content = { }' : ''
   return `
     @Test
     fun scope_${member.name}() {
         val html = createHTML(prettyPrint = false).div {
             ${member.opener} {
-                ${member.name}(${args})
+                ${member.name}()
             }
         }
         assertTrue(html.contains("join-item"), "${member.name} in a ${member.opener}")
@@ -845,12 +838,11 @@ function coverageFunctionsOf(shape: ComponentShape, config: MainFunctionConfig) 
 
 /**
  * The members of the component's scope, so the coverage tests can reach them: each is called
- * inside the main function's lambda, with a `content` lambda where its element requires one.
+ * inside the main function's block.
  */
 function scopeMembersOf(shape: ComponentShape): ScopeMember[] {
   return (shape.scope?.members ?? []).map(member => ({
     name: member.name,
-    requiresContent: member.parameters.some(parameter => parameter.name === 'content' && parameter.default === null),
     opener: shape.functions[0].name,
   }))
 }

@@ -184,7 +184,7 @@ export interface FunctionShape {
   readonly name: string
   /** Extension receiver, e.g. `FlowContent`. */
   readonly receiver: string
-  /** The tag class, which is also the lambda receiver type in `attrs` and `content`. */
+  /** The tag class, which is also the receiver type of `block`. */
   readonly element: TagClass
   /** What the generated Kotlin calls to open the tag. */
   readonly tagBuilder: TagBuilder
@@ -305,7 +305,7 @@ const TEXT_PARAMETER: ParameterShape = {
   name: 'text',
   type: 'String?',
   default: 'null',
-  doc: 'Inline text, appended after anything [content] writes',
+  doc: 'Inline text, appended after anything [block] writes',
 }
 
 const EXTRA_CLASSES_PARAMETER: ParameterShape = {
@@ -315,44 +315,29 @@ const EXTRA_CLASSES_PARAMETER: ParameterShape = {
   doc: 'Additional CSS classes appended after the generated ones',
 }
 
-function attrsParameter(element: TagClass): ParameterShape {
-  return {
-    name: 'attrs',
-    type: `(${element}.() -> Unit)?`,
-    default: 'null',
-    doc: 'Direct access to the underlying kotlinx.html tag attributes',
-  }
-}
-
-/** Optional when a `text` parameter competes with it, required otherwise. */
-function contentParameter(element: TagClass, hasTextParam: boolean): ParameterShape {
-  if (hasTextParam) {
-    return {
-      name: 'content',
-      type: `(${element}.() -> Unit)?`,
-      default: 'null',
-      doc: 'Nested HTML content; [text], if given, is appended after it',
-    }
-  }
-  return { name: 'content', type: `(${element}.() -> Unit)`, default: null, doc: 'Nested HTML content' }
-}
-
-/** The four parameters every part and custom part shares, in declaration order. */
 /**
- * The four parameters every generated function has, plus `text` where the component takes it.
+ * The one lambda every rendering function takes, as kotlinx.html's own builders take it: last, so
+ * a trailing lambda binds to it, and doing nothing by default, so no call has to pass one.
  *
- * `content` is absent for a void element, here rather than at each call site: an element the
- * HTML specification says cannot hold children cannot hold them on a part or a custom part
- * either. The check used to sit on the main function's path alone, so `daisyModalToggle`
- * required a content lambda for the same `<input>` that `daisyInput` correctly refuses one for.
+ * A void element takes it too. It cannot hold children, so there the block writes attributes
+ * only; until 0.9.0 that was a second lambda, `attrs`, on every function.
  */
+function blockParameter(element: TagClass): ParameterShape {
+  return {
+    name: 'block',
+    type: `(${element}.() -> Unit)`,
+    default: '{}',
+    doc: "Writes the element's attributes, and its children where it can hold any",
+  }
+}
+
+/** The parameters every generated function has, plus `text` where the component takes it. */
 function escapeHatchParameters(element: TagClass, hasTextParam: boolean, idRequired: boolean): ParameterShape[] {
   return [
     ...(hasTextParam ? [TEXT_PARAMETER] : []),
     idRequired ? REQUIRED_ID_PARAMETER : ID_PARAMETER,
     EXTRA_CLASSES_PARAMETER,
-    attrsParameter(element),
-    ...(isVoidElement(element) ? [] : [contentParameter(element, hasTextParam)]),
+    blockParameter(element),
   ]
 }
 

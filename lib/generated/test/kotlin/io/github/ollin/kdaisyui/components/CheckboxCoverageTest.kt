@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class CheckboxCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class CheckboxCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class CheckboxCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -61,7 +59,7 @@ class CheckboxCoverageTest {
 
     @Test
     fun checkbox_all_flags() {
-        val html = allFlags(Expected("Checkbox all flags", "checkbox zz-extra", content = false)) { daisyCheckbox(id = ID, checked = true, disabled = true, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("Checkbox all flags", "checkbox zz-extra")) { daisyCheckbox(id = ID, checked = true, disabled = true, extraClasses = EXTRA, block = BLOCK) }
         assertTrue(html.contains("type=\""), "Checkbox sets type")
         assertTrue(html.contains("checked=\""), "Checkbox sets checked")
         assertTrue(html.contains("disabled=\""), "Checkbox sets disabled")
@@ -82,7 +80,7 @@ class CheckboxCoverageTest {
     }
 
     @Test
-    fun checkboxClasses_all_flags() = assertRenders(Expected("CheckboxClasses all flags", "checkbox", content = false)) { daisyCheckboxClasses() }
+    fun checkboxClasses_all_flags() = assertRenders(Expected("CheckboxClasses all flags", "checkbox")) { daisyCheckboxClasses() }
 
     @Test
     fun checkboxClasses_color() = assertEachEntry("CheckboxClasses color", mapOf(CheckboxColor.Primary to "checkbox checkbox-primary", CheckboxColor.Secondary to "checkbox checkbox-secondary", CheckboxColor.Accent to "checkbox checkbox-accent", CheckboxColor.Neutral to "checkbox checkbox-neutral", CheckboxColor.Success to "checkbox checkbox-success", CheckboxColor.Warning to "checkbox checkbox-warning", CheckboxColor.Info to "checkbox checkbox-info", CheckboxColor.Error to "checkbox checkbox-error")) { daisyCheckboxClasses(color = it) }

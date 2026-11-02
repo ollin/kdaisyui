@@ -17,8 +17,7 @@ class ModalTest {
     @Test
     fun dialog_modal_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Dialog modal")
     }
@@ -26,8 +25,7 @@ class ModalTest {
     @Test
     fun dialog_modal() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModal() {
-            }
+            daisyModal()
         }
         assertDocumented(html, "dialog", "modal", "Dialog modal")
     }
@@ -35,8 +33,7 @@ class ModalTest {
     @Test
     fun dialog_modal_daisyModalBox() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModalBox() {
-            }
+            daisyModalBox()
         }
         assertDocumented(html, "div", "modal-box", "Dialog modal")
     }
@@ -44,8 +41,7 @@ class ModalTest {
     @Test
     fun dialog_modal_daisyModalAction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModalAction() {
-            }
+            daisyModalAction()
         }
         assertDocumented(html, "div", "modal-action", "Dialog modal")
     }
@@ -61,8 +57,7 @@ class ModalTest {
     @Test
     fun dialog_modal_with_a_close_button_at_corner_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Sm, shape = ButtonShape.Circle, style = ButtonStyle.Ghost) {
-            }
+            daisyButton(size = ButtonSize.Sm, shape = ButtonShape.Circle, style = ButtonStyle.Ghost)
         }
         assertDocumented(html, "button", "btn btn-circle btn-ghost btn-sm", "Dialog modal with a close button at corner")
     }
@@ -70,8 +65,7 @@ class ModalTest {
     @Test
     fun responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModal(verticalPlacement = ModalVerticalPlacement.Bottom, extraClasses = "sm:modal-middle") {
-            }
+            daisyModal(verticalPlacement = ModalVerticalPlacement.Bottom, extraClasses = "sm:modal-middle")
         }
         assertDocumented(html, "dialog", "modal modal-bottom sm:modal-middle", "Responsive")
     }
@@ -79,8 +73,7 @@ class ModalTest {
     @Test
     fun popover_modal_daisyModalPopover() {
         val html = createHTML(prettyPrint = false).div {
-            daisyModalPopover() {
-            }
+            daisyModalPopover()
         }
         assertDocumented(html, "div", "modal", "Popover modal")
     }

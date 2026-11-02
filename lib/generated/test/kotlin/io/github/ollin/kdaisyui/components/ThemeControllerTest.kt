@@ -17,7 +17,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_toggle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyThemeController(attrs = { daisyToggleClasses() })
+            daisyThemeController { daisyToggleClasses() }
         }
         assertDocumented(html, "input", "theme-controller toggle", "Theme Controller using a toggle")
     }
@@ -25,7 +25,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_checkbox() {
         val html = createHTML(prettyPrint = false).div {
-            daisyThemeController(attrs = { daisyCheckboxClasses() })
+            daisyThemeController { daisyCheckboxClasses() }
         }
         assertDocumented(html, "input", "checkbox theme-controller", "Theme Controller using a checkbox")
     }
@@ -33,8 +33,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_swap_daisySwap() {
         val html = createHTML(prettyPrint = false).div {
-            daisySwap(style = SwapStyle.Rotate) {
-            }
+            daisySwap(style = SwapStyle.Rotate)
         }
         assertDocumented(html, "label", "swap swap-rotate", "Theme Controller using a swap")
     }
@@ -74,8 +73,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_radio_input_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFieldset() {
-            }
+            daisyFieldset()
         }
         assertDocumented(html, "fieldset", "fieldset", "Theme Controller using a radio input")
     }
@@ -83,7 +81,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_radio_input() {
         val html = createHTML(prettyPrint = false).div {
-            daisyThemeController(attrs = { daisyRadioClasses(size = RadioSize.Sm) })
+            daisyThemeController { daisyRadioClasses(size = RadioSize.Sm) }
         }
         assertDocumented(html, "input", "radio radio-sm theme-controller", "Theme Controller using a radio input")
     }
@@ -91,8 +89,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_radio_button_daisyJoin() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin(direction = JoinDirection.Vertical) {
-            }
+            daisyJoin(direction = JoinDirection.Vertical)
         }
         assertDocumented(html, "div", "join join-vertical", "Theme Controller using a radio button")
     }
@@ -100,7 +97,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_radio_button() {
         val html = createHTML(prettyPrint = false).div {
-            daisyThemeController(attrs = { daisyButtonClasses() })
+            daisyThemeController { daisyButtonClasses() }
         }
         assertDocumented(html, "input", "btn theme-controller", "Theme Controller using a radio button")
     }
@@ -124,8 +121,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_dropdown_daisyDropdownContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdownContent() {
-            }
+            daisyDropdownContent()
         }
         assertDocumented(html, "ul", "dropdown-content", "Theme Controller using a dropdown")
     }
@@ -133,7 +129,7 @@ class ThemeControllerTest {
     @Test
     fun theme_controller_using_a_dropdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyThemeController(attrs = { daisyButtonClasses(size = ButtonSize.Sm, width = ButtonWidth.Block, style = ButtonStyle.Ghost) })
+            daisyThemeController { daisyButtonClasses(size = ButtonSize.Sm, width = ButtonWidth.Block, style = ButtonStyle.Ghost) }
         }
         assertDocumented(html, "input", "btn btn-block btn-ghost btn-sm theme-controller", "Theme Controller using a dropdown")
     }

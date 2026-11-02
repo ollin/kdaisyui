@@ -578,6 +578,7 @@ you write yourself.** `Tag.daisy<Name>Classes(…)` takes the function's class p
 the same classes to the element it is called on. Not breaking; it replaces the `extraClasses`
 strings 0.7.x needed for such cases:
 
+<!-- snippet: skip - the 0.8.x API, whose `attrs` 0.9.0 removed -->
 ```kotlin
 // <ul class="dropdown-content menu menu-sm">
 daisyDropdownContent(attrs = { daisyMenuClasses(size = MenuSize.Sm) }) { /* … */ }

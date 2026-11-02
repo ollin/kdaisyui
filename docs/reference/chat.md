@@ -17,8 +17,7 @@ fun FlowContent.daisyChat(
     id: HtmlId? = null,
     placement: ClassValues<ChatPlacement>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -29,8 +28,7 @@ fun Tag.daisyChatClasses(placement: ClassValues<ChatPlacement>? = null)
 fun FlowContent.daisyChatImage(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -41,8 +39,7 @@ fun Tag.daisyChatImageClasses()
 fun FlowContent.daisyChatHeader(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -53,8 +50,7 @@ fun Tag.daisyChatHeaderClasses()
 fun FlowContent.daisyChatFooter(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -66,8 +62,7 @@ fun FlowContent.daisyChatBubble(
     id: HtmlId? = null,
     color: ClassValues<ChatBubbleColor>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

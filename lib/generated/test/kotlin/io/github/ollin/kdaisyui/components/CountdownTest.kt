@@ -15,8 +15,7 @@ class CountdownTest {
     @Test
     fun countdown() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCountdown() {
-            }
+            daisyCountdown()
         }
         assertDocumented(html, "span", "countdown", "Countdown")
     }

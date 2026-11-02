@@ -17,8 +17,7 @@ fun FlowContent.daisySteps(
     id: HtmlId? = null,
     direction: ClassValues<StepsDirection>? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -30,8 +29,7 @@ fun UL.daisyStep(
     id: HtmlId? = null,
     color: ClassValues<StepColor>? = null,
     extraClasses: String? = null,
-    attrs: (LI.() -> Unit)? = null,
-    content: (LI.() -> Unit),
+    block: (LI.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -42,8 +40,7 @@ fun Tag.daisyStepClasses(color: ClassValues<StepColor>? = null)
 fun FlowContent.daisyStepIcon(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

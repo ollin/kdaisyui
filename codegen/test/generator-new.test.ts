@@ -67,7 +67,7 @@ describe('the doc comment', () => {
 
     assert.match(kotlin, /Renders `<textarea class="textarea \.\.\.">`\./)
     assert.match(kotlin, /^ {4}textArea \{$/m)
-    assert.match(kotlin, /attrs: \(TEXTAREA\.\(\) -> Unit\)\? = null,/)
+    assert.match(kotlin, /block: \(TEXTAREA\.\(\) -> Unit\) = \{\},/)
   })
 
   test('leaves a part comment on the element too', () => {
@@ -102,7 +102,7 @@ describe('the join scope', () => {
   })
 
   test('the tag builder is not imported, because nothing calls it any more', () => {
-    // Positive control beside it: the element class IS still needed, for `attrs`.
+    // Positive control beside it: the element class IS still needed, for the scope's members.
     assert.match(joined(), /^import kotlinx\.html\.DIV$/m)
     assert.ok(!joined().includes('import kotlinx.html.div\n'))
   })
@@ -116,7 +116,7 @@ describe('the join scope', () => {
     const scope = joined().split('class JoinScope')[1]
 
     assert.match(scope, /^ {4}fun daisyButton\($/m)
-    assert.match(scope, /^ {8}attrs: \(BUTTON\.\(\) -> Unit\)\? = null,$/m)
+    assert.match(scope, /^ {8}block: \(BUTTON\.\(\) -> Unit\) = \{\},$/m)
   })
 
   test('the scope is the only way to write the marker class', () => {

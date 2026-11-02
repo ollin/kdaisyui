@@ -14,8 +14,7 @@ Calendar date picker widget. Renders `<calendar-date class="cally ...">`.
 fun FlowContent.daisyCalendar(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (CALENDAR_DATE.() -> Unit)? = null,
-    content: (CALENDAR_DATE.() -> Unit),
+    block: (CALENDAR_DATE.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,8 +25,7 @@ fun Tag.daisyCalendarClasses()
 fun FlowContent.daisyVc(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

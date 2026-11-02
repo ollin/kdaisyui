@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class RangeCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class RangeCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class RangeCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -61,7 +59,7 @@ class RangeCoverageTest {
 
     @Test
     fun range_all_flags() {
-        val html = allFlags(Expected("Range all flags", "range range-vertical zz-extra", content = false)) { daisyRange(id = ID, vertical = true, disabled = true, min = "x", max = "x", value = "x", step = "x", extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("Range all flags", "range range-vertical zz-extra")) { daisyRange(id = ID, vertical = true, disabled = true, min = "x", max = "x", value = "x", step = "x", extraClasses = EXTRA, block = BLOCK) }
         assertTrue(html.contains("min=\"x\""), "Range min")
         assertTrue(html.contains("max=\"x\""), "Range max")
         assertTrue(html.contains("value=\"x\""), "Range value")
@@ -89,7 +87,7 @@ class RangeCoverageTest {
     }
 
     @Test
-    fun rangeClasses_all_flags() = assertRenders(Expected("RangeClasses all flags", "range range-vertical", content = false)) { daisyRangeClasses(vertical = true) }
+    fun rangeClasses_all_flags() = assertRenders(Expected("RangeClasses all flags", "range range-vertical")) { daisyRangeClasses(vertical = true) }
 
     @Test
     fun rangeClasses_color() = assertEachEntry("RangeClasses color", mapOf(RangeColor.Neutral to "range range-neutral", RangeColor.Primary to "range range-primary", RangeColor.Secondary to "range range-secondary", RangeColor.Accent to "range range-accent", RangeColor.Success to "range range-success", RangeColor.Warning to "range range-warning", RangeColor.Info to "range range-info", RangeColor.Error to "range range-error")) { daisyRangeClasses(color = it) }

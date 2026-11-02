@@ -16,8 +16,7 @@ class StepsTest {
     @Test
     fun horizontal() {
         val html = createHTML(prettyPrint = false).div {
-            daisySteps() {
-            }
+            daisySteps()
         }
         assertDocumented(html, "ul", "steps", "Horizontal")
     }
@@ -25,8 +24,7 @@ class StepsTest {
     @Test
     fun horizontal_daisyStep() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep(color = StepColor.Primary) {
-            }
+            daisyStep(color = StepColor.Primary)
         }
         assertDocumented(html, "li", "step step-primary", "Horizontal")
     }
@@ -34,8 +32,7 @@ class StepsTest {
     @Test
     fun horizontal_daisyStep_2() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep() {
-            }
+            daisyStep()
         }
         assertDocumented(html, "li", "step", "Horizontal")
     }
@@ -43,8 +40,7 @@ class StepsTest {
     @Test
     fun vertical() {
         val html = createHTML(prettyPrint = false).div {
-            daisySteps(direction = StepsDirection.Vertical) {
-            }
+            daisySteps(direction = StepsDirection.Vertical)
         }
         assertDocumented(html, "ul", "steps steps-vertical", "Vertical")
     }
@@ -52,8 +48,7 @@ class StepsTest {
     @Test
     fun responsive_vertical_on_small_screen_horizontal_on_large_screen() {
         val html = createHTML(prettyPrint = false).div {
-            daisySteps(direction = StepsDirection.Vertical, extraClasses = "lg:steps-horizontal") {
-            }
+            daisySteps(direction = StepsDirection.Vertical, extraClasses = "lg:steps-horizontal")
         }
         assertDocumented(html, "ul", "lg:steps-horizontal steps steps-vertical", "responsive (vertical on small screen, horizontal on large screen)")
     }
@@ -61,8 +56,7 @@ class StepsTest {
     @Test
     fun with_custom_content_in_step_icon_daisyStep() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep(color = StepColor.Neutral) {
-            }
+            daisyStep(color = StepColor.Neutral)
         }
         assertDocumented(html, "li", "step step-neutral", "With custom content in step-icon")
     }
@@ -70,8 +64,7 @@ class StepsTest {
     @Test
     fun with_custom_content_in_step_icon_daisyStepIcon() {
         val html = createHTML(prettyPrint = false).div {
-            daisyStepIcon() {
-            }
+            daisyStepIcon()
         }
         assertDocumented(html, "span", "step-icon", "With custom content in step-icon")
     }
@@ -79,8 +72,7 @@ class StepsTest {
     @Test
     fun custom_colors_daisyStep() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep(color = StepColor.Info) {
-            }
+            daisyStep(color = StepColor.Info)
         }
         assertDocumented(html, "li", "step step-info", "Custom colors")
     }
@@ -88,8 +80,7 @@ class StepsTest {
     @Test
     fun custom_colors_daisyStep_2() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep(color = StepColor.Error) {
-            }
+            daisyStep(color = StepColor.Error)
         }
         assertDocumented(html, "li", "step step-error", "Custom colors")
     }
@@ -97,8 +88,7 @@ class StepsTest {
     @Test
     fun with_scrollable_wrapper_daisyStep() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep(color = StepColor.Secondary) {
-            }
+            daisyStep(color = StepColor.Secondary)
         }
         assertDocumented(html, "li", "step step-secondary", "With scrollable wrapper")
     }
@@ -106,8 +96,7 @@ class StepsTest {
     @Test
     fun with_scrollable_wrapper_daisyStep_2() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep(color = StepColor.Accent) {
-            }
+            daisyStep(color = StepColor.Accent)
         }
         assertDocumented(html, "li", "step step-accent", "With scrollable wrapper")
     }
@@ -115,8 +104,7 @@ class StepsTest {
     @Test
     fun with_scrollable_wrapper_daisyStep_3() {
         val html = createHTML(prettyPrint = false).ul {
-            daisyStep(color = StepColor.Warning) {
-            }
+            daisyStep(color = StepColor.Warning)
         }
         assertDocumented(html, "li", "step step-warning", "With scrollable wrapper")
     }

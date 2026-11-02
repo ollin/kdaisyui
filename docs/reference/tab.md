@@ -20,8 +20,7 @@ fun FlowContent.daisyTabs(
     placement: ClassValues<TabsPlacement>? = null,
     style: ClassValues<TabsStyle>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -34,8 +33,7 @@ fun FlowContent.daisyTab(
     active: Boolean = false,  // Makes a single tab look active
     disabled: Boolean = false,  // Makes a single tab look disabled
     extraClasses: String? = null,
-    attrs: (A.() -> Unit)? = null,
-    content: (A.() -> Unit),
+    block: (A.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -48,7 +46,7 @@ fun FlowContent.daisyTabRadio(
     active: Boolean = false,  // Makes a single tab look active
     disabled: Boolean = false,  // Makes a single tab look disabled
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -59,8 +57,7 @@ fun Tag.daisyTabRadioClasses(active: Boolean = false, disabled: Boolean = false)
 fun FlowContent.daisyTabContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

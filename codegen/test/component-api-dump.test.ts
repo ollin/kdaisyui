@@ -20,8 +20,8 @@ describe('what the JVM baseline cannot see', () => {
     const asLabel = generateComponentApiDump([shapeOf(component('otp', 'Otp', 'otp', {}, { element: 'LABEL' }))])
 
     assert.notEqual(asDiv, asLabel)
-    assert.match(asDiv, /attrs: \(DIV\.\(\) -> Unit\)\? = null/)
-    assert.match(asLabel, /attrs: \(LABEL\.\(\) -> Unit\)\? = null/)
+    assert.match(asDiv, /block: \(DIV\.\(\) -> Unit\) = \{\}/)
+    assert.match(asLabel, /block: \(LABEL\.\(\) -> Unit\) = \{\}/)
   })
 
   test('parameter names are in the dump, because named arguments make them API', () => {
@@ -40,19 +40,18 @@ describe('what the JVM baseline cannot see', () => {
   })
 
   test('default values are in the dump', () => {
-    const required = generateComponentApiDump([card()])
-    const optional = generateComponentApiDump([card({}, { text: true })])
+    const withText = generateComponentApiDump([card({}, { text: true })])
 
-    assert.match(required, /content: \(DIV\.\(\) -> Unit\)\)$/m)
-    assert.match(optional, /content: \(DIV\.\(\) -> Unit\)\? = null\)$/m)
+    assert.match(withText, /\(text: String\? = null, /)
+    assert.match(withText, /block: \(DIV\.\(\) -> Unit\) = \{\}\)$/m)
   })
 
   test('a removed parameter changes the dump too, so it does not only cover the blind spot', () => {
-    const withContent = generateComponentApiDump([card()])
-    const voidElement = generateComponentApiDump([card({}, { element: 'IMG' })])
+    const withText = generateComponentApiDump([card({}, { text: true })])
+    const withoutText = generateComponentApiDump([card()])
 
-    assert.match(withContent, /content:/)
-    assert.ok(!voidElement.includes('content:'))
+    assert.match(withText, /text:/)
+    assert.ok(!withoutText.includes('text:'))
   })
 })
 

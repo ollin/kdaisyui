@@ -18,7 +18,7 @@ fun FlowContent.daisyMask(
     style: ClassValues<MaskStyle>? = null,
     half: ClassValues<MaskHalf>? = null,
     extraClasses: String? = null,
-    attrs: (IMG.() -> Unit)? = null,
+    block: (IMG.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

@@ -16,8 +16,7 @@ class CarouselTest {
     @Test
     fun snap_to_start_default() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel() {
-            }
+            daisyCarousel()
         }
         assertDocumented(html, "div", "carousel", "Snap to start (default)")
     }
@@ -25,8 +24,7 @@ class CarouselTest {
     @Test
     fun snap_to_start_default_daisyCarouselItem() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarouselItem() {
-            }
+            daisyCarouselItem()
         }
         assertDocumented(html, "div", "carousel-item", "Snap to start (default)")
     }
@@ -34,8 +32,7 @@ class CarouselTest {
     @Test
     fun snap_to_center() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(snap = CarouselSnap.Center) {
-            }
+            daisyCarousel(snap = CarouselSnap.Center)
         }
         assertDocumented(html, "div", "carousel carousel-center", "Snap to center")
     }
@@ -43,8 +40,7 @@ class CarouselTest {
     @Test
     fun snap_to_end() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(snap = CarouselSnap.End) {
-            }
+            daisyCarousel(snap = CarouselSnap.End)
         }
         assertDocumented(html, "div", "carousel carousel-end", "Snap to end")
     }
@@ -52,8 +48,7 @@ class CarouselTest {
     @Test
     fun vertical_carousel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCarousel(direction = CarouselDirection.Vertical) {
-            }
+            daisyCarousel(direction = CarouselDirection.Vertical)
         }
         assertDocumented(html, "div", "carousel carousel-vertical", "Vertical carousel")
     }

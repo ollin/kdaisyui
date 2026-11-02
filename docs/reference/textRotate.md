@@ -14,8 +14,7 @@ Rotated text display. Renders `<span class="text-rotate ...">`.
 fun FlowContent.daisyTextRotate(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

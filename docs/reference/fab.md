@@ -15,8 +15,7 @@ fun FlowContent.daisyFab(
     id: HtmlId? = null,
     flower: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -27,8 +26,7 @@ fun Tag.daisyFabClasses(flower: Boolean = false)
 fun FlowContent.daisyFabClose(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -39,8 +37,7 @@ fun Tag.daisyFabCloseClasses()
 fun FlowContent.daisyFabMainAction(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit),
+    block: (BUTTON.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

@@ -14,8 +14,7 @@ Browser window mockup frame. Renders `<div class="mockup-browser ...">`.
 fun FlowContent.daisyMockupBrowser(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,8 +25,7 @@ fun Tag.daisyMockupBrowserClasses()
 fun FlowContent.daisyMockupBrowserToolbar(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

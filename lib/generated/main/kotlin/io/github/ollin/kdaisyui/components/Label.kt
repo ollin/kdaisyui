@@ -15,25 +15,22 @@ import kotlinx.html.Tag
 
 /**
  * Label is used to provide a name or title for an input field. Label can be placed before or after the field. Renders `<span class="label ...">`.
- * @param text — Inline text, appended after anything [content] writes
+ * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content; [text], if given, is appended after it
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyLabel(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit)? = null,
+    block: (SPAN.() -> Unit) = {},
 ) {
     span {
         if (id != null) attributes["id"] = id.id
         addClassNames("label")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        if (content != null) content()
+        block()
         if (text != null) +text
     }
 }
@@ -47,15 +44,13 @@ fun Tag.daisyLabelClasses() {
 fun FlowContent.daisyFloatingLabel(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 ) {
     label {
         if (id != null) attributes["id"] = id.id
         addClassNames("floating-label")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

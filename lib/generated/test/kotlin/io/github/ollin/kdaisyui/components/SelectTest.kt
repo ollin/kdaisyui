@@ -16,8 +16,7 @@ class SelectTest {
     @Test
     fun select() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect() {
-            }
+            daisySelect()
         }
         assertDocumented(html, "select", "select", "Select")
     }
@@ -25,8 +24,7 @@ class SelectTest {
     @Test
     fun ghost_no_background() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(ghost = true) {
-            }
+            daisySelect(ghost = true)
         }
         assertDocumented(html, "select", "select select-ghost", "Ghost (no background)")
     }
@@ -34,8 +32,7 @@ class SelectTest {
     @Test
     fun with_fieldset_and_labels_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFieldset() {
-            }
+            daisyFieldset()
         }
         assertDocumented(html, "fieldset", "fieldset", "With fieldset and labels")
     }
@@ -43,8 +40,7 @@ class SelectTest {
     @Test
     fun with_fieldset_and_labels_daisyFieldsetLegend() {
         val html = createHTML(prettyPrint = false).fieldSet {
-            daisyFieldsetLegend() {
-            }
+            daisyFieldsetLegend()
         }
         assertDocumented(html, "legend", "fieldset-legend", "With fieldset and labels")
     }
@@ -52,8 +48,7 @@ class SelectTest {
     @Test
     fun with_fieldset_and_labels_daisyLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyLabel() {
-            }
+            daisyLabel()
         }
         assertDocumented(html, "span", "label", "With fieldset and labels")
     }
@@ -61,8 +56,7 @@ class SelectTest {
     @Test
     fun primary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Primary) {
-            }
+            daisySelect(color = SelectColor.Primary)
         }
         assertDocumented(html, "select", "select select-primary", "Primary color")
     }
@@ -70,8 +64,7 @@ class SelectTest {
     @Test
     fun secondary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Secondary) {
-            }
+            daisySelect(color = SelectColor.Secondary)
         }
         assertDocumented(html, "select", "select select-secondary", "Secondary color")
     }
@@ -79,8 +72,7 @@ class SelectTest {
     @Test
     fun accent_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Accent) {
-            }
+            daisySelect(color = SelectColor.Accent)
         }
         assertDocumented(html, "select", "select select-accent", "Accent color")
     }
@@ -88,8 +80,7 @@ class SelectTest {
     @Test
     fun neutral_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Neutral) {
-            }
+            daisySelect(color = SelectColor.Neutral)
         }
         assertDocumented(html, "select", "select select-neutral", "Neutral color")
     }
@@ -97,8 +88,7 @@ class SelectTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Info) {
-            }
+            daisySelect(color = SelectColor.Info)
         }
         assertDocumented(html, "select", "select select-info", "Info color")
     }
@@ -106,8 +96,7 @@ class SelectTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Success) {
-            }
+            daisySelect(color = SelectColor.Success)
         }
         assertDocumented(html, "select", "select select-success", "Success color")
     }
@@ -115,8 +104,7 @@ class SelectTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Warning) {
-            }
+            daisySelect(color = SelectColor.Warning)
         }
         assertDocumented(html, "select", "select select-warning", "Warning color")
     }
@@ -124,8 +112,7 @@ class SelectTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(color = SelectColor.Error) {
-            }
+            daisySelect(color = SelectColor.Error)
         }
         assertDocumented(html, "select", "select select-error", "Error color")
     }
@@ -133,8 +120,7 @@ class SelectTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(size = SelectSize.Xs) {
-            }
+            daisySelect(size = SelectSize.Xs)
         }
         assertDocumented(html, "select", "select select-xs", "Sizes")
     }
@@ -142,8 +128,7 @@ class SelectTest {
     @Test
     fun sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(size = SelectSize.Sm) {
-            }
+            daisySelect(size = SelectSize.Sm)
         }
         assertDocumented(html, "select", "select select-sm", "Sizes")
     }
@@ -151,8 +136,7 @@ class SelectTest {
     @Test
     fun sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(size = SelectSize.Md) {
-            }
+            daisySelect(size = SelectSize.Md)
         }
         assertDocumented(html, "select", "select select-md", "Sizes")
     }
@@ -160,8 +144,7 @@ class SelectTest {
     @Test
     fun sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(size = SelectSize.Lg) {
-            }
+            daisySelect(size = SelectSize.Lg)
         }
         assertDocumented(html, "select", "select select-lg", "Sizes")
     }
@@ -169,8 +152,7 @@ class SelectTest {
     @Test
     fun sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisySelect(size = SelectSize.Xl) {
-            }
+            daisySelect(size = SelectSize.Xl)
         }
         assertDocumented(html, "select", "select select-xl", "Sizes")
     }

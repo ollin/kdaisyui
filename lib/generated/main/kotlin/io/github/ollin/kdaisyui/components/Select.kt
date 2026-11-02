@@ -59,8 +59,7 @@ enum class SelectSize(internal val className: String) : ClassValues<SelectSize> 
  * @param ghost
  * @param disabled
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisySelect(
     id: HtmlId? = null,
@@ -69,8 +68,7 @@ fun FlowContent.daisySelect(
     ghost: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
-    attrs: (SELECT.() -> Unit)? = null,
-    content: (SELECT.() -> Unit),
+    block: (SELECT.() -> Unit) = {},
 ) {
     select {
         if (id != null) attributes["id"] = id.id
@@ -80,8 +78,7 @@ fun FlowContent.daisySelect(
         if (ghost) addClassNames("select-ghost")
         if (disabled) this.disabled = true
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

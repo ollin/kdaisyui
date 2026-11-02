@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class HeroCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class HeroCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,23 +45,20 @@ class HeroCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun hero_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHero(
-                content = { },
-            )
+            daisyHero()
         }
         assertRendered(html, Expected("Hero defaults", "hero", closes = "</div></div>"))
     }
 
     @Test
     fun hero_all_flags() {
-        val html = allFlags(Expected("Hero all flags", "hero zz-extra", closes = "</div></div>")) { daisyHero(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Hero all flags", "hero zz-extra", closes = "</div></div>")) { daisyHero(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -74,21 +70,19 @@ class HeroCoverageTest {
     }
 
     @Test
-    fun heroClasses_all_flags() = assertRenders(Expected("HeroClasses all flags", "hero", content = false)) { daisyHeroClasses() }
+    fun heroClasses_all_flags() = assertRenders(Expected("HeroClasses all flags", "hero")) { daisyHeroClasses() }
 
     @Test
     fun heroContent_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHeroContent(
-                content = { },
-            )
+            daisyHeroContent()
         }
         assertRendered(html, Expected("HeroContent defaults", "hero-content", closes = "</div></div>"))
     }
 
     @Test
     fun heroContent_all_flags() {
-        val html = allFlags(Expected("HeroContent all flags", "hero-content zz-extra", closes = "</div></div>")) { daisyHeroContent(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("HeroContent all flags", "hero-content zz-extra", closes = "</div></div>")) { daisyHeroContent(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -100,21 +94,19 @@ class HeroCoverageTest {
     }
 
     @Test
-    fun heroContentClasses_all_flags() = assertRenders(Expected("HeroContentClasses all flags", "hero-content", content = false)) { daisyHeroContentClasses() }
+    fun heroContentClasses_all_flags() = assertRenders(Expected("HeroContentClasses all flags", "hero-content")) { daisyHeroContentClasses() }
 
     @Test
     fun heroOverlay_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHeroOverlay(
-                content = { },
-            )
+            daisyHeroOverlay()
         }
         assertRendered(html, Expected("HeroOverlay defaults", "hero-overlay", closes = "</div></div>"))
     }
 
     @Test
     fun heroOverlay_all_flags() {
-        val html = allFlags(Expected("HeroOverlay all flags", "hero-overlay zz-extra", closes = "</div></div>")) { daisyHeroOverlay(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("HeroOverlay all flags", "hero-overlay zz-extra", closes = "</div></div>")) { daisyHeroOverlay(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -126,5 +118,5 @@ class HeroCoverageTest {
     }
 
     @Test
-    fun heroOverlayClasses_all_flags() = assertRenders(Expected("HeroOverlayClasses all flags", "hero-overlay", content = false)) { daisyHeroOverlayClasses() }
+    fun heroOverlayClasses_all_flags() = assertRenders(Expected("HeroOverlayClasses all flags", "hero-overlay")) { daisyHeroOverlayClasses() }
 }

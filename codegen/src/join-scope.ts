@@ -17,16 +17,16 @@ import type { ComponentShape, CssClass, FunctionShape, ParameterShape } from './
 /** The class a join's children wear, and the whole reason this scope exists. */
 export const JOIN_ITEM_CLASS = 'join-item' as CssClass
 
-/** The generated Kotlin class the join's `content` lambda runs in. */
+/** The generated Kotlin class the join's `block` runs in. */
 const JOIN_SCOPE_NAME = 'JoinScope'
 
 /**
- * The join component, with its content lambda moved onto the scope.
+ * The join component, with its block moved onto the scope.
  *
- * Only the RECEIVER of `content` changes. `JoinScope` extends the `<div>` the join already
- * rendered, so `attrs` still reaches a `DIV`, every kotlinx.html builder still works inside the
- * lambda, and nothing a caller could write before stops working — except writing `join-item`
- * by hand, which was never a typed option.
+ * Only the RECEIVER of `block` changes. `JoinScope` extends the `<div>` the join already
+ * rendered, so every kotlinx.html builder and attribute still works inside the block, and nothing
+ * a caller could write before stops working — except writing `join-item` by hand, which was never
+ * a typed option.
  */
 export function withJoinScope(
   shape: ComponentShape,
@@ -46,15 +46,14 @@ function inScope(fn: FunctionShape): FunctionShape {
     ...fn,
     contentScope: JOIN_SCOPE_NAME,
     parameters: fn.parameters.map(parameter =>
-      parameter.name === 'content' ? received(parameter) : parameter,
+      parameter.name === 'block' ? received(parameter) : parameter,
     ),
   }
 }
 
-/** The same lambda parameter, on the scope — nullability preserved, since only the type moves. */
-function received(content: ParameterShape): ParameterShape {
-  const optional = content.type.endsWith('?') ? '?' : ''
-  return { ...content, type: `(${JOIN_SCOPE_NAME}.() -> Unit)${optional}` }
+/** The same block, on the scope: only its receiver type moves. */
+function received(block: ParameterShape): ParameterShape {
+  return { ...block, type: `(${JOIN_SCOPE_NAME}.() -> Unit)` }
 }
 
 /**

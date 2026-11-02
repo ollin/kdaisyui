@@ -18,8 +18,7 @@ fun FlowContent.daisyLink(
     color: ClassValues<LinkColor>? = null,
     hover: Boolean = false,  // Only shows underline on hover
     extraClasses: String? = null,
-    attrs: (A.() -> Unit)? = null,
-    content: (A.() -> Unit)? = null,
+    block: (A.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

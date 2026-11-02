@@ -17,21 +17,18 @@ import kotlinx.html.Tag
  * Filter is a group of radio buttons. Choosing one of the options will hide the others and shows a reset button next to the chosen option. Renders `<form class="filter ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyFilter(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FORM.() -> Unit)? = null,
-    content: (FORM.() -> Unit),
+    block: (FORM.() -> Unit) = {},
 ) {
     form {
         if (id != null) attributes["id"] = id.id
         addClassNames("filter")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -44,13 +41,13 @@ fun Tag.daisyFilterClasses() {
 fun FlowContent.daisyFilterReset(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("filter-reset")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 

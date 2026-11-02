@@ -32,8 +32,7 @@ enum class TimelineDirection(internal val className: String) : ClassValues<Timel
  * @param compact
  * @param snapIcon
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyTimeline(
     id: HtmlId? = null,
@@ -41,8 +40,7 @@ fun FlowContent.daisyTimeline(
     compact: Boolean = false,
     snapIcon: Boolean = false,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 ) {
     ul {
         if (id != null) attributes["id"] = id.id
@@ -51,8 +49,7 @@ fun FlowContent.daisyTimeline(
         if (compact) addClassNames("timeline-compact")
         if (snapIcon) addClassNames("timeline-snap-icon")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -73,16 +70,14 @@ fun FlowContent.daisyTimelineStart(
     id: HtmlId? = null,
     box: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline-start")
         if (box) addClassNames("timeline-box")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -99,16 +94,14 @@ fun FlowContent.daisyTimelineMiddle(
     id: HtmlId? = null,
     box: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline-middle")
         if (box) addClassNames("timeline-box")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -125,16 +118,14 @@ fun FlowContent.daisyTimelineEnd(
     id: HtmlId? = null,
     box: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("timeline-end")
         if (box) addClassNames("timeline-box")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

@@ -27,7 +27,7 @@ describe('shapeFromModel', () => {
   test('frames the declared parameters with text, id and the escape hatches', () => {
     const [kbd] = shapeFromModel(KBD, DESCRIPTIONS).functions
 
-    assert.deepEqual(kbd.parameters.map(parameter => parameter.name), ['text', 'id', 'size', 'extraClasses', 'attrs', 'content'])
+    assert.deepEqual(kbd.parameters.map(parameter => parameter.name), ['text', 'id', 'size', 'extraClasses', 'block'])
   })
 
   test('types an enum parameter as the ClassValues of its enum', () => {
@@ -131,16 +131,10 @@ describe('shapeFromModel', () => {
     assert.deepEqual(mainFunctionConfig(button).extras, [disabled])
   })
 
-  test('a void element takes no content parameter, even where a text shortcut exists', () => {
+  test('a void element takes the same optional block, on its own element', () => {
     const image: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'IMG', parameters: [] }] }
 
-    assert.ok(!shapeFromModel(image, DESCRIPTIONS).functions[0].parameters.some(parameter => parameter.name === 'content'))
-  })
-
-  test('content is required, and optional only where a text shortcut competes with it', () => {
-    const contentOf = (text: boolean) => shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], text, parameters: [] }] }, DESCRIPTIONS).functions[0].parameters.at(-1)
-
-    assert.deepEqual([contentOf(false)?.default, contentOf(true)?.default], [null, 'null'])
+    assert.deepEqual(shapeFromModel(image, DESCRIPTIONS).functions[0].parameters.at(-1), { name: 'block', type: '(IMG.() -> Unit)', default: '{}', doc: "Writes the element's attributes, and its children where it can hold any" })
   })
 
   test('calls the three kotlinx.html builders whose names differ from their tag', () => {

@@ -77,18 +77,10 @@ describe('withJoinScope', () => {
   const member = (name: string): FunctionShape =>
     ({ kind: 'main', name, element: 'BUTTON', parameters: [] }) as unknown as FunctionShape
 
-  test("the content lambda's receiver becomes the scope", () => {
+  test("the block's receiver becomes the scope, and its default stays", () => {
     const joined = withJoinScope(joinShape(), [member('daisyButton')], [])
 
-    assert.equal(parameterNamed(joined, 'content')?.type, '(JoinScope.() -> Unit)')
-  })
-
-  test('the element keeps its own escape hatch, because the scope IS that element', () => {
-    // JoinScope extends DIV, so `attrs` still reaches a DIV and every kotlinx.html builder
-    // still works inside the lambda. Only the RECEIVER of `content` changes.
-    const joined = withJoinScope(joinShape(), [member('daisyButton')], [])
-
-    assert.equal(parameterNamed(joined, 'attrs')?.type, '(DIV.() -> Unit)?')
+    assert.deepEqual([parameterNamed(joined, 'block')?.type, parameterNamed(joined, 'block')?.default], ['(JoinScope.() -> Unit)', '{}'])
   })
 
   test('the main function says which scope its body must open', () => {
@@ -103,12 +95,6 @@ describe('withJoinScope', () => {
     assert.equal(joined.scope?.name, 'JoinScope')
     assert.equal(joined.scope?.markerClass, 'join-item')
     assert.deepEqual(joined.scope?.members.map(fn => fn.name), ['daisyButton', 'daisySelect'])
-  })
-
-  test('an optional content lambda stays optional on the scope', () => {
-    const joined = withJoinScope(shapeOf(component('join', 'Join', 'join', {}, { text: true })), [member('daisyButton')], [])
-
-    assert.equal(parameterNamed(joined, 'content')?.type, '(JoinScope.() -> Unit)?')
   })
 
   test('nothing else about the component moves', () => {

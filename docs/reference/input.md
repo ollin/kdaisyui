@@ -23,7 +23,7 @@ fun FlowContent.daisyInput(
     value: String? = null,
     disabled: Boolean = false,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

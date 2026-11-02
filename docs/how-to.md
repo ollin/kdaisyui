@@ -288,7 +288,7 @@ places it next to its trigger through CSS anchor positioning:
 <!-- snippet: in FlowContent -->
 ```kotlin
 val notifications = htmlId("notifications")
-daisyButton("🔔", attrs = { popoverTarget(notifications, anchored = true) })
+daisyButton("🔔") { popoverTarget(notifications, anchored = true) }
 daisyDropdownPopover(id = notifications, align = DropdownAlign.End, extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl") {
     daisyMenuClasses()
     li { a { b { +"New message" }; +" Alice: Hi!" } }

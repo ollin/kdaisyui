@@ -17,21 +17,18 @@ import kotlinx.html.Tag
  * Diff component shows a side-by-side comparison of two items. Renders `<figure class="diff ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyDiff(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FIGURE.() -> Unit)? = null,
-    content: (FIGURE.() -> Unit),
+    block: (FIGURE.() -> Unit) = {},
 ) {
     figure {
         if (id != null) attributes["id"] = id.id
         addClassNames("diff")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -44,15 +41,13 @@ fun Tag.daisyDiffClasses() {
 fun FlowContent.daisyDiffItem1(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("diff-item-1")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -65,15 +60,13 @@ fun Tag.daisyDiffItem1Classes() {
 fun FlowContent.daisyDiffItem2(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("diff-item-2")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -86,15 +79,13 @@ fun Tag.daisyDiffItem2Classes() {
 fun FlowContent.daisyDiffResizer(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("diff-resizer")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

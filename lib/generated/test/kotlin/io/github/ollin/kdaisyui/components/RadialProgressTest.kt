@@ -15,8 +15,7 @@ class RadialProgressTest {
     @Test
     fun radial_progress() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRadialProgress() {
-            }
+            daisyRadialProgress()
         }
         assertDocumented(html, "div", "radial-progress", "Radial progress")
     }

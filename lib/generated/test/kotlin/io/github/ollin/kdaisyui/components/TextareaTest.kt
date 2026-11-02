@@ -16,8 +16,7 @@ class TextareaTest {
     @Test
     fun textarea() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea() {
-            }
+            daisyTextarea()
         }
         assertDocumented(html, "textarea", "textarea", "Textarea")
     }
@@ -25,8 +24,7 @@ class TextareaTest {
     @Test
     fun ghost_no_background() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(ghost = true) {
-            }
+            daisyTextarea(ghost = true)
         }
         assertDocumented(html, "textarea", "textarea textarea-ghost", "Ghost (no background)")
     }
@@ -34,8 +32,7 @@ class TextareaTest {
     @Test
     fun with_form_control_and_labels_daisyFieldset() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFieldset() {
-            }
+            daisyFieldset()
         }
         assertDocumented(html, "fieldset", "fieldset", "With form control and labels")
     }
@@ -43,8 +40,7 @@ class TextareaTest {
     @Test
     fun with_form_control_and_labels_daisyFieldsetLegend() {
         val html = createHTML(prettyPrint = false).fieldSet {
-            daisyFieldsetLegend() {
-            }
+            daisyFieldsetLegend()
         }
         assertDocumented(html, "legend", "fieldset-legend", "With form control and labels")
     }
@@ -60,8 +56,7 @@ class TextareaTest {
     @Test
     fun textarea_colors() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Primary) {
-            }
+            daisyTextarea(color = TextareaColor.Primary)
         }
         assertDocumented(html, "textarea", "textarea textarea-primary", "Textarea colors")
     }
@@ -69,8 +64,7 @@ class TextareaTest {
     @Test
     fun textarea_colors_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Secondary) {
-            }
+            daisyTextarea(color = TextareaColor.Secondary)
         }
         assertDocumented(html, "textarea", "textarea textarea-secondary", "Textarea colors")
     }
@@ -78,8 +72,7 @@ class TextareaTest {
     @Test
     fun textarea_colors_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Accent) {
-            }
+            daisyTextarea(color = TextareaColor.Accent)
         }
         assertDocumented(html, "textarea", "textarea textarea-accent", "Textarea colors")
     }
@@ -87,8 +80,7 @@ class TextareaTest {
     @Test
     fun textarea_colors_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Neutral) {
-            }
+            daisyTextarea(color = TextareaColor.Neutral)
         }
         assertDocumented(html, "textarea", "textarea textarea-neutral", "Textarea colors")
     }
@@ -96,8 +88,7 @@ class TextareaTest {
     @Test
     fun textarea_colors_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Info) {
-            }
+            daisyTextarea(color = TextareaColor.Info)
         }
         assertDocumented(html, "textarea", "textarea textarea-info", "Textarea colors")
     }
@@ -105,8 +96,7 @@ class TextareaTest {
     @Test
     fun textarea_colors_6() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Success) {
-            }
+            daisyTextarea(color = TextareaColor.Success)
         }
         assertDocumented(html, "textarea", "textarea textarea-success", "Textarea colors")
     }
@@ -114,8 +104,7 @@ class TextareaTest {
     @Test
     fun textarea_colors_7() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Warning) {
-            }
+            daisyTextarea(color = TextareaColor.Warning)
         }
         assertDocumented(html, "textarea", "textarea textarea-warning", "Textarea colors")
     }
@@ -123,8 +112,7 @@ class TextareaTest {
     @Test
     fun textarea_colors_8() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(color = TextareaColor.Error) {
-            }
+            daisyTextarea(color = TextareaColor.Error)
         }
         assertDocumented(html, "textarea", "textarea textarea-error", "Textarea colors")
     }
@@ -132,8 +120,7 @@ class TextareaTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(size = TextareaSize.Xs) {
-            }
+            daisyTextarea(size = TextareaSize.Xs)
         }
         assertDocumented(html, "textarea", "textarea textarea-xs", "Sizes")
     }
@@ -141,8 +128,7 @@ class TextareaTest {
     @Test
     fun sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(size = TextareaSize.Sm) {
-            }
+            daisyTextarea(size = TextareaSize.Sm)
         }
         assertDocumented(html, "textarea", "textarea textarea-sm", "Sizes")
     }
@@ -150,8 +136,7 @@ class TextareaTest {
     @Test
     fun sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(size = TextareaSize.Md) {
-            }
+            daisyTextarea(size = TextareaSize.Md)
         }
         assertDocumented(html, "textarea", "textarea textarea-md", "Sizes")
     }
@@ -159,8 +144,7 @@ class TextareaTest {
     @Test
     fun sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(size = TextareaSize.Lg) {
-            }
+            daisyTextarea(size = TextareaSize.Lg)
         }
         assertDocumented(html, "textarea", "textarea textarea-lg", "Sizes")
     }
@@ -168,8 +152,7 @@ class TextareaTest {
     @Test
     fun sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextarea(size = TextareaSize.Xl) {
-            }
+            daisyTextarea(size = TextareaSize.Xl)
         }
         assertDocumented(html, "textarea", "textarea textarea-xl", "Sizes")
     }

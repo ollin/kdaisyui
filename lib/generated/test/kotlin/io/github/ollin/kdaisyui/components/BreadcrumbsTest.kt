@@ -17,8 +17,7 @@ class BreadcrumbsTest {
     @Test
     fun breadcrumbs() {
         val html = createHTML(prettyPrint = false).div {
-            daisyBreadcrumbs() {
-            }
+            daisyBreadcrumbs()
         }
         assertDocumented(html, "div", "breadcrumbs", "Breadcrumbs")
     }

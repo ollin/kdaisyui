@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class MockupPhoneCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class MockupPhoneCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,23 +45,20 @@ class MockupPhoneCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun mockupPhone_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupPhone(
-                content = { },
-            )
+            daisyMockupPhone()
         }
         assertRendered(html, Expected("MockupPhone defaults", "mockup-phone", closes = "</div></div>"))
     }
 
     @Test
     fun mockupPhone_all_flags() {
-        val html = allFlags(Expected("MockupPhone all flags", "mockup-phone zz-extra", closes = "</div></div>")) { daisyMockupPhone(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("MockupPhone all flags", "mockup-phone zz-extra", closes = "</div></div>")) { daisyMockupPhone(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -74,21 +70,19 @@ class MockupPhoneCoverageTest {
     }
 
     @Test
-    fun mockupPhoneClasses_all_flags() = assertRenders(Expected("MockupPhoneClasses all flags", "mockup-phone", content = false)) { daisyMockupPhoneClasses() }
+    fun mockupPhoneClasses_all_flags() = assertRenders(Expected("MockupPhoneClasses all flags", "mockup-phone")) { daisyMockupPhoneClasses() }
 
     @Test
     fun mockupPhoneCamera_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupPhoneCamera(
-                content = { },
-            )
+            daisyMockupPhoneCamera()
         }
         assertRendered(html, Expected("MockupPhoneCamera defaults", "mockup-phone-camera", closes = "</div></div>"))
     }
 
     @Test
     fun mockupPhoneCamera_all_flags() {
-        val html = allFlags(Expected("MockupPhoneCamera all flags", "mockup-phone-camera zz-extra", closes = "</div></div>")) { daisyMockupPhoneCamera(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("MockupPhoneCamera all flags", "mockup-phone-camera zz-extra", closes = "</div></div>")) { daisyMockupPhoneCamera(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -100,21 +94,19 @@ class MockupPhoneCoverageTest {
     }
 
     @Test
-    fun mockupPhoneCameraClasses_all_flags() = assertRenders(Expected("MockupPhoneCameraClasses all flags", "mockup-phone-camera", content = false)) { daisyMockupPhoneCameraClasses() }
+    fun mockupPhoneCameraClasses_all_flags() = assertRenders(Expected("MockupPhoneCameraClasses all flags", "mockup-phone-camera")) { daisyMockupPhoneCameraClasses() }
 
     @Test
     fun mockupPhoneDisplay_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupPhoneDisplay(
-                content = { },
-            )
+            daisyMockupPhoneDisplay()
         }
         assertRendered(html, Expected("MockupPhoneDisplay defaults", "mockup-phone-display", closes = "</div></div>"))
     }
 
     @Test
     fun mockupPhoneDisplay_all_flags() {
-        val html = allFlags(Expected("MockupPhoneDisplay all flags", "mockup-phone-display zz-extra", closes = "</div></div>")) { daisyMockupPhoneDisplay(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("MockupPhoneDisplay all flags", "mockup-phone-display zz-extra", closes = "</div></div>")) { daisyMockupPhoneDisplay(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -126,5 +118,5 @@ class MockupPhoneCoverageTest {
     }
 
     @Test
-    fun mockupPhoneDisplayClasses_all_flags() = assertRenders(Expected("MockupPhoneDisplayClasses all flags", "mockup-phone-display", content = false)) { daisyMockupPhoneDisplayClasses() }
+    fun mockupPhoneDisplayClasses_all_flags() = assertRenders(Expected("MockupPhoneDisplayClasses all flags", "mockup-phone-display")) { daisyMockupPhoneDisplayClasses() }
 }

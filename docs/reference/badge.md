@@ -23,8 +23,7 @@ fun FlowContent.daisyBadge(
     outlineStyle: ClassValues<BadgeOutlineStyle>? = null,
     fillStyle: ClassValues<BadgeFillStyle>? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit)? = null,
+    block: (SPAN.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

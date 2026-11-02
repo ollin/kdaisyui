@@ -15,8 +15,7 @@ class AlertTest {
     @Test
     fun alert() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert() {
-            }
+            daisyAlert()
         }
         assertDocumented(html, "div", "alert", "Alert")
     }
@@ -24,8 +23,7 @@ class AlertTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Info) {
-            }
+            daisyAlert(color = AlertColor.Info)
         }
         assertDocumented(html, "div", "alert alert-info", "Info color")
     }
@@ -33,8 +31,7 @@ class AlertTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Success) {
-            }
+            daisyAlert(color = AlertColor.Success)
         }
         assertDocumented(html, "div", "alert alert-success", "Success color")
     }
@@ -42,8 +39,7 @@ class AlertTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Warning) {
-            }
+            daisyAlert(color = AlertColor.Warning)
         }
         assertDocumented(html, "div", "alert alert-warning", "Warning color")
     }
@@ -51,8 +47,7 @@ class AlertTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Error) {
-            }
+            daisyAlert(color = AlertColor.Error)
         }
         assertDocumented(html, "div", "alert alert-error", "Error color")
     }
@@ -60,8 +55,7 @@ class AlertTest {
     @Test
     fun alert_soft_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Info, soft = true) {
-            }
+            daisyAlert(color = AlertColor.Info, soft = true)
         }
         assertDocumented(html, "div", "alert alert-info alert-soft", "Alert soft style")
     }
@@ -69,8 +63,7 @@ class AlertTest {
     @Test
     fun alert_soft_style_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Success, soft = true) {
-            }
+            daisyAlert(color = AlertColor.Success, soft = true)
         }
         assertDocumented(html, "div", "alert alert-soft alert-success", "Alert soft style")
     }
@@ -78,8 +71,7 @@ class AlertTest {
     @Test
     fun alert_soft_style_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Warning, soft = true) {
-            }
+            daisyAlert(color = AlertColor.Warning, soft = true)
         }
         assertDocumented(html, "div", "alert alert-soft alert-warning", "Alert soft style")
     }
@@ -87,8 +79,7 @@ class AlertTest {
     @Test
     fun alert_soft_style_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Error, soft = true) {
-            }
+            daisyAlert(color = AlertColor.Error, soft = true)
         }
         assertDocumented(html, "div", "alert alert-error alert-soft", "Alert soft style")
     }
@@ -96,8 +87,7 @@ class AlertTest {
     @Test
     fun alert_outline_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Info, style = AlertStyle.Outline) {
-            }
+            daisyAlert(color = AlertColor.Info, style = AlertStyle.Outline)
         }
         assertDocumented(html, "div", "alert alert-info alert-outline", "Alert outline style")
     }
@@ -105,8 +95,7 @@ class AlertTest {
     @Test
     fun alert_outline_style_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Success, style = AlertStyle.Outline) {
-            }
+            daisyAlert(color = AlertColor.Success, style = AlertStyle.Outline)
         }
         assertDocumented(html, "div", "alert alert-outline alert-success", "Alert outline style")
     }
@@ -114,8 +103,7 @@ class AlertTest {
     @Test
     fun alert_outline_style_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Warning, style = AlertStyle.Outline) {
-            }
+            daisyAlert(color = AlertColor.Warning, style = AlertStyle.Outline)
         }
         assertDocumented(html, "div", "alert alert-outline alert-warning", "Alert outline style")
     }
@@ -123,8 +111,7 @@ class AlertTest {
     @Test
     fun alert_outline_style_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Error, style = AlertStyle.Outline) {
-            }
+            daisyAlert(color = AlertColor.Error, style = AlertStyle.Outline)
         }
         assertDocumented(html, "div", "alert alert-error alert-outline", "Alert outline style")
     }
@@ -132,8 +119,7 @@ class AlertTest {
     @Test
     fun alert_dash_style() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Info, style = AlertStyle.Dash) {
-            }
+            daisyAlert(color = AlertColor.Info, style = AlertStyle.Dash)
         }
         assertDocumented(html, "div", "alert alert-dash alert-info", "Alert dash style")
     }
@@ -141,8 +127,7 @@ class AlertTest {
     @Test
     fun alert_dash_style_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Success, style = AlertStyle.Dash) {
-            }
+            daisyAlert(color = AlertColor.Success, style = AlertStyle.Dash)
         }
         assertDocumented(html, "div", "alert alert-dash alert-success", "Alert dash style")
     }
@@ -150,8 +135,7 @@ class AlertTest {
     @Test
     fun alert_dash_style_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Warning, style = AlertStyle.Dash) {
-            }
+            daisyAlert(color = AlertColor.Warning, style = AlertStyle.Dash)
         }
         assertDocumented(html, "div", "alert alert-dash alert-warning", "Alert dash style")
     }
@@ -159,8 +143,7 @@ class AlertTest {
     @Test
     fun alert_dash_style_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(color = AlertColor.Error, style = AlertStyle.Dash) {
-            }
+            daisyAlert(color = AlertColor.Error, style = AlertStyle.Dash)
         }
         assertDocumented(html, "div", "alert alert-dash alert-error", "Alert dash style")
     }
@@ -168,8 +151,7 @@ class AlertTest {
     @Test
     fun alert_with_buttons_responsive() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(direction = AlertDirection.Vertical, extraClasses = "sm:alert-horizontal") {
-            }
+            daisyAlert(direction = AlertDirection.Vertical, extraClasses = "sm:alert-horizontal")
         }
         assertDocumented(html, "div", "alert alert-vertical sm:alert-horizontal", "Alert with buttons + responsive")
     }
@@ -177,8 +159,7 @@ class AlertTest {
     @Test
     fun alert_with_buttons_responsive_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Sm) {
-            }
+            daisyButton(size = ButtonSize.Sm)
         }
         assertDocumented(html, "button", "btn btn-sm", "Alert with buttons + responsive")
     }
@@ -186,8 +167,7 @@ class AlertTest {
     @Test
     fun alert_with_buttons_responsive_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Sm, color = ButtonColor.Primary) {
-            }
+            daisyButton(size = ButtonSize.Sm, color = ButtonColor.Primary)
         }
         assertDocumented(html, "button", "btn btn-primary btn-sm", "Alert with buttons + responsive")
     }

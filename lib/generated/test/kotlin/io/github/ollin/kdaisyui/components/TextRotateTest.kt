@@ -15,8 +15,7 @@ class TextRotateTest {
     @Test
     fun text_rotate() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTextRotate() {
-            }
+            daisyTextRotate()
         }
         assertDocumented(html, "span", "text-rotate", "Text Rotate")
     }

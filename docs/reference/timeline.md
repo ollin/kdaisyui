@@ -18,8 +18,7 @@ fun FlowContent.daisyTimeline(
     compact: Boolean = false,
     snapIcon: Boolean = false,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -31,8 +30,7 @@ fun FlowContent.daisyTimelineStart(
     id: HtmlId? = null,
     box: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -44,8 +42,7 @@ fun FlowContent.daisyTimelineMiddle(
     id: HtmlId? = null,
     box: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -57,8 +54,7 @@ fun FlowContent.daisyTimelineEnd(
     id: HtmlId? = null,
     box: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

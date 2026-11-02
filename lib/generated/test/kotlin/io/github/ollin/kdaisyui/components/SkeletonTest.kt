@@ -16,8 +16,7 @@ class SkeletonTest {
     @Test
     fun skeleton() {
         val html = createHTML(prettyPrint = false).div {
-            daisySkeleton() {
-            }
+            daisySkeleton()
         }
         assertDocumented(html, "div", "skeleton", "Skeleton")
     }
@@ -25,8 +24,7 @@ class SkeletonTest {
     @Test
     fun skeleton_text_animated_gradient_text_daisySkeletonText() {
         val html = createHTML(prettyPrint = false).div {
-            daisySkeletonText() {
-            }
+            daisySkeletonText()
         }
         assertDocumented(html, "span", "skeleton skeleton-text", "skeleton-text - animated gradient text")
     }

@@ -15,8 +15,7 @@ class ChatTest {
     @Test
     fun chat_start_and_chat_end() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.Start) {
-            }
+            daisyChat(placement = ChatPlacement.Start)
         }
         assertDocumented(html, "div", "chat chat-start", "chat-start and chat-end")
     }
@@ -24,8 +23,7 @@ class ChatTest {
     @Test
     fun chat_start_and_chat_end_daisyChatBubble() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble() {
-            }
+            daisyChatBubble()
         }
         assertDocumented(html, "div", "chat-bubble", "chat-start and chat-end")
     }
@@ -33,8 +31,7 @@ class ChatTest {
     @Test
     fun chat_start_and_chat_end_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChat(placement = ChatPlacement.End) {
-            }
+            daisyChat(placement = ChatPlacement.End)
         }
         assertDocumented(html, "div", "chat chat-end", "chat-start and chat-end")
     }
@@ -42,8 +39,7 @@ class ChatTest {
     @Test
     fun chat_with_image_daisyChatImage() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatImage(attrs = { daisyAvatarClasses() }) {
-            }
+            daisyChatImage { daisyAvatarClasses() }
         }
         assertDocumented(html, "div", "avatar chat-image", "Chat with image")
     }
@@ -51,8 +47,7 @@ class ChatTest {
     @Test
     fun chat_with_image_header_and_footer_daisyChatHeader() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatHeader() {
-            }
+            daisyChatHeader()
         }
         assertDocumented(html, "div", "chat-header", "Chat with image, header and footer")
     }
@@ -60,8 +55,7 @@ class ChatTest {
     @Test
     fun chat_with_image_header_and_footer_daisyChatFooter() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatFooter() {
-            }
+            daisyChatFooter()
         }
         assertDocumented(html, "div", "chat-footer", "Chat with image, header and footer")
     }
@@ -69,8 +63,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Primary) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Primary)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-primary", "Chat Bubble with colors")
     }
@@ -78,8 +71,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Secondary) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Secondary)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-secondary", "Chat Bubble with colors")
     }
@@ -87,8 +79,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Accent) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Accent)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-accent", "Chat Bubble with colors")
     }
@@ -96,8 +87,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Neutral) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Neutral)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-neutral", "Chat Bubble with colors")
     }
@@ -105,8 +95,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Info) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Info)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-info", "Chat Bubble with colors")
     }
@@ -114,8 +103,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble_6() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Success) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Success)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-success", "Chat Bubble with colors")
     }
@@ -123,8 +111,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble_7() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Warning) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Warning)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-warning", "Chat Bubble with colors")
     }
@@ -132,8 +119,7 @@ class ChatTest {
     @Test
     fun chat_bubble_with_colors_daisyChatBubble_8() {
         val html = createHTML(prettyPrint = false).div {
-            daisyChatBubble(color = ChatBubbleColor.Error) {
-            }
+            daisyChatBubble(color = ChatBubbleColor.Error)
         }
         assertDocumented(html, "div", "chat-bubble chat-bubble-error", "Chat Bubble with colors")
     }

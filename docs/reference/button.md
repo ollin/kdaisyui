@@ -28,8 +28,7 @@ fun FlowContent.daisyButton(
     disabled: Boolean = false,
     type: ButtonType? = null,
     extraClasses: String? = null,
-    attrs: (BUTTON.() -> Unit)? = null,
-    content: (BUTTON.() -> Unit)? = null,
+    block: (BUTTON.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

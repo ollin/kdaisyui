@@ -44,7 +44,7 @@ An informal "about half a day" (240m) was given in conversation before the scope
 - [x] 3.1 Text and content add up: `contentLines` in `generator-new.ts` emits the content call,
   then `if (text != null) +text`. Rewrite `TextAndContentPrecedenceTest` into the three scenarios
   of "A function's text and block add up", regenerate, run TCR at the repository root. `! F`
-- [ ] 3.2 One block: `escapeHatchParameters` drops `attrs` and renames `content` to `block`,
+- [x] 3.2 One block: `escapeHatchParameters` drops `attrs` and renames `content` to `block`,
   typed `TAG.() -> Unit = {}`, also on void elements; both bodies call `block()` unconditionally;
   `join-scope.ts` follows. Move the remaining hand-written `attrs` calls (void elements, `text`
   functions) into the block, regenerate, run `just update-api`, read both API diffs, run TCR at

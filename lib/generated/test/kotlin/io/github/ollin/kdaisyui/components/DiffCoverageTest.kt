@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class DiffCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class DiffCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,23 +45,20 @@ class DiffCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun diff_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiff(
-                content = { },
-            )
+            daisyDiff()
         }
         assertRendered(html, Expected("Diff defaults", "diff", closes = "</figure></div>"))
     }
 
     @Test
     fun diff_all_flags() {
-        val html = allFlags(Expected("Diff all flags", "diff zz-extra", closes = "</figure></div>")) { daisyDiff(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Diff all flags", "diff zz-extra", closes = "</figure></div>")) { daisyDiff(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -74,21 +70,19 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffClasses_all_flags() = assertRenders(Expected("DiffClasses all flags", "diff", content = false)) { daisyDiffClasses() }
+    fun diffClasses_all_flags() = assertRenders(Expected("DiffClasses all flags", "diff")) { daisyDiffClasses() }
 
     @Test
     fun diffItem1_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiffItem1(
-                content = { },
-            )
+            daisyDiffItem1()
         }
         assertRendered(html, Expected("DiffItem1 defaults", "diff-item-1", closes = "</div></div>"))
     }
 
     @Test
     fun diffItem1_all_flags() {
-        val html = allFlags(Expected("DiffItem1 all flags", "diff-item-1 zz-extra", closes = "</div></div>")) { daisyDiffItem1(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("DiffItem1 all flags", "diff-item-1 zz-extra", closes = "</div></div>")) { daisyDiffItem1(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -100,21 +94,19 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffItem1Classes_all_flags() = assertRenders(Expected("DiffItem1Classes all flags", "diff-item-1", content = false)) { daisyDiffItem1Classes() }
+    fun diffItem1Classes_all_flags() = assertRenders(Expected("DiffItem1Classes all flags", "diff-item-1")) { daisyDiffItem1Classes() }
 
     @Test
     fun diffItem2_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiffItem2(
-                content = { },
-            )
+            daisyDiffItem2()
         }
         assertRendered(html, Expected("DiffItem2 defaults", "diff-item-2", closes = "</div></div>"))
     }
 
     @Test
     fun diffItem2_all_flags() {
-        val html = allFlags(Expected("DiffItem2 all flags", "diff-item-2 zz-extra", closes = "</div></div>")) { daisyDiffItem2(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("DiffItem2 all flags", "diff-item-2 zz-extra", closes = "</div></div>")) { daisyDiffItem2(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -126,21 +118,19 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffItem2Classes_all_flags() = assertRenders(Expected("DiffItem2Classes all flags", "diff-item-2", content = false)) { daisyDiffItem2Classes() }
+    fun diffItem2Classes_all_flags() = assertRenders(Expected("DiffItem2Classes all flags", "diff-item-2")) { daisyDiffItem2Classes() }
 
     @Test
     fun diffResizer_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiffResizer(
-                content = { },
-            )
+            daisyDiffResizer()
         }
         assertRendered(html, Expected("DiffResizer defaults", "diff-resizer", closes = "</div></div>"))
     }
 
     @Test
     fun diffResizer_all_flags() {
-        val html = allFlags(Expected("DiffResizer all flags", "diff-resizer zz-extra", closes = "</div></div>")) { daisyDiffResizer(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("DiffResizer all flags", "diff-resizer zz-extra", closes = "</div></div>")) { daisyDiffResizer(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -152,5 +142,5 @@ class DiffCoverageTest {
     }
 
     @Test
-    fun diffResizerClasses_all_flags() = assertRenders(Expected("DiffResizerClasses all flags", "diff-resizer", content = false)) { daisyDiffResizerClasses() }
+    fun diffResizerClasses_all_flags() = assertRenders(Expected("DiffResizerClasses all flags", "diff-resizer")) { daisyDiffResizerClasses() }
 }

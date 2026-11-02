@@ -14,8 +14,7 @@ Groups related form controls. Renders `<fieldset class="fieldset ...">`.
 fun FlowContent.daisyFieldset(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FIELDSET.() -> Unit)? = null,
-    content: (FIELDSET.() -> Unit),
+    block: (FIELDSET.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,8 +25,7 @@ fun Tag.daisyFieldsetClasses()
 fun FIELDSET.daisyFieldsetLegend(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LEGEND.() -> Unit)? = null,
-    content: (LEGEND.() -> Unit),
+    block: (LEGEND.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

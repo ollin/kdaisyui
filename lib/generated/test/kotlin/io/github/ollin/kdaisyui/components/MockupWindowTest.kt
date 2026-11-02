@@ -15,8 +15,7 @@ class MockupWindowTest {
     @Test
     fun window_mockup_with_border() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupWindow() {
-            }
+            daisyMockupWindow()
         }
         assertDocumented(html, "div", "mockup-window", "window mockup with border")
     }

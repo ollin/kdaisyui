@@ -16,8 +16,7 @@ class PaginationTest {
     @Test
     fun pagination_with_an_active_button_daisyJoin() {
         val html = createHTML(prettyPrint = false).div {
-            daisyJoin() {
-            }
+            daisyJoin()
         }
         assertDocumented(html, "div", "join", "Pagination with an active button")
     }
@@ -25,8 +24,7 @@ class PaginationTest {
     @Test
     fun pagination_with_an_active_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Pagination with an active button")
     }
@@ -34,8 +32,7 @@ class PaginationTest {
     @Test
     fun pagination_with_an_active_button_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(active = true) {
-            }
+            daisyButton(active = true)
         }
         assertDocumented(html, "button", "btn btn-active", "Pagination with an active button")
     }
@@ -43,8 +40,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Xs) {
-            }
+            daisyButton(size = ButtonSize.Xs)
         }
         assertDocumented(html, "button", "btn btn-xs", "Sizes")
     }
@@ -52,8 +48,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Xs, active = true) {
-            }
+            daisyButton(size = ButtonSize.Xs, active = true)
         }
         assertDocumented(html, "button", "btn btn-active btn-xs", "Sizes")
     }
@@ -61,8 +56,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Sm) {
-            }
+            daisyButton(size = ButtonSize.Sm)
         }
         assertDocumented(html, "button", "btn btn-sm", "Sizes")
     }
@@ -70,8 +64,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Sm, active = true) {
-            }
+            daisyButton(size = ButtonSize.Sm, active = true)
         }
         assertDocumented(html, "button", "btn btn-active btn-sm", "Sizes")
     }
@@ -79,8 +72,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Md) {
-            }
+            daisyButton(size = ButtonSize.Md)
         }
         assertDocumented(html, "button", "btn btn-md", "Sizes")
     }
@@ -88,8 +80,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_6() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Md, active = true) {
-            }
+            daisyButton(size = ButtonSize.Md, active = true)
         }
         assertDocumented(html, "button", "btn btn-active btn-md", "Sizes")
     }
@@ -97,8 +88,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_7() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg) {
-            }
+            daisyButton(size = ButtonSize.Lg)
         }
         assertDocumented(html, "button", "btn btn-lg", "Sizes")
     }
@@ -106,8 +96,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_8() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg, active = true) {
-            }
+            daisyButton(size = ButtonSize.Lg, active = true)
         }
         assertDocumented(html, "button", "btn btn-active btn-lg", "Sizes")
     }
@@ -115,8 +104,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_9() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Xl) {
-            }
+            daisyButton(size = ButtonSize.Xl)
         }
         assertDocumented(html, "button", "btn btn-xl", "Sizes")
     }
@@ -124,8 +112,7 @@ class PaginationTest {
     @Test
     fun sizes_daisyButton_10() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Xl, active = true) {
-            }
+            daisyButton(size = ButtonSize.Xl, active = true)
         }
         assertDocumented(html, "button", "btn btn-active btn-xl", "Sizes")
     }
@@ -133,8 +120,7 @@ class PaginationTest {
     @Test
     fun with_a_disabled_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(disabled = true) {
-            }
+            daisyButton(disabled = true)
         }
         assertDocumented(html, "button", "btn btn-disabled", "With a disabled button")
     }
@@ -142,8 +128,7 @@ class PaginationTest {
     @Test
     fun nex_prev_outline_buttons_with_equal_width_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(style = ButtonStyle.Outline) {
-            }
+            daisyButton(style = ButtonStyle.Outline)
         }
         assertDocumented(html, "button", "btn btn-outline", "Nex/Prev outline buttons with equal width")
     }

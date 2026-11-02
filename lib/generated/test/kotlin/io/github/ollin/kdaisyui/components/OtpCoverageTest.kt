@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class OtpCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class OtpCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,30 +45,27 @@ class OtpCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun otp_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyOtp(
-                content = { },
-            )
+            daisyOtp()
         }
         assertRendered(html, Expected("Otp defaults", "otp", closes = "</label></div>"))
     }
 
     @Test
     fun otp_all_flags() {
-        val html = allFlags(Expected("Otp all flags", "otp otp-joined zz-extra", closes = "</label></div>")) { daisyOtp(id = ID, joined = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Otp all flags", "otp otp-joined zz-extra", closes = "</label></div>")) { daisyOtp(id = ID, joined = true, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun otp_color() = assertEachEntry("Otp color", mapOf(OtpColor.Neutral to "otp otp-neutral", OtpColor.Primary to "otp otp-primary", OtpColor.Secondary to "otp otp-secondary", OtpColor.Accent to "otp otp-accent", OtpColor.Success to "otp otp-success", OtpColor.Info to "otp otp-info", OtpColor.Warning to "otp otp-warning", OtpColor.Error to "otp otp-error")) { daisyOtp(color = it, content = { }) }
+    fun otp_color() = assertEachEntry("Otp color", mapOf(OtpColor.Neutral to "otp otp-neutral", OtpColor.Primary to "otp otp-primary", OtpColor.Secondary to "otp otp-secondary", OtpColor.Accent to "otp otp-accent", OtpColor.Success to "otp otp-success", OtpColor.Info to "otp otp-info", OtpColor.Warning to "otp otp-warning", OtpColor.Error to "otp otp-error")) { daisyOtp(color = it) }
 
     @Test
-    fun otp_size() = assertEachEntry("Otp size", mapOf(OtpSize.Xs to "otp otp-xs", OtpSize.Sm to "otp otp-sm", OtpSize.Md to "otp otp-md", OtpSize.Lg to "otp otp-lg", OtpSize.Xl to "otp otp-xl")) { daisyOtp(size = it, content = { }) }
+    fun otp_size() = assertEachEntry("Otp size", mapOf(OtpSize.Xs to "otp otp-xs", OtpSize.Sm to "otp otp-sm", OtpSize.Md to "otp otp-md", OtpSize.Lg to "otp otp-lg", OtpSize.Xl to "otp otp-xl")) { daisyOtp(size = it) }
 
     @Test
     fun otpClasses_defaults() {
@@ -80,7 +76,7 @@ class OtpCoverageTest {
     }
 
     @Test
-    fun otpClasses_all_flags() = assertRenders(Expected("OtpClasses all flags", "otp otp-joined", content = false)) { daisyOtpClasses(joined = true) }
+    fun otpClasses_all_flags() = assertRenders(Expected("OtpClasses all flags", "otp otp-joined")) { daisyOtpClasses(joined = true) }
 
     @Test
     fun otpClasses_color() = assertEachEntry("OtpClasses color", mapOf(OtpColor.Neutral to "otp otp-neutral", OtpColor.Primary to "otp otp-primary", OtpColor.Secondary to "otp otp-secondary", OtpColor.Accent to "otp otp-accent", OtpColor.Success to "otp otp-success", OtpColor.Info to "otp otp-info", OtpColor.Warning to "otp otp-warning", OtpColor.Error to "otp otp-error")) { daisyOtpClasses(color = it) }

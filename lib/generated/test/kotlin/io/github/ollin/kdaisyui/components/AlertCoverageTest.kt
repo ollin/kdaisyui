@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class AlertCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class AlertCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,16 +45,13 @@ class AlertCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun alert_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAlert(
-                content = { },
-            )
+            daisyAlert()
         }
         assertRendered(html, Expected("Alert defaults", "alert", closes = "</div></div>"))
         assertTrue(html.contains("role=\""), "Alert sets role")
@@ -63,18 +59,18 @@ class AlertCoverageTest {
 
     @Test
     fun alert_all_flags() {
-        val html = allFlags(Expected("Alert all flags", "alert alert-soft zz-extra", closes = "</div></div>")) { daisyAlert(id = ID, soft = true, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Alert all flags", "alert alert-soft zz-extra", closes = "</div></div>")) { daisyAlert(id = ID, soft = true, extraClasses = EXTRA, block = BLOCK) }
         assertTrue(html.contains("role=\""), "Alert sets role")
     }
 
     @Test
-    fun alert_color() = assertEachEntry("Alert color", mapOf(AlertColor.Info to "alert alert-info", AlertColor.Success to "alert alert-success", AlertColor.Warning to "alert alert-warning", AlertColor.Error to "alert alert-error")) { daisyAlert(color = it, content = { }) }
+    fun alert_color() = assertEachEntry("Alert color", mapOf(AlertColor.Info to "alert alert-info", AlertColor.Success to "alert alert-success", AlertColor.Warning to "alert alert-warning", AlertColor.Error to "alert alert-error")) { daisyAlert(color = it) }
 
     @Test
-    fun alert_style() = assertEachEntry("Alert style", mapOf(AlertStyle.Outline to "alert alert-outline", AlertStyle.Dash to "alert alert-dash")) { daisyAlert(style = it, content = { }) }
+    fun alert_style() = assertEachEntry("Alert style", mapOf(AlertStyle.Outline to "alert alert-outline", AlertStyle.Dash to "alert alert-dash")) { daisyAlert(style = it) }
 
     @Test
-    fun alert_direction() = assertEachEntry("Alert direction", mapOf(AlertDirection.Vertical to "alert alert-vertical", AlertDirection.Horizontal to "alert alert-horizontal")) { daisyAlert(direction = it, content = { }) }
+    fun alert_direction() = assertEachEntry("Alert direction", mapOf(AlertDirection.Vertical to "alert alert-vertical", AlertDirection.Horizontal to "alert alert-horizontal")) { daisyAlert(direction = it) }
 
     @Test
     fun alertClasses_defaults() {
@@ -85,7 +81,7 @@ class AlertCoverageTest {
     }
 
     @Test
-    fun alertClasses_all_flags() = assertRenders(Expected("AlertClasses all flags", "alert alert-soft", content = false)) { daisyAlertClasses(soft = true) }
+    fun alertClasses_all_flags() = assertRenders(Expected("AlertClasses all flags", "alert alert-soft")) { daisyAlertClasses(soft = true) }
 
     @Test
     fun alertClasses_color() = assertEachEntry("AlertClasses color", mapOf(AlertColor.Info to "alert alert-info", AlertColor.Success to "alert alert-success", AlertColor.Warning to "alert alert-warning", AlertColor.Error to "alert alert-error")) { daisyAlertClasses(color = it) }

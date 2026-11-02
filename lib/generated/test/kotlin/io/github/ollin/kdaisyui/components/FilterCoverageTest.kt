@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class FilterCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class FilterCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,23 +45,20 @@ class FilterCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun filter_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFilter(
-                content = { },
-            )
+            daisyFilter()
         }
         assertRendered(html, Expected("Filter defaults", "filter", closes = "</form></div>"))
     }
 
     @Test
     fun filter_all_flags() {
-        val html = allFlags(Expected("Filter all flags", "filter zz-extra", closes = "</form></div>")) { daisyFilter(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Filter all flags", "filter zz-extra", closes = "</form></div>")) { daisyFilter(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -74,7 +70,7 @@ class FilterCoverageTest {
     }
 
     @Test
-    fun filterClasses_all_flags() = assertRenders(Expected("FilterClasses all flags", "filter", content = false)) { daisyFilterClasses() }
+    fun filterClasses_all_flags() = assertRenders(Expected("FilterClasses all flags", "filter")) { daisyFilterClasses() }
 
     @Test
     fun filterReset_defaults() {
@@ -86,7 +82,7 @@ class FilterCoverageTest {
 
     @Test
     fun filterReset_all_flags() {
-        val html = allFlags(Expected("FilterReset all flags", "filter-reset zz-extra", content = false)) { daisyFilterReset(id = ID, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("FilterReset all flags", "filter-reset zz-extra")) { daisyFilterReset(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -98,5 +94,5 @@ class FilterCoverageTest {
     }
 
     @Test
-    fun filterResetClasses_all_flags() = assertRenders(Expected("FilterResetClasses all flags", "filter-reset", content = false)) { daisyFilterResetClasses() }
+    fun filterResetClasses_all_flags() = assertRenders(Expected("FilterResetClasses all flags", "filter-reset")) { daisyFilterResetClasses() }
 }

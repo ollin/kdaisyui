@@ -32,16 +32,14 @@ enum class SwapStyle(internal val className: String) : ClassValues<SwapStyle> {
  * @param style — Style variant
  * @param active — Activates the swap (no need for checkbox)
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisySwap(
     id: HtmlId? = null,
     style: ClassValues<SwapStyle>? = null,
     active: Boolean = false,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 ) {
     label {
         if (id != null) attributes["id"] = id.id
@@ -49,8 +47,7 @@ fun FlowContent.daisySwap(
         addClassNames(style)
         if (active) addClassNames("swap-active")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -68,15 +65,13 @@ fun Tag.daisySwapClasses(
 fun FlowContent.daisySwapOn(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("swap-on")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -89,15 +84,13 @@ fun Tag.daisySwapOnClasses() {
 fun FlowContent.daisySwapOff(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("swap-off")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -110,15 +103,13 @@ fun Tag.daisySwapOffClasses() {
 fun FlowContent.daisySwapIndeterminate(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("swap-indeterminate")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

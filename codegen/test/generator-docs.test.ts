@@ -86,8 +86,7 @@ fun FlowContent.daisyCard(
     imageFull: Boolean = false,  // The image in <figure> element will be the background
     side: Boolean = false,  // The image in <figure> will be on to the side
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -99,8 +98,7 @@ fun FlowContent.daisyCardTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    block: (H2.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -111,8 +109,7 @@ fun Tag.daisyCardTitleClasses()
 fun FlowContent.daisyCardBody(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -123,8 +120,7 @@ fun Tag.daisyCardBodyClasses()
 fun FlowContent.daisyCardActions(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -142,7 +138,7 @@ fun Tag.daisyCardActionsClasses()
       { summary: 'Horizontal menu with popover navigation blocks' },
     )
 
-    assert.match(result, /fun FlowContent\.daisyMegamenuActive\(\n {4}id: HtmlId\? = null,\n {4}extraClasses: String\? = null,\n {4}attrs: \(SPAN\.\(\) -> Unit\)\? = null,\n {4}content: \(SPAN\.\(\) -> Unit\),\n\)/)
+    assert.match(result, /fun FlowContent\.daisyMegamenuActive\(\n {4}id: HtmlId\? = null,\n {4}extraClasses: String\? = null,\n {4}block: \(SPAN\.\(\) -> Unit\) = \{\},\n\)/)
   })
 
   test('names a static attribute in the renders clause', () => {
@@ -214,7 +210,7 @@ fun Tag.daisyCardActionsClasses()
 
     assert.match(result, /Renders `<fieldset class="fieldset \.\.\.">`\./)
     assert.ok(!result.includes('<fieldSet class'))
-    assert.match(result, /attrs: \(FIELDSET\.\(\) -> Unit\)\? = null,/)
+    assert.match(result, /block: \(FIELDSET\.\(\) -> Unit\) = \{\},/)
   })
 })
 

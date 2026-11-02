@@ -16,8 +16,7 @@ class FabTest {
     @Test
     fun fab_and_speed_dial_vertical() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFab() {
-            }
+            daisyFab()
         }
         assertDocumented(html, "div", "fab", "FAB and Speed Dial (vertical)")
     }
@@ -33,8 +32,7 @@ class FabTest {
     @Test
     fun fab_and_speed_dial_vertical_daisyButton_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg, shape = ButtonShape.Circle) {
-            }
+            daisyButton(size = ButtonSize.Lg, shape = ButtonShape.Circle)
         }
         assertDocumented(html, "button", "btn btn-circle btn-lg", "FAB and Speed Dial (vertical)")
     }
@@ -58,8 +56,7 @@ class FabTest {
     @Test
     fun fab_and_speed_dial_with_rectangle_buttons_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(size = ButtonSize.Lg) {
-            }
+            daisyButton(size = ButtonSize.Lg)
         }
         assertDocumented(html, "button", "btn btn-lg", "FAB and Speed Dial with rectangle buttons")
     }
@@ -75,8 +72,7 @@ class FabTest {
     @Test
     fun fab_and_speed_dial_with_labels_and_fab_close_button_daisyFabClose() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFabClose() {
-            }
+            daisyFabClose()
         }
         assertDocumented(html, "div", "fab-close", "FAB and Speed Dial with labels and fab-close button")
     }
@@ -100,8 +96,7 @@ class FabTest {
     @Test
     fun fab_and_speed_dial_with_labels_and_fab_main_action_button_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(shape = ButtonShape.Circle, color = ButtonColor.Secondary, size = ButtonSize.Lg) {
-            }
+            daisyButton(shape = ButtonShape.Circle, color = ButtonColor.Secondary, size = ButtonSize.Lg)
         }
         assertDocumented(html, "button", "btn btn-circle btn-lg btn-secondary", "FAB and Speed Dial with labels and fab-main-action Button")
     }
@@ -109,8 +104,7 @@ class FabTest {
     @Test
     fun fab_flower_and_speed_dial() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFab(flower = true) {
-            }
+            daisyFab(flower = true)
         }
         assertDocumented(html, "div", "fab fab-flower", "FAB Flower and Speed Dial")
     }
@@ -118,8 +112,7 @@ class FabTest {
     @Test
     fun fab_flower_and_speed_dial_daisyFabMainAction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg) }) {
-            }
+            daisyFabMainAction { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg) }
         }
         assertDocumented(html, "button", "btn btn-circle btn-lg fab-main-action", "FAB Flower and Speed Dial")
     }
@@ -135,8 +128,7 @@ class FabTest {
     @Test
     fun fab_and_flower_speed_dial_with_svg_icons_daisyFabMainAction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Primary) }) {
-            }
+            daisyFabMainAction { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Primary) }
         }
         assertDocumented(html, "button", "btn btn-circle btn-lg btn-primary fab-main-action", "FAB and Flower Speed Dial with SVG icons")
     }
@@ -152,8 +144,7 @@ class FabTest {
     @Test
     fun fab_and_flower_speed_dial_with_tooltip_daisyFabMainAction() {
         val html = createHTML(prettyPrint = false).div {
-            daisyFabMainAction(attrs = { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Success) }) {
-            }
+            daisyFabMainAction { daisyButtonClasses(shape = ButtonShape.Circle, size = ButtonSize.Lg, color = ButtonColor.Success) }
         }
         assertDocumented(html, "button", "btn btn-circle btn-lg btn-success fab-main-action", "FAB and Flower Speed Dial with tooltip")
     }
@@ -161,8 +152,7 @@ class FabTest {
     @Test
     fun fab_and_flower_speed_dial_with_tooltip_daisyTooltip() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(side = TooltipSide.Left) {
-            }
+            daisyTooltip(side = TooltipSide.Left)
         }
         assertDocumented(html, "div", "tooltip tooltip-left", "FAB and Flower Speed Dial with tooltip")
     }
@@ -170,8 +160,7 @@ class FabTest {
     @Test
     fun fab_and_flower_speed_dial_with_tooltip_daisyTooltip_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip() {
-            }
+            daisyTooltip()
         }
         assertDocumented(html, "div", "tooltip", "FAB and Flower Speed Dial with tooltip")
     }

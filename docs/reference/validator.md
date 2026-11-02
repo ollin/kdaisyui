@@ -14,7 +14,7 @@ Form validation wrapper. Renders `<input class="validator ...">`.
 fun FlowContent.daisyValidator(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -25,8 +25,7 @@ fun Tag.daisyValidatorClasses()
 fun FlowContent.daisyValidatorHint(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (P.() -> Unit)? = null,
-    content: (P.() -> Unit),
+    block: (P.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

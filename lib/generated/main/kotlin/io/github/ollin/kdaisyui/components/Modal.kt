@@ -48,8 +48,7 @@ enum class ModalHorizontalPlacement(internal val className: String) : ClassValue
  * @param horizontalPlacement — HorizontalPlacement variant
  * @param open — Keeps the modal open (you can add this class using JS)
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyModal(
     id: HtmlId? = null,
@@ -57,8 +56,7 @@ fun FlowContent.daisyModal(
     horizontalPlacement: ClassValues<ModalHorizontalPlacement>? = null,
     open: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIALOG.() -> Unit)? = null,
-    content: (DIALOG.() -> Unit),
+    block: (DIALOG.() -> Unit) = {},
 ) {
     dialog {
         if (id != null) attributes["id"] = id.id
@@ -67,8 +65,7 @@ fun FlowContent.daisyModal(
         addClassNames(horizontalPlacement)
         if (open) addClassNames("modal-open")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -88,15 +85,13 @@ fun Tag.daisyModalClasses(
 fun FlowContent.daisyModalBox(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("modal-box")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -109,15 +104,13 @@ fun Tag.daisyModalBoxClasses() {
 fun FlowContent.daisyModalAction(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("modal-action")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -130,15 +123,13 @@ fun Tag.daisyModalActionClasses() {
 fun FlowContent.daisyModalBackdrop(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         addClassNames("modal-backdrop")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -151,13 +142,13 @@ fun Tag.daisyModalBackdropClasses() {
 fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (INPUT.() -> Unit)? = null,
+    block: (INPUT.() -> Unit) = {},
 ) {
     input {
         if (id != null) attributes["id"] = id.id
         addClassNames("modal-toggle")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
+        block()
     }
 }
 
@@ -170,16 +161,14 @@ fun Tag.daisyModalToggleClasses() {
 fun FlowContent.daisyModalPopover(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
         attributes["popover"] = ""
         addClassNames("modal")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

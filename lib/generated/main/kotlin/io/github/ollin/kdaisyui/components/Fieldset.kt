@@ -17,21 +17,18 @@ import kotlinx.html.Tag
  * Fieldset is a container for grouping related form elements. It includes fieldset-legend as a title and label as a description. Renders `<fieldset class="fieldset ...">`.
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyFieldset(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (FIELDSET.() -> Unit)? = null,
-    content: (FIELDSET.() -> Unit),
+    block: (FIELDSET.() -> Unit) = {},
 ) {
     fieldSet {
         if (id != null) attributes["id"] = id.id
         addClassNames("fieldset")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -44,15 +41,13 @@ fun Tag.daisyFieldsetClasses() {
 fun FIELDSET.daisyFieldsetLegend(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LEGEND.() -> Unit)? = null,
-    content: (LEGEND.() -> Unit),
+    block: (LEGEND.() -> Unit) = {},
 ) {
     legend {
         if (id != null) attributes["id"] = id.id
         addClassNames("fieldset-legend")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

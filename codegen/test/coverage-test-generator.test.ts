@@ -55,9 +55,9 @@ describe("a main function's extras", () => {
 })
 
 describe('a scope member', () => {
-  test('is called without content where only another parameter is required', () => {
+  test('is called with no arguments, so every default of the member runs', () => {
     const join = component('join', 'Join', 'join')
-    const member = { name: 'daisyPopover', parameters: [{ name: 'id', type: 'HtmlId', default: null, doc: null }, { name: 'content', type: '(DIV.() -> Unit)?', default: 'null', doc: null }] } as unknown as FunctionShape
+    const member = { name: 'daisyPopover', parameters: [{ name: 'id', type: 'HtmlId', default: null, doc: null }, { name: 'block', type: '(DIV.() -> Unit)', default: '{}', doc: null }] } as unknown as FunctionShape
     const shape = { ...shapeOf(join), scope: { name: 'JoinScope', markerClass: 'join-item', members: [member], imports: [] } } as unknown as ComponentShape
 
     assert.deepEqual(linesOf(coverageOf(join, shape), /^\s+daisyPopover\(/), ['daisyPopover()'])

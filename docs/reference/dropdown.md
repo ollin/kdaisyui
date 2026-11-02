@@ -21,8 +21,7 @@ fun FlowContent.daisyDropdown(
     state: ClassValues<DropdownState>? = null,
     hover: Boolean = false,  // Opens on hover too
     extraClasses: String? = null,
-    attrs: (DETAILS.() -> Unit)? = null,
-    content: (DETAILS.() -> Unit),
+    block: (DETAILS.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -35,8 +34,7 @@ fun FlowContent.daisyDropdownPopover(
     side: ClassValues<DropdownSide>? = null,
     align: ClassValues<DropdownAlign>? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -47,8 +45,7 @@ fun Tag.daisyDropdownPopoverClasses(side: ClassValues<DropdownSide>? = null, ali
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

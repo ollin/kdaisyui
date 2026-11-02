@@ -50,7 +50,7 @@ describe('documentedCall', () => {
   const callFor = (html: string) => documentedCall([sized], markedElements(html)[0], classes)
 
   it('passes each class through its typed parameter, and a prefixed one through extraClasses', () => {
-    assert.deepEqual(callFor('<button class="$$btn $$btn-active md:$$btn-lg">x</button>'), { fn: sized.functions[0], args: 'active = true, extraClasses = "md:btn-lg"', expectedClasses: 'btn btn-active md:btn-lg', tag: 'button', rendersTag: false, onTag: 'daisyButtonClasses(active = true); addClassNames("md:btn-lg")' })
+    assert.deepEqual(callFor('<button class="$$btn $$btn-active md:$$btn-lg">x</button>'), { fn: sized.functions[0], args: 'active = true, extraClasses = "md:btn-lg"', block: '', expectedClasses: 'btn btn-active md:btn-lg', tag: 'button', rendersTag: false, onTag: 'daisyButtonClasses(active = true); addClassNames("md:btn-lg")' })
   })
 
   it('names an id for an anchored popover, which cannot be called without one', () => {
@@ -68,7 +68,7 @@ describe('documentedCall', () => {
   it("calls the first model's function and adds another component's classes through its sibling", () => {
     const call = documentedCall([CARD_WITH_BODY, sized], markedElements('<div class="$$btn $$btn-lg $$card-body">x</div>')[0], new Set([...classes, 'card-body']))
 
-    assert.deepEqual({ fn: call?.fn.name, args: call?.args, expected: call?.expectedClasses }, { fn: 'daisyCardBody', args: 'attrs = { daisyButtonClasses(size = ButtonSize.Lg) }', expected: 'btn btn-lg card-body' })
+    assert.deepEqual({ fn: call?.fn.name, args: call?.args, block: call?.block, expected: call?.expectedClasses }, { fn: 'daisyCardBody', args: '', block: 'daisyButtonClasses(size = ButtonSize.Lg)', expected: 'btn btn-lg card-body' })
   })
 
   it("never calls a class-only function as the element's function, and lets it express a child alone", () => {
@@ -77,8 +77,8 @@ describe('documentedCall', () => {
     const both = documentedCall([menu, sized], markedElements('<a class="$$btn $$menu-active">x</a>')[0], new Set([...classes, 'menu-active']))
     const alone = documentedCall([menu], markedElements('<a class="$$menu-active">x</a>')[0], new Set(['menu-active']))
 
-    assert.deepEqual([both?.fn.name, both?.args], ['daisyButton', 'attrs = { daisyMenuItemClasses(active = true) }'])
-    assert.deepEqual([alone?.fn.kind, alone?.args, alone?.expectedClasses], ['classes', 'active = true', 'menu-active'])
+    assert.deepEqual([both?.fn.name, both?.args, both?.block], ['daisyButton', '', 'daisyMenuItemClasses(active = true)'])
+    assert.deepEqual([alone?.fn.kind, alone?.args, alone?.block, alone?.expectedClasses], ['classes', 'active = true', '', 'menu-active'])
   })
 
   it('says whether its function renders the documented tag', () => {
@@ -101,7 +101,8 @@ describe('documentedCall', () => {
     const menu = { ...component('menu', 'Menu', 'menu'), functions: [item] }
     const call = documentedCall([CARD_WITH_BODY, sized, menu], markedElements('<div class="$$card-body $$btn $$menu-active md:$$btn-lg lg:$$btn-sm">x</div>')[0], new Set([...classes, 'card-body', 'menu-active']))
 
-    assert.equal(call?.args, 'extraClasses = "md:btn-lg lg:btn-sm", attrs = { daisyButtonClasses(); daisyMenuItemClasses(active = true) }')
+    assert.equal(call?.args, 'extraClasses = "md:btn-lg lg:btn-sm"')
+    assert.equal(call?.block, 'daisyButtonClasses(); daisyMenuItemClasses(active = true)')
     assert.equal(call?.onTag, 'daisyCardBodyClasses(); daisyButtonClasses(); daisyMenuItemClasses(active = true); addClassNames("md:btn-lg lg:btn-sm")')
   })
 

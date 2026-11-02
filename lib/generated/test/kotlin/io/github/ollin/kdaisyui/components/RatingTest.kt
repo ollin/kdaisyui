@@ -16,8 +16,7 @@ class RatingTest {
     @Test
     fun rating() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating() {
-            }
+            daisyRating()
         }
         assertDocumented(html, "div", "rating", "Rating")
     }
@@ -49,8 +48,7 @@ class RatingTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(size = RatingSize.Xs) {
-            }
+            daisyRating(size = RatingSize.Xs)
         }
         assertDocumented(html, "div", "rating rating-xs", "Sizes")
     }
@@ -58,8 +56,7 @@ class RatingTest {
     @Test
     fun sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(size = RatingSize.Sm) {
-            }
+            daisyRating(size = RatingSize.Sm)
         }
         assertDocumented(html, "div", "rating rating-sm", "Sizes")
     }
@@ -67,8 +64,7 @@ class RatingTest {
     @Test
     fun sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(size = RatingSize.Md) {
-            }
+            daisyRating(size = RatingSize.Md)
         }
         assertDocumented(html, "div", "rating rating-md", "Sizes")
     }
@@ -76,8 +72,7 @@ class RatingTest {
     @Test
     fun sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(size = RatingSize.Lg) {
-            }
+            daisyRating(size = RatingSize.Lg)
         }
         assertDocumented(html, "div", "rating rating-lg", "Sizes")
     }
@@ -85,8 +80,7 @@ class RatingTest {
     @Test
     fun sizes_5() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(size = RatingSize.Xl) {
-            }
+            daisyRating(size = RatingSize.Xl)
         }
         assertDocumented(html, "div", "rating rating-xl", "Sizes")
     }
@@ -102,8 +96,7 @@ class RatingTest {
     @Test
     fun half_stars() {
         val html = createHTML(prettyPrint = false).div {
-            daisyRating(size = RatingSize.Lg, half = true) {
-            }
+            daisyRating(size = RatingSize.Lg, half = true)
         }
         assertDocumented(html, "div", "rating rating-half rating-lg", "half stars")
     }

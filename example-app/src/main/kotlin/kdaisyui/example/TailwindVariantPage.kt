@@ -44,18 +44,15 @@ fun HTML.tailwindVariantPage() {
             daisyButton(
                 text = "Control",
                 size = ButtonSize.Lg,
-                attrs = { attributes["id"] = "variant-control" },
-            )
+            ) { attributes["id"] = "variant-control" }
             daisyButton(
                 text = "Variant",
                 extraClasses = "lg:btn-lg",
-                attrs = { attributes["id"] = "variant-subject" },
-            )
+            ) { attributes["id"] = "variant-subject" }
             daisyButton(
                 text = "Max variant",
                 extraClasses = "max-lg:btn-lg",
-                attrs = { attributes["id"] = "variant-subject-max" },
-            )
+            ) { attributes["id"] = "variant-subject-max" }
         }
     }
 }

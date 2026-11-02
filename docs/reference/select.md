@@ -20,8 +20,7 @@ fun FlowContent.daisySelect(
     ghost: Boolean = false,
     disabled: Boolean = false,
     extraClasses: String? = null,
-    attrs: (SELECT.() -> Unit)? = null,
-    content: (SELECT.() -> Unit),
+    block: (SELECT.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

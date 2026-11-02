@@ -16,8 +16,7 @@ class TabTest {
     @Test
     fun tabs() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs() {
-            }
+            daisyTabs()
         }
         assertDocumented(html, "div", "tabs", "tabs")
     }
@@ -25,8 +24,7 @@ class TabTest {
     @Test
     fun tabs_daisyTab() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab() {
-            }
+            daisyTab()
         }
         assertDocumented(html, "a", "tab", "tabs")
     }
@@ -34,8 +32,7 @@ class TabTest {
     @Test
     fun tabs_daisyTab_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTab(active = true) {
-            }
+            daisyTab(active = true)
         }
         assertDocumented(html, "a", "tab tab-active", "tabs")
     }
@@ -43,8 +40,7 @@ class TabTest {
     @Test
     fun tabs_border() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Border) {
-            }
+            daisyTabs(style = TabsStyle.Border)
         }
         assertDocumented(html, "div", "tabs tabs-border", "tabs-border")
     }
@@ -52,8 +48,7 @@ class TabTest {
     @Test
     fun tabs_lift() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Lift) {
-            }
+            daisyTabs(style = TabsStyle.Lift)
         }
         assertDocumented(html, "div", "tabs tabs-lift", "tabs-lift")
     }
@@ -61,8 +56,7 @@ class TabTest {
     @Test
     fun tabs_box() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Box) {
-            }
+            daisyTabs(style = TabsStyle.Box)
         }
         assertDocumented(html, "div", "tabs tabs-box", "tabs-box")
     }
@@ -78,8 +72,7 @@ class TabTest {
     @Test
     fun sizes() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Xs) {
-            }
+            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Xs)
         }
         assertDocumented(html, "div", "tabs tabs-lift tabs-xs", "Sizes")
     }
@@ -87,8 +80,7 @@ class TabTest {
     @Test
     fun sizes_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Sm) {
-            }
+            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Sm)
         }
         assertDocumented(html, "div", "tabs tabs-lift tabs-sm", "Sizes")
     }
@@ -96,8 +88,7 @@ class TabTest {
     @Test
     fun sizes_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Lg) {
-            }
+            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Lg)
         }
         assertDocumented(html, "div", "tabs tabs-lg tabs-lift", "Sizes")
     }
@@ -105,8 +96,7 @@ class TabTest {
     @Test
     fun sizes_4() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Xl) {
-            }
+            daisyTabs(style = TabsStyle.Lift, size = TabsSize.Xl)
         }
         assertDocumented(html, "div", "tabs tabs-lift tabs-xl", "Sizes")
     }
@@ -114,8 +104,7 @@ class TabTest {
     @Test
     fun radio_tabs_border_tab_content_daisyTabContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabContent() {
-            }
+            daisyTabContent()
         }
         assertDocumented(html, "div", "tab-content", "radio tabs-border + tab content")
     }
@@ -123,8 +112,7 @@ class TabTest {
     @Test
     fun radio_tabs_lift_tab_content_on_bottom() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTabs(style = TabsStyle.Lift, placement = TabsPlacement.Bottom) {
-            }
+            daisyTabs(style = TabsStyle.Lift, placement = TabsPlacement.Bottom)
         }
         assertDocumented(html, "div", "tabs tabs-bottom tabs-lift", "radio tabs-lift + tab content on bottom")
     }

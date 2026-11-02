@@ -15,8 +15,7 @@ fun FlowContent.daisyLabel(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit)? = null,
+    block: (SPAN.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -27,8 +26,7 @@ fun Tag.daisyLabelClasses()
 fun FlowContent.daisyFloatingLabel(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

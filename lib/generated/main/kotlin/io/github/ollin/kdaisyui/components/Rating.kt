@@ -36,16 +36,14 @@ enum class RatingSize(internal val className: String) : ClassValues<RatingSize> 
  * @param size — Size variant
  * @param half — To shows half of the shapes. Useful for half star ratings
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyRating(
     id: HtmlId? = null,
     size: ClassValues<RatingSize>? = null,
     half: Boolean = false,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 ) {
     div {
         if (id != null) attributes["id"] = id.id
@@ -53,8 +51,7 @@ fun FlowContent.daisyRating(
         addClassNames(size)
         if (half) addClassNames("rating-half")
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 

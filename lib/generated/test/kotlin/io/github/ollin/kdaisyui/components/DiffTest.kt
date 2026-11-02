@@ -15,8 +15,7 @@ class DiffTest {
     @Test
     fun diff() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiff() {
-            }
+            daisyDiff()
         }
         assertDocumented(html, "figure", "diff", "Diff")
     }
@@ -24,8 +23,7 @@ class DiffTest {
     @Test
     fun diff_daisyDiffItem1() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiffItem1() {
-            }
+            daisyDiffItem1()
         }
         assertDocumented(html, "div", "diff-item-1", "Diff")
     }
@@ -33,8 +31,7 @@ class DiffTest {
     @Test
     fun diff_daisyDiffItem2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiffItem2() {
-            }
+            daisyDiffItem2()
         }
         assertDocumented(html, "div", "diff-item-2", "Diff")
     }
@@ -42,8 +39,7 @@ class DiffTest {
     @Test
     fun diff_daisyDiffResizer() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDiffResizer() {
-            }
+            daisyDiffResizer()
         }
         assertDocumented(html, "div", "diff-resizer", "Diff")
     }

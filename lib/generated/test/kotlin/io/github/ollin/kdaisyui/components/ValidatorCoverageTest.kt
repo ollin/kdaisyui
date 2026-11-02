@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class ValidatorCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class ValidatorCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class ValidatorCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -60,7 +58,7 @@ class ValidatorCoverageTest {
 
     @Test
     fun validator_all_flags() {
-        val html = allFlags(Expected("Validator all flags", "validator zz-extra", content = false)) { daisyValidator(id = ID, extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("Validator all flags", "validator zz-extra")) { daisyValidator(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -72,21 +70,19 @@ class ValidatorCoverageTest {
     }
 
     @Test
-    fun validatorClasses_all_flags() = assertRenders(Expected("ValidatorClasses all flags", "validator", content = false)) { daisyValidatorClasses() }
+    fun validatorClasses_all_flags() = assertRenders(Expected("ValidatorClasses all flags", "validator")) { daisyValidatorClasses() }
 
     @Test
     fun validatorHint_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyValidatorHint(
-                content = { },
-            )
+            daisyValidatorHint()
         }
         assertRendered(html, Expected("ValidatorHint defaults", "validator-hint", closes = "</p></div>"))
     }
 
     @Test
     fun validatorHint_all_flags() {
-        val html = allFlags(Expected("ValidatorHint all flags", "validator-hint zz-extra", closes = "</p></div>")) { daisyValidatorHint(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("ValidatorHint all flags", "validator-hint zz-extra", closes = "</p></div>")) { daisyValidatorHint(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -98,5 +94,5 @@ class ValidatorCoverageTest {
     }
 
     @Test
-    fun validatorHintClasses_all_flags() = assertRenders(Expected("ValidatorHintClasses all flags", "validator-hint", content = false)) { daisyValidatorHintClasses() }
+    fun validatorHintClasses_all_flags() = assertRenders(Expected("ValidatorHintClasses all flags", "validator-hint")) { daisyValidatorHintClasses() }
 }

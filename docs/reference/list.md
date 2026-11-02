@@ -14,8 +14,7 @@ Styled list layout. Renders `<ul class="list ...">`.
 fun FlowContent.daisyList(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -26,8 +25,7 @@ fun Tag.daisyListClasses()
 fun UL.daisyListRow(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (LI.() -> Unit)? = null,
-    content: (LI.() -> Unit),
+    block: (LI.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

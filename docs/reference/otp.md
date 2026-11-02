@@ -19,8 +19,7 @@ fun FlowContent.daisyOtp(
     size: ClassValues<OtpSize>? = null,
     joined: Boolean = false,  // Connects the character boxes together
     extraClasses: String? = null,
-    attrs: (LABEL.() -> Unit)? = null,
-    content: (LABEL.() -> Unit),
+    block: (LABEL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

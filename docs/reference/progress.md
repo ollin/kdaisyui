@@ -16,8 +16,7 @@ fun FlowContent.daisyProgress(
     id: HtmlId? = null,
     color: ClassValues<ProgressColor>? = null,
     extraClasses: String? = null,
-    attrs: (PROGRESS.() -> Unit)? = null,
-    content: (PROGRESS.() -> Unit),
+    block: (PROGRESS.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

@@ -20,8 +20,7 @@ fun FlowContent.daisyMenu(
     focus: Boolean = false,  // For the element inside <li> to look focused
     paged: Boolean = false,  // Shows one level at a time and turns the open summary into a back button
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -33,8 +32,7 @@ fun FlowContent.daisyMenuTitle(
     text: String? = null,
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (H2.() -> Unit)? = null,
-    content: (H2.() -> Unit)? = null,
+    block: (H2.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -46,8 +44,7 @@ fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
     show: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
     extraClasses: String? = null,
-    attrs: (UL.() -> Unit)? = null,
-    content: (UL.() -> Unit),
+    block: (UL.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:
@@ -59,8 +56,7 @@ fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
     dropdownShow: Boolean = false,  // Shows the menu-dropdown-toggle and menu-dropdown collapsible submenu using JS
     extraClasses: String? = null,
-    attrs: (SPAN.() -> Unit)? = null,
-    content: (SPAN.() -> Unit),
+    block: (SPAN.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

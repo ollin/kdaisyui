@@ -15,8 +15,7 @@ class TooltipTest {
     @Test
     fun tooltip() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip() {
-            }
+            daisyTooltip()
         }
         assertDocumented(html, "div", "tooltip", "Tooltip")
     }
@@ -24,8 +23,7 @@ class TooltipTest {
     @Test
     fun tooltip_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton() {
-            }
+            daisyButton()
         }
         assertDocumented(html, "button", "btn", "Tooltip")
     }
@@ -33,8 +31,7 @@ class TooltipTest {
     @Test
     fun tooltip_with_tooltip_content_daisyTooltipContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltipContent() {
-            }
+            daisyTooltipContent()
         }
         assertDocumented(html, "div", "tooltip-content", "Tooltip with tooltip-content")
     }
@@ -42,8 +39,7 @@ class TooltipTest {
     @Test
     fun force_open() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true) {
-            }
+            daisyTooltip(open = true)
         }
         assertDocumented(html, "div", "tooltip tooltip-open", "Force open")
     }
@@ -51,8 +47,7 @@ class TooltipTest {
     @Test
     fun top() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.Start) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.Start)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-start tooltip-top", "Top")
     }
@@ -60,8 +55,7 @@ class TooltipTest {
     @Test
     fun top_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Top) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Top)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-top", "Top")
     }
@@ -69,8 +63,7 @@ class TooltipTest {
     @Test
     fun top_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.End) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Top, align = TooltipAlign.End)
         }
         assertDocumented(html, "div", "tooltip tooltip-end tooltip-open tooltip-top", "Top")
     }
@@ -78,8 +71,7 @@ class TooltipTest {
     @Test
     fun bottom() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.Start) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.Start)
         }
         assertDocumented(html, "div", "tooltip tooltip-bottom tooltip-open tooltip-start", "Bottom")
     }
@@ -87,8 +79,7 @@ class TooltipTest {
     @Test
     fun bottom_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Bottom) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Bottom)
         }
         assertDocumented(html, "div", "tooltip tooltip-bottom tooltip-open", "Bottom")
     }
@@ -96,8 +87,7 @@ class TooltipTest {
     @Test
     fun bottom_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.End) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Bottom, align = TooltipAlign.End)
         }
         assertDocumented(html, "div", "tooltip tooltip-bottom tooltip-end tooltip-open", "Bottom")
     }
@@ -105,8 +95,7 @@ class TooltipTest {
     @Test
     fun left() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.Start) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.Start)
         }
         assertDocumented(html, "div", "tooltip tooltip-left tooltip-open tooltip-start", "Left")
     }
@@ -114,8 +103,7 @@ class TooltipTest {
     @Test
     fun left_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Left) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Left)
         }
         assertDocumented(html, "div", "tooltip tooltip-left tooltip-open", "Left")
     }
@@ -123,8 +111,7 @@ class TooltipTest {
     @Test
     fun left_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.End) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Left, align = TooltipAlign.End)
         }
         assertDocumented(html, "div", "tooltip tooltip-end tooltip-left tooltip-open", "Left")
     }
@@ -132,8 +119,7 @@ class TooltipTest {
     @Test
     fun right() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.Start) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.Start)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-right tooltip-start", "Right")
     }
@@ -141,8 +127,7 @@ class TooltipTest {
     @Test
     fun right_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Right) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Right)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-right", "Right")
     }
@@ -150,8 +135,7 @@ class TooltipTest {
     @Test
     fun right_3() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.End) {
-            }
+            daisyTooltip(open = true, side = TooltipSide.Right, align = TooltipAlign.End)
         }
         assertDocumented(html, "div", "tooltip tooltip-end tooltip-open tooltip-right", "Right")
     }
@@ -159,8 +143,7 @@ class TooltipTest {
     @Test
     fun primary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, color = TooltipColor.Primary) {
-            }
+            daisyTooltip(open = true, color = TooltipColor.Primary)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-primary", "Primary color")
     }
@@ -168,8 +151,7 @@ class TooltipTest {
     @Test
     fun primary_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Primary) {
-            }
+            daisyButton(color = ButtonColor.Primary)
         }
         assertDocumented(html, "button", "btn btn-primary", "Primary color")
     }
@@ -177,8 +159,7 @@ class TooltipTest {
     @Test
     fun secondary_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, color = TooltipColor.Secondary) {
-            }
+            daisyTooltip(open = true, color = TooltipColor.Secondary)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-secondary", "Secondary color")
     }
@@ -186,8 +167,7 @@ class TooltipTest {
     @Test
     fun secondary_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Secondary) {
-            }
+            daisyButton(color = ButtonColor.Secondary)
         }
         assertDocumented(html, "button", "btn btn-secondary", "Secondary color")
     }
@@ -195,8 +175,7 @@ class TooltipTest {
     @Test
     fun accent_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, color = TooltipColor.Accent) {
-            }
+            daisyTooltip(open = true, color = TooltipColor.Accent)
         }
         assertDocumented(html, "div", "tooltip tooltip-accent tooltip-open", "Accent color")
     }
@@ -204,8 +183,7 @@ class TooltipTest {
     @Test
     fun accent_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Accent) {
-            }
+            daisyButton(color = ButtonColor.Accent)
         }
         assertDocumented(html, "button", "btn btn-accent", "Accent color")
     }
@@ -213,8 +191,7 @@ class TooltipTest {
     @Test
     fun info_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, color = TooltipColor.Info) {
-            }
+            daisyTooltip(open = true, color = TooltipColor.Info)
         }
         assertDocumented(html, "div", "tooltip tooltip-info tooltip-open", "Info color")
     }
@@ -222,8 +199,7 @@ class TooltipTest {
     @Test
     fun info_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Info) {
-            }
+            daisyButton(color = ButtonColor.Info)
         }
         assertDocumented(html, "button", "btn btn-info", "Info color")
     }
@@ -231,8 +207,7 @@ class TooltipTest {
     @Test
     fun success_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, color = TooltipColor.Success) {
-            }
+            daisyTooltip(open = true, color = TooltipColor.Success)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-success", "Success color")
     }
@@ -240,8 +215,7 @@ class TooltipTest {
     @Test
     fun success_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Success) {
-            }
+            daisyButton(color = ButtonColor.Success)
         }
         assertDocumented(html, "button", "btn btn-success", "Success color")
     }
@@ -249,8 +223,7 @@ class TooltipTest {
     @Test
     fun warning_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, color = TooltipColor.Warning) {
-            }
+            daisyTooltip(open = true, color = TooltipColor.Warning)
         }
         assertDocumented(html, "div", "tooltip tooltip-open tooltip-warning", "Warning color")
     }
@@ -258,8 +231,7 @@ class TooltipTest {
     @Test
     fun warning_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Warning) {
-            }
+            daisyButton(color = ButtonColor.Warning)
         }
         assertDocumented(html, "button", "btn btn-warning", "Warning color")
     }
@@ -267,8 +239,7 @@ class TooltipTest {
     @Test
     fun error_color() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(open = true, color = TooltipColor.Error) {
-            }
+            daisyTooltip(open = true, color = TooltipColor.Error)
         }
         assertDocumented(html, "div", "tooltip tooltip-error tooltip-open", "Error color")
     }
@@ -276,8 +247,7 @@ class TooltipTest {
     @Test
     fun error_color_daisyButton() {
         val html = createHTML(prettyPrint = false).div {
-            daisyButton(color = ButtonColor.Error) {
-            }
+            daisyButton(color = ButtonColor.Error)
         }
         assertDocumented(html, "button", "btn btn-error", "Error color")
     }
@@ -285,8 +255,7 @@ class TooltipTest {
     @Test
     fun responsive_tooltip_position() {
         val html = createHTML(prettyPrint = false).div {
-            daisyTooltip(align = TooltipAlign.Start, extraClasses = "md:tooltip-right md:tooltip-center") {
-            }
+            daisyTooltip(align = TooltipAlign.Start, extraClasses = "md:tooltip-right md:tooltip-center")
         }
         assertDocumented(html, "div", "md:tooltip-center md:tooltip-right tooltip tooltip-start", "Responsive tooltip position")
     }

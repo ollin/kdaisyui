@@ -19,8 +19,7 @@ fun FlowContent.daisyTable(
     pinRows: Boolean = false,  // For <table> to make all the rows inside <thead> and <tfoot> sticky
     zebra: Boolean = false,  // For <table> to show zebra stripe rows
     extraClasses: String? = null,
-    attrs: (TABLE.() -> Unit)? = null,
-    content: (TABLE.() -> Unit),
+    block: (TABLE.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class CollapseCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class CollapseCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,30 +45,27 @@ class CollapseCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
     fun collapse_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapse(
-                content = { },
-            )
+            daisyCollapse()
         }
         assertRendered(html, Expected("Collapse defaults", "collapse", closes = "</div></div>"))
     }
 
     @Test
     fun collapse_all_flags() {
-        val html = allFlags(Expected("Collapse all flags", "collapse zz-extra", closes = "</div></div>")) { daisyCollapse(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("Collapse all flags", "collapse zz-extra", closes = "</div></div>")) { daisyCollapse(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
-    fun collapse_icon() = assertEachEntry("Collapse icon", mapOf(CollapseIcon.Arrow to "collapse collapse-arrow", CollapseIcon.Plus to "collapse collapse-plus")) { daisyCollapse(icon = it, content = { }) }
+    fun collapse_icon() = assertEachEntry("Collapse icon", mapOf(CollapseIcon.Arrow to "collapse collapse-arrow", CollapseIcon.Plus to "collapse collapse-plus")) { daisyCollapse(icon = it) }
 
     @Test
-    fun collapse_state() = assertEachEntry("Collapse state", mapOf(CollapseState.Open to "collapse collapse-open", CollapseState.Close to "collapse collapse-close")) { daisyCollapse(state = it, content = { }) }
+    fun collapse_state() = assertEachEntry("Collapse state", mapOf(CollapseState.Open to "collapse collapse-open", CollapseState.Close to "collapse collapse-close")) { daisyCollapse(state = it) }
 
     @Test
     fun collapseClasses_defaults() {
@@ -80,7 +76,7 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapseClasses_all_flags() = assertRenders(Expected("CollapseClasses all flags", "collapse", content = false)) { daisyCollapseClasses() }
+    fun collapseClasses_all_flags() = assertRenders(Expected("CollapseClasses all flags", "collapse")) { daisyCollapseClasses() }
 
     @Test
     fun collapseClasses_icon() = assertEachEntry("CollapseClasses icon", mapOf(CollapseIcon.Arrow to "collapse collapse-arrow", CollapseIcon.Plus to "collapse collapse-plus")) { daisyCollapseClasses(icon = it) }
@@ -98,7 +94,7 @@ class CollapseCoverageTest {
 
     @Test
     fun collapseTitle_all_flags() {
-        val html = allFlags(Expected("CollapseTitle all flags", "collapse-title zz-extra", closes = "</div></div>")) { daisyCollapseTitle(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("CollapseTitle all flags", "collapse-title zz-extra", closes = "</div></div>")) { daisyCollapseTitle(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -121,21 +117,19 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapseTitleClasses_all_flags() = assertRenders(Expected("CollapseTitleClasses all flags", "collapse-title", content = false)) { daisyCollapseTitleClasses() }
+    fun collapseTitleClasses_all_flags() = assertRenders(Expected("CollapseTitleClasses all flags", "collapse-title")) { daisyCollapseTitleClasses() }
 
     @Test
     fun collapseContent_defaults() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCollapseContent(
-                content = { },
-            )
+            daisyCollapseContent()
         }
         assertRendered(html, Expected("CollapseContent defaults", "collapse-content", closes = "</div></div>"))
     }
 
     @Test
     fun collapseContent_all_flags() {
-        val html = allFlags(Expected("CollapseContent all flags", "collapse-content zz-extra", closes = "</div></div>")) { daisyCollapseContent(id = ID, extraClasses = EXTRA, attrs = ATTRS, content = CONTENT) }
+        val html = allFlags(Expected("CollapseContent all flags", "collapse-content zz-extra", closes = "</div></div>")) { daisyCollapseContent(id = ID, extraClasses = EXTRA, block = BLOCK) }
     }
 
     @Test
@@ -147,5 +141,5 @@ class CollapseCoverageTest {
     }
 
     @Test
-    fun collapseContentClasses_all_flags() = assertRenders(Expected("CollapseContentClasses all flags", "collapse-content", content = false)) { daisyCollapseContentClasses() }
+    fun collapseContentClasses_all_flags() = assertRenders(Expected("CollapseContentClasses all flags", "collapse-content")) { daisyCollapseContentClasses() }
 }

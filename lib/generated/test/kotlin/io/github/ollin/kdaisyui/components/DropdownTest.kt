@@ -19,8 +19,7 @@ class DropdownTest {
     @Test
     fun dropdown_using_details_and_summary() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdown() {
-            }
+            daisyDropdown()
         }
         assertDocumented(html, "details", "dropdown", "Dropdown using details and summary")
     }
@@ -36,8 +35,7 @@ class DropdownTest {
     @Test
     fun dropdown_using_details_and_summary_daisyDropdownContent() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdownContent(attrs = { daisyMenuClasses() }) {
-            }
+            daisyDropdownContent { daisyMenuClasses() }
         }
         assertDocumented(html, "ul", "dropdown-content menu", "Dropdown using details and summary")
     }
@@ -45,8 +43,7 @@ class DropdownTest {
     @Test
     fun dropdown_using_popover_api_and_anchor_positioning_daisyDropdownPopover() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDropdownPopover(id = htmlId("documented"), attrs = { daisyMenuClasses() }) {
-            }
+            daisyDropdownPopover(id = htmlId("documented")) { daisyMenuClasses() }
         }
         assertDocumented(html, "ul", "dropdown menu", "Dropdown using popover API and anchor positioning")
     }
@@ -206,8 +203,7 @@ class DropdownTest {
     @Test
     fun card_as_dropdown_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardBody() {
-            }
+            daisyCardBody()
         }
         assertDocumented(html, "div", "card-body", "Card as dropdown")
     }
@@ -215,8 +211,7 @@ class DropdownTest {
     @Test
     fun dropdown_in_navbar_daisyNavbar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyNavbar() {
-            }
+            daisyNavbar()
         }
         assertDocumented(html, "div", "navbar", "Dropdown in navbar")
     }
@@ -240,8 +235,7 @@ class DropdownTest {
     @Test
     fun helper_dropdown_daisyCardTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardTitle() {
-            }
+            daisyCardTitle()
         }
         assertDocumented(html, "h2", "card-title", "Helper dropdown")
     }

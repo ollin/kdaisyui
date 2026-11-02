@@ -15,8 +15,7 @@ class MockupCodeTest {
     @Test
     fun mockup_code_with_line_prefix() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupCode() {
-            }
+            daisyMockupCode()
         }
         assertDocumented(html, "div", "mockup-code", "mockup code with line prefix")
     }

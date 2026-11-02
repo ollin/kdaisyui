@@ -14,8 +14,7 @@ Code block mockup frame. Renders `<div class="mockup-code ...">`.
 fun FlowContent.daisyMockupCode(
     id: HtmlId? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (DIV.() -> Unit),
+    block: (DIV.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

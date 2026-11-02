@@ -11,8 +11,8 @@ import kotlinx.html.stream.createHTML
 
 class InputCoverageTest {
 
-    /** What a case must render: its classes, sorted, the tail it closes with, whether it took content. */
-    private class Expected(val label: String, val classes: String, val closes: String = "", val content: Boolean = true)
+    /** What a case must render: its classes, sorted, and the tail it closes with. */
+    private class Expected(val label: String, val classes: String, val closes: String = "")
 
     private fun assertRendered(html: String, expected: Expected) {
         assertEquals(expected.classes, html.substringAfter("class=\"").substringBefore("\"").split(" ").sorted().joinToString(" "), expected.label)
@@ -21,8 +21,7 @@ class InputCoverageTest {
 
     private val ID = htmlId("x-cov-id")
     private val EXTRA = "zz-extra"
-    private val ATTRS: Tag.() -> Unit = { attributes["data-attrs"] = "yes" }
-    private val CONTENT: Tag.() -> Unit = { attributes["data-content"] = "yes" }
+    private val BLOCK: Tag.() -> Unit = { attributes["data-block"] = "yes" }
 
     /** Renders one call and asserts the classes it writes. */
     private fun assertRenders(expected: Expected, render: FlowContent.() -> Unit) {
@@ -46,8 +45,7 @@ class InputCoverageTest {
 
     private fun assertCommonFlags(html: String, expected: Expected) {
         assertTrue(html.contains("id=\"x-cov-id\""), "${expected.label} id")
-        assertTrue(html.contains("data-attrs=\"yes\""), "${expected.label} attrs")
-        if (expected.content) assertTrue(html.contains("data-content=\"yes\""), "${expected.label} content")
+        assertTrue(html.contains("data-block=\"yes\""), "${expected.label} block")
     }
 
     @Test
@@ -61,7 +59,7 @@ class InputCoverageTest {
 
     @Test
     fun input_all_flags() {
-        val html = allFlags(Expected("Input all flags", "input input-ghost zz-extra", content = false)) { daisyInput(id = ID, ghost = true, disabled = true, placeholder = "x", value = "x", extraClasses = EXTRA, attrs = ATTRS) }
+        val html = allFlags(Expected("Input all flags", "input input-ghost zz-extra")) { daisyInput(id = ID, ghost = true, disabled = true, placeholder = "x", value = "x", extraClasses = EXTRA, block = BLOCK) }
         assertTrue(html.contains("placeholder=\"x\""), "Input placeholder")
         assertTrue(html.contains("value=\"x\""), "Input value")
         assertTrue(html.contains("type=\""), "Input sets type")
@@ -85,7 +83,7 @@ class InputCoverageTest {
     }
 
     @Test
-    fun inputClasses_all_flags() = assertRenders(Expected("InputClasses all flags", "input input-ghost", content = false)) { daisyInputClasses(ghost = true) }
+    fun inputClasses_all_flags() = assertRenders(Expected("InputClasses all flags", "input input-ghost")) { daisyInputClasses(ghost = true) }
 
     @Test
     fun inputClasses_color() = assertEachEntry("InputClasses color", mapOf(InputColor.Neutral to "input input-neutral", InputColor.Primary to "input input-primary", InputColor.Secondary to "input input-secondary", InputColor.Accent to "input input-accent", InputColor.Info to "input input-info", InputColor.Success to "input input-success", InputColor.Warning to "input input-warning", InputColor.Error to "input input-error")) { daisyInputClasses(color = it) }

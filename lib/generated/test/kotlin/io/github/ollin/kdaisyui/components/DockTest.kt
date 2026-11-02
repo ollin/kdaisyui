@@ -15,8 +15,7 @@ class DockTest {
     @Test
     fun dock() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock() {
-            }
+            daisyDock()
         }
         assertDocumented(html, "div", "dock", "Dock")
     }
@@ -24,8 +23,7 @@ class DockTest {
     @Test
     fun dock_daisyDockLabel() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDockLabel() {
-            }
+            daisyDockLabel()
         }
         assertDocumented(html, "span", "dock-label", "Dock")
     }
@@ -33,8 +31,7 @@ class DockTest {
     @Test
     fun dock_daisyDockItem() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDockItem(active = true) {
-            }
+            daisyDockItem(active = true)
         }
         assertDocumented(html, "button", "dock-active", "Dock")
     }
@@ -42,8 +39,7 @@ class DockTest {
     @Test
     fun dock_extra_small_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(size = DockSize.Xs) {
-            }
+            daisyDock(size = DockSize.Xs)
         }
         assertDocumented(html, "div", "dock dock-xs", "Dock Extra Small size")
     }
@@ -51,8 +47,7 @@ class DockTest {
     @Test
     fun dock_small_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(size = DockSize.Sm) {
-            }
+            daisyDock(size = DockSize.Sm)
         }
         assertDocumented(html, "div", "dock dock-sm", "Dock Small size")
     }
@@ -60,8 +55,7 @@ class DockTest {
     @Test
     fun dock_medium_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(size = DockSize.Md) {
-            }
+            daisyDock(size = DockSize.Md)
         }
         assertDocumented(html, "div", "dock dock-md", "Dock Medium size")
     }
@@ -69,8 +63,7 @@ class DockTest {
     @Test
     fun dock_large_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(size = DockSize.Lg) {
-            }
+            daisyDock(size = DockSize.Lg)
         }
         assertDocumented(html, "div", "dock dock-lg", "Dock Large size")
     }
@@ -78,8 +71,7 @@ class DockTest {
     @Test
     fun dock_extra_large_size() {
         val html = createHTML(prettyPrint = false).div {
-            daisyDock(size = DockSize.Xl) {
-            }
+            daisyDock(size = DockSize.Xl)
         }
         assertDocumented(html, "div", "dock dock-xl", "Dock Extra Large size")
     }

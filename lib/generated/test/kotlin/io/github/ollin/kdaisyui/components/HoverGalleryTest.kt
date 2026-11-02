@@ -15,8 +15,7 @@ class HoverGalleryTest {
     @Test
     fun hover_gallery() {
         val html = createHTML(prettyPrint = false).div {
-            daisyHoverGallery() {
-            }
+            daisyHoverGallery()
         }
         assertDocumented(html, "figure", "hover-gallery", "Hover Gallery")
     }
@@ -24,8 +23,7 @@ class HoverGalleryTest {
     @Test
     fun hover_gallery_in_a_card_daisyCard() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCard(size = CardSize.Sm) {
-            }
+            daisyCard(size = CardSize.Sm)
         }
         assertDocumented(html, "div", "card card-sm", "Hover Gallery in a card")
     }
@@ -33,8 +31,7 @@ class HoverGalleryTest {
     @Test
     fun hover_gallery_in_a_card_daisyCardBody() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardBody() {
-            }
+            daisyCardBody()
         }
         assertDocumented(html, "div", "card-body", "Hover Gallery in a card")
     }
@@ -42,8 +39,7 @@ class HoverGalleryTest {
     @Test
     fun hover_gallery_in_a_card_daisyCardTitle() {
         val html = createHTML(prettyPrint = false).div {
-            daisyCardTitle() {
-            }
+            daisyCardTitle()
         }
         assertDocumented(html, "h2", "card-title", "Hover Gallery in a card")
     }

@@ -17,8 +17,7 @@ fun FlowContent.daisyKbd(
     id: HtmlId? = null,
     size: ClassValues<KbdSize>? = null,
     extraClasses: String? = null,
-    attrs: (KBD.() -> Unit)? = null,
-    content: (KBD.() -> Unit)? = null,
+    block: (KBD.() -> Unit) = {},
 )
 
 // The same classes on an element you write yourself, or beside another component's:

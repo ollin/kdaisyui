@@ -15,8 +15,7 @@ class MockupPhoneTest {
     @Test
     fun iphone_mockup() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupPhone() {
-            }
+            daisyMockupPhone()
         }
         assertDocumented(html, "div", "mockup-phone", "iPhone mockup")
     }
@@ -24,8 +23,7 @@ class MockupPhoneTest {
     @Test
     fun iphone_mockup_daisyMockupPhoneCamera() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupPhoneCamera() {
-            }
+            daisyMockupPhoneCamera()
         }
         assertDocumented(html, "div", "mockup-phone-camera", "iPhone mockup")
     }
@@ -33,8 +31,7 @@ class MockupPhoneTest {
     @Test
     fun iphone_mockup_daisyMockupPhoneDisplay() {
         val html = createHTML(prettyPrint = false).div {
-            daisyMockupPhoneDisplay() {
-            }
+            daisyMockupPhoneDisplay()
         }
         assertDocumented(html, "div", "mockup-phone-display", "iPhone mockup")
     }

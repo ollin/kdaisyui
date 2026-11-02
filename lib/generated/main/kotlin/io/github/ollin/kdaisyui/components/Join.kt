@@ -35,23 +35,20 @@ enum class JoinDirection(internal val className: String) : ClassValues<JoinDirec
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
- * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content
+ * @param block — Writes the element's attributes, and its children where it can hold any
  */
 fun FlowContent.daisyJoin(
     id: HtmlId? = null,
     direction: ClassValues<JoinDirection>? = null,
     extraClasses: String? = null,
-    attrs: (DIV.() -> Unit)? = null,
-    content: (JoinScope.() -> Unit),
+    block: (JoinScope.() -> Unit) = {},
 ) {
     JoinScope(emptyMap(), consumer).visit {
         if (id != null) attributes["id"] = id.id
         addClassNames("join")
         addClassNames(direction)
         addClassNames(extraClasses)
-        if (attrs != null) attrs()
-        content()
+        block()
     }
 }
 
@@ -92,8 +89,7 @@ class JoinScope internal constructor(
         disabled: Boolean = false,
         type: ButtonType? = null,
         extraClasses: String? = null,
-        attrs: (BUTTON.() -> Unit)? = null,
-        content: (BUTTON.() -> Unit)? = null,
+        block: (BUTTON.() -> Unit) = {},
     ) {
         flow.daisyButton(
             text = text,
@@ -107,8 +103,7 @@ class JoinScope internal constructor(
             disabled = disabled,
             type = type,
             extraClasses = joinItem(extraClasses),
-            attrs = attrs,
-            content = content,
+            block = block,
         )
     }
 
@@ -119,8 +114,7 @@ class JoinScope internal constructor(
         style: ClassValues<CardStyle>? = null,
         layout: ClassValues<CardLayout>? = null,
         extraClasses: String? = null,
-        attrs: (DIV.() -> Unit)? = null,
-        content: (DIV.() -> Unit),
+        block: (DIV.() -> Unit) = {},
     ) {
         flow.daisyCard(
             id = id,
@@ -128,8 +122,7 @@ class JoinScope internal constructor(
             style = style,
             layout = layout,
             extraClasses = joinItem(extraClasses),
-            attrs = attrs,
-            content = content,
+            block = block,
         )
     }
 
@@ -139,16 +132,14 @@ class JoinScope internal constructor(
         icon: ClassValues<CollapseIcon>? = null,
         state: ClassValues<CollapseState>? = null,
         extraClasses: String? = null,
-        attrs: (DIV.() -> Unit)? = null,
-        content: (DIV.() -> Unit),
+        block: (DIV.() -> Unit) = {},
     ) {
         flow.daisyCollapse(
             id = id,
             icon = icon,
             state = state,
             extraClasses = joinItem(extraClasses),
-            attrs = attrs,
-            content = content,
+            block = block,
         )
     }
 
@@ -163,7 +154,7 @@ class JoinScope internal constructor(
         value: String? = null,
         disabled: Boolean = false,
         extraClasses: String? = null,
-        attrs: (INPUT.() -> Unit)? = null,
+        block: (INPUT.() -> Unit) = {},
     ) {
         flow.daisyInput(
             id = id,
@@ -175,7 +166,7 @@ class JoinScope internal constructor(
             value = value,
             disabled = disabled,
             extraClasses = joinItem(extraClasses),
-            attrs = attrs,
+            block = block,
         )
     }
 
@@ -187,8 +178,7 @@ class JoinScope internal constructor(
         ghost: Boolean = false,
         disabled: Boolean = false,
         extraClasses: String? = null,
-        attrs: (SELECT.() -> Unit)? = null,
-        content: (SELECT.() -> Unit),
+        block: (SELECT.() -> Unit) = {},
     ) {
         flow.daisySelect(
             id = id,
@@ -197,8 +187,7 @@ class JoinScope internal constructor(
             ghost = ghost,
             disabled = disabled,
             extraClasses = joinItem(extraClasses),
-            attrs = attrs,
-            content = content,
+            block = block,
         )
     }
 
@@ -206,12 +195,12 @@ class JoinScope internal constructor(
     fun daisyThemeController(
         id: HtmlId? = null,
         extraClasses: String? = null,
-        attrs: (INPUT.() -> Unit)? = null,
+        block: (INPUT.() -> Unit) = {},
     ) {
         flow.daisyThemeController(
             id = id,
             extraClasses = joinItem(extraClasses),
-            attrs = attrs,
+            block = block,
         )
     }
 
@@ -219,12 +208,12 @@ class JoinScope internal constructor(
     fun daisyValidator(
         id: HtmlId? = null,
         extraClasses: String? = null,
-        attrs: (INPUT.() -> Unit)? = null,
+        block: (INPUT.() -> Unit) = {},
     ) {
         flow.daisyValidator(
             id = id,
             extraClasses = joinItem(extraClasses),
-            attrs = attrs,
+            block = block,
         )
     }
 }

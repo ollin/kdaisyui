@@ -15,8 +15,7 @@ class AvatarTest {
     @Test
     fun avatar() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar() {
-            }
+            daisyAvatar()
         }
         assertDocumented(html, "div", "avatar", "Avatar")
     }
@@ -48,8 +47,7 @@ class AvatarTest {
     @Test
     fun avatar_group_daisyAvatarGroup() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatarGroup() {
-            }
+            daisyAvatarGroup()
         }
         assertDocumented(html, "div", "avatar-group", "Avatar group")
     }
@@ -57,8 +55,7 @@ class AvatarTest {
     @Test
     fun avatar_group_with_counter() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(placeholder = true) {
-            }
+            daisyAvatar(placeholder = true)
         }
         assertDocumented(html, "div", "avatar avatar-placeholder", "Avatar group with counter")
     }
@@ -66,8 +63,7 @@ class AvatarTest {
     @Test
     fun avatar_with_presence_indicator() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(presence = AvatarPresence.Online) {
-            }
+            daisyAvatar(presence = AvatarPresence.Online)
         }
         assertDocumented(html, "div", "avatar avatar-online", "Avatar with presence indicator")
     }
@@ -75,8 +71,7 @@ class AvatarTest {
     @Test
     fun avatar_with_presence_indicator_2() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(presence = AvatarPresence.Offline) {
-            }
+            daisyAvatar(presence = AvatarPresence.Offline)
         }
         assertDocumented(html, "div", "avatar avatar-offline", "Avatar with presence indicator")
     }
@@ -84,8 +79,7 @@ class AvatarTest {
     @Test
     fun avatar_placeholder() {
         val html = createHTML(prettyPrint = false).div {
-            daisyAvatar(presence = AvatarPresence.Online, placeholder = true) {
-            }
+            daisyAvatar(presence = AvatarPresence.Online, placeholder = true)
         }
         assertDocumented(html, "div", "avatar avatar-online avatar-placeholder", "Avatar placeholder")
     }

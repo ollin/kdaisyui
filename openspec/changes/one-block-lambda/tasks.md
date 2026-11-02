@@ -20,7 +20,7 @@ An informal "about half a day" (240m) was given in conversation before the scope
   children that must follow the text. Record the count and the verdict in design.md, Risks. Any
   such call refutes the Assumed requirement "A function's text and block add up": stop and revise
   the order before task 2. `. d (internal)`
-- [ ] 1.2 Pin the kotlinx.html rule the order rests on in a hand-written test: an attribute set
+- [x] 1.2 Pin the kotlinx.html rule the order rests on in a hand-written test: an attribute set
   inside a builder before its first text is rendered, the same attribute after `+text` throws
   `IllegalStateException`, for `createHTML` and `appendHTML`. `. r (internal)`
 

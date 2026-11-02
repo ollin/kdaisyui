@@ -22,7 +22,7 @@
  * the failure being fixed.
  */
 
-import { hasSibling, siblingParameters, type ComponentShape, type FunctionShape, type ParameterShape, type SiblingShape } from './component-shape.ts'
+import { byDisplayName, hasSibling, siblingParameters, type ComponentShape, type FunctionShape, type ParameterShape, type SiblingShape } from './component-shape.ts'
 
 /** One parameter, in the form a Kotlin caller sees it. */
 function renderParameter(parameter: ParameterShape): string {
@@ -98,12 +98,7 @@ export function generateComponentApiDump(shapes: readonly ComponentShape[]): str
     '',
   ]
 
-  const sorted = [...shapes].sort((a, b) => {
-    const left = a.componentName.toLowerCase()
-    const right = b.componentName.toLowerCase()
-    if (left < right) return -1
-    return left > right ? 1 : 0
-  })
+  const sorted = [...shapes].sort(byDisplayName)
 
   return [...header, ...sorted.flatMap(renderComponent)].join('\n')
 }

@@ -390,7 +390,7 @@ export function generateKotlinFile(shape: ComponentShape, componentConfig: MainF
 
   const enums = shape.enums.map(renderEnum).join('\n')
   const functions = shape.functions.map(fn => [
-    renderFunction(fn, renderBody(fn, shape.prefix ?? '', componentConfig)),
+    renderFunction(fn, renderBody(fn, shape.prefix, componentConfig)),
     ...(hasSibling(fn) ? [renderSibling(fn)] : []),
   ].join('\n\n'))
   const scope = shape.scope === undefined ? '' : renderScope(shape.scope, shape.functions[0].element)

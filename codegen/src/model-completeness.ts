@@ -7,7 +7,7 @@
  * completeness check.
  */
 
-import type { ComponentModel, ModelFunction, ModelParameter } from './model.ts'
+import type { ComponentModel, ModelEnumParameter, ModelFunction, ModelParameter } from './model.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
 import { toPascalCase } from './classifier.ts'
 
@@ -21,7 +21,8 @@ export function offeredBy(model: ComponentModel, fn: ModelFunction): string[] {
 
 /** The classes one parameter can write: its axis's members, its toggle's class, or its extra's. */
 export function writtenBy(model: ComponentModel, parameter: ModelParameter): string[] {
-  if (parameter.kind === 'enum') return [...(model.enums.find(declared => declared.name === parameter.enum)?.classes ?? [])]
+  // Every enum parameter names a declared enum; committed-model.test.ts checks all of them.
+  if (parameter.kind === 'enum') return [...model.enums.find(declared => declared.name === parameter.enum)!.classes]
   if (parameter.kind === 'toggle') return [parameter.class]
   return [...(parameter.writes ?? [])]
 }
@@ -68,7 +69,8 @@ export function namingFindings(model: ComponentModel): string[] {
     .flatMap(fn => {
       // The filter above let through only functions with a class.
       const stem = fn.stem ?? toPascalCase(fn.class!)
-      const enums = fn.parameters.flatMap(parameter => (parameter.kind === 'enum' ? [{ name: parameter.enum, expected: `${stem}${toPascalCase(parameter.name)}` }] : []))
+      const enums = fn.parameters.filter((parameter): parameter is ModelEnumParameter => parameter.kind === 'enum')
+        .map(parameter => ({ name: parameter.enum, expected: `${stem}${toPascalCase(parameter.name)}` }))
       return [{ name: fn.name, expected: `daisy${stem}` }, ...enums]
     })
     .filter(({ name, expected }) => name !== expected)

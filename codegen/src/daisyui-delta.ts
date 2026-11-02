@@ -32,8 +32,9 @@ export class DocsAtTag implements ComponentDocs {
     this.tag = tag
   }
 
+  /** git's output; its stderr is captured with it, so a page a tag lacks prints nothing. */
   private git(...args: string[]): string {
-    return execFileSync('git', ['-C', this.repo, ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] })
+    return execFileSync('git', ['-C', this.repo, ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: 'pipe' })
   }
 
   /** Every directory with a `+page.md`, sorted. */

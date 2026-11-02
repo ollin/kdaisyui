@@ -62,6 +62,20 @@ describe('DocsAtTag', () => {
   it('reads no page where the tag has none', () => {
     assert.equal(new DocsAtTag(repository.dir, 'v1').page('card'), null)
   })
+
+  it("prints nothing of git's complaint about the missing page", () => {
+    // Without a `stdio` option, execFileSync writes the child's stderr to process.stderr.
+    const written: unknown[] = []
+    const write = process.stderr.write
+    process.stderr.write = ((chunk: unknown) => written.push(chunk) > 0) as typeof process.stderr.write
+    try {
+      new DocsAtTag(repository.dir, 'v1').page('card')
+    } finally {
+      process.stderr.write = write
+    }
+
+    assert.deepEqual(written, [])
+  })
 })
 
 describe('DocsAtTag, on a tree with more than pages in it', () => {

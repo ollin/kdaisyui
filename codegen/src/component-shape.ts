@@ -52,14 +52,19 @@ const LIBRARY_ELEMENTS: Readonly<Record<string, { readonly builder: string, read
   CALENDAR_DATE: { builder: 'calendarDate', html: 'calendar-date' },
 }
 
-/** The HTML elements kotlinx.html 0.12.0 builds, by their HTML name: the standard set. */
-const KOTLINX_HTML_ELEMENTS: ReadonlySet<string> = new Set(`
+/**
+ * Every tag something can write, by its HTML name: the standard set kotlinx.html 0.12.0 builds,
+ * and the library's own elements.
+ */
+const BUILDABLE_TAGS: ReadonlySet<string> = new Set([...`
   a abbr address area article aside audio b base bdi bdo blockquote body br button canvas caption cite
   code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure
   footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd label legend li link
   main map mark menu meta meter nav noscript object ol optgroup option output p param picture pre progress
   q rp rt ruby s samp script section select slot small source span strong style sub summary sup svg table
-  tbody td template textarea tfoot th thead time title tr track u ul var video wbr`.trim().split(/\s+/))
+  tbody td template textarea tfoot th thead time title tr track u ul var video wbr`.match(/\S+/g)!,
+  ...Object.values(LIBRARY_ELEMENTS).map(element => element.html),
+])
 
 export function tagBuilderFor(element: TagClass): TagBuilder {
   return (LIBRARY_ELEMENTS[element]?.builder ?? TAG_BUILDER_EXCEPTIONS[element] ?? element.toLowerCase()) as TagBuilder
@@ -76,7 +81,7 @@ export function elementPackage(element: TagClass): string {
 
 /** Whether a documented tag can be written at all: kotlinx.html builds it, or the library does. */
 export function hasBuilder(htmlTag: string): boolean {
-  return KOTLINX_HTML_ELEMENTS.has(htmlTag) || Object.values(LIBRARY_ELEMENTS).some(element => element.html === htmlTag)
+  return BUILDABLE_TAGS.has(htmlTag)
 }
 
 /**
@@ -92,6 +97,19 @@ const VOID_ELEMENTS: ReadonlySet<string> = new Set([
   'AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG',
   'INPUT', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR',
 ])
+
+/**
+ * English collation: case-insensitive first, so `Textarea` sorts before `TextRotate`, digits
+ * before letters, so `Hover3d` keeps its place ahead of `HoverGallery`. A fixed locale, so every
+ * machine agrees. `localeCompare` is not used: once V8 has served one call without a locale, an
+ * empty locale stops being refused, which made a test unable to tell the two apart.
+ */
+const DISPLAY_ORDER = new Intl.Collator('en')
+
+/** Components by display name: the order of the reference index, llms.txt and the API dump. */
+export function byDisplayName(a: Pick<ComponentShape, 'componentName'>, b: Pick<ComponentShape, 'componentName'>): number {
+  return DISPLAY_ORDER.compare(a.componentName, b.componentName)
+}
 
 export function isVoidElement(element: TagClass): boolean {
   return VOID_ELEMENTS.has(element)
@@ -252,7 +270,7 @@ export interface ComponentShape {
   /** DaisyUI's directory name, e.g. `file-input`. */
   readonly componentDir: string
   /** The component's own CSS class, e.g. `card`. */
-  readonly prefix: CssClass | null
+  readonly prefix: CssClass
   readonly enums: readonly EnumShape[]
   /** The main function first, then parts in declaration order, then custom parts. */
   readonly functions: readonly FunctionShape[]

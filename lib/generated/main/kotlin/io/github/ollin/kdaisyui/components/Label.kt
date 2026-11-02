@@ -15,11 +15,11 @@ import kotlinx.html.Tag
 
 /**
  * Label is used to provide a name or title for an input field. Label can be placed before or after the field. Renders `<span class="label ...">`.
- * @param text — Shortcut for inline text content (mutually exclusive with [content])
+ * @param text — Inline text, appended after anything [content] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content (takes precedence over [text] if both are set)
+ * @param content — Nested HTML content; [text], if given, is appended after it
  */
 fun FlowContent.daisyLabel(
     text: String? = null,
@@ -33,10 +33,8 @@ fun FlowContent.daisyLabel(
         addClassNames("label")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        if (content != null) content()
+        if (text != null) +text
     }
 }
 

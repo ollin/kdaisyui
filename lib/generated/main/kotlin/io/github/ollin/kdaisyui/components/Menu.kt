@@ -106,10 +106,8 @@ fun FlowContent.daisyMenuTitle(
         addClassNames("menu-title")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        if (content != null) content()
+        if (text != null) +text
     }
 }
 

@@ -194,23 +194,20 @@ function applyLines(extras: readonly ExtraParameter[]): string[] {
   return extras.flatMap(extra => extra.apply.trim().split('\n').map(line => `        ${line}`))
 }
 
-/** The `content` / `text` tail shared by every function that can take children. */
 /**
  * How the body writes the children — read off the SIGNATURE, like the classes above it.
  *
  * A function with no `content` parameter writes none: its element is void and cannot hold any.
  * The body used to call `content()` unconditionally, so the day the void rule reached parts and
  * custom parts, three generated files stopped compiling.
+ *
+ * Content and text add up, content first: kotlinx.html rejects an attribute once an element's
+ * text is written, so text first would make `daisyButton("Save") { popoverTarget(menu) }` throw.
  */
 function contentLines(shape: FunctionShape, hasTextParam: boolean): string[] {
   if (!shape.parameters.some(parameter => parameter.name === 'content')) return []
   if (!hasTextParam) return ['        content()']
-  return [
-    '        when {',
-    '            content != null -> content()',
-    '            text != null -> +text',
-    '        }',
-  ]
+  return ['        if (content != null) content()', '        if (text != null) +text']
 }
 
 function mainFunctionBody(

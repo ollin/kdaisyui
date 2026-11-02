@@ -305,7 +305,7 @@ const TEXT_PARAMETER: ParameterShape = {
   name: 'text',
   type: 'String?',
   default: 'null',
-  doc: 'Shortcut for inline text content (mutually exclusive with [content])',
+  doc: 'Inline text, appended after anything [content] writes',
 }
 
 const EXTRA_CLASSES_PARAMETER: ParameterShape = {
@@ -331,7 +331,7 @@ function contentParameter(element: TagClass, hasTextParam: boolean): ParameterSh
       name: 'content',
       type: `(${element}.() -> Unit)?`,
       default: 'null',
-      doc: 'Nested HTML content (takes precedence over [text] if both are set)',
+      doc: 'Nested HTML content; [text], if given, is appended after it',
     }
   }
   return { name: 'content', type: `(${element}.() -> Unit)`, default: null, doc: 'Nested HTML content' }

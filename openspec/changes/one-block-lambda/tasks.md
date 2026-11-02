@@ -41,7 +41,7 @@ An informal "about half a day" (240m) was given in conversation before the scope
 
 ## 3. The behaviour change
 
-- [ ] 3.1 Text and content add up: `contentLines` in `generator-new.ts` emits the content call,
+- [x] 3.1 Text and content add up: `contentLines` in `generator-new.ts` emits the content call,
   then `if (text != null) +text`. Rewrite `TextAndContentPrecedenceTest` into the three scenarios
   of "A function's text and block add up", regenerate, run TCR at the repository root. `! F`
 - [ ] 3.2 One block: `escapeHatchParameters` drops `attrs` and renames `content` to `block`,

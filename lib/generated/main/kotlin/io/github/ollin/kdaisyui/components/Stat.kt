@@ -90,10 +90,8 @@ fun FlowContent.daisyStatTitle(
         addClassNames("stat-title")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        if (content != null) content()
+        if (text != null) +text
     }
 }
 
@@ -115,10 +113,8 @@ fun FlowContent.daisyStatValue(
         addClassNames("stat-value")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        if (content != null) content()
+        if (text != null) +text
     }
 }
 
@@ -140,10 +136,8 @@ fun FlowContent.daisyStatDesc(
         addClassNames("stat-desc")
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        if (content != null) content()
+        if (text != null) +text
     }
 }
 

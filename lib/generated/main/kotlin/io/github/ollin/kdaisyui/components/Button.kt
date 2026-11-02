@@ -95,7 +95,7 @@ enum class ButtonWidth(internal val className: String) : ClassValues<ButtonWidth
 
 /**
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
- * @param text — Shortcut for inline text content (mutually exclusive with [content])
+ * @param text — Inline text, appended after anything [content] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant
@@ -107,7 +107,7 @@ enum class ButtonWidth(internal val className: String) : ClassValues<ButtonWidth
  * @param type
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param attrs — Direct access to the underlying kotlinx.html tag attributes
- * @param content — Nested HTML content (takes precedence over [text] if both are set)
+ * @param content — Nested HTML content; [text], if given, is appended after it
  */
 fun FlowContent.daisyButton(
     text: String? = null,
@@ -137,10 +137,8 @@ fun FlowContent.daisyButton(
         if (type != null) this.type = type
         addClassNames(extraClasses)
         if (attrs != null) attrs()
-        when {
-            content != null -> content()
-            text != null -> +text
-        }
+        if (content != null) content()
+        if (text != null) +text
     }
 }
 

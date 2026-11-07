@@ -47,3 +47,13 @@
 - **Cause:** the reorder of F2 renumbered the tasks, and nothing checks a task number cited in a
   spec against `tasks.md`.
 - **Cost:** two minutes.
+
+## F5 - Task 2.1 could not be `^ F`
+
+- **What happened:** task 2.1, 2026-11-07. The resource is two rules plus a header that tells
+  whoever opens it what it is and how to import it, and its test reads it and compares the rules:
+  about fifteen counted lines, so the planned `^ F` would have broken the eight-line ceiling.
+  The task now says `! F`.
+- **Cause:** the plan sized the step by its behaviour, one resource, not by its counted lines; a
+  CSS file has no line comment, so its header counts in full.
+- **Cost:** three minutes and one bookkeeping commit.

@@ -82,3 +82,14 @@
   them, so it could not tell "the rules anchor it" from "nothing needs to"; and A1 checked one
   engine for a rule meant for all of them.
 - **Cost:** a question round with Oliver, and possibly the removal of block 2.
+
+## F7 - The revision after F6 leaves two other changes naming `kdaisyui.css`
+
+- **What happened:** 2026-11-07, Oliver chose the subtraction of F6. `guarantee-strict-csp`
+  (proposal, design, tasks 4.1, spec `content-security-policy`) and
+  `compile-the-stylesheet-in-the-plugin` (proposal, design) were written against the first design
+  and name the `kdaisyui.css` import as something the application supplies. This change does not
+  edit them; each revises its own artifacts when it is applied.
+- **Cause:** five changes were proposed on one day against a design none of them had built yet,
+  and they cite one another's mechanism rather than only its outcome.
+- **Cost:** none here; one revision task in each of the two changes.

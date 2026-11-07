@@ -16,77 +16,74 @@ and under that policy. This is the one place where kdaisyui's own markup cannot.
 
 ## What Changes
 
-- **The anchor pair moves from inline style to data attributes.** The trigger writes
-  `data-anchor-name="--…"`, the popover `data-position-anchor="--…"`. The value is still
-  `HtmlId.anchorName`, derived in one place, so the two cannot disagree.
-- **Two CSS rules turn the attributes into the anchor properties**, with CSS `attr()`:
+**Revised 2026-11-07 after F6.** The change first moved the anchor pair to data attributes and
+shipped two CSS rules turning them back into anchor properties with typed `attr()`. A positive
+control then showed the menu anchored without the rules, and the compat data showed the rules
+would anchor nothing in any released Safari. Oliver chose to subtract.
 
-  ```css
-  [data-anchor-name] { anchor-name: attr(data-anchor-name type(<custom-ident>)); }
-  [data-position-anchor] { position-anchor: attr(data-position-anchor type(<custom-ident>)); }
-  ```
-
-  They ship as a resource in the `kdaisyui` jar, `kdaisyui.css`, beside the class list. The
-  Gradle plugin's `kdaisyuiClasses` task writes it to `build/kdaisyui/kdaisyui.css` next to
-  `kdaisyui-classes.txt`, and the consumer's entry stylesheet imports it. The example app does.
-- **`popoverTarget` no longer touches `style`.** The branch that appended `anchor-name` to an
-  existing `style` goes.
-- **The documented-element and coverage tests follow**, generated: they assert the attribute, not
-  the style.
-- **BREAKING for anchored popovers:** a consumer who compiled a stylesheet without the two rules
-  loses the anchoring on upgrade. `docs/upgrading.md` gets the "How to migrate from 0.9.x" entry,
-  and the README's CSS section names the import.
+- **Neither side writes an anchor.** A popover opened by `popovertarget` has its invoker as its
+  implicit anchor (HTML and CSS Anchor Positioning; Chrome 133, Safari 26, Firefox 147), and
+  DaisyUI's `position-area` places the menu against it. So `daisyDropdownPopover` writes
+  `popover` and its `id` and no `style`, and `popoverTarget` writes `popovertarget` (and
+  `popovertargetaction`) and no `style`.
+- **`anchored` is deprecated and does nothing.** `popoverTarget(popover, action)` is the
+  function to call; the three-parameter form stays, `@Deprecated` with a `ReplaceWith`, so no
+  caller breaks. `HtmlId.anchorName`, which nothing in the library uses any more, is deprecated
+  too.
+- **No stylesheet of kdaisyui's own.** The intermediate `kdaisyui.css`, the plugin's second
+  output and the example app's import go again; the library's CSS contract (`css-delivery`) is
+  unchanged by this change.
+- **The documented-element and coverage tests follow**, generated: the custom-part test asserts
+  `popover` and nothing anchor-related.
+- **Not breaking:** a call with `anchored = true` compiles with a deprecation warning and
+  renders a menu that still opens at its trigger. `docs/upgrading.md` says so.
 
 ### The subtractive option, stated
 
-Keep the inline styles and document that anchored popovers need
-`style-src-attr 'unsafe-inline'`, or `'unsafe-hashes'` with one hash per anchor name. It adds
-nothing to the library. It also tells a strict-CSP application to weaken its policy for one
-component, or to compute per-page hashes of values kdaisyui derives, which is the opposite of
-"works from the own origin". Rejected.
-
-What this change removes: both inline `style` writes and the style-merging branch in
-`popoverTarget`.
+This is it: delete both anchor writes and rely on the browser. What it removes: both inline
+`style` writes, the style-merging branch in `popoverTarget`, and every intermediate piece the
+first plan added — the data attributes, `kdaisyui.css`, its test and the plugin's second output.
+The one addition is the deprecated overload that keeps `anchored` compiling.
 
 ## Out of scope
 
-- **The strict-CSP guarantee and its test** — `guarantee-strict-csp` owns it. That change
-  depends on this one: its browser check would fail on the anchored pages until the attributes
-  land, which is why this change comes first.
-- **The stylesheet compile task** — `compile-the-stylesheet-in-the-plugin`. The import of
-  `kdaisyui.css` is the same there; that change only moves where the compile runs.
-- **Browsers without typed `attr()`.** Anchor positioning is itself Chromium 125, Safari 26 and
-  Firefox 147, and DaisyUI's CSS falls back where it is missing; the docs already say
-  `daisyDropdown` is the choice that behaves the same everywhere. This change does not widen that.
+- **The strict-CSP guarantee and its test** — `guarantee-strict-csp` owns it, and depends on this
+  change. Its proposal and spec still name `kdaisyui.css`; that change revises them when it is
+  applied (finding F7).
+- **The stylesheet compile task** — `compile-the-stylesheet-in-the-plugin`. Its design names the
+  `kdaisyui.css` import; the same revision applies there (F7).
+- **A popover opened from script.** `showPopover()` without `source` sets no invoker, so no
+  implicit anchor. kdaisyui's markup opens popovers by attribute only; a caller who opens one
+  from script passes `source` or writes their own anchor.
+- **Browsers without anchor positioning.** DaisyUI's CSS falls back where it is missing; the docs
+  already say `daisyDropdown` is the choice that behaves the same everywhere.
 
 ## Assumptions
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | Chromium applies `anchor-name: attr(data-anchor-name type(<custom-ident>))` and the matching `position-anchor`, so a popover anchors through data attributes alone | code | confirmed at proposal - `assets/anchor-probe.html` in this change, run in headless Chromium 156 on 2026-11-07, its command and result in its header comment: computed `anchorName` and `positionAnchor` both `--dash_menu`, `CSS.supports` true, and the shown popover's top and left equal the trigger's bottom and left (240, 300). Typed `attr()` shipped in Chrome 133 |
+| A1 | Chromium applies `anchor-name: attr(data-anchor-name type(<custom-ident>))` and the matching `position-anchor`, so a popover anchors through data attributes alone | code | false - true in Chromium (`assets/anchor-probe.html`, Chromium 156), but typed `attr()` with `<custom-ident>` is Safari preview only and Firefox 155 (MDN BCD 8.1.8), and the anchor is not needed at all: the implicit anchor of `popovertarget` replaced the route (finding F6) |
 | A2 | The browser the E2E suite runs is at least Chromium 133, locally and in CI | code | confirmed in task 1.1 - locally `/usr/bin/chromium` is 156.0.8078.79; CI's E2E job of run 42393356804 (2026-11-07) ran on `ubuntu-26.04` image 20261101.186, whose readme lists Google Chrome 156.0.8078.79 and Chromium 156.0.8078.0, and its `playwrightInstall` fetched Chrome for Testing 156.0.8078.4. All above 133; no fallback needed |
-| A3 | A consumer's Tailwind 4 entry can `@import` a plain CSS file written by the build, relative to the entry | code | confirmed in task 1.2 - a scratch `example-app/build/kdaisyui/kdaisyui.css` with the two rules, imported by `@import "../kdaisyui/kdaisyui.css";` right after `@import "tailwindcss"`, compiled by `:example-app:compileTailwind` (Tailwind 4.3.4, daisyUI 5.7.50): the output carries both rules verbatim, `anchor-name: attr(data-anchor-name type(<custom-ident>))` and `position-anchor: attr(data-position-anchor type(<custom-ident>))`. Scratch edit reverted |
-| A4 | No requirement of a main spec this builds on contradicts it. It builds on `css-delivery` ("the library's contract ends at the class name"; "the library ships the class list a consumer's CSS build needs"), `daisyui-component-coverage` (the popover trigger and the popover dropdown), `component-model` (static attributes come from the model) and `api-change-detection` | code | confirmed at proposal - `css-delivery` already has the library ship a resource the consumer's CSS build consumes, and this adds a second one of the same kind; the contract sentence is MODIFIED below to say so. `daisyui-component-coverage` names `style="position-anchor:…"` and `anchor-name` in two requirements, both MODIFIED below. `component-model` lists static attributes as a model fact; the anchored-popover fact keeps writing one, with another name. The API baselines do not change: no signature moves. Re-read in task 1.3: the four main specs carry no requirement on inline style beyond the two MODIFIED ones; `api-change-detection` concerns signatures only; the megamenu requirement sets `anchor-name` through DaisyUI's CSS, not `popoverTarget`, and stays untouched |
-| A5 | Generation reads the attribute name from one place, so the trigger's and the popover's attribute names cannot drift | code | confirmed at proposal - the popover side is one line in `generator-new.ts:280`, the trigger side one line in `Popover.kt:14`; neither is derived from the other today, and the pairing is tested end to end by `dropdown_popover.feature` |
-| A6 | The two rules belong in a jar resource the plugin writes, not in a snippet the docs ask the reader to paste | user | confirmed by the user 2026-11-07 - the resource, as recommended: the rules make kdaisyui's HTML work and travel with the version like the class list; a pasted copy per consumer drifts silently |
+| A3 | A consumer's Tailwind 4 entry can `@import` a plain CSS file written by the build, relative to the entry | code | confirmed in task 1.2 - a scratch `example-app/build/kdaisyui/kdaisyui.css` with the two rules, imported by `@import "../kdaisyui/kdaisyui.css";` right after `@import "tailwindcss"`, compiled by `:example-app:compileTailwind` (Tailwind 4.3.4, daisyUI 5.7.50): the output carries both rules verbatim. Moot since F6: nothing is imported |
+| A4 | No requirement of a main spec this builds on contradicts it. It builds on `css-delivery` ("the library's contract ends at the class name"), `daisyui-component-coverage` (the popover trigger and the popover dropdown), `component-model` (static attributes come from the model) and `api-change-detection` | code | confirmed in task 1.3 - the four main specs carry no requirement on inline style beyond the two `daisyui-component-coverage` requirements MODIFIED below; `css-delivery` is no longer touched; `component-model` keeps `popover` as a static attribute of the anchored-popover fact; `api-change-detection` sees one added overload and two deprecations, no removal. The megamenu requirement sets `anchor-name` through DaisyUI's CSS, not `popoverTarget`, and stays untouched |
+| A5 | Generation reads the attribute name from one place, so the trigger's and the popover's attribute names cannot drift | code | confirmed at proposal - moot since F6: neither side writes a name |
+| A6 | The two rules belong in a jar resource the plugin writes, not in a snippet the docs ask the reader to paste | user | confirmed by the user 2026-11-07 - moot since F6: no rules ship |
+| A7 | A popover opened by `popovertarget` is anchored to its invoker with no `anchor-name` or `position-anchor` anywhere, in every engine that has anchor positioning | code | confirmed after task 3.2 - E2E "sits below" green in Chromium 156 with `kdaisyui.css` not imported; MDN BCD 8.1.8 `html.elements.button.popovertarget.implicit_anchor_reference`: Chrome 133, Safari 26, Firefox 147 (finding F6) |
 
 ## Capabilities
 
 ### Modified Capabilities
 
-- `daisyui-component-coverage`: the popover dropdown writes `data-position-anchor`, its trigger
-  `data-anchor-name`; the anchoring still holds in the browser, now through the shipped rules.
-- `css-delivery`: the library ships `kdaisyui.css` beside the class list, the plugin writes both,
-  and the contract sentence says what the library's CSS covers.
+- `daisyui-component-coverage`: the popover dropdown and its trigger write no anchor; the menu
+  is anchored to the trigger that opens it by the browser; `anchored` is deprecated.
 
 ## Impact
 
-- `lib/src/main/kotlin/…/core/Popover.kt` and `PopoverTest.kt`.
-- `codegen/src/generator-new.ts` and `codegen/src/test-generator.ts:113`, which hard-codes the
-  expected inline style of the custom-part test; `codegen/test/generator-new.test.ts:185` and
-  the snapshots; regenerated `lib/generated/**`, `docs/reference/dropdown.md`, `llms-full.txt`.
-- `lib/src/main/resources/kdaisyui.css`, new, and a test that the jar carries it.
-- `gradle-plugin`: `KdaisyuiClasses` writes the second file; its tests.
-- `example-app/src/main/css/app.css`; `e2e-tests/.../dropdown_popover.feature` (the markup
-  assertions).
-- `README.md` (CSS section), `docs/how-to.md` (dropdown recipe), `docs/upgrading.md`.
+- `lib/src/main/kotlin/…/core/Popover.kt`, `TagId.kt`, `PopoverTest.kt`; `lib/api/lib.api` (one
+  added overload).
+- `codegen/src/generator-new.ts`, `codegen/src/test-generator.ts`,
+  `codegen/test/generator-new.test.ts`; regenerated `lib/generated/**`.
+- `example-app/…/DropdownPopoverPage.kt`; `e2e-tests/.../dropdown_popover.feature`.
+- Removed again: `lib/src/main/resources/kdaisyui.css`, `KdaisyuiCssTest.kt`, the plugin's
+  `stylesheet` output and its tests, the example app's import and input.
+- `docs/how-to.md` (dropdown recipe), `docs/upgrading.md`.

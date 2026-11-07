@@ -23,7 +23,13 @@ today (`dropdown_popover.feature:7-8`).
 - [x] 1.3 `. d` (A4) Read the four main specs named in A4 against a data attribute in place of
   the inline style; record the result.
 
-## 2. The rules, shipped and imported, before anything depends on them
+**Revised 2026-11-07 after F6:** the control after task 3.2 showed the menu anchored with no
+rules, and typed `attr()` unshipped in Safari. Oliver chose to subtract: blocks 2 and 3 stay as
+the record of what was built, block 4 removes it again and drops the anchor altogether. Each step
+of block 4 stays green under root TCR: the writes go first, the stylesheet last, consumer before
+producer.
+
+## 2. The rules, shipped and imported, before anything depends on them (superseded by block 4)
 
 - [x] 2.1 `! F` `lib/src/main/resources/kdaisyui.css` with the two rules; a test asserts the
   built jar carries it (the shape of `TailwindClassListTest`).
@@ -34,7 +40,7 @@ today (`dropdown_popover.feature:7-8`).
 - [x] 2.4 `^ F` `example-app/src/main/css/app.css` imports the plugin's `kdaisyui.css` from its
   mount point; the compiled stylesheet carries both rules, which nothing uses yet. E2E unchanged.
 
-## 3. The attribute pair, one side per step, under TCR at the repository root
+## 3. The attribute pair, one side per step, under TCR at the repository root (superseded by block 4)
 
 - [x] 3.1 `! F (internal)` The popover side: `generator-new.ts` writes `data-position-anchor`
   in place of the inline style, `test-generator.ts:113` expects that attribute in the custom-part
@@ -48,19 +54,37 @@ today (`dropdown_popover.feature:7-8`).
   `dropdown_popover.feature:7` asserts `data-anchor-name="--…"` and no `style=` in the body.
   If "sits below" fails here, revise the change before going on.
 
-## 4. Docs
+## 4. Rely on the implicit anchor of `popovertarget`
 
-- [ ] 4.1 `. d` README's CSS section: the import beside the class list, and the contract
-  sentence's exception. `docs/how-to.md`, "Add a dropdown": Chromium 133 as the floor for the
-  popover form.
-- [ ] 4.2 `. d` `docs/upgrading.md`, "How to migrate from 0.9.x": the import, and the symptom
-  without it.
+- [ ] 4.1 `! F` The popover side writes no anchor: `generator-new.ts` drops the
+  `data-position-anchor` line and its `anchorName` import, `test-generator.ts` expects `popover`
+  only, `generator-new.test.ts` asserts no anchor and no import, `just generate`, and
+  `dropdown_popover.feature` asserts the body does not contain `data-position-anchor`.
+- [ ] 4.2 `! F` The trigger side: `popoverTarget(popover, action)` writes no anchor; the
+  three-parameter form delegates to it under `@Deprecated(ReplaceWith)`; `PopoverTest` covers both
+  forms; the example app and the how-to snippet drop `anchored = true`; the feature asserts no
+  `data-anchor-name`; `lib/api/lib.api` re-dumped with the added overload.
+- [ ] 4.3 `^ F` `HtmlId.anchorName` deprecated; `HtmlIdTest` keeps its two cases under
+  `@Suppress("DEPRECATION")`.
+- [ ] 4.4 `^ F` The example app stops importing `kdaisyui.css`: the `@import`, the compile
+  task's input and the stylesheet scenario go.
+- [ ] 4.5 `^ F (internal)` `kdaisyuiClasses` stops writing `kdaisyui.css`: the `stylesheet`
+  output, its wiring, `STYLESHEET` and their tests go.
+- [ ] 4.6 `^ F` `lib/src/main/resources/kdaisyui.css` and `KdaisyuiCssTest` go.
 
-## 5. Gate, adoption and archive
+## 5. Docs
 
-- [ ] 5.1 Full green: `check` with E2E and the E2E result files asserted on disk under
+- [ ] 5.1 `. d` `docs/how-to.md`, "Add a dropdown": the popover form is anchored to the button
+  that opens it by the browser (Chrome 133, Safari 26, Firefox 147), and a popover opened from
+  script needs `source`.
+- [ ] 5.2 `. d` `docs/upgrading.md`, "How to migrate from 0.9.x": `anchored` is deprecated and
+  does nothing; drop it; no inline style is written any more.
+
+## 6. Gate, adoption and archive
+
+- [ ] 6.1 Full green: `check` with E2E and the E2E result files asserted on disk under
   `e2e-tests/build/`, `koverVerify`, `:lib:pitest`, `:doc-snippets:pitest`,
   `:gradle-plugin:pitest`, StrykerJS on the changed `codegen/src` lines, `analyze_change_set`.
-- [ ] 5.2 `openspec validate csp-safe-popover-anchoring --strict`.
-- [ ] 5.3 The evaluation under `tmp/csp-safe-popover-anchoring/` for Oliver to adopt.
-- [ ] 5.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.
+- [ ] 6.2 `openspec validate csp-safe-popover-anchoring --strict`.
+- [ ] 6.3 The evaluation under `tmp/csp-safe-popover-anchoring/` for Oliver to adopt.
+- [ ] 6.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

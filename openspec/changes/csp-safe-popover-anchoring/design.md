@@ -2,91 +2,73 @@
 
 See proposal.md, Why. Two writers of inline style exist: `Tag.popoverTarget` in core and the
 `anchoredPopover` branch of the Kotlin emitter. Both take the name from `HtmlId.anchorName`.
-The library ships one CSS-build input today, `kdaisyui-classes.txt`, generated into
-`lib/generated/main/resources` and read by the Gradle plugin from the jar on the runtime
-classpath (`MapOnClasspath.kt` does the same for the component map).
+
+**Revised 2026-11-07 after F6.** Blocks 1-3 of `tasks.md` implemented the first design below
+(data attributes plus shipped rules). The control run after task 3.2 refuted its premise, and
+Oliver chose the subtraction. Decision 1 is the design now; the first design is kept as a
+rejected alternative with the evidence that rejected it.
 
 ## Goals / Non-Goals
 
 **Goals:**
 
 - Anchored popovers work with no inline `style` anywhere in kdaisyui's output.
-- The anchor pairing stays derived in one place and tested in a browser.
+- The anchoring stays tested in a browser.
 
 **Non-Goals:**
 
-- A general "attributes to CSS" mechanism. Two rules, for one pair of properties.
 - Nonce or hash support for inline styles. Nothing in kdaisyui should need an inline style.
+- Anchoring a popover opened from script. kdaisyui opens popovers by attribute only.
 
 ## Decisions
 
-### 1. Data attributes plus typed `attr()`, not nonces, hashes or per-id classes
+### 1. No anchor at all: the implicit anchor of `popovertarget`
 
-**Chosen:** `data-anchor-name` / `data-position-anchor`, read by two rules with
-`attr(<name> type(<custom-ident>))`. Proven by the probe in A1.
+**Chosen:** the trigger writes `popovertarget`, the popover `popover` and `id`, and nothing
+names an anchor. HTML makes the invoker the popover's implicit anchor; DaisyUI's dropdown CSS
+positions with `position-area`, which uses the default anchor. Evidence: the E2E "sits below"
+scenario green with no anchor written anywhere (control after task 3.2), and MDN BCD 8.1.8,
+`html.elements.button.popovertarget.implicit_anchor_reference` at Chrome 133, Safari 26,
+Firefox 147 — no later than anchor positioning itself in any engine.
 
-**Rejected: `'unsafe-hashes'` with a hash per anchor value.** The policy would have to list one
-`sha256-…` per anchored popover on the page, computed from a string kdaisyui derives. The
-application would need the set of ids per response to build its header. Not a library concern,
-and fragile.
+**`anchored` stays, deprecated.** Removing the parameter breaks every caller that wrote it, for
+no behaviour of theirs that changes. So `popoverTarget(popover, action)` is the function, and
+`popoverTarget(popover, action, anchored)` delegates to it under `@Deprecated(ReplaceWith(…))`.
+Kotlin resolves `popoverTarget(menu)` to the overload that needs no default for an unnamed
+parameter, so plain calls do not warn. `HtmlId.anchorName` is deprecated alongside: it is public,
+and nothing in the library writes it any more.
 
-**Rejected: a nonce on a `<style>` element.** kotlinx.html has no notion of a per-request nonce;
-every page would thread one through its render, and the rules would be repeated per page.
+**Rejected: data attributes plus typed `attr()` (the first design, built in blocks 2-3).**
+`[data-anchor-name] { anchor-name: attr(data-anchor-name type(<custom-ident>)) }` and its pair,
+shipped as `kdaisyui.css` and written by the plugin. It works in Chromium, but typed `attr()`
+with `<custom-ident>` is Safari preview only and Firefox 155 (BCD 8.1.8), so it would have
+anchored nothing in any released Safari — and the control showed it adds nothing where it
+works. It also asked every consumer to import a file.
 
-**Rejected: a generated class per anchor.** A class name is a dashed-ident too, but the rule
-`.anchor-dash_menu { anchor-name: --dash_menu }` has to exist in the compiled stylesheet, which
-means Tailwind would have to see every id at build time. Ids are runtime values.
+**Rejected: `'unsafe-hashes'` with a hash per anchor value.** One `sha256-…` per anchored popover
+on the page, computed from a string kdaisyui derives. Not a library concern, and fragile.
 
-### 2. The rules ship as a jar resource the plugin writes next to the class list
+**Rejected: a nonce on a `<style>` element.** kotlinx.html has no notion of a per-request nonce.
 
-**Chosen:** `lib/src/main/resources/kdaisyui.css`, hand-written, two rules and a comment. The
-plugin's `kdaisyuiClasses` task copies it from the jar to `build/kdaisyui/kdaisyui.css`, the
-same way it reads the component map, and the README's entry CSS gains
-`@import "./build/kdaisyui/kdaisyui.css";`. The example app's `app.css` imports it from its
-mount point.
+**Rejected: a generated class per anchor.** Ids are runtime values; Tailwind cannot see them.
 
-**Rejected: a snippet in the README the reader pastes.** Two lines, no machinery, and the
-proposal lists it as the subtractive option (A6). It loses to the resource on one point: the
-rules are part of what makes kdaisyui's HTML work, and a pasted copy is a second source that
-drifts when a later change adds a third rule. The plugin already exists to stop exactly that
-kind of hand-kept copy for the class list.
+### 2. Undo the first design in reverse order of dependence
 
-**Rejected: the rules inside `kdaisyui-classes.txt`.** That file is a Tailwind `@source`, a bag
-of candidate class names; CSS inside it would be scanned for names, not applied.
+The example app stops importing `kdaisyui.css` before the plugin stops writing it, and the plugin
+stops before the resource goes, so every step is green under root TCR. The classpath lookup's
+generalisation (`resourceIn(entry, name)`, task 2.2) stays: it reads as well with one caller,
+and undoing it is churn.
 
-**Rejected: generating the file.** Nothing in the model determines it. Hand-written, under
-`lib/src/main/resources`, is honest about that; the jar-presence test is the same shape as
-`TailwindClassListTest`.
+### 3. `popoverTarget` stops touching `style`
 
-### 3. `popoverTarget` stops merging `style`
-
-The `listOfNotNull(attributes["style"], …)` branch existed only to append to a style the caller
-had set. It is the line the attribute write replaces, so the two cannot be separate commits;
-the step's test asserts the attribute, the absence of `style`, and that a caller's `style`
-survives.
-
-### 4. Order: the rules first, then one side of the pair per step
-
-Root TCR runs the E2E suite, and `dropdown_popover.feature` asserts the inline styles in the
-served markup and measures the anchoring. So the rules reach the example app's stylesheet
-before any attribute moves (block 2 of `tasks.md`, each step leaving the E2E unchanged), then
-the popover side moves with its feature line while the trigger's inline `anchor-name` still
-resolves, then the trigger side moves with its feature line. Every step is green on its own.
-
-### 5. Enablers and the desired change
-
-Enablers, provable by diff or by an empty regeneration: the plugin writing a second file whose
-content it reads from the jar; the jar-presence test; the import of rules nothing uses yet.
-Desired changes: the two attribute writes, each replacing a style write.
+Already true after task 3.2; the subtraction removes the attribute write that replaced it.
 
 ## Risks / Trade-offs
 
-- [A consumer upgrades and forgets the import] → the migration note, and the plugin's output
-  file is named in the README right beside the class list. The symptom, a popover opening in the
-  middle of the viewport, is what the E2E scenario measures here, so the library's own copy
-  cannot regress silently.
-- [A browser without typed `attr()`] → the same fallback DaisyUI already has for anchor
-  positioning: `daisyDropdown` renders `<details>` and needs none of this. The how-to names
-  Chromium 133 as the floor for the popover form, beside the 125 it names today.
-- [Tailwind rewrites or drops the `attr()` rule] → task 1.2 compiles it in the example app and
-  reads the output before anything is built on it.
+- [A popover opened from script anchors nowhere] → out of scope, stated in the how-to: pass
+  `source` to `showPopover()`.
+- [A browser with anchor positioning but without implicit popover anchors] → none per BCD 8.1.8;
+  the floors coincide in all three engines.
+- [The E2E check cannot show the implicit anchor is what places the menu] → its counterpart was
+  observed: on 2026-10-31 a `position-anchor` naming a missing anchor overrode the implicit one
+  and the menu opened 80px off, which the same check reported.

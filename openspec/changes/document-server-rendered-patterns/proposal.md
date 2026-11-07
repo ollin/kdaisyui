@@ -59,12 +59,12 @@ removes: in a consumer, raw class strings and a script for closing.
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | `<dialog class="modal" open>` is visible without a script, and a `form method="dialog"` button inside it removes `open` and hides it | code | confirmed at proposal by reading `modal.css` (`&[open]` in the visible rule; `.modal` sets `display: grid`, so the user agent's `dialog:not([open]) { display: none }` loses to the author rule); the browser check is task 2.2 |
+| A1 | `<dialog class="modal" open>` is visible without a script, and a `form method="dialog"` button inside it removes `open` and hides it | code | confirmed at proposal by reading `modal.css`: `.modal` is `display: grid` and `invisible` (line 3), so the user agent's `display: none` for a closed dialog never applies and the closed state is `visibility: hidden` plus `pointer-events: none`; the visible rule (lines 34-39) matches `&[open]`, which the form's submit removes. The browser check is tasks 2.2 and 2.3 |
 | A2 | htmx 4 inserts a swapped-in `<dialog open>` such that the browser shows it open | code | to check in task 2.2 - the E2E scenario; a dialog with the `open` attribute at parse time is open by the HTML specification |
 | A3 | kotlinx.html 0.12.0 has a `dialog` builder with no `open` property, and `FormMethod` has no `dialog` entry | code | confirmed at proposal - `kotlinx/html/DIALOG.class` and `FormMethod.class` of kotlinx-html-jvm 0.12.0, read 2026-11-07; the snippets write both attributes by name |
 | A4 | No requirement of a main spec this builds on contradicts it. It builds on `daisyui-component-coverage` ("Popover modals are expressible from the DSL": `daisyModal` stays unchanged and recommended; "New components have E2E smoke coverage"), `documentation-snippets` and `css-delivery` | code | confirmed at proposal - `daisyModal` is not touched; the new page is asserted by E2E; every Kotlin fence compiles, and the JavaScript fence is not Kotlin; the README paragraph adds to what `css-delivery` already has the docs say |
-| A5 | kdaisyui ships no behaviour script | user | open - ask at review |
-| A6 | The `open` parameter of `daisyModal` keeps its meaning, "adds `modal-open`", and the recipe writes the attribute instead | user | open - ask at review. The alternative, `open = true` writing the attribute too, would keep a form-closed dialog visible through the class |
+| A5 | kdaisyui ships no behaviour script | user | open - ask at review, recorded in task 1.1 |
+| A6 | The `open` parameter of `daisyModal` keeps its meaning, "adds `modal-open`", and the recipe writes the attribute instead | user | open - ask at review, recorded in task 1.1. The recipe is the same either way: a dialog the class keeps visible cannot be closed by the form, so the attribute is what the recipe writes; a "yes" on the parameter is an API change of its own |
 
 ## Capabilities
 
@@ -77,5 +77,8 @@ removes: in a consumer, raw class strings and a script for closing.
 
 ## Impact
 
-- `example-app`: a page, a fragment route, two ids; `e2e-tests`: one feature, steps as needed.
-- `docs/how-to.md`: three sections; `README.md`: one paragraph.
+- `example-app`: a page loading the stylesheet and the htmx webjar script, its resource class
+  in `DashboardResources.kt`, ids in `Ids.kt`, a route and a fragment route in
+  `DashboardRoutes.kt`; `e2e-tests`: one feature, steps as needed.
+- `docs/how-to.md`: three sections; `README.md`: one paragraph; `codegen/llms-template.md:19`
+  and the regenerated `llms.txt`, since the how-to's description there lists its recipes.

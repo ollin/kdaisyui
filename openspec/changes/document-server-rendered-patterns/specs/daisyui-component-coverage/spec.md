@@ -7,11 +7,16 @@ in the document or swapped in by htmx, and a `form method="dialog"` button insid
 it, with no script beyond htmx. The example application SHALL render one on a demo route, the
 E2E suite SHALL assert the showing and the closing, and the how-to SHALL show the recipe.
 
-**Verified** by reading `daisyui/packages/daisyui/src/components/modal.css`, 2026-11-07: the
-visible rule matches `&[open]`, and `.modal` sets `display: grid`, an author rule that wins over
-the user agent's `dialog:not([open]) { display: none }`. **Assumed** for the htmx swap; *wrong
-if* the E2E scenario of task 2.2 does not see the dialog after the click, or still sees it
-after Close.
+**Verified** in DaisyUI's CSS, `daisyui/packages/daisyui/src/components/modal.css`, 2026-11-07:
+`.modal` is `display: grid` and `invisible` (line 3), and the rule that makes it visible
+matches `&[open]` (lines 34-39); so a closed dialog is hidden by `visibility`, and removing
+`open` hides it again. **Assumed** for the htmx swap; *wrong if* task 2.2 does not see the
+dialog after the click, or 2.3 still sees it after Close.
+
+#### Scenario: Served open
+
+- **WHEN** the fragment route is requested
+- **THEN** the body contains `class="modal"` and `open=""`
 
 #### Scenario: Swapped in open
 
@@ -22,4 +27,4 @@ after Close.
 
 - **WHEN** the user clicks Close
 - **THEN** the dialog is hidden
-- **AND** no request was made for the close
+- **AND** the page's request log holds no request after the click

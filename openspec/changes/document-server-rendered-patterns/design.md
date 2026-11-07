@@ -61,5 +61,9 @@ a comment does not. One paragraph, with the example from the Deploy-Radar's own 
 
 - [A later DaisyUI renames a theme variable] → the paragraph names DaisyUI's documented list as
   the source, not a fixed name.
-- [A swapped-in `<dialog open>` is not modal: no top layer, no focus trap] → said in the how-to;
-  DaisyUI paints the backdrop and covers the page itself, which is what the Deploy-Radar needed.
+- [A swapped-in `<dialog open>` is not modal: no top layer, no focus trap, and the page behind
+  stays reachable by keyboard] → said in the how-to in those words. What DaisyUI paints is the
+  `.modal` element's own background (`modal.css:44`), not a `::backdrop`; it covers the page
+  visually, which is what the Deploy-Radar needed.
+- [DaisyUI's 0.3 s `visibility` transition on close] → the close step waits for hidden rather
+  than asserting at once.

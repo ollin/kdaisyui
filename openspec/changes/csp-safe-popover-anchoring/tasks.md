@@ -85,6 +85,6 @@ producer.
 - [x] 6.1 Full green: `check` with E2E and the E2E result files asserted on disk under
   `e2e-tests/build/`, `koverVerify`, `:lib:pitest`, `:doc-snippets:pitest`,
   `:gradle-plugin:pitest`, StrykerJS on the changed `codegen/src` lines, `analyze_change_set`.
-- [ ] 6.2 `openspec validate csp-safe-popover-anchoring --strict`.
+- [x] 6.2 `openspec validate csp-safe-popover-anchoring --strict`.
 - [ ] 6.3 The evaluation under `tmp/csp-safe-popover-anchoring/` for Oliver to adopt.
 - [ ] 6.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

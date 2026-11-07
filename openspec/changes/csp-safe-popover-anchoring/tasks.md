@@ -64,7 +64,7 @@ producer.
   three-parameter form delegates to it under `@Deprecated(ReplaceWith)`; `PopoverTest` covers both
   forms; the example app and the how-to snippet drop `anchored = true`; the feature asserts no
   `data-anchor-name`; `lib/api/lib.api` re-dumped with the added overload.
-- [ ] 4.3 `^ F` `HtmlId.anchorName` deprecated; `HtmlIdTest` keeps its two cases under
+- [x] 4.3 `^ F` `HtmlId.anchorName` deprecated; `HtmlIdTest` keeps its two cases under
   `@Suppress("DEPRECATION")`.
 - [ ] 4.4 `^ F` The example app stops importing `kdaisyui.css`: the `@import`, the compile
   task's input and the stylesheet scenario go.

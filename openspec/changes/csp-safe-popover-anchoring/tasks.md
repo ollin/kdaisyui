@@ -60,7 +60,7 @@ producer.
   `data-position-anchor` line and its `anchorName` import, `test-generator.ts` expects `popover`
   only, `generator-new.test.ts` asserts no anchor and no import, `just generate`, and
   `dropdown_popover.feature` asserts the body does not contain `data-position-anchor`.
-- [ ] 4.2 `! F` The trigger side: `popoverTarget(popover, action)` writes no anchor; the
+- [x] 4.2 `! F` The trigger side: `popoverTarget(popover, action)` writes no anchor; the
   three-parameter form delegates to it under `@Deprecated(ReplaceWith)`; `PopoverTest` covers both
   forms; the example app and the how-to snippet drop `anchored = true`; the feature asserts no
   `data-anchor-name`; `lib/api/lib.api` re-dumped with the added overload.

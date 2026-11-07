@@ -5,7 +5,6 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.addClassNames
-import io.github.ollin.kdaisyui.core.anchorName
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
 import kotlinx.html.details
@@ -111,7 +110,6 @@ fun FlowContent.daisyDropdownPopover(
     ul {
         attributes["id"] = id.id
         attributes["popover"] = ""
-        attributes["data-position-anchor"] = id.anchorName
         addClassNames("dropdown")
         addClassNames(side)
         addClassNames(align)

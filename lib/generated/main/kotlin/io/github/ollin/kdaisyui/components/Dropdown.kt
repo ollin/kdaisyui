@@ -111,7 +111,7 @@ fun FlowContent.daisyDropdownPopover(
     ul {
         attributes["id"] = id.id
         attributes["popover"] = ""
-        attributes["style"] = "position-anchor:${id.anchorName}"
+        attributes["data-position-anchor"] = id.anchorName
         addClassNames("dropdown")
         addClassNames(side)
         addClassNames(align)

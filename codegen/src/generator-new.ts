@@ -277,7 +277,7 @@ function secondaryFunctionBody(shape: FunctionShape): string {
 
   const lines: string[] = [idRequired ? '        attributes["id"] = id.id' : '        if (id != null) attributes["id"] = id.id']
   lines.push(...staticAttributeLines(shape.staticAttributes))
-  if (shape.anchoredPopover) lines.push('        attributes["style"] = "position-anchor:${id.anchorName}"')
+  if (shape.anchoredPopover) lines.push('        attributes["data-position-anchor"] = id.anchorName')
   if (shape.cssClass !== null) lines.push(`        addClassNames("${shape.cssClass}")`)
   lines.push(...shape.modifierClasses.map(cssClass => `        addClassNames("${cssClass}")`))
   lines.push(...classValuesLines(shape))

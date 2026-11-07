@@ -5,7 +5,7 @@ Feature: Popover Dropdown
     Then the endpoint "/dropdown-popover" returns status 200
     And the response body contains "popovertarget=\"dashboard-dropdown-popover\""
     And the response body contains "anchor-name:--dashboard-dropdown-popover"
-    And the response body contains "position-anchor:--dashboard-dropdown-popover"
+    And the response body contains "data-position-anchor=\"--dashboard-dropdown-popover\""
 
   Scenario: The stylesheet turns the anchor attributes into anchor properties
     Then the endpoint "/static/app.css" returns status 200

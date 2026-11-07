@@ -110,7 +110,7 @@ function customPartsOf(model: ComponentModel) {
     modifierClasses: fn.always ?? [],
     receiver: fn.receiver,
     // An anchored popover writes `popover` without declaring it, and its trigger's anchor from its id.
-    staticAttributes: { ...(fn.anchoredPopover ? { popover: '', style: 'position-anchor:--custom-part' } : {}), ...(fn.attributes ?? {}) },
+    staticAttributes: { ...(fn.anchoredPopover ? { popover: '', 'data-position-anchor': '--custom-part' } : {}), ...(fn.attributes ?? {}) },
     anchoredPopover: fn.anchoredPopover === true,
   }))
 }

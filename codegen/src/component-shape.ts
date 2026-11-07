@@ -202,7 +202,7 @@ export interface FunctionShape {
    */
   readonly modifierClasses: readonly CssClass[]
   readonly staticAttributes: readonly StaticAttribute[]
-  /** A popover its trigger anchors: it writes `position-anchor` from its required `id`. */
+  /** A popover its trigger anchors: it writes `data-position-anchor` from its required `id`. */
   readonly anchoredPopover?: true
   /** Prose sentence preceding the `Renders ...` clause. Empty when there is none. */
   readonly desc: string

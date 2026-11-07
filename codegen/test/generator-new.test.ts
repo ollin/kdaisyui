@@ -182,7 +182,7 @@ describe('an anchored popover', () => {
     const kotlin = popover()
 
     assert.match(kotlin, /^ {8}attributes\["popover"\] = ""$/m)
-    assert.match(kotlin, /^ {8}attributes\["style"\] = "position-anchor:\$\{id\.anchorName\}"$/m)
+    assert.match(kotlin, /^ {8}attributes\["data-position-anchor"\] = id\.anchorName$/m)
     assert.match(kotlin, /^import io\.github\.ollin\.kdaisyui\.core\.anchorName$/m)
   })
 })

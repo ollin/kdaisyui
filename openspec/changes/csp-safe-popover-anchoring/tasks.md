@@ -42,7 +42,7 @@ today (`dropdown_popover.feature:7-8`).
   `dropdown_popover.feature:8` asserts `data-position-anchor="--…"`. Risky by size: the
   regeneration is part of the diff. The trigger's inline `anchor-name` still resolves, so "sits
   below" stays green.
-- [ ] 3.2 `^ F` The trigger side: `popoverTarget(…, anchored = true)` writes `data-anchor-name`
+- [ ] 3.2 `! F` The trigger side: `popoverTarget(…, anchored = true)` writes `data-anchor-name`
   in place of the `style`, and the merging of a caller's `style` goes with it; `PopoverTest`
   asserts the attribute, no `style`, and that a caller's `style` survives;
   `dropdown_popover.feature:7` asserts `data-anchor-name="--…"` and no `style=` in the body.

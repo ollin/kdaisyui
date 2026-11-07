@@ -54,8 +54,10 @@
   whoever opens it what it is and how to import it, and its test reads it and compares the rules:
   about fifteen counted lines, so the planned `^ F` would have broken the eight-line ceiling.
   The task now says `! F`. Task 2.3 met the same: a second output property, its write, the
-  plugin's wiring and the two tests are 14 counted lines; it says `! F (internal)` now.
+  plugin's wiring and the two tests are 14 counted lines; it says `! F (internal)` now. Task 3.2
+  too: the attribute write, two rewritten `PopoverTest` cases, two feature lines and a new E2E
+  step for "the body does not contain" are about twelve; it says `! F` now.
 - **Cause:** the plan sized the step by its behaviour, one resource, not by its counted lines; a
   CSS file has no line comment, so its header counts in full, and a Gradle task output needs its
   declaration, its wiring and a test in two files.
-- **Cost:** five minutes and two bookkeeping commits.
+- **Cost:** seven minutes and three bookkeeping commits.

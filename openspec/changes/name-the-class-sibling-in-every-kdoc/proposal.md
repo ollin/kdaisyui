@@ -2,8 +2,10 @@
 
 Every generated function that writes a class has had a typed class sibling since 0.8.0:
 `a { daisyBadgeClasses(color = BadgeColor.Info) }` puts a badge's classes on a link. The
-reference page of each component shows it under "The same classes on an element you write
-yourself" (`docs/reference/badge.md`), and `llms-full.txt:85` gives the link example. The
+reference page of each component shows it as a comment inside its signature fence, "The same
+classes on an element you write yourself, or beside another component's"
+(`docs/reference/badge.md:29`, emitted by `generator-docs.ts:133`), and `llms-full.txt:82-86`
+explains it with the button-as-link example. The
 Deploy-Radar (fwb-application, kdaisyui 0.9.0) still wrote raw class strings for every badge
 that is a link, every button that is a link and a button that is a `<summary>`, in nine places
 across five files, and used `daisyButtonClasses` exactly once (its proposal item 7,
@@ -13,10 +15,11 @@ parameters, and does not mention that a sibling exists.
 
 ## What Changes
 
-- **The generated KDoc of every rendering function that has a class sibling ends with one
-  sentence naming it**, as a KDoc link the IDE resolves:
-  `The same classes on another element: a { [daisyBadgeClasses](…) }.` One sentence, one
-  place in the emitter; 129 generated files change by one line each, by regeneration.
+- **The generated KDoc of every rendering function that has a class sibling gets one
+  sentence naming it**, with the call shape and a KDoc link the IDE resolves:
+  ``The same classes on another element: `a { daisyBadgeClasses(…) }`; see [daisyBadgeClasses].``
+  One sentence, one place in the emitter, gated on the existing `hasSibling`; 129 sentences
+  across the 66 component files, by regeneration.
 - **A how-to section, "Put a component's classes on another element"**, with the three cases
   the Deploy-Radar needed: a badge that is a link, a button that is a link, a button that is a
   `<summary>`; compiled by `:doc-snippets`.
@@ -49,10 +52,10 @@ designed answer; this change makes it visible.
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
 | A1 | One emitter function writes the KDoc of every rendering function, main, part and custom alike | code | confirmed at proposal - `codegen/src/generator-new.ts:88`, `renderKdoc(shape)`, with only the `@param` lines conditional on `main` |
-| A2 | The emitter knows at that point whether the function has a sibling | code | confirmed at proposal - the sibling is emitted for every function whose `cssClass` is not null (`generator-new.ts:256-270`), and the three structural wrappers have none (`component-model`, "Every function has a typed class sibling", Verified paragraph) |
-| A3 | The reference pages and `llms-full.txt` already name the sibling, so neither generator changes | code | confirmed at proposal - `docs/reference/badge.md` ("The same classes on an element you write yourself…"), `llms-full.txt:85` and `:179` |
+| A2 | The emitter knows at that point whether the function has a sibling | code | false - the condition is not "own class is not null" but the exported `hasSibling` of `component-shape.ts:367`, which also counts modifier classes and class-writing parameters; the emitter calls it at `generator-new.ts:380`. The sentence is gated on that predicate and the planned enabler is dropped (finding F2) |
+| A3 | The reference pages and `llms-full.txt` already name the sibling, so neither generator changes | code | confirmed at proposal - `docs/reference/badge.md:29`, a comment inside the signature fence emitted by `generator-docs.ts:133`; `llms-full.txt:82-86`, the prose with the button-as-link example, and `:179`, the badge sibling's signature |
 | A4 | No requirement of a main spec this builds on contradicts it. It builds on `component-model` (the sibling requirement, MODIFIED below), `generated-sources` (deterministic regeneration, drift-checked) and `mutation-testing` (changed codegen lines at 100%) | code | confirmed at proposal - a KDoc line is generated output like any other; the snapshot test kills a mutant of the sentence |
-| A5 | `a` is the right example element for every function's sentence, and the wording is acceptable | user | open - ask at review. A link is what the Deploy-Radar needed nine times; for a `daisyMenu` the example reads oddly but stays true |
+| A5 | `a` is the right example element for every function's sentence, and the wording is acceptable | user | open - ask at review, decided before task 2.1. A link is what the Deploy-Radar needed nine times; for a `daisyMenu` the example reads oddly but stays true |
 
 ## Capabilities
 
@@ -62,6 +65,6 @@ designed answer; this change makes it visible.
 
 ## Impact
 
-- `codegen/src/generator-new.ts` and its emitter tests and snapshot; regenerated
-  `lib/generated/main/**` (129 files, one KDoc line each).
+- `codegen/src/generator-new.ts`, `codegen/test/generator-new.test.ts` and the snapshot;
+  regenerated `lib/generated/main/**` (129 sentences across the 66 component files).
 - `docs/how-to.md`, one section.

@@ -9,9 +9,9 @@ its own class, the classes it writes on every call, and the classes of its axes,
 extra parameters. An extra parameter that writes a class also sets an attribute or a property in
 its function; the sibling writes only the class. The sibling writes no attribute and no content.
 
-The generated KDoc of every such function SHALL name its sibling in one sentence with a KDoc
-link and the call shape on another element, so a reader in an IDE learns of it from the
-function itself: `The same classes on another element: a { [daisyBadgeClasses](…) }.`
+The generated KDoc of every such function SHALL name its sibling in one sentence with the call
+shape on another element and a KDoc link, so a reader in an IDE learns of it from the function
+itself: ``The same classes on another element: `a { daisyBadgeClasses(…) }`; see [daisyBadgeClasses].``
 
 A sibling puts one component's typed classes on an element another function renders, or on an
 element no function renders: `daisyMenu { daisyDropdownContentClasses() }`,
@@ -48,8 +48,8 @@ KDoc of `daisyBadge` does not; and that the omission cost a consumer nine raw cl
 - **THEN** the `a` carries `btn btn-disabled` and no `disabled` attribute
 
 #### Scenario: The function's KDoc names its sibling
-- **WHEN** the Kotlin for a function with a class sibling is generated
-- **THEN** its KDoc contains one sentence linking the sibling by name with the `a { … }` call shape
+- **WHEN** the Kotlin for a function with a class sibling is generated, whether the sibling comes from an own class, modifier classes or a class-writing parameter
+- **THEN** its KDoc contains one sentence with the `a { … }` call shape and a `[name]` link to the sibling
 
 #### Scenario: A structural wrapper names none
 - **WHEN** the Kotlin for a function that writes no class is generated

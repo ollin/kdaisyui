@@ -17,7 +17,7 @@ today (`dropdown_popover.feature:7-8`).
   `playwrightInstall` fetches); record both in `findings.md`. Floor: 133. If CI's system browser
   is below it, the E2E build prefers Playwright's bundled Chromium in CI, which it installs
   already; that becomes a task here.
-- [ ] 1.2 `. d` (A3) Put the two rules into `example-app/src/main/css/app.css` behind a
+- [x] 1.2 `. d` (A3) Put the two rules into `example-app/src/main/css/app.css` behind a
   relative `@import` of a scratch file, compile, and read the output for `attr(`; record the
   result. Revert the scratch edit.
 - [ ] 1.3 `. d` (A4) Read the four main specs named in A4 against a data attribute in place of

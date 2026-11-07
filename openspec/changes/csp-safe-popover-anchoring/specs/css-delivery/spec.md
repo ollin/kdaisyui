@@ -33,9 +33,9 @@ example application opens in the middle of the viewport (the measurement the
 `daisyui-component-coverage` E2E scenario makes); with them in the page, the probe of 2026-11-07
 in headless Chromium 156 (`assets/anchor-probe.html` of this change) shows it at its trigger.
 
-**Assumed** that a Tailwind 4 entry stylesheet applies a relative `@import` of a plain CSS file
-unchanged. *Wrong if:* the compiled stylesheet of the example application does not contain the
-`attr(` rules after task 1.2.
+**Verified** in task 1.2 that a Tailwind 4 entry stylesheet applies a relative `@import` of a plain CSS file
+unchanged: Tailwind 4.3.4 compiled the example application's entry with the import and its
+output carried both `attr(` rules verbatim.
 
 #### Scenario: The rules at this change
 - **WHEN** `kdaisyui.css` is read at the release of this change

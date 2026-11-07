@@ -16,13 +16,13 @@ class PopoverTest {
     @Test
     fun anAnchoredTriggerNamesItsAnchor() {
         val html = createHTML(prettyPrint = false).button { popoverTarget(htmlId("menu"), anchored = true) }
-        assertEquals("""<button popovertarget="menu" style="anchor-name:--menu"></button>""", html)
+        assertEquals("""<button popovertarget="menu" data-anchor-name="--menu"></button>""", html)
     }
 
     @Test
-    fun theAnchorNameJoinsAStyleTheTriggerAlreadyHas() {
+    fun aStyleTheTriggerAlreadyHasIsLeftAsItIs() {
         val html = createHTML(prettyPrint = false).button { attributes["style"] = "color:red"; popoverTarget(htmlId("menu"), anchored = true) }
-        assertEquals("""<button style="color:red;anchor-name:--menu" popovertarget="menu"></button>""", html)
+        assertEquals("""<button style="color:red" popovertarget="menu" data-anchor-name="--menu"></button>""", html)
     }
 
     @Test

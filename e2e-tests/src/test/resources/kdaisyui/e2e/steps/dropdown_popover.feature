@@ -4,8 +4,9 @@ Feature: Popover Dropdown
   Scenario: The served markup pairs the trigger and the menu
     Then the endpoint "/dropdown-popover" returns status 200
     And the response body contains "popovertarget=\"dashboard-dropdown-popover\""
-    And the response body contains "anchor-name:--dashboard-dropdown-popover"
+    And the response body contains "data-anchor-name=\"--dashboard-dropdown-popover\""
     And the response body contains "data-position-anchor=\"--dashboard-dropdown-popover\""
+    And the response body does not contain "style="
 
   Scenario: The stylesheet turns the anchor attributes into anchor properties
     Then the endpoint "/static/app.css" returns status 200

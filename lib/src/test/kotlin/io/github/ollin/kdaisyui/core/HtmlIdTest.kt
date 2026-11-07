@@ -22,6 +22,7 @@ class HtmlIdTest {
     }
 
     @Test
+    @Suppress("DEPRECATION")
     fun anAnchorNameIsTheIdAsADashedIdentWithForbiddenCharactersReplaced() {
         assertEquals("--app-sidebar", AppIds.Sidebar().anchorName)
         assertEquals("--main_menu_1", htmlId("main menu.1").anchorName)

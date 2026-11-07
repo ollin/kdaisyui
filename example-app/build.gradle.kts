@@ -66,6 +66,7 @@ val compileTailwind = tasks.register<Exec>("compileTailwind") {
 
     inputs.dir(appKotlin)
     inputs.file(kdaisyuiClasses)
+    inputs.file(tasks.named<io.github.ollin.kdaisyui.gradle.KdaisyuiClasses>("kdaisyuiClasses").flatMap { it.stylesheet })
     inputs.dir(cssDir)
     outputs.file(outDir.map { it.file("app.css") })
 

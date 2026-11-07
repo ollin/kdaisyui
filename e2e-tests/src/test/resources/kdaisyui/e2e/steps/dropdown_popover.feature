@@ -7,6 +7,11 @@ Feature: Popover Dropdown
     And the response body contains "anchor-name:--dashboard-dropdown-popover"
     And the response body contains "position-anchor:--dashboard-dropdown-popover"
 
+  Scenario: The stylesheet turns the anchor attributes into anchor properties
+    Then the endpoint "/static/app.css" returns status 200
+    And the response body contains "anchor-name: attr(data-anchor-name type(<custom-ident>))"
+    And the response body contains "position-anchor: attr(data-position-anchor type(<custom-ident>))"
+
   @nojs
   Scenario: The menu opens below its trigger with JavaScript disabled
     Given the user opens "/dropdown-popover"

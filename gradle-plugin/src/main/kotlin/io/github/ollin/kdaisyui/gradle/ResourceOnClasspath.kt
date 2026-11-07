@@ -4,7 +4,6 @@ import java.io.File
 import java.util.zip.ZipFile
 
 const val COMPONENT_MAP = "kdaisyui-components.txt"
-const val STYLESHEET = "kdaisyui.css"
 
 /**
  * The resource [name] in one runtime classpath entry, or null: a jar, as the published kdaisyui is, a

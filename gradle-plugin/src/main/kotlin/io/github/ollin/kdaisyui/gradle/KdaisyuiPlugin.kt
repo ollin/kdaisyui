@@ -8,7 +8,7 @@ import org.gradle.api.tasks.SourceSetContainer
 /**
  * `id("io.github.ollin.kdaisyui")`: registers `kdaisyuiClasses`, which writes
  * `build/kdaisyui/kdaisyui-classes.txt` with the classes of the kdaisyui components the main source
- * set's compiled code uses, and `build/kdaisyui/kdaisyui.css` beside it. Needs the `java` plugin, which Kotlin's JVM plugin applies.
+ * set's compiled code uses. Needs the `java` plugin, which Kotlin's JVM plugin applies.
  */
 class KdaisyuiPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -21,7 +21,6 @@ class KdaisyuiPlugin : Plugin<Project> {
                 // and a build whose stylesheet is a resource would wait on itself.
                 runtimeClasspath.from(project.configurations.getByName(main.runtimeClasspathConfigurationName))
                 output.set(project.layout.buildDirectory.file("kdaisyui/kdaisyui-classes.txt"))
-                stylesheet.set(project.layout.buildDirectory.file("kdaisyui/kdaisyui.css"))
             }
         }
     }

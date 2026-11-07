@@ -27,17 +27,12 @@ abstract class KdaisyuiClasses : DefaultTask() {
     @get:OutputFile
     abstract val output: RegularFileProperty
 
-    /** Where the artifact's `kdaisyui.css` goes, the rules its markup needs beyond DaisyUI's. */
-    @get:OutputFile
-    abstract val stylesheet: RegularFileProperty
-
     @TaskAction
     fun write() {
         val found = classes.asFileTree.matching { include("**/*.class") }.flatMap { componentClassesNamedIn(it.readBytes()) }.toSet()
         val selection = ComponentMap(resource(COMPONENT_MAP)).select(found)
         val reason = selection.fullListBecause
         if (reason != null) logger.warn("kdaisyui: writing every class, because $reason")
-        stylesheet.get().asFile.writeText(resource(STYLESHEET))
         output.get().asFile.writeText(HEADER + fullListLine(reason) + selection.classes.joinToString("\n", postfix = "\n"))
     }
 

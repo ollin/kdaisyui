@@ -56,7 +56,7 @@ producer.
 
 ## 4. Rely on the implicit anchor of `popovertarget`
 
-- [ ] 4.1 `! F` The popover side writes no anchor: `generator-new.ts` drops the
+- [x] 4.1 `! F` The popover side writes no anchor: `generator-new.ts` drops the
   `data-position-anchor` line and its `anchorName` import, `test-generator.ts` expects `popover`
   only, `generator-new.test.ts` asserts no anchor and no import, `just generate`, and
   `dropdown_popover.feature` asserts the body does not contain `data-position-anchor`.

@@ -13,12 +13,8 @@
  *
  * `source(none)`: Tailwind otherwise also scans whatever else is mounted under its
  * working directory, and the stylesheet would depend on more than these two sources.
- *
- * `kdaisyui.css` is the plugin's other output: the rules kdaisyui's markup needs beyond
- * DaisyUI's, today the anchor of a popover dropdown, carried by data attributes.
  */
 @import "tailwindcss" source(none);
-@import "../kdaisyui/kdaisyui.css";
 @plugin "daisyui";
 
 @source "../app-kotlin";

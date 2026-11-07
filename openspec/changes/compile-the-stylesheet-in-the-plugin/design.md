@@ -56,9 +56,11 @@ the daemon (`ImageFromDockerfile`), so the CLI is not the obstacle. The credenti
 `.npmrc` with `_auth` inside an image layer is a secret in an artifact the daemon keeps. Per-run
 install copies the `.npmrc` into a container that is removed.
 
-**Rejected: no cache.** Three packages per compile, about 20 s against the 70 ms of today's
-baked image, on every source change. A8 puts the volume to Oliver; without it, the slower loop
-is the fallback, not a blocker.
+**Rejected: no cache.** Three packages per compile, an estimated 20 s against the 70 ms of
+today's baked image (task 5.4 measures both), on every source change. A8 puts the volume to
+Oliver; without it, the slower loop is the fallback, not a blocker. The task is a
+`@CacheableTask` like `kdaisyuiClasses`, so with `--build-cache` an unchanged input set skips
+the container altogether.
 
 ### 4. The versions come from the plugin jar, written at its build
 
@@ -66,6 +68,11 @@ is the fallback, not a blocker.
 `processResources` from a version catalog the included build creates from
 `../gradle/libs.versions.toml` and from `.tool-versions`. A `KdaisyuiVersions` object reads it.
 The versions are then one place, as the root `AGENTS.md` demands.
+
+The plugin and the library are released together under one version number
+(`gradle.properties`), so a matched pair is the versions the components were generated
+against. A consumer can still pair a newer plugin with an older library; the plugin already
+opens the library jar for its component map, and warns when that jar's version is not its own.
 
 **Rejected: the consumer passes them.** That is what the Deploy-Radar does, and what the
 proposal exists to stop.
@@ -84,7 +91,8 @@ the missing half. Pure, so it is unit-tested without Docker and its mutants die 
 ### 6. The mount points are fixed and documented
 
 The entry lands at `/deps/project/css/app.css`, each source directory under
-`/deps/project/sources/<name>`, and the `kdaisyuiClasses` output directory at
+`/deps/project/sources/<index>-<last segment>` (`0-kotlin` for the first `src/main/kotlin`),
+so two directories that end alike cannot collide, and the `kdaisyuiClasses` output directory at
 `/deps/project/kdaisyui/`. The entry therefore writes `@source "../sources"`,
 `@source "../kdaisyui/kdaisyui-classes.txt"` and, after `csp-safe-popover-anchoring`,
 `@import "../kdaisyui/kdaisyui.css"`. Fixed paths are what let the README show one entry file
@@ -109,11 +117,17 @@ task, its registration, the example app's switch, the deletions.
 
 - [Testcontainers' first start pulls the Node image] → the image is configurable, and a mirror
   is the documented answer; the pull happens once per daemon.
-- [PIT runs the thin method's mutants against a real container] → there are few, and the method
-  has no branch; if a run exceeds a minute per mutant, the method is excluded from PIT with its
-  reason in `gradle-plugin/build.gradle.kts`, as `lib/build.gradle.kts` does for the
-  interface-default bridges.
-- [A consumer's own `@plugin` beyond DaisyUI] → not installed; the docs say to add the package
-  by a second `npm install` is not offered, and that such a build keeps its own compile.
+- [PIT runs the thin method's mutants against a real container] → `NodeContainerRun` is
+  excluded from PIT's target classes with its reason in `gradle-plugin/build.gradle.kts`, as
+  `lib/build.gradle.kts` does for the interface-default bridges; its one real-container test
+  keeps Kover at 100% (A11, task 1.3 confirms the split leaves nothing else uncovered).
+- [The real-container test needs Docker and the network] → so does `check` today, for the
+  example app's compile; no new host requirement. Offline, the test fails rather than skips,
+  because a skipped test would hide a hole in the 100% gate.
+- [Testcontainers' libraries conflict with another plugin's on the consumer's classpath] →
+  task 1.1 applies the plugin from `mavenLocal()` in a scratch consumer; A9's alternative is a
+  second artifact for the stylesheet task alone.
+- [A consumer's own `@plugin` beyond DaisyUI] → not installed; the README says that a build
+  with a further Tailwind plugin keeps its own compile.
 - [The named volume accumulates] → it holds one npm cache; `docker volume rm` is named in the
   README.

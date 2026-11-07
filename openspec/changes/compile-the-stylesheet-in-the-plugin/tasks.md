@@ -1,45 +1,63 @@
 # Tasks
 
-**Estimate, frozen 2026-11-07:** 295 minutes developer-only, `2h 40min (4h 55min DevOnly)` by
-the ledger's `forecast` (ratio 0.53 over 153 runs). Block 1: 25, block 2: 30, block 3: 45,
-block 4: 90, block 5: 45, block 6: 20, block 7: 40.
+**Estimate, frozen 2026-11-07:** `2h 40min (4h 55min DevOnly)` by the ledger's `forecast`
+(ratio 0.53 over 153 runs); 295 minutes developer-only is the frozen raw figure. Block 1: 35,
+block 2: 40, block 3: 45, block 4: 90, block 5: 45, block 6: 20, block 7: 20. The review of
+the same day split task 4.1, added the version-mismatch warning and the stale references
+(finding F2); the figure stands, the miss is recorded.
 
-Ordered by uncertainty: A2 can sink the plan (a POM that does not resolve) and is settled
-before a line of the task exists; A6 shapes how the task is split, so it is read before block 4.
+Ordered by uncertainty: A2 can sink the plan (a plugin that does not load in a consumer) and
+is settled before a line of the task exists; A8, A9 and A10 are Oliver's and are recorded
+before the defaults they decide are written; A6 shapes how the task is split.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A2) Add `testcontainers` to the catalog and the plugin's `implementation`,
-  `publishToMavenLocal` the plugin, resolve it from a scratch consumer in `/tmp/opencode/`
-  with `mavenLocal()`; record whether the dependency is on the consumer's build classpath.
-- [ ] 1.2 `. d` (A6, A7) Read `css-delivery`, `coverage-enforcement` and `mutation-testing`
-  against a task that starts a container, and count the branches the design's split leaves in
-  the thin method; record.
+- [ ] 1.1 `^ F (internal)` (A2) `testcontainers` in the catalog and the plugin's
+  `implementation`, the `ProjectBuilder` tests still green; then `publishToMavenLocal` and a
+  scratch consumer in `/tmp/opencode/` that applies the plugin from `mavenLocal()` and runs
+  `kdaisyuiClasses`. Record in `proposal.md` A2 and `findings.md` whether the plugin loads with
+  Testcontainers on its classpath beside Gradle's own libraries.
+- [ ] 1.2 `. d` (A8, A9, A10) Record Oliver's decisions in `proposal.md`: the cache volume
+  (task 4.3), the dependency (or a separate artifact, which would reshape block 4), and the
+  `minify` default (task 3.1).
+- [ ] 1.3 `. d` (A6, A7) Read `css-delivery`, `coverage-enforcement` and `mutation-testing`
+  against a task that starts a container; decide and record whether `NodeContainerRun` is
+  excluded from PIT's target classes with its reason, as `lib/build.gradle.kts` does for the
+  bridges, since every mutant of it would need a container run. Record in `proposal.md`.
 
 ## 2. The versions, under TCR in `gradle-plugin`
 
 - [ ] 2.1 `^ F (internal)` `processResources` expands `kdaisyui-versions.properties` with the
-  three versions from the catalog and `.tool-versions`; a test reads the built resource.
+  three versions from the catalog and `../.tool-versions`; a test reads the built resource.
 - [ ] 2.2 `^ F` `KdaisyuiVersions.tailwind`, `.daisyui`, `.node` read it.
+- [ ] 2.3 `^ F` The plugin warns when the `kdaisyui` jar it reads the component map from
+  carries a version other than its own, naming both; a test with a renamed jar.
 
 ## 3. The configuration, under TCR
 
 - [ ] 3.1 `^ F` `kdaisyui { stylesheet { entry; sources; output; nodeImage; npmRegistry;
-  npmUser; npmPassword; minify } }`, with the defaults the design names.
+  npmUser; npmPassword; minify } }`, with the defaults the design names and 1.2 decided.
 - [ ] 3.2 `^ F` `NpmConfig.npmrc(registry, user, password)`: the registry line alone, or with
   `_auth` when both are given.
 - [ ] 3.3 `^ F` A half credential throws, naming the missing half.
 - [ ] 3.4 `^ F` `StylesheetCompile.command(versions, minify)`: the install of the three pinned
   packages with `--prefer-offline`, then the compile, `--minify` when asked.
+- [ ] 3.5 `^ F` `StylesheetCompile.mountPoints(sources)`: each source directory at
+  `/deps/project/sources/<index>-<last segment>`, so two directories with one name cannot
+  collide.
 
 ## 4. The task, under TCR
 
-- [ ] 4.1 `! F` `KdaisyuiStylesheet`: inputs (entry, sources, the class-list directory, image,
-  versions, registry), output; `NodeContainerRun.compile` copies in, runs one-shot, copies out.
-  One test compiles a two-line entry in a real container and reads `--color-base-100` in the
-  output.
-- [ ] 4.2 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache`.
-- [ ] 4.3 `^ F (internal)` The plugin registers the task, depending on `kdaisyuiClasses`, when
+- [ ] 4.1 `^ F` `KdaisyuiStylesheet`, a `@CacheableTask`: inputs (entry, sources, the class-list
+  directory, image, versions, registry, minify), output; its action builds the
+  `StylesheetCompile` and fails on a half credential before any container; the test needs no
+  Docker.
+- [ ] 4.2 `! F` `NodeContainerRun.compile(StylesheetCompile)`: copies the inputs in, runs the
+  command one-shot, copies the stylesheet out. One test compiles a two-line entry with one
+  source directory in a real container and reads `--color-base-100` in the output; it needs
+  Docker and the network, as `check` already does for the example app.
+- [ ] 4.3 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache`, if 1.2 said so.
+- [ ] 4.4 `^ F (internal)` The plugin registers the task, depending on `kdaisyuiClasses`, when
   the extension's entry is set; a `ProjectBuilder` test reads the wiring, and one that it is
   absent without an entry.
 
@@ -49,18 +67,24 @@ before a line of the task exists; A6 shapes how the task is split, so it is read
   takes the task's output; `app.css` uses the design's mount points; E2E green.
 - [ ] 5.2 `^ r` Delete `tailwind/Dockerfile`, `buildTailwindImage`, `compileTailwind` and
   `callingUserArgs`.
-- [ ] 5.3 `. d` Record the compile time before and after, cold and with the cache volume, in
-  `findings.md`.
+- [ ] 5.3 `. d` The five references to the deleted task follow: `app.css:2-6`,
+  `Assets.kt:9`, `Application.kt:21`, `.opencode/skills/kdaisyui-testing/SKILL.md:218`, and
+  `ci.yml:274`'s comment.
+- [ ] 5.4 `. d` Record the compile time before and after, cold and with the cache volume, in
+  `findings.md`; the design's figures are estimates until then.
 
 ## 6. Docs
 
 - [ ] 6.1 `. d` README, "Give those classes some CSS": the task and its configuration first,
-  the mirror settings, the volume, the manual route as the alternative with repository paths.
-  `ci.yml`'s comment on the Docker compile.
+  the mirror settings, the volume and how to remove it, that a further `@plugin` of the
+  consumer's own is not installed, and the manual route as the alternative with repository
+  paths.
 
-## 7. Gate and adoption
+## 7. Gate, adoption and archive
 
-- [ ] 7.1 Full green: `check` with E2E, `koverVerify` of the root and of `gradle-plugin`,
-  `:gradle-plugin:pitest`, `analyze_change_set`.
+- [ ] 7.1 Full green: `check` with E2E and the E2E result files asserted on disk,
+  `koverVerify` of the root and of `gradle-plugin`, `:gradle-plugin:pitest`,
+  `analyze_change_set`.
 - [ ] 7.2 `openspec validate compile-the-stylesheet-in-the-plugin --strict`.
 - [ ] 7.3 The evaluation under `tmp/compile-the-stylesheet-in-the-plugin/` for Oliver to adopt.
+- [ ] 7.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

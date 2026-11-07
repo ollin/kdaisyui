@@ -39,7 +39,7 @@ abstract class KdaisyuiClasses : DefaultTask() {
     /** Whoever opens the file sees why it holds every class, not only whoever read the build's log. */
     private fun fullListLine(reason: String?): String = if (reason == null) "" else "# Every class, because $reason.\n"
 
-    private fun componentMap(): String = checkNotNull(runtimeClasspath.firstNotNullOfOrNull(::componentMapIn)) {
+    private fun componentMap(): String = checkNotNull(runtimeClasspath.firstNotNullOfOrNull { resourceIn(it, COMPONENT_MAP) }) {
         "$COMPONENT_MAP is on no runtime classpath entry: does the build depend on io.github.ollin.kdaisyui:kdaisyui?"
     }
 

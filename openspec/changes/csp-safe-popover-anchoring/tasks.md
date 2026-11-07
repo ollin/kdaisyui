@@ -12,7 +12,7 @@ today (`dropdown_popover.feature:7-8`).
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A2) Read the Chromium version the E2E suite runs locally (`which chromium`) and
+- [x] 1.1 `. d` (A2) Read the Chromium version the E2E suite runs locally (`which chromium`) and
   in CI (`google-chrome --version` on `ubuntu-latest`, and the Playwright build
   `playwrightInstall` fetches); record both in `findings.md`. Floor: 133. If CI's system browser
   is below it, the E2E build prefers Playwright's bundled Chromium in CI, which it installs

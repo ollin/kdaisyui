@@ -27,3 +27,13 @@
   rules first, block 3 moves one side of the pair per step with its feature line, the test
   generator is named in task 3.1 and the Impact list, and the probe is kept as
   `assets/anchor-probe.html` with its command and result.
+
+## F3 - The browsers the E2E suite runs, read for A2
+
+- **What happened:** task 1.1, 2026-11-07. Locally `/usr/bin/chromium` is 156.0.8078.79. In CI
+  the E2E job (run 42393356804) ran on `ubuntu-26.04` image 20261101.186, which ships Google
+  Chrome 156.0.8078.79 (the browser `systemChromium` finds there) and Chromium 156.0.8078.0;
+  `playwrightInstall` fetched Chrome for Testing 156.0.8078.4. Every one is above the floor of
+  133 for typed `attr()`, so A2 holds and no CI task was added.
+- **Cause:** record only; the task asked for both versions to be written down.
+- **Cost:** none.

@@ -27,7 +27,7 @@ today (`dropdown_popover.feature:7-8`).
 
 - [x] 2.1 `! F` `lib/src/main/resources/kdaisyui.css` with the two rules; a test asserts the
   built jar carries it (the shape of `TailwindClassListTest`).
-- [ ] 2.2 `^ r (internal)` In the plugin, the lookup of a resource on the runtime classpath takes
+- [x] 2.2 `^ r (internal)` In the plugin, the lookup of a resource on the runtime classpath takes
   the resource name as a parameter (today it knows only the component map).
 - [ ] 2.3 `^ F (internal)` `kdaisyuiClasses` writes `build/kdaisyui/kdaisyui.css` from the
   artifact's resource; a test asserts the bytes.

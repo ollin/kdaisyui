@@ -68,7 +68,7 @@ producer.
   `@Suppress("DEPRECATION")`.
 - [x] 4.4 `^ F` The example app stops importing `kdaisyui.css`: the `@import`, the compile
   task's input and the stylesheet scenario go.
-- [ ] 4.5 `^ F (internal)` `kdaisyuiClasses` stops writing `kdaisyui.css`: the `stylesheet`
+- [x] 4.5 `^ F (internal)` `kdaisyuiClasses` stops writing `kdaisyui.css`: the `stylesheet`
   output, its wiring, `STYLESHEET` and their tests go.
 - [ ] 4.6 `^ F` `lib/src/main/resources/kdaisyui.css` and `KdaisyuiCssTest` go.
 

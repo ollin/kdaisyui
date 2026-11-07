@@ -36,7 +36,7 @@ today (`dropdown_popover.feature:7-8`).
 
 ## 3. The attribute pair, one side per step, under TCR at the repository root
 
-- [ ] 3.1 `! F (internal)` The popover side: `generator-new.ts` writes `data-position-anchor`
+- [x] 3.1 `! F (internal)` The popover side: `generator-new.ts` writes `data-position-anchor`
   in place of the inline style, `test-generator.ts:113` expects that attribute in the custom-part
   test, `codegen/test/generator-new.test.ts:185` and the snapshot follow, `just generate`, and
   `dropdown_popover.feature:8` asserts `data-position-anchor="--…"`. Risky by size: the

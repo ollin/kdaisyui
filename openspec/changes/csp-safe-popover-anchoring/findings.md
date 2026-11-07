@@ -73,6 +73,12 @@
   failed for the opposite reason: an explicit `position-anchor` naming an anchor that did not
   exist overrode the implicit one. The `css-delivery` delta's claim that without the rules the
   menu "opens in the middle of the viewport" is false for this markup in Chromium.
+  MDN's browser-compat data (8.1.8, 2026-11-02) makes it decisive:
+  `html.elements.button.popovertarget.implicit_anchor_reference` is Chrome 133, Safari 26,
+  Firefox 147 - the floors anchor positioning itself has - while `css.types.attr.type_function.custom-ident`,
+  which `kdaisyui.css` needs, is Chrome 133, Safari **preview only**, Firefox 155. The shipped
+  rules would anchor nothing in any released Safari; the implicit anchor works in all three.
 - **Cause:** the probe behind A1 measured the attribute route with the rules, never without
-  them, so it could not tell "the rules anchor it" from "nothing needs to".
+  them, so it could not tell "the rules anchor it" from "nothing needs to"; and A1 checked one
+  engine for a rule meant for all of them.
 - **Cost:** a question round with Oliver, and possibly the removal of block 2.

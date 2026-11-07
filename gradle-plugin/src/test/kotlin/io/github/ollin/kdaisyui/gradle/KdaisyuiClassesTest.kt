@@ -15,12 +15,14 @@ class KdaisyuiClassesTest {
     private val resources = dir.resolve("resources").apply {
         mkdirs()
         resolve(COMPONENT_MAP).writeText("button\tButtonKt\tbtn btn-primary\ncard\tCardKt\tcard\n")
+        resolve(STYLESHEET).writeText("[data-x] { color: red; }\n")
     }
 
     init {
         task.classes.from(compiled)
         // Gradle creates an output file's directory before a task runs; calling the action directly does not.
         task.output.set(dir.resolve("out").apply { mkdirs() }.resolve("kdaisyui-classes.txt"))
+        task.stylesheet.set(dir.resolve("out").resolve(STYLESHEET))
     }
 
     @Test
@@ -30,6 +32,13 @@ class KdaisyuiClassesTest {
         task.write()
         assertEquals(listOf("btn", "btn-primary"), writtenClasses())
         assertEquals(2, comments().size, "a narrowed list gives no reason")
+    }
+
+    @Test
+    fun theArtifactsStylesheetIsWrittenByteForByte() {
+        task.runtimeClasspath.from(resources)
+        task.write()
+        assertEquals("[data-x] { color: red; }\n", task.stylesheet.get().asFile.readText())
     }
 
     @Test

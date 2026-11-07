@@ -66,7 +66,7 @@ producer.
   `data-anchor-name`; `lib/api/lib.api` re-dumped with the added overload.
 - [x] 4.3 `^ F` `HtmlId.anchorName` deprecated; `HtmlIdTest` keeps its two cases under
   `@Suppress("DEPRECATION")`.
-- [ ] 4.4 `^ F` The example app stops importing `kdaisyui.css`: the `@import`, the compile
+- [x] 4.4 `^ F` The example app stops importing `kdaisyui.css`: the `@import`, the compile
   task's input and the stylesheet scenario go.
 - [ ] 4.5 `^ F (internal)` `kdaisyuiClasses` stops writing `kdaisyui.css`: the `stylesheet`
   output, its wiring, `STYLESHEET` and their tests go.

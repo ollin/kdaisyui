@@ -4,7 +4,7 @@ Feature: Popover Dropdown
   Scenario: The served markup pairs the trigger and the menu
     Then the endpoint "/dropdown-popover" returns status 200
     And the response body contains "popovertarget=\"dashboard-dropdown-popover\""
-    And the response body contains "data-anchor-name=\"--dashboard-dropdown-popover\""
+    And the response body does not contain "data-anchor-name"
     And the response body contains "id=\"dashboard-dropdown-popover\""
     And the response body does not contain "data-position-anchor"
     And the response body does not contain "style="

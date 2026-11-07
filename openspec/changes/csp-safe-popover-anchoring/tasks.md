@@ -70,7 +70,7 @@ producer.
   task's input and the stylesheet scenario go.
 - [x] 4.5 `^ F (internal)` `kdaisyuiClasses` stops writing `kdaisyui.css`: the `stylesheet`
   output, its wiring, `STYLESHEET` and their tests go.
-- [ ] 4.6 `^ F` `lib/src/main/resources/kdaisyui.css` and `KdaisyuiCssTest` go.
+- [x] 4.6 `^ F` `lib/src/main/resources/kdaisyui.css` and `KdaisyuiCssTest` go.
 
 ## 5. Docs
 

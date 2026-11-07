@@ -63,8 +63,8 @@ removes: in a consumer, raw class strings and a script for closing.
 | A2 | htmx 4 inserts a swapped-in `<dialog open>` such that the browser shows it open | code | to check in task 2.2 - the E2E scenario; a dialog with the `open` attribute at parse time is open by the HTML specification |
 | A3 | kotlinx.html 0.12.0 has a `dialog` builder with no `open` property, and `FormMethod` has no `dialog` entry | code | confirmed at proposal - `kotlinx/html/DIALOG.class` and `FormMethod.class` of kotlinx-html-jvm 0.12.0, read 2026-11-07; the snippets write both attributes by name |
 | A4 | No requirement of a main spec this builds on contradicts it. It builds on `daisyui-component-coverage` ("Popover modals are expressible from the DSL": `daisyModal` stays unchanged and recommended; "New components have E2E smoke coverage"), `documentation-snippets` and `css-delivery` | code | confirmed at proposal - `daisyModal` is not touched; the new page is asserted by E2E; every Kotlin fence compiles, and the JavaScript fence is not Kotlin; the README paragraph adds to what `css-delivery` already has the docs say |
-| A5 | kdaisyui ships no behaviour script | user | open - ask at review, recorded in task 1.1 |
-| A6 | The `open` parameter of `daisyModal` keeps its meaning, "adds `modal-open`", and the recipe writes the attribute instead | user | open - ask at review, recorded in task 1.1. The recipe is the same either way: a dialog the class keeps visible cannot be closed by the form, so the attribute is what the recipe writes; a "yes" on the parameter is an API change of its own |
+| A5 | kdaisyui ships no behaviour script | user | confirmed by the user 2026-11-07 - none, as recommended: three of the four behaviours are the browser's, and the clipboard is six lines that must know the application's ids |
+| A6 | The `open` parameter of `daisyModal` keeps its meaning, "adds `modal-open`", and the recipe writes the attribute instead | user | confirmed by the user 2026-11-07 - as recommended: the class and the attribute mean different things, and only the attribute is what `form method="dialog"` removes |
 
 ## Capabilities
 

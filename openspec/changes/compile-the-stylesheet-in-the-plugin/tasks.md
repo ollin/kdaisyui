@@ -7,8 +7,8 @@ the same day split task 4.1, added the version-mismatch warning and the stale re
 (finding F2); the figure stands, the miss is recorded.
 
 Ordered by uncertainty: A2 can sink the plan (a plugin that does not load in a consumer) and
-is settled before a line of the task exists; A8, A9 and A10 are Oliver's and are recorded
-before the defaults they decide are written; A6 shapes how the task is split.
+is settled before a line of the task exists; A8, A9 and A10 were decided by Oliver on
+2026-11-07 as recommended; A6 shapes how the task is split.
 
 ## 1. Open assumptions
 
@@ -17,10 +17,7 @@ before the defaults they decide are written; A6 shapes how the task is split.
   scratch consumer in `/tmp/opencode/` that applies the plugin from `mavenLocal()` and runs
   `kdaisyuiClasses`. Record in `proposal.md` A2 and `findings.md` whether the plugin loads with
   Testcontainers on its classpath beside Gradle's own libraries.
-- [ ] 1.2 `. d` (A8, A9, A10) Record Oliver's decisions in `proposal.md`: the cache volume
-  (task 4.3), the dependency (or a separate artifact, which would reshape block 4), and the
-  `minify` default (task 3.1).
-- [ ] 1.3 `. d` (A6, A7) Read `css-delivery`, `coverage-enforcement` and `mutation-testing`
+- [ ] 1.2 `. d` (A6, A7, A11) Read `css-delivery`, `coverage-enforcement` and `mutation-testing`
   against a task that starts a container; decide and record whether `NodeContainerRun` is
   excluded from PIT's target classes with its reason, as `lib/build.gradle.kts` does for the
   bridges, since every mutant of it would need a container run. Record in `proposal.md`.
@@ -36,7 +33,7 @@ before the defaults they decide are written; A6 shapes how the task is split.
 ## 3. The configuration, under TCR
 
 - [ ] 3.1 `^ F` `kdaisyui { stylesheet { entry; sources; output; nodeImage; npmRegistry;
-  npmUser; npmPassword; minify } }`, with the defaults the design names and 1.2 decided.
+  npmUser; npmPassword; minify } }`, with the defaults the design names; `minify` on (A10).
 - [ ] 3.2 `^ F` `NpmConfig.npmrc(registry, user, password)`: the registry line alone, or with
   `_auth` when both are given.
 - [ ] 3.3 `^ F` A half credential throws, naming the missing half.
@@ -56,7 +53,7 @@ before the defaults they decide are written; A6 shapes how the task is split.
   command one-shot, copies the stylesheet out. One test compiles a two-line entry with one
   source directory in a real container and reads `--color-base-100` in the output; it needs
   Docker and the network, as `check` already does for the example app.
-- [ ] 4.3 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache`, if 1.2 said so.
+- [ ] 4.3 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache` (A8).
 - [ ] 4.4 `^ F (internal)` The plugin registers the task, depending on `kdaisyuiClasses`, when
   the extension's entry is set; a `ProjectBuilder` test reads the wiring, and one that it is
   absent without an entry.

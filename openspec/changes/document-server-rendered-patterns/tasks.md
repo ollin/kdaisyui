@@ -11,10 +11,8 @@ root TCR, which runs the E2E suite, sees test and code together.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A5, A6) Record Oliver's decisions in `proposal.md`: no shipped script, and
-  whether `daisyModal`'s `open` parameter stays "the class only". The recipe writes the
-  attribute either way, since a dialog the class keeps visible cannot be closed by the form; a
-  "yes" on the parameter would be its own change.
+None. A5 and A6 Oliver decided on 2026-11-07 as recommended; A2 is the browser's to answer and
+is settled by the scenarios of block 2.
 
 ## 2. The page and its scenarios, under TCR
 

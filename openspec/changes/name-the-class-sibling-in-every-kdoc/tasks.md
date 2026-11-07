@@ -4,14 +4,13 @@
 over 153 runs); 120 minutes developer-only is the frozen raw figure. Block 1: 15, block 2: 45,
 block 3: 30, block 4: 30.
 
-No code assumption is open: the review of 2026-11-07 settled A2 against `component-shape.ts:367`
-(finding F2), so the sentence is gated on the existing `hasSibling` and no enabler is needed.
-A5, the wording, is Oliver's and is decided before task 2.1.
+No assumption is open: the review of 2026-11-07 settled A2 against `component-shape.ts:367`
+(finding F2), so the sentence is gated on the existing `hasSibling` and no enabler is needed;
+A5, the wording, Oliver decided the same day as recommended.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d` (A5) Record Oliver's decision on the wording and the `a { … }` example in
-  `proposal.md`; no implementation task starts before it.
+None. Block 1 is kept so the numbering matches the other changes.
 
 ## 2. Codegen, under TCR at the repository root
 

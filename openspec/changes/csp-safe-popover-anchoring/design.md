@@ -61,15 +61,23 @@ of candidate class names; CSS inside it would be scanned for names, not applied.
 ### 3. `popoverTarget` stops merging `style`
 
 The `listOfNotNull(attributes["style"], …)` branch existed only to append to a style the caller
-had set. With no style written, the branch and its test go. One behaviour per commit: the
-attribute first, the deletion second.
+had set. It is the line the attribute write replaces, so the two cannot be separate commits;
+the step's test asserts the attribute, the absence of `style`, and that a caller's `style`
+survives.
 
-### 4. Enablers and the desired change
+### 4. Order: the rules first, then one side of the pair per step
+
+Root TCR runs the E2E suite, and `dropdown_popover.feature` asserts the inline styles in the
+served markup and measures the anchoring. So the rules reach the example app's stylesheet
+before any attribute moves (block 2 of `tasks.md`, each step leaving the E2E unchanged), then
+the popover side moves with its feature line while the trigger's inline `anchor-name` still
+resolves, then the trigger side moves with its feature line. Every step is green on its own.
+
+### 5. Enablers and the desired change
 
 Enablers, provable by diff or by an empty regeneration: the plugin writing a second file whose
-content it reads from the jar (the example app's stylesheet is unchanged until the import is
-added); the jar-presence test. Desired changes: the two attribute writes, the two rules, the
-import, the deletion of the style branch.
+content it reads from the jar; the jar-presence test; the import of rules nothing uses yet.
+Desired changes: the two attribute writes, each replacing a style write.
 
 ## Risks / Trade-offs
 

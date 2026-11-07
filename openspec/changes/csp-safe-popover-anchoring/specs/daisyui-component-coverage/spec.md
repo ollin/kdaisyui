@@ -23,11 +23,6 @@ refused under `Content-Security-Policy: default-src 'self'` and a data attribute
 - **WHEN** `daisyDropdownPopover(id = menu, side = DropdownSide.Top, align = DropdownAlign.End)` renders
 - **THEN** the element carries `dropdown-top` and `dropdown-end`
 
-#### Scenario: No inline style
-
-- **WHEN** `daisyDropdownPopover(id = menu)` renders
-- **THEN** the element carries no `style` attribute
-
 ### Requirement: A popover's trigger is typed and anchored to it
 
 The library SHALL offer `Tag.popoverTarget(popover: HtmlId, action: PopoverTargetAction?, anchored:
@@ -38,9 +33,9 @@ a `style` the caller set untouched. Off by default, because DaisyUI's megamenu s
 on its triggers itself.
 
 **Verified** that the attribute route anchors, probe of 2026-11-07 in headless Chromium 156
-(`/tmp/opencode/csp-anchor-probe/probe.html`): with the two rules of the `css-delivery` delta in
-the page, the shown popover's top edge equals the trigger's bottom edge and its left edge the
-trigger's left edge.
+(`assets/anchor-probe.html` of the change `csp-safe-popover-anchoring`, result in its header):
+with the two rules of the `css-delivery` delta in the page, the shown popover's top edge equals
+the trigger's bottom edge and its left edge the trigger's left edge.
 
 #### Scenario: Trigger and popover agree on an id with a space
 

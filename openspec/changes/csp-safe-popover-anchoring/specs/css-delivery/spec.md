@@ -28,17 +28,18 @@ markup needs that DaisyUI's stylesheet does not provide. The Gradle plugin's `kd
 task SHALL write it to `build/kdaisyui/kdaisyui.css` beside the class list, and the
 documentation SHALL show the import.
 
-At this change the resource holds two rules, which turn `data-anchor-name` and
-`data-position-anchor` into the CSS anchor properties.
-
 **Verified** that the rules are what the markup needs: without them, the popover dropdown of the
 example application opens in the middle of the viewport (the measurement the
 `daisyui-component-coverage` E2E scenario makes); with them in the page, the probe of 2026-11-07
-in headless Chromium 156 shows it at its trigger.
+in headless Chromium 156 (`assets/anchor-probe.html` of this change) shows it at its trigger.
 
 **Assumed** that a Tailwind 4 entry stylesheet applies a relative `@import` of a plain CSS file
 unchanged. *Wrong if:* the compiled stylesheet of the example application does not contain the
 `attr(` rules after task 1.2.
+
+#### Scenario: The rules at this change
+- **WHEN** `kdaisyui.css` is read at the release of this change
+- **THEN** it holds a rule turning `data-anchor-name` into `anchor-name` and one turning `data-position-anchor` into `position-anchor`, and nothing else
 
 #### Scenario: The resource cannot silently stop being packaged
 - **WHEN** `kdaisyui.css` is missing from the built artifact

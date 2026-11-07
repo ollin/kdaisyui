@@ -1,0 +1,32 @@
+<!doctype html>
+<!--
+  The probe behind assumption A1, run 2026-11-07 in headless Chromium 156:
+
+    chromium --headless=new --no-sandbox --disable-gpu --virtual-time-budget=2000 \
+      --dump-dom file://$PWD/anchor-probe.html | grep -o '<pre id="out">.*</pre>'
+
+  Result: {"anchorName":"--dash_menu","positionAnchor":"--dash_menu","triggerBottom":240,
+  "triggerLeft":300,"popoverTop":240,"popoverLeft":300,"supportsAttr":true,
+  "ua":"... HeadlessChrome/156.0.0.0 ..."} - the shown popover's top and left equal the
+  trigger's bottom and left, with no inline style anywhere on the page.
+-->
+<html><head><meta charset="utf-8">
+<style>
+  [data-anchor-name] { anchor-name: attr(data-anchor-name type(<custom-ident>)); }
+  [data-position-anchor] { position-anchor: attr(data-position-anchor type(<custom-ident>)); }
+  #t { position:absolute; left:300px; top:200px; width:100px; height:40px; }
+  #p { position: fixed; position-area: bottom span-right; margin:0; inset: auto; }
+</style></head><body>
+<button id="t" data-anchor-name="--dash_menu">Open</button>
+<ul id="p" popover data-position-anchor="--dash_menu"><li>a</li></ul>
+<pre id="out"></pre>
+<script>
+  const p = document.getElementById('p'); p.showPopover();
+  const t = document.getElementById('t').getBoundingClientRect(), b = p.getBoundingClientRect();
+  document.getElementById('out').textContent = JSON.stringify({
+    anchorName: getComputedStyle(document.getElementById('t')).anchorName,
+    positionAnchor: getComputedStyle(p).positionAnchor,
+    triggerBottom: t.bottom, triggerLeft: t.left, popoverTop: b.top, popoverLeft: b.left,
+    supportsAttr: CSS.supports('anchor-name', 'attr(data-x type(<custom-ident>))'),
+    ua: navigator.userAgent });
+</script></body></html>

@@ -63,12 +63,12 @@ What this change removes: both inline `style` writes and the style-merging branc
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | Chromium applies `anchor-name: attr(data-anchor-name type(<custom-ident>))` and the matching `position-anchor`, so a popover anchors through data attributes alone | code | confirmed at proposal - probe `/tmp/opencode/csp-anchor-probe/probe.html` in headless Chromium 156, 2026-11-07: computed `anchorName` and `positionAnchor` both `--dash_menu`, `CSS.supports` true, and the shown popover's top and left equal the trigger's bottom and left (240, 300). Typed `attr()` shipped in Chrome 133 |
-| A2 | The browser the E2E suite runs is at least Chromium 133, locally and in CI | code | to check in task 1.1 - locally `which chromium` finds 156; CI's `google-chrome` and Playwright's bundled build are read there |
+| A1 | Chromium applies `anchor-name: attr(data-anchor-name type(<custom-ident>))` and the matching `position-anchor`, so a popover anchors through data attributes alone | code | confirmed at proposal - `assets/anchor-probe.html` in this change, run in headless Chromium 156 on 2026-11-07, its command and result in its header comment: computed `anchorName` and `positionAnchor` both `--dash_menu`, `CSS.supports` true, and the shown popover's top and left equal the trigger's bottom and left (240, 300). Typed `attr()` shipped in Chrome 133 |
+| A2 | The browser the E2E suite runs is at least Chromium 133, locally and in CI | code | to check in task 1.1 - locally `which chromium` finds 156; `ci.yml` pins no browser, so CI's `google-chrome` and Playwright's bundled build are read there. Fallback if CI is below 133: the E2E build prefers Playwright's bundled Chromium in CI |
 | A3 | A consumer's Tailwind 4 entry can `@import` a plain CSS file written by the build, relative to the entry | code | to check in task 1.2 - the example app's compile, with `@import "../kdaisyui/kdaisyui.css"` |
 | A4 | No requirement of a main spec this builds on contradicts it. It builds on `css-delivery` ("the library's contract ends at the class name"; "the library ships the class list a consumer's CSS build needs"), `daisyui-component-coverage` (the popover trigger and the popover dropdown), `component-model` (static attributes come from the model) and `api-change-detection` | code | confirmed at proposal - `css-delivery` already has the library ship a resource the consumer's CSS build consumes, and this adds a second one of the same kind; the contract sentence is MODIFIED below to say so. `daisyui-component-coverage` names `style="position-anchor:…"` and `anchor-name` in two requirements, both MODIFIED below. `component-model` lists static attributes as a model fact; the anchored-popover fact keeps writing one, with another name. The API baselines do not change: no signature moves |
 | A5 | Generation reads the attribute name from one place, so the trigger's and the popover's attribute names cannot drift | code | confirmed at proposal - the popover side is one line in `generator-new.ts:280`, the trigger side one line in `Popover.kt:14`; neither is derived from the other today, and the pairing is tested end to end by `dropdown_popover.feature` |
-| A6 | The two rules belong in a jar resource the plugin writes, not in a snippet the docs ask the reader to paste | user | open - ask at review. The design argues for the resource (one source, no hand-kept copy that drifts); a pasted snippet is two lines and no machinery |
+| A6 | The two rules belong in a jar resource the plugin writes, not in a snippet the docs ask the reader to paste | user | open - ask at review. What cannot be removed: the two rules must reach every consumer's compiled stylesheet. Everything else in block 2 of `tasks.md`, the resource, the plugin's second file, the lookup parameter and their tests, is machinery so that no consumer keeps a copy that drifts; a pasted snippet drops all of it and keeps a copy per consumer |
 
 ## Capabilities
 
@@ -82,8 +82,9 @@ What this change removes: both inline `style` writes and the style-merging branc
 ## Impact
 
 - `lib/src/main/kotlin/…/core/Popover.kt` and `PopoverTest.kt`.
-- `codegen/src/generator-new.ts` and its tests; regenerated `lib/generated/**`,
-  `docs/reference/dropdown.md`, `llms-full.txt`.
+- `codegen/src/generator-new.ts` and `codegen/src/test-generator.ts:113`, which hard-codes the
+  expected inline style of the custom-part test; `codegen/test/generator-new.test.ts:185` and
+  the snapshots; regenerated `lib/generated/**`, `docs/reference/dropdown.md`, `llms-full.txt`.
 - `lib/src/main/resources/kdaisyui.css`, new, and a test that the jar carries it.
 - `gradle-plugin`: `KdaisyuiClasses` writes the second file; its tests.
 - `example-app/src/main/css/app.css`; `e2e-tests/.../dropdown_popover.feature` (the markup

@@ -20,7 +20,7 @@ today (`dropdown_popover.feature:7-8`).
 - [x] 1.2 `. d` (A3) Put the two rules into `example-app/src/main/css/app.css` behind a
   relative `@import` of a scratch file, compile, and read the output for `attr(`; record the
   result. Revert the scratch edit.
-- [ ] 1.3 `. d` (A4) Read the four main specs named in A4 against a data attribute in place of
+- [x] 1.3 `. d` (A4) Read the four main specs named in A4 against a data attribute in place of
   the inline style; record the result.
 
 ## 2. The rules, shipped and imported, before anything depends on them

@@ -37,3 +37,13 @@
   133 for typed `attr()`, so A2 holds and no CI task was added.
 - **Cause:** record only; the task asked for both versions to be written down.
 - **Cost:** none.
+
+## F4 - A spec delta named a task that does not exist
+
+- **What happened:** task 1.3, 2026-11-07. Re-reading the specs found the delta of
+  `daisyui-component-coverage` saying the anchoring assumption is wrong "after task 4.3"; the
+  reorder of F2 had made it task 3.2. Corrected in the 1.3 commit. The four main specs
+  themselves hold nothing against the change.
+- **Cause:** the reorder of F2 renumbered the tasks, and nothing checks a task number cited in a
+  spec against `tasks.md`.
+- **Cost:** two minutes.

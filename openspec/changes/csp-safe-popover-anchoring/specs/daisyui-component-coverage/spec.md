@@ -66,7 +66,7 @@ next to the trigger, with no script on the page and no inline style in the marku
 top edge meets the trigger's bottom edge within 4px. The check was seen to fail with the trigger's
 `anchor-name` removed: the menu then opened 80px off. **Assumed** that the same scenario passes
 once the anchor travels as data attributes and the rules are in the example app's stylesheet;
-*wrong if* the scenario reports the menu off its trigger after task 4.3.
+*wrong if* the scenario reports the menu off its trigger after task 3.2.
 
 #### Scenario: Click opens it under the button
 

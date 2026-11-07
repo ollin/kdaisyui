@@ -24,10 +24,13 @@ app installs `Webjars` and `Resources` and serves `/static` from the classpath.
 ### 1. One collector, installed where each runner opens its page
 
 **Chosen:** a small class in `e2e-tests`, `ConsoleErrors`, that subscribes to
-`page.onConsoleMessage` and `page.onPageError` and holds the error-level texts. Both runners
-install it after `newPage()` and, in their teardown, fail when it holds anything, naming every
-message. The teardown runs after the scenario's own steps, so a scenario that opens two pages
-reports both.
+`page.onConsoleMessage` and `page.onPageError` and holds the error-level texts; `drain()`
+returns and clears them, and a pure `failureMessage(texts)` names every one. Both runners
+install it after `newPage()` and, in their teardown, fail when it holds anything. The check
+runs after the screenshot and the trace, and `context.close()` sits in a `finally`, so a failing
+check skips no cleanup. A scenario tagged `@csp-probe` drains instead of failing: that is how a
+probe that provokes a refusal on purpose passes. The teardown runs after the scenario's own
+steps, so a scenario that opens two pages reports both.
 
 **Rejected: a Cucumber step `Then the browser reports no violation`**, the Deploy-Radar's shape.
 It would have to be written into every scenario and would never reach the Kotest specs; a
@@ -53,6 +56,10 @@ non-CSP defect with it.
 in `configureRouting`, the function the E2E server also calls, so the suite and `just dev` send
 the same header. `ktor-server-default-headers` joins the app bundle in `libs.versions.toml`.
 
+`DefaultHeaders` applies to every response, static resources and webjars included, which are
+same-origin and fine; the header test reads `/` and `/static/app.css` so that the "every
+response" scenario is observed on a static route too.
+
 **Rejected: the header only in the E2E server.** Then `just dev` would show a page the suite
 never sees, and a developer looking at the browser would see no violation the suite would fail.
 
@@ -62,8 +69,9 @@ never sees, and a developer looking at the browser would see no violation the su
 
 - The indicator rules move into `app.css` verbatim; the `<style>` element goes. Tailwind's
   `@source` does not see them, but they are plain CSS in the entry, which Tailwind passes through.
-- The avatar becomes `daisyAvatar(placeholder = true)` with initials, which is what the DaisyUI
-  dashboard template shows without an image. No own-origin image to ship.
+- Each of the five avatars becomes `daisyAvatar(placeholder = true)` with initials, which is
+  what the DaisyUI dashboard template shows without an image, one file per commit. No
+  own-origin image to ship.
 - `* { --fx-noise: none; }` sits after the `@plugin` line, unlayered, with the comment the
   Deploy-Radar wrote: DaisyUI's rule lives in `@layer daisyui.l1.l2.l3`, and an unlayered
   declaration wins over any layered one.
@@ -73,16 +81,24 @@ never sees, and a developer looking at the browser would see no violation the su
 
 ### 5. The check must be seen to fail
 
-Before the example app's fixes land, the collector is installed and the suite run once with the
-header: the measurement in task 1.2 lists the failing pages and their messages, and that list
-is what the fix tasks work through. A gate nobody has seen red is the defect this repository has
-paid for five times (`AGENTS.md`, "RED is two steps").
+Twice. Before anything is committed, a throwaway header and collector on a scratch branch run
+the suite once: the measurement in task 1.2 lists the failing pages and their messages, and
+that list is what the fix tasks work through. And permanently: `CspProbeSpec` fulfils a request
+for `/csp-probe` through `page.route` with the header and an inline style, so no route of the
+example app violates the policy on purpose, and asserts that the collector held the refusal
+and that `failureMessage` names it. A gate nobody has seen red is the defect this repository
+has paid for five times (`AGENTS.md`, "RED is two steps").
 
-### 6. Enablers and the desired change
+### 6. Order, so every step is green under root TCR
 
-Enablers: the collector class and its unit test (a fake page is not available; the test opens a
-scratch page in the shared browser, as task 1.1 does). Desired changes: the header, the failing
-teardown, each example-app fix, the README section.
+Root TCR runs the E2E suite. The example app's fixes come first, while nothing enforces; the
+collector and the enforcing teardowns come last, when every page is clean. The reverse order
+would revert each step on the favicon 404 alone.
+
+### 7. Enablers and the desired change
+
+Enablers: the collector class with its pure `failureMessage`, and the probe spec. Desired
+changes: the header, each example-app fix, the failing teardowns, the README section.
 
 ## Risks / Trade-offs
 

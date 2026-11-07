@@ -15,10 +15,11 @@ off. kdaisyui SHALL write no inline `style`, no inline event handler and no `dat
 
 Provenance, in part verified and in part assumed: `grep -rnE 'attributes\["(on|src|style)'` over
 `lib/generated/main` finds one write, the `position-anchor` style of `Dropdown.kt:114`, which
-`csp-safe-popover-anchoring` removes together with the trigger's in `core/Popover.kt`; no
-generated function writes an event handler or a `src`. **Assumed** for the rest; *wrong if*
-the example application's suite under the header reports a message naming kdaisyui's output
-rather than the application's own markup.
+`csp-safe-popover-anchoring` removes together with the trigger's in `core/Popover.kt`; and the
+324 icon files that write SVG through `raw(` carry no `style=`, no `on…=` and no `data:`
+(`grep -rn 'raw(\|unsafe' | grep -E 'style=|on[a-z]+=|data:'`, empty, 2026-11-07). **Assumed**
+for the rest; *wrong if* the example application's suite under the header reports a message
+naming kdaisyui's output rather than the application's own markup.
 
 #### Scenario: A page of generated components under the header
 
@@ -38,7 +39,9 @@ and link an icon of its own origin, so no page load logs a request the policy or
 refuses.
 
 **Verified** that it does not today, read 2026-11-07: `DashboardShell.kt` writes a `<style>`
-element and an `https://picsum.photos` image, and no page links an icon.
+element, five files write an `https://picsum.photos` image (`DashboardShell.kt:94`,
+`TeamFragment.kt:82`, `RepoFragment.kt:51`, `FormSectionsFragment.kt:43`,
+`CardsRow2Fragment.kt:69`), and no page links an icon.
 
 #### Scenario: The header is on every response
 
@@ -62,8 +65,14 @@ Deploy-Radar's `BrowserSteps.kt:39` collects exactly these messages for its refu
 
 #### Scenario: An inline style is refused
 
-- **WHEN** a scenario's page carries a `style` attribute under the header
-- **THEN** the scenario fails, and the failure quotes the browser's refusal
+- **WHEN** a test serves itself a page with a `style` attribute under the header
+- **THEN** the collector holds the browser's refusal
+- **AND** the failure message built from it quotes that refusal
+
+#### Scenario: A probe drains instead of failing
+
+- **WHEN** a scenario is tagged as a probe of the policy
+- **THEN** its teardown drains the collector and the scenario passes
 
 #### Scenario: A clean page
 

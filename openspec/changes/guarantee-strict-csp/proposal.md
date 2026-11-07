@@ -14,8 +14,11 @@ noise texture, a `data:` image every button and badge references even in a theme
 2026-11-07), and Oliver's first priority: nothing may be loaded from another web site.
 
 The example app itself breaks the policy today, read 2026-11-07: an inline `<style>` for the
-htmx indicator (`example-app/.../DashboardShell.kt:18`), an avatar from `https://picsum.photos`
-(`DashboardShell.kt:94`), and no favicon, so every page load logs a 404.
+htmx indicator (`example-app/.../DashboardShell.kt:18`), five avatars from
+`https://picsum.photos` (`DashboardShell.kt:94`, `team/TeamFragment.kt:82`,
+`repo/RepoFragment.kt:51`, `dashboard/FormSectionsFragment.kt:43`,
+`dashboard/CardsRow2Fragment.kt:69`, the last four in fragments the shell loads over htmx), and
+no favicon, so every page load logs a 404.
 
 ## What Changes
 
@@ -27,10 +30,13 @@ htmx indicator (`example-app/.../DashboardShell.kt:18`), an avatar from `https:/
   runners (Cucumber hooks and the Kotest base spec). A refused inline style, a blocked image, a
   404 and a script error all arrive that way. The suite runs every page of the example app, so
   every generated component the app uses is covered, under the header, in Chromium.
-- **The example app's own violations go:** the inline `<style>` moves into `app.css`; the
-  picsum avatar becomes a DaisyUI avatar placeholder with initials, no image at all; `app.css`
+- **The example app's own violations go:** the inline `<style>` moves into `app.css`; the five
+  picsum avatars become DaisyUI avatar placeholders with initials, no image at all; `app.css`
   gains `* { --fx-noise: none; }`, unlayered so it beats DaisyUI's components layer; the app
   serves `/static/favicon.svg` and links it.
+- **The check is seen to fail** by a kept Kotest spec that serves itself a page with an inline
+  style under the header through Playwright's request routing, and asserts the refusal is held
+  and named; no page of the example app violates the policy on purpose.
 - **The docs:** README, section "Give those classes some CSS", gains "Under a strict
   Content-Security-Policy".
 
@@ -58,12 +64,13 @@ change removes: the picsum image, the inline `<style>` element, and the 404 on e
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
 | A1 | Chromium reports a CSP refusal, a blocked `data:` image and a 404 as console messages of type `error`, and Playwright's `onConsoleMessage` delivers them before the scenario ends | code | to check in task 1.1 - a scratch page with one inline style and one `data:` image under the header, opened in the suite's browser; the Deploy-Radar's `BrowserSteps.kt:39` relies on the same for the refusals |
-| A2 | htmx 4.0.1 serves the example app's triggers (`load`, `load delay:100ms`, `revealed`, `click`) with no `'unsafe-eval'` | external, code | confirmed at proposal for `hx-get`/`hx-target`/`hx-include`: the Deploy-Radar runs htmx 4 under the header with no violation. The delayed and `revealed` triggers: to check in task 1.2 |
+| A2 | htmx 4.0.1 serves the example app's triggers (`load`, `load delay:100ms`, `revealed`, `click`) with no `'unsafe-eval'`, and injects no `<style>` element of its own | external, code | confirmed at proposal for `hx-get`/`hx-target`/`hx-include`: the Deploy-Radar runs htmx 4 under the header with no violation; and for the style injection: `dist/htmx.js` of the 4.0.1 webjar has no `includeIndicatorStyles`, `inlineStyleNonce` or `createElement("style")`, read 2026-11-07, so the indicator style htmx 2 injected is gone. The delayed and `revealed` triggers: to check in task 1.2 |
 | A3 | `* { --fx-noise: none; }` outside any layer keeps the browser from requesting the noise image | code | confirmed at proposal - `daisyui/packages/daisyui/src/components/badge.css:9` reads `var(--fx-noise)` with no condition on `--noise`, and the Deploy-Radar's `app.css` carries that rule since commit "Keep DaisyUI's noise image out of the pages" (#FWB-6226), after which its violations stopped |
 | A4 | After the noise rule, the compiled stylesheet of the example app contains no other `url(` that is not the own origin | code | to check in task 1.2 - grep the compiled `app.css` |
 | A5 | No requirement of a main spec this builds on contradicts it. It builds on `css-delivery` (the example app uses the documented setup), `daisyui-component-coverage` (E2E coverage of the popover pages) and `documentation-snippets` (new README fences compile or say why not) | code | confirmed at proposal - the setup stays the plugin plus a compiled stylesheet; the popover scenarios keep their assertions and gain the console check; the README additions are CSS and a Ktor line, both skipped with a reason |
 | A6 | The check fails on every error-level message, not only on CSP refusals | user | open - ask at review. The design argues for every error: a 404 or a script error on a demo page is a defect of the same kind, and the suite today logs none on purpose |
 | A7 | The DaisyUI themes the example app uses render acceptably without the noise texture | user | open - ask at review. With `--noise: 0`, which the default themes have, the texture is invisible already, so the rule changes nothing visible |
+| A8 | An exception thrown in Kotest's `afterTest` fails the test it follows | code | to check in task 3.3 - seen once on purpose and recorded |
 
 ## Capabilities
 
@@ -79,9 +86,10 @@ None. `css-delivery`'s example-app requirement stays as written; its stylesheet 
 ## Impact
 
 - `example-app`: `Application.kt` (the header), `DashboardShell.kt` (style, avatar, favicon
-  link), `src/main/css/app.css` (indicator rules, noise rule), a `favicon.svg` resource,
-  `build.gradle.kts` only if the resource needs wiring; `gradle/libs.versions.toml` gains
-  `ktor-server-default-headers` in the app bundle.
-- `e2e-tests`: `CucumberHooks.kt`, `PlaywrightSpec.kt`, one shared collector; a scenario that
-  proves the check can fail.
+  link), the four fragment files with an avatar, `src/main/css/app.css` (indicator rules, noise
+  rule), a `favicon.svg` resource, `build.gradle.kts` only if the resource needs wiring;
+  `gradle/libs.versions.toml` gains `ktor-server-default-headers` in the app bundle. No test
+  source set is added to `example-app`: the header is asserted by an E2E HTTP step.
+- `e2e-tests`: `CucumberHooks.kt`, `PlaywrightSpec.kt`, one shared collector, a header step in
+  `FragmentSteps.kt`, and a kept probe spec that proves the check can fail.
 - `README.md`.

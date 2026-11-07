@@ -31,7 +31,7 @@ today (`dropdown_popover.feature:7-8`).
   the resource name as a parameter (today it knows only the component map).
 - [x] 2.3 `! F (internal)` `kdaisyuiClasses` writes `build/kdaisyui/kdaisyui.css` from the
   artifact's resource; a test asserts the bytes.
-- [ ] 2.4 `^ F` `example-app/src/main/css/app.css` imports the plugin's `kdaisyui.css` from its
+- [x] 2.4 `^ F` `example-app/src/main/css/app.css` imports the plugin's `kdaisyui.css` from its
   mount point; the compiled stylesheet carries both rules, which nothing uses yet. E2E unchanged.
 
 ## 3. The attribute pair, one side per step, under TCR at the repository root

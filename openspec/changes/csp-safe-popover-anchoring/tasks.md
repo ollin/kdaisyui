@@ -74,7 +74,7 @@ producer.
 
 ## 5. Docs
 
-- [ ] 5.1 `. d` `docs/how-to.md`, "Add a dropdown": the popover form is anchored to the button
+- [x] 5.1 `. d` `docs/how-to.md`, "Add a dropdown": the popover form is anchored to the button
   that opens it by the browser (Chrome 133, Safari 26, Firefox 147), and a popover opened from
   script needs `source`.
 - [ ] 5.2 `. d` `docs/upgrading.md`, "How to migrate from 0.9.x": `anchored` is deprecated and

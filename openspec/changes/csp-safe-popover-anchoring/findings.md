@@ -61,3 +61,18 @@
   CSS file has no line comment, so its header counts in full, and a Gradle task output needs its
   declaration, its wiring and a test in two files.
 - **Cost:** seven minutes and three bookkeeping commits.
+
+## F6 - The menu sits below its trigger without the rules: `popovertarget` anchors it implicitly
+
+- **What happened:** after task 3.2, 2026-11-07, a positive control: with the `@import` of
+  `kdaisyui.css` removed from the example app, `:e2e-tests:test` failed only the stylesheet
+  scenario; "The menu opens below its trigger" stayed green in Chromium 156. A popover opened by
+  `popovertarget` has its invoker as its implicit anchor (MDN, "Using CSS anchor positioning",
+  "Implicit anchor association"), so once no inline `position-anchor` names a missing anchor,
+  DaisyUI's `position-area` places the menu at the trigger by itself. The 2026-10-31 control
+  failed for the opposite reason: an explicit `position-anchor` naming an anchor that did not
+  exist overrode the implicit one. The `css-delivery` delta's claim that without the rules the
+  menu "opens in the middle of the viewport" is false for this markup in Chromium.
+- **Cause:** the probe behind A1 measured the attribute route with the rules, never without
+  them, so it could not tell "the rules anchor it" from "nothing needs to".
+- **Cost:** a question round with Oliver, and possibly the removal of block 2.

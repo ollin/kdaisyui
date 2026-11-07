@@ -1,0 +1,87 @@
+## Why
+
+kdaisyui's pitch is server-rendered HTML that needs no script: popover modals, popover
+dropdowns and megamenus open with no handler on the page. Nothing checks the stronger claim an
+application behind `Content-Security-Policy: default-src 'self'` needs: that no page loads
+anything from another host, runs no inline script, applies no inline style and fetches no
+`data:` image. The Deploy-Radar (fwb-application, kdaisyui 0.9.0) runs behind exactly that header
+and had to write a browser scenario of its own, "A view loads without breaking its own
+Content-Security-Policy" (`bdd_tests/.../filters_in_the_browser.feature:83`), which collects
+error-level console messages through Playwright. That scenario found two violations kdaisyui's
+own suite could not see: the inline anchor style (`csp-safe-popover-anchoring`) and DaisyUI's
+noise texture, a `data:` image every button and badge references even in a theme with
+`--noise: 0`. This is item 1 of its proposals (`~/ai/kdaisyui-improvements-from-deploy-radar.md`,
+2026-11-07), and Oliver's first priority: nothing may be loaded from another web site.
+
+The example app itself breaks the policy today, read 2026-11-07: an inline `<style>` for the
+htmx indicator (`example-app/.../DashboardShell.kt:18`), an avatar from `https://picsum.photos`
+(`DashboardShell.kt:94`), and no favicon, so every page load logs a 404.
+
+## What Changes
+
+- **The guarantee, stated:** kdaisyui's markup works under `default-src 'self'`. The README says
+  so, names the header, and lists what the application supplies: the stylesheet import of
+  `kdaisyui.css`, the noise rule, a favicon of its own.
+- **The example app sends the header** on every response, through Ktor's `DefaultHeaders`.
+- **The E2E suite fails a scenario whose page logs an error-level console message**, in both
+  runners (Cucumber hooks and the Kotest base spec). A refused inline style, a blocked image, a
+  404 and a script error all arrive that way. The suite runs every page of the example app, so
+  every generated component the app uses is covered, under the header, in Chromium.
+- **The example app's own violations go:** the inline `<style>` moves into `app.css`; the
+  picsum avatar becomes a DaisyUI avatar placeholder with initials, no image at all; `app.css`
+  gains `* { --fx-noise: none; }`, unlayered so it beats DaisyUI's components layer; the app
+  serves `/static/favicon.svg` and links it.
+- **The docs:** README, section "Give those classes some CSS", gains "Under a strict
+  Content-Security-Policy".
+
+### The subtractive option, stated
+
+Document the header and the two rules, and add no test. It is what the Deploy-Radar's author
+would have needed to read. It is rejected because both violations this change is about were
+found only by a test; a sentence in the README would not have found the next one. What this
+change removes: the picsum image, the inline `<style>` element, and the 404 on every page load.
+
+## Out of scope
+
+- **The inline anchor styles** — `csp-safe-popover-anchoring`, which lands first. Until it has,
+  the popover dropdown page fails the check here, which is why this change is sequenced after it.
+- **The stylesheet compile task** — `compile-the-stylesheet-in-the-plugin`.
+- **A page-head or CSP helper in `ktor-integration`** (item 10 of the proposals). Rejected: the
+  header is one line of Ktor, the favicon is the application's, and `ktor-integration`
+  deliberately serves no asset (`ktor-integration/build.gradle.kts`, the webjars comment).
+  Documented instead.
+- **A shipped behaviour script** (item 5) — `document-server-rendered-patterns` shows what
+  needs no script, and what does.
+
+## Assumptions
+
+| ID | Assumption | Checked by | Status |
+|---|---|---|---|
+| A1 | Chromium reports a CSP refusal, a blocked `data:` image and a 404 as console messages of type `error`, and Playwright's `onConsoleMessage` delivers them before the scenario ends | code | to check in task 1.1 - a scratch page with one inline style and one `data:` image under the header, opened in the suite's browser; the Deploy-Radar's `BrowserSteps.kt:39` relies on the same for the refusals |
+| A2 | htmx 4.0.1 serves the example app's triggers (`load`, `load delay:100ms`, `revealed`, `click`) with no `'unsafe-eval'` | external, code | confirmed at proposal for `hx-get`/`hx-target`/`hx-include`: the Deploy-Radar runs htmx 4 under the header with no violation. The delayed and `revealed` triggers: to check in task 1.2 |
+| A3 | `* { --fx-noise: none; }` outside any layer keeps the browser from requesting the noise image | code | confirmed at proposal - `daisyui/packages/daisyui/src/components/badge.css:9` reads `var(--fx-noise)` with no condition on `--noise`, and the Deploy-Radar's `app.css` carries that rule since commit "Keep DaisyUI's noise image out of the pages" (#FWB-6226), after which its violations stopped |
+| A4 | After the noise rule, the compiled stylesheet of the example app contains no other `url(` that is not the own origin | code | to check in task 1.2 - grep the compiled `app.css` |
+| A5 | No requirement of a main spec this builds on contradicts it. It builds on `css-delivery` (the example app uses the documented setup), `daisyui-component-coverage` (E2E coverage of the popover pages) and `documentation-snippets` (new README fences compile or say why not) | code | confirmed at proposal - the setup stays the plugin plus a compiled stylesheet; the popover scenarios keep their assertions and gain the console check; the README additions are CSS and a Ktor line, both skipped with a reason |
+| A6 | The check fails on every error-level message, not only on CSP refusals | user | open - ask at review. The design argues for every error: a 404 or a script error on a demo page is a defect of the same kind, and the suite today logs none on purpose |
+| A7 | The DaisyUI themes the example app uses render acceptably without the noise texture | user | open - ask at review. With `--noise: 0`, which the default themes have, the texture is invisible already, so the rule changes nothing visible |
+
+## Capabilities
+
+### New Capabilities
+
+- `content-security-policy`: kdaisyui's markup works under `default-src 'self'`, the example
+  application proves it on every page, and the documentation says what the application supplies.
+
+### Modified Capabilities
+
+None. `css-delivery`'s example-app requirement stays as written; its stylesheet gains one rule.
+
+## Impact
+
+- `example-app`: `Application.kt` (the header), `DashboardShell.kt` (style, avatar, favicon
+  link), `src/main/css/app.css` (indicator rules, noise rule), a `favicon.svg` resource,
+  `build.gradle.kts` only if the resource needs wiring; `gradle/libs.versions.toml` gains
+  `ktor-server-default-headers` in the app bundle.
+- `e2e-tests`: `CucumberHooks.kt`, `PlaywrightSpec.kt`, one shared collector; a scenario that
+  proves the check can fail.
+- `README.md`.

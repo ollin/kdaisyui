@@ -30,7 +30,7 @@ abstract class KdaisyuiClasses : DefaultTask() {
     @TaskAction
     fun write() {
         val found = classes.asFileTree.matching { include("**/*.class") }.flatMap { componentClassesNamedIn(it.readBytes()) }.toSet()
-        val selection = ComponentMap(componentMap()).select(found)
+        val selection = ComponentMap(resource(COMPONENT_MAP)).select(found)
         val reason = selection.fullListBecause
         if (reason != null) logger.warn("kdaisyui: writing every class, because $reason")
         output.get().asFile.writeText(HEADER + fullListLine(reason) + selection.classes.joinToString("\n", postfix = "\n"))
@@ -39,8 +39,8 @@ abstract class KdaisyuiClasses : DefaultTask() {
     /** Whoever opens the file sees why it holds every class, not only whoever read the build's log. */
     private fun fullListLine(reason: String?): String = if (reason == null) "" else "# Every class, because $reason.\n"
 
-    private fun componentMap(): String = checkNotNull(runtimeClasspath.firstNotNullOfOrNull { resourceIn(it, COMPONENT_MAP) }) {
-        "$COMPONENT_MAP is on no runtime classpath entry: does the build depend on io.github.ollin.kdaisyui:kdaisyui?"
+    private fun resource(name: String): String = checkNotNull(runtimeClasspath.firstNotNullOfOrNull { resourceIn(it, name) }) {
+        "$name is on no runtime classpath entry: does the build depend on io.github.ollin.kdaisyui:kdaisyui?"
     }
 
     private companion object {

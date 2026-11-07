@@ -6,7 +6,7 @@ import kotlin.io.path.createTempDirectory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class MapOnClasspathTest {
+class ResourceOnClasspathTest {
 
     private val dir = createTempDirectory().toFile()
 

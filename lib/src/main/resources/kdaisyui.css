@@ -1,9 +1,0 @@
-/*
- * The rules kdaisyui's own markup needs beyond DaisyUI's stylesheet. Import this file from your
- * Tailwind entry, beside the class list; the kdaisyui Gradle plugin writes both to build/kdaisyui/.
- *
- * An anchored popover travels its anchor name as a data attribute, not as an inline style,
- * because `Content-Security-Policy: default-src 'self'` drops every inline style attribute.
- */
-[data-anchor-name] { anchor-name: attr(data-anchor-name type(<custom-ident>)); }
-[data-position-anchor] { position-anchor: attr(data-position-anchor type(<custom-ident>)); }

@@ -80,10 +80,8 @@ jobs:
           submodules: recursive
 
       - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
-          java-version-file: .tool-versions
+        # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
+        uses: ./.github/actions/setup-jdk
 
       # Gradle's caches, the local build cache among them, written by main and only read by a pull
       # request, so no branch can poison what another restores. The MIT provider, by decision.
@@ -225,10 +223,8 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
-          java-version-file: .tool-versions
+        # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
+        uses: ./.github/actions/setup-jdk
 
       # Gradle's caches, the local build cache among them, written by main and only read by a pull
       # request, so no branch can poison what another restores. The MIT provider, by decision.
@@ -255,10 +251,8 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
-          java-version-file: .tool-versions
+        # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
+        uses: ./.github/actions/setup-jdk
 
       # Gradle's caches, the local build cache among them, written by main and only read by a pull
       # request, so no branch can poison what another restores. The MIT provider, by decision.
@@ -315,10 +309,8 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
-          java-version-file: .tool-versions
+        # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
+        uses: ./.github/actions/setup-jdk
 
       # Gradle's caches, the local build cache among them, written by main and only read by a pull
       # request, so no branch can poison what another restores. The MIT provider, by decision.
@@ -356,10 +348,8 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
-          java-version-file: .tool-versions
+        # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
+        uses: ./.github/actions/setup-jdk
 
       # Gradle's caches, the local build cache among them, written by main and only read by a pull
       # request, so no branch can poison what another restores. The MIT provider, by decision.

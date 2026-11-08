@@ -22,10 +22,9 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v6
+        # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
+        uses: ./.github/actions/setup-jdk
         with:
-          # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
-          java-version-file: .tool-versions
           cache: gradle
 
       - name: Derive version from tag

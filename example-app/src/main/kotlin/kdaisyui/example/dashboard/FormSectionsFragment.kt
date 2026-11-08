@@ -27,16 +27,16 @@ private fun TagConsumer<*>.teamMembersSection() {
             daisyCardBody {
                 daisyCardTitle("Team members")
                 ul("space-y-4") {
-                    teamMemberRow(1, "Alice Chen", "Owner")
-                    teamMemberRow(2, "Bob Martinez", "Maintainer")
-                    teamMemberRow(3, "Carol White", "Developer")
+                    teamMemberRow("Alice Chen", "Owner")
+                    teamMemberRow("Bob Martinez", "Maintainer")
+                    teamMemberRow("Carol White", "Developer")
                 }
             }
         }
     }
 }
 
-private fun UL.teamMemberRow(imgId: Int, name: String, role: String) {
+private fun UL.teamMemberRow(name: String, role: String) {
     li("flex items-center gap-3") {
         daisyAvatar(placeholder = true) {
             div("bg-neutral text-neutral-content w-10 rounded-full") {

@@ -62,10 +62,10 @@ page is clean, and the probe spec proves the check can go red.
   the collector holds and `failureMessage` names.
 - [x] 3.2 `! F (internal)` `CucumberHooks.tearDown` fails the scenario with `failureMessage`
   after the screenshot and the trace, with `context.close()` in a `finally`.
-- [ ] 3.3 `! F (internal)` `PlaywrightSpec.afterTest` does the same; `ConsoleErrorsSpec`'s probe
+- [x] 3.3 `! F (internal)` `PlaywrightSpec.afterTest` does the same; `ConsoleErrorsSpec`'s probe
   drains the spec's own collector (A8: record in `findings.md` that an exception thrown there
   fails the test, seen once on purpose).
-- [ ] 3.5 `. d` Record the before/after count of failing scenarios from 1.2 in `findings.md`.
+- [x] 3.5 `. d` Record the before/after count of failing scenarios from 1.2 in `findings.md`.
 
 ## 4. Docs
 

@@ -95,3 +95,17 @@
   3.4 merged into 3.1, the tag went; the steps' markers became `! F (internal)` by counted lines.
 - **Cause:** the review of F2 added the probe and the tag separately, each against one finding.
 - **Cost:** three minutes; one bookkeeping commit, and one test and one branch fewer.
+
+## F8 - Both teardowns seen to fail, and the before/after count (A8, task 3.5)
+
+- **What happened:** 2026-11-08. Cucumber (task 3.2): a temporary inline `style` on the popover
+  dropdown page failed both of its scenarios, one by the existing "no `style=`" step and one by
+  the teardown, quoting `Applying inline style violates …`. Kotest (task 3.3): a throwaway spec
+  that provoked a refusal and did not drain failed with `AfterAnyException`; the draining
+  `ConsoleErrorsSpec` passed. A first Cucumber control, removing the favicon link, proved
+  nothing: Chromium asks for `/favicon.ico` once per run, so no scenario logged the 404.
+  Before the fixes, under the header: 40 of 53 tests logged 1072 error-level messages (F4).
+  After them, with both teardowns enforcing: 62 tests, 0 failures - the 53 plus the header,
+  icon and image scenarios and the two `ConsoleErrorsSpec` tests.
+- **Cause:** record only; the controls are the "RED is two steps" rule applied to a gate.
+- **Cost:** none.

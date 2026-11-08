@@ -129,7 +129,7 @@ One row per finding (house rules §9).
 | F3 | - | same as csp-safe-popover-anchoring F5 |
 | F4 | - | none - record only |
 | F5 | - | none - record only; F6 carries the tool's side |
-| F6 | `mcp_Tcr` compiles the test sources as a guard of its own (`testClasses`) before it runs the suite, so a test that does not compile stops the cycle instead of reverting correct production code | open |
+| F6 | `mcp_Tcr` compiles the test sources as a guard of its own (`testClasses`) before it runs the suite, so a test that does not compile stops the cycle instead of reverting correct production code | adopted -> ollin/chezmoi-openspace-dotfiles/tcr-guards-test-compilation |
 | F7 | - | none - record only |
 | F8 | - | none - record only |
 | F9 | - | none - record only |

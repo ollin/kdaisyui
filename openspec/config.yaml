@@ -53,6 +53,9 @@ rules:
       engine the documentation names, and a control run with the mechanism removed.
       One engine with the mechanism present cannot tell "this makes it work" from
       "nothing needed it" (csp-safe-popover-anchoring, finding F6).
+    - An assumption that a CI step or job blocks a merge cites the main ruleset's required
+      status checks, read for the proposal. A job that is not required, or whose failure only
+      makes other jobs run, blocks nothing (fail-ci-on-an-unparsable-openspec-config, finding F1).
   design:
     - Record the alternatives considered for each decision and why they lost. A
       decision without its rejected alternative cannot be revisited later.

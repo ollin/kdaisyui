@@ -253,6 +253,8 @@ images: the masks of `loading`, `mask-*`, the tail of a `chat` bubble, the arrow
 browser refuses them, and a refused mask makes the element **invisible**: a loading spinner or a
 masked avatar simply disappears. A `data:` image is part of the stylesheet that carries it and is
 fetched from nowhere; scripts and styles stay at `'self'`.
+<!-- The DaisyUI stylesheets the paragraph above means; codegen/test/daisyui-data-urls.test.ts fails when DaisyUI's CSS no longer matches them.
+daisyui-data-urls: base/svg components/chat components/loading components/mask components/mockup components/tooltip -->
 
 With Ktor, `ktor-server-default-headers` sends it:
 

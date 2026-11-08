@@ -1,6 +1,8 @@
 package io.github.ollin.kdaisyui.gradle
 
 import org.gradle.testfixtures.ProjectBuilder
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 import kotlin.io.path.createTempDirectory
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -44,6 +46,15 @@ class KdaisyuiClassesTest {
     fun noMapOnTheClasspathFailsNamingTheDependency() {
         val failure = assertFailsWith<IllegalStateException> { task.write() }
         assertEquals("$COMPONENT_MAP is on no runtime classpath entry: does the build depend on io.github.ollin.kdaisyui:kdaisyui?", failure.message)
+    }
+
+    @Test
+    fun aLibraryOfAnotherVersionIsNamedInTheFile() {
+        val jar = dir.resolve("kdaisyui-0.0.1.jar")
+        ZipOutputStream(jar.outputStream()).use { zip -> zip.putNextEntry(ZipEntry(COMPONENT_MAP)); zip.write("button\tButtonKt\tbtn\n".toByteArray()) }
+        task.runtimeClasspath.from(jar)
+        task.write()
+        assertEquals("# kdaisyui: the plugin is ${KdaisyuiVersions.kdaisyui}, the kdaisyui jar on the runtime classpath is 0.0.1; the stylesheet compile installs the toolchain of ${KdaisyuiVersions.kdaisyui}", comments().last())
     }
 
     private fun writtenClasses() = task.output.get().asFile.readLines().filterNot { it.startsWith("#") }

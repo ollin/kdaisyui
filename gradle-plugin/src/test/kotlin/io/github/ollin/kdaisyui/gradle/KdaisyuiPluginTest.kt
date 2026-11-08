@@ -22,6 +22,38 @@ class KdaisyuiPluginTest {
     }
 
     @Test
+    fun theStylesheetTaskReadsTheExtensionThePinnedVersionsAndTheClassList() {
+        project.pluginManager.apply("java")
+        project.pluginManager.apply("io.github.ollin.kdaisyui")
+        project.extensions.getByType(KdaisyuiExtension::class.java).stylesheet { entry.set(project.file("src/main/css/app.css")) }
+        val task = project.tasks.getByName("kdaisyuiStylesheet") as KdaisyuiStylesheet
+        assertEquals(project.file("src/main/css/app.css"), task.entry.get().asFile)
+        assertEquals(project.layout.buildDirectory.dir("kdaisyui").get().asFile, task.classList.get().asFile)
+        assertEquals(listOf(KdaisyuiVersions.tailwind, KdaisyuiVersions.daisyui), listOf(task.tailwind.get(), task.daisyui.get()))
+        assertEquals(project.layout.buildDirectory.file("kdaisyui/app.css").get().asFile, task.output.get().asFile)
+        assertTrue(task.taskDependencies.getDependencies(task).any { it.name == "kdaisyuiClasses" }, "the class list is written first")
+    }
+
+    @Test
+    fun theStylesheetTaskTakesTheMirrorTheCredentialAndMinifyFromTheExtension() {
+        project.pluginManager.apply("java")
+        project.pluginManager.apply("io.github.ollin.kdaisyui")
+        project.extensions.getByType(KdaisyuiExtension::class.java).stylesheet {
+            nodeImage.set("mirror.example/node:26-slim")
+            npmRegistry.set("https://npm.mirror.example/")
+            npmUser.set("user")
+            npmPassword.set("secret")
+            minify.set(false)
+        }
+        val task = project.tasks.getByName("kdaisyuiStylesheet") as KdaisyuiStylesheet
+        assertEquals("Compiles the stylesheet with the plugin's Tailwind and DaisyUI, in a Node container.", task.description)
+        assertEquals("mirror.example/node:26-slim", task.nodeImage.get())
+        assertEquals("https://npm.mirror.example/", task.npmRegistry.get())
+        assertEquals(listOf("user", "secret"), listOf(task.npmUser.get(), task.npmPassword.get()))
+        assertEquals(false, task.minify.get())
+    }
+
+    @Test
     fun withoutJavaThereIsNothingToScan() {
         project.pluginManager.apply("io.github.ollin.kdaisyui")
         assertNull(project.tasks.findByName("kdaisyuiClasses"))

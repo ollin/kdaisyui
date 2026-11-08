@@ -33,8 +33,12 @@ abstract class KdaisyuiClasses : DefaultTask() {
         val selection = ComponentMap(resource(COMPONENT_MAP)).select(found)
         val reason = selection.fullListBecause
         if (reason != null) logger.warn("kdaisyui: writing every class, because $reason")
-        output.get().asFile.writeText(HEADER + fullListLine(reason) + selection.classes.joinToString("\n", postfix = "\n"))
+        val mismatch = versionMismatch(KdaisyuiVersions.kdaisyui, runtimeClasspath)
+        if (mismatch != null) logger.warn(mismatch)
+        output.get().asFile.writeText(HEADER + fullListLine(reason) + mismatchLine(mismatch) + selection.classes.joinToString("\n", postfix = "\n"))
     }
+
+    private fun mismatchLine(mismatch: String?): String = if (mismatch == null) "" else "# $mismatch\n"
 
     /** Whoever opens the file sees why it holds every class, not only whoever read the build's log. */
     private fun fullListLine(reason: String?): String = if (reason == null) "" else "# Every class, because $reason.\n"

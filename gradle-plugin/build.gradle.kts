@@ -65,10 +65,27 @@ gradlePlugin {
 }
 
 dependencies {
+    // The stylesheet compile runs Node in a container reached through the Docker daemon alone: no
+    // docker CLI and no Node on the build host (compile-the-stylesheet-in-the-plugin).
+    implementation(libs.testcontainers)
     testImplementation(kotlin("test"))
 }
 
 tasks.test { useJUnitPlatform() }
+
+// The versions the stylesheet compile installs, from the repository's one place for each: the catalog
+// and .tool-versions. Expanded into the jar, so a consumer pins nothing and gets what the components
+// were generated against.
+tasks.processResources {
+    val versions = mapOf(
+        "tailwind" to libs.versions.webjar.tailwindcss.browser.get(),
+        "daisyui" to libs.versions.daisyui.get(),
+        "node" to file("../.tool-versions").readLines().first { it.startsWith("nodejs ") }.substringAfter(" ").trim(),
+        "kdaisyui" to version.toString(),
+    )
+    inputs.properties(versions)
+    filesMatching("kdaisyui-versions.properties") { expand(versions) }
+}
 
 // Its own 100% line and branch gate: the root build's aggregated one cannot reach an included build.
 kover {
@@ -91,7 +108,12 @@ pitest {
     // Calls whose removal no test can observe: Kotlin's parameter null checks; closing the jar the
     // map is read from (nothing on Linux notices a leaked handle); and the fallback's warning, whose
     // reason the written file also states, which is what the tests assert.
-    avoidCallsTo.set(setOf("kotlin.jvm.internal", "java.util.zip.ZipFile", "org.gradle.api.logging"))
+    avoidCallsTo.set(setOf("kotlin.jvm.internal", "java.util.zip.ZipFile", "org.gradle.api.logging", "io.github.ollin.kdaisyui.gradle.NodeContainerRun"))
+    // NodeContainerRun starts a Node container: each of its mutants, and each mutant removing the call
+    // to it, would cost a container start and an npm install. It has no branch, and Kover keeps it in
+    // the 100% gate through NodeContainerRunTest, which compiles a real stylesheet. Everything it is
+    // handed is pure and mutated (compile-the-stylesheet-in-the-plugin, A11).
+    excludedClasses.set(setOf("io.github.ollin.kdaisyui.gradle.NodeContainerRun"))
     outputFormats.set(setOf("HTML", "XML"))
     testStrengthThreshold.set(100)
     // ProjectBuilder injects classes into java.lang; Gradle's own test task opens it for the test

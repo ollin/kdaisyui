@@ -8,7 +8,8 @@ Five rules before following a link:
 - An enum parameter is a choice of one DaisyUI class group (`color = ButtonColor.Primary` emits `btn-primary`). A `Boolean` parameter is named after the class it toggles (`soft = true` emits `alert-soft`).
 - Every function takes `id: HtmlId?`, `extraClasses: String?` and one optional trailing lambda, `block`, whose receiver is the element that function renders and which writes its attributes and children. Where a function also takes `text`, the text is appended after the block. A part renders its own element, which can differ from its component's: `daisyDropdown` renders `<details>`, `daisyDropdownContent` renders `<ul>`. A part such as `daisyDropdownContent` is documented on its component's page, here Dropdown, which names each function's element.
 - Every function has a class sibling, `Tag.daisy<Name>Classes(…)`, which adds the same classes to an element you write yourself.
-- The library emits class names only. Your Tailwind build needs the class list, which the Gradle plugin `io.github.ollin.kdaisyui` writes (README, Quick start, step 3).
+- The library emits class names only. Your Tailwind build needs the class list, which the Gradle plugin `io.github.ollin.kdaisyui` writes; its task `kdaisyuiStylesheet` compiles the stylesheet in a Node container through the Docker daemon alone, with the Tailwind and DaisyUI the plugin pins (README, Quick start, step 3).
+- The markup works under `Content-Security-Policy: default-src 'self'; img-src 'self' data:` - no inline style, script or handler; `data:` images only because DaisyUI's masks and noise are `data:` SVGs (README, "Under a strict Content-Security-Policy").
 
 ## Docs
 

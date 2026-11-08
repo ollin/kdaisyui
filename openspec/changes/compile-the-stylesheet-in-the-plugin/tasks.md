@@ -70,7 +70,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 5. The example application
 
-- [ ] 5.1 `! F` `example-app/build.gradle.kts` configures the extension and `processResources`
+- [x] 5.1 `! F` `example-app/build.gradle.kts` configures the extension and `processResources`
   takes the task's output; `app.css` uses the design's mount points; E2E green.
 - [ ] 5.2 `^ r` Delete `tailwind/Dockerfile`, `buildTailwindImage`, `compileTailwind` and
   `callingUserArgs`.

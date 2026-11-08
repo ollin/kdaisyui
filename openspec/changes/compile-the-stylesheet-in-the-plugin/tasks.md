@@ -20,7 +20,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
   scratch consumer in `/tmp/opencode/` that applies the plugin from `mavenLocal()` and runs
   `kdaisyuiClasses`. Record in `proposal.md` A2 and `findings.md` whether the plugin loads with
   Testcontainers on its classpath beside Gradle's own libraries.
-- [ ] 1.2 `. d` (A6, A7, A11) Read `css-delivery`, `coverage-enforcement` and `mutation-testing`
+- [x] 1.2 `. d` (A6, A7, A11) Read `css-delivery`, `coverage-enforcement` and `mutation-testing`
   against a task that starts a container; decide and record whether `NodeContainerRun` is
   excluded from PIT's target classes with its reason, as `lib/build.gradle.kts` does for the
   bridges, since every mutant of it would need a container run. Record in `proposal.md`.

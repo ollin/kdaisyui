@@ -46,7 +46,7 @@ page is clean, and the probe spec proves the check can go red.
 - [x] 2.5 `^ F` `repo/RepoFragment.kt:51`, the same, for `/fragments/forms`.
 - [x] 2.6 `^ F` `dashboard/FormSectionsFragment.kt:43`, the same, for `/fragments/form-sections`.
 - [x] 2.7 `^ F` `dashboard/CardsRow2Fragment.kt:69`, the same, for `/fragments/cards-row2`.
-- [ ] 2.9 `^ F` `favicon.svg` under `static/`, linked beside the stylesheet in every page head;
+- [x] 2.9 `^ F` `favicon.svg` under `static/`, linked beside the stylesheet in every page head;
   the feature asserts `/static/favicon.svg` answers 200 and `/` links it.
 
 ## 3. The check, under TCR

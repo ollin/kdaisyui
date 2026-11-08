@@ -74,7 +74,7 @@ never sees, and a developer looking at the browser would see no violation the su
   what the DaisyUI dashboard template shows without an image, one file per commit. No
   own-origin image to ship.
 - A `favicon.svg` under `example-app/src/main/resources/static/`, linked from every page's head
-  through the existing `daisyuiStylesheet()` neighbour; a second head helper is not worth a
+  through the existing `daisyuiStylesheet()` neighbour (renamed `pageAssets()` in task 2.9); a second head helper is not worth a
   file. `/favicon.ico` itself is not served: a page that links an icon is not asked for it.
 
 ### 5. The check must be seen to fail

@@ -94,4 +94,4 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
   `analyze_change_set`.
 - [x] 7.2 `openspec validate compile-the-stylesheet-in-the-plugin --strict`.
 - [x] 7.3 The evaluation under `tmp/compile-the-stylesheet-in-the-plugin/` for Oliver to adopt.
-- [ ] 7.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.
+- [x] 7.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

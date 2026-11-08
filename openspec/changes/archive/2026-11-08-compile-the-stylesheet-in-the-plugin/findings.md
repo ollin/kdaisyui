@@ -117,3 +117,20 @@
   run. `NodeContainerRunTest` showed the same split: 6.1 s cold, 3.0 s warm.
 - **Cause:** the figure was estimated at proposal and never measured; the design said so.
 - **Cost:** none; the README states the measured figures.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | none - record only |
+| F2 | - | same as csp-safe-popover-anchoring F2 |
+| F3 | - | same as csp-safe-popover-anchoring F5 |
+| F4 | - | none - record only |
+| F5 | - | none - record only; F6 carries the tool's side |
+| F6 | `mcp_Tcr` compiles the test sources as a guard of its own (`testClasses`) before it runs the suite, so a test that does not compile stops the cycle instead of reverting correct production code | open |
+| F7 | - | none - record only |
+| F8 | - | none - record only |
+| F9 | - | none - record only |
+| F10 | - | none - record only |

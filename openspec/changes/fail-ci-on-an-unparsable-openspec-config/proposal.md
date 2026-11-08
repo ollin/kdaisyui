@@ -33,7 +33,7 @@ the warning is one line among JSON on another stream. A check is the house rules
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
 | A1 | The runner's `yq` (mikefarah 4.54.1, `ubuntu-26.04` image 20261101.186) rejects F1's broken line as the CLI's parser does | code | to check in task 1.1 - locally only the Python `yq` 0.0.0 (PyYAML) was available: exit 1 on the broken line, 0 on the good file |
-| A2 | No requirement of a main spec this builds on contradicts it. It builds on `ci-job-selection` (the `scope` job runs for every pull request; planning-only pull requests run nothing else) | code | to check in task 1.2 |
+| A2 | No requirement of a main spec this builds on contradicts it. It builds on `ci-job-selection` (the `scope` job runs for every pull request; planning-only pull requests run nothing else) | code | false - task 1.2: `ci-job-selection` makes a failed `scope` job run every test job ("The classification fails safe"), and the `main` ruleset requires only the seven test and title checks, not `scope` (`get_rules_for_branch`, 2026-11-08). A failing check in `scope` would leave the pull request mergeable. The spec also says planning files are "read by no job". Replacement open with Oliver (finding F1) |
 
 ## Capabilities
 

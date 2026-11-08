@@ -54,7 +54,7 @@ page is clean, and the probe spec proves the check can go red.
 3.4, a separate `CspProbeSpec`, was merged into 3.1, whose routed test is the same proof; the
 `@csp-probe` tag went with it, since no Cucumber scenario provokes a refusal (finding F7).
 
-- [ ] 3.1 `! F (internal)` `ConsoleErrors`: subscribes to a page's error-level console messages
+- [x] 3.1 `! F (internal)` `ConsoleErrors`: subscribes to a page's error-level console messages
   and page errors, each with its location, since a 404's text names no URL (F3); `drain()`
   returns and clears what it holds; `failureMessage(texts)` is a pure function naming every
   message. `ConsoleErrorsSpec`: the pure part, and - kept, the proof the check can go red - a

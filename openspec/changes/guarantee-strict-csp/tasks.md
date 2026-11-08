@@ -37,7 +37,7 @@ page is clean, and the probe spec proves the check can go red.
   `DefaultHeaders` with the policy `default-src 'self'; img-src 'self' data:`; a new
   `content_security_policy.feature` reads the header on `/` and on `/static/app.css` through a
   new step, so static responses are covered too. About 15 counted lines.
-- [ ] 2.2 `^ r` The htmx indicator rules move from the inline `<style>` into `app.css`; the
+- [x] 2.2 `^ r` The htmx indicator rules move from the inline `<style>` into `app.css`; the
   element goes. Its test: the progressive-loading scenarios, unchanged.
 - [ ] 2.3 `^ F` `DashboardShell.kt:94`: the picsum avatar becomes `daisyAvatar(placeholder = true)`
   with initials; `content_security_policy.feature` gains "The page loads no image from another

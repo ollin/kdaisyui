@@ -38,9 +38,9 @@ private fun TagConsumer<*>.teamMembersSection() {
 
 private fun UL.teamMemberRow(imgId: Int, name: String, role: String) {
     li("flex items-center gap-3") {
-        daisyAvatar {
-            div("w-10 rounded-full") {
-                img(src = "https://picsum.photos/80/80?member-$imgId", alt = "$name avatar")
+        daisyAvatar(placeholder = true) {
+            div("bg-neutral text-neutral-content w-10 rounded-full") {
+                span { +name.split(" ").joinToString("") { it.take(1) } }
             }
         }
         div("grow") {

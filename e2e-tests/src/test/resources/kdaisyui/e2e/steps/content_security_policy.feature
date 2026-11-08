@@ -12,3 +12,5 @@ Feature: Content-Security-Policy
     And the response body does not contain "src=\"http"
     And the endpoint "/fragments/forms" returns status 200
     And the response body does not contain "src=\"http"
+    And the endpoint "/fragments/form-sections" returns status 200
+    And the response body does not contain "src=\"http"

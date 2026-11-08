@@ -1,5 +1,6 @@
 package io.github.ollin.kdaisyui.gradle
 
+import org.testcontainers.DockerClientFactory
 import kotlin.io.path.createTempDirectory
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -25,5 +26,6 @@ class NodeContainerRunTest {
         NodeContainerRun.compile(run, output)
 
         assertContains(output.readText(), "--color-base-100")
+        DockerClientFactory.instance().client().inspectVolumeCmd(NodeContainerRun.NPM_CACHE_VOLUME).exec()
     }
 }

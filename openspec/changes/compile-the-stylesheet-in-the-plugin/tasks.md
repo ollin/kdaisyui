@@ -82,7 +82,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 6. Docs
 
-- [ ] 6.1 `. d` README, "Give those classes some CSS": the task and its configuration first,
+- [x] 6.1 `. d` README, "Give those classes some CSS": the task and its configuration first,
   the mirror settings, the volume and how to remove it, that a further `@plugin` of the
   consumer's own is not installed, and the manual route as the alternative with repository
   paths.

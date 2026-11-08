@@ -6,6 +6,7 @@ import com.microsoft.playwright.Tracing
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.Scenario
+import kdaisyui.e2e.ConsoleErrors
 import kdaisyui.e2e.SharedInfrastructure
 import java.nio.file.Files
 import java.nio.file.Path
@@ -13,6 +14,8 @@ import java.nio.file.Path
 private const val NO_JAVASCRIPT_TAG = "@nojs"
 
 class CucumberHooks(private val world: PlaywrightWorld) {
+
+    private lateinit var consoleErrors: ConsoleErrors
 
     /**
      * Tag a scenario `@nojs` to run it in a context with JavaScript disabled. That is the only
@@ -31,6 +34,7 @@ class CucumberHooks(private val world: PlaywrightWorld) {
             Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true)
         )
         world.page = world.context.newPage()
+        consoleErrors = ConsoleErrors(world.page)
     }
 
     @After
@@ -53,6 +57,12 @@ class CucumberHooks(private val world: PlaywrightWorld) {
         } catch (e: Exception) {
             System.err.println("Trace capture failed: ${e.message}")
         }
-        world.context.close()
+        // After the screenshot and the trace, so a page that logged an error still leaves both.
+        try {
+            val held = consoleErrors.drain()
+            check(held.isEmpty()) { ConsoleErrors.failureMessage(held) }
+        } finally {
+            world.context.close()
+        }
     }
 }

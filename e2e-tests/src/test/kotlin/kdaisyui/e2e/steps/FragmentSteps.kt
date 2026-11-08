@@ -110,6 +110,12 @@ class FragmentSteps(private val world: PlaywrightWorld) {
         lastResponseBody = response.text()
     }
 
+    @Then("the endpoint {string} sends the header {string} as {string}")
+    fun endpointSendsHeader(path: String, name: String, expected: String) {
+        val actual = world.page.request().get("${SharedInfrastructure.BASE_URL}$path").headers()[name.lowercase()]
+        check(actual == expected) { "Expected $name of $path to be '$expected', got '$actual'" }
+    }
+
     @Then("the response body contains {string}")
     fun responseBodyContains(text: String) {
         check(lastResponseBody.contains(text)) {

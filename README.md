@@ -193,6 +193,41 @@ responsive or state variants on DaisyUI classes, compile.
 > `extraClasses` takes any class you like, but the same rule applies: it must be visible to *your*
 > Tailwind setup. The library cannot account for classes it never sees.
 
+#### Under a strict Content-Security-Policy
+
+kdaisyui's markup works under this policy, with nothing loaded from another host and no inline
+script or style:
+
+```text
+Content-Security-Policy: default-src 'self'; img-src 'self' data:
+```
+
+kdaisyui writes no inline `style`, no event handler and no `data:` URL, and its popovers open
+without script. `:example-app` sends this header on every response, and its E2E suite fails any
+page that logs a console error, so every page of it is checked in Chromium.
+
+**Why `img-src` allows `data:`:** DaisyUI's own stylesheet draws some components with `data:` SVG
+images: the masks of `loading`, `mask-*`, the tail of a `chat` bubble, the arrow of a `tooltip`, a
+`mockup` control, and the noise texture of its themes. Under `default-src 'self'` alone the
+browser refuses them, and a refused mask makes the element **invisible**: a loading spinner or a
+masked avatar simply disappears. A `data:` image is part of the stylesheet that carries it and is
+fetched from nowhere; scripts and styles stay at `'self'`.
+
+With Ktor, `ktor-server-default-headers` sends it:
+
+<!-- snippet: skip - needs ktor-server-default-headers, which the library does not depend on -->
+```kotlin
+install(DefaultHeaders) { header("Content-Security-Policy", "default-src 'self'; img-src 'self' data:") }
+```
+
+What your application supplies itself: **an icon of its own origin**. A page that links none
+makes the browser ask for `/favicon.ico`, and a 404 there is a console error too.
+
+<!-- snippet: in HEAD -->
+```kotlin
+link { rel = "icon"; type = "image/svg+xml"; href = "/static/favicon.svg" }
+```
+
 ## Upgrading
 
 Every release that breaks the API says what to change in the [upgrade guide](docs/upgrading.md).

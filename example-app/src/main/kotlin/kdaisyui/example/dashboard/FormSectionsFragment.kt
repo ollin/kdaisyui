@@ -27,20 +27,20 @@ private fun TagConsumer<*>.teamMembersSection() {
             daisyCardBody {
                 daisyCardTitle("Team members")
                 ul("space-y-4") {
-                    teamMemberRow(1, "Alice Chen", "Owner")
-                    teamMemberRow(2, "Bob Martinez", "Maintainer")
-                    teamMemberRow(3, "Carol White", "Developer")
+                    teamMemberRow("Alice Chen", "Owner")
+                    teamMemberRow("Bob Martinez", "Maintainer")
+                    teamMemberRow("Carol White", "Developer")
                 }
             }
         }
     }
 }
 
-private fun UL.teamMemberRow(imgId: Int, name: String, role: String) {
+private fun UL.teamMemberRow(name: String, role: String) {
     li("flex items-center gap-3") {
-        daisyAvatar {
-            div("w-10 rounded-full") {
-                img(src = "https://picsum.photos/80/80?member-$imgId", alt = "$name avatar")
+        daisyAvatar(placeholder = true) {
+            div("bg-neutral text-neutral-content w-10 rounded-full") {
+                span { +name.split(" ").joinToString("") { it.take(1) } }
             }
         }
         div("grow") {

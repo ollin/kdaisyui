@@ -1,16 +1,22 @@
-## Purpose
+# content-security-policy Specification
 
-kdaisyui's markup works under `Content-Security-Policy: default-src 'self'`: nothing from
-another host, no inline script, no inline style, no `data:` image. The example application
+## Purpose
+kdaisyui's markup works under `Content-Security-Policy: default-src 'self'; img-src 'self' data:`: nothing from another
+host, no inline script, no inline style; `data:` images only, which DaisyUI's own masks need. The example application
 proves it on every page under that header, and the documentation says what the application
 supplies.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: The markup works under a strict policy
 
-Every element kdaisyui renders SHALL work under `Content-Security-Policy: default-src 'self'`
-once DaisyUI's noise texture is switched off. kdaisyui SHALL write no inline `style`, no inline event handler and no `data:` URL.
+Every element kdaisyui renders SHALL work under `Content-Security-Policy: default-src 'self'; img-src 'self' data:`.
+kdaisyui SHALL write no inline `style`, no inline event handler and no `data:` URL itself.
+
+**Verified** that `img-src` needs `data:`: DaisyUI 5.7.50 sets `data:` SVG masks in
+`loading.css`, `mask.css`, `chat.css`, `tooltip.css` and `mockup.css`, and the noise in
+`base/svg.css`; under `default-src 'self'` the suite logged their refusals, and under this policy
+none (F4, F5, A9).
 
 Provenance, in part verified and in part assumed: `grep -rnE 'attributes\["(on|src|style)'` over
 `lib/generated/main` and `lib/src/main` finds no write since `csp-safe-popover-anchoring` (#477)
@@ -22,7 +28,7 @@ naming kdaisyui's output rather than the application's own markup.
 
 #### Scenario: A page of generated components under the header
 
-- **WHEN** a page built from generated components is served with `default-src 'self'`
+- **WHEN** a page built from generated components is served with `default-src 'self'; img-src 'self' data:`
 - **THEN** the browser logs no refusal
 
 #### Scenario: A popover opens under the header
@@ -32,7 +38,7 @@ naming kdaisyui's output rather than the application's own markup.
 
 ### Requirement: The example application sends the header and passes
 
-The example application SHALL send `Content-Security-Policy: default-src 'self'` on every
+The example application SHALL send `Content-Security-Policy: default-src 'self'; img-src 'self' data:` on every
 response, and every E2E scenario SHALL pass with it. It SHALL load nothing from another host
 and link an icon of its own origin, so no page load logs a request the policy or the server
 refuses.
@@ -45,7 +51,7 @@ element, five files write an `https://picsum.photos` image (`DashboardShell.kt:9
 #### Scenario: The header is on every response
 
 - **WHEN** any route of the example application answers
-- **THEN** the response carries `Content-Security-Policy: default-src 'self'`
+- **THEN** the response carries `Content-Security-Policy: default-src 'self'; img-src 'self' data:`
 
 #### Scenario: Every page is clean
 
@@ -57,10 +63,9 @@ element, five files write an `https://picsum.photos` image (`DashboardShell.kt:9
 The E2E suite SHALL fail any scenario, Cucumber or Kotest, whose page logged a console message
 of type `error` or raised a page error, and the failure SHALL quote every such message.
 
-**Assumed** that Chromium delivers a policy refusal and a blocked `data:` image as console
-messages of type `error` through Playwright. *Wrong if:* the scratch page of task 1.1, with one
-inline style and one `data:` image under the header, produces no error-level message. The
-Deploy-Radar's `BrowserSteps.kt:39` collects exactly these messages for its refusal check.
+**Verified** in task 1.1 (Chromium 156): an inline style refused, a `data:` image refused and a
+404 each reach Playwright's `onConsoleMessage` as type `error` before the test ends; the 404's
+text names no URL, so the collector adds each message's location (finding F3).
 
 #### Scenario: An inline style is refused
 
@@ -70,8 +75,8 @@ Deploy-Radar's `BrowserSteps.kt:39` collects exactly these messages for its refu
 
 #### Scenario: A probe drains instead of failing
 
-- **WHEN** a scenario is tagged as a probe of the policy
-- **THEN** its teardown drains the collector and the scenario passes
+- **WHEN** a test provokes a refusal on purpose and drains the collector itself
+- **THEN** its teardown finds nothing and the test passes
 
 #### Scenario: A clean page
 
@@ -85,15 +90,11 @@ Deploy-Radar's `BrowserSteps.kt:39` collects exactly these messages for its refu
 
 ### Requirement: The documentation names the header and what the application supplies
 
-The README SHALL state that kdaisyui's markup works under `default-src 'self'`, show the header
-and name what the application supplies: the rule that switches DaisyUI's noise texture off and
-why, and an icon of its own.
-
-**Verified** that the noise rule is needed: `daisyui/packages/daisyui/src/base/svg.css` declares
-`--fx-noise` as a `data:` URL, and `components/badge.css:9` reads it with no condition on
-`--noise`; the Deploy-Radar's refusals stopped with `* { --fx-noise: none; }` in its entry.
+The README SHALL state that kdaisyui's markup works under `default-src 'self'; img-src 'self' data:`, show the header,
+say why `img-src` allows `data:` and what breaks without it, and name what the application
+supplies: an icon of its own.
 
 #### Scenario: A reader sets up a strict policy
 
 - **WHEN** a developer reads the README's CSS section
-- **THEN** it shows the header, the noise rule and the icon, each with its reason
+- **THEN** it shows the header, the reason for `data:` and the icon, each with its reason

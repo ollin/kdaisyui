@@ -19,3 +19,10 @@
 
 @source "../app-kotlin";
 @source "../kdaisyui/kdaisyui-classes.txt";
+
+/*
+ * htmx's loading indicator. In the stylesheet rather than a <style> element in the page head,
+ * because the example app runs under `default-src 'self'`, which refuses inline styles.
+ */
+.htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
+.htmx-request .htmx-indicator, .htmx-request.htmx-indicator { opacity: 1; }

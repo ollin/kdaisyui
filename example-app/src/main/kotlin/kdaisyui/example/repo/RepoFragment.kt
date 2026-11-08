@@ -37,18 +37,18 @@ private fun TagConsumer<*>.recentEventsCard() {
         addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-5")
         div("text-base-content/60 p-6 pb-0 text-center text-xs font-bold") { +"Recent events" }
         daisyMenu(extraClasses = "w-full") {
-            for ((idx, event) in listOf(
+            for (event in listOf(
                 "Pipeline succeeded on api-gateway/main" to "2 minutes ago",
                 "PR #1204 merged into frontend/main" to "11 minutes ago",
                 "Issue #2891 assigned to Bob" to "31 minutes ago",
                 "Release v2.4.1 deployed to production" to "1 hour ago",
                 "Security alert triaged in worker-service" to "2 hours ago",
-            ).withIndex()) {
+            )) {
                 li {
                     a("gap-4") {
-                        daisyAvatar {
-                            div("w-6 rounded-full") {
-                                img(src = "https://picsum.photos/80/80?${idx + 6}")
+                        daisyAvatar(placeholder = true) {
+                            div("bg-neutral text-neutral-content w-6 rounded-full") {
+                                span("text-xs") { +event.first.take(1) }
                             }
                         }
                         span("text-xs") { b { +event.first }; br; +event.second }

@@ -16,6 +16,9 @@ abstract class PlaywrightSpec : FunSpec() {
     protected val context: BrowserContext get() = _context!!
     protected val page: Page get() = _page!!
 
+    /** What this test's page logged at error level; a test that provokes it on purpose drains it. */
+    protected lateinit var consoleErrors: ConsoleErrors
+
     init {
         beforeTest {
             val browser = SharedInfrastructure.browser
@@ -27,6 +30,7 @@ abstract class PlaywrightSpec : FunSpec() {
                 Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true)
             )
             _page = _context!!.newPage()
+            consoleErrors = ConsoleErrors(_page!!)
         }
 
         afterTest { (testCase, _) ->
@@ -56,9 +60,15 @@ abstract class PlaywrightSpec : FunSpec() {
                     System.err.println("Trace capture failed: ${e.message}")
                 }
             }
-            _context?.close()
-            _context = null
-            _page = null
+            // After the screenshot and the trace, so a page that logged an error still leaves both.
+            try {
+                val held = consoleErrors.drain()
+                check(held.isEmpty()) { ConsoleErrors.failureMessage(held) }
+            } finally {
+                _context?.close()
+                _context = null
+                _page = null
+            }
         }
     }
 

@@ -13,16 +13,8 @@ fun HTML.dashboardShell(application: Application) {
         meta { charset = "utf-8" }
         title { +"DevTrack Overview" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        daisyuiStylesheet()
+        pageAssets()
         script { src = "/webjars/htmx.org/dist/htmx.min.js" }
-        style {
-            unsafe {
-                raw("""
-                    .htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
-                    .htmx-request .htmx-indicator, .htmx-request.htmx-indicator { opacity: 1; }
-                """.trimIndent())
-            }
-        }
     }
     body("drawer bg-base-200 lg:drawer-open min-h-screen") {
         val drawerId: HtmlId = Dashboard.Drawer()
@@ -87,12 +79,9 @@ private fun FlowContent.shellHeader() {
         }
         div("dropdown dropdown-end z-10") {
             id = Dashboard.Header.Avatar().id
-            div {
+            daisyAvatar(placeholder = true, extraClasses = "btn btn-circle btn-ghost") {
                 attributes["tabindex"] = "0"
-                classes = setOf("avatar", "btn", "btn-circle", "btn-ghost")
-                div("w-10 rounded-full") {
-                    img(src = "https://picsum.photos/80/80?5")
-                }
+                div("bg-neutral text-neutral-content w-10 rounded-full") { span { +"DT" } }
             }
             ul {
                 attributes["tabindex"] = "0"

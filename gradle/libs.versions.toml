@@ -45,6 +45,7 @@ ktor-server-html-builder = { module = "io.ktor:ktor-server-html-builder", versio
 ktor-server-webjars = { module = "io.ktor:ktor-server-webjars", version.ref = "ktor" }
 ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-server-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
+ktor-server-default-headers = { module = "io.ktor:ktor-server-default-headers", version.ref = "ktor" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 
 # Logging
@@ -75,6 +76,7 @@ ktor-server-app = [
     "ktor-server-html-builder",
     "ktor-server-webjars",
     "ktor-server-status-pages",
+    "ktor-server-default-headers",
     "ktor-server-resources",
 ]
 

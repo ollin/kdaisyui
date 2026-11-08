@@ -62,7 +62,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
   source directory in a real container and reads `--color-base-100` in the output; it needs
   Docker and the network, as `check` already does for the example app.
 - [x] 4.3 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache` (A8).
-- [ ] 4.4 `! F (internal)` The plugin registers `kdaisyuiStylesheet` beside `kdaisyuiClasses`,
+- [x] 4.4 `! F (internal)` The plugin registers `kdaisyuiStylesheet` beside `kdaisyuiClasses`,
   wired lazily from the extension and depending on `kdaisyuiClasses` through its output; a
   `ProjectBuilder` test reads the wiring. Registered always, not "when the entry is set": that
   would need `afterEvaluate`, and without an entry Gradle already fails the task naming `entry`

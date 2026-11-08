@@ -8,7 +8,9 @@ import org.gradle.api.tasks.SourceSetContainer
 /**
  * `id("io.github.ollin.kdaisyui")`: registers `kdaisyuiClasses`, which writes
  * `build/kdaisyui/kdaisyui-classes.txt` with the classes of the kdaisyui components the main source
- * set's compiled code uses. Needs the `java` plugin, which Kotlin's JVM plugin applies.
+ * set's compiled code uses, and `kdaisyuiStylesheet`, which compiles the entry stylesheet configured in
+ * `kdaisyui { stylesheet { … } }` in a Node container. Needs the `java` plugin, which Kotlin's JVM
+ * plugin applies.
  */
 class KdaisyuiPlugin : Plugin<Project> {
     override fun apply(project: Project) {

@@ -89,3 +89,14 @@
   `entry`. Task 4.4 changed accordingly; no spec requirement names the condition.
 - **Cause:** the plan described the user's view ("absent when unused"), not Gradle's lifecycle.
 - **Cost:** three minutes; one bookkeeping commit.
+
+## F9 - Task 4.4 reverted once: a task's output cannot be mapped before it ran
+
+- **What happened:** 2026-11-08. The first wiring derived the stylesheet task's class-list
+  directory from `kdaisyuiClasses`' output (`flatMap { it.output }.map { … parent }`); Gradle
+  refused to query that mapped value before `kdaisyuiClasses` completed, and the test asking for
+  the configured directory failed. Reverted; the smaller step names the directory both tasks use,
+  `build/kdaisyui`, and adds an explicit `dependsOn`. Green; a `^ r` then named the directory once.
+- **Cause:** `map` on a task output provider is only valid at execution, which a configuration
+  test never reaches.
+- **Cost:** one revert, about four minutes.

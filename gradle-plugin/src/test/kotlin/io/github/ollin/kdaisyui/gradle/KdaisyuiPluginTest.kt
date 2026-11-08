@@ -35,6 +35,25 @@ class KdaisyuiPluginTest {
     }
 
     @Test
+    fun theStylesheetTaskTakesTheMirrorTheCredentialAndMinifyFromTheExtension() {
+        project.pluginManager.apply("java")
+        project.pluginManager.apply("io.github.ollin.kdaisyui")
+        project.extensions.getByType(KdaisyuiExtension::class.java).stylesheet {
+            nodeImage.set("mirror.example/node:26-slim")
+            npmRegistry.set("https://npm.mirror.example/")
+            npmUser.set("user")
+            npmPassword.set("secret")
+            minify.set(false)
+        }
+        val task = project.tasks.getByName("kdaisyuiStylesheet") as KdaisyuiStylesheet
+        assertEquals("Compiles the stylesheet with the plugin's Tailwind and DaisyUI, in a Node container.", task.description)
+        assertEquals("mirror.example/node:26-slim", task.nodeImage.get())
+        assertEquals("https://npm.mirror.example/", task.npmRegistry.get())
+        assertEquals(listOf("user", "secret"), listOf(task.npmUser.get(), task.npmPassword.get()))
+        assertEquals(false, task.minify.get())
+    }
+
+    @Test
     fun withoutJavaThereIsNothingToScan() {
         project.pluginManager.apply("io.github.ollin.kdaisyui")
         assertNull(project.tasks.findByName("kdaisyuiClasses"))

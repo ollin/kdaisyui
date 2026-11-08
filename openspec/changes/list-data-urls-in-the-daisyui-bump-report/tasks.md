@@ -1,6 +1,6 @@
 # Tasks
 
-**Estimate:** to be made when the change is applied (proposed 2026-11-08, not started).
+**Estimate, frozen 2026-11-08:** `20min (35min DevOnly)` by the ledger's `forecast`; 35 minutes developer-only. Block 1: 5, block 2: 20, block 3: 10.
 
 ## 1. Open assumptions
 

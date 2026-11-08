@@ -67,9 +67,12 @@
   and kept the test. Fixed in the test (`also`), the production code restored from the tool's
   rescue copy and the one tracked edit rewritten unchanged; green. Together with F5, two of the
   change's first eight production steps were reverted for a defect in the step's test.
-- **Cause:** the tool's guard compiles production and test sources in one Gradle invocation
-  (`build`), so a test compile error reaches it as a red build, not as the stop the TCR skill
-  describes ("compile error: STOP, nothing reverted").
+- **Cause** (corrected 2026-11-08 by a probe): the tool's Gradle guard is
+  `./gradlew --quiet testClasses`, which compiles the root build's test sources only; it does not
+  reach an included build. With a test of `gradle-plugin` broken on purpose it exited 0, while
+  `./gradlew testClasses :gradle-plugin:testClasses` exited 1. So the compile error first surfaced
+  in the suite's `build`, as a red run that reverts. The first cause written here ("compiles
+  production and tests in one invocation") was wrong.
 - **Cost:** about five minutes and one revert, plus the rescue-copy restore.
 
 ## F7 - Tasks 3.2 and 3.3 could not be two green steps
@@ -129,7 +132,7 @@ One row per finding (house rules §9).
 | F3 | - | same as csp-safe-popover-anchoring F5 |
 | F4 | - | none - record only |
 | F5 | - | none - record only; F6 carries the tool's side |
-| F6 | `mcp_Tcr` compiles the test sources as a guard of its own (`testClasses`) before it runs the suite, so a test that does not compile stops the cycle instead of reverting correct production code | adopted -> ollin/chezmoi-openspace-dotfiles/tcr-guards-test-compilation |
+| F6 | `mcp_Tcr`'s Gradle guard compiles the test sources of every included build too, not only the root's, so a test that does not compile stops the cycle instead of reverting correct production code | adopted -> ollin/chezmoi-openspace-dotfiles/tcr-guards-test-compilation |
 | F7 | - | none - record only |
 | F8 | - | none - record only |
 | F9 | - | none - record only |

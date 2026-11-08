@@ -1,0 +1,17 @@
+# Throwaway probe for upload-coverage-to-codescene task 1.1 (A1, A2). Never merged.
+name: probe-codescene-reach
+on: pull_request
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install cs-coverage (A2)
+        run: curl -fsSL https://downloads.codescene.io/enterprise/cli/install-cs-coverage-tool.sh | bash -s -- -y
+      - name: cs-coverage version (A2)
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          cs-coverage version || cs-coverage --version
+      - name: Reach the server (A1)
+        run: |
+          getent hosts codescene.katta.nautsch.ch || true
+          curl -sS -o /dev/null -w 'http_code=%{http_code} time=%{time_total}s\n' --max-time 30 https://codescene.katta.nautsch.ch:11128/ || echo "curl exit=$?"

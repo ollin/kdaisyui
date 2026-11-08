@@ -80,4 +80,4 @@ page is clean, and the probe spec proves the check can go red.
   that no mutation tool covers `e2e-tests` or `example-app`.
 - [x] 5.2 `openspec validate guarantee-strict-csp --strict`.
 - [x] 5.3 The evaluation under `tmp/guarantee-strict-csp/` for Oliver to adopt.
-- [ ] 5.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.
+- [x] 5.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

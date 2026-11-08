@@ -109,3 +109,18 @@
   icon and image scenarios and the two `ConsoleErrorsSpec` tests.
 - **Cause:** record only; the controls are the "RED is two steps" rule applied to a gate.
 - **Cost:** none.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | fixed - in this change (tasks 2.2-2.9) |
+| F2 | - | same as csp-safe-popover-anchoring F2 |
+| F3 | - | none - record only |
+| F4 | - | none - record only |
+| F5 | The DaisyUI bump report (`just daisyui-delta`) lists every component whose CSS carries a `data:` URL, so the README's list of them follows a DaisyUI bump | open |
+| F6 | - | same as csp-safe-popover-anchoring F5 |
+| F7 | - | none - record only |
+| F8 | - | none - record only |

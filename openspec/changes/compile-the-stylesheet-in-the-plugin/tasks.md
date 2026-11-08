@@ -45,7 +45,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
   `_auth` when both are given; a half credential throws, naming the missing half. One step with
   3.3: the condition "both given" has a branch "only one", which Kover's 100% branch gate refuses
   to leave untested (finding F7).
-- [ ] 3.4 `! F` `StylesheetCompile.command(versions, minify)`: the install of the three pinned
+- [x] 3.4 `! F` `StylesheetCompile.command(versions, minify)`: the install of the three pinned
   packages with `--prefer-offline`, then the compile, `--minify` when asked.
 - [ ] 3.5 `^ F` `StylesheetCompile.mountPoints(sources)`: each source directory at
   `/deps/project/sources/<index>-<last segment>`, so two directories with one name cannot

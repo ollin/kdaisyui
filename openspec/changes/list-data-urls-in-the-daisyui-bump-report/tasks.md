@@ -8,7 +8,7 @@
 
 ## 2. The check
 
-- [ ] 2.1 `! F (internal)` The test in `codegen/test/`, with its control: a component removed from
+- [x] 2.1 `! F (internal)` The test in `codegen/test/`, with its control: a component removed from
   the README's list fails it.
 
 ## 3. Gate and archive

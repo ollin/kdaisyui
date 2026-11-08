@@ -1,9 +1,10 @@
 /*
- * Tailwind entry for :example-app, compiled by the `compileTailwind` Gradle task.
+ * Tailwind entry for :example-app, compiled by the kdaisyui plugin's `kdaisyuiStylesheet` task in a
+ * Node container.
  *
- * The `@source` paths are mount points the task creates, not repository paths — see
- * example-app/build.gradle.kts. Keeping them flat and named avoids a chain of `../..`
- * that would break the moment a directory moves.
+ * The `@source` paths are the task's fixed places in that container, not repository paths:
+ * `../sources/0-kotlin` is the first configured source directory (src/main/kotlin), and
+ * `../kdaisyui/` is the directory `kdaisyuiClasses` writes to. They are the same in every build.
  *
  * Both sources are needed, and the second is the interesting one: a class like
  * `btn-primary` never appears in this application's code. It is assembled at runtime

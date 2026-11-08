@@ -6,8 +6,9 @@ import kotlinx.html.link
 /**
  * What every page in this application links in its head: the stylesheet, and an icon of its own.
  *
- * Compiled by `:example-app:compileTailwind` from this application's Kotlin sources and the
- * library's generated ones, then shipped as a classpath resource.
+ * The stylesheet is compiled by the kdaisyui plugin's `kdaisyuiStylesheet` task from this
+ * application's Kotlin sources and the classes of the kdaisyui components it uses, then shipped as
+ * a classpath resource.
  *
  * It replaced the prebuilt `daisyui.css` webjar plus Tailwind's browser build. That pairing
  * worked for the five variant prefixes DaisyUI happens to pre-generate — `sm:` `md:` `lg:`

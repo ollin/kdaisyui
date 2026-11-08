@@ -24,7 +24,7 @@ fun Application.configureRouting() {
     install(Webjars)
     install(Resources)
     routing {
-        // The stylesheet the build compiles, produced by :example-app:compileTailwind.
+        // The stylesheet the build compiles, produced by the kdaisyui plugin's kdaisyuiStylesheet task.
         staticResources("/static", "static")
         dashboardRoutes()
     }

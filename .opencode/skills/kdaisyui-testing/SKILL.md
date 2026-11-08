@@ -215,5 +215,7 @@ runner's default file patterns have changed between majors, and a mismatch there
 builds and tests with no Node, no npm and no submodules. Both Node-needing jobs stay outside it.
 
 `e2e-tests` needs Docker because `:e2e-tests:test` depends on `:example-app:classes`, which
-compiles the app's stylesheet in a container (`:example-app:compileTailwind`). That adds a one-off
-image build, ~15 s with no layer cache between runs.
+compiles the app's stylesheet in a Node container through the kdaisyui plugin's `kdaisyuiStylesheet`
+task (Testcontainers; no docker CLI needed). npm's cache lives in the named volume
+`kdaisyui-npm-cache`; without it a compile installs Tailwind and DaisyUI anew. The plugin's own
+`NodeContainerRunTest` starts a container too.

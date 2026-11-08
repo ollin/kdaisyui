@@ -51,8 +51,19 @@ val html = createHTML().div {
 kdaisyui emits class names only, and a class assembled at runtime from an enum appears in none of
 your source files, so Tailwind needs the list. The Gradle plugin `io.github.ollin.kdaisyui` (Maven
 Central) writes `build/kdaisyui/kdaisyui-classes.txt` with the classes of the components your
-compiled code uses; point your Tailwind `@source` at it. Without Gradle, the jar's own
-`kdaisyui-classes.txt` lists every class. See the README's Quick start, step 3.
+compiled code uses. Its task `kdaisyuiStylesheet` compiles your entry stylesheet with the Tailwind
+and DaisyUI it pins, in a Node container reached through the Docker daemon alone, configured by
+`kdaisyui { stylesheet { entry.set(…) } }`; the entry names its inputs as
+`@source "../kdaisyui/kdaisyui-classes.txt"` and `@source "../sources/0-kotlin"`. Without Gradle,
+the jar's own `kdaisyui-classes.txt` lists every class. See the README's Quick start, step 3.
+
+### Content-Security-Policy
+
+The markup works under `default-src 'self'; img-src 'self' data:`: kdaisyui writes no inline
+style, script or event handler, and its popovers open without script, anchored to the trigger that
+opens them. `img-src` allows `data:` because DaisyUI draws `loading`, `mask-*`, the `chat` tail,
+the `tooltip` arrow, a `mockup` control and its noise with `data:` SVGs; refused, a mask makes its
+element invisible. `popoverTarget(…, anchored = …)` is deprecated and writes nothing.
 
 ## Reading the signatures below
 

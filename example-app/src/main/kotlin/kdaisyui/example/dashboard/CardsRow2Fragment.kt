@@ -55,13 +55,13 @@ private fun TagConsumer<*>.teamActivityCard() {
         daisyCardBody {
             daisyCardTitle("Team Activity")
             daisyMenu(extraClasses = "w-full") {
-                for ((idx, event) in listOf(
+                for (event in listOf(
                     "Alice merged PR #1204",
                     "Bob opened issue #2891",
                     "Carol deployed v2.4.1",
                     "Dave closed 12 issues",
                     "Eve created repository",
-                ).withIndex()) {
+                )) {
                     li {
                         a("gap-3") {
                             daisyAvatar(placeholder = true) {

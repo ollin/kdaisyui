@@ -17,15 +17,14 @@ class ConsoleErrorsSpec : PlaywrightSpec() {
         }
 
         test("a refused inline style is held, named, and drained") {
-            val errors = ConsoleErrors(page)
             page.route("**/csp-probe") { route -> route.fulfill(pageWithAnInlineStyle()) }
             page.navigate("/csp-probe")
 
-            val held = errors.drain()
+            val held = consoleErrors.drain()
 
             held shouldHaveSize 1
             ConsoleErrors.failureMessage(held) shouldContain "Applying inline style violates"
-            errors.drain() shouldHaveSize 0
+            consoleErrors.drain() shouldHaveSize 0
         }
     }
 

@@ -4,7 +4,7 @@ import kotlinx.html.HEAD
 import kotlinx.html.link
 
 /**
- * The stylesheet every page in this application loads.
+ * What every page in this application links in its head: the stylesheet, and an icon of its own.
  *
  * Compiled by `:example-app:compileTailwind` from this application's Kotlin sources and the
  * library's generated ones, then shipped as a classpath resource.
@@ -20,7 +20,7 @@ import kotlinx.html.link
  * so the comment itself was a candidate and the compiled stylesheet carried six rules that no
  * code in this application could ever put on a page. Name the variant and the class separately.
  */
-fun HEAD.daisyuiStylesheet() {
+fun HEAD.pageAssets() {
     link { rel = "stylesheet"; href = "/static/app.css" }
     // An icon of its own origin: without a link the browser asks for /favicon.ico and logs a 404.
     link { rel = "icon"; type = "image/svg+xml"; href = "/static/favicon.svg" }

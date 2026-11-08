@@ -13,7 +13,7 @@ fun HTML.dashboardShell(application: Application) {
         meta { charset = "utf-8" }
         title { +"DevTrack Overview" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        daisyuiStylesheet()
+        pageAssets()
         script { src = "/webjars/htmx.org/dist/htmx.min.js" }
     }
     body("drawer bg-base-200 lg:drawer-open min-h-screen") {

@@ -40,7 +40,7 @@ fun HTML.disabledStatePage() {
         meta { charset = "utf-8" }
         title { +"Disabled state check" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        daisyuiStylesheet()
+        pageAssets()
     }
     body("bg-base-200 min-h-screen p-10") {
         h1("text-xl font-bold mb-6") { +"Disabled state check" }

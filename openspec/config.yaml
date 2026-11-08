@@ -70,6 +70,10 @@ rules:
       in that order.
     - Give each task its intended Arlo prefix, and for anything bug-related make
       the first step the failing reproducing test.
+    - Before ordering, grep the repository for every literal the change replaces and
+      name each file that holds it in a task - a generator or a test that hard-codes
+      it included. Then order the steps so each is green under TCR at the repository
+      root, which runs the E2E suite (csp-safe-popover-anchoring, finding F2).
 
 # Per-operation guidance, served when implementation or archival starts.
 # Advisory: it reduces the chance a step is forgotten, it does not enforce anything.

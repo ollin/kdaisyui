@@ -31,8 +31,8 @@ Nothing: the list is checked by hand at each bump. That is what F5 found not hap
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | The codegen tests can read DaisyUI's CSS through `src/submodules.ts`, as the snapshot tests read the pages | code | to check in task 1.1 |
-| A2 | No requirement of a main spec this builds on contradicts it: `content-security-policy` (the README names the policy and why) | code | to check in task 1.1 |
+| A1 | The codegen tests can read DaisyUI's CSS through `src/submodules.ts`, as the snapshot tests read the pages | code | confirmed in task 1.1 - `pinnedSubmodule('daisyui')` in `codegen/src/submodules.ts` returns the pinned checkout from the repository root, as `submodules.test.ts` and the snapshot tests use it |
+| A2 | No requirement of a main spec this builds on contradicts it: `content-security-policy` (the README names the policy and why) | code | confirmed in task 1.1 - `content-security-policy` requires the README to show the header and say why `img-src` allows `data:`; a marker naming the components adds nothing it forbids |
 | A3 | Oliver accepts a failing test instead of a report line | user | confirmed by the user 2026-11-08 - the test, as recommended |
 
 ## Impact

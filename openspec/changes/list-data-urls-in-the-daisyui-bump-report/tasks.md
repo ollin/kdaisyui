@@ -4,7 +4,7 @@
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d (internal)` (A1, A2) Read `src/submodules.ts` and `content-security-policy`; record.
+- [x] 1.1 `. d (internal)` (A1, A2) Read `src/submodules.ts` and `content-security-policy`; record.
 
 ## 2. The check
 

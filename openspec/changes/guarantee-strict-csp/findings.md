@@ -75,3 +75,14 @@
   element kdaisyui renders SHALL work … once DaisyUI's noise texture is switched off", rested on
   it.
 - **Cost:** a question round with Oliver on what the guarantee says, before section 2.
+
+## F6 - Section 2 was planned with markers and tests it could not have
+
+- **What happened:** 2026-11-08, before the first code commit, against the rule
+  `planning-rules-from-popover-anchoring` added the same day (plan a marker from counted lines).
+  Task 2.1 counts about fifteen lines, so `! F`, not `^ F`. Tasks 2.3-2.7 changed visible
+  behaviour with no test naming it, which no marker better than `@` allows and TCR refuses; each
+  now adds its route to a scenario built from existing steps. Corrected in one commit.
+- **Cause:** the plan of 2026-11-07 predates the rule, and counted "the gate in section 3" as
+  the test of section 2's fixes, which it cannot be while section 2 has to stay green without it.
+- **Cost:** about five minutes; one bookkeeping commit.

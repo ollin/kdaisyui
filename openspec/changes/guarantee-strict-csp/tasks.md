@@ -33,18 +33,21 @@ page is clean, and the probe spec proves the check can go red.
 
 2.8, the noise rule, was dropped after F5: `img-src 'self' data:` lets DaisyUI's noise load.
 
-- [ ] 2.1 `^ F` `ktor-server-default-headers` in the app bundle; `configureRouting` installs
-  `DefaultHeaders` with the policy `default-src 'self'; img-src 'self' data:`; an E2E HTTP step reads the header on `/` and on
-  `/static/app.css`, so static responses are covered too.
+- [ ] 2.1 `! F` `ktor-server-default-headers` in the app bundle; `configureRouting` installs
+  `DefaultHeaders` with the policy `default-src 'self'; img-src 'self' data:`; a new
+  `content_security_policy.feature` reads the header on `/` and on `/static/app.css` through a
+  new step, so static responses are covered too. About 15 counted lines.
 - [ ] 2.2 `^ r` The htmx indicator rules move from the inline `<style>` into `app.css`; the
-  element goes.
+  element goes. Its test: the progressive-loading scenarios, unchanged.
 - [ ] 2.3 `^ F` `DashboardShell.kt:94`: the picsum avatar becomes `daisyAvatar(placeholder = true)`
-  with initials.
-- [ ] 2.4 `^ F` `team/TeamFragment.kt:82`, the same.
-- [ ] 2.5 `^ F` `repo/RepoFragment.kt:51`, the same.
-- [ ] 2.6 `^ F` `dashboard/FormSectionsFragment.kt:43`, the same.
-- [ ] 2.7 `^ F` `dashboard/CardsRow2Fragment.kt:69`, the same.
-- [ ] 2.9 `^ F` `favicon.svg` under `static/`, linked beside the stylesheet in every page head.
+  with initials; `content_security_policy.feature` gains "The page loads no image from another
+  host" for `/`, from the existing steps (`returns status 200`, `does not contain "src=\"http"`).
+- [ ] 2.4 `^ F` `team/TeamFragment.kt:82`, the same, and the scenario's line for `/fragments/team`.
+- [ ] 2.5 `^ F` `repo/RepoFragment.kt:51`, the same, for `/fragments/forms`.
+- [ ] 2.6 `^ F` `dashboard/FormSectionsFragment.kt:43`, the same, for `/fragments/form-sections`.
+- [ ] 2.7 `^ F` `dashboard/CardsRow2Fragment.kt:69`, the same, for `/fragments/cards-row2`.
+- [ ] 2.9 `^ F` `favicon.svg` under `static/`, linked beside the stylesheet in every page head;
+  the feature asserts `/static/favicon.svg` answers 200 and `/` links it.
 
 ## 3. The check, under TCR
 

@@ -27,3 +27,16 @@
   `@csp-probe` tag, the probe as a self-serving Kotest spec through `page.route`, the header
   asserted by an E2E HTTP step, A2 extended (htmx 4.0.1 injects no style element, read in its
   `dist/htmx.js`), and the grep extended to `raw(` (empty for `style=`, handlers and `data:`).
+
+## F3 - What Chromium reports, read for A1
+
+- **What happened:** task 1.1, 2026-11-08, Chromium 156, a page fulfilled through `page.route`
+  with `default-src 'self'`. `onConsoleMessage` received, all of type `error`:
+  - `Applying inline style violates the following Content Security Policy directive 'default-src 'self''. … The action has been blocked.`
+  - `Loading the image 'data:image/gif;base64,…' violates the following Content Security Policy directive: "default-src 'self'". … The action has been blocked.`
+  - `Failed to load resource: the server responded with a status of 404 (Not Found)` - with no URL in the text.
+  No `onPageError`. A1 holds.
+- **Cause:** record only. One consequence for task 3.1: the 404 message names no URL, so
+  `failureMessage` should add the message's location (`ConsoleMessage.location()`) to name the
+  resource, as the spec's 404 scenario asks.
+- **Cost:** none.

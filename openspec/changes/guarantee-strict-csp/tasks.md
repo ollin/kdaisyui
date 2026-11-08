@@ -14,7 +14,7 @@ page is clean, and the probe spec proves the check can go red.
 
 ## 1. Open assumptions, on a scratch branch, nothing committed
 
-- [ ] 1.1 `. d` (A1) A scratch page with one inline `style`, one `data:` image and one request
+- [x] 1.1 `. d` (A1) A scratch page with one inline `style`, one `data:` image and one request
   the server answers 404, served by a throwaway route under the header; a throwaway Kotest spec
   prints every console message's type and text. Record them in `findings.md`; discard the scratch.
 - [ ] 1.2 `. d` (A2, A4) With a throwaway header and collector, run the E2E suite once and

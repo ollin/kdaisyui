@@ -39,6 +39,14 @@ class KdaisyuiStylesheetTest {
     }
 
     @Test
+    fun aMirrorAndItsCredentialReachTheNpmrc() {
+        task.npmRegistry.set("https://npm.mirror.example/npmjs/")
+        task.npmUser.set("user")
+        task.npmPassword.set("secret")
+        assertEquals("registry=https://npm.mirror.example/npmjs/\n//npm.mirror.example/npmjs/:_auth=dXNlcjpzZWNyZXQ=\n", task.plan().npmrc)
+    }
+
+    @Test
     fun halfACredentialFailsTheTaskBeforeAnyContainer() {
         task.npmUser.set("user")
         val failure = assertFailsWith<IllegalArgumentException> { task.compile() }

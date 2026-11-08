@@ -51,18 +51,20 @@ page is clean, and the probe spec proves the check can go red.
 
 ## 3. The check, under TCR
 
-- [ ] 3.1 `^ F (internal)` `ConsoleErrors`: subscribes to a page's error-level console messages
-  and page errors; `drain()` returns and clears what it holds; `failureMessage(texts)` is a pure
-  function naming every message. Unit tests on the pure parts; one test opens a page the test
-  itself fulfils through `page.route` with the header and an inline style, in the shared browser.
-- [ ] 3.2 `^ F (internal)` `CucumberHooks.tearDown` fails the scenario with `failureMessage`
-  after the screenshot and the trace, with `context.close()` in a `finally`; a scenario tagged
-  `@csp-probe` drains instead of failing.
-- [ ] 3.3 `^ F (internal)` `PlaywrightSpec.afterTest` does the same (A8: record in
-  `findings.md` that an exception thrown there fails the test, seen once on purpose).
-- [ ] 3.4 `^ F (internal)` `CspProbeSpec`, kept: fulfils `/csp-probe` through `page.route` with
-  the header and an inline style, asserts the collector held a refusal, and asserts that
-  `failureMessage` of that list names it. This is the proof the check can go red.
+3.4, a separate `CspProbeSpec`, was merged into 3.1, whose routed test is the same proof; the
+`@csp-probe` tag went with it, since no Cucumber scenario provokes a refusal (finding F7).
+
+- [ ] 3.1 `! F (internal)` `ConsoleErrors`: subscribes to a page's error-level console messages
+  and page errors, each with its location, since a 404's text names no URL (F3); `drain()`
+  returns and clears what it holds; `failureMessage(texts)` is a pure function naming every
+  message. `ConsoleErrorsSpec`: the pure part, and - kept, the proof the check can go red - a
+  page the test fulfils through `page.route` with the header and an inline style, whose refusal
+  the collector holds and `failureMessage` names.
+- [ ] 3.2 `! F (internal)` `CucumberHooks.tearDown` fails the scenario with `failureMessage`
+  after the screenshot and the trace, with `context.close()` in a `finally`.
+- [ ] 3.3 `! F (internal)` `PlaywrightSpec.afterTest` does the same; `ConsoleErrorsSpec`'s probe
+  drains the spec's own collector (A8: record in `findings.md` that an exception thrown there
+  fails the test, seen once on purpose).
 - [ ] 3.5 `. d` Record the before/after count of failing scenarios from 1.2 in `findings.md`.
 
 ## 4. Docs

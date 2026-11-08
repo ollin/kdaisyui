@@ -86,3 +86,12 @@
 - **Cause:** the plan of 2026-11-07 predates the rule, and counted "the gate in section 3" as
   the test of section 2's fixes, which it cannot be while section 2 has to stay green without it.
 - **Cost:** about five minutes; one bookkeeping commit.
+
+## F7 - Section 3 held a duplicate test and a tag nothing used
+
+- **What happened:** 2026-11-08, before section 3. Task 3.1's test of the collector on a
+  self-served page with an inline style was the same proof as task 3.4's `CspProbeSpec`, and the
+  `@csp-probe` Cucumber tag of 3.2 had no scenario to carry it, since the probe is a Kotest spec.
+  3.4 merged into 3.1, the tag went; the steps' markers became `! F (internal)` by counted lines.
+- **Cause:** the review of F2 added the probe and the tag separately, each against one finding.
+- **Cost:** three minutes; one bookkeeping commit, and one test and one branch fewer.

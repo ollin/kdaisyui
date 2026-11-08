@@ -29,8 +29,8 @@ app installs `Webjars` and `Resources` and serves `/static` from the classpath.
 returns and clears them, and a pure `failureMessage(texts)` names every one. Both runners
 install it after `newPage()` and, in their teardown, fail when it holds anything. The check
 runs after the screenshot and the trace, and `context.close()` sits in a `finally`, so a failing
-check skips no cleanup. A scenario tagged `@csp-probe` drains instead of failing: that is how a
-probe that provokes a refusal on purpose passes. The teardown runs after the scenario's own
+check skips no cleanup. A test that provokes a refusal on purpose drains the collector before the
+teardown reads it. The teardown runs after the scenario's own
 steps, so a scenario that opens two pages reports both.
 
 **Rejected: a Cucumber step `Then the browser reports no violation`**, the Deploy-Radar's shape.
@@ -81,7 +81,7 @@ never sees, and a developer looking at the browser would see no violation the su
 
 Twice. Before anything is committed, a throwaway header and collector on a scratch branch run
 the suite once: the measurement in task 1.2 lists the failing pages and their messages, and
-that list is what the fix tasks work through. And permanently: `CspProbeSpec` fulfils a request
+that list is what the fix tasks work through. And permanently: `ConsoleErrorsSpec` fulfils a request
 for `/csp-probe` through `page.route` with the header and an inline style, so no route of the
 example app violates the policy on purpose, and asserts that the collector held the refusal
 and that `failureMessage` names it. A gate nobody has seen red is the defect this repository

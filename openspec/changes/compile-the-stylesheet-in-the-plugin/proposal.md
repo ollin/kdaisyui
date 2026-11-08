@@ -51,8 +51,9 @@ tasks and `callingUserArgs` from the example app, about 90 lines.
 - **A compile without a container.** Tailwind's standalone binary and DaisyUI's `.mjs` bundles
   would avoid Node, and are downloads from GitHub and npm just the same; the design records why
   this lost.
-- **The strict-CSP documentation** — `guarantee-strict-csp`. **`kdaisyui.css`** —
-  `csp-safe-popover-anchoring`; this task copies whatever `kdaisyuiClasses` wrote.
+- **The strict-CSP documentation** — `guarantee-strict-csp`. The compile mounts whatever
+  `kdaisyuiClasses` wrote, today only the class list (`csp-safe-popover-anchoring` shipped no
+  `kdaisyui.css`, task 1.3).
 - **A stable marker in the compiled stylesheet** (item 9) — a sentence in
   `document-server-rendered-patterns`.
 

@@ -93,9 +93,8 @@ the missing half. Pure, so it is unit-tested without Docker and its mutants die 
 The entry lands at `/deps/project/css/app.css`, each source directory under
 `/deps/project/sources/<index>-<last segment>` (`0-kotlin` for the first `src/main/kotlin`),
 so two directories that end alike cannot collide, and the `kdaisyuiClasses` output directory at
-`/deps/project/kdaisyui/`. The entry therefore writes `@source "../sources"`,
-`@source "../kdaisyui/kdaisyui-classes.txt"` and, after `csp-safe-popover-anchoring`,
-`@import "../kdaisyui/kdaisyui.css"`. Fixed paths are what let the README show one entry file
+`/deps/project/kdaisyui/`. The entry therefore writes `@source "../sources"`
+and `@source "../kdaisyui/kdaisyui-classes.txt"`. Fixed paths are what let the README show one entry file
 for everyone; a consumer compiling by hand uses repository paths instead, and the README says
 which is which.
 

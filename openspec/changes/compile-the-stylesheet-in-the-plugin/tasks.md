@@ -21,7 +21,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
   against a task that starts a container; decide and record whether `NodeContainerRun` is
   excluded from PIT's target classes with its reason, as `lib/build.gradle.kts` does for the
   bridges, since every mutant of it would need a container run. Record in `proposal.md`.
-- [ ] 1.3 `. d` Revise this change after `csp-safe-popover-anchoring` (its finding F7): that
+- [x] 1.3 `. d` Revise this change after `csp-safe-popover-anchoring` (its finding F7): that
   change ships no `kdaisyui.css`. Drop the `@import "../kdaisyui/kdaisyui.css"` from the design
   (lines 97-98) and the `kdaisyui.css` sentence from the proposal (lines 54-55); the compile copies
   only the class list.

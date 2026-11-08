@@ -13,5 +13,5 @@
 
 ## 3. Gate and archive
 
-- [ ] 3.1 Full green, StrykerJS on any changed `codegen/src` line, `openspec validate --strict`,
+- [x] 3.1 Full green, StrykerJS on any changed `codegen/src` line, `openspec validate --strict`,
   the evaluation, archive.

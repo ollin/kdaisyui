@@ -72,7 +72,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 - [x] 5.1 `! F` `example-app/build.gradle.kts` configures the extension and `processResources`
   takes the task's output; `app.css` uses the design's mount points; E2E green.
-- [ ] 5.2 `^ r` Delete `tailwind/Dockerfile`, `buildTailwindImage`, `compileTailwind` and
+- [x] 5.2 `^ r` Delete `tailwind/Dockerfile`, `buildTailwindImage`, `compileTailwind` and
   `callingUserArgs`.
 - [ ] 5.3 `. d` The five references to the deleted task follow: `app.css:2-6`,
   `Assets.kt:9`, `Application.kt:21`, `.opencode/skills/kdaisyui-testing/SKILL.md:218`, and

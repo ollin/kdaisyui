@@ -46,3 +46,15 @@
   from `~/.m2` afterwards.
 - **Cause:** record only; A9's fallback, a second artifact, is not needed.
 - **Cost:** none.
+
+## F5 - A TCR revert caused by the test, not the code
+
+- **What happened:** task 2.1, 2026-11-08. The first run reverted the production step on a
+  `NullPointerException` in the test's initialiser: inside `Properties().apply { … }`,
+  `javaClass` is `Properties`'s class, loaded by the bootstrap loader, whose `classLoader` is
+  `null`. The test never reached its assertion. Fixed in the test alone
+  (`VersionsResourceTest::class.java.getResourceAsStream`), and the same production step went
+  green unchanged - a stop that TCR reports as red, since the harness raised it after compiling.
+- **Cause:** a receiver mistake in Kotlin's scope functions; the test was written with the code
+  in one run, so its own defect looked like the code's.
+- **Cost:** one revert, about three minutes.

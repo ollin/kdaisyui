@@ -100,3 +100,20 @@
 - **Cause:** `map` on a task output provider is only valid at execution, which a configuration
   test never reaches.
 - **Cost:** one revert, about four minutes.
+
+## F10 - Compile time, measured (task 5.4)
+
+- **What happened:** 2026-11-08, `./gradlew -q :example-app:<task> --rerun`, whole Gradle
+  invocation, this machine, Node image already pulled:
+
+  | Route | Time | Output |
+  |---|---|---|
+  | before: `compileTailwind`, baked image, docker CLI | 1.2-1.4 s (Tailwind itself 101 ms) | 228,694 bytes, unminified |
+  | after: `kdaisyuiStylesheet`, cold, no `kdaisyui-npm-cache` volume | 4.5 s | 150,330 bytes, minified |
+  | after: warm, with the volume | 2.5 s, twice | the same |
+
+  The design's "an estimated 20 s against today's 70 ms" was the wrong order of magnitude for a
+  cold install; npm fetches three packages in about two seconds here. The volume still halves the
+  run. `NodeContainerRunTest` showed the same split: 6.1 s cold, 3.0 s warm.
+- **Cause:** the figure was estimated at proposal and never measured; the design said so.
+- **Cost:** none; the README states the measured figures.

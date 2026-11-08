@@ -77,7 +77,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 - [x] 5.3 `. d` The five references to the deleted task follow: `app.css:2-6`,
   `Assets.kt:9`, `Application.kt:21`, `.opencode/skills/kdaisyui-testing/SKILL.md:218`, and
   `ci.yml:274`'s comment.
-- [ ] 5.4 `. d` Record the compile time before and after, cold and with the cache volume, in
+- [x] 5.4 `. d` Record the compile time before and after, cold and with the cache volume, in
   `findings.md`; the design's figures are estimates until then.
 
 ## 6. Docs

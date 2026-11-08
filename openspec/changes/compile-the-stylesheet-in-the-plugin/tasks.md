@@ -6,6 +6,9 @@ block 2: 40, block 3: 45, block 4: 90, block 5: 45, block 6: 20, block 7: 20. Th
 the same day split task 4.1, added the version-mismatch warning and the stale references
 (finding F2); the figure stands, the miss is recorded.
 
+Markers re-planned 2026-11-08 by counted lines (`planning-rules-from-popover-anchoring`): the
+steps estimated above eight counted lines, test included, are `!`; finding F3.
+
 Ordered by uncertainty: A2 can sink the plan (a plugin that does not load in a consumer) and
 is settled before a line of the task exists; A8, A9 and A10 were decided by Oliver on
 2026-11-07 as recommended; A6 shapes how the task is split.
@@ -28,20 +31,20 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 2. The versions, under TCR in `gradle-plugin`
 
-- [ ] 2.1 `^ F (internal)` `processResources` expands `kdaisyui-versions.properties` with the
+- [ ] 2.1 `! F (internal)` `processResources` expands `kdaisyui-versions.properties` with the
   three versions from the catalog and `../.tool-versions`; a test reads the built resource.
-- [ ] 2.2 `^ F` `KdaisyuiVersions.tailwind`, `.daisyui`, `.node` read it.
-- [ ] 2.3 `^ F` The plugin warns when the `kdaisyui` jar it reads the component map from
+- [ ] 2.2 `! F` `KdaisyuiVersions.tailwind`, `.daisyui`, `.node` read it.
+- [ ] 2.3 `! F` The plugin warns when the `kdaisyui` jar it reads the component map from
   carries a version other than its own, naming both; a test with a renamed jar.
 
 ## 3. The configuration, under TCR
 
-- [ ] 3.1 `^ F` `kdaisyui { stylesheet { entry; sources; output; nodeImage; npmRegistry;
+- [ ] 3.1 `! F` `kdaisyui { stylesheet { entry; sources; output; nodeImage; npmRegistry;
   npmUser; npmPassword; minify } }`, with the defaults the design names; `minify` on (A10).
-- [ ] 3.2 `^ F` `NpmConfig.npmrc(registry, user, password)`: the registry line alone, or with
+- [ ] 3.2 `! F` `NpmConfig.npmrc(registry, user, password)`: the registry line alone, or with
   `_auth` when both are given.
 - [ ] 3.3 `^ F` A half credential throws, naming the missing half.
-- [ ] 3.4 `^ F` `StylesheetCompile.command(versions, minify)`: the install of the three pinned
+- [ ] 3.4 `! F` `StylesheetCompile.command(versions, minify)`: the install of the three pinned
   packages with `--prefer-offline`, then the compile, `--minify` when asked.
 - [ ] 3.5 `^ F` `StylesheetCompile.mountPoints(sources)`: each source directory at
   `/deps/project/sources/<index>-<last segment>`, so two directories with one name cannot
@@ -49,7 +52,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 4. The task, under TCR
 
-- [ ] 4.1 `^ F` `KdaisyuiStylesheet`, a `@CacheableTask`: inputs (entry, sources, the class-list
+- [ ] 4.1 `! F` `KdaisyuiStylesheet`, a `@CacheableTask`: inputs (entry, sources, the class-list
   directory, image, versions, registry, minify), output; its action builds the
   `StylesheetCompile` and fails on a half credential before any container; the test needs no
   Docker.
@@ -58,13 +61,13 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
   source directory in a real container and reads `--color-base-100` in the output; it needs
   Docker and the network, as `check` already does for the example app.
 - [ ] 4.3 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache` (A8).
-- [ ] 4.4 `^ F (internal)` The plugin registers the task, depending on `kdaisyuiClasses`, when
+- [ ] 4.4 `! F (internal)` The plugin registers the task, depending on `kdaisyuiClasses`, when
   the extension's entry is set; a `ProjectBuilder` test reads the wiring, and one that it is
   absent without an entry.
 
 ## 5. The example application
 
-- [ ] 5.1 `^ F` `example-app/build.gradle.kts` configures the extension and `processResources`
+- [ ] 5.1 `! F` `example-app/build.gradle.kts` configures the extension and `processResources`
   takes the task's output; `app.css` uses the design's mount points; E2E green.
 - [ ] 5.2 `^ r` Delete `tailwind/Dockerfile`, `buildTailwindImage`, `compileTailwind` and
   `callingUserArgs`.

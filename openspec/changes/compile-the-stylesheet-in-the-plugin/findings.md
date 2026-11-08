@@ -25,3 +25,12 @@
 - **Cost:** about 25 minutes; block 4 is four steps, the version-mismatch warning is task
   2.3, the stale references task 5.3, the mount points are indexed, the spec is three
   requirements with scenarios the tests observe, and A11 records the PIT exclusion decision.
+
+## F3 - Nine steps planned `^` that count above eight lines
+
+- **What happened:** 2026-11-08, before the first code step, against the planning rule added the
+  same day (plan a marker from counted lines). Tasks 2.1, 2.2, 2.3, 3.1, 3.2, 3.4, 4.1, 4.4 and
+  5.1 each hold a class or a configuration block with its test, estimated at ten to thirty counted
+  lines. They are `!` now; the remaining `^` steps (1.1, 3.3, 3.5, 4.3) stay at or under eight.
+- **Cause:** the plan of 2026-11-07 predates the rule and sized by behaviour.
+- **Cost:** five minutes; one bookkeeping commit.

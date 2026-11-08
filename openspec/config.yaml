@@ -49,6 +49,10 @@ rules:
     - Name explicitly what is deliberately out of scope and which change owns it
       instead. A renovation sequence only works if each change refuses the others'
       work.
+    - An assumption about a browser or platform feature cites compat data for every
+      engine the documentation names, and a control run with the mechanism removed.
+      One engine with the mechanism present cannot tell "this makes it work" from
+      "nothing needed it" (csp-safe-popover-anchoring, finding F6).
   design:
     - Record the alternatives considered for each decision and why they lost. A
       decision without its rejected alternative cannot be revisited later.
@@ -66,6 +70,14 @@ rules:
       in that order.
     - Give each task its intended Arlo prefix, and for anything bug-related make
       the first step the failing reproducing test.
+    - Before ordering, grep the repository for every literal the change replaces and
+      name each file that holds it in a task - a generator or a test that hard-codes
+      it included. Then order the steps so each is green under TCR at the repository
+      root, which runs the E2E suite (csp-safe-popover-anchoring, finding F2).
+    - Plan a step's marker from its counted lines, not from its behaviour. A changed
+      line counts as one removed plus one added, and a comment counts in a file type
+      without a line comment, such as CSS. A behaviour step above eight is planned `!`
+      (csp-safe-popover-anchoring, finding F5).
 
 # Per-operation guidance, served when implementation or archival starts.
 # Advisory: it reduces the chance a step is forgotten, it does not enforce anything.

@@ -1,0 +1,6 @@
+schema: spec-driven
+created: 2026-11-08
+affected_areas:
+  - .github/workflows/ci.yml
+  - .github/openspec-config/check.sh
+  - .github/openspec-config/check.test.sh

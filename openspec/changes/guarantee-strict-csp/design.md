@@ -16,7 +16,8 @@ app installs `Webjars` and `Resources` and serves `/static` from the classpath.
 **Non-Goals:**
 
 - Firefox or WebKit. The suite runs Chromium; the README says so.
-- A policy stricter than `default-src 'self'`, such as nonces on scripts. htmx is served from
+- A policy stricter than `default-src 'self'; img-src 'self' data:`, such as nonces on scripts, or `img-src 'self'` without
+  `data:` (decision 8). htmx is served from
   the own origin and needs none.
 
 ## Decisions
@@ -52,7 +53,7 @@ non-CSP defect with it.
 
 ### 3. The header is the example app's, set with Ktor's `DefaultHeaders`
 
-**Chosen:** `install(DefaultHeaders) { header("Content-Security-Policy", "default-src 'self'") }`
+**Chosen:** `install(DefaultHeaders) { header("Content-Security-Policy", "default-src 'self'; img-src 'self' data:") }`
 in `configureRouting`, the function the E2E server also calls, so the suite and `just dev` send
 the same header. `ktor-server-default-headers` joins the app bundle in `libs.versions.toml`.
 
@@ -72,9 +73,6 @@ never sees, and a developer looking at the browser would see no violation the su
 - Each of the five avatars becomes `daisyAvatar(placeholder = true)` with initials, which is
   what the DaisyUI dashboard template shows without an image, one file per commit. No
   own-origin image to ship.
-- `* { --fx-noise: none; }` sits after the `@plugin` line, unlayered, with the comment the
-  Deploy-Radar wrote: DaisyUI's rule lives in `@layer daisyui.l1.l2.l3`, and an unlayered
-  declaration wins over any layered one.
 - A `favicon.svg` under `example-app/src/main/resources/static/`, linked from every page's head
   through the existing `daisyuiStylesheet()` neighbour; a second head helper is not worth a
   file. `/favicon.ico` itself is not served: a page that links an icon is not asked for it.
@@ -88,6 +86,20 @@ for `/csp-probe` through `page.route` with the header and an inline style, so no
 example app violates the policy on purpose, and asserts that the collector held the refusal
 and that `failureMessage` names it. A gate nobody has seen red is the defect this repository
 has paid for five times (`AGENTS.md`, "RED is two steps").
+
+### 8. `img-src 'self' data:`, not `default-src 'self'` alone
+
+**Chosen** (Oliver, 2026-11-08, after F5): DaisyUI 5.7.50 sets `data:` SVGs as `mask-image` in
+`loading`, `mask-*`, `chat`, `tooltip` and `mockup`, and the noise as a background. A refused
+mask makes the element invisible. A `data:` image is fetched from nowhere and cannot run script;
+allowing it keeps scripts and styles at `'self'`.
+
+**Rejected: switching the noise off with `* { --fx-noise: none; }`** (the first plan, from the
+Deploy-Radar). It fixes the noise only; `daisyLoading` and every mask would still vanish.
+**Rejected: kdaisyui ships the masks as own-origin SVG files** and overrides DaisyUI's rules.
+The library would have to serve files, which it does not (`css-delivery`, `ktor-integration`),
+and every DaisyUI bump that changes a mask would need a copy. **Rejected: excluding the five
+components from the guarantee.** They would stay broken for every user of a strict policy.
 
 ### 6. Order, so every step is green under root TCR
 
@@ -106,7 +118,5 @@ changes: the header, each example-app fix, the failing teardowns, the README sec
   text; task 1.1 records the current text in `findings.md` for a reader.
 - [A future demo page loads a third-party asset for a good reason] → it cannot, by this
   guarantee. The README says so; the scenario fails naming the URL.
-- [The noise rule changes a theme's look] → with `--noise: 0` nothing is visible; A7 puts the
-  themes with noise to Oliver.
 - [The popover dropdown page fails until `csp-safe-popover-anchoring` lands] → landed in #477;
   kdaisyui writes no inline style, so task 1.2 can run now.

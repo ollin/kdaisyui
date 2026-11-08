@@ -31,8 +31,10 @@ page is clean, and the probe spec proves the check can go red.
 
 ## 2. The example application, under TCR, nothing enforcing yet
 
+2.8, the noise rule, was dropped after F5: `img-src 'self' data:` lets DaisyUI's noise load.
+
 - [ ] 2.1 `^ F` `ktor-server-default-headers` in the app bundle; `configureRouting` installs
-  `DefaultHeaders` with the policy; an E2E HTTP step reads the header on `/` and on
+  `DefaultHeaders` with the policy `default-src 'self'; img-src 'self' data:`; an E2E HTTP step reads the header on `/` and on
   `/static/app.css`, so static responses are covered too.
 - [ ] 2.2 `^ r` The htmx indicator rules move from the inline `<style>` into `app.css`; the
   element goes.
@@ -42,7 +44,6 @@ page is clean, and the probe spec proves the check can go red.
 - [ ] 2.5 `^ F` `repo/RepoFragment.kt:51`, the same.
 - [ ] 2.6 `^ F` `dashboard/FormSectionsFragment.kt:43`, the same.
 - [ ] 2.7 `^ F` `dashboard/CardsRow2Fragment.kt:69`, the same.
-- [ ] 2.8 `^ F` `* { --fx-noise: none; }` in `app.css`, unlayered, with its reason.
 - [ ] 2.9 `^ F` `favicon.svg` under `static/`, linked beside the stylesheet in every page head.
 
 ## 3. The check, under TCR
@@ -63,8 +64,8 @@ page is clean, and the probe spec proves the check can go red.
 
 ## 4. Docs
 
-- [ ] 4.1 `. d` README, "Under a strict Content-Security-Policy": the header, the noise rule,
-  the icon; fences skipped with their reason where they are not Kotlin
+- [ ] 4.1 `. d` README, "Under a strict Content-Security-Policy": the header and why `img-src`
+  allows `data:`, the icon; fences skipped with their reason where they are not Kotlin
   against the library.
 
 ## 5. Gate, adoption and archive

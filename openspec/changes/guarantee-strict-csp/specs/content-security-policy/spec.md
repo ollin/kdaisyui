@@ -62,10 +62,9 @@ element, five files write an `https://picsum.photos` image (`DashboardShell.kt:9
 The E2E suite SHALL fail any scenario, Cucumber or Kotest, whose page logged a console message
 of type `error` or raised a page error, and the failure SHALL quote every such message.
 
-**Assumed** that Chromium delivers a policy refusal and a blocked `data:` image as console
-messages of type `error` through Playwright. *Wrong if:* the scratch page of task 1.1, with one
-inline style and one `data:` image under the header, produces no error-level message. The
-Deploy-Radar's `BrowserSteps.kt:39` collects exactly these messages for its refusal check.
+**Verified** in task 1.1 (Chromium 156): an inline style refused, a `data:` image refused and a
+404 each reach Playwright's `onConsoleMessage` as type `error` before the test ends; the 404's
+text names no URL, so the collector adds each message's location (finding F3).
 
 #### Scenario: An inline style is refused
 
@@ -75,8 +74,8 @@ Deploy-Radar's `BrowserSteps.kt:39` collects exactly these messages for its refu
 
 #### Scenario: A probe drains instead of failing
 
-- **WHEN** a scenario is tagged as a probe of the policy
-- **THEN** its teardown drains the collector and the scenario passes
+- **WHEN** a test provokes a refusal on purpose and drains the collector itself
+- **THEN** its teardown finds nothing and the test passes
 
 #### Scenario: A clean page
 

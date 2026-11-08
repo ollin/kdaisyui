@@ -53,11 +53,11 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 4. The task, under TCR
 
-- [ ] 4.1 `! F` `KdaisyuiStylesheet`, a `@CacheableTask`: inputs (entry, sources, the class-list
+- [x] 4.1 `! F` `KdaisyuiStylesheet`, a `@CacheableTask`: inputs (entry, sources, the class-list
   directory, image, versions, registry, minify), output; its action builds the
   `StylesheetCompile` and fails on a half credential before any container; the test needs no
   Docker.
-- [ ] 4.2 `! F` `NodeContainerRun.compile(StylesheetCompile)`: copies the inputs in, runs the
+- [x] 4.2 `! F` `NodeContainerRun.compile(StylesheetCompile)`: copies the inputs in, runs the
   command one-shot, copies the stylesheet out. One test compiles a two-line entry with one
   source directory in a real container and reads `--color-base-100` in the output; it needs
   Docker and the network, as `check` already does for the example app.

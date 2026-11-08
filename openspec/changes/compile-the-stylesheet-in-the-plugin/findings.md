@@ -71,3 +71,11 @@
   (`build`), so a test compile error reaches it as a red build, not as the stop the TCR skill
   describes ("compile error: STOP, nothing reverted").
 - **Cost:** about five minutes and one revert, plus the rescue-copy restore.
+
+## F7 - Tasks 3.2 and 3.3 could not be two green steps
+
+- **What happened:** 2026-11-08, before task 3.2. "`_auth` when both halves are given" holds the
+  branch "only one half", whose behaviour is task 3.3. A 3.2 commit without it would leave that
+  branch unexecuted, and the plugin's 100% branch gate would fail the step. Merged into one task.
+- **Cause:** the plan split a function by its outputs, not by its branches.
+- **Cost:** two minutes; one bookkeeping commit.

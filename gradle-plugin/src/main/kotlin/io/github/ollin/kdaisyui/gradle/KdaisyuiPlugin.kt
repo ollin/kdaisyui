@@ -22,19 +22,21 @@ class KdaisyuiPlugin : Plugin<Project> {
         }
         project.plugins.withType(JavaPlugin::class.java) {
             val main = project.extensions.getByType(SourceSetContainer::class.java).getByName("main")
+            // One directory for both: the stylesheet task copies it in whole, so the entry names the list by one path.
+            val kdaisyuiDirectory = project.layout.buildDirectory.dir("kdaisyui")
             val classesTask = project.tasks.register("kdaisyuiClasses", KdaisyuiClasses::class.java) {
                 description = "Writes the classes of the kdaisyui components this build uses, for Tailwind's @source."
                 classes.from(main.output.classesDirs)
                 // The dependencies, not main.runtimeClasspath: that holds the project's own resources,
                 // and a build whose stylesheet is a resource would wait on itself.
                 runtimeClasspath.from(project.configurations.getByName(main.runtimeClasspathConfigurationName))
-                output.set(project.layout.buildDirectory.file("kdaisyui/kdaisyui-classes.txt"))
+                output.set(kdaisyuiDirectory.map { it.file("kdaisyui-classes.txt") })
             }
             project.tasks.register("kdaisyuiStylesheet", KdaisyuiStylesheet::class.java) {
                 description = "Compiles the stylesheet with the plugin's Tailwind and DaisyUI, in a Node container."
                 entry.set(stylesheet.entry)
                 sources.from(stylesheet.sources)
-                classList.set(project.layout.buildDirectory.dir("kdaisyui"))
+                classList.set(kdaisyuiDirectory)
                 dependsOn(classesTask)
                 nodeImage.set(stylesheet.nodeImage)
                 tailwind.set(KdaisyuiVersions.tailwind)

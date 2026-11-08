@@ -22,4 +22,6 @@ import kotlinx.html.link
  */
 fun HEAD.daisyuiStylesheet() {
     link { rel = "stylesheet"; href = "/static/app.css" }
+    // An icon of its own origin: without a link the browser asks for /favicon.ico and logs a 404.
+    link { rel = "icon"; type = "image/svg+xml"; href = "/static/favicon.svg" }
 }

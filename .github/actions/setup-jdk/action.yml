@@ -1,0 +1,36 @@
+name: Set up the JDK of .tool-versions
+description: >
+  The JDK that runs Gradle, from its one pin, .tool-versions, without downloading it when the
+  runner image already has it.
+
+  asdf-java names the release `temurin-25.0.5+8.0.LTS`, and asdf knows no shorter name. Given
+  that file, setup-java reads the version as `25.0.5+8.0.LTS`, takes `8.0.LTS` for the build, and
+  requires it to equal the runner's preinstalled `25.0.5+8` exactly - so it never matches, and
+  every job downloaded the JDK from GitHub's release CDN: 84-134 s per job, and the step that
+  failed with HTTP 502/503/504 on 2026-11-08. Passing `25.0.5+8` finds the preinstalled copy, and
+  still downloads exactly that version where the image has another.
+
+inputs:
+  cache:
+    description: Passed to setup-java's `cache`.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - id: version
+      shell: bash
+      run: |
+        version="$(sed -n -E 's/^java[[:space:]]+temurin-([0-9.]+\+[0-9]+).*/\1/p' .tool-versions)"
+        if [ -z "$version" ]; then
+          echo "::error file=.tool-versions::no 'java temurin-<version>+<build>' line"
+          exit 1
+        fi
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: ${{ steps.version.outputs.version }}
+        cache: ${{ inputs.cache }}

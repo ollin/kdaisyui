@@ -178,12 +178,11 @@ describe('an anchored popover', () => {
     assert.match(fn, /^ {8}attributes\["id"\] = id\.id$/m)
   })
 
-  test('is a popover anchored where its trigger names the same anchor', () => {
+  test('is a popover that names no anchor, since the trigger that opens it is its anchor', () => {
     const kotlin = popover()
 
     assert.match(kotlin, /^ {8}attributes\["popover"\] = ""$/m)
-    assert.match(kotlin, /^ {8}attributes\["style"\] = "position-anchor:\$\{id\.anchorName\}"$/m)
-    assert.match(kotlin, /^import io\.github\.ollin\.kdaisyui\.core\.anchorName$/m)
+    assert.doesNotMatch(kotlin, /anchor/i)
   })
 })
 

@@ -7,9 +7,10 @@ import kotlinx.html.*
 /**
  * DaisyUI's popover dropdown, on a page of its own and with no script.
  *
- * The trigger and the menu are a browser-native pair: `popovertarget` opens the menu, and the
- * anchor name both derive from the menu's id places it next to the trigger through CSS anchor
- * positioning. On the top layer it needs no z-index and no ancestor can clip it.
+ * The trigger and the menu are a browser-native pair: `popovertarget` opens the menu and makes
+ * the trigger its implicit anchor, so CSS anchor positioning places it next to the trigger with
+ * no anchor name and no inline style. On the top layer it needs no z-index and no ancestor can
+ * clip it.
  */
 fun HTML.dropdownPopoverPage() {
     lang = "en"
@@ -21,7 +22,7 @@ fun HTML.dropdownPopoverPage() {
     }
     body("bg-base-200 min-h-screen p-10") {
         val menu = Dashboard.DropdownPopover()
-        daisyButton("Open menu") { popoverTarget(menu, anchored = true) }
+        daisyButton("Open menu") { popoverTarget(menu) }
         daisyDropdownPopover(id = menu, extraClasses = "bg-base-100 rounded-box w-52 shadow-sm") {
             daisyMenuClasses()
             li { a { +"Item 1" } }

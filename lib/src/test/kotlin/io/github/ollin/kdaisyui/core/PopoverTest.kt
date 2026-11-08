@@ -8,21 +8,22 @@ import kotlin.test.assertEquals
 class PopoverTest {
 
     @Test
-    fun aTriggerTargetsThePopoverAndLeavesTheAnchorToItsCss() {
+    fun aTriggerTargetsThePopoverAndNamesNoAnchor() {
         val html = createHTML(prettyPrint = false).button { popoverTarget(htmlId("panel")) }
         assertEquals("""<button popovertarget="panel"></button>""", html)
     }
 
     @Test
-    fun anAnchoredTriggerNamesItsAnchor() {
-        val html = createHTML(prettyPrint = false).button { popoverTarget(htmlId("menu"), anchored = true) }
-        assertEquals("""<button popovertarget="menu" style="anchor-name:--menu"></button>""", html)
+    @Suppress("DEPRECATION")
+    fun aDeprecatedAnchoredTriggerRendersTheSame() {
+        val html = createHTML(prettyPrint = false).button { popoverTarget(htmlId("menu"), PopoverTargetAction.Show, anchored = true) }
+        assertEquals("""<button popovertarget="menu" popovertargetaction="show"></button>""", html)
     }
 
     @Test
-    fun theAnchorNameJoinsAStyleTheTriggerAlreadyHas() {
-        val html = createHTML(prettyPrint = false).button { attributes["style"] = "color:red"; popoverTarget(htmlId("menu"), anchored = true) }
-        assertEquals("""<button style="color:red;anchor-name:--menu" popovertarget="menu"></button>""", html)
+    fun aStyleTheTriggerAlreadyHasIsLeftAsItIs() {
+        val html = createHTML(prettyPrint = false).button { attributes["style"] = "color:red"; popoverTarget(htmlId("menu")) }
+        assertEquals("""<button style="color:red" popovertarget="menu"></button>""", html)
     }
 
     @Test

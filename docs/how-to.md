@@ -282,21 +282,24 @@ daisyDropdown(align = DropdownAlign.End) {
 ```
 
 **`daisyDropdownPopover`** is the menu itself, opened on the browser's top layer by a trigger that
-names it, so no ancestor's `overflow` can clip it and it needs no `z-index`. `anchored = true`
-places it next to its trigger through CSS anchor positioning:
+names it, so no ancestor's `overflow` can clip it and it needs no `z-index`. The browser anchors
+it to that trigger, so it opens beside it through CSS anchor positioning:
 
 <!-- snippet: in FlowContent -->
 ```kotlin
 val notifications = htmlId("notifications")
-daisyButton("🔔") { popoverTarget(notifications, anchored = true) }
+daisyButton("🔔") { popoverTarget(notifications) }
 daisyDropdownPopover(id = notifications, align = DropdownAlign.End, extraClasses = "rounded-box bg-base-100 w-80 p-2 shadow-2xl") {
     daisyMenuClasses()
     li { a { b { +"New message" }; +" Alice: Hi!" } }
 }
 ```
 
-Anchor positioning is new: Chromium 125, Safari 26, Firefox 147. Where it is missing, DaisyUI's CSS
-falls back, and `daisyDropdown` is the choice that behaves the same everywhere.
+No anchor name and no inline style is written, so this works under a strict
+`Content-Security-Policy`: the trigger that opens a popover is its anchor. That implicit anchor
+needs Chrome 133, Safari 26 or Firefox 147; where anchor positioning is missing, DaisyUI's CSS
+falls back, and `daisyDropdown` is the choice that behaves the same everywhere. A popover opened
+from script instead of `popovertarget` has no such trigger: pass `source` to `showPopover()`.
 
 ## Show validation feedback
 

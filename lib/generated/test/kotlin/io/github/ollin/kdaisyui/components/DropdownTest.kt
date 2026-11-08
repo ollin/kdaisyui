@@ -249,6 +249,5 @@ class DropdownTest {
         assertTrue(html.contains("<ul"))
         assertTrue(html.contains("class=\"dropdown"))
         assertTrue(html.contains("popover=\"\""))
-        assertTrue(html.contains("style=\"position-anchor:--custom-part\""))
     }
 }

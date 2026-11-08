@@ -3,16 +3,21 @@ package io.github.ollin.kdaisyui.core
 import kotlinx.html.Tag
 
 /**
- * Makes this tag the trigger of [popover]: `daisyButton("Menu") { popoverTarget(menu, anchored = true) }`.
+ * Makes this tag the trigger of [popover]: `daisyButton("Menu") { popoverTarget(menu) }`.
  *
- * [anchored] also writes the anchor name an anchored popover such as `daisyDropdownPopover`
- * positions itself against. Off by default: DaisyUI's megamenu sets its triggers' anchor itself.
+ * It writes no anchor. The browser makes the trigger that opens a popover its implicit anchor
+ * (Chrome 133, Safari 26, Firefox 147), so `daisyDropdownPopover` opens beside it with no inline
+ * style, which a strict Content-Security-Policy would refuse.
  */
-fun Tag.popoverTarget(popover: HtmlId, action: PopoverTargetAction? = null, anchored: Boolean = false) {
+fun Tag.popoverTarget(popover: HtmlId, action: PopoverTargetAction? = null) {
     attributes["popovertarget"] = popover.id
     if (action != null) attributes["popovertargetaction"] = action.value
-    if (anchored) attributes["style"] = listOfNotNull(attributes["style"], "anchor-name:${popover.anchorName}").joinToString(";")
 }
+
+/** Since 0.10, [anchored] does nothing: the trigger that opens a popover is its anchor already. */
+@Deprecated("The browser anchors a popover to the trigger that opens it; anchored does nothing.", ReplaceWith("popoverTarget(popover, action)"))
+@Suppress("UNUSED_PARAMETER")
+fun Tag.popoverTarget(popover: HtmlId, action: PopoverTargetAction? = null, anchored: Boolean = false) = popoverTarget(popover, action)
 
 /** What a [popoverTarget] trigger does to its popover; without one, the browser toggles it. */
 enum class PopoverTargetAction(internal val value: String) { Show("show"), Hide("hide"), Toggle("toggle") }

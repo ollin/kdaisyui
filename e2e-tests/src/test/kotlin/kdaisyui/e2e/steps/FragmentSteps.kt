@@ -117,6 +117,11 @@ class FragmentSteps(private val world: PlaywrightWorld) {
         }
     }
 
+    @Then("the response body does not contain {string}")
+    fun responseBodyDoesNotContain(text: String) {
+        check(!lastResponseBody.contains(text)) { "Expected response body not to contain '$text'" }
+    }
+
     /**
      * The selector Tailwind writes for a class, e.g. `dark:alert-info` -> `.dark\:alert-info`.
      *

@@ -6,27 +6,27 @@ import kotlin.io.path.createTempDirectory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class MapOnClasspathTest {
+class ResourceOnClasspathTest {
 
     private val dir = createTempDirectory().toFile()
 
     @Test
     fun aResourcesDirectoryHoldsTheMapOrNot() {
         val resources = dir.resolve("resources").apply { mkdirs() }
-        assertEquals(null, componentMapIn(resources))
+        assertEquals(null, resourceIn(resources, COMPONENT_MAP))
         resources.resolve(COMPONENT_MAP).writeText("button")
-        assertEquals("button", componentMapIn(resources))
+        assertEquals("button", resourceIn(resources, COMPONENT_MAP))
     }
 
     @Test
     fun aJarHoldsTheMapOrNot() {
-        assertEquals("card", componentMapIn(jarWith(COMPONENT_MAP, "card")))
-        assertEquals(null, componentMapIn(jarWith("other.txt", "card")))
+        assertEquals("card", resourceIn(jarWith(COMPONENT_MAP, "card"), COMPONENT_MAP))
+        assertEquals(null, resourceIn(jarWith("other.txt", "card"), COMPONENT_MAP))
     }
 
     @Test
     fun aPathThatDoesNotExistHoldsNothing() {
-        assertEquals(null, componentMapIn(dir.resolve("missing")))
+        assertEquals(null, resourceIn(dir.resolve("missing"), COMPONENT_MAP))
     }
 
     private fun jarWith(name: String, text: String) = dir.resolve("$name.jar").apply {

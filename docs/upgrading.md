@@ -634,3 +634,34 @@ element cannot hold children.
 **3. `content` is called `block`, and no call has to pass one.** Only a call that names it changes:
 `content = { … }` becomes `block = { … }`, or a trailing lambda. `daisyCard()` now compiles and
 renders an empty card.
+
+## How to migrate from 0.9.x
+
+Nothing breaks: every 0.9.x call compiles and renders a working page. **One parameter is
+deprecated**, and the markup it wrote is gone.
+
+**1. `popoverTarget(…, anchored = true)` writes no anchor any more, so drop `anchored`.** In 0.9.x
+it put `style="anchor-name:--…"` on the trigger, and `daisyDropdownPopover` put
+`style="position-anchor:--…"` on the menu. A strict `Content-Security-Policy` (`default-src
+'self'`) refuses both. Neither is needed: the browser makes the trigger that opens a popover its
+anchor (Chrome 133, Safari 26, Firefox 147), so the menu opens beside it with no inline style at
+all. The parameter is accepted and ignored, with a deprecation warning that offers the fix:
+
+<!-- snippet: skip - the deprecated 0.9.x call, shown for migration -->
+```kotlin
+// before
+daisyButton("Menu") { popoverTarget(menu, anchored = true) }
+```
+
+<!-- snippet: in FlowContent -->
+```kotlin
+// after
+val menu = htmlId("menu")
+daisyButton("Menu") { popoverTarget(menu) }
+```
+
+A popover you open from script rather than by `popovertarget` has no trigger to anchor to: pass
+`source` to `showPopover()`.
+
+**2. `HtmlId.anchorName` is deprecated.** Nothing in kdaisyui writes an anchor name now. It still
+returns the same string, for code of your own that names one.

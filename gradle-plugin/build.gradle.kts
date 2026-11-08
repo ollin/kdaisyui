@@ -81,6 +81,7 @@ tasks.processResources {
         "tailwind" to libs.versions.webjar.tailwindcss.browser.get(),
         "daisyui" to libs.versions.daisyui.get(),
         "node" to file("../.tool-versions").readLines().first { it.startsWith("nodejs ") }.substringAfter(" ").trim(),
+        "kdaisyui" to version.toString(),
     )
     inputs.properties(versions)
     filesMatching("kdaisyui-versions.properties") { expand(versions) }

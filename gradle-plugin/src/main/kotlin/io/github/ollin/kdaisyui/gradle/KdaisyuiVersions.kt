@@ -9,4 +9,7 @@ object KdaisyuiVersions {
     val tailwind: String = written.getProperty("tailwind")
     val daisyui: String = written.getProperty("daisyui")
     val node: String = written.getProperty("node")
+
+    /** The plugin's own version, which is the library's it was released with. */
+    val kdaisyui: String = written.getProperty("kdaisyui")
 }

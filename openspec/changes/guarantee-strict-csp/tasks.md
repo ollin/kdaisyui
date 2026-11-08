@@ -33,7 +33,7 @@ page is clean, and the probe spec proves the check can go red.
 
 2.8, the noise rule, was dropped after F5: `img-src 'self' data:` lets DaisyUI's noise load.
 
-- [ ] 2.1 `! F` `ktor-server-default-headers` in the app bundle; `configureRouting` installs
+- [x] 2.1 `! F` `ktor-server-default-headers` in the app bundle; `configureRouting` installs
   `DefaultHeaders` with the policy `default-src 'self'; img-src 'self' data:`; a new
   `content_security_policy.feature` reads the header on `/` and on `/static/app.css` through a
   new step, so static responses are covered too. About 15 counted lines.

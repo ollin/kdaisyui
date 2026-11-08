@@ -73,6 +73,19 @@ dependencies {
 
 tasks.test { useJUnitPlatform() }
 
+// The versions the stylesheet compile installs, from the repository's one place for each: the catalog
+// and .tool-versions. Expanded into the jar, so a consumer pins nothing and gets what the components
+// were generated against.
+tasks.processResources {
+    val versions = mapOf(
+        "tailwind" to libs.versions.webjar.tailwindcss.browser.get(),
+        "daisyui" to libs.versions.daisyui.get(),
+        "node" to file("../.tool-versions").readLines().first { it.startsWith("nodejs ") }.substringAfter(" ").trim(),
+    )
+    inputs.properties(versions)
+    filesMatching("kdaisyui-versions.properties") { expand(versions) }
+}
+
 // Its own 100% line and branch gate: the root build's aggregated one cannot reach an included build.
 kover {
     reports {

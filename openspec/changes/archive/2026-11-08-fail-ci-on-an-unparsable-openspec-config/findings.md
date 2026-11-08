@@ -18,4 +18,4 @@ One row per finding (house rules §9).
 
 | Finding | Proposal | Status |
 |---|---|---|
-| F1 | A rule in `openspec/config.yaml` for `proposal`: an assumption that a CI step blocks a merge cites the `main` ruleset's required checks | open |
+| F1 | A rule in `openspec/config.yaml` for `proposal`: an assumption that a CI step blocks a merge cites the `main` ruleset's required checks | fixed - in this pull request (cite-required-checks-in-ci-assumptions, archived) |

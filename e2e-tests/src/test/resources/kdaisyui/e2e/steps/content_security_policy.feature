@@ -8,3 +8,5 @@ Feature: Content-Security-Policy
   Scenario: The pages load no image from another host
     Then the endpoint "/" returns status 200
     And the response body does not contain "src=\"http"
+    And the endpoint "/fragments/team" returns status 200
+    And the response body does not contain "src=\"http"

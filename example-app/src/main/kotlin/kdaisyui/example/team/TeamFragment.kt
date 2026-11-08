@@ -77,9 +77,9 @@ private fun TBODY.teamMemberRow(
     tr {
         td {
             div("flex items-center gap-4") {
-                daisyAvatar {
-                    div("mask mask-squircle h-10 w-10") {
-                        img(src = "https://picsum.photos/80/80?team-member-$imgId", alt = "Avatar")
+                daisyAvatar(placeholder = true) {
+                    div("mask mask-squircle bg-neutral text-neutral-content h-10 w-10") {
+                        span { +name.split(" ").joinToString("") { it.take(1) } }
                     }
                 }
                 div {

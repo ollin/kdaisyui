@@ -87,4 +87,4 @@ producer.
   `:gradle-plugin:pitest`, StrykerJS on the changed `codegen/src` lines, `analyze_change_set`.
 - [x] 6.2 `openspec validate csp-safe-popover-anchoring --strict`.
 - [x] 6.3 The evaluation under `tmp/csp-safe-popover-anchoring/` for Oliver to adopt.
-- [ ] 6.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.
+- [x] 6.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

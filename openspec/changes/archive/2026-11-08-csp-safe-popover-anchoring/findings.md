@@ -93,3 +93,17 @@
 - **Cause:** five changes were proposed on one day against a design none of them had built yet,
   and they cite one another's mechanism rather than only its outcome.
 - **Cost:** none here; one revision task in each of the two changes.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | none - record only |
+| F2 | A rule in `openspec/config.yaml` for `tasks`: before ordering, grep the repository for the literal string the change replaces and name every hit in a task, and order the steps so each is green under root TCR, which runs the E2E suite | open |
+| F3 | - | none - record only |
+| F4 | A check beside `openspec validate`: every "task N.M" a change's proposal, design or spec cites exists in its `tasks.md` | open |
+| F5 | A rule in `openspec/config.yaml` for `tasks`: a step's marker is planned from its counted lines - a changed line counts twice, a CSS comment counts - and a behaviour step above eight is planned `!` | open |
+| F6 | A rule in `openspec/config.yaml` for `proposal`: an assumption about a browser feature cites compat data for every engine the docs name, and a control run with the mechanism removed | open |
+| F7 | A revision task in `guarantee-strict-csp` and in `compile-the-stylesheet-in-the-plugin`: drop the `kdaisyui.css` import, which no release ships | open |

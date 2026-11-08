@@ -54,12 +54,12 @@ private fun TagConsumer<*>.activeTeamMembersTable() {
                     }
                 }
                 tbody {
-                    teamMemberRow(1, "Alice Chen", "alice.chen@devtrack.io", "Owner", "All", "2 minutes ago")
-                    teamMemberRow(2, "Bob Martinez", "bob.martinez@devtrack.io", "Maintainer", "12", "9 minutes ago")
-                    teamMemberRow(3, "Carol White", "carol.white@devtrack.io", "Developer", "7", "24 minutes ago")
-                    teamMemberRow(4, "Dave Kim", "dave.kim@devtrack.io", "Developer", "5", "1 hour ago")
-                    teamMemberRow(5, "Eve Jackson", "eve.jackson@devtrack.io", "Reporter", "3", "2 hours ago")
-                    teamMemberRow(6, "Frank Diaz", "frank.diaz@devtrack.io", "Maintainer", "10", "Today")
+                    teamMemberRow("Alice Chen", "alice.chen@devtrack.io", "Owner", "All", "2 minutes ago")
+                    teamMemberRow("Bob Martinez", "bob.martinez@devtrack.io", "Maintainer", "12", "9 minutes ago")
+                    teamMemberRow("Carol White", "carol.white@devtrack.io", "Developer", "7", "24 minutes ago")
+                    teamMemberRow("Dave Kim", "dave.kim@devtrack.io", "Developer", "5", "1 hour ago")
+                    teamMemberRow("Eve Jackson", "eve.jackson@devtrack.io", "Reporter", "3", "2 hours ago")
+                    teamMemberRow("Frank Diaz", "frank.diaz@devtrack.io", "Maintainer", "10", "Today")
                 }
             }
         }
@@ -67,7 +67,6 @@ private fun TagConsumer<*>.activeTeamMembersTable() {
 }
 
 private fun TBODY.teamMemberRow(
-    imgId: Int,
     name: String,
     email: String,
     role: String,

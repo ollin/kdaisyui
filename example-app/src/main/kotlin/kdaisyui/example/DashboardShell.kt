@@ -79,12 +79,9 @@ private fun FlowContent.shellHeader() {
         }
         div("dropdown dropdown-end z-10") {
             id = Dashboard.Header.Avatar().id
-            div {
+            daisyAvatar(placeholder = true, extraClasses = "btn btn-circle btn-ghost") {
                 attributes["tabindex"] = "0"
-                classes = setOf("avatar", "btn", "btn-circle", "btn-ghost")
-                div("w-10 rounded-full") {
-                    img(src = "https://picsum.photos/80/80?5")
-                }
+                div("bg-neutral text-neutral-content w-10 rounded-full") { span { +"DT" } }
             }
             ul {
                 attributes["tabindex"] = "0"

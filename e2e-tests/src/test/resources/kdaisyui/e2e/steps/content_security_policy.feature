@@ -4,3 +4,7 @@ Feature: Content-Security-Policy
   Scenario: The header is on every response, static ones included
     Then the endpoint "/" sends the header "Content-Security-Policy" as "default-src 'self'; img-src 'self' data:"
     And the endpoint "/static/app.css" sends the header "Content-Security-Policy" as "default-src 'self'; img-src 'self' data:"
+
+  Scenario: The pages load no image from another host
+    Then the endpoint "/" returns status 200
+    And the response body does not contain "src=\"http"

@@ -17,7 +17,7 @@ one: the list would silently go wrong. Oliver adopted a proposal for this on 202
 
 The adopted proposal said "the bump report lists them". A test is the stronger form (house rules
 §9, order 1: a check that fails before a report someone has to read): the bump's pull request goes
-red until the README follows. Open with Oliver as A3.
+red until the README follows. Confirmed by Oliver as A3, 2026-11-08.
 
 ### The subtractive option, stated
 
@@ -33,7 +33,7 @@ Nothing: the list is checked by hand at each bump. That is what F5 found not hap
 |---|---|---|---|
 | A1 | The codegen tests can read DaisyUI's CSS through `src/submodules.ts`, as the snapshot tests read the pages | code | to check in task 1.1 |
 | A2 | No requirement of a main spec this builds on contradicts it: `content-security-policy` (the README names the policy and why) | code | to check in task 1.1 |
-| A3 | Oliver accepts a failing test instead of a report line | user | open - ask at review |
+| A3 | Oliver accepts a failing test instead of a report line | user | confirmed by the user 2026-11-08 - the test, as recommended |
 
 ## Impact
 

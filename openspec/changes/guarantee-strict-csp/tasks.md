@@ -23,6 +23,11 @@ page is clean, and the probe spec proves the check can go red.
   Requires `csp-safe-popover-anchoring` merged, or the popover pages fail for the known reason.
 - [ ] 1.3 `. d` (A5) Read `css-delivery`, `daisyui-component-coverage` and
   `documentation-snippets` against the header and the collector; record the result.
+- [ ] 1.4 `. d` Revise this change after `csp-safe-popover-anchoring` (its finding F7): that
+  change ships no `kdaisyui.css`, writes no anchor and no inline style, and relies on the
+  implicit anchor of `popovertarget`. Drop the import from proposal (What Changes), task 4.1 and
+  the `content-security-policy` spec (lines 13 and 90), and rewrite the spec's source-scan note
+  (lines 17-18): `lib/generated/main` writes no `style` at all now.
 
 ## 2. The example application, under TCR, nothing enforcing yet
 

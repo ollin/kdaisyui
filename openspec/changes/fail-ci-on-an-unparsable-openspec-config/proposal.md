@@ -13,9 +13,12 @@ silently stop reaching the agents that plan and implement. Oliver adopted a chec
   message when it does not parse.
 - **`.github/openspec-config/check.test.sh`** proves it: a good file passes, the broken line of F1
   fails, in the style of `.github/ci-scope/classify.test.sh`.
-- **The `scope` job runs both**, before it classifies. It is the one job a pull request that
-  touches only `openspec/` runs (`ci-job-selection`), so it is the only place that sees such a
-  pull request.
+- **A job of its own, `openspec-config`, runs both** on every pull request and every push, with no
+  dependency on `scope`, and becomes a required check of the `main` ruleset. **Revised
+  2026-11-08 after F1:** the plan put the step into `scope`, which is not required, so a red
+  `scope` would have left the pull request mergeable; Oliver chose the own job.
+- **`ci-job-selection` stops claiming no job reads planning files**: `openspec-config` reads one,
+  and it is not a test job the classification selects.
 
 ### The subtractive option, stated
 
@@ -41,7 +44,12 @@ the warning is one line among JSON on another stream. A check is the house rules
 
 - `openspec-config-check`: CI fails when `openspec/config.yaml` does not parse.
 
+### Modified Capabilities
+
+- `ci-job-selection`: the sentence that no job reads planning files names the exception.
+
 ## Impact
 
 - New: `.github/openspec-config/check.sh`, `.github/openspec-config/check.test.sh`.
-- Edited: `.github/workflows/ci.yml`, the `scope` job.
+- Edited: `.github/workflows/ci.yml`, a new job `openspec-config`.
+- Outside the repository: `openspec-config` added to the `main` ruleset's required status checks.

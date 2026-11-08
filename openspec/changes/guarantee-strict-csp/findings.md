@@ -40,3 +40,38 @@
   `failureMessage` should add the message's location (`ConsoleMessage.location()`) to name the
   resource, as the spec's 404 scenario asks.
 - **Cost:** none.
+
+## F4 - The red, measured: 40 of 53 tests log errors under the header (task 1.2)
+
+- **What happened:** 2026-11-08, a throwaway header in the test server and a collector that only
+  printed; `:e2e-tests:test --rerun`: 53 tests, 0 failures, and 1072 error-level messages in 40
+  of them. By kind:
+
+  | Count | Message | Source |
+  |---|---|---|
+  | 717 | `data:` image refused | DaisyUI's `--fx-noise` |
+  | 284 | `https://picsum.photos/…` refused | the five avatars (2.3-2.7) |
+  | 32 | inline style refused | `DashboardShell.kt`'s `<style>` (2.2) |
+  | 32 | `data:` image refused | DaisyUI's `.loading` / `.loading-spinner` mask |
+  | 6 | `data:` image refused | DaisyUI's `.mask-squircle` mask |
+  | 1 | 404 `/favicon.ico` | no icon (2.9) - once only, the browser caches the miss |
+
+  `grep -rnE 'https?://' example-app/src` (w3.org namespaces aside) finds exactly the five picsum
+  avatars. The compiled `app.css` holds `url("data:` in `:root` (`--fx-noise`), `.loading`,
+  `.loading-spinner` and `.mask-squircle`. htmx raised nothing: no `unsafe-eval` refusal, no
+  injected style (A2 holds, delayed and `revealed` triggers included).
+- **Cause:** see F5 for the two `data:` masks no task planned for.
+- **Cost:** none beyond the measurement.
+
+## F5 - DaisyUI itself needs `data:` images in more components than the noise (A4 false)
+
+- **What happened:** task 1.2. Besides `--fx-noise`, DaisyUI 5.7.50's sources set a `data:` SVG
+  as a mask in `loading.css` (14), `mask.css` (14), `chat.css` (the bubble tail), `tooltip.css`
+  (the arrow) and `mockup.css` (one window control); `status.css` has two, commented out. Under
+  `default-src 'self'`, `img-src` falls back to `'self'` and refuses them. A refused mask image
+  makes the element invisible, so `daisyLoading` and every `mask-*` shape disappear, a tooltip
+  loses its arrow and a chat bubble its tail. The planned noise rule fixes only the first.
+- **Cause:** A4 was to be settled by the grep this task ran; the proposal's guarantee, "every
+  element kdaisyui renders SHALL work … once DaisyUI's noise texture is switched off", rested on
+  it.
+- **Cost:** a question round with Oliver on what the guarantee says, before section 2.

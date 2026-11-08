@@ -17,7 +17,7 @@ page is clean, and the probe spec proves the check can go red.
 - [x] 1.1 `. d` (A1) A scratch page with one inline `style`, one `data:` image and one request
   the server answers 404, served by a throwaway route under the header; a throwaway Kotest spec
   prints every console message's type and text. Record them in `findings.md`; discard the scratch.
-- [ ] 1.2 `. d` (A2, A4) With a throwaway header and collector, run the E2E suite once and
+- [x] 1.2 `. d` (A2, A4) With a throwaway header and collector, run the E2E suite once and
   record every failing scenario and message; grep `example-app/src` for `https?://` and the
   compiled `app.css` for `url(`; record both lists. This is the red the gate must be seen in.
   Requires `csp-safe-popover-anchoring` merged, or the popover pages fail for the known reason.

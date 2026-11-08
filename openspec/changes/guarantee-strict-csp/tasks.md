@@ -60,7 +60,7 @@ page is clean, and the probe spec proves the check can go red.
   message. `ConsoleErrorsSpec`: the pure part, and - kept, the proof the check can go red - a
   page the test fulfils through `page.route` with the header and an inline style, whose refusal
   the collector holds and `failureMessage` names.
-- [ ] 3.2 `! F (internal)` `CucumberHooks.tearDown` fails the scenario with `failureMessage`
+- [x] 3.2 `! F (internal)` `CucumberHooks.tearDown` fails the scenario with `failureMessage`
   after the screenshot and the trace, with `context.close()` in a `finally`.
 - [ ] 3.3 `! F (internal)` `PlaywrightSpec.afterTest` does the same; `ConsoleErrorsSpec`'s probe
   drains the spec's own collector (A8: record in `findings.md` that an exception thrown there

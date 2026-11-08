@@ -79,3 +79,13 @@
   branch unexecuted, and the plugin's 100% branch gate would fail the step. Merged into one task.
 - **Cause:** the plan split a function by its outputs, not by its branches.
 - **Cost:** two minutes; one bookkeeping commit.
+
+## F8 - "Register the task only when an entry is set" needs `afterEvaluate`
+
+- **What happened:** 2026-11-08, before task 4.4. A build sets the extension's entry after the
+  plugin is applied, so registering conditionally means `afterEvaluate`, and a `ProjectBuilder`
+  test of it means internal API to evaluate the project. Registering always and wiring lazily is
+  the idiom; a build that runs the task without an entry gets Gradle's own message naming
+  `entry`. Task 4.4 changed accordingly; no spec requirement names the condition.
+- **Cause:** the plan described the user's view ("absent when unused"), not Gradle's lifecycle.
+- **Cost:** three minutes; one bookkeeping commit.

@@ -61,10 +61,12 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
   command one-shot, copies the stylesheet out. One test compiles a two-line entry with one
   source directory in a real container and reads `--color-base-100` in the output; it needs
   Docker and the network, as `check` already does for the example app.
-- [ ] 4.3 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache` (A8).
-- [ ] 4.4 `! F (internal)` The plugin registers the task, depending on `kdaisyuiClasses`, when
-  the extension's entry is set; a `ProjectBuilder` test reads the wiring, and one that it is
-  absent without an entry.
+- [x] 4.3 `^ F` The npm cache directory is the named volume `kdaisyui-npm-cache` (A8).
+- [ ] 4.4 `! F (internal)` The plugin registers `kdaisyuiStylesheet` beside `kdaisyuiClasses`,
+  wired lazily from the extension and depending on `kdaisyuiClasses` through its output; a
+  `ProjectBuilder` test reads the wiring. Registered always, not "when the entry is set": that
+  would need `afterEvaluate`, and without an entry Gradle already fails the task naming `entry`
+  (finding F8).
 
 ## 5. The example application
 

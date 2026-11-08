@@ -2,7 +2,7 @@
 
 ## 1. The rule
 
-- [ ] 1.1 `. d (internal)` The rule under `rules.proposal`; `openspec/config.yaml` parses and
+- [x] 1.1 `. d (internal)` The rule under `rules.proposal`; `openspec/config.yaml` parses and
   `openspec instructions proposal` serves it.
 
 ## 2. Gate and archive

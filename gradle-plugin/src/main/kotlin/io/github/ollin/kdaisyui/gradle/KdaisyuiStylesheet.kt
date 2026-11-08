@@ -59,7 +59,7 @@ abstract class KdaisyuiStylesheet : DefaultTask() {
 
     @TaskAction
     fun compile() {
-        plan()
+        NodeContainerRun.compile(plan(), output.get().asFile)
     }
 }
 

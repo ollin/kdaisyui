@@ -108,7 +108,12 @@ pitest {
     // Calls whose removal no test can observe: Kotlin's parameter null checks; closing the jar the
     // map is read from (nothing on Linux notices a leaked handle); and the fallback's warning, whose
     // reason the written file also states, which is what the tests assert.
-    avoidCallsTo.set(setOf("kotlin.jvm.internal", "java.util.zip.ZipFile", "org.gradle.api.logging"))
+    avoidCallsTo.set(setOf("kotlin.jvm.internal", "java.util.zip.ZipFile", "org.gradle.api.logging", "io.github.ollin.kdaisyui.gradle.NodeContainerRun"))
+    // NodeContainerRun starts a Node container: each of its mutants, and each mutant removing the call
+    // to it, would cost a container start and an npm install. It has no branch, and Kover keeps it in
+    // the 100% gate through NodeContainerRunTest, which compiles a real stylesheet. Everything it is
+    // handed is pure and mutated (compile-the-stylesheet-in-the-plugin, A11).
+    excludedClasses.set(setOf("io.github.ollin.kdaisyui.gradle.NodeContainerRun"))
     outputFormats.set(setOf("HTML", "XML"))
     testStrengthThreshold.set(100)
     // ProjectBuilder injects classes into java.lang; Gradle's own test task opens it for the test

@@ -33,8 +33,8 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 - [x] 2.1 `! F (internal)` `processResources` expands `kdaisyui-versions.properties` with the
   three versions from the catalog and `../.tool-versions`; a test reads the built resource.
-- [ ] 2.2 `! F` `KdaisyuiVersions.tailwind`, `.daisyui`, `.node` read it.
-- [ ] 2.3 `! F` The plugin warns when the `kdaisyui` jar it reads the component map from
+- [x] 2.2 `! F` `KdaisyuiVersions.tailwind`, `.daisyui`, `.node` read it.
+- [x] 2.3 `! F` The plugin warns when the `kdaisyui` jar it reads the component map from
   carries a version other than its own, naming both; a test with a renamed jar.
 
 ## 3. The configuration, under TCR

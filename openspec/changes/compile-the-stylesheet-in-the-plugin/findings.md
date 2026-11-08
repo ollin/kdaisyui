@@ -58,3 +58,16 @@
 - **Cause:** a receiver mistake in Kotlin's scope functions; the test was written with the code
   in one run, so its own defect looked like the code's.
 - **Cost:** one revert, about three minutes.
+
+## F6 - `mcp_Tcr` reverts on a test that does not compile
+
+- **What happened:** task 3.1, 2026-11-08. The test wrote `ProjectBuilder.builder().build().apply { … }`;
+  on a `Project`, the Kotlin DSL's `Project.apply(…)` wins over Kotlin's scope function, so the
+  test did not compile. `mcp_Tcr` reverted the production code - which compiled and was right -
+  and kept the test. Fixed in the test (`also`), the production code restored from the tool's
+  rescue copy and the one tracked edit rewritten unchanged; green. Together with F5, two of the
+  change's first eight production steps were reverted for a defect in the step's test.
+- **Cause:** the tool's guard compiles production and test sources in one Gradle invocation
+  (`build`), so a test compile error reaches it as a red build, not as the stop the TCR skill
+  describes ("compile error: STOP, nothing reverted").
+- **Cost:** about five minutes and one revert, plus the rescue-copy restore.

@@ -39,7 +39,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 3. The configuration, under TCR
 
-- [ ] 3.1 `! F` `kdaisyui { stylesheet { entry; sources; output; nodeImage; npmRegistry;
+- [x] 3.1 `! F` `kdaisyui { stylesheet { entry; sources; output; nodeImage; npmRegistry;
   npmUser; npmPassword; minify } }`, with the defaults the design names; `minify` on (A10).
 - [ ] 3.2 `! F` `NpmConfig.npmrc(registry, user, password)`: the registry line alone, or with
   `_auth` when both are given.

@@ -7,7 +7,7 @@
 
 ## 2. The rules
 
-- [ ] 2.1 `. d (internal)` The `proposal` rule of F6 in `openspec/config.yaml`.
+- [x] 2.1 `. d (internal)` The `proposal` rule of F6 in `openspec/config.yaml`.
 - [ ] 2.2 `. d (internal)` The `tasks` rule of F2.
 - [ ] 2.3 `. d (internal)` The `tasks` rule of F5.
 

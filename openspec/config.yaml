@@ -49,6 +49,10 @@ rules:
     - Name explicitly what is deliberately out of scope and which change owns it
       instead. A renovation sequence only works if each change refuses the others'
       work.
+    - An assumption about a browser or platform feature cites compat data for every
+      engine the documentation names, and a control run with the mechanism removed.
+      One engine with the mechanism present cannot tell "this makes it work" from
+      "nothing needed it" (csp-safe-popover-anchoring, finding F6).
   design:
     - Record the alternatives considered for each decision and why they lost. A
       decision without its rejected alternative cannot be revisited later.

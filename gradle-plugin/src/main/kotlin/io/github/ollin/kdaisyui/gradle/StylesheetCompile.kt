@@ -1,5 +1,7 @@
 package io.github.ollin.kdaisyui.gradle
 
+import java.io.File
+
 /** What runs inside the Node container: pure, so it is tested without Docker. */
 object StylesheetCompile {
     /**
@@ -14,4 +16,8 @@ object StylesheetCompile {
             "&& cd project && mkdir -p out && /deps/node_modules/.bin/tailwindcss --input css/app.css --output out/app.css" +
             if (minify) " --minify" else "",
     )
+
+    /** Each source directory's place in the container, indexed so two directories with one name cannot collide. */
+    fun mountPoints(sources: List<File>): Map<File, String> =
+        sources.withIndex().associate { (index, source) -> source to "/deps/project/sources/$index-${source.name}" }
 }

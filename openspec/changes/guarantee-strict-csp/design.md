@@ -108,5 +108,5 @@ changes: the header, each example-app fix, the failing teardowns, the README sec
   guarantee. The README says so; the scenario fails naming the URL.
 - [The noise rule changes a theme's look] → with `--noise: 0` nothing is visible; A7 puts the
   themes with noise to Oliver.
-- [The popover dropdown page fails until `csp-safe-popover-anchoring` lands] → sequencing; this
-  change's task 1.2 is run only after that change is merged, and says so.
+- [The popover dropdown page fails until `csp-safe-popover-anchoring` lands] → landed in #477;
+  kdaisyui writes no inline style, so task 1.2 can run now.

@@ -23,8 +23,8 @@ no favicon, so every page load logs a 404.
 ## What Changes
 
 - **The guarantee, stated:** kdaisyui's markup works under `default-src 'self'`. The README says
-  so, names the header, and lists what the application supplies: the stylesheet import of
-  `kdaisyui.css`, the noise rule, a favicon of its own.
+  so, names the header, and lists what the application supplies: the noise rule and a favicon
+  of its own. (No `kdaisyui.css`: `csp-safe-popover-anchoring` shipped none, task 1.4.)
 - **The example app sends the header** on every response, through Ktor's `DefaultHeaders`.
 - **The E2E suite fails a scenario whose page logs an error-level console message**, in both
   runners (Cucumber hooks and the Kotest base spec). A refused inline style, a blocked image, a
@@ -49,8 +49,8 @@ change removes: the picsum image, the inline `<style>` element, and the 404 on e
 
 ## Out of scope
 
-- **The inline anchor styles** — `csp-safe-popover-anchoring`, which lands first. Until it has,
-  the popover dropdown page fails the check here, which is why this change is sequenced after it.
+- **The inline anchor styles** — `csp-safe-popover-anchoring`, merged in #477: kdaisyui writes no
+  anchor and no inline style any more; the popover is anchored to its trigger by the browser.
 - **The stylesheet compile task** — `compile-the-stylesheet-in-the-plugin`.
 - **A page-head or CSP helper in `ktor-integration`** (item 10 of the proposals). Rejected: the
   header is one line of Ktor, the favicon is the application's, and `ktor-integration`

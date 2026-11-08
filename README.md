@@ -109,7 +109,7 @@ compiled classes, not Kotlin sources. A scan of your project finds nothing, Tail
 and your button renders unstyled with no error anywhere.
 
 So the library ships the list, and its Gradle plugin narrows it to the components your code
-uses. Apply the plugin, at the same version as the library:
+uses and compiles the stylesheet. Apply the plugin, at the same version as the library:
 
 <!-- snippet: skip - a Gradle settings script, not code against the library -->
 ```kotlin
@@ -122,25 +122,66 @@ pluginManagement { repositories { gradlePluginPortal(); mavenCentral() } }
 // build.gradle.kts
 plugins { id("io.github.ollin.kdaisyui") version "VERSION" }
 
-// Whatever compiles your stylesheet runs after the list is written:
-tasks.named("yourTailwindTask") { dependsOn("kdaisyuiClasses") }
+kdaisyui {
+    stylesheet {
+        entry.set(layout.projectDirectory.file("src/main/css/app.css"))
+    }
+}
+
+// Ship the stylesheet as a classpath resource, served under /static:
+tasks.named<ProcessResources>("processResources") {
+    from(tasks.named("kdaisyuiStylesheet")) { into("static") }
+}
 ```
 
-`kdaisyuiClasses` reads your compiled classes and writes `build/kdaisyui/kdaisyui-classes.txt`
-with the classes of every component they use. Point Tailwind at it:
+Two tasks do the work. `kdaisyuiClasses` reads your compiled classes and writes
+`build/kdaisyui/kdaisyui-classes.txt` with the classes of every component they use.
+`kdaisyuiStylesheet` compiles your entry with Tailwind and DaisyUI in a Node container, through the
+Docker daemon alone: **no docker CLI, no Node and no npm on the build host.** The inputs are copied
+in and the stylesheet out, so a daemon on another machine works too. Your entry names its inputs by
+the task's fixed places in that container:
 
 ```css
-/* app.css */
+/* src/main/css/app.css */
 @import "tailwindcss" source(none);
 @plugin "daisyui";
 
-@source "./build/kdaisyui/kdaisyui-classes.txt";  /* the components your code uses */
-@source "./src/main/kotlin";                       /* what you write yourself */
+@source "../kdaisyui/kdaisyui-classes.txt";  /* the components your code uses */
+@source "../sources/0-kotlin";               /* src/main/kotlin, what you write yourself */
 ```
 
-Compile it with the Tailwind CLI, the standalone binary, or a container, whatever suits your
-build. `:example-app` applies the plugin and compiles in a container, so the repository needs no
-Node; see [`example-app/build.gradle.kts`](example-app/build.gradle.kts).
+`sources` defaults to `src/main/kotlin`; each further directory you add lands at
+`../sources/<index>-<directory name>`. The output is `build/kdaisyui/app.css`, minified.
+
+**The versions are the plugin's.** It installs the Tailwind and DaisyUI the components were
+generated against, and the Node image of the same release; your build states none of them. It
+warns when the `kdaisyui` jar on your classpath is another version than the plugin.
+
+**Behind a mirror, with no internet:** point the task at your registry and image, and hand it a
+credential if the mirror wants one. A user without a password, or the reverse, fails before any
+container starts.
+
+<!-- snippet: skip - a Gradle build script, not code against the library -->
+```kotlin
+kdaisyui {
+    stylesheet {
+        entry.set(layout.projectDirectory.file("src/main/css/app.css"))
+        nodeImage.set("registry.example.com/library/node:26.12.1-slim")
+        npmRegistry.set("https://npm.example.com/npmjs/")
+        npmUser.set(providers.environmentVariable("NPM_USER"))
+        npmPassword.set(providers.environmentVariable("NPM_PASSWORD"))
+    }
+}
+```
+
+npm's cache lives in the Docker volume `kdaisyui-npm-cache`, so a second compile installs nothing
+anew: about 2.5 s for the example app against 4.5 s cold. Remove it with
+`docker volume rm kdaisyui-npm-cache`. The task installs DaisyUI as Tailwind's only plugin; an
+entry with a further `@plugin` of its own needs a compile of its own.
+
+**Without Docker,** compile yourself with the Tailwind CLI or the standalone binary, and point it at
+repository paths instead: `@source "./build/kdaisyui/kdaisyui-classes.txt";` and
+`@source "./src/main/kotlin";`, with `kdaisyuiClasses` running first.
 
 **What it weighs:** `:example-app` uses 20 of the 66 components, and its stylesheet went from
 55 KB to 27 KB gzip (572 KB to 229 KB uncompressed) when it switched to the plugin. When the plugin

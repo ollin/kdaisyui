@@ -39,7 +39,7 @@ judgement about a plan, not a property of a file (house rules §9, order 3).
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | `rules.proposal` and `rules.tasks` in `openspec/config.yaml` reach the agent writing those artifacts | code | to check in task 1.1 - `openspec instructions tasks --change <any> --json` prints them |
+| A1 | `rules.proposal` and `rules.tasks` in `openspec/config.yaml` reach the agent writing those artifacts | code | confirmed in task 1.1 - `openspec instructions tasks --change planning-rules-from-popover-anchoring --json` returns the four existing `rules.tasks` entries verbatim in its `rules` field |
 | A2 | No requirement of a main spec this builds on contradicts it. It builds on none: it touches only `openspec/config.yaml`, which no spec under `openspec/specs/` describes | code | confirmed at proposal - `grep -rl "config.yaml" openspec/specs` names no rule set for planning |
 
 ## Impact

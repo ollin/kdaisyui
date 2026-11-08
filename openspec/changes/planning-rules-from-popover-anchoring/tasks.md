@@ -2,7 +2,7 @@
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d (internal)` (A1) Run `openspec instructions tasks --change planning-rules-from-popover-anchoring --json`
+- [x] 1.1 `. d (internal)` (A1) Run `openspec instructions tasks --change planning-rules-from-popover-anchoring --json`
   and confirm the existing `rules.tasks` entries are in its output; record the result.
 
 ## 2. The rules

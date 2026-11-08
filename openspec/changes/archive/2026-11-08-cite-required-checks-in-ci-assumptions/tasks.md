@@ -7,5 +7,5 @@
 
 ## 2. Gate and archive
 
-- [ ] 2.1 `openspec validate cite-required-checks-in-ci-assumptions --strict`; archive on this
+- [x] 2.1 `openspec validate cite-required-checks-in-ci-assumptions --strict`; archive on this
   branch, `. d (internal)`.

@@ -34,8 +34,10 @@ playwright = "1.64.0"
 kotest = "6.2.6"
 cucumber = "8.0.4"
 junit-platform = "6.1.3"
+testcontainers = "2.0.5"
 
 [libraries]
+testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kotlinx-html" }
 
 # Ktor server

@@ -65,6 +65,9 @@ gradlePlugin {
 }
 
 dependencies {
+    // The stylesheet compile runs Node in a container reached through the Docker daemon alone: no
+    // docker CLI and no Node on the build host (compile-the-stylesheet-in-the-plugin).
+    implementation(libs.testcontainers)
     testImplementation(kotlin("test"))
 }
 

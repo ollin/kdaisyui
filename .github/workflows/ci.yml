@@ -27,6 +27,23 @@ jobs:
   #   full   anything else, and every push     all six
   #
   # A new test job gets `needs: scope` and the condition of its group, or it simply runs always.
+  # A broken openspec/config.yaml is not an error to the OpenSpec CLI: it warns, ignores the file
+  # and serves no project rules, so every planning rule silently stops reaching the agents. Its own
+  # job, with no `needs`, so that it runs on every pull request whatever `scope` decides, and a
+  # required check of the main ruleset - a failing step in `scope` would only make every test
+  # job run, and the pull request would stay mergeable (fail-ci-on-an-unparsable-openspec-config).
+  openspec-config:
+    name: openspec-config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Prove the check can fail
+        run: bash .github/openspec-config/check.test.sh
+
+      - name: openspec/config.yaml parses
+        run: bash .github/openspec-config/check.sh openspec/config.yaml
+
   scope:
     name: scope
     runs-on: ubuntu-latest

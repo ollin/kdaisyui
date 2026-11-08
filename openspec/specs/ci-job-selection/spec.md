@@ -20,8 +20,10 @@ compile in `doc-snippets/build.gradle.kts` runs in `check`, and the `llms.txt` c
 `docs/` in a build script, Kotlin or TypeScript source is a comment or a test fixture (grep,
 2026-11-01).
 
-**Verified** that the planning and agent files are read by no job: every hit in build scripts,
-Kotlin and TypeScript is a comment (grep, 2026-11-01).
+**Verified** that the planning and agent files are read by no test job: every hit in build
+scripts, Kotlin and TypeScript is a comment (grep, 2026-11-01). The one job that reads one,
+`openspec-config`, parses `openspec/config.yaml` and is not selected by the classification: it
+runs on every pull request.
 
 **Verified** end to end on 2026-11-01 with probe PRs: planning only ran no test job (#441), prose
 only ran exactly the two (#443), and a broken snippet in a prose-only change still failed

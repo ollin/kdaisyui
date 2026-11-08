@@ -17,10 +17,18 @@ runner image. If A1 is false, `python3` with PyYAML is the fallback, the parser 
 fixture written to a temporary directory, and fails if either answer is wrong - the shape
 `classify.test.sh` already has, so a check that cannot fail is caught by its own test.
 
-### 3. In `scope`, before the classifier
+### 3. A job of its own, required by the ruleset
 
-The only job a planning-only pull request runs. Its failure making every test job run is
-harmless: the pull request is red either way.
+**Chosen** (after F1): `openspec-config`, no `needs`, on every pull request and push, listed in
+the `main` ruleset's required checks. A failure names itself in the checks list and blocks the
+merge.
+
+**Rejected: a step in `scope`** (the first plan). `scope` is not required, and a failed `scope`
+makes every test job run (`ci-job-selection`), so the pull request stays mergeable.
+**Rejected: making `scope` required.** A broken classifier would then block every merge instead of
+running every job, against "The classification fails safe". **Rejected: a step in the required
+`Validate PR title` workflow.** No ruleset change, but two unrelated checks under one misleading
+name.
 
 ## Risks / Trade-offs
 

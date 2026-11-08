@@ -12,6 +12,13 @@ import org.gradle.api.tasks.SourceSetContainer
  */
 class KdaisyuiPlugin : Plugin<Project> {
     override fun apply(project: Project) {
+        project.extensions.create("kdaisyui", KdaisyuiExtension::class.java).stylesheet.apply {
+            sources.convention(project.layout.projectDirectory.dir("src/main/kotlin"))
+            output.convention(project.layout.buildDirectory.file("kdaisyui/app.css"))
+            nodeImage.convention("node:${KdaisyuiVersions.node}-slim")
+            npmRegistry.convention("https://registry.npmjs.org/")
+            minify.convention(true)
+        }
         project.plugins.withType(JavaPlugin::class.java) {
             val main = project.extensions.getByType(SourceSetContainer::class.java).getByName("main")
             project.tasks.register("kdaisyuiClasses", KdaisyuiClasses::class.java) {

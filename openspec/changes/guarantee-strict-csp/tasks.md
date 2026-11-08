@@ -39,7 +39,7 @@ page is clean, and the probe spec proves the check can go red.
   new step, so static responses are covered too. About 15 counted lines.
 - [x] 2.2 `^ r` The htmx indicator rules move from the inline `<style>` into `app.css`; the
   element goes. Its test: the progressive-loading scenarios, unchanged.
-- [ ] 2.3 `^ F` `DashboardShell.kt:94`: the picsum avatar becomes `daisyAvatar(placeholder = true)`
+- [x] 2.3 `^ F` `DashboardShell.kt:94`: the picsum avatar becomes `daisyAvatar(placeholder = true)`
   with initials; `content_security_policy.feature` gains "The page loads no image from another
   host" for `/`, from the existing steps (`returns status 200`, `does not contain "src=\"http"`).
 - [ ] 2.4 `^ F` `team/TeamFragment.kt:82`, the same, and the scenario's line for `/fragments/team`.

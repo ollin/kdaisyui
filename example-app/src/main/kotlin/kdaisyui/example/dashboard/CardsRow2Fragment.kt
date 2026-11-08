@@ -64,9 +64,9 @@ private fun TagConsumer<*>.teamActivityCard() {
                 ).withIndex()) {
                     li {
                         a("gap-3") {
-                            daisyAvatar {
-                                div("w-8 rounded-full") {
-                                    img(src = "https://picsum.photos/80/80?team-${idx + 20}", alt = "Team avatar")
+                            daisyAvatar(placeholder = true) {
+                                div("bg-neutral text-neutral-content w-8 rounded-full") {
+                                    span("text-xs") { +event.take(1) }
                                 }
                             }
                             span("text-sm") { +event }

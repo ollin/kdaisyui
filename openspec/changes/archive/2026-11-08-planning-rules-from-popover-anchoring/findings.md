@@ -11,3 +11,11 @@
 - **Cause:** a rule edited as prose in a YAML file, with no check that the file parses; the CLI
   degrades silently to "no project rules".
 - **Cost:** five minutes; nothing reached `main`.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | A check in CI's `scope` job that fails when `openspec/config.yaml` does not parse, with a test that shows it failing on a broken file | adopted -> fail-ci-on-an-unparsable-openspec-config |

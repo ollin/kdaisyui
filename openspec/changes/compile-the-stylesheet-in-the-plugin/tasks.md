@@ -89,9 +89,9 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 7. Gate, adoption and archive
 
-- [ ] 7.1 Full green: `check` with E2E and the E2E result files asserted on disk,
+- [x] 7.1 Full green: `check` with E2E and the E2E result files asserted on disk,
   `koverVerify` of the root and of `gradle-plugin`, `:gradle-plugin:pitest`,
   `analyze_change_set`.
-- [ ] 7.2 `openspec validate compile-the-stylesheet-in-the-plugin --strict`.
-- [ ] 7.3 The evaluation under `tmp/compile-the-stylesheet-in-the-plugin/` for Oliver to adopt.
+- [x] 7.2 `openspec validate compile-the-stylesheet-in-the-plugin --strict`.
+- [x] 7.3 The evaluation under `tmp/compile-the-stylesheet-in-the-plugin/` for Oliver to adopt.
 - [ ] 7.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

@@ -23,7 +23,7 @@ page is clean, and the probe spec proves the check can go red.
   Requires `csp-safe-popover-anchoring` merged, or the popover pages fail for the known reason.
 - [ ] 1.3 `. d` (A5) Read `css-delivery`, `daisyui-component-coverage` and
   `documentation-snippets` against the header and the collector; record the result.
-- [ ] 1.4 `. d` Revise this change after `csp-safe-popover-anchoring` (its finding F7): that
+- [x] 1.4 `. d` Revise this change after `csp-safe-popover-anchoring` (its finding F7): that
   change ships no `kdaisyui.css`, writes no anchor and no inline style, and relies on the
   implicit anchor of `popovertarget`. Drop the import from proposal (What Changes), task 4.1 and
   the `content-security-policy` spec (lines 13 and 90), and rewrite the spec's source-scan note
@@ -63,8 +63,8 @@ page is clean, and the probe spec proves the check can go red.
 
 ## 4. Docs
 
-- [ ] 4.1 `. d` README, "Under a strict Content-Security-Policy": the header, the `kdaisyui.css`
-  import, the noise rule, the icon; fences skipped with their reason where they are not Kotlin
+- [ ] 4.1 `. d` README, "Under a strict Content-Security-Policy": the header, the noise rule,
+  the icon; fences skipped with their reason where they are not Kotlin
   against the library.
 
 ## 5. Gate, adoption and archive

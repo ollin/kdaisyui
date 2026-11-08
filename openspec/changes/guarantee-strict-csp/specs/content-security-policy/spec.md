@@ -10,12 +10,11 @@ supplies.
 ### Requirement: The markup works under a strict policy
 
 Every element kdaisyui renders SHALL work under `Content-Security-Policy: default-src 'self'`
-once the application's stylesheet carries `kdaisyui.css` and DaisyUI's noise texture is switched
-off. kdaisyui SHALL write no inline `style`, no inline event handler and no `data:` URL.
+once DaisyUI's noise texture is switched off. kdaisyui SHALL write no inline `style`, no inline event handler and no `data:` URL.
 
 Provenance, in part verified and in part assumed: `grep -rnE 'attributes\["(on|src|style)'` over
-`lib/generated/main` finds one write, the `position-anchor` style of `Dropdown.kt:114`, which
-`csp-safe-popover-anchoring` removes together with the trigger's in `core/Popover.kt`; and the
+`lib/generated/main` and `lib/src/main` finds no write since `csp-safe-popover-anchoring` (#477)
+removed the two anchor styles (2026-11-08); and the
 324 icon files that write SVG through `raw(` carry no `style=`, no `on…=` and no `data:`
 (`grep -rn 'raw(\|unsafe' | grep -E 'style=|on[a-z]+=|data:'`, empty, 2026-11-07). **Assumed**
 for the rest; *wrong if* the example application's suite under the header reports a message
@@ -87,8 +86,8 @@ Deploy-Radar's `BrowserSteps.kt:39` collects exactly these messages for its refu
 ### Requirement: The documentation names the header and what the application supplies
 
 The README SHALL state that kdaisyui's markup works under `default-src 'self'`, show the header
-and name what the application supplies: the `kdaisyui.css` import, the rule that switches
-DaisyUI's noise texture off and why, and an icon of its own.
+and name what the application supplies: the rule that switches DaisyUI's noise texture off and
+why, and an icon of its own.
 
 **Verified** that the noise rule is needed: `daisyui/packages/daisyui/src/base/svg.css` declares
 `--fx-noise` as a `data:` URL, and `components/badge.css:9` reads it with no condition on
@@ -97,4 +96,4 @@ DaisyUI's noise texture off and why, and an icon of its own.
 #### Scenario: A reader sets up a strict policy
 
 - **WHEN** a developer reads the README's CSS section
-- **THEN** it shows the header, the import, the noise rule and the icon, each with its reason
+- **THEN** it shows the header, the noise rule and the icon, each with its reason

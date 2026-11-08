@@ -13,6 +13,6 @@
 
 ## 3. Gate and archive
 
-- [ ] 3.1 `openspec validate planning-rules-from-popover-anchoring --strict`; the rules appear in
+- [x] 3.1 `openspec validate planning-rules-from-popover-anchoring --strict`; the rules appear in
   `openspec instructions proposal|tasks --json`.
 - [ ] 3.2 Archive on this branch, `. d (internal)`.

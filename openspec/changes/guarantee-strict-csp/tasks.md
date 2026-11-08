@@ -75,9 +75,9 @@ page is clean, and the probe spec proves the check can go red.
 
 ## 5. Gate, adoption and archive
 
-- [ ] 5.1 Full green: `check` with E2E and the E2E result files asserted on disk under
+- [x] 5.1 Full green: `check` with E2E and the E2E result files asserted on disk under
   `e2e-tests/build/`, `koverVerify`, `:lib:pitest`, `analyze_change_set`. The evaluation says
   that no mutation tool covers `e2e-tests` or `example-app`.
-- [ ] 5.2 `openspec validate guarantee-strict-csp --strict`.
-- [ ] 5.3 The evaluation under `tmp/guarantee-strict-csp/` for Oliver to adopt.
+- [x] 5.2 `openspec validate guarantee-strict-csp --strict`.
+- [x] 5.3 The evaluation under `tmp/guarantee-strict-csp/` for Oliver to adopt.
 - [ ] 5.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

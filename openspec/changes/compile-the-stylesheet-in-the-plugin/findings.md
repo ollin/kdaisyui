@@ -34,3 +34,15 @@
   lines. They are `!` now; the remaining `^` steps (1.1, 3.3, 3.5, 4.3) stay at or under eight.
 - **Cause:** the plan of 2026-11-07 predates the rule and sized by behaviour.
 - **Cost:** five minutes; one bookkeeping commit.
+
+## F4 - The plugin loads in a consumer with Testcontainers on its classpath (A2)
+
+- **What happened:** task 1.1, 2026-11-08. `:lib:publishToMavenLocal` and the plugin's
+  `publishToMavenLocal`, both with `-Pversion=0.0.0-probe` so no released version in `~/.m2` was
+  overwritten; a consumer in `/tmp/opencode/` with Kotlin 2.4.10 applied the plugin from
+  `mavenLocal()`. `kdaisyuiClasses` wrote 27 lines for one `daisyButton`, and a build-script
+  task loading `org.testcontainers.DockerClientFactory` printed `Docker available = true`.
+  No classpath conflict with Gradle 9.8.2 or the Kotlin plugin. The probe artifacts were removed
+  from `~/.m2` afterwards.
+- **Cause:** record only; A9's fallback, a second artifact, is not needed.
+- **Cost:** none.

@@ -15,7 +15,7 @@ is settled before a line of the task exists; A8, A9 and A10 were decided by Oliv
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `^ F (internal)` (A2) `testcontainers` in the catalog and the plugin's
+- [x] 1.1 `^ F (internal)` (A2) `testcontainers` in the catalog and the plugin's
   `implementation`, the `ProjectBuilder` tests still green; then `publishToMavenLocal` and a
   scratch consumer in `/tmp/opencode/` that applies the plugin from `mavenLocal()` and runs
   `kdaisyuiClasses`. Record in `proposal.md` A2 and `findings.md` whether the plugin loads with

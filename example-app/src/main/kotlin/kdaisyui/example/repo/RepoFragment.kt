@@ -46,9 +46,9 @@ private fun TagConsumer<*>.recentEventsCard() {
             ).withIndex()) {
                 li {
                     a("gap-4") {
-                        daisyAvatar {
-                            div("w-6 rounded-full") {
-                                img(src = "https://picsum.photos/80/80?${idx + 6}")
+                        daisyAvatar(placeholder = true) {
+                            div("bg-neutral text-neutral-content w-6 rounded-full") {
+                                span("text-xs") { +event.first.take(1) }
                             }
                         }
                         span("text-xs") { b { +event.first }; br; +event.second }

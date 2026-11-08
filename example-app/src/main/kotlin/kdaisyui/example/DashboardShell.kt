@@ -15,14 +15,6 @@ fun HTML.dashboardShell(application: Application) {
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
         daisyuiStylesheet()
         script { src = "/webjars/htmx.org/dist/htmx.min.js" }
-        style {
-            unsafe {
-                raw("""
-                    .htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
-                    .htmx-request .htmx-indicator, .htmx-request.htmx-indicator { opacity: 1; }
-                """.trimIndent())
-            }
-        }
     }
     body("drawer bg-base-200 lg:drawer-open min-h-screen") {
         val drawerId: HtmlId = Dashboard.Drawer()

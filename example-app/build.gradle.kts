@@ -14,6 +14,14 @@ application {
     mainClass.set("kdaisyui.example.ApplicationKt")
 }
 
+// The plugin compiles the stylesheet in a Node container, with the Tailwind and DaisyUI the components
+// were generated against; its sources default to src/main/kotlin.
+kdaisyui {
+    stylesheet {
+        entry.set(layout.projectDirectory.file("src/main/css/app.css"))
+    }
+}
+
 // --- Tailwind CSS, compiled at build time in a container ---
 //
 // The prebuilt daisyui webjar ships only five variant prefixes (sm, md, lg, xl, hover),
@@ -100,7 +108,7 @@ val compileTailwind = tasks.register<Exec>("compileTailwind") {
 // The compiled stylesheet ships as a classpath resource, so the running application
 // serves it the same way in the IDE, from `just dev` and from a distribution.
 tasks.named<ProcessResources>("processResources") {
-    from(compileTailwind) { into("static") }
+    from(tasks.named("kdaisyuiStylesheet")) { into("static") }
 }
 
 fun callingUserArgs(): List<String> {

@@ -69,7 +69,7 @@ page is clean, and the probe spec proves the check can go red.
 
 ## 4. Docs
 
-- [ ] 4.1 `. d` README, "Under a strict Content-Security-Policy": the header and why `img-src`
+- [x] 4.1 `. d` README, "Under a strict Content-Security-Policy": the header and why `img-src`
   allows `data:`, the icon; fences skipped with their reason where they are not Kotlin
   against the library.
 

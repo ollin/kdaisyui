@@ -26,14 +26,7 @@ import kotlinx.html.*
  * for that reason until 2026-09-14. Say the variant and the class separately, as above.
  */
 fun HTML.tailwindVariantPage() {
-    lang = "en"
-    head {
-        meta { charset = "utf-8" }
-        title { +"Tailwind variant check" }
-        meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        pageAssets()
-    }
-    body("bg-base-200 min-h-screen p-10") {
+    demoPage("Tailwind variant check") {
         h1("text-xl font-bold mb-6") { +"Tailwind variant check" }
         p("mb-6 text-sm opacity-70") {
             +"Both buttons should be the same size at lg and above. If they are not, a Tailwind "

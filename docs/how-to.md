@@ -322,3 +322,103 @@ daisyInput(placeholder = "Email", extraClasses = "input-error w-full")
 ```
 
 DaisyUI provides `input-error`, `input-success`, `input-warning` classes.
+
+## Let users choose a theme
+
+DaisyUI ships 35 themes. `DaisyTheme` names each of them, `daisyTheme` puts one on an element,
+and `daisyThemeOf` reads a stored one back. The choice needs no script: a theme is CSS that
+applies to whatever carries `data-theme`, and the server writes that attribute.
+
+**Step 1: put the themes in the stylesheet.** The webjar's `themes.css` carries all 35. A
+compiled stylesheet carries only the themes its entry names, and DaisyUI's default is `light`
+and `dark`:
+
+```css
+@plugin "daisyui" { themes: all; }
+```
+
+That adds about 36 KB to a minified stylesheet. To offer fewer, name them:
+`themes: light --default, dark --prefersdark, nord;`.
+
+`DaisyTheme` lists every built-in theme whatever your stylesheet holds. A theme the stylesheet
+lacks does not fail: the element renders in the default theme. A theme of your own, made with
+`@plugin "daisyui/theme"`, has no entry; write it as `attributes["data-theme"] = "mytheme"`.
+
+**Step 2: render the page in the user's theme.** Without the attribute, DaisyUI follows the
+browser's light or dark preference:
+
+```kotlin
+import io.github.ollin.kdaisyui.themes.*
+
+fun HTML.themedPage(theme: DaisyTheme?) {
+    if (theme != null) daisyTheme(theme)     // <html data-theme="nord">
+    body { +"…" }
+}
+```
+
+**Step 3: preview each theme.** On any other element the attribute themes only that element, so
+a card shows a theme inside a page wearing another:
+
+```kotlin
+import io.github.ollin.kdaisyui.themes.*
+
+fun FlowContent.themeChoice(theme: DaisyTheme, current: DaisyTheme?) {
+    label("flex items-center gap-3") {
+        daisyRadio(name = "theme", checked = theme == current) { value = theme.value }
+        daisyCard(extraClasses = "bg-base-100 text-base-content w-48") {
+            daisyTheme(theme)
+            daisyCardBody {
+                +theme.value
+                div("flex gap-1") {
+                    span("bg-primary size-4 rounded") {}
+                    span("bg-secondary size-4 rounded") {}
+                    span("bg-accent size-4 rounded") {}
+                }
+            }
+        }
+    }
+}
+```
+
+Put one per `DaisyTheme.entries` inside a `form(action = "/profile/theme", method = FormMethod.post)`.
+
+**Step 4: keep the choice.** A cookie lets the server render the theme on the first byte, so the
+page never flashes the default. `daisyThemeOf` turns the stored string back into a theme, and
+`null` for anything that is not one:
+
+<!-- snippet: in Route -->
+```kotlin
+import io.github.ollin.kdaisyui.themes.*
+import io.ktor.server.request.receiveParameters
+
+post("/profile/theme") {
+    val theme = daisyThemeOf(call.receiveParameters()["theme"].orEmpty())
+        ?: return@post call.respond(HttpStatusCode.BadRequest)
+    call.response.cookies.append(Cookie("theme", theme.value, maxAge = 31_536_000, path = "/", httpOnly = true))
+    call.respondRedirect("/profile")
+}
+
+get("/profile") {
+    val theme = call.request.cookies["theme"]?.let(::daisyThemeOf)
+    call.respondHtml { themedPage(theme) }
+}
+```
+
+**A light/dark switch in the page.** The theme controller re-themes the page while it is checked,
+with CSS alone, and forgets it on reload:
+
+```kotlin
+import io.github.ollin.kdaisyui.themes.*
+
+daisyThemeController(theme = DaisyTheme.Dark) { type = InputType.checkBox }
+
+// Or as a toggle, the way DaisyUI's own page shows it:
+daisyToggle {
+    daisyThemeControllerClasses()
+    value = DaisyTheme.Dark.value
+}
+```
+
+The example application's profile does all four steps, with a "System default" choice that
+deletes the cookie: `example-app/src/main/kotlin/kdaisyui/example/ProfilePage.kt` and
+`ThemeCookie.kt`.

@@ -3,15 +3,35 @@ package kdaisyui.example
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
+import io.github.ollin.kdaisyui.themes.DaisyTheme
+import io.github.ollin.kdaisyui.themes.daisyTheme
 import io.ktor.server.application.Application
 import io.ktor.server.resources.href
 import kotlinx.html.*
 
-fun HTML.dashboardShell(application: Application) {
+fun HTML.dashboardShell(application: Application, theme: DaisyTheme?) {
+    appShell(application, theme, "Overview") {
+        htmxPlaceholder(application.href(Fragments.Stats()), "load", "col-span-12")
+        htmxPlaceholder(application.href(Fragments.CardsRow1()), "load delay:100ms", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+        htmxPlaceholder(application.href(Fragments.CardsRow2()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+        htmxPlaceholder(application.href(Fragments.WhatsNew()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+        htmxPlaceholder(application.href(Fragments.Forms()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+        htmxPlaceholder(application.href(Fragments.FormSections()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+        htmxPlaceholder(application.href(Fragments.Team()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+    }
+}
+
+/**
+ * The frame every page of the app shares: the drawer with its sidebar, and a header with the
+ * page's [heading], the search field and the avatar menu. [pageContent] fills the twelve-column grid
+ * below the header.
+ */
+fun HTML.appShell(application: Application, theme: DaisyTheme?, heading: String, pageContent: DIV.() -> Unit) {
     lang = "en"
+    if (theme != null) daisyTheme(theme)
     head {
         meta { charset = "utf-8" }
-        title { +"DevTrack Overview" }
+        title { +"DevTrack $heading" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
         pageAssets()
         script { src = "/webjars/htmx.org/dist/htmx.min.js" }
@@ -26,14 +46,8 @@ fun HTML.dashboardShell(application: Application) {
         main("drawer-content") {
             id = Dashboard.Content().id
             div("grid grid-cols-12 grid-rows-[min-content] gap-y-12 p-4 lg:gap-x-12 lg:p-10") {
-                shellHeader()
-                htmxPlaceholder(application.href(Fragments.Stats()), "load", "col-span-12")
-                htmxPlaceholder(application.href(Fragments.CardsRow1()), "load delay:100ms", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder(application.href(Fragments.CardsRow2()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder(application.href(Fragments.WhatsNew()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder(application.href(Fragments.Forms()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder(application.href(Fragments.FormSections()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
-                htmxPlaceholder(application.href(Fragments.Team()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
+                shellHeader(application.href(ProfilePage()), heading)
+                pageContent()
             }
         }
         aside("drawer-side z-10") {
@@ -41,7 +55,7 @@ fun HTML.dashboardShell(application: Application) {
                 htmlFor = drawerId.id
                 classes = setOf("drawer-overlay")
             }
-            shellSidebar()
+            shellSidebar(application.href(DashboardPage()), overviewActive = heading == "Overview")
         }
     }
 }
@@ -58,7 +72,7 @@ private fun FlowContent.htmxPlaceholder(url: String, trigger: String, extraClass
     }
 }
 
-private fun FlowContent.shellHeader() {
+private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
     header("col-span-12 flex items-center gap-2 lg:gap-4") {
         id = Dashboard.Header().id
         label {
@@ -67,7 +81,7 @@ private fun FlowContent.shellHeader() {
             +"☰"
         }
         div("grow") {
-            h1("lg:text-2xl lg:font-light") { +"Overview" }
+            h1("lg:text-2xl lg:font-light") { +heading }
         }
         div {
             daisyInput(
@@ -86,7 +100,7 @@ private fun FlowContent.shellHeader() {
             ul {
                 attributes["tabindex"] = "0"
                 classes = setOf("menu", "dropdown-content", "rounded-box", "bg-base-100", "mt-3", "w-52", "p-2", "shadow-2xl")
-                li { a { +"Profile" } }
+                li { a(href = profileUrl) { +"Profile" } }
                 li {
                     a {
                         +"Inbox"
@@ -100,7 +114,7 @@ private fun FlowContent.shellHeader() {
     }
 }
 
-private fun FlowContent.shellSidebar() {
+private fun FlowContent.shellSidebar(dashboardUrl: String, overviewActive: Boolean) {
     nav("bg-base-100 flex min-h-screen w-72 flex-col gap-2 overflow-y-auto px-6 py-10") {
         id = Dashboard.Sidebar().id
         div("mx-4 flex items-center gap-2 font-black") { +"DevTrack" }
@@ -108,7 +122,7 @@ private fun FlowContent.shellSidebar() {
             // `classes` NAMED, because kotlinx.html's `a` is a(href, target, referrerPolicy,
             // classes): the positional form set href="menu-active", so this item linked to a
             // route that does not exist and never got the active styling either.
-            li { a(classes = "menu-active") { +"Overview" } }
+            li { a(href = dashboardUrl, classes = if (overviewActive) "menu-active" else null) { +"Overview" } }
             sidebarSubmenu("Repositories", listOf("All Repos", "New Repository", "Archived"))
             li { a { +"Issues" } }
             li { a { +"Pull Requests" } }

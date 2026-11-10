@@ -92,6 +92,8 @@ Hand-written Kotlin exists only here:
   `CustomElements.kt` (elements kotlinx.html has no class for, today `<calendar-date>`)
 - `lib/src/main/kotlin/io/github/ollin/kdaisyui/icons/` — `HeroIconSize.kt`, `HeroIconVariant.kt`
   (the icon *functions* next to them are generated; these two support files are not)
+- `lib/src/main/kotlin/io/github/ollin/kdaisyui/themes/` — `DaisyThemes.kt` (`daisyTheme`,
+  `daisyThemeOf`; the `DaisyTheme` enum beside it is generated from DaisyUI's theme files)
 - `ktor-integration/src/main/kotlin/io/github/ollin/kdaisyui/ktor/Resolvable.kt`
 - `doc-snippets/src/main/kotlin/…` — the extractor that turns the prose documentation's snippets
   into Kotlin files

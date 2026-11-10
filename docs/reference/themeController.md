@@ -13,6 +13,7 @@ DaisyUI theme controller toggle. Renders `<input class="theme-controller ...">`.
 ```kotlin
 fun FlowContent.daisyThemeController(
     id: HtmlId? = null,
+    theme: DaisyTheme? = null,
     extraClasses: String? = null,
     block: (INPUT.() -> Unit) = {},
 )

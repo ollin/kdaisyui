@@ -13,14 +13,7 @@ import kotlinx.html.*
  * clip it.
  */
 fun HTML.dropdownPopoverPage() {
-    lang = "en"
-    head {
-        meta { charset = "utf-8" }
-        title { +"Popover Dropdown" }
-        meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        pageAssets()
-    }
-    body("bg-base-200 min-h-screen p-10") {
+    demoPage("Popover Dropdown") {
         val menu = Dashboard.DropdownPopover()
         daisyButton("Open menu") { popoverTarget(menu) }
         daisyDropdownPopover(id = menu, extraClasses = "bg-base-100 rounded-box w-52 shadow-sm") {

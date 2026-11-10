@@ -756,8 +756,8 @@ public final class io/github/ollin/kdaisyui/components/JoinScope : kotlinx/html/
 	public static synthetic fun daisyInput$default (Lio/github/ollin/kdaisyui/components/JoinScope;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZLkotlinx/html/InputType;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public final fun daisySelect (Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisySelect$default (Lio/github/ollin/kdaisyui/components/JoinScope;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/core/ClassValues;Lio/github/ollin/kdaisyui/core/ClassValues;ZZLjava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public final fun daisyThemeController (Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyThemeController$default (Lio/github/ollin/kdaisyui/components/JoinScope;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public final fun daisyThemeController (Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/themes/DaisyTheme;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyThemeController$default (Lio/github/ollin/kdaisyui/components/JoinScope;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/themes/DaisyTheme;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public final fun daisyValidator (Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun daisyValidator$default (Lio/github/ollin/kdaisyui/components/JoinScope;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
@@ -1507,8 +1507,8 @@ public final class io/github/ollin/kdaisyui/components/TextareaSize : java/lang/
 }
 
 public final class io/github/ollin/kdaisyui/components/ThemeControllerKt {
-	public static final fun daisyThemeController (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun daisyThemeController$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun daisyThemeController (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/themes/DaisyTheme;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun daisyThemeController$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/core/HtmlId;Lio/github/ollin/kdaisyui/themes/DaisyTheme;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static final fun daisyThemeControllerClasses (Lkotlinx/html/Tag;)V
 }
 
@@ -3363,5 +3363,52 @@ public final class io/github/ollin/kdaisyui/icons/XCircleKt {
 public final class io/github/ollin/kdaisyui/icons/XMarkKt {
 	public static final fun heroIconXMark (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/icons/HeroIconVariant;Lio/github/ollin/kdaisyui/icons/HeroIconSize;Ljava/lang/String;)V
 	public static synthetic fun heroIconXMark$default (Lkotlinx/html/FlowContent;Lio/github/ollin/kdaisyui/icons/HeroIconVariant;Lio/github/ollin/kdaisyui/icons/HeroIconSize;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class io/github/ollin/kdaisyui/themes/DaisyTheme : java/lang/Enum {
+	public static final field Abyss Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Acid Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Aqua Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Autumn Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Black Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Bumblebee Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Business Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Caramellatte Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Cmyk Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Coffee Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Corporate Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Cupcake Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Cyberpunk Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Dark Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Dim Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Dracula Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Emerald Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Fantasy Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Forest Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Garden Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Halloween Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Lemonade Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Light Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Lofi Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Luxury Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Night Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Nord Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Pastel Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Retro Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Silk Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Sunset Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Synthwave Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Valentine Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Winter Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static final field Wireframe Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+	public static fun values ()[Lio/github/ollin/kdaisyui/themes/DaisyTheme;
+}
+
+public final class io/github/ollin/kdaisyui/themes/DaisyThemesKt {
+	public static final fun daisyTheme (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/themes/DaisyTheme;)V
+	public static final fun daisyThemeOf (Ljava/lang/String;)Lio/github/ollin/kdaisyui/themes/DaisyTheme;
 }
 

@@ -366,10 +366,10 @@ function documentedTestFor(componentName: string, page: string, model: Component
 // drive every branch of every function with assertions on the rendered HTML.
 
 
-// Enum types from kotlinx.html (not declared in the source): arms can't be
-// enumerated, so the `!= null` branch is driven once with a known value.
-const EXTERNAL_ENUM_VALUES = { ButtonType: 'ButtonType.button' }
-const EXTERNAL_ENUM_IMPORTS = { ButtonType: 'import kotlinx.html.ButtonType' }
+// Enum types not declared in the component's source - kotlinx.html's, and the library's own
+// `DaisyTheme`: arms can't be enumerated, so the `!= null` branch is driven once with a known value.
+const EXTERNAL_ENUM_VALUES = { ButtonType: 'ButtonType.button', DaisyTheme: 'DaisyTheme.Dark' }
+const EXTERNAL_ENUM_IMPORTS = { ButtonType: 'import kotlinx.html.ButtonType', DaisyTheme: 'import io.github.ollin.kdaisyui.themes.DaisyTheme' }
 
 function lowerFirst(s) {
   return s.charAt(0).toLowerCase() + s.slice(1)

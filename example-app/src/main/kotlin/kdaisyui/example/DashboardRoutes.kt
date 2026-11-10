@@ -2,7 +2,11 @@ package kdaisyui.example
 
 import io.ktor.http.*
 import io.ktor.server.html.*
+import io.ktor.server.request.receiveParameters
 import io.ktor.server.resources.get
+import io.ktor.server.resources.href
+import io.ktor.server.resources.post
+import io.ktor.server.response.respond
 import io.ktor.server.routing.*
 import kdaisyui.example.dashboard.*
 import kdaisyui.example.repo.*
@@ -11,7 +15,7 @@ import kdaisyui.example.team.*
 fun Route.dashboardRoutes() {
     get<DashboardPage> {
         call.respondHtml(HttpStatusCode.OK) {
-            dashboardShell(call.application)
+            dashboardShell(call.application, call.storedTheme())
         }
     }
 
@@ -23,6 +27,12 @@ fun Route.dashboardRoutes() {
     get<TailwindVariantCheck> { call.respondHtml(HttpStatusCode.OK) { tailwindVariantPage() } }
     get<DisabledStateCheck> { call.respondHtml(HttpStatusCode.OK) { disabledStatePage() } }
     get<TabsDemo> { call.respondHtml(HttpStatusCode.OK) { tabsPage() } }
+    get<ProfilePage> { call.respondHtml(HttpStatusCode.OK) { profilePage(call.application, call.storedTheme()) } }
+    post<ProfilePage.Theme> {
+        if (!call.storeTheme(call.receiveParameters()["theme"].orEmpty())) return@post call.respond(HttpStatusCode.BadRequest)
+        call.response.headers.append(HttpHeaders.Location, call.application.href(ProfilePage()))
+        call.respond(HttpStatusCode.SeeOther)
+    }
 
     get<Fragments.Stats> { call.respondHtmlFragment { statsFragment() } }
     get<Fragments.CardsRow1> { call.respondHtmlFragment { cardsRow1Fragment() } }

@@ -457,7 +457,7 @@ fun FlowContent.daisyTextRotate(id: HtmlId? = null, extraClasses: String? = null
 fun Tag.daisyTextRotateClasses()
 
 # ThemeController <input>
-fun FlowContent.daisyThemeController(id: HtmlId? = null, extraClasses: String? = null, block: (INPUT.() -> Unit) = {})
+fun FlowContent.daisyThemeController(id: HtmlId? = null, theme: DaisyTheme? = null, extraClasses: String? = null, block: (INPUT.() -> Unit) = {})
 fun Tag.daisyThemeControllerClasses()
 
 # Timeline <ul>

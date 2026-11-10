@@ -16,6 +16,10 @@ class Megamenu : AnnotatedIdBase("megamenu") {
     class PanelTwo(parent: Megamenu = Megamenu()) : AnnotatedIdBase("panel-two", parent)
 }
 
+class Profile : AnnotatedIdBase("profile") {
+    class ThemeForm(parent: Profile = Profile()) : AnnotatedIdBase("theme-form", parent)
+}
+
 class Dashboard : AnnotatedIdBase("dashboard") {
     class Drawer(parent: Dashboard = Dashboard()) : AnnotatedIdBase("drawer", parent)
     class Search(parent: Dashboard = Dashboard()) : AnnotatedIdBase("search", parent)

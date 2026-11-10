@@ -24,7 +24,10 @@ class DisabledStateCheck
 class TabsDemo
 
 @Resource("/profile")
-class ProfilePage
+class ProfilePage {
+    @Resource("/theme")
+    class Theme(val parent: ProfilePage = ProfilePage())
+}
 
 @Resource("/fragments")
 class Fragments {

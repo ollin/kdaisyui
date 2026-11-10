@@ -1,6 +1,9 @@
 package kdaisyui.e2e.steps
 
+import com.microsoft.playwright.Page.GetByRoleOptions
+import com.microsoft.playwright.options.AriaRole
 import io.cucumber.java.en.Then
+import io.cucumber.java.en.When
 import kdaisyui.example.Profile
 
 /** Steps for the profile's theme picker. */
@@ -18,5 +21,17 @@ class ThemeSteps(private val world: PlaywrightWorld) {
         val values = world.page.locator("#${Profile.ThemeForm().id} [data-theme]")
             .evaluateAll("(els, prop) => els.map(e => getComputedStyle(e).getPropertyValue(prop))", property) as List<*>
         check(values.size == count && values.toSet().size == count) { "Expected $count previews with distinct $property, got $values" }
+    }
+
+    @When("the user chooses the theme {string} and saves")
+    fun chooseThemeAndSave(theme: String) {
+        world.page.locator("#${Profile.ThemeForm().id} input[name=theme][value=$theme]").check()
+        world.page.getByRole(AriaRole.BUTTON, GetByRoleOptions().setName("Save")).click()
+    }
+
+    @Then("the browser keeps the cookie {string} as {string}")
+    fun browserKeepsCookie(name: String, value: String) {
+        val actual = world.context.cookies().firstOrNull { it.name == name }?.value
+        check(actual == value) { "Expected cookie $name=$value, got $actual" }
     }
 }

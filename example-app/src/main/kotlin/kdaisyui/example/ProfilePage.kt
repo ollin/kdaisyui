@@ -20,10 +20,10 @@ import kotlinx.html.label
 import kotlinx.html.span
 
 /** The user's profile, where a theme is chosen with a preview of each. */
-fun HTML.profilePage() {
+fun HTML.profilePage(saveUrl: String) {
     demoPage("Profile") {
         h1("text-2xl font-light") { +"Profile" }
-        form(method = FormMethod.post) {
+        form(action = saveUrl, method = FormMethod.post) {
             id = Profile.ThemeForm().id
             for (theme in DaisyTheme.entries) {
                 label("flex items-center gap-3") {

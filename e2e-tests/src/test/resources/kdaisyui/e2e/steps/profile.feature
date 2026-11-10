@@ -17,3 +17,9 @@ Feature: Profile
   Scenario: Every theme is previewed in itself
     Given the user opens "/profile"
     Then the 35 theme previews each compute their own "--color-primary"
+
+  Scenario: Saving a theme keeps it in a cookie and returns to the profile
+    Given the user opens "/profile"
+    When the user chooses the theme "nord" and saves
+    Then the heading "Profile" is visible
+    And the browser keeps the cookie "theme" as "nord"

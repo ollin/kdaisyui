@@ -26,4 +26,11 @@ class GradleProblemTest {
             """<script type="application/json" id="problems-summary">{"summaries":[{"problemId":[{"name":"set-visible"}],"count":5}]}</script>"""
         assertEquals(listOf(GradleProblem("set-visible", "org.example.kover")), problemsIn(report))
     }
+
+    @Test
+    fun aProblemWithADocumentationLinkIsItsAnchorAndItsSummaryStillMatchesByName() {
+        val report = """{"diagnostics":[{"problemId":[{"name":"Method usage"}],"documentationLink":"https://docs.gradle.org/9.9.0/userguide/upgrading_version_9.html#deprecate-visible-property",""" +
+            """"locations":[{"pluginId":"org.example.kover"}]}],"problemsReport":{"summaries":[{"problemId":[{"name":"Method usage"}],"count":5}]}}"""
+        assertEquals(listOf(GradleProblem("deprecate-visible-property", "org.example.kover")), problemsIn(report))
+    }
 }

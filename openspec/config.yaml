@@ -81,6 +81,10 @@ rules:
       line counts as one removed plus one added, and a comment counts in a file type
       without a line comment, such as CSS. A behaviour step above eight is planned `!`
       (csp-safe-popover-anchoring, finding F5).
+    - A step that changes a generator includes `just generate` and the regenerated output in
+      the same task. The snapshot tests compare the generators with the committed output, so
+      the generator change alone is red under TCR at the repository root
+      (name-the-class-sibling-in-every-kdoc, finding F3).
 
 # Per-operation guidance, served when implementation or archival starts.
 # Advisory: it reduces the chance a step is forgotten, it does not enforce anything.

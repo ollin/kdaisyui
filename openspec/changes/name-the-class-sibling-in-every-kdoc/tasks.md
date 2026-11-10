@@ -14,7 +14,7 @@ None. Block 1 is kept so the numbering matches the other changes.
 
 ## 2. Codegen, under TCR at the repository root
 
-- [x] 2.1 `! F (internal)` `renderKdoc` in `codegen/src/generator-new.ts` adds the sentence
+- [x] 2.1 `! F` `renderKdoc` in `codegen/src/generator-new.ts` adds the sentence
   as the comment's second line for every function for which `hasSibling(shape)` holds, and not
   otherwise. `codegen/test/generator-new.test.ts` asserts the exact string for a function with
   an own class, for one with only modifier classes or class-writing parameters, and its absence

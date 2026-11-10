@@ -74,7 +74,7 @@ task 3.4.
   two together exceed eight counted lines. If the test generator or Kover objects, revise first.
   Done in two runs: the test generator first learned to drive a `DaisyTheme` extra (finding F8),
   then the model edit with its output and a hand test of both spec scenarios in `DaisyThemeTest`.
-- [ ] 2.9 `. F (internal)` `lib/build.gradle.kts`: `targetClasses` gains
+- [x] 2.9 `. F (internal)` `lib/build.gradle.kts`: `targetClasses` gains
   `io.github.ollin.kdaisyui.themes.*`; `./gradlew :lib:pitest` reports 100% test strength.
 
 ## 3. The profile page and its scenarios, under TCR at the root

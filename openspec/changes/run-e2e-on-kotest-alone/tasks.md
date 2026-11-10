@@ -113,8 +113,13 @@ nothing else any more are deleted in the same run.
 
 ## 5. Gates, archive, pull request
 
-- [ ] 5.1 `./gradlew check` green; `code_health_review` on every new spec; the project values on
+- [x] 5.1 `./gradlew check` green; `code_health_review` on every new spec; the project values on
   CodeScene (`kdaisyui`, id 14) before the push.
+  2026-11-10: `./gradlew check koverXmlReport` and `:build-checks:checkGradleProblems` green.
+  `analyze_change_set` first failed the gate on `ProfileTest.init` (76 lines, threshold 70). Its
+  five longest bodies became named functions, and the gate passed. The server lists no hotspot
+  for project 14. No production code changed, so neither Kover nor PIT has anything new to
+  measure; the per-port controls stand in for mutation testing of the E2E specs.
 - [ ] 5.2 Archive the change on this branch, commit.
 - [ ] 5.3 Rebase onto `origin/main`, run the suite, push, open the pull request through
   `github-mcp` (`test: run the E2E suite on Kotest alone`), CI green, merge with a merge commit.

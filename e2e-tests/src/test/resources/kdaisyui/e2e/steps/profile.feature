@@ -41,3 +41,8 @@ Feature: Profile
     And the user chooses the theme "system" and saves
     Then the page wears no theme of its own
     And the theme choice "system" is checked
+
+  Scenario: The avatar menu leads to the profile
+    Given the user navigates to the dashboard
+    When the user opens the profile from the avatar menu
+    Then the heading "Profile" is visible

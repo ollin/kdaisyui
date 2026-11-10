@@ -8,6 +8,7 @@ import com.microsoft.playwright.options.RequestOptions
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import kdaisyui.e2e.SharedInfrastructure
+import kdaisyui.example.Dashboard
 import kdaisyui.example.Profile
 
 /** Steps for the profile's theme picker. */
@@ -61,5 +62,11 @@ class ThemeSteps(private val world: PlaywrightWorld) {
     fun pageWearsNoTheme() {
         val actual = world.page.locator("html").getAttribute("data-theme")
         check(actual == null) { "Expected html without data-theme, got $actual" }
+    }
+
+    @When("the user opens the profile from the avatar menu")
+    fun openProfileFromAvatarMenu() {
+        world.page.locator("#${Dashboard.Header.Avatar().id} [tabindex]").first().click()
+        world.page.getByRole(AriaRole.LINK, GetByRoleOptions().setName("Profile")).click()
     }
 }

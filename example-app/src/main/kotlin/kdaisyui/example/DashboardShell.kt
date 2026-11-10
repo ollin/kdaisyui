@@ -29,7 +29,7 @@ fun HTML.dashboardShell(application: Application, theme: DaisyTheme?) {
         main("drawer-content") {
             id = Dashboard.Content().id
             div("grid grid-cols-12 grid-rows-[min-content] gap-y-12 p-4 lg:gap-x-12 lg:p-10") {
-                shellHeader()
+                shellHeader(application.href(ProfilePage()))
                 htmxPlaceholder(application.href(Fragments.Stats()), "load", "col-span-12")
                 htmxPlaceholder(application.href(Fragments.CardsRow1()), "load delay:100ms", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
                 htmxPlaceholder(application.href(Fragments.CardsRow2()), "revealed", "col-span-12 grid grid-cols-12 gap-y-12 lg:gap-x-12")
@@ -61,7 +61,7 @@ private fun FlowContent.htmxPlaceholder(url: String, trigger: String, extraClass
     }
 }
 
-private fun FlowContent.shellHeader() {
+private fun FlowContent.shellHeader(profileUrl: String) {
     header("col-span-12 flex items-center gap-2 lg:gap-4") {
         id = Dashboard.Header().id
         label {
@@ -89,7 +89,7 @@ private fun FlowContent.shellHeader() {
             ul {
                 attributes["tabindex"] = "0"
                 classes = setOf("menu", "dropdown-content", "rounded-box", "bg-base-100", "mt-3", "w-52", "p-2", "shadow-2xl")
-                li { a { +"Profile" } }
+                li { a(href = profileUrl) { +"Profile" } }
                 li {
                     a {
                         +"Inbox"

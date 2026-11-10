@@ -66,8 +66,9 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
   plugin (D2).
   A4's repeat: after an empty commit `:lib:jar` stayed `UP-TO-DATE` and its SHA-256 unchanged
   (`6c03eb3e…`); the manifest carries no `SCM-Revision`.
-- [ ] 3.4 `. r (internal)` `jvmToolchain(21)` alone: drop `java { toolchain }` and `jvmTarget` from
+- [x] 3.4 `. r (internal)` `jvmToolchain(21)` alone: drop `java { toolchain }` and `jvmTarget` from
   the convention plugin and `buildSrc/build.gradle.kts` (D6).
+  Class files of `lib` and `ktor-integration` still carry major version 65 (Java 21).
 - [ ] 3.5 `. d (internal)` Delete the two false comments: the staged-rollout paragraph in the root
   Kover block and the one-class/no-threshold paragraph in `lib`'s PIT block (D8).
 

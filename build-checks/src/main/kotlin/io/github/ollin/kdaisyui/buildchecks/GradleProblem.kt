@@ -24,27 +24,33 @@ sealed interface Source {
  */
 fun problemsIn(report: String): List<GradleProblem> {
     val diagnostics = report.split(summaryStart, limit = 2).first()
-    val entries = entriesOf(diagnostics)
-    val listed = entries.map { GradleProblem(idOf(it), sourceOf(it)) }
-    val listedNames = entries.map(::nameOf).toSet()
-    val unlisted = entriesOf(report.removePrefix(diagnostics)).map(::nameOf).filter { it !in listedNames }
-    return listed + unlisted.map { GradleProblem(it, Source.ThisBuild) }
+    val listed = entriesOf(diagnostics)
+    val listedNames = listed.map { it.name }.toSet()
+    val unlisted = entriesOf(report.removePrefix(diagnostics)).filter { it.name !in listedNames }
+    return listed.map { it.problem } + unlisted.map { GradleProblem(it.name, Source.ThisBuild) }
 }
 
-private fun entriesOf(json: String): List<String> = json.split("{\"problemId\":").drop(1)
+private fun entriesOf(json: String): List<ReportEntry> = json.split("{\"problemId\":").drop(1).map(::ReportEntry)
 
-/** The anchor of the entry's documentation link, one per deprecation, else its most specific name. */
-private fun idOf(entry: String): String = anchor.findAll(entry).map { it.groupValues[1] }.firstOrNull() ?: nameOf(entry)
+/** One problem's entry in the report's data, from its `problemId` to the next entry. */
+@JvmInline
+private value class ReportEntry(private val json: String) {
+    /** Its most specific name: generic since Gradle 9.9, and all a summary carries. */
+    val name: String get() = namePattern.findAll(json.substringBefore("]")).last().groupValues[1]
 
-private fun sourceOf(entry: String): Source =
-    pluginId.findAll(entry).map { Source.Plugin(it.groupValues[1]) }.firstOrNull() ?: Source.ThisBuild
+    /** The anchor of its documentation link, one per deprecation, else its name. */
+    val id: String get() = anchorPattern.findAll(json).map { it.groupValues[1] }.firstOrNull() ?: name
 
-private fun nameOf(entry: String): String = name.findAll(entry.substringBefore("]")).last().groupValues[1]
+    /** The plugin it is attributed to, else the build itself. */
+    val source: Source
+        get() = pluginPattern.findAll(json).map { Source.Plugin(it.groupValues[1]) }.firstOrNull() ?: Source.ThisBuild
 
-private val anchor = Regex("\"documentationLink\":\"[^\"#]*#([^\"]+)\"")
+    val problem: GradleProblem get() = GradleProblem(id, source)
+}
 
 /** Where the summaries begin: a key of the report's data up to Gradle 9.8, a script of their own since 9.9. */
 private val summaryStart = Regex("\"problemsReport\"|id=\"problems-summary\"")
 
-private val name = Regex("\"name\":\"([^\"]+)\"")
-private val pluginId = Regex("\"pluginId\":\"([^\"]+)\"")
+private val namePattern = Regex("\"name\":\"([^\"]+)\"")
+private val anchorPattern = Regex("\"documentationLink\":\"[^\"#]*#([^\"]+)\"")
+private val pluginPattern = Regex("\"pluginId\":\"([^\"]+)\"")

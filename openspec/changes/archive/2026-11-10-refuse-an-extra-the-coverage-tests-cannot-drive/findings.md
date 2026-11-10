@@ -31,4 +31,4 @@ One row per finding (house rules §9).
 | Finding | Proposal | Status |
 |---|---|---|
 | F1 | - | none - record only: a review round doing its job |
-| F2 | The `mcp_Tcr` tool refuses to start while another git command holds the index (or the house rules forbid a commit in the same batch as a TCR run); the slip recurred from select-a-theme-in-the-profile | open |
+| F2 | The `mcp_Tcr` tool refuses to start while another git command holds the index (or the house rules forbid a commit in the same batch as a TCR run); the slip recurred from select-a-theme-in-the-profile | adopted -> ollin/chezmoi-openspace-dotfiles/tcr-notices-a-commit-made-beside-it |

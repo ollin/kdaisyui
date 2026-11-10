@@ -27,8 +27,10 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
   with a sample is not.
 - [x] 2.4 `^ F (internal)` The coverage test imports `sampleImports` of sampled extras; the fixture
   asserts the import, and that an unsampled extra's `imports` do not appear.
-- [ ] 2.5 `^ r (internal)` Delete `EXTERNAL_ENUM_VALUES`, `EXTERNAL_ENUM_IMPORTS` and their rule;
+- [x] 2.5 `! F (internal)` (planned `^ r`) Delete `EXTERNAL_ENUM_VALUES`, `EXTERNAL_ENUM_IMPORTS` and their rule;
   `just generate` leaves `lib/generated/test/**` byte-identical (A3), the snapshot tests stay green.
+  Not a pure refactoring after all: the theme change's test that drove `DaisyTheme?` WITHOUT a
+  sample asserted exactly the table behaviour removed here, so it was deleted (finding F2).
 - [ ] 2.6 `^ F (internal)` `extraSampleFindings(model)`: a nullable extra that is not `String`,
   `Boolean` or a `model.enums` type (bare or in `ClassValues<…>`) and has no sample yields
   `<component>: <function>.<parameter> needs a sample`; fixtures for each exemption;

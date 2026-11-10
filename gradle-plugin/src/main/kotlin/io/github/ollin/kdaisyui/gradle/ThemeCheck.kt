@@ -6,7 +6,8 @@ package io.github.ollin.kdaisyui.gradle
  * `DaisyTheme` entry to its value, as the library's `kdaisyui-themes.txt` does.
  */
 fun themesNamedIn(references: List<MemberReference>, themes: Map<String, String>): Set<String> =
-    if (references.any { it in RUNTIME_CHOICES }) themes.values.toSet()
+    // `intersect`, not the inline `any`, whose `is Collection` short-cut is a mutant no test can tell apart.
+    if ((references intersect RUNTIME_CHOICES).isNotEmpty()) themes.values.toSet()
     else references.filter { it.owner == DAISY_THEME }.mapNotNull { themes[it.name] }.toSet()
 
 /** `kdaisyui-themes.txt` read back: each `DaisyTheme` entry and its `data-theme` value. */

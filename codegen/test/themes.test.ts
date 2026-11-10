@@ -1,7 +1,13 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { themeNames } from '../src/themes.ts'
+import { renderDaisyThemeEnum, themeNames } from '../src/themes.ts'
+
+describe('renderDaisyThemeEnum', () => {
+  it('declares one entry per theme, named by its capitalised name and carrying the name', () => {
+    assert.match(renderDaisyThemeEnum(['abyss', 'nord']), /enum class DaisyTheme\(val value: String\) \{\n    Abyss\("abyss"\),\n    Nord\("nord"\),\n\}\n$/)
+  })
+})
 
 describe('themeNames', () => {
   it('returns the stems of the CSS files, sorted, and ignores every other file', () => {

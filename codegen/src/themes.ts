@@ -10,6 +10,12 @@ export function themeNames(fileNames: readonly string[]): string[] {
   return fileNames.filter((name) => name.endsWith('.css')).map(themeName).sort()
 }
 
+/** The Kotlin source of `DaisyTheme`, one entry per theme, named by its capitalised name. */
+export function renderDaisyThemeEnum(names: readonly string[]): string {
+  const entries = names.map((name) => `    ${name[0].toUpperCase()}${name.slice(1)}("${name}"),`)
+  return ['enum class DaisyTheme(val value: String) {', ...entries, '}', ''].join('\n')
+}
+
 function themeName(fileName: string): string {
   const name = fileName.slice(0, -'.css'.length)
   if (/^[a-z]+$/.test(name)) return name

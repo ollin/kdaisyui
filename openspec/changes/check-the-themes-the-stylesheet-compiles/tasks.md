@@ -18,7 +18,7 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 
 ## 2. The theme map, under TCR at the root
 
-- [ ] 2.1 `^ F (internal)` `codegen/src/themes.ts`: `renderThemeMap(names)` — header and
+- [x] 2.1 `^ F (internal)` `codegen/src/themes.ts`: `renderThemeMap(names)` — header and
   `Entry<TAB>value` lines; unit test for two names.
 - [ ] 2.2 `! F` `index-new.ts` writes `kdaisyui-themes.txt` beside the component map;
   `lib/build.gradle.kts` declares it as an output; `just generate`; the 35-line resource committed.

@@ -81,11 +81,18 @@ nothing else any more are deleted in the same run.
   `Escape` failed the second test. That control ran beside a TCR run by mistake. The two Gradle
   builds clashed on `build/test-results` and TCR went red with `NoSuchFileException`. TCR reverted
   nothing, since every file was a test file, and the rerun alone was green.
-- [ ] 3.8 `! F (internal)` `saveScreenshot(name)` in `PlaywrightSpec` (D2), used by its first
+- [x] 3.8 `! F (internal)` `saveScreenshot(name)` in `PlaywrightSpec` (D2), used by its first
   caller in 3.9.
-- [ ] 3.9 `megamenu_reference.feature` → `MegamenuReferenceTest` and
+  Committed with its first caller, `MegamenuReferenceTest`, which holds the two screenshot
+  scenarios (desktop, small viewport), so no step added an unused function. Control: the small
+  viewport's open check pointed at the desktop panel failed it.
+- [x] 3.9 `megamenu_reference.feature` → `MegamenuReferenceTest` and
   `MegamenuReferenceWithoutJavaScriptTest` (3 + 1), four screenshots under
   `build/reports/screenshots/` as before.
+  The split went the other way round. `MegamenuReferenceTest` (scripting on) holds the two
+  screenshot tests; `MegamenuWithoutJavaScriptTest` holds the markup test and the panel test
+  (2 + 2). The four PNGs were written. Control: without the click, the panel test failed at its
+  `shouldBeTrue` (`false should equal true`, line 33).
 - [ ] 3.10 `profile.feature` → `ProfileTest` (11).
 
 ## 4. Cucumber out

@@ -27,8 +27,14 @@ no plugin, so it can never be listed: fix it. The last one was the E2E build's `
 Chromium through `ProcessBuilder` at configuration time; `providers.exec` replaced it. When a
 plugin release drops `setVisible`, delete its line.
 
+An allowlist line names a problem by the anchor of its documentation link,
+`deprecate-visible-property`, not by its own name: since Gradle 9.9 that name is the generic
+`Method usage` for every deprecated method, so allowing it would accept any method a plugin
+calls (`read-the-gradle-9-9-problems-report`).
+
 The report caps its listed diagnostics and folds the rest into `summaries`, which carry no
-location. The check counts a summary as the listed problem it repeats, and one whose id nothing
+location and no link, so a summary matches a listed problem by name. Up to Gradle 9.8 they sat
+under the data's `problemsReport` key; since 9.9 in a script of their own, `problems-summary`. The check counts a summary as the listed problem it repeats, and one whose id nothing
 lists as the build's own.
 
 Until then this section said `gradle check --warning-mode all` "must end with `Problems: 0`", and it

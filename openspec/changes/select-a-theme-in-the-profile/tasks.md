@@ -57,11 +57,11 @@ task 3.4.
   nothing calls it yet. Done with `lib/src/test/…/themes/DaisyThemeTest.kt` asserting 35 entries
   and `Nord.value`, because Kover's 100% gate covers generated code and would fail on an enum no
   test loads.
-- [ ] 2.6 `^ F` `lib/src/main/kotlin/io/github/ollin/kdaisyui/themes/DaisyThemes.kt`:
+- [x] 2.6 `! F` (planned `^`, see finding F7) `lib/src/main/kotlin/io/github/ollin/kdaisyui/themes/DaisyThemes.kt`:
   `Tag.daisyTheme(theme)` writes `data-theme`; a test in `lib/src/test/…/themes/` renders
   `html { daisyTheme(DaisyTheme.Nord) }` and asserts `data-theme="nord"`; `lib.api` re-dumped in
   the same run (gains `DaisyThemesKt.daisyTheme`).
-- [ ] 2.7 `^ F` `daisyThemeOf(value)`: the test asserts `"nord"` gives `Nord`, `"Nord"` and `""`
+- [ ] 2.7 `! F` (finding F7) `daisyThemeOf(value)`: the test asserts `"nord"` gives `Nord`, `"Nord"` and `""`
   give `null`, and every entry round-trips (which also executes every enum entry for Kover);
   `lib.api` re-dumped in the same run (gains `daisyThemeOf`).
 - [ ] 2.8 `! F` `codegen/model/theme-controller.json` declares the `theme` extra (design,

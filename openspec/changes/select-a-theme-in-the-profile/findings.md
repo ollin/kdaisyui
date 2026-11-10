@@ -63,3 +63,11 @@
   implementing: `themeNames(fileNames)`, the listing done by `index-new.ts` in task 2.5.
 - **Cause:** the task was written before reading `kdaisyui-codegen`'s mutation-testing section.
 - **Cost:** about 3 minutes; no code was written against the old task.
+
+## F7 - The lib.api re-dump pushes the small API steps over eight lines
+
+- **What happened:** 2026-11-10, task 2.6. `Tag.daisyTheme` and its test are eight counted
+  lines, and the `lib/api/lib.api` re-dump F5 folded into the same run adds three more, so the
+  step is `! F`, not the planned `^ F`; 2.7 is replanned `!` for the same reason.
+- **Cause:** F5 moved the baseline into each step without recounting the steps' markers.
+- **Cost:** none in time; two markers one level lower than planned.

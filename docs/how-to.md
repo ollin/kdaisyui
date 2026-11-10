@@ -31,7 +31,7 @@ Any other JDK 21 or newer builds the same code: the JDK that *compiles* it is a 
 
 ## Run the E2E tests
 
-The E2E tests drive a real Chromium through Playwright for Java, with Kotest and Cucumber. They
+The E2E tests drive a real Chromium through Playwright for Java, with Kotest. They
 need no Node: Gradle runs them, and the example app's Ktor server starts in the test process, so
 there is nothing to start first.
 

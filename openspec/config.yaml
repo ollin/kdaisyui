@@ -30,7 +30,7 @@ context: |
 
   Five modules: lib (the library), ktor-integration (Resolvable, context
   parameters), example-app (Ktor + htmx dashboard on port 8080), e2e-tests
-  (Kotest + Playwright + Cucumber) and bom (a java-platform BOM). The root
+  (Kotest + Playwright) and bom (a java-platform BOM). The root
   build.gradle.kts carries the release and the coverage gate.
 
   Releases ARE automated: pushing a v* tag runs JReleaser, which publishes

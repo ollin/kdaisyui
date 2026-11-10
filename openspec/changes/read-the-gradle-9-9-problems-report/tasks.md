@@ -20,10 +20,10 @@ block 3: 20, block 4: 10.
 
 ## 3. Gate
 
-- [ ] 3.1 `./gradlew check` with E2E, `:build-checks:checkGradleProblems` green on 9.8.2, the same
+- [x] 3.1 `./gradlew check` with E2E, `:build-checks:checkGradleProblems` green on 9.8.2, the same
   on the Renovate branch with this change applied (9.9.0), `:build-checks:pitest` at 100% test
   strength, CodeScene on the changed files.
-- [ ] 3.2 `openspec validate read-the-gradle-9-9-problems-report --strict`; the evaluation under
+- [x] 3.2 `openspec validate read-the-gradle-9-9-problems-report --strict`; the evaluation under
   `tmp/read-the-gradle-9-9-problems-report/`.
 
 ## 4. Archive

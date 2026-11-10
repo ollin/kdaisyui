@@ -72,3 +72,15 @@
   its one-line re-dump, so it stayed `^`.
 - **Cause:** F5 moved the baseline into each step without recounting the steps' markers.
 - **Cost:** none in time; two markers one level lower than planned.
+
+## F8 - A9 was false: the coverage-test generator knew only `ButtonType`
+
+- **What happened:** 2026-11-10, task 2.8. With the `theme` extra in the model, `just generate`
+  wrote `ThemeControllerCoverageTest` asserting `value="` in its all-flags case without passing a
+  theme, because `test-generator.ts` drives a nullable external enum only when it is listed in
+  `EXTERNAL_ENUM_VALUES`, which held `ButtonType` alone. The model edit was stashed, the generator
+  taught `DaisyTheme` in its own `! F (internal)` run with a unit test, and the model edit then
+  went green.
+- **Cause:** A9 named `button.json` as the precedent without reading how the generator reaches
+  `ButtonType`; the table is a second place an external type must be named.
+- **Cost:** about 10 minutes, one extra commit; no revert.

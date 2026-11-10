@@ -64,7 +64,7 @@ task 3.4.
 - [x] 2.7 `^ F` (eight counted lines with the re-dump, so the `!` of F7 was not needed) `daisyThemeOf(value)`: the test asserts `"nord"` gives `Nord`, `"Nord"` and `""`
   give `null`, and every entry round-trips (which also executes every enum entry for Kover);
   `lib.api` re-dumped in the same run (gains `daisyThemeOf`).
-- [ ] 2.8 `! F` `codegen/model/theme-controller.json` declares the `theme` extra (design,
+- [x] 2.8 `! F` `codegen/model/theme-controller.json` declares the `theme` extra (design,
   decision 7); `just generate`; `ThemeController.kt`, its generated tests,
   `docs/reference/themeController.md` and `lib/api/components.api` follow (the parameter's name
   and type), `lib/api/lib.api` is re-dumped in the same run (the one changed
@@ -72,6 +72,8 @@ task 3.4.
   both branches of the `apply` (A9). One commit, not two: a model edit without its regenerated
   output fails `generated-sources-drift`, so neither half is a green commit alone. `!` because the
   two together exceed eight counted lines. If the test generator or Kover objects, revise first.
+  Done in two runs: the test generator first learned to drive a `DaisyTheme` extra (finding F8),
+  then the model edit with its output and a hand test of both spec scenarios in `DaisyThemeTest`.
 - [ ] 2.9 `. F (internal)` `lib/build.gradle.kts`: `targetClasses` gains
   `io.github.ollin.kdaisyui.themes.*`; `./gradlew :lib:pitest` reports 100% test strength.
 

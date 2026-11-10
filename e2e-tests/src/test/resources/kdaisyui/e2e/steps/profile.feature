@@ -57,3 +57,4 @@ Feature: Profile
   Scenario: The themes are laid out as tiles, not stacked
     Given the user opens "/profile"
     Then the theme tiles sit side by side
+    And the Save button is in view without scrolling

@@ -8,7 +8,6 @@ import io.github.ollin.kdaisyui.components.RadioSize
 import io.github.ollin.kdaisyui.components.daisyBadge
 import io.github.ollin.kdaisyui.components.daisyButton
 import io.github.ollin.kdaisyui.components.daisyCard
-import io.github.ollin.kdaisyui.components.daisyCardActions
 import io.github.ollin.kdaisyui.components.daisyCardBody
 import io.github.ollin.kdaisyui.components.daisyCardTitle
 import io.github.ollin.kdaisyui.components.daisyFieldset
@@ -44,9 +43,13 @@ fun HTML.profilePage(application: Application, current: DaisyTheme?) {
 }
 
 private fun FlowContent.appearance(saveUrl: String, current: DaisyTheme?) {
-    div {
-        daisyCardTitle("Appearance")
-        p("text-base-content/70 text-sm") { +"The theme DevTrack wears on every page. Each tile shows a theme in its own colours." }
+    div("flex flex-wrap items-start justify-between gap-4") {
+        div {
+            daisyCardTitle("Appearance")
+            p("text-base-content/70 text-sm") { +"The theme DevTrack wears on every page. Each tile shows a theme in its own colours." }
+        }
+        // Beside the title rather than under 36 tiles; `form` ties it to the form below, no script.
+        daisyButton("Save", color = ButtonColor.Primary, type = ButtonType.submit) { attributes["form"] = Profile.ThemeForm().id }
     }
     form(action = saveUrl, method = FormMethod.post) {
         id = Profile.ThemeForm().id
@@ -56,9 +59,6 @@ private fun FlowContent.appearance(saveUrl: String, current: DaisyTheme?) {
                 tile("System default", "system", current == null) { systemMockup() }
                 for (theme in DaisyTheme.entries) tile(theme.name, theme.value, theme == current) { themeMockup(theme) }
             }
-        }
-        daisyCardActions(extraClasses = "justify-end pt-6") {
-            daisyButton("Save", color = ButtonColor.Primary, type = ButtonType.submit)
         }
     }
 }

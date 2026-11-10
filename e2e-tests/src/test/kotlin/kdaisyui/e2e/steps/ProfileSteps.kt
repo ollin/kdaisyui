@@ -94,4 +94,11 @@ class ProfileSteps(private val world: PlaywrightWorld) {
         val tile = form.locator("label").filter(Locator.FilterOptions().setHas(world.page.locator("input[value=${choice.value}]")))
         assertThat(tile).containsText("Current")
     }
+
+    @Then("the Save button is in view without scrolling")
+    fun saveIsInView() {
+        val save = checkNotNull(world.page.getByRole(AriaRole.BUTTON, GetByRoleOptions().setName("Save")).boundingBox())
+        val height = checkNotNull(world.page.viewportSize()).height
+        check(save.y + save.height <= height) { "Expected Save within the first $height px, it ends at ${save.y + save.height}" }
+    }
 }

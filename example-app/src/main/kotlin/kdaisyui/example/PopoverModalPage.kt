@@ -16,14 +16,7 @@ import kotlinx.html.*
  * `.modal:popover-open`.
  */
 fun HTML.popoverModalPage() {
-    lang = "en"
-    head {
-        meta { charset = "utf-8" }
-        title { +"Popover Modal" }
-        meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        pageAssets()
-    }
-    body("bg-base-200 min-h-screen p-10") {
+    demoPage("Popover Modal") {
         val modalId = Dashboard.PopoverModal()
         daisyButton(
             text = "Open modal",

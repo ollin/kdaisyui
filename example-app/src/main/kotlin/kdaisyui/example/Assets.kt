@@ -1,7 +1,14 @@
 package kdaisyui.example
 
+import kotlinx.html.BODY
 import kotlinx.html.HEAD
+import kotlinx.html.HTML
+import kotlinx.html.body
+import kotlinx.html.head
+import kotlinx.html.lang
 import kotlinx.html.link
+import kotlinx.html.meta
+import kotlinx.html.title
 
 /**
  * What every page in this application links in its head: the stylesheet, and an icon of its own.
@@ -25,4 +32,16 @@ fun HEAD.pageAssets() {
     link { rel = "stylesheet"; href = "/static/app.css" }
     // An icon of its own origin: without a link the browser asks for /favicon.ico and logs a 404.
     link { rel = "icon"; type = "image/svg+xml"; href = "/static/favicon.svg" }
+}
+
+/** A standalone page of this application: its title, the assets every page links, and a padded body. */
+fun HTML.demoPage(pageTitle: String, block: BODY.() -> Unit) {
+    lang = "en"
+    head {
+        meta { charset = "utf-8" }
+        title { +pageTitle }
+        meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
+        pageAssets()
+    }
+    body("bg-base-200 min-h-screen p-10") { block() }
 }

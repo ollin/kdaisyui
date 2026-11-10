@@ -13,14 +13,7 @@ import kotlinx.html.*
  * other. The second tab is the positive control: the active one must look different from it.
  */
 fun HTML.tabsPage() {
-    lang = "en"
-    head {
-        meta { charset = "utf-8" }
-        title { +"Tabs" }
-        meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        pageAssets()
-    }
-    body("bg-base-200 min-h-screen p-10") {
+    demoPage("Tabs") {
         daisyTabs(style = TabsStyle.Lift) {
             daisyTab(active = true) { attributes["id"] = "tab-active"; +"Overview" }
             daisyTab { attributes["id"] = "tab-inactive"; +"Portfolios" }

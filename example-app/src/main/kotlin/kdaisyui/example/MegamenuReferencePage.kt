@@ -21,14 +21,7 @@ import kotlinx.html.*
  * Source: `daisyui/skills/daisyui/components/megamenu.md:14-30`.
  */
 fun HTML.megamenuReferencePage() {
-    lang = "en"
-    head {
-        meta { charset = "utf-8" }
-        title { +"Megamenu reference" }
-        meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
-        pageAssets()
-    }
-    body("bg-base-200 min-h-screen p-10") {
+    demoPage("Megamenu reference") {
         h1("text-xl font-bold mb-6") { +"Megamenu reference" }
         p("mb-6 text-sm opacity-70") {
             +"DaisyUI's documented markup, from the generated wrappers. The trigger button below "

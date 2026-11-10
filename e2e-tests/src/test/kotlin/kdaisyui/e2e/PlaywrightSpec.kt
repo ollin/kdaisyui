@@ -4,6 +4,7 @@ import com.microsoft.playwright.Browser
 import com.microsoft.playwright.BrowserContext
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Tracing
+import com.microsoft.playwright.options.ScreenshotAnimations
 import io.kotest.core.spec.style.FunSpec
 import java.nio.file.Files
 import java.nio.file.Path
@@ -77,7 +78,26 @@ abstract class PlaywrightSpec(private val javaScriptEnabled: Boolean = true) : F
         }
     }
 
+    /**
+     * Writes the page to `build/reports/screenshots/<name>.png`, for a person to page through: a
+     * rendering fault an assertion was never going to catch is visible there. Animations are
+     * finished rather than waited out — DaisyUI transitions opacity, translate and scale over
+     * 200ms, and a popover caught half-faded reads like a layout fault that is not there.
+     */
+    protected fun saveScreenshot(name: String) {
+        Files.createDirectories(SCREENSHOT_DIR)
+        val target = SCREENSHOT_DIR.resolve("$name.png")
+        page.screenshot(
+            Page.ScreenshotOptions()
+                .setFullPage(true)
+                .setAnimations(ScreenshotAnimations.DISABLED)
+                .setPath(target)
+        )
+        println("Screenshot saved: ${target.toAbsolutePath()}")
+    }
+
     companion object {
         val BASE_URL: String get() = SharedInfrastructure.BASE_URL
+        private val SCREENSHOT_DIR: Path = Path.of("build/reports/screenshots")
     }
 }

@@ -8,6 +8,10 @@ describe('renderDaisyThemeEnum', () => {
     assert.match(renderDaisyThemeEnum(['abyss', 'nord']), /enum class DaisyTheme\(val value: String\) \{\n    Abyss\("abyss"\),\n    Nord\("nord"\),\n\}\n$/)
   })
 
+  it('documents the enum, saying a stylesheet carries only the themes its entry names', () => {
+    assert.match(renderDaisyThemeEnum([]), /\n\/\*\*\n \* DaisyUI's built-in themes; [^]* carries only the\n \* themes its entry names, [^]*\*\/\nenum class/)
+  })
+
   it('opens with the generated header, naming its source, and the themes package', () => {
     assert.match(renderDaisyThemeEnum([]), /^\/\/ GENERATED — DO NOT EDIT\n\/\/ Source: daisyui\/packages\/daisyui\/src\/themes\/\*\.css\n.*\n\npackage io\.github\.ollin\.kdaisyui\.themes\n/)
   })

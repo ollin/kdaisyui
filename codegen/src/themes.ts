@@ -17,6 +17,10 @@ const HEADER = [
   '',
   'package io.github.ollin.kdaisyui.themes',
   '',
+  '/**',
+  ' * DaisyUI\'s built-in themes; [value] is what `data-theme` takes. A stylesheet carries only the',
+  ' * themes its entry names, and an element given another renders in the default theme.',
+  ' */',
 ]
 
 /** The Kotlin source of `DaisyTheme`, one entry per theme, named by its capitalised name. */

@@ -42,7 +42,8 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 - [x] 3.8 `^ F (internal)` `themeMap(resource)`: the resource's lines read back.
 - [x] 3.9 `^ F (internal)` `themesCarriedBy(css)`: the `[data-theme=…]` names (both forms of 1.2).
 - [x] 3.10 `^ F (internal)` `missingThemes(named, carried)`.
-- [ ] 3.11 `^ F (internal)` `themeWarning(missing)`: the text with the entry line.
+- [x] 3.11 `! F (internal)` `themeWarning(missing)`: the missing themes and where to add them,
+  the entry's existing themes shown as `…` (finding F4).
 - [ ] 3.12 `! F` Task class `KdaisyuiThemes` (`@DisableCachingByDefault`, `@InputFiles` classes,
   `@InputFile` stylesheet, `@Classpath` runtime classpath); its action, called on a `ProjectBuilder`
   project with a hand-written stylesheet, returns the warning; without the resource it passes and

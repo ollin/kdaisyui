@@ -21,7 +21,7 @@ line that adds them. An entry reference names its theme; the whole set or `daisy
 #### Scenario: A theme the stylesheet lacks
 
 - **WHEN** compiled code references `DaisyTheme.Nord` and the stylesheet has no `[data-theme=nord]`
-- **THEN** the build logs a warning naming `nord` and the entry line to add
+- **THEN** the build logs a warning naming `nord` and `themes: …, nord;` as what to add
 
 #### Scenario: Every theme chosen at runtime
 

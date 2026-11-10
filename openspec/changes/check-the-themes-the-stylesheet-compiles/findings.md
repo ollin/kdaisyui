@@ -36,3 +36,14 @@ The change comes from `archive/2026-11-10-select-a-theme-in-the-profile/findings
 - **Cause:** Kover's per-slot branch counting of table switches was unknown; and the stash before
   a refactoring after a revert was forgotten.
 - **Cost:** two red runs and one question round, about 10 minutes.
+
+## F4 - The warning stopped guessing the entry's flags
+
+- **What happened:** 2026-11-10, task 3.11. The first wording rebuilt a whole `themes:` line from
+  the carried themes, giving `light` and `dark` DaisyUI's default flags; the run was reverted
+  because no test carried a theme without a flag (Kover, one branch). The smaller transformation
+  dropped the guess: the warning names the missing themes and shows `themes: …, nord;`, since the
+  plugin cannot know which flags the entry really sets. The spec delta says so.
+- **Cause:** the plan asked for "the entry line that adds them", which needs knowledge the plugin
+  does not have.
+- **Cost:** one red run, about 5 minutes.

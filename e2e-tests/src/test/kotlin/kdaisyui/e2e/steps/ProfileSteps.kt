@@ -11,8 +11,8 @@ import kdaisyui.e2e.SharedInfrastructure
 import kdaisyui.example.Dashboard
 import kdaisyui.example.Profile
 
-/** Steps for the profile's theme picker. */
-class ThemeSteps(private val world: PlaywrightWorld) {
+/** Steps for the profile page: its theme picker, the cookie it keeps, and the way to it. */
+class ProfileSteps(private val world: PlaywrightWorld) {
 
     @Then("the theme form offers {int} choices")
     fun themeFormOffers(count: Int) {

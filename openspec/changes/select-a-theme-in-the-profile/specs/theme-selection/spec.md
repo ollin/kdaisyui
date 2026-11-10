@@ -4,17 +4,28 @@
 
 The library SHALL offer an enum `DaisyTheme` with one entry per built-in theme of the pinned
 DaisyUI, each carrying its `data-theme` value, generated from DaisyUI's theme sources by
-`just generate`. An entry is the PascalCase form of the theme name: `nord` gives `DaisyTheme.Nord`.
+`just generate`. `nord` gives `DaisyTheme.Nord`.
 
-**Verified** that the theme sources are the set DaisyUI compiles for `themes: all`: the 35 stems
-of `daisyui/packages/daisyui/src/themes/*.css` equal the 35 names of `functions/themeOrder.js`,
-2026-11-10 (proposal A1).
+**Verified** 2026-11-10 (A1): the 35 stems of `src/themes/*.css` equal the 35 names
+`themes: all` compiles (`functions/themeOrder.js`).
 
 #### Scenario: The enum follows DaisyUI
 
 - **WHEN** a DaisyUI bump adds or removes a theme file and `just generate` runs
 - **THEN** `DaisyTheme` gains or loses that entry
 - **AND** CI's `generated-sources-drift` fails a commit that carries the bump without it
+
+### Requirement: A theme name the entry rule cannot spell fails generation
+
+Generation SHALL fail on a theme name that is not lowercase letters only, naming its file.
+
+**Verified** that every name of the pinned DaisyUI passes: the 35 stems are lowercase letters only,
+2026-11-10.
+
+#### Scenario: A theme name the rule cannot spell
+
+- **WHEN** DaisyUI ships a theme file named with a hyphen or a digit
+- **THEN** `just generate` fails, naming the file
 
 ### Requirement: The theme types leave the plugin's narrowing intact
 

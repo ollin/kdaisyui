@@ -33,8 +33,10 @@ adds a theme, with nothing to notice; generated, `generated-sources-drift` notic
 
 **Rejected: reading `functions/themeOrder.js`.** Its order (light, dark first) is nicer for a
 picker, but it is JavaScript, and reading it means a regex over source code - the kind of
-inference `AGENTS.md` keeps out of the generators. The directory listing is the same set (A1);
-an application orders its picker itself.
+inference `AGENTS.md` keeps out of the generators. The directory listing is the same set today
+(A1), and the generator trusts the directory from then on: a bump that adds a file without adding
+it to `themeOrder.js` would give an entry `themes: all` does not compile, and nothing would fail.
+An application orders its picker itself.
 
 ### 2. A package of its own, `io.github.ollin.kdaisyui.themes`
 

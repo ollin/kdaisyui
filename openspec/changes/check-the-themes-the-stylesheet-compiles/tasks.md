@@ -60,8 +60,8 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 
 ## 5. Gate, adoption and archive
 
-- [ ] 5.1 Full green: `check` with E2E (the example app's `themes: all` build logs no warning — the
+- [x] 5.1 Full green: `check` with E2E (the example app's `themes: all` build logs no warning — the
   positive control), `koverVerify` and `:gradle-plugin`'s own Kover 100 % and `:gradle-plugin:pitest`
   100 %, StrykerJS on the changed `codegen/src/` lines, `just generate` clean, CodeScene change set.
-- [ ] 5.2 The evaluation under `tmp/check-the-themes-the-stylesheet-compiles/`.
+- [x] 5.2 The evaluation under `tmp/check-the-themes-the-stylesheet-compiles/`.
 - [ ] 5.3 After adoption: archive on the implementation branch, Proposals table, `. d (internal)`.

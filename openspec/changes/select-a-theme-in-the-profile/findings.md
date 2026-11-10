@@ -103,3 +103,13 @@
   35 distinct primaries; the spec delta was corrected in the tick commit.
 - **Cause:** the property was chosen at proposal without reading the theme files' values.
 - **Cost:** about 5 minutes; caught before any run.
+
+## F11 - The working picker was ugly and had no navigation
+
+- **What happened:** 2026-11-10, after the gate was green. Oliver ran the app: switching works,
+  but the page looks bad, should look like the dashboard and offer its navigation, and packs
+  everything tightly underneath each other. Tasks 3.10-3.13 were added: a shared app shell, the
+  Overview link, and a tile grid built with the daisyUI Blueprint workflow.
+- **Cause:** the plan specified behaviour and E2E checks only; no task looked at the page as a
+  user would, and the `demoPage` frame chosen in 3.0 is the test-page frame, not the app's.
+- **Cost:** one review round (a decision wait) and four more tasks, unplanned.

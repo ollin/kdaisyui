@@ -111,6 +111,21 @@ task 3.4.
 - [x] 3.9 `! F` The avatar menu's "Profile" links to `href(ProfilePage())`; the scenario opens the
   menu, clicks it, and lands on the profile.
 
+- [ ] 3.10 `^ r` Extract `HTML.appShell(application, theme, pageTitle, heading, content)` from
+  `dashboardShell`: the drawer, sidebar and header become the frame every app page shares; the
+  dashboard passes its htmx placeholders. Added after Oliver's review of the running page,
+  2026-11-10 (finding F11).
+- [ ] 3.11 `! F` The profile renders inside `appShell`, heading "Profile"; the scenario finds the
+  sidebar's navigation on `/profile`.
+- [ ] 3.12 `! F` The sidebar's "Overview" links to the dashboard and is `menu-active` only there;
+  the scenario goes from the profile to the dashboard through it.
+- [ ] 3.13 `! F` The picker becomes an "Appearance" card: a responsive grid of theme tiles (two
+  columns on a phone, up to five wide), each a small mock-up of the theme in its own colours, under
+  it the radio, the theme's name and a "Current" badge on the stored one, so selection is not shown
+  by colour alone; "System default" first, its tile in the page's theme; Save in `card-actions`.
+  The scenario asserts two tiles side by side at 1280 px and the badge on the stored theme. Built
+  with the daisyUI Blueprint workflow, its Quality Inspector run on the changed files.
+
 ## 4. Docs
 
 - [x] 4.1 `. d` `docs/how-to.md`, "Let users choose a theme": the entry's `themes` line and naming

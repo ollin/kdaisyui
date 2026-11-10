@@ -29,6 +29,12 @@ export function renderDaisyThemeEnum(names: readonly string[]): string {
   return [...HEADER, 'enum class DaisyTheme(val value: String) {', ...entries, '}', ''].join('\n')
 }
 
+/** `kdaisyui-themes.txt`: each `DaisyTheme` entry and its `data-theme` value, for the Gradle plugin. */
+export function renderThemeMap(names: readonly string[]): string {
+  const header = '# Per theme: its DaisyTheme entry and its data-theme value, tab-separated. Read by the kdaisyui\n# Gradle plugin. Generated - do not edit.\n'
+  return header + names.map((name) => `${entryName(name)}\t${name}\n`).join('')
+}
+
 /** A theme's `DaisyTheme` entry: its name, capitalised. */
 function entryName(name: string): string {
   return `${name[0].toUpperCase()}${name.slice(1)}`

@@ -54,3 +54,12 @@
 - **Cause:** the precedent was quoted from memory of the grep output instead of the file; the
   baseline was treated as bookkeeping, not as part of the build TCR runs.
 - **Cost:** one more review round, about 10 minutes.
+
+## F6 - Task 2.1 planned file reading inside a mutated module
+
+- **What happened:** 2026-11-10, at the start of block 2. Task 2.1 had `themeNames(directory)`
+  read a directory, but the codegen keeps reading and writing files in `index-*.ts` entry points
+  and the logic in pure functions beside them, which StrykerJS mutates. Corrected before
+  implementing: `themeNames(fileNames)`, the listing done by `index-new.ts` in task 2.5.
+- **Cause:** the task was written before reading `kdaisyui-codegen`'s mutation-testing section.
+- **Cost:** about 3 minutes; no code was written against the old task.

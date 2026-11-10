@@ -33,12 +33,13 @@ task 3.4.
 
 ## 2. The library API, under TCR
 
-- [ ] 2.1 `^ F (internal)` `codegen/src/themes.ts`: `themeNames(directory)` returns the stems of
-  `*.css` in a directory, sorted; its `node --test` reads a fixture directory of three files and
-  one non-CSS file.
+- [ ] 2.1 `^ F (internal)` `codegen/src/themes.ts`: `themeNames(fileNames)` returns the stems of
+  the `*.css` names, sorted; its `node --test` passes three CSS names out of order and one
+  non-CSS name. A pure function over names: reading the directory belongs in the entry point
+  (task 2.5), which the mutation gate leaves out (`kdaisyui-codegen`, Mutation testing).
 - [ ] 2.2 `^ F (internal)` `themeNames` fails on a stem that is not lowercase letters only,
   naming the file, so the PascalCase rule of the spec cannot meet a hyphen or a digit unseen; the
-  test adds a `foo-bar.css` fixture.
+  test passes `foo-bar.css`.
 - [ ] 2.3 `^ F (internal)` `renderDaisyThemeEnum(names)` returns the Kotlin source of
   `DaisyTheme` in `io.github.ollin.kdaisyui.themes`, the GENERATED header the other outputs carry,
   one entry per name as `Nord("nord")`; asserted for two names.

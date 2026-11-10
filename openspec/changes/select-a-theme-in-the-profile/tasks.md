@@ -43,7 +43,7 @@ task 3.4.
 - [x] 2.3 `^ F (internal)` `renderDaisyThemeEnum(names)` returns the Kotlin source of
   `DaisyTheme` in `io.github.ollin.kdaisyui.themes`, the GENERATED header the other outputs carry,
   one entry per name as `Nord("nord")`; asserted for two names.
-- [ ] 2.4 `. F (internal)` `lib/build.gradle.kts:254`: `generateComponents`, whose output is the
+- [x] 2.4 `. F (internal)` `lib/build.gradle.kts:254`: `generateComponents`, whose output is the
   components directory today, also declares
   `lib/generated/main/kotlin/io/github/ollin/kdaisyui/themes` as an output. Nothing writes there
   yet; `./gradlew :lib:generateComponents` still leaves the tree clean.

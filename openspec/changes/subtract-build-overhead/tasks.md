@@ -62,8 +62,10 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
   listing all five.
   The dry run listed all five; `just generate` then ran them and left `lib/generated`,
   `docs/reference` and both `llms` files unchanged.
-- [ ] 3.3 `! F (internal)` Remove `SCM-Revision` and `GitHashValueSource` from the convention
+- [x] 3.3 `! F (internal)` Remove `SCM-Revision` and `GitHashValueSource` from the convention
   plugin (D2).
+  A4's repeat: after an empty commit `:lib:jar` stayed `UP-TO-DATE` and its SHA-256 unchanged
+  (`6c03eb3e…`); the manifest carries no `SCM-Revision`.
 - [ ] 3.4 `. r (internal)` `jvmToolchain(21)` alone: drop `java { toolchain }` and `jvmTarget` from
   the convention plugin and `buildSrc/build.gradle.kts` (D6).
 - [ ] 3.5 `. d (internal)` Delete the two false comments: the staged-rollout paragraph in the root

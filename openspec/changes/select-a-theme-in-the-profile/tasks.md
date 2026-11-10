@@ -117,7 +117,7 @@ task 3.4.
   2026-11-10 (finding F11).
 - [x] 3.11 `! F` The profile renders inside `appShell`, heading "Profile"; the scenario finds the
   sidebar's navigation on `/profile`.
-- [ ] 3.12 `! F` The sidebar's "Overview" links to the dashboard and is `menu-active` only there;
+- [x] 3.12 `! F` The sidebar's "Overview" links to the dashboard and is `menu-active` only there;
   the scenario goes from the profile to the dashboard through it.
 - [ ] 3.13 `! F` The picker becomes an "Appearance" card: a responsive grid of theme tiles (two
   columns on a phone, up to five wide), each a small mock-up of the theme in its own colours, under

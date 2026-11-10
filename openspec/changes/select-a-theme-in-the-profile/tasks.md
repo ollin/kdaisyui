@@ -47,14 +47,16 @@ task 3.4.
   components directory today, also declares
   `lib/generated/main/kotlin/io/github/ollin/kdaisyui/themes` as an output. Nothing writes there
   yet; `./gradlew :lib:generateComponents` still leaves the tree clean.
-- [ ] 2.5 `! F` `index-new.ts` (the `generateComponents` entry point, so `just generate` and the
+- [x] 2.5 `! F` `index-new.ts` (the `generateComponents` entry point, so `just generate` and the
   drift job need no new task) writes `DaisyTheme.kt` into that directory from the submodule's
   `packages/daisyui/src/themes` via `submodules.ts`; `just generate`; the 35-entry file is
   committed, `./gradlew :lib:updateKotlinAbi` re-dumps `lib/api/lib.api` in the same run (it
   gains `DaisyTheme` and nothing else; `checkKotlinAbi` runs in `check`, so a stale baseline
   would revert the step), and the tree is clean afterwards. `!` because the committed generated file counts
   about 40 lines under the notation's counting, which does not exempt generated Kotlin here;
-  nothing calls it yet.
+  nothing calls it yet. Done with `lib/src/test/…/themes/DaisyThemeTest.kt` asserting 35 entries
+  and `Nord.value`, because Kover's 100% gate covers generated code and would fail on an enum no
+  test loads.
 - [ ] 2.6 `^ F` `lib/src/main/kotlin/io/github/ollin/kdaisyui/themes/DaisyThemes.kt`:
   `Tag.daisyTheme(theme)` writes `data-theme`; a test in `lib/src/test/…/themes/` renders
   `html { daisyTheme(DaisyTheme.Nord) }` and asserts `data-theme="nord"`; `lib.api` re-dumped in

@@ -48,8 +48,10 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
   `@InputFile` stylesheet, `@Classpath` runtime classpath); its action, called on a `ProjectBuilder`
   project with a hand-written stylesheet, returns the warning; without the resource it passes and
   says so at info level.
-- [ ] 3.13 `^ F` Registration and `kdaisyuiStylesheet.finalizedBy(kdaisyuiThemes)`;
+- [x] 3.13 `! F` Registration and `kdaisyuiStylesheet.finalizedBy(kdaisyuiThemes)`;
   `KdaisyuiPluginTest` asserts the finalizer and that `check` does not depend on either task.
+  Checked live on the example app: `themes: all` gives no warning; `@plugin "daisyui";` names the
+  33 missing themes.
 
 ## 4. Docs
 

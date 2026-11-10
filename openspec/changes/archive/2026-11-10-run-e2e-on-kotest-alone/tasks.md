@@ -120,6 +120,6 @@ nothing else any more are deleted in the same run.
   five longest bodies became named functions, and the gate passed. The server lists no hotspot
   for project 14. No production code changed, so neither Kover nor PIT has anything new to
   measure; the per-port controls stand in for mutation testing of the E2E specs.
-- [ ] 5.2 Archive the change on this branch, commit.
+- [x] 5.2 Archive the change on this branch, commit.
 - [ ] 5.3 Rebase onto `origin/main`, run the suite, push, open the pull request through
   `github-mcp` (`test: run the E2E suite on Kotest alone`), CI green, merge with a merge commit.

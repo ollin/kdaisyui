@@ -615,6 +615,11 @@ Chrome 133, Safari 26 and Firefox 147. The check has been seen to fail: on 2026-
 `position-anchor` naming an anchor that did not exist overrode the implicit one, and the menu
 opened 80px off.
 
+`run-e2e-on-kotest-alone` ported that feature to a Kotest spec with the same two checks and the
+same 4px tolerance. **Assumed** for the port: *wrong if* the ported test still passes when the
+menu's expected top edge is moved by 80px, the offset the 2026-10-31 defect produced. The port's
+task runs that control and records the spec's name.
+
 #### Scenario: Click opens it under the button
 
 - **WHEN** the trigger is clicked

@@ -24,3 +24,15 @@ The change comes from `archive/2026-11-10-select-a-theme-in-the-profile/findings
   outside this change.
 - **Cost:** none here beyond a confusing probe run; in every consumer build, one extra container
   compile after each real one.
+
+## F3 - Two reverts: a dense switch Kover counts gap by gap, and a test left on disk
+
+- **What happened:** 2026-11-10, task 3.3. Adding tags 10 and 11 to `when (tag)` made the cases
+  dense; Kotlin compiled a table switch over 1-12, and Kover counted its five gaps (2, 4, 5, 6, 8)
+  as branches no test reaches: 92.2 % branch coverage, reverted. The refactoring that avoids the
+  dense switch then went red because the reverted step's test was still on disk (TCR keeps tests).
+  Stopped as the rule demands, asked Oliver, then: test stashed, `^ r` alone green, the behaviour
+  with the test green.
+- **Cause:** Kover's per-slot branch counting of table switches was unknown; and the stash before
+  a refactoring after a revert was forgotten.
+- **Cost:** two red runs and one question round, about 10 minutes.

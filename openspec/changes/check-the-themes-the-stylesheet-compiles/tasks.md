@@ -32,7 +32,8 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
   the planned two: without the skip table the reader needs an `else` branch no test reaches, which
   the 100 % branch gate refuses.
 - [x] 3.2 (folded into 3.1)
-- [ ] 3.3 `^ F (internal)` Pool reader: Methodref and InterfaceMethodref resolved like Fieldref.
+- [x] 3.3 `! F (internal)` Pool reader: Methodref and InterfaceMethodref resolved like Fieldref.
+  After a `^ r` that picks an entry by conditions instead of `when (tag)` (finding F3).
 - [ ] 3.4 `^ F (internal)` Pool reader: Long and Double take two slots; the test also reads a real
   class file of the plugin.
 - [ ] 3.5 `^ F (internal)` `themesNamedIn(classFile, map)`: an entry `Fieldref` gives its value.

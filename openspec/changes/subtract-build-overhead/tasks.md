@@ -57,9 +57,11 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
 
 - [x] 3.1 `! r (internal)` One `CheckoutSubmoduleTag` class in `lib/build.gradle.kts`, registered
   as `checkoutDaisyuiTag` and `checkoutHeroiconsTag` (D4).
-- [ ] 3.2 `! F (internal)` A `:lib:generate` task depending on the five generators; `justfile:20`
+- [x] 3.2 `! F (internal)` A `:lib:generate` task depending on the five generators; `justfile:20`
   and the drift job's *Regenerate* step call it (D3). Checked by `./gradlew :lib:generate --dry-run`
   listing all five.
+  The dry run listed all five; `just generate` then ran them and left `lib/generated`,
+  `docs/reference` and both `llms` files unchanged.
 - [ ] 3.3 `! F (internal)` Remove `SCM-Revision` and `GitHashValueSource` from the convention
   plugin (D2).
 - [ ] 3.4 `. r (internal)` `jvmToolchain(21)` alone: drop `java { toolchain }` and `jvmTarget` from

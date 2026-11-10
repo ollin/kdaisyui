@@ -49,12 +49,22 @@ directly. The files live in `lib/src/test/` (10), `ktor-integration/src/test/` (
 Style: render with `createHTML().div { … }` and assert against the produced HTML string.
 
 **A coverage revert can come from Kotlin, not from a missing test.** The gate is 100% *branch*,
-measured on bytecode, and Kotlin emits a null check for a safe call whose result can never be
-null: `x?.groupValues?.get(1)`, `a?.removePrefix(p) ?: d`. One branch of it is unreachable, so
-`koverVerify` fails and TCR reverts the step with every test green. Do not add a test. Take the
-form without the dead branch: `x?.groupValues[1]`, `(a ?: default).removePrefix(p)`, or a `when`
-over the type. Two steps of `verify-doc-snippets` were reverted this way before it was named
-(its finding F5).
+measured on bytecode, and every `?.` and every `?:` is a null check with two branches. When the
+value a check looks at can never be null, one of its branches is dead: `koverVerify` fails and
+TCR reverts the step with every test green. **Do not add a test; no input reaches a dead branch.**
+Count the null checks and make it one per value that really can be null:
+
+| Written | The dead branch | Write instead |
+|---|---|---|
+| `m?.groupValues?.get(1)` | the second `?.`: `groupValues` is never null | `m?.groupValues[1]` |
+| `m?.groupValues[1] ?: d` | the `?:`: it checks `groupValues[1]`, which is never null; the `?.` already decided | `regex.findAll(s).map { it.groupValues[1] }.firstOrNull() ?: d`, or `if (m == null) d else m.groupValues[1]` |
+| `a?.removePrefix(p) ?: d` | the same: `removePrefix` never returns null | `(a ?: d).removePrefix(p)`, where `d` has no prefix `p` |
+
+The second row is the one that looks safe, because the first row's fix is inside it: `?.` then
+`?:` is two checks, and only the first can go both ways. The sign is in Kover's report: the line
+shows a missed branch while every test passes and no input you can name would reach it.
+`verify-doc-snippets` lost two steps to the first row (its finding F5),
+`read-the-gradle-9-9-problems-report` one to the second (its finding F2).
 
 Inlined standard-library functions do the same, out of sight: `bufferedReader()` checks
 `this is BufferedReader`, which an `InputStreamReader` never is, so `readBytes().decodeToString()`

@@ -26,4 +26,4 @@ One row per finding (house rules §9).
 | Finding | Proposal | Status |
 |---|---|---|
 | F1 | - | none - record only; `koverVerify` is the check, and it caught it before a commit |
-| F2 | `kdaisyui-testing` names the `?.` + `?:` shape beside the dense-when trap, with the one-null-check form (`findAll(…).map { … }.firstOrNull() ?: …`); no check can see an unreachable branch before Kover does | open |
+| F2 | `kdaisyui-testing` names the `?.` + `?:` shape beside the dense-when trap | fixed - in this change, a table in `.opencode/skills/kdaisyui-testing/SKILL.md` (Oliver 2026-11-10: adopted, made clearer). The skill had named the first row already and recommended `m?.groupValues[1]`, without saying that an `?:` behind it brings the dead branch back. A skill sentence: no check can see an unreachable branch before Kover does |

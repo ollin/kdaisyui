@@ -16,7 +16,7 @@ block 3: 20, block 4: 10.
 
 ## 2. Docs
 
-- [ ] 2.1 `. d (internal)` `kdaisyui-build`: the accepted problem is named by its anchor, and why.
+- [x] 2.1 `. d (internal)` `kdaisyui-build`: the accepted problem is named by its anchor, and why.
 
 ## 3. Gate
 

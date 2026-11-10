@@ -113,3 +113,14 @@
 - **Cause:** the plan specified behaviour and E2E checks only; no task looked at the page as a
   user would, and the `demoPage` frame chosen in 3.0 is the test-page frame, not the app's.
 - **Cost:** one review round (a decision wait) and four more tasks, unplanned.
+
+## F12 - The daisyUI Blueprint Quality Inspector cannot read the project
+
+- **What happened:** 2026-11-10, task 3.13. Setup Expert, Rules Enforcer and Component Syntax
+  Expert answered; `daisyui_quality_inspector` failed twice with `EACCES: permission denied,
+  realpath '/home/ollin/dev/src/github.com/ollin/kdaisyui'`. The page was reviewed by hand against
+  the Rules Enforcer's rules instead, from screenshots at 1440 px (light and Dracula) and 390 px;
+  that review moved Save beside the title and let tile names wrap.
+- **Cause:** the Blueprint server's process has no read access to the repository path; it is an
+  environment problem, not one of this change.
+- **Cost:** about 10 minutes of manual review; the inspector's own findings are missing.

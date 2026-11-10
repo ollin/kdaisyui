@@ -119,12 +119,15 @@ task 3.4.
   sidebar's navigation on `/profile`.
 - [x] 3.12 `! F` The sidebar's "Overview" links to the dashboard and is `menu-active` only there;
   the scenario goes from the profile to the dashboard through it.
-- [ ] 3.13 `! F` The picker becomes an "Appearance" card: a responsive grid of theme tiles (two
+- [x] 3.13 `! F` The picker becomes an "Appearance" card: a responsive grid of theme tiles (two
   columns on a phone, up to five wide), each a small mock-up of the theme in its own colours, under
   it the radio, the theme's name and a "Current" badge on the stored one, so selection is not shown
   by colour alone; "System default" first, its tile in the page's theme; Save in `card-actions`.
   The scenario asserts two tiles side by side at 1280 px and the badge on the stored theme. Built
   with the daisyUI Blueprint workflow, its Quality Inspector run on the changed files.
+  Done in three runs: the card and tiles; Save moved beside the title, in view without scrolling
+  (its own scenario); tile names wrapping at two columns, checked by screenshot only. The
+  Quality Inspector could not read the project (finding F12); reviewed by hand at 1440 and 390 px.
 
 ## 4. Docs
 

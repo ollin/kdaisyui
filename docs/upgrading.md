@@ -665,3 +665,29 @@ A popover you open from script rather than by `popovertarget` has no trigger to 
 
 **2. `HtmlId.anchorName` is deprecated.** Nothing in kdaisyui writes an anchor name now. It still
 returns the same string, for code of your own that names one.
+
+## How to migrate from 0.10.x
+
+Nothing breaks in source: every 0.10.x call compiles unchanged. **One function's JVM signature
+changed**, so code compiled against 0.10.x must be recompiled, not only re-linked.
+
+**1. `daisyThemeController` takes a `theme`.** It writes the input's `value`, which is what
+DaisyUI matches to switch the page's theme. A library compiled against 0.10.x that calls
+`daisyThemeController` fails at runtime with `NoSuchMethodError` until it is rebuilt. Your own
+call sites need no change; where they write the value by hand, the parameter says the same thing
+typed:
+
+<!-- snippet: skip - the 0.10.x call, shown for migration -->
+```kotlin
+// before
+daisyThemeController { type = InputType.checkBox; value = "dark" }
+```
+
+<!-- snippet: in FlowContent -->
+```kotlin
+// after
+daisyThemeController(theme = io.github.ollin.kdaisyui.themes.DaisyTheme.Dark) { type = InputType.checkBox }
+```
+
+`DaisyTheme`, `daisyTheme` and `daisyThemeOf` are new; see "Let users choose a theme" in the
+[how-to](how-to.md).

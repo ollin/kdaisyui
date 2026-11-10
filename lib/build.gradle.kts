@@ -269,7 +269,10 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     inputs.file(rootProject.file("codegen/package.json"))
     inputs.file(rootProject.file("codegen/package-lock.json"))
     inputs.dir(rootProject.file("codegen/model"))
+    // DaisyTheme, written beside the components from the names of DaisyUI's theme files.
+    inputs.dir(rootProject.file("daisyui/packages/daisyui/src/themes"))
     outputs.dir(outputDir)
+    outputs.dir(generatedMainDir.dir("io/github/ollin/kdaisyui/themes"))
     outputs.file(classList)
     outputs.file(generatedResourcesDir.file("kdaisyui-components.txt"))
 }

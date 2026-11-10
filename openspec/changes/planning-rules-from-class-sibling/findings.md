@@ -1,3 +1,0 @@
-# Findings
-
-No finding yet.

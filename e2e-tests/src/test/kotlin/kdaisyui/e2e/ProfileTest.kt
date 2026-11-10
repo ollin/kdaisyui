@@ -36,43 +36,15 @@ class ProfileTest : PlaywrightSpec() {
             form.locator("input[type=radio][name=theme]").count() shouldBe DaisyTheme.entries.size + 1
         }
 
-        test("The stylesheet carries the themes beyond DaisyUI's default two") {
-            val response = page.request().get("$BASE_URL/static/app.css")
-            response.status() shouldBe 200
-            val stylesheet = response.text()
-            stylesheet shouldContain "[data-theme=nord]"
-            stylesheet shouldContain "[data-theme=abyss]"
-        }
+        test("The stylesheet carries the themes beyond DaisyUI's default two") { stylesheetCarriesTheThemes() }
 
         // Every preview computing a distinct value is what shows each wears its own theme, not
         // the page's.
-        test("Every theme is previewed in itself") {
-            page.navigate("/profile")
-            val primaries = form.locator("[data-theme]")
-                .evaluateAll("els => els.map(e => getComputedStyle(e).getPropertyValue('--color-primary'))") as List<*>
-            primaries shouldHaveSize DaisyTheme.entries.size
-            primaries.shouldNotContainDuplicates()
-        }
+        test("Every theme is previewed in itself") { everyPreviewWearsItsOwnTheme() }
 
-        test("Saving a theme keeps it in a cookie and returns to the profile") {
-            page.navigate("/profile")
-            chooseThemeAndSave(NORD)
+        test("Saving a theme keeps it in a cookie and returns to the profile") { savingKeepsTheThemeAndReturns() }
 
-            assertThat(heading("Profile")).isVisible()
-            context.cookies().firstOrNull { it.name == "theme" }?.value shouldBe NORD
-            themeOfPage() shouldBe NORD
-            assertThat(choice(NORD)).isChecked()
-            assertThat(tileOf(NORD)).containsText("Current")
-        }
-
-        test("A value that is not a theme is refused") {
-            val request = RequestOptions.create()
-                .setForm(FormData.create().set("theme", "no-such-theme"))
-                .setMaxRedirects(0)
-            val response = page.request().post("$BASE_URL/profile/theme", request)
-            response.status() shouldBe 400
-            response.headers() shouldNotContainKey "set-cookie"
-        }
+        test("A value that is not a theme is refused") { aValueThatIsNoThemeIsRefused() }
 
         test("The saved theme is worn by the dashboard") {
             page.navigate("/profile")
@@ -102,17 +74,55 @@ class ProfileTest : PlaywrightSpec() {
             assertThat(heading("Overview")).isVisible()
         }
 
-        test("The themes are laid out as tiles, not stacked") {
-            page.navigate("/profile")
-            // Side by side: the second tile starts on the first one's row, to its right.
-            val first = checkNotNull(form.locator("label").nth(0).boundingBox())
-            val second = checkNotNull(form.locator("label").nth(1).boundingBox())
-            second.y shouldBe first.y
-            second.x shouldBeGreaterThanOrEqual first.x + first.width
+        test("The themes are laid out as tiles, not stacked") { tilesSitSideBySideAndSaveIsInView() }
+    }
 
-            val save = checkNotNull(saveButton().boundingBox())
-            save.y + save.height shouldBeLessThanOrEqual checkNotNull(page.viewportSize()).height.toDouble()
-        }
+    private fun stylesheetCarriesTheThemes() {
+        val response = page.request().get("$BASE_URL/static/app.css")
+        response.status() shouldBe 200
+        val stylesheet = response.text()
+        stylesheet shouldContain "[data-theme=nord]"
+        stylesheet shouldContain "[data-theme=abyss]"
+    }
+
+    private fun everyPreviewWearsItsOwnTheme() {
+        page.navigate("/profile")
+        val primaries = form.locator("[data-theme]")
+            .evaluateAll("els => els.map(e => getComputedStyle(e).getPropertyValue('--color-primary'))") as List<*>
+        primaries shouldHaveSize DaisyTheme.entries.size
+        primaries.shouldNotContainDuplicates()
+    }
+
+    private fun savingKeepsTheThemeAndReturns() {
+        page.navigate("/profile")
+        chooseThemeAndSave(NORD)
+
+        assertThat(heading("Profile")).isVisible()
+        context.cookies().firstOrNull { it.name == "theme" }?.value shouldBe NORD
+        themeOfPage() shouldBe NORD
+        assertThat(choice(NORD)).isChecked()
+        assertThat(tileOf(NORD)).containsText("Current")
+    }
+
+    private fun aValueThatIsNoThemeIsRefused() {
+        val request = RequestOptions.create()
+            .setForm(FormData.create().set("theme", "no-such-theme"))
+            .setMaxRedirects(0)
+        val response = page.request().post("$BASE_URL/profile/theme", request)
+        response.status() shouldBe 400
+        response.headers() shouldNotContainKey "set-cookie"
+    }
+
+    private fun tilesSitSideBySideAndSaveIsInView() {
+        page.navigate("/profile")
+        // Side by side: the second tile starts on the first one's row, to its right.
+        val first = checkNotNull(form.locator("label").nth(0).boundingBox())
+        val second = checkNotNull(form.locator("label").nth(1).boundingBox())
+        second.y shouldBe first.y
+        second.x shouldBeGreaterThanOrEqual first.x + first.width
+
+        val save = checkNotNull(saveButton().boundingBox())
+        save.y + save.height shouldBeLessThanOrEqual checkNotNull(page.viewportSize()).height.toDouble()
     }
 
     private fun heading(name: String): Locator = page.getByRole(AriaRole.HEADING, GetByRoleOptions().setName(name))

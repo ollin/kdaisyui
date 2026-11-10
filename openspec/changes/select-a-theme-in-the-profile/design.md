@@ -86,10 +86,27 @@ With no `data-theme`, DaisyUI's `light --default` applies, and `dark` under
 `prefers-color-scheme: dark` - which `themes: all` keeps (`pluginOptionsHandler.js:42-50`). So the
 system choice is the absence of the attribute, not a theme.
 
+### 7. The controller's theme is a model `extra`, not an overload
+
+**Chosen (Oliver, 2026-11-10, A7):** `codegen/model/theme-controller.json` declares
+`{ "kind": "extra", "name": "theme", "type": "DaisyTheme?", "default": "null",
+"apply": "if (theme != null) this.value = theme.value" }` with the enum's import, the shape of
+`button.json`'s `type`. It is source-compatible; the JVM signature changes, so a consumer
+recompiles, which `docs/upgrading.md` says.
+
+**Rejected: an overload `daisyThemeController(theme: DaisyTheme, …)`** that would keep the old
+signature. The model declares one function per name; teaching the generators overloads for one
+parameter is a larger change than the binary break of a pre-1.0 library that ships a migration
+note anyway.
+
+**Rejected: no parameter** (the recommendation at proposal). `value = DaisyTheme.Dark.value` in
+the block is already typed, and the common toggle uses `daisyToggle` with
+`daisyThemeControllerClasses()`; Oliver chose the parameter for discoverability.
+
 ## Enablers and desired changes
 
 - **Enablers** (behaviour-preserving, provable by diff): none. Every step adds behaviour.
-- **Desired changes:** the enum and its generator; the two functions; `themes: all` in the entry;
+- **Desired changes:** the enum and its generator; the two functions; the controller's parameter; `themes: all` in the entry;
   the profile page, its POST, the shell's attribute; the docs.
 
 ## Risks / Trade-offs

@@ -3,7 +3,8 @@
 **Estimate, frozen 2026-11-10:** `4h 30min (8h 30min DevOnly)` by the ledger's `forecast`
 (ratio 0.52 over 168 runs); 510 minutes developer-only is the frozen raw figure. Block 1: 30,
 block 2: 210, block 3: 150, block 4: 60, block 5: 60. Ledger run
-`2026-11-10-kdaisyui-select-a-theme-in-the-profile`.
+`2026-11-10-kdaisyui-select-a-theme-in-the-profile`. Tasks 2.6 and 4.4 were added after the
+freeze by A7 (finding F3); the figure stands, their time is recorded as unplanned.
 
 Ordered by uncertainty: A3 is the one thing only a compile can answer, so it runs before any
 code; the browser checks of A2, A3 and A5 are the scenarios of 3.3. Every step in block 3 carries
@@ -22,7 +23,7 @@ test hard-codes either.
   the output. No commit of the CSS here (it lands with its scenario in 3.3); the proposal's A3 row
   is updated in its own `. d`. If the compile fails, revise the change before block 2.
 
-A7 is Oliver's, asked at review; A8 he decided on 2026-11-10.
+A7 and A8 Oliver decided on 2026-11-10. A9 depends on the enum and is checked in task 2.6.
 
 ## 2. The library API, under TCR
 
@@ -44,10 +45,16 @@ A7 is Oliver's, asked at review; A8 he decided on 2026-11-10.
   `html { daisyTheme(DaisyTheme.Nord) }` and asserts `data-theme="nord"`.
 - [ ] 2.5 `^ F` `daisyThemeOf(value)`: the test asserts `"nord"` gives `Nord`, `"Nord"` and `""`
   give `null`, and every entry round-trips (which also executes every enum entry for Kover).
-- [ ] 2.6 `. F (internal)` `lib/build.gradle.kts`: `targetClasses` gains
+- [ ] 2.6 `! F` `codegen/model/theme-controller.json` declares the `theme` extra (design,
+  decision 7); `just generate`; `ThemeController.kt`, its generated tests and
+  `docs/reference/themeController.md` follow, and `koverVerify` sees both branches of the
+  `apply` (A9). `!` because model and regenerated output exceed eight counted lines. If the test
+  generator or Kover objects, revise the change first.
+- [ ] 2.7 `. F (internal)` `lib/build.gradle.kts`: `targetClasses` gains
   `io.github.ollin.kdaisyui.themes.*`; `./gradlew :lib:pitest` reports 100% test strength.
-- [ ] 2.7 `. d (internal)` `./gradlew apiDump`; the diff of `lib/api/lib.api` is read and holds
-  additions only (`DaisyTheme`, `DaisyThemesKt`); `components.api` unchanged.
+- [ ] 2.8 `. d (internal)` `./gradlew apiDump`; the diff of `lib/api/*.api` is read: additions
+  (`DaisyTheme`, `DaisyThemesKt`) plus the one changed `daisyThemeController` signature, and
+  nothing else.
 
 ## 3. The profile page and its scenarios, under TCR at the root
 
@@ -76,12 +83,17 @@ A7 is Oliver's, asked at review; A8 he decided on 2026-11-10.
 
 - [ ] 4.1 `. d` `docs/how-to.md`, "Let users choose a theme": the entry's `themes` line and naming
   fewer; the webjar's `themes.css` carrying all; `html { daisyTheme(…) }`; the preview card;
-  the POST route (`<!-- snippet: in Route -->`); that `DaisyTheme` names every built-in theme
+  the POST route (`<!-- snippet: in Route -->`); a light/dark toggle with
+  `daisyThemeController(theme = DaisyTheme.Dark)` beside the `daisyToggle` +
+  `daisyThemeControllerClasses()` form; that `DaisyTheme` names every built-in theme
   while the stylesheet decides which exist; a custom theme as `attributes["data-theme"]`.
 - [ ] 4.2 `. d` `codegen/llms-template.md` names the recipe, `codegen/llms-full-template.md`
   describes `DaisyTheme`, `daisyTheme`, `daisyThemeOf`; `just generate`; tree clean afterwards.
 - [ ] 4.3 `. d (internal)` `AGENTS.md`'s list of hand-written Kotlin gains `themes/DaisyThemes.kt`;
   `.opencode/skills/kdaisyui-codegen` names the theme step of `generateComponents`.
+- [ ] 4.4 `. d` `docs/upgrading.md`, 0.11.0: `daisyThemeController` gained `theme`; source
+  unchanged, binaries compiled against 0.10.x recompile (**How to migrate**: rebuild; optionally
+  replace `value = "dark"` in the block by `theme = DaisyTheme.Dark`).
 
 ## 5. Gate, adoption and archive
 

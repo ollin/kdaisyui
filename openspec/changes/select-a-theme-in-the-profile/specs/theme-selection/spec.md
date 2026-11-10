@@ -48,6 +48,24 @@ value equals its argument and `null` for any other string.
 - **THEN** it returns `DaisyTheme.Nord`
 - **AND** `daisyThemeOf("Nord")` and `daisyThemeOf("")` return `null`
 
+### Requirement: The theme controller takes a typed theme
+
+`daisyThemeController` SHALL take a parameter `theme: DaisyTheme? = null`, declared in the
+component model, which writes the input's `value` when given and nothing when `null`.
+
+**Verified** that the value is what DaisyUI matches: the selector is
+`:root:has(input.theme-controller[value=<name>]:checked)` (`pluginOptionsHandler.js:27`).
+
+#### Scenario: A controller for one theme
+
+- **WHEN** `daisyThemeController(theme = DaisyTheme.Dark)` is rendered
+- **THEN** the input carries `class="theme-controller"` and `value="dark"`
+
+#### Scenario: Without a theme
+
+- **WHEN** `daisyThemeController()` is rendered
+- **THEN** the input carries no `value`
+
 ### Requirement: The documentation shows how a user chooses a theme
 
 The how-to SHALL show, in snippets `:doc-snippets` compiles, how to compile the themes an

@@ -19,3 +19,14 @@
 - **Cause:** each changed scope or observable behaviour (the picker with or without a live
   preview, a library helper or none).
 - **Cost:** one round, before the ledger run opened, so no wait is recorded.
+
+## F3 - A7 decided against the recommendation; the plan grew by two tasks
+
+- **What happened:** 2026-11-10, after the proposal was committed. Asked at review whether
+  `daisyThemeController` stays without a `theme` parameter, Oliver chose the parameter (A7),
+  after a detailed explanation with usage examples. Tasks 2.6 (model and regeneration) and 4.4
+  (the migration note for the binary change) were added; the frozen estimate stands.
+- **Cause:** the proposal had removed the parameter as subtraction, while the scope question at
+  the start had offered it as part of the typed basics - the two said different things.
+- **Cost:** two question rounds (the A7 question and the request for the explanation), recorded
+  as decision waits; about 45 minutes of unplanned work.

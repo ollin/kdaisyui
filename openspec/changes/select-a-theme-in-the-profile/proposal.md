@@ -17,6 +17,9 @@ check and a DaisyUI bump can silently invalidate.
 - **Two hand-written functions** beside it, as the icons package has its support files:
   `Tag.daisyTheme(theme)` writes `data-theme`, and `daisyThemeOf(value)` parses a stored value
   back, `null` for anything that is not a theme.
+- **`daisyThemeController(theme = DaisyTheme.Dark)`**: a `theme` parameter, declared in
+  `codegen/model/theme-controller.json`, writes the input's `value`. Source-compatible; a binary
+  change of the function's JVM signature, so `docs/upgrading.md` says to recompile.
 - **A profile page in the example app**, reached from the avatar menu's "Profile": one radio
   per theme, each inside a card that renders in that theme (the preview), plus "System default".
   Saving is a plain form POST that sets a cookie and redirects; the dashboard and the profile
@@ -35,10 +38,6 @@ exactly the kind of string this library exists to type, and the enum is generate
 no maintenance. What this change removes: a dead menu entry in the example app, and in a
 consumer the theme names as strings.
 
-Also removed from the first sketch: a `theme` parameter on `daisyThemeController`. The picker
-does not use the theme controller (a checked `.theme-controller` re-themes the whole page, which
-the swatch preview must not), and `daisyThemeController { value = DaisyTheme.Nord.value }` is
-already typed. A7 puts that to Oliver.
 
 ## Out of scope
 
@@ -64,8 +63,9 @@ already typed. A7 puts that to Oliver.
 | A3 | `@plugin "daisyui" { themes: all; }` compiles in the plugin's `kdaisyuiStylesheet` container and grows the minified stylesheet by roughly 30 KB (raw theme CSS is 38,334 bytes) | code | to check in task 1.1 |
 | A4 | A type outside `io.github.ollin.kdaisyui.components` does not trip the plugin's "unknown component class" fallback | code | confirmed at proposal - `gradle-plugin/.../ComponentReferences.kt:11` matches only `io/github/ollin/kdaisyui/components/…`; an enum in that package unknown to `kdaisyui-components.txt` would make the plugin write the full list and warn (`ComponentMap.kt:12-15`) |
 | A5 | A `data-theme` on a `div` previews its theme inside a page wearing another | code | confirmed at proposal by the selector `[data-theme=<name>]` scoping custom properties, which inherit from the nearest ancestor; the browser check is task 3.2 |
-| A6 | No requirement of a main spec this builds on contradicts it: `css-delivery` (the narrowed stylesheet styles the example app, compiled by the plugin's task alone - the entry changes, the task does not), `content-security-policy` (no script, no inline style), `component-model` (no model file changes; the enum is no class axis, so the naming rule does not apply), `generated-sources` and `documentation-snippets` | code | confirmed at proposal - each requirement read on 2026-11-10 |
-| A7 | `daisyThemeController` gets no `theme` parameter | user | open - ask at review |
+| A6 | No requirement of a main spec this builds on contradicts it: `css-delivery` (the narrowed stylesheet styles the example app, compiled by the plugin's task alone - the entry changes, the task does not), `content-security-policy` (no script, no inline style), `component-model` (the `theme` parameter is declared in the model as an `extra`, as `button.json`'s `type` is; the enum is no class axis, so the naming rule does not apply), `api-change-detection` (the binary change of `daisyThemeController` gets a **How to migrate** entry, task 4.4), `generated-sources` and `documentation-snippets` | code | confirmed at proposal - each requirement read on 2026-11-10 |
+| A7 | `daisyThemeController` gets a typed `theme` parameter | user | confirmed by the user 2026-11-10 - as a parameter, against the recommendation to leave it out (finding F3) |
+| A9 | A model `extra` of type `DaisyTheme?` from another package generates, and the generated tests cover both of its branches | code | to check in task 2.6 - the precedent is `button.json`'s `ButtonType?` with an import; revise if `koverVerify` or the test generator objects |
 | A8 | The cookie is the example app's choice, not the library's: the library ships no Ktor helper | user | confirmed by the user 2026-11-10 - typed basics chosen |
 
 ## Capabilities
@@ -85,9 +85,11 @@ None.
 - `codegen/`: a theme generator and its test, wired into `just generate`; Stryker on its lines.
 - `lib/`: `lib/generated/main/kotlin/io/github/ollin/kdaisyui/themes/DaisyTheme.kt` (generated),
   `lib/src/main/kotlin/io/github/ollin/kdaisyui/themes/DaisyThemes.kt` and its test; `:lib:pitest`
-  scope gains `themes.*`; `lib/api/lib.api` re-dumped, additive only.
+  scope gains `themes.*`.
 - `example-app/`: `app.css`, a profile page and routes, `DashboardShell.kt`, `Ids.kt`,
   `DashboardResources.kt`; `e2e-tests/`: one feature with steps.
-- `docs/how-to.md`, `codegen/llms-template.md`, `codegen/llms-full-template.md`, regenerated
+- `codegen/model/theme-controller.json` and the regenerated `ThemeController.kt`, its tests and
+  `docs/reference/themeController.md`; `lib/api/*.api` re-dumped.
+- `docs/how-to.md`, `docs/upgrading.md`, `codegen/llms-template.md`, `codegen/llms-full-template.md`, regenerated
   `llms*.txt`; `AGENTS.md`'s list of hand-written Kotlin.
-- Lands in 0.11.0; not breaking.
+- Lands in 0.11.0; source-compatible, `daisyThemeController` binary-incompatible (recompile).

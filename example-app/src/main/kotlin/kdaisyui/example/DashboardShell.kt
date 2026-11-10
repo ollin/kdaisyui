@@ -55,7 +55,7 @@ fun HTML.appShell(application: Application, theme: DaisyTheme?, heading: String,
                 htmlFor = drawerId.id
                 classes = setOf("drawer-overlay")
             }
-            shellSidebar()
+            shellSidebar(application.href(DashboardPage()), overviewActive = heading == "Overview")
         }
     }
 }
@@ -114,7 +114,7 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
     }
 }
 
-private fun FlowContent.shellSidebar() {
+private fun FlowContent.shellSidebar(dashboardUrl: String, overviewActive: Boolean) {
     nav("bg-base-100 flex min-h-screen w-72 flex-col gap-2 overflow-y-auto px-6 py-10") {
         id = Dashboard.Sidebar().id
         div("mx-4 flex items-center gap-2 font-black") { +"DevTrack" }
@@ -122,7 +122,7 @@ private fun FlowContent.shellSidebar() {
             // `classes` NAMED, because kotlinx.html's `a` is a(href, target, referrerPolicy,
             // classes): the positional form set href="menu-active", so this item linked to a
             // route that does not exist and never got the active styling either.
-            li { a(classes = "menu-active") { +"Overview" } }
+            li { a(href = dashboardUrl, classes = if (overviewActive) "menu-active" else null) { +"Overview" } }
             sidebarSubmenu("Repositories", listOf("All Repos", "New Repository", "Archived"))
             li { a { +"Issues" } }
             li { a { +"Pull Requests" } }

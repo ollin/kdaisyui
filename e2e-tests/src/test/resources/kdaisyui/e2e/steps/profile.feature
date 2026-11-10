@@ -47,3 +47,8 @@ Feature: Profile
     Given the user navigates to the dashboard
     When the user opens the profile from the avatar menu
     Then the heading "Profile" is visible
+
+  Scenario: The sidebar leads back to the dashboard
+    Given the user opens "/profile"
+    When the user clicks "Overview"
+    Then the heading "Overview" is visible

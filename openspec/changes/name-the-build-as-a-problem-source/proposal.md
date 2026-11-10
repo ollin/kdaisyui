@@ -35,7 +35,7 @@ and three free functions on raw strings.
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | The check's output stays byte-identical, `this build` included | code | to check in task 1.1 - `CheckGradleProblemsTest` asserts the full message and is not changed by the refactoring |
+| A1 | The check's output stays byte-identical, `this build` included | code | confirmed in task 1.1 - `CheckGradleProblemsTest`, unchanged, asserts the full message with `(this build)` and passed |
 | A2 | No requirement of a main spec this builds on contradicts it. It builds on none: `grep -rl checkGradleProblems openspec/specs` finds nothing | code | confirmed at proposal |
 
 ## Impact

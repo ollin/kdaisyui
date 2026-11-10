@@ -5,7 +5,7 @@ developer-only is the frozen raw figure. Block 1: 30, block 2: 30.
 
 ## 1. Refactoring, under TCR at the repository root
 
-- [ ] 1.1 `^ r (internal)` `Source.Plugin` / `Source.ThisBuild` replace `pluginId: String?` in
+- [x] 1.1 `^ r (internal)` `Source.Plugin` / `Source.ThisBuild` replace `pluginId: String?` in
   `GradleProblem`, the reader, the allowlist and the message; the tests' constructors follow, their
   assertions unchanged (A1).
 - [ ] 1.2 `^ r (internal)` `ReportEntry` replaces `entriesOf`, `idOf` and `nameOf`; tests untouched.

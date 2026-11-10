@@ -31,7 +31,7 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
   `just generate` leaves `lib/generated/test/**` byte-identical (A3), the snapshot tests stay green.
   Not a pure refactoring after all: the theme change's test that drove `DaisyTheme?` WITHOUT a
   sample asserted exactly the table behaviour removed here, so it was deleted (finding F2).
-- [ ] 2.6 `^ F (internal)` `extraSampleFindings(model)`: a nullable extra that is not `String`,
+- [x] 2.6 `^ F (internal)` `extraSampleFindings(model)`: a nullable extra that is not `String`,
   `Boolean` or a `model.enums` type (bare or in `ClassValues<…>`) and has no sample yields
   `<component>: <function>.<parameter> needs a sample`; fixtures for each exemption;
   `committed-model.test.ts` asserts no finding for the committed models.

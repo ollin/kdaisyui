@@ -63,6 +63,13 @@ is the form without it. Before guessing which call it is, read the line Kover's 
 finding F1). The same inlining shows up in PIT as a survivor no test can kill, `any {}` there;
 take the non-inline form (`intersect`) rather than a weaker threshold.
 
+A `when` over constants is the third case. Close values (`1, 7, 9, 10, 11, 12`) compile to a table
+switch over the whole range, and Kover counts every gap of it as a branch of its own, which no
+real input reaches: `check-the-themes-the-stylesheet-compiles` lost a run to five such gaps (its
+finding F3). Write the cases as conditions, or test membership in a set (`tag in REFERENCE_TAGS`).
+After such a revert the test of the reverted step is still on disk; `git stash` it before the
+refactoring that has to come first, or that refactoring goes red on the old test.
+
 ## 2a. Documentation snippets — `:doc-snippets:compileSnippets`
 
 Every Kotlin snippet of `README.md` and `docs/` is compiled against the library, in `check` and

@@ -34,14 +34,19 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
   `ktor-integration`, `doc-snippets`, `build-checks` and `example-app`, `:ktor-integration:test`,
   its Kover artifact, and `:example-app:kdaisyuiClasses` and `kdaisyuiThemes`. A real but small
   cost; the repeat without `SCM-Revision` is task 3.3's check.
-- [ ] 1.3 `. r (internal)` (A5) `dependencyResolutionManagement { repositories { mavenCentral() } }`
+- [x] 1.3 `. r (internal)` (A5) `dependencyResolutionManagement { repositories { mavenCentral() } }`
   in `settings.gradle.kts`; delete the `repositories` blocks of `build.gradle.kts`,
   `lib/build.gradle.kts`, `ktor-integration/build.gradle.kts`, `e2e-tests/build.gradle.kts` and the
   convention plugin.
-- [ ] 1.4 `. d (internal)` (api-change-detection) Add a public function to `lib`'s core without
+  A5 verified: TCR green. The Gradle problems check runs in task 5.1.
+- [x] 1.4 `. d (internal)` (api-change-detection) Add a public function to `lib`'s core without
   re-dumping, run `./gradlew check -x :e2e-tests:test`, record that it fails at
   `:lib:checkKotlinAbi` naming the declaration, then discard the probe edit. This is the command
   `unit-tests` runs.
+  Verified 2026-11-10: `fun apiProbe(): Int = 1` in `ClassNames.kt` failed the build. Without
+  `--continue` Gradle stopped at `:koverVerify` first (the probe had no test); with it,
+  `:lib:checkKotlinAbi` failed too and printed `+ public static final fun apiProbe ()I`. Either
+  way `unit-tests` goes red, and a tested API change reaches the ABI failure directly.
 
 ## 2. The CI job
 

@@ -16,6 +16,9 @@ fun themeMap(resource: String): Map<String, String> =
 /** The themes a compiled stylesheet carries: the names of its `[data-theme=…]` selectors, minified or not. */
 fun themesCarriedBy(css: String): Set<String> = DATA_THEME.findAll(css).map { it.groupValues[1] }.toSet()
 
+/** The themes [named] by the code that the stylesheet does not carry, in order. */
+fun missingThemes(named: Set<String>, carried: Set<String>): List<String> = (named - carried).sorted()
+
 private val DATA_THEME = Regex("""\[data-theme=([a-z]+)]""")
 
 private const val DAISY_THEME = "io/github/ollin/kdaisyui/themes/DaisyTheme"

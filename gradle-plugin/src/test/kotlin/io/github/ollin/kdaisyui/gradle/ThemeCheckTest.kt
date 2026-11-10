@@ -31,5 +31,10 @@ class ThemeCheckTest {
         assertEquals(setOf("light", "nord"), themesCarriedBy(css))
     }
 
+    @Test
+    fun theMissingThemesAreTheNamedOnesTheStylesheetLacksInOrder() {
+        assertEquals(listOf("abyss", "nord"), missingThemes(setOf("nord", "light", "abyss"), setOf("light", "dark")))
+    }
+
     private fun theme(member: String) = MemberReference("io/github/ollin/kdaisyui/themes/DaisyTheme", member)
 }

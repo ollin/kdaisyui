@@ -10,7 +10,7 @@ A1 and A2 are checked by the step that needs them (2.1, 3.1); A3 and A4 were set
 
 ## 2. Under TCR at the root
 
-- [ ] 2.1 `! F` `KdaisyuiStylesheet.classList` is a `RegularFileProperty` copied to
+- [x] 2.1 `! F` `KdaisyuiStylesheet.classList` is a `RegularFileProperty` copied to
   `/deps/project/kdaisyui/kdaisyui-classes.txt`; `KdaisyuiPlugin` sets it to the class-list file;
   `KdaisyuiStylesheetTest`, `KdaisyuiPluginTest` assert the file; `NodeContainerRunTest` copies a
   class list naming `badge`, which no source names, and asserts `.badge` in the output (A1).

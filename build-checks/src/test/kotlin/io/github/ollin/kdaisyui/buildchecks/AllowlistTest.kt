@@ -5,8 +5,8 @@ import kotlin.test.assertEquals
 
 class AllowlistTest {
 
-    private val kover = GradleProblem("set-visible", "org.example.kover")
-    private val ours = GradleProblem("external-process", null)
+    private val kover = GradleProblem("set-visible", Source.Plugin("org.example.kover"))
+    private val ours = GradleProblem("external-process", Source.ThisBuild)
 
     @Test
     fun aProblemNoLineAcceptsIsUnexpectedOnce() {

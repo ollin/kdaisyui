@@ -7,5 +7,5 @@ import kotlin.io.path.readText
 fun main(args: Array<String>) {
     val (report, allowlist) = args.map { Path(it).readText() }
     val found = unexpected(problemsIn(report), allowlist)
-    check(found.isEmpty()) { "Gradle problems no line of the allowlist accepts:\n" + found.joinToString("\n") { "  ${it.id} (${it.pluginId ?: "this build"})" } }
+    check(found.isEmpty()) { "Gradle problems no line of the allowlist accepts:\n" + found.joinToString("\n") { "  ${it.id} (${it.source})" } }
 }

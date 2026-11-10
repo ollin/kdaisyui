@@ -21,7 +21,7 @@ test hard-codes either.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 A3 and A2: in a scratch copy under `tmp/select-a-theme-in-the-profile/`, change the
+- [x] 1.1 A3 and A2: in a scratch copy under `tmp/select-a-theme-in-the-profile/`, change the
   entry to `@plugin "daisyui" { themes: all; }`, run `./gradlew :example-app:kdaisyuiStylesheet`,
   and record the minified size against today's 150,330 bytes, and that `[data-theme=nord]`
   occurs in the output although the narrowed class list names no theme. No commit of the CSS here

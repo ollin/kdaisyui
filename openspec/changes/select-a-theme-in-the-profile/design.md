@@ -113,7 +113,7 @@ the block is already typed, and the common toggle uses `daisyToggle` with
 
 ## Risks / Trade-offs
 
-- [The stylesheet grows by every theme, ~30 KB minified (A3)] → the example app offers all on
+- [The stylesheet grows by every theme, 36 KB minified, measured (A3)] → the example app offers all on
   purpose; the how-to shows naming fewer.
 - [`DaisyTheme` offers themes a consumer's stylesheet lacks] → the how-to says so; finding F1
   proposes a plugin check.

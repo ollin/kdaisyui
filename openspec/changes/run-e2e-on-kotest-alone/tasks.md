@@ -100,10 +100,13 @@ nothing else any more are deleted in the same run.
 
 ## 4. Cucumber out
 
-- [ ] 4.1 `. r (internal)` (A3, D4) Delete `RunCucumberTest.java`, `CucumberHooks`,
+- [x] 4.1 `. r (internal)` (A3, D4) Delete `RunCucumberTest.java`, `CucumberHooks`,
   `PlaywrightWorld` and what is left of `steps/`; the five libraries in
   `e2e-tests/build.gradle.kts` and the catalog with the `cucumber` and `junit-platform` versions;
   the naming-strategy property. Count the tests in `build/test-results`: 22 + 1 (1.2) + 35 = 58.
+  A3 verified 2026-11-10: `./gradlew :e2e-tests:test --rerun` gave 20 specs and 58 tests, none
+  failed, 18.1 s in tests (21.3 s for 73 tests before). The `SharedInfrastructure` KDoc lost its
+  "both Kotest and Cucumber".
 - [ ] 4.2 `. d (internal)` Cucumber out of `AGENTS.md` (117, 246), `docs/how-to.md:34`,
   `openspec/config.yaml:33` and `.opencode/skills/kdaisyui-testing/SKILL.md` (5, 93, 101-107, and
   the Kotest spec list).

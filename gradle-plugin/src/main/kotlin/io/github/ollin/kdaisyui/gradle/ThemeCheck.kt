@@ -19,6 +19,18 @@ fun themesCarriedBy(css: String): Set<String> = DATA_THEME.findAll(css).map { it
 /** The themes [named] by the code that the stylesheet does not carry, in order. */
 fun missingThemes(named: Set<String>, carried: Set<String>): List<String> = (named - carried).sorted()
 
+/**
+ * The warning for [missing] themes and where to add them; null when nothing is missing. It shows
+ * the entry's existing themes as `…`: the plugin cannot know which flags, such as `--default`, the
+ * entry gives them.
+ */
+fun themeWarning(missing: List<String>): String? {
+    if (missing.isEmpty()) return null
+    val names = missing.joinToString(", ")
+    return "kdaisyui: the code names themes the stylesheet does not carry: $names.\n" +
+        "  Add them to the themes of the entry's @plugin \"daisyui\" block: themes: …, $names;"
+}
+
 private val DATA_THEME = Regex("""\[data-theme=([a-z]+)]""")
 
 private const val DAISY_THEME = "io/github/ollin/kdaisyui/themes/DaisyTheme"

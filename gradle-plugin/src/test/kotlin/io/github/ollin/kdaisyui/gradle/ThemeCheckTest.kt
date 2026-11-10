@@ -36,5 +36,13 @@ class ThemeCheckTest {
         assertEquals(listOf("abyss", "nord"), missingThemes(setOf("nord", "light", "abyss"), setOf("light", "dark")))
     }
 
+    @Test
+    fun theWarningNamesTheMissingThemesAndWhereToAddThem() {
+        val expected = "kdaisyui: the code names themes the stylesheet does not carry: abyss, nord.\n" +
+            "  Add them to the themes of the entry's @plugin \"daisyui\" block: themes: …, abyss, nord;"
+        assertEquals(expected, themeWarning(listOf("abyss", "nord")))
+        assertEquals(null, themeWarning(emptyList()))
+    }
+
     private fun theme(member: String) = MemberReference("io/github/ollin/kdaisyui/themes/DaisyTheme", member)
 }

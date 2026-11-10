@@ -56,6 +56,9 @@ rules:
     - An assumption that a CI step or job blocks a merge cites the main ruleset's required
       status checks, read for the proposal. A job that is not required, or whose failure only
       makes other jobs run, blocks nothing (fail-ci-on-an-unparsable-openspec-config, finding F1).
+    - A count stated in a proposal is measured for that proposal, and the command that measured
+      it is named beside it. A count copied from an older verification describes the code of
+      that day (name-the-class-sibling-in-every-kdoc, finding F4).
   design:
     - Record the alternatives considered for each decision and why they lost. A
       decision without its rejected alternative cannot be revisited later.

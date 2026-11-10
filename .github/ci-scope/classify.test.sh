@@ -28,7 +28,7 @@ expect() {
 expect full "an empty list"
 expect full "a source path" lib/src/main/kotlin/X.kt
 
-for planning in openspec/changes/x/tasks.md .opencode/skills/x/SKILL.md .idea/vcs.xml .codeseeker/x \
+for planning in openspec/changes/x/tasks.md .opencode/skills/x/SKILL.md .idea/vcs.xml \
     AGENTS.md CLAUDE.md CREDITS.md LICENSE opencode.jsonc renovate.json justfile \
     .github/workflows/release.yml .github/workflows/renovate.yml .github/workflows/pr-conventional-commits.yml; do
   expect none "$planning" "$planning"

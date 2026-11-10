@@ -28,6 +28,7 @@ enum class FooterDirection(internal val className: String) : ClassValues<FooterD
 
 /**
  * Footer can contain logo, copyright notice, and links to other pages. Renders `<footer class="footer ...">`.
+ * The same classes on another element: `a { daisyFooterClasses(…) }`; see [daisyFooterClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param center — Aligns footer content to center
@@ -61,7 +62,10 @@ fun Tag.daisyFooterClasses(
     if (center) addClassNames("footer-center")
 }
 
-/** Renders `<h6 class="footer-title ...">`. */
+/**
+ * Renders `<h6 class="footer-title ...">`.
+ * The same classes on another element: `a { daisyFooterTitleClasses(…) }`; see [daisyFooterTitleClasses].
+ */
 fun FlowContent.daisyFooterTitle(
     text: String? = null,
     id: HtmlId? = null,

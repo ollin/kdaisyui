@@ -15,6 +15,7 @@ import kotlinx.html.Tag
 
 /**
  * Diff component shows a side-by-side comparison of two items. Renders `<figure class="diff ...">`.
+ * The same classes on another element: `a { daisyDiffClasses(…) }`; see [daisyDiffClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -37,7 +38,10 @@ fun Tag.daisyDiffClasses() {
     addClassNames("diff")
 }
 
-/** Renders `<div class="diff-item-1 ...">`. */
+/**
+ * Renders `<div class="diff-item-1 ...">`.
+ * The same classes on another element: `a { daisyDiffItem1Classes(…) }`; see [daisyDiffItem1Classes].
+ */
 fun FlowContent.daisyDiffItem1(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -56,7 +60,10 @@ fun Tag.daisyDiffItem1Classes() {
     addClassNames("diff-item-1")
 }
 
-/** Renders `<div class="diff-item-2 ...">`. */
+/**
+ * Renders `<div class="diff-item-2 ...">`.
+ * The same classes on another element: `a { daisyDiffItem2Classes(…) }`; see [daisyDiffItem2Classes].
+ */
 fun FlowContent.daisyDiffItem2(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -75,7 +82,10 @@ fun Tag.daisyDiffItem2Classes() {
     addClassNames("diff-item-2")
 }
 
-/** Renders `<div class="diff-resizer ...">`. */
+/**
+ * Renders `<div class="diff-resizer ...">`.
+ * The same classes on another element: `a { daisyDiffResizerClasses(…) }`; see [daisyDiffResizerClasses].
+ */
 fun FlowContent.daisyDiffResizer(
     id: HtmlId? = null,
     extraClasses: String? = null,

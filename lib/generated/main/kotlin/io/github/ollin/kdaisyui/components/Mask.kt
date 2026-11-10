@@ -61,6 +61,7 @@ enum class MaskHalf(internal val className: String) : ClassValues<MaskHalf> {
 
 /**
  * Mask crops the content of the element to common shapes. Renders `<img class="mask ...">`.
+ * The same classes on another element: `a { daisyMaskClasses(…) }`; see [daisyMaskClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param style — Style variant
  * @param half — Half variant

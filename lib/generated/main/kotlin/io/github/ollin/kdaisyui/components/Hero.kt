@@ -13,6 +13,7 @@ import kotlinx.html.Tag
 
 /**
  * Hero is a component for displaying a large box or image with a title and description. Renders `<div class="hero ...">`.
+ * The same classes on another element: `a { daisyHeroClasses(…) }`; see [daisyHeroClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -35,7 +36,10 @@ fun Tag.daisyHeroClasses() {
     addClassNames("hero")
 }
 
-/** Renders `<div class="hero-content ...">`. */
+/**
+ * Renders `<div class="hero-content ...">`.
+ * The same classes on another element: `a { daisyHeroContentClasses(…) }`; see [daisyHeroContentClasses].
+ */
 fun FlowContent.daisyHeroContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -54,7 +58,10 @@ fun Tag.daisyHeroContentClasses() {
     addClassNames("hero-content")
 }
 
-/** Renders `<div class="hero-overlay ...">`. */
+/**
+ * Renders `<div class="hero-overlay ...">`.
+ * The same classes on another element: `a { daisyHeroOverlayClasses(…) }`; see [daisyHeroOverlayClasses].
+ */
 fun FlowContent.daisyHeroOverlay(
     id: HtmlId? = null,
     extraClasses: String? = null,

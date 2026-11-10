@@ -60,6 +60,7 @@ enum class DividerPlacement(internal val className: String) : ClassValues<Divide
 
 /**
  * Divider will be used to separate content vertically or horizontally. Renders `<div class="divider ...">`.
+ * The same classes on another element: `a { daisyDividerClasses(…) }`; see [daisyDividerClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param direction — Direction variant

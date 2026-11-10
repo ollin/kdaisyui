@@ -28,6 +28,7 @@ enum class SwapStyle(internal val className: String) : ClassValues<SwapStyle> {
 
 /**
  * Swap allows you to toggle the visibility of two elements using a checkbox or a class name. Renders `<label class="swap ...">`.
+ * The same classes on another element: `a { daisySwapClasses(…) }`; see [daisySwapClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param style — Style variant
  * @param active — Activates the swap (no need for checkbox)
@@ -61,7 +62,10 @@ fun Tag.daisySwapClasses(
     if (active) addClassNames("swap-active")
 }
 
-/** Renders `<div class="swap-on ...">`. */
+/**
+ * Renders `<div class="swap-on ...">`.
+ * The same classes on another element: `a { daisySwapOnClasses(…) }`; see [daisySwapOnClasses].
+ */
 fun FlowContent.daisySwapOn(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -80,7 +84,10 @@ fun Tag.daisySwapOnClasses() {
     addClassNames("swap-on")
 }
 
-/** Renders `<div class="swap-off ...">`. */
+/**
+ * Renders `<div class="swap-off ...">`.
+ * The same classes on another element: `a { daisySwapOffClasses(…) }`; see [daisySwapOffClasses].
+ */
 fun FlowContent.daisySwapOff(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -99,7 +106,10 @@ fun Tag.daisySwapOffClasses() {
     addClassNames("swap-off")
 }
 
-/** Renders `<div class="swap-indeterminate ...">`. */
+/**
+ * Renders `<div class="swap-indeterminate ...">`.
+ * The same classes on another element: `a { daisySwapIndeterminateClasses(…) }`; see [daisySwapIndeterminateClasses].
+ */
 fun FlowContent.daisySwapIndeterminate(
     id: HtmlId? = null,
     extraClasses: String? = null,

@@ -17,6 +17,7 @@ import kotlinx.html.UL
 
 /**
  * Breadcrumbs helps users to navigate through the website. Renders `<div class="breadcrumbs ...">`.
+ * The same classes on another element: `a { daisyBreadcrumbsClasses(…) }`; see [daisyBreadcrumbsClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any

@@ -13,6 +13,7 @@ import kotlinx.html.Tag
 
 /**
  * Browser mockup shows a box that looks like a browser window. Renders `<div class="mockup-browser ...">`.
+ * The same classes on another element: `a { daisyMockupBrowserClasses(…) }`; see [daisyMockupBrowserClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -35,7 +36,10 @@ fun Tag.daisyMockupBrowserClasses() {
     addClassNames("mockup-browser")
 }
 
-/** Renders `<div class="mockup-browser-toolbar ...">`. */
+/**
+ * Renders `<div class="mockup-browser-toolbar ...">`.
+ * The same classes on another element: `a { daisyMockupBrowserToolbarClasses(…) }`; see [daisyMockupBrowserToolbarClasses].
+ */
 fun FlowContent.daisyMockupBrowserToolbar(
     id: HtmlId? = null,
     extraClasses: String? = null,

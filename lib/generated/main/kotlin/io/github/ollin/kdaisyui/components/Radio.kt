@@ -56,6 +56,7 @@ enum class RadioSize(internal val className: String) : ClassValues<RadioSize> {
 
 /**
  * Radio buttons allow the user to select one option from a set. Renders `<input class="radio ...">`.
+ * The same classes on another element: `a { daisyRadioClasses(…) }`; see [daisyRadioClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

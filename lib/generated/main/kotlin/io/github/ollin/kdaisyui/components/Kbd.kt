@@ -32,6 +32,7 @@ enum class KbdSize(internal val className: String) : ClassValues<KbdSize> {
 
 /**
  * Kbd is used to display keyboard shortcuts. Renders `<kbd class="kbd ...">`.
+ * The same classes on another element: `a { daisyKbdClasses(…) }`; see [daisyKbdClasses].
  * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant

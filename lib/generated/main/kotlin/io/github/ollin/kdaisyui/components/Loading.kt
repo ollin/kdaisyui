@@ -51,6 +51,7 @@ enum class LoadingStyle(internal val className: String) : ClassValues<LoadingSty
 
 /**
  * Loading shows an animation to indicate that something is loading. Renders `<span class="loading ...">`.
+ * The same classes on another element: `a { daisyLoadingClasses(…) }`; see [daisyLoadingClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param style — Style variant

@@ -70,6 +70,26 @@ describe('the doc comment', () => {
     assert.match(kotlin, /block: \(TEXTAREA\.\(\) -> Unit\) = \{\},/)
   })
 
+  test('names the class sibling as its second line, before the parameters', () => {
+    const kotlin = kotlinFor(component('badge', 'Badge', 'badge'))
+
+    assert.ok(kotlin.includes('`<div class="badge ...">`.\n * The same classes on another element: `a { daisyBadgeClasses(…) }`; see [daisyBadgeClasses].\n * @param id'))
+  })
+
+  test('names the sibling of a function whose only classes are written on every call or by a parameter', () => {
+    const kotlin = kotlinFor(withParts(
+      component('wrap', 'Wrap', 'wrap', {}, { class: null, always: ['wrap-always'] }),
+      part('daisyWrapItem', 'wrap-item', { class: null, parameters: [toggle('active', 'wrap-active')] }),
+    ))
+
+    assert.match(kotlin, /^ \* The same classes on another element: `a \{ daisyWrapClasses\(…\) \}`; see \[daisyWrapClasses\]\.$/m)
+    assert.match(kotlin, /^ \* The same classes on another element: `a \{ daisyWrapItemClasses\(…\) \}`; see \[daisyWrapItemClasses\]\.$/m)
+  })
+
+  test('names no sibling for a structural wrapper, which has none', () => {
+    assert.ok(!kotlinFor(component('wrap', 'Wrap', 'wrap', {}, { class: null })).includes('The same classes on another element'))
+  })
+
   test('leaves a part comment on the element too', () => {
     const kotlin = kotlinFor(withParts(
       component('fieldset', 'Fieldset', 'fieldset', {}, { element: 'FIELDSET' }),

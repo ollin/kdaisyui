@@ -54,6 +54,7 @@ enum class InputSize(internal val className: String) : ClassValues<InputSize> {
 
 /**
  * Text Input is a simple input field. Renders `<input class="input ...">`.
+ * The same classes on another element: `a { daisyInputClasses(…) }`; see [daisyInputClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

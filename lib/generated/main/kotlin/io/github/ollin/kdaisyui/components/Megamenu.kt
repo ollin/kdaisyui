@@ -45,6 +45,7 @@ enum class MegamenuWidth(internal val className: String) : ClassValues<MegamenuW
 
 /**
  * A megamenu is a large, horizontal menu where each item opens a popover to show a large block of navigation links. Megamenu must be used once, on top of the page. Inside each popover, you can use a daisyUI menu, or any custom content. Megamenu fits better on large screens only, and for small screens, you can hide the megamenu and show the content in a dropdown or a drawer. Renders `<div class="megamenu ..." popover>`.
+ * The same classes on another element: `a { daisyMegamenuClasses(…) }`; see [daisyMegamenuClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param width — Width variant
@@ -84,7 +85,10 @@ fun Tag.daisyMegamenuClasses(
     if (vertical) addClassNames("megamenu-vertical")
 }
 
-/** Renders `<span class="megamenu-active ...">`. */
+/**
+ * Renders `<span class="megamenu-active ...">`.
+ * The same classes on another element: `a { daisyMegamenuActiveClasses(…) }`; see [daisyMegamenuActiveClasses].
+ */
 fun FlowContent.daisyMegamenuActive(
     id: HtmlId? = null,
     extraClasses: String? = null,

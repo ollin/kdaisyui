@@ -41,6 +41,7 @@ enum class IndicatorItemVerticalPlacement(internal val className: String) : Clas
 
 /**
  * Indicators are used to place an element on the corner of another element. Renders `<div class="indicator ...">`.
+ * The same classes on another element: `a { daisyIndicatorClasses(…) }`; see [daisyIndicatorClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -63,7 +64,10 @@ fun Tag.daisyIndicatorClasses() {
     addClassNames("indicator")
 }
 
-/** Renders `<span class="indicator-item ...">`. */
+/**
+ * Renders `<span class="indicator-item ...">`.
+ * The same classes on another element: `a { daisyIndicatorItemClasses(…) }`; see [daisyIndicatorItemClasses].
+ */
 fun FlowContent.daisyIndicatorItem(
     id: HtmlId? = null,
     horizontalPlacement: ClassValues<IndicatorItemHorizontalPlacement>? = null,

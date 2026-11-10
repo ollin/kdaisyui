@@ -56,6 +56,7 @@ enum class DropdownState(internal val className: String) : ClassValues<DropdownS
 
 /**
  * Dropdown can open a menu or any other element when the button is clicked. Renders `<details class="dropdown ...">`.
+ * The same classes on another element: `a { daisyDropdownClasses(…) }`; see [daisyDropdownClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param side — Side variant
  * @param align — Align variant
@@ -99,7 +100,10 @@ fun Tag.daisyDropdownClasses(
     if (hover) addClassNames("dropdown-hover")
 }
 
-/** Renders `<ul class="dropdown ..." popover>`. */
+/**
+ * Renders `<ul class="dropdown ..." popover>`.
+ * The same classes on another element: `a { daisyDropdownPopoverClasses(…) }`; see [daisyDropdownPopoverClasses].
+ */
 fun FlowContent.daisyDropdownPopover(
     id: HtmlId,
     side: ClassValues<DropdownSide>? = null,
@@ -128,7 +132,10 @@ fun Tag.daisyDropdownPopoverClasses(
     addClassNames(align)
 }
 
-/** Renders `<ul class="dropdown-content ...">`. */
+/**
+ * Renders `<ul class="dropdown-content ...">`.
+ * The same classes on another element: `a { daisyDropdownContentClasses(…) }`; see [daisyDropdownContentClasses].
+ */
 fun FlowContent.daisyDropdownContent(
     id: HtmlId? = null,
     extraClasses: String? = null,

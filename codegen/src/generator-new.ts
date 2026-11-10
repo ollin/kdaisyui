@@ -87,6 +87,7 @@ function summaryLine(shape: FunctionShape): string {
  */
 function renderKdoc(shape: FunctionShape): string {
   const lines = [summaryLine(shape)]
+  if (hasSibling(shape)) lines.push(`The same classes on another element: \`a { ${shape.name}Classes(…) }\`; see [${shape.name}Classes].`)
   if (shape.kind === 'main') {
     for (const parameter of shape.parameters) {
       lines.push(parameter.doc ? `@param ${parameter.name} — ${parameter.doc}` : `@param ${parameter.name}`)

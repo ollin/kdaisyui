@@ -54,6 +54,7 @@ enum class CheckboxSize(internal val className: String) : ClassValues<CheckboxSi
 
 /**
  * Checkboxes are used to select or deselect a value. Renders `<input class="checkbox ...">`.
+ * The same classes on another element: `a { daisyCheckboxClasses(…) }`; see [daisyCheckboxClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

@@ -30,6 +30,7 @@ enum class StackPlacement(internal val className: String) : ClassValues<StackPla
 
 /**
  * Stack visually puts elements on top of each other. Renders `<div class="stack ...">`.
+ * The same classes on another element: `a { daisyStackClasses(…) }`; see [daisyStackClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param placement — Placement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones

@@ -53,6 +53,7 @@ enum class AlertDirection(internal val className: String) : ClassValues<AlertDir
 
 /**
  * Alert informs users about important events. Renders `<div class="alert ...">`.
+ * The same classes on another element: `a { daisyAlertClasses(…) }`; see [daisyAlertClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param style — Style variant

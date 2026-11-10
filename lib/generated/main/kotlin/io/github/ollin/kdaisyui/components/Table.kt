@@ -32,6 +32,7 @@ enum class TableSize(internal val className: String) : ClassValues<TableSize> {
 
 /**
  * Table can be used to show a list of data in a table format. Renders `<table class="table ...">`.
+ * The same classes on another element: `a { daisyTableClasses(…) }`; see [daisyTableClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param pinCols — For <table> to make all the <th> columns sticky

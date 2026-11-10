@@ -38,6 +38,7 @@ enum class LinkColor(internal val className: String) : ClassValues<LinkColor> {
 
 /**
  * Link adds the missing underline style to links. Renders `<a class="link ...">`.
+ * The same classes on another element: `a { daisyLinkClasses(…) }`; see [daisyLinkClasses].
  * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant

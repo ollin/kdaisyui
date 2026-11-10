@@ -13,6 +13,7 @@ import kotlinx.html.Tag
 
 /**
  * Code mockup is used to show a block of code in a box that looks like a code editor. Renders `<div class="mockup-code ...">`.
+ * The same classes on another element: `a { daisyMockupCodeClasses(…) }`; see [daisyMockupCodeClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any

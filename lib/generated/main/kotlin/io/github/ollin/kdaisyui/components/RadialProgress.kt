@@ -13,6 +13,7 @@ import kotlinx.html.Tag
 
 /**
  * Radial progress can be used to show the progress of a task or to show the passing of time. Renders `<div class="radial-progress ...">`.
+ * The same classes on another element: `a { daisyRadialProgressClasses(…) }`; see [daisyRadialProgressClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any

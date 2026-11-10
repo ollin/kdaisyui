@@ -41,6 +41,7 @@ enum class ToastVerticalPlacement(internal val className: String) : ClassValues<
 
 /**
  * Toast is a wrapper to stack elements, positioned on the corner of page. Renders `<div class="toast ...">`.
+ * The same classes on another element: `a { daisyToastClasses(…) }`; see [daisyToastClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param horizontalPlacement — HorizontalPlacement variant
  * @param verticalPlacement — VerticalPlacement variant

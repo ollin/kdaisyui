@@ -33,6 +33,7 @@ enum class JoinDirection(internal val className: String) : ClassValues<JoinDirec
 
 /**
  * Join is a container for grouping multiple items, it can be used to group buttons, inputs, etc. Join applies border radius to the first and last item. Join can be used to create a horizontal or vertical list of items. Renders `<div class="join ...">`.
+ * The same classes on another element: `a { daisyJoinClasses(…) }`; see [daisyJoinClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones

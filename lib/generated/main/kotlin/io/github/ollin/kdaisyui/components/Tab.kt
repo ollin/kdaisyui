@@ -60,6 +60,7 @@ enum class TabsStyle(internal val className: String) : ClassValues<TabsStyle> {
 
 /**
  * Tabs can be used to show a list of links in a tabbed format. Renders `<div class="tabs ..." role="tablist">`.
+ * The same classes on another element: `a { daisyTabsClasses(…) }`; see [daisyTabsClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param placement — Placement variant
@@ -99,7 +100,10 @@ fun Tag.daisyTabsClasses(
     addClassNames(style)
 }
 
-/** A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ..." role="tab">`. */
+/**
+ * A single tab button (can be button, link, div, radio input, etc) Renders `<a class="tab ..." role="tab">`.
+ * The same classes on another element: `a { daisyTabClasses(…) }`; see [daisyTabClasses].
+ */
 fun FlowContent.daisyTab(
     id: HtmlId? = null,
     active: Boolean = false,
@@ -128,7 +132,10 @@ fun Tag.daisyTabClasses(
     if (disabled) addClassNames("tab-disabled")
 }
 
-/** Renders `<input class="tab ..." type="radio" role="tab">`. */
+/**
+ * Renders `<input class="tab ..." type="radio" role="tab">`.
+ * The same classes on another element: `a { daisyTabRadioClasses(…) }`; see [daisyTabRadioClasses].
+ */
 fun FlowContent.daisyTabRadio(
     id: HtmlId? = null,
     active: Boolean = false,
@@ -158,7 +165,10 @@ fun Tag.daisyTabRadioClasses(
     if (disabled) addClassNames("tab-disabled")
 }
 
-/** Tab content that comes immediately after a tab Renders `<div class="tab-content ...">`. */
+/**
+ * Tab content that comes immediately after a tab Renders `<div class="tab-content ...">`.
+ * The same classes on another element: `a { daisyTabContentClasses(…) }`; see [daisyTabContentClasses].
+ */
 fun FlowContent.daisyTabContent(
     id: HtmlId? = null,
     extraClasses: String? = null,

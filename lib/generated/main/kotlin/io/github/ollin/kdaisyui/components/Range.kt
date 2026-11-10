@@ -56,6 +56,7 @@ enum class RangeSize(internal val className: String) : ClassValues<RangeSize> {
 
 /**
  * Range slider is used to select a value by sliding a handle. Renders `<input class="range ...">`.
+ * The same classes on another element: `a { daisyRangeClasses(…) }`; see [daisyRangeClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

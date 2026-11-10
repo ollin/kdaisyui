@@ -39,6 +39,7 @@ enum class CarouselDirection(internal val className: String) : ClassValues<Carou
 
 /**
  * Carousel show images or content in a scrollable area. Renders `<div class="carousel ...">`.
+ * The same classes on another element: `a { daisyCarouselClasses(…) }`; see [daisyCarouselClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param snap — Snap variant
  * @param direction — Direction variant
@@ -72,7 +73,10 @@ fun Tag.daisyCarouselClasses(
     addClassNames(direction)
 }
 
-/** Renders `<div class="carousel-item ...">`. */
+/**
+ * Renders `<div class="carousel-item ...">`.
+ * The same classes on another element: `a { daisyCarouselItemClasses(…) }`; see [daisyCarouselItemClasses].
+ */
 fun FlowContent.daisyCarouselItem(
     id: HtmlId? = null,
     extraClasses: String? = null,

@@ -53,6 +53,7 @@ enum class TextareaSize(internal val className: String) : ClassValues<TextareaSi
 
 /**
  * Textarea allows users to enter text in multiple lines. Renders `<textarea class="textarea ...">`.
+ * The same classes on another element: `a { daisyTextareaClasses(…) }`; see [daisyTextareaClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

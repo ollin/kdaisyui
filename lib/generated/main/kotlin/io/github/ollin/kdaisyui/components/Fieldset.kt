@@ -15,6 +15,7 @@ import kotlinx.html.Tag
 
 /**
  * Fieldset is a container for grouping related form elements. It includes fieldset-legend as a title and label as a description. Renders `<fieldset class="fieldset ...">`.
+ * The same classes on another element: `a { daisyFieldsetClasses(…) }`; see [daisyFieldsetClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -37,7 +38,10 @@ fun Tag.daisyFieldsetClasses() {
     addClassNames("fieldset")
 }
 
-/** Renders `<legend class="fieldset-legend ...">`. */
+/**
+ * Renders `<legend class="fieldset-legend ...">`.
+ * The same classes on another element: `a { daisyFieldsetLegendClasses(…) }`; see [daisyFieldsetLegendClasses].
+ */
 fun FIELDSET.daisyFieldsetLegend(
     id: HtmlId? = null,
     extraClasses: String? = null,

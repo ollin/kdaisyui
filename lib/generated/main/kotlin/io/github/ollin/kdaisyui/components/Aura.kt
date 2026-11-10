@@ -51,6 +51,7 @@ enum class AuraStyle(internal val className: String) : ClassValues<AuraStyle> {
 
 /**
  * Aura is a border light effect that can wrap around any component. It is a great way to add a cool, eye-catching visual effect to your components. Aura is useful for the most important button, card, or div that you want to highlight. Renders `<div class="aura ...">`.
+ * The same classes on another element: `a { daisyAuraClasses(…) }`; see [daisyAuraClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param style — Style variant

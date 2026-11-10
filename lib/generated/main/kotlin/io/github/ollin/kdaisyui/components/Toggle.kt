@@ -54,6 +54,7 @@ enum class ToggleSize(internal val className: String) : ClassValues<ToggleSize> 
 
 /**
  * Toggle is a checkbox that is styled to look like a switch button. Renders `<input class="toggle ...">`.
+ * The same classes on another element: `a { daisyToggleClasses(…) }`; see [daisyToggleClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

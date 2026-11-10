@@ -15,6 +15,7 @@ import kotlinx.html.Tag
 
 /**
  * Calendar includes styles for different calendar libraries. Renders `<calendar-date class="cally ...">`.
+ * The same classes on another element: `a { daisyCalendarClasses(…) }`; see [daisyCalendarClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -37,7 +38,10 @@ fun Tag.daisyCalendarClasses() {
     addClassNames("cally")
 }
 
-/** Renders `<div class="vc ...">`. */
+/**
+ * Renders `<div class="vc ...">`.
+ * The same classes on another element: `a { daisyVcClasses(…) }`; see [daisyVcClasses].
+ */
 fun FlowContent.daisyVc(
     id: HtmlId? = null,
     extraClasses: String? = null,

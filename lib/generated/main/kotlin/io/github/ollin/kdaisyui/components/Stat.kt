@@ -25,6 +25,7 @@ enum class StatsDirection(internal val className: String) : ClassValues<StatsDir
 
 /**
  * Stat is used to show numbers and data in a block. Renders `<div class="stats ...">`.
+ * The same classes on another element: `a { daisyStatsClasses(…) }`; see [daisyStatsClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -53,7 +54,10 @@ fun Tag.daisyStatsClasses(
     addClassNames(direction)
 }
 
-/** Renders `<div class="stat ...">`. */
+/**
+ * Renders `<div class="stat ...">`.
+ * The same classes on another element: `a { daisyStatClasses(…) }`; see [daisyStatClasses].
+ */
 fun FlowContent.daisyStat(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -72,7 +76,10 @@ fun Tag.daisyStatClasses() {
     addClassNames("stat")
 }
 
-/** Renders `<div class="stat-title ...">`. */
+/**
+ * Renders `<div class="stat-title ...">`.
+ * The same classes on another element: `a { daisyStatTitleClasses(…) }`; see [daisyStatTitleClasses].
+ */
 fun FlowContent.daisyStatTitle(
     text: String? = null,
     id: HtmlId? = null,
@@ -93,7 +100,10 @@ fun Tag.daisyStatTitleClasses() {
     addClassNames("stat-title")
 }
 
-/** Renders `<div class="stat-value ...">`. */
+/**
+ * Renders `<div class="stat-value ...">`.
+ * The same classes on another element: `a { daisyStatValueClasses(…) }`; see [daisyStatValueClasses].
+ */
 fun FlowContent.daisyStatValue(
     text: String? = null,
     id: HtmlId? = null,
@@ -114,7 +124,10 @@ fun Tag.daisyStatValueClasses() {
     addClassNames("stat-value")
 }
 
-/** Renders `<div class="stat-desc ...">`. */
+/**
+ * Renders `<div class="stat-desc ...">`.
+ * The same classes on another element: `a { daisyStatDescClasses(…) }`; see [daisyStatDescClasses].
+ */
 fun FlowContent.daisyStatDesc(
     text: String? = null,
     id: HtmlId? = null,
@@ -135,7 +148,10 @@ fun Tag.daisyStatDescClasses() {
     addClassNames("stat-desc")
 }
 
-/** Renders `<div class="stat-figure ...">`. */
+/**
+ * Renders `<div class="stat-figure ...">`.
+ * The same classes on another element: `a { daisyStatFigureClasses(…) }`; see [daisyStatFigureClasses].
+ */
 fun FlowContent.daisyStatFigure(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -154,7 +170,10 @@ fun Tag.daisyStatFigureClasses() {
     addClassNames("stat-figure")
 }
 
-/** Renders `<div class="stat-actions ...">`. */
+/**
+ * Renders `<div class="stat-actions ...">`.
+ * The same classes on another element: `a { daisyStatActionsClasses(…) }`; see [daisyStatActionsClasses].
+ */
 fun FlowContent.daisyStatActions(
     id: HtmlId? = null,
     extraClasses: String? = null,

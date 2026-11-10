@@ -21,12 +21,19 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. r (internal)` (A3) Delete the catalog parser and the `plugins` block from
+- [x] 1.1 `. r (internal)` (A3) Delete the catalog parser and the `plugins` block from
   `pluginManagement` in `settings.gradle.kts`, keeping `includeBuild("gradle-plugin")`. If TCR
   reverts it, record the error here, mark D7 rejected in `design.md`, and go on.
-- [ ] 1.2 `. d (internal)` (A4) On a scratch worktree, build `:lib:jar` on two commits that differ
+  A3 verified: TCR green (`./gradlew build` and the codegen suite) without the block.
+- [x] 1.2 `. d (internal)` (A4) On a scratch worktree, build `:lib:jar` on two commits that differ
   only in a comment and compare the jars' SHA-256; repeat with `SCM-Revision` removed. Record both
   results here. A refutation drops the speed claim from the proposal, not the removal.
+  A4 verified, 2026-11-10, detached worktree at `2fb556a`: an empty commit changed
+  `kdaisyui-0.11.0.jar` from `e12da469…` to `5a027271…`. `check -x :e2e-tests:test` after a
+  second empty commit executed, beyond the ten tasks an idle rerun executes, the jars of `lib`,
+  `ktor-integration`, `doc-snippets`, `build-checks` and `example-app`, `:ktor-integration:test`,
+  its Kover artifact, and `:example-app:kdaisyuiClasses` and `kdaisyuiThemes`. A real but small
+  cost; the repeat without `SCM-Revision` is task 3.3's check.
 - [ ] 1.3 `. r (internal)` (A5) `dependencyResolutionManagement { repositories { mavenCentral() } }`
   in `settings.gradle.kts`; delete the `repositories` blocks of `build.gradle.kts`,
   `lib/build.gradle.kts`, `ktor-integration/build.gradle.kts`, `e2e-tests/build.gradle.kts` and the

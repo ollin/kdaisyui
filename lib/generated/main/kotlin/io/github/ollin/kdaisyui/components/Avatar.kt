@@ -25,6 +25,7 @@ enum class AvatarPresence(internal val className: String) : ClassValues<AvatarPr
 
 /**
  * Avatars are used to show a thumbnail representation of an individual or business in the interface. Renders `<div class="avatar ...">`.
+ * The same classes on another element: `a { daisyAvatarClasses(…) }`; see [daisyAvatarClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param presence — Presence variant
  * @param placeholder
@@ -58,7 +59,10 @@ fun Tag.daisyAvatarClasses(
     if (placeholder) addClassNames("avatar-placeholder")
 }
 
-/** Renders `<div class="avatar-group ...">`. */
+/**
+ * Renders `<div class="avatar-group ...">`.
+ * The same classes on another element: `a { daisyAvatarGroupClasses(…) }`; see [daisyAvatarGroupClasses].
+ */
 fun FlowContent.daisyAvatarGroup(
     id: HtmlId? = null,
     extraClasses: String? = null,

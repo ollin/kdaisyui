@@ -47,6 +47,7 @@ enum class MenuDirection(internal val className: String) : ClassValues<MenuDirec
 
 /**
  * Menu is used to display a list of links vertically or horizontally. Renders `<ul class="menu ...">`.
+ * The same classes on another element: `a { daisyMenuClasses(…) }`; see [daisyMenuClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param direction — Direction variant
@@ -90,7 +91,10 @@ fun Tag.daisyMenuClasses(
     if (paged) addClassNames("menu-paged")
 }
 
-/** Renders `<h2 class="menu-title ...">`. */
+/**
+ * Renders `<h2 class="menu-title ...">`.
+ * The same classes on another element: `a { daisyMenuTitleClasses(…) }`; see [daisyMenuTitleClasses].
+ */
 fun FlowContent.daisyMenuTitle(
     text: String? = null,
     id: HtmlId? = null,
@@ -111,7 +115,10 @@ fun Tag.daisyMenuTitleClasses() {
     addClassNames("menu-title")
 }
 
-/** Renders `<ul class="menu-dropdown ...">`. */
+/**
+ * Renders `<ul class="menu-dropdown ...">`.
+ * The same classes on another element: `a { daisyMenuDropdownClasses(…) }`; see [daisyMenuDropdownClasses].
+ */
 fun FlowContent.daisyMenuDropdown(
     id: HtmlId? = null,
     show: Boolean = false,
@@ -135,7 +142,10 @@ fun Tag.daisyMenuDropdownClasses(
     if (show) addClassNames("menu-dropdown-show")
 }
 
-/** Renders `<span class="menu-dropdown-toggle ...">`. */
+/**
+ * Renders `<span class="menu-dropdown-toggle ...">`.
+ * The same classes on another element: `a { daisyMenuDropdownToggleClasses(…) }`; see [daisyMenuDropdownToggleClasses].
+ */
 fun FlowContent.daisyMenuDropdownToggle(
     id: HtmlId? = null,
     dropdownShow: Boolean = false,

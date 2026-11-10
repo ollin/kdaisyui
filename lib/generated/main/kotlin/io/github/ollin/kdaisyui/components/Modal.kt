@@ -43,6 +43,7 @@ enum class ModalHorizontalPlacement(internal val className: String) : ClassValue
 
 /**
  * Modal is used to show a dialog or a box when you click a button. Renders `<dialog class="modal ...">`.
+ * The same classes on another element: `a { daisyModalClasses(…) }`; see [daisyModalClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param verticalPlacement — VerticalPlacement variant
  * @param horizontalPlacement — HorizontalPlacement variant
@@ -81,7 +82,10 @@ fun Tag.daisyModalClasses(
     if (open) addClassNames("modal-open")
 }
 
-/** Renders `<div class="modal-box ...">`. */
+/**
+ * Renders `<div class="modal-box ...">`.
+ * The same classes on another element: `a { daisyModalBoxClasses(…) }`; see [daisyModalBoxClasses].
+ */
 fun FlowContent.daisyModalBox(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -100,7 +104,10 @@ fun Tag.daisyModalBoxClasses() {
     addClassNames("modal-box")
 }
 
-/** Renders `<div class="modal-action ...">`. */
+/**
+ * Renders `<div class="modal-action ...">`.
+ * The same classes on another element: `a { daisyModalActionClasses(…) }`; see [daisyModalActionClasses].
+ */
 fun FlowContent.daisyModalAction(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -119,7 +126,10 @@ fun Tag.daisyModalActionClasses() {
     addClassNames("modal-action")
 }
 
-/** Renders `<div class="modal-backdrop ...">`. */
+/**
+ * Renders `<div class="modal-backdrop ...">`.
+ * The same classes on another element: `a { daisyModalBackdropClasses(…) }`; see [daisyModalBackdropClasses].
+ */
 fun FlowContent.daisyModalBackdrop(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -138,7 +148,10 @@ fun Tag.daisyModalBackdropClasses() {
     addClassNames("modal-backdrop")
 }
 
-/** Renders `<input class="modal-toggle ...">`. */
+/**
+ * Renders `<input class="modal-toggle ...">`.
+ * The same classes on another element: `a { daisyModalToggleClasses(…) }`; see [daisyModalToggleClasses].
+ */
 fun FlowContent.daisyModalToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -157,7 +170,10 @@ fun Tag.daisyModalToggleClasses() {
     addClassNames("modal-toggle")
 }
 
-/** Renders `<div class="modal ..." popover>`. */
+/**
+ * Renders `<div class="modal ..." popover>`.
+ * The same classes on another element: `a { daisyModalPopoverClasses(…) }`; see [daisyModalPopoverClasses].
+ */
 fun FlowContent.daisyModalPopover(
     id: HtmlId? = null,
     extraClasses: String? = null,

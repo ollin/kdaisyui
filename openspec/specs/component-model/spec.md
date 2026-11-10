@@ -427,6 +427,10 @@ its own class, the classes it writes on every call, and the classes of its axes,
 extra parameters. An extra parameter that writes a class also sets an attribute or a property in
 its function; the sibling writes only the class. The sibling writes no attribute and no content.
 
+The generated KDoc of every such function SHALL name its sibling in one sentence with the call
+shape on another element and a KDoc link, so a reader in an IDE learns of it from the function
+itself: ``The same classes on another element: `a { daisyBadgeClasses(…) }`; see [daisyBadgeClasses].``
+
 A sibling puts one component's typed classes on an element another function renders, or on an
 element no function renders: `daisyMenu { daisyDropdownContentClasses() }`,
 `a { daisyButtonClasses(color = ButtonColor.Primary) }`.
@@ -444,6 +448,15 @@ a property and writes no class.
 2026-10-18 in kotlinx-html-jvm 0.12.0's sources: every element class the model uses is an
 `HTMLTag`, and `HTMLTag` implements `Tag`.
 
+**Verified** that the KDoc was the one place that did not name the sibling, read 2026-11-07:
+`docs/reference/badge.md` and `llms-full.txt:85,179` showed it, `lib/generated/main/.../Badge.kt`'s
+KDoc of `daisyBadge` did not; and that the omission cost a consumer nine raw class strings
+(the Deploy-Radar, fwb-application, proposal item 7 of 2026-11-07).
+
+**Verified** that it does now, generated 2026-11-10 by `name-the-class-sibling-in-every-kdoc`:
+135 sentences across the 66 component files, one per rendering function with a sibling, and
+`codegen/test/generator-new.test.ts` asserts the sentence and its absence on a structural wrapper.
+
 #### Scenario: A sibling adds the same classes as its function
 - **WHEN** `div { daisyButtonClasses(color = ButtonColor.Primary, active = true) }` is rendered
 - **THEN** the `div` carries `btn btn-primary btn-active`, and no attribute besides `class`
@@ -455,6 +468,14 @@ a property and writes no class.
 #### Scenario: An extra's class without its property
 - **WHEN** `a { daisyButtonClasses(disabled = true) }` is rendered
 - **THEN** the `a` carries `btn btn-disabled` and no `disabled` attribute
+
+#### Scenario: The function's KDoc names its sibling
+- **WHEN** the Kotlin for a function with a class sibling is generated, whether the sibling comes from an own class, modifier classes or a class-writing parameter
+- **THEN** its KDoc contains one sentence with the `a { … }` call shape and a `[name]` link to the sibling
+
+#### Scenario: A structural wrapper names none
+- **WHEN** the Kotlin for a function that writes no class is generated
+- **THEN** its KDoc contains no such sentence
 
 ### Requirement: A child without an own class gets a class-only function
 

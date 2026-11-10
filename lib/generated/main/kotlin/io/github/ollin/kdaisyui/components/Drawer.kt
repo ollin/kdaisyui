@@ -17,6 +17,7 @@ import kotlinx.html.Tag
 
 /**
  * Drawer is a grid layout that can show/hide a sidebar on the left or right side of the page. Renders `<div class="drawer ...">`.
+ * The same classes on another element: `a { daisyDrawerClasses(…) }`; see [daisyDrawerClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param end
  * @param open
@@ -50,7 +51,10 @@ fun Tag.daisyDrawerClasses(
     if (open) addClassNames("drawer-open")
 }
 
-/** Renders `<input class="drawer-toggle ...">`. */
+/**
+ * Renders `<input class="drawer-toggle ...">`.
+ * The same classes on another element: `a { daisyDrawerToggleClasses(…) }`; see [daisyDrawerToggleClasses].
+ */
 fun FlowContent.daisyDrawerToggle(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -69,7 +73,10 @@ fun Tag.daisyDrawerToggleClasses() {
     addClassNames("drawer-toggle")
 }
 
-/** Renders `<div class="drawer-content ...">`. */
+/**
+ * Renders `<div class="drawer-content ...">`.
+ * The same classes on another element: `a { daisyDrawerContentClasses(…) }`; see [daisyDrawerContentClasses].
+ */
 fun FlowContent.daisyDrawerContent(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -88,7 +95,10 @@ fun Tag.daisyDrawerContentClasses() {
     addClassNames("drawer-content")
 }
 
-/** Renders `<div class="drawer-side ...">`. */
+/**
+ * Renders `<div class="drawer-side ...">`.
+ * The same classes on another element: `a { daisyDrawerSideClasses(…) }`; see [daisyDrawerSideClasses].
+ */
 fun FlowContent.daisyDrawerSide(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -107,7 +117,10 @@ fun Tag.daisyDrawerSideClasses() {
     addClassNames("drawer-side")
 }
 
-/** Renders `<label class="drawer-overlay ...">`. */
+/**
+ * Renders `<label class="drawer-overlay ...">`.
+ * The same classes on another element: `a { daisyDrawerOverlayClasses(…) }`; see [daisyDrawerOverlayClasses].
+ */
 fun FlowContent.daisyDrawerOverlay(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -126,7 +139,10 @@ fun Tag.daisyDrawerOverlayClasses() {
     addClassNames("drawer-overlay")
 }
 
-/** Renders `<label class="drawer-button ...">`. */
+/**
+ * Renders `<label class="drawer-button ...">`.
+ * The same classes on another element: `a { daisyDrawerButtonClasses(…) }`; see [daisyDrawerButtonClasses].
+ */
 fun FlowContent.daisyDrawerButton(
     id: HtmlId? = null,
     extraClasses: String? = null,

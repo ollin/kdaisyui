@@ -47,6 +47,7 @@ enum class ChatPlacement(internal val className: String) : ClassValues<ChatPlace
 
 /**
  * Chat bubbles are used to show one line of conversation and all its data, including the author image, author name, time, etc. Renders `<div class="chat ...">`.
+ * The same classes on another element: `a { daisyChatClasses(…) }`; see [daisyChatClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param placement — Placement variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -75,7 +76,10 @@ fun Tag.daisyChatClasses(
     addClassNames(placement)
 }
 
-/** Renders `<div class="chat-image ...">`. */
+/**
+ * Renders `<div class="chat-image ...">`.
+ * The same classes on another element: `a { daisyChatImageClasses(…) }`; see [daisyChatImageClasses].
+ */
 fun FlowContent.daisyChatImage(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -94,7 +98,10 @@ fun Tag.daisyChatImageClasses() {
     addClassNames("chat-image")
 }
 
-/** Renders `<div class="chat-header ...">`. */
+/**
+ * Renders `<div class="chat-header ...">`.
+ * The same classes on another element: `a { daisyChatHeaderClasses(…) }`; see [daisyChatHeaderClasses].
+ */
 fun FlowContent.daisyChatHeader(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -113,7 +120,10 @@ fun Tag.daisyChatHeaderClasses() {
     addClassNames("chat-header")
 }
 
-/** Renders `<div class="chat-footer ...">`. */
+/**
+ * Renders `<div class="chat-footer ...">`.
+ * The same classes on another element: `a { daisyChatFooterClasses(…) }`; see [daisyChatFooterClasses].
+ */
 fun FlowContent.daisyChatFooter(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -132,7 +142,10 @@ fun Tag.daisyChatFooterClasses() {
     addClassNames("chat-footer")
 }
 
-/** Renders `<div class="chat-bubble ...">`. */
+/**
+ * Renders `<div class="chat-bubble ...">`.
+ * The same classes on another element: `a { daisyChatBubbleClasses(…) }`; see [daisyChatBubbleClasses].
+ */
 fun FlowContent.daisyChatBubble(
     id: HtmlId? = null,
     color: ClassValues<ChatBubbleColor>? = null,

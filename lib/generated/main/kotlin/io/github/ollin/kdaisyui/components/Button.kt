@@ -95,6 +95,7 @@ enum class ButtonWidth(internal val className: String) : ClassValues<ButtonWidth
 
 /**
  * Buttons allow the user to take actions or make choices. Renders `<button class="btn ...">`.
+ * The same classes on another element: `a { daisyButtonClasses(…) }`; see [daisyButtonClasses].
  * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant

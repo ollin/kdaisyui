@@ -35,6 +35,7 @@ enum class CollapseState(internal val className: String) : ClassValues<CollapseS
 
 /**
  * Collapse is used for showing and hiding content. Renders `<div class="collapse ...">`.
+ * The same classes on another element: `a { daisyCollapseClasses(…) }`; see [daisyCollapseClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param icon — Icon variant
  * @param state — State variant
@@ -68,7 +69,10 @@ fun Tag.daisyCollapseClasses(
     addClassNames(state)
 }
 
-/** Renders `<div class="collapse-title ...">`. */
+/**
+ * Renders `<div class="collapse-title ...">`.
+ * The same classes on another element: `a { daisyCollapseTitleClasses(…) }`; see [daisyCollapseTitleClasses].
+ */
 fun FlowContent.daisyCollapseTitle(
     text: String? = null,
     id: HtmlId? = null,
@@ -89,7 +93,10 @@ fun Tag.daisyCollapseTitleClasses() {
     addClassNames("collapse-title")
 }
 
-/** Renders `<div class="collapse-content ...">`. */
+/**
+ * Renders `<div class="collapse-content ...">`.
+ * The same classes on another element: `a { daisyCollapseContentClasses(…) }`; see [daisyCollapseContentClasses].
+ */
 fun FlowContent.daisyCollapseContent(
     id: HtmlId? = null,
     extraClasses: String? = null,

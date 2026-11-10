@@ -53,6 +53,7 @@ enum class SelectSize(internal val className: String) : ClassValues<SelectSize> 
 
 /**
  * Select is used to pick a value from a list of options. Renders `<select class="select ...">`.
+ * The same classes on another element: `a { daisySelectClasses(…) }`; see [daisySelectClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

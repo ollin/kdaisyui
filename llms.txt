@@ -22,7 +22,7 @@ Five rules before following a link:
 - [Getting started](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/getting-started.md): Set up a project and render buttons, cards, stats, a form and an alert, in ten minutes
 - [Build a dashboard with Ktor](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/build-a-dashboard.md): A full admin dashboard with a sidebar, header, stats fragments and htmx lazy loading, in thirty minutes
 - [Tutorials](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/tutorials/index.md): The learning path through the two tutorials
-- [How-to guides](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/how-to.md): Recipes: add a component, custom classes and attributes, nest components, build a form, a sidebar layout, htmx partial loading, a dropdown, validation feedback, a theme picker with previews
+- [How-to guides](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/how-to.md): Recipes: add a component, custom classes and attributes, nest components, a component's classes on another element, build a form, a sidebar layout, htmx partial loading, a dropdown, validation feedback, a theme picker with previews
 - [Explanation](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/explanation.md): What DaisyUI, kotlinx.html and htmx are, how class merging works, the common parameters, and why the wrappers are thin
 - [Upgrade guide](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/upgrading.md): What to change at the call site for every release that broke the API, one section per version
 - [Component reference](https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference.md): The hand-written entry point to the per-component pages

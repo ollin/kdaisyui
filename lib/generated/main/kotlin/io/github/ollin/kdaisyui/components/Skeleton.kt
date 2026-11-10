@@ -15,6 +15,7 @@ import kotlinx.html.Tag
 
 /**
  * Skeleton is a component that can be used to show a loading state of a component. Renders `<div class="skeleton ...">`.
+ * The same classes on another element: `a { daisySkeletonClasses(…) }`; see [daisySkeletonClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -37,7 +38,10 @@ fun Tag.daisySkeletonClasses() {
     addClassNames("skeleton")
 }
 
-/** Renders `<span class="skeleton skeleton-text ...">`. */
+/**
+ * Renders `<span class="skeleton skeleton-text ...">`.
+ * The same classes on another element: `a { daisySkeletonTextClasses(…) }`; see [daisySkeletonTextClasses].
+ */
 fun FlowContent.daisySkeletonText(
     id: HtmlId? = null,
     extraClasses: String? = null,

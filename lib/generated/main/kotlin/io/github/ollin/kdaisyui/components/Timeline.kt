@@ -27,6 +27,7 @@ enum class TimelineDirection(internal val className: String) : ClassValues<Timel
 
 /**
  * Timeline component shows a list of events in chronological order. Renders `<ul class="timeline ...">`.
+ * The same classes on another element: `a { daisyTimelineClasses(…) }`; see [daisyTimelineClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param compact
@@ -65,7 +66,10 @@ fun Tag.daisyTimelineClasses(
     if (snapIcon) addClassNames("timeline-snap-icon")
 }
 
-/** Renders `<div class="timeline-start ...">`. */
+/**
+ * Renders `<div class="timeline-start ...">`.
+ * The same classes on another element: `a { daisyTimelineStartClasses(…) }`; see [daisyTimelineStartClasses].
+ */
 fun FlowContent.daisyTimelineStart(
     id: HtmlId? = null,
     box: Boolean = false,
@@ -89,7 +93,10 @@ fun Tag.daisyTimelineStartClasses(
     if (box) addClassNames("timeline-box")
 }
 
-/** Renders `<div class="timeline-middle ...">`. */
+/**
+ * Renders `<div class="timeline-middle ...">`.
+ * The same classes on another element: `a { daisyTimelineMiddleClasses(…) }`; see [daisyTimelineMiddleClasses].
+ */
 fun FlowContent.daisyTimelineMiddle(
     id: HtmlId? = null,
     box: Boolean = false,
@@ -113,7 +120,10 @@ fun Tag.daisyTimelineMiddleClasses(
     if (box) addClassNames("timeline-box")
 }
 
-/** Renders `<div class="timeline-end ...">`. */
+/**
+ * Renders `<div class="timeline-end ...">`.
+ * The same classes on another element: `a { daisyTimelineEndClasses(…) }`; see [daisyTimelineEndClasses].
+ */
 fun FlowContent.daisyTimelineEnd(
     id: HtmlId? = null,
     box: Boolean = false,

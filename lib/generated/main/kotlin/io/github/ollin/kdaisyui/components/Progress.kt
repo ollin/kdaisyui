@@ -38,6 +38,7 @@ enum class ProgressColor(internal val className: String) : ClassValues<ProgressC
 
 /**
  * Progress bar can be used to show the progress of a task or to show the passing of time. Renders `<progress class="progress ...">`.
+ * The same classes on another element: `a { daisyProgressClasses(…) }`; see [daisyProgressClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param extraClasses — Additional CSS classes appended after the generated ones

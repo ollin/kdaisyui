@@ -53,6 +53,7 @@ enum class FileInputSize(internal val className: String) : ClassValues<FileInput
 
 /**
  * File Input is an input field for uploading files. Renders `<input class="file-input ...">`.
+ * The same classes on another element: `a { daisyFileInputClasses(…) }`; see [daisyFileInputClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

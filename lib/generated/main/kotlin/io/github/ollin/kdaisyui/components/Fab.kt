@@ -15,6 +15,7 @@ import kotlinx.html.Tag
 
 /**
  * FAB (Floating Action Button) stays in the bottom corner of screen. It includes a focusable and accessible element with button role. Clicking or focusing it shows additional buttons (known as Speed Dial buttons) in a vertical arrangement or a flower shape (quarter circle). Renders `<div class="fab ...">`.
+ * The same classes on another element: `a { daisyFabClasses(…) }`; see [daisyFabClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param flower
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -43,7 +44,10 @@ fun Tag.daisyFabClasses(
     if (flower) addClassNames("fab-flower")
 }
 
-/** Renders `<div class="fab-close ...">`. */
+/**
+ * Renders `<div class="fab-close ...">`.
+ * The same classes on another element: `a { daisyFabCloseClasses(…) }`; see [daisyFabCloseClasses].
+ */
 fun FlowContent.daisyFabClose(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -62,7 +66,10 @@ fun Tag.daisyFabCloseClasses() {
     addClassNames("fab-close")
 }
 
-/** Renders `<button class="fab-main-action ...">`. */
+/**
+ * Renders `<button class="fab-main-action ...">`.
+ * The same classes on another element: `a { daisyFabMainActionClasses(…) }`; see [daisyFabMainActionClasses].
+ */
 fun FlowContent.daisyFabMainAction(
     id: HtmlId? = null,
     extraClasses: String? = null,

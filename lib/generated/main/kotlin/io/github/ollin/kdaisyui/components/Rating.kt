@@ -32,6 +32,7 @@ enum class RatingSize(internal val className: String) : ClassValues<RatingSize> 
 
 /**
  * Rating is a set of radio buttons that allow the user to rate something. Renders `<div class="rating ...">`.
+ * The same classes on another element: `a { daisyRatingClasses(…) }`; see [daisyRatingClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param half — To shows half of the shapes. Useful for half star ratings

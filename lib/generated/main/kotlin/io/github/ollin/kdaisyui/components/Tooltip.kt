@@ -64,6 +64,7 @@ enum class TooltipAlign(internal val className: String) : ClassValues<TooltipAli
 
 /**
  * Tooltip can be used to show a message when hovering over an element. Renders `<div class="tooltip ...">`.
+ * The same classes on another element: `a { daisyTooltipClasses(…) }`; see [daisyTooltipClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param side — Side variant
@@ -107,7 +108,10 @@ fun Tag.daisyTooltipClasses(
     if (open) addClassNames("tooltip-open")
 }
 
-/** Renders `<div class="tooltip-content ...">`. */
+/**
+ * Renders `<div class="tooltip-content ...">`.
+ * The same classes on another element: `a { daisyTooltipContentClasses(…) }`; see [daisyTooltipContentClasses].
+ */
 fun FlowContent.daisyTooltipContent(
     id: HtmlId? = null,
     extraClasses: String? = null,

@@ -55,6 +55,7 @@ enum class OtpSize(internal val className: String) : ClassValues<OtpSize> {
 
 /**
  * OTP (One-Time Password) component for inputting verification codes. It's usually 4 to 6 digits long and is used for two-factor authentication (2FA) or passwordless login. Renders `<label class="otp ...">`.
+ * The same classes on another element: `a { daisyOtpClasses(…) }`; see [daisyOtpClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

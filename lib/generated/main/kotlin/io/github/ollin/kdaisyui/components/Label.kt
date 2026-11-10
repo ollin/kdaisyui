@@ -15,6 +15,7 @@ import kotlinx.html.Tag
 
 /**
  * Label is used to provide a name or title for an input field. Label can be placed before or after the field. Renders `<span class="label ...">`.
+ * The same classes on another element: `a { daisyLabelClasses(…) }`; see [daisyLabelClasses].
  * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -40,7 +41,10 @@ fun Tag.daisyLabelClasses() {
     addClassNames("label")
 }
 
-/** For the parent of an input field (or select) and a span that floats above the input field when the field is focused Renders `<label class="floating-label ...">`. */
+/**
+ * For the parent of an input field (or select) and a span that floats above the input field when the field is focused Renders `<label class="floating-label ...">`.
+ * The same classes on another element: `a { daisyFloatingLabelClasses(…) }`; see [daisyFloatingLabelClasses].
+ */
 fun FlowContent.daisyFloatingLabel(
     id: HtmlId? = null,
     extraClasses: String? = null,

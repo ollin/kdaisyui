@@ -13,6 +13,7 @@ import kotlinx.html.Tag
 
 /**
  * Navbar is used to show a navigation bar on the top of the page. Renders `<div class="navbar ...">`.
+ * The same classes on another element: `a { daisyNavbarClasses(…) }`; see [daisyNavbarClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -35,7 +36,10 @@ fun Tag.daisyNavbarClasses() {
     addClassNames("navbar")
 }
 
-/** Renders `<div class="navbar-start ...">`. */
+/**
+ * Renders `<div class="navbar-start ...">`.
+ * The same classes on another element: `a { daisyNavbarStartClasses(…) }`; see [daisyNavbarStartClasses].
+ */
 fun FlowContent.daisyNavbarStart(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -54,7 +58,10 @@ fun Tag.daisyNavbarStartClasses() {
     addClassNames("navbar-start")
 }
 
-/** Renders `<div class="navbar-center ...">`. */
+/**
+ * Renders `<div class="navbar-center ...">`.
+ * The same classes on another element: `a { daisyNavbarCenterClasses(…) }`; see [daisyNavbarCenterClasses].
+ */
 fun FlowContent.daisyNavbarCenter(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -73,7 +80,10 @@ fun Tag.daisyNavbarCenterClasses() {
     addClassNames("navbar-center")
 }
 
-/** Renders `<div class="navbar-end ...">`. */
+/**
+ * Renders `<div class="navbar-end ...">`.
+ * The same classes on another element: `a { daisyNavbarEndClasses(…) }`; see [daisyNavbarEndClasses].
+ */
 fun FlowContent.daisyNavbarEnd(
     id: HtmlId? = null,
     extraClasses: String? = null,

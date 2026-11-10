@@ -56,6 +56,7 @@ enum class StatusSize(internal val className: String) : ClassValues<StatusSize> 
 
 /**
  * Status is a really small icon to visually show the current status of an element, like online, offline, error, etc. Renders `<div class="status ...">`.
+ * The same classes on another element: `a { daisyStatusClasses(…) }`; see [daisyStatusClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant
  * @param size — Size variant

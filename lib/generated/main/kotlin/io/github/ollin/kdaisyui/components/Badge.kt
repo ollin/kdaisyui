@@ -77,6 +77,7 @@ enum class BadgeFillStyle(internal val className: String) : ClassValues<BadgeFil
 
 /**
  * Badges are used to inform the user of the status of specific data. Renders `<span class="badge ...">`.
+ * The same classes on another element: `a { daisyBadgeClasses(…) }`; see [daisyBadgeClasses].
  * @param text — Inline text, appended after anything [block] writes
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param color — Color variant

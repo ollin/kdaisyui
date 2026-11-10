@@ -15,6 +15,7 @@ import kotlinx.html.UL
 
 /**
  * List is a vertical layout to display information in rows. Renders `<ul class="list ...">`.
+ * The same classes on another element: `a { daisyListClasses(…) }`; see [daisyListClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -37,7 +38,10 @@ fun Tag.daisyListClasses() {
     addClassNames("list")
 }
 
-/** Renders `<li class="list-row ...">`. */
+/**
+ * Renders `<li class="list-row ...">`.
+ * The same classes on another element: `a { daisyListRowClasses(…) }`; see [daisyListRowClasses].
+ */
 fun UL.daisyListRow(
     id: HtmlId? = null,
     extraClasses: String? = null,

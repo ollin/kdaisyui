@@ -13,6 +13,7 @@ import kotlinx.html.Tag
 
 /**
  * Phone mockup shows a mockup of an iPhone. Renders `<div class="mockup-phone ...">`.
+ * The same classes on another element: `a { daisyMockupPhoneClasses(…) }`; see [daisyMockupPhoneClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param extraClasses — Additional CSS classes appended after the generated ones
  * @param block — Writes the element's attributes, and its children where it can hold any
@@ -35,7 +36,10 @@ fun Tag.daisyMockupPhoneClasses() {
     addClassNames("mockup-phone")
 }
 
-/** Renders `<div class="mockup-phone-camera ...">`. */
+/**
+ * Renders `<div class="mockup-phone-camera ...">`.
+ * The same classes on another element: `a { daisyMockupPhoneCameraClasses(…) }`; see [daisyMockupPhoneCameraClasses].
+ */
 fun FlowContent.daisyMockupPhoneCamera(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -54,7 +58,10 @@ fun Tag.daisyMockupPhoneCameraClasses() {
     addClassNames("mockup-phone-camera")
 }
 
-/** Renders `<div class="mockup-phone-display ...">`. */
+/**
+ * Renders `<div class="mockup-phone-display ...">`.
+ * The same classes on another element: `a { daisyMockupPhoneDisplayClasses(…) }`; see [daisyMockupPhoneDisplayClasses].
+ */
 fun FlowContent.daisyMockupPhoneDisplay(
     id: HtmlId? = null,
     extraClasses: String? = null,

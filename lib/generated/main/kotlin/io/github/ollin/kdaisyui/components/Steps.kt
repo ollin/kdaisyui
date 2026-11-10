@@ -53,6 +53,7 @@ enum class StepsDirection(internal val className: String) : ClassValues<StepsDir
 
 /**
  * Steps can be used to show a list of steps in a process. Renders `<ul class="steps ...">`.
+ * The same classes on another element: `a { daisyStepsClasses(…) }`; see [daisyStepsClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param direction — Direction variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -81,7 +82,10 @@ fun Tag.daisyStepsClasses(
     addClassNames(direction)
 }
 
-/** A single step node Renders `<li class="step ...">`. */
+/**
+ * A single step node Renders `<li class="step ...">`.
+ * The same classes on another element: `a { daisyStepClasses(…) }`; see [daisyStepClasses].
+ */
 fun UL.daisyStep(
     id: HtmlId? = null,
     color: ClassValues<StepColor>? = null,
@@ -105,7 +109,10 @@ fun Tag.daisyStepClasses(
     addClassNames(color)
 }
 
-/** For custom icon inside step Renders `<span class="step-icon ...">`. */
+/**
+ * For custom icon inside step Renders `<span class="step-icon ...">`.
+ * The same classes on another element: `a { daisyStepIconClasses(…) }`; see [daisyStepIconClasses].
+ */
 fun FlowContent.daisyStepIcon(
     id: HtmlId? = null,
     extraClasses: String? = null,

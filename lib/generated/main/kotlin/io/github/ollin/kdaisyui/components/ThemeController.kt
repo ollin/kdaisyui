@@ -14,6 +14,7 @@ import kotlinx.html.Tag
 
 /**
  * If a checked checkbox input or a checked radio input with theme-controller class exists in the page, The page will have the same theme as that input's value. Renders `<input class="theme-controller ...">`.
+ * The same classes on another element: `a { daisyThemeControllerClasses(…) }`; see [daisyThemeControllerClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param theme
  * @param extraClasses — Additional CSS classes appended after the generated ones

@@ -56,6 +56,7 @@ enum class CardLayout(internal val className: String) : ClassValues<CardLayout> 
 
 /**
  * Cards are used to group and display content in a way that is easily readable. Renders `<div class="card ...">`.
+ * The same classes on another element: `a { daisyCardClasses(…) }`; see [daisyCardClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param style — Style variant
@@ -94,7 +95,10 @@ fun Tag.daisyCardClasses(
     addClassNames(layout)
 }
 
-/** Renders `<h2 class="card-title ...">`. */
+/**
+ * Renders `<h2 class="card-title ...">`.
+ * The same classes on another element: `a { daisyCardTitleClasses(…) }`; see [daisyCardTitleClasses].
+ */
 fun FlowContent.daisyCardTitle(
     text: String? = null,
     id: HtmlId? = null,
@@ -115,7 +119,10 @@ fun Tag.daisyCardTitleClasses() {
     addClassNames("card-title")
 }
 
-/** Renders `<div class="card-body ...">`. */
+/**
+ * Renders `<div class="card-body ...">`.
+ * The same classes on another element: `a { daisyCardBodyClasses(…) }`; see [daisyCardBodyClasses].
+ */
 fun FlowContent.daisyCardBody(
     id: HtmlId? = null,
     extraClasses: String? = null,
@@ -134,7 +141,10 @@ fun Tag.daisyCardBodyClasses() {
     addClassNames("card-body")
 }
 
-/** Renders `<div class="card-actions ...">`. */
+/**
+ * Renders `<div class="card-actions ...">`.
+ * The same classes on another element: `a { daisyCardActionsClasses(…) }`; see [daisyCardActionsClasses].
+ */
 fun FlowContent.daisyCardActions(
     id: HtmlId? = null,
     extraClasses: String? = null,

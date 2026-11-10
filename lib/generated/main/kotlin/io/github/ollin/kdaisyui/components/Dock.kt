@@ -36,6 +36,7 @@ enum class DockSize(internal val className: String) : ClassValues<DockSize> {
 
 /**
  * Dock (also know as Bottom navigation or Bottom bar) is a UI element that provides navigation options to the user. Dock sticks to the bottom of the screen. Renders `<div class="dock ...">`.
+ * The same classes on another element: `a { daisyDockClasses(…) }`; see [daisyDockClasses].
  * @param id — Type-safe HTML id attribute from [HtmlId] hierarchy
  * @param size — Size variant
  * @param extraClasses — Additional CSS classes appended after the generated ones
@@ -64,7 +65,10 @@ fun Tag.daisyDockClasses(
     addClassNames(size)
 }
 
-/** Structural wrapper. Renders `<button>`. */
+/**
+ * Structural wrapper. Renders `<button>`.
+ * The same classes on another element: `a { daisyDockItemClasses(…) }`; see [daisyDockItemClasses].
+ */
 fun FlowContent.daisyDockItem(
     id: HtmlId? = null,
     active: Boolean = false,
@@ -86,7 +90,10 @@ fun Tag.daisyDockItemClasses(
     if (active) addClassNames("dock-active")
 }
 
-/** Renders `<span class="dock-label ...">`. */
+/**
+ * Renders `<span class="dock-label ...">`.
+ * The same classes on another element: `a { daisyDockLabelClasses(…) }`; see [daisyDockLabelClasses].
+ */
 fun FlowContent.daisyDockLabel(
     id: HtmlId? = null,
     extraClasses: String? = null,

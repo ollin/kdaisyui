@@ -113,7 +113,7 @@ task 3.4.
 
 ## 4. Docs
 
-- [ ] 4.1 `. d` `docs/how-to.md`, "Let users choose a theme": the entry's `themes` line and naming
+- [x] 4.1 `. d` `docs/how-to.md`, "Let users choose a theme": the entry's `themes` line and naming
   fewer; the webjar's `themes.css` carrying all; `html { daisyTheme(…) }`; the preview card;
   the POST route (`<!-- snippet: in Route -->`); a light/dark toggle with
   `daisyThemeController(theme = DaisyTheme.Dark)` beside the `daisyToggle` +

@@ -20,7 +20,7 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
 - [x] 2.2 `. r (internal)` `button.json` and `theme-controller.json` declare `"sample"`. Nothing
   reads it in generation yet: `committed-model.test.ts` stays green and `just generate` leaves the
   tree clean.
-- [ ] 2.3 `^ F (internal)` `classifyParam` receives `sample`; a rule after the generated-enum rule
+- [x] 2.3 `^ F (internal)` `classifyParam` receives `sample`; a rule after the generated-enum rule
   classifies a nullable extra with a sample, and the all-flags arguments pass it. Tables still
   present. `coverage-test-generator.test.ts` (`coverageOf`): a nullable `Foo?` with sample
   `Foo.Bar` is passed `Foo.Bar`; a nullable `Foo?` without a sample is not; a non-nullable extra

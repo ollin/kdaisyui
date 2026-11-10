@@ -52,7 +52,9 @@ forecast `2h 40min (5h DevOnly)` (ratio 0.52 over 177 runs).
 Each one `. r (internal)`: the new spec and the deleted feature in one run. Step bodies used by
 nothing else any more are deleted in the same run.
 
-- [ ] 3.1 `webjars_assets.feature`' last scenario into `WebjarsAssetsTest`, which deletes the file.
+- [x] 3.1 `webjars_assets.feature`' last scenario into `WebjarsAssetsTest`, which deletes the file.
+  Control: the absence check pointed at `lg:btn-lg` failed the new test alone. The dead step
+  bodies go with the rest of `steps/` in 4.1, not port by port, since Cucumber ignores unused ones.
 - [ ] 3.2 `tailwind_variant.feature` → `TailwindVariantTest` (4 tests). The stylesheet-rule
   lookup becomes a helper shared with 3.1 if both use it (D3).
 - [ ] 3.3 `content_security_policy.feature` → `ContentSecurityPolicyTest` (2 tests, plus one per

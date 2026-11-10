@@ -1,0 +1,48 @@
+package io.github.ollin.kdaisyui.gradle
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class ThemeCheckTest {
+
+    private val themes = mapOf("Light" to "light", "Dark" to "dark", "Nord" to "nord")
+
+    @Test
+    fun anEntryReferenceNamesItsThemeAndAReferenceElsewhereNamesNone() {
+        val references = listOf(theme("Nord"), MemberReference("a/Other", "Dark"))
+        assertEquals(setOf("nord"), themesNamedIn(references, themes))
+    }
+
+    @Test
+    fun aRuntimeChoiceNamesEveryThemeAndReadingAValueNamesNone() {
+        val choices = listOf(theme("getEntries"), theme("values"), theme("valueOf"), MemberReference("io/github/ollin/kdaisyui/themes/DaisyThemesKt", "daisyThemeOf"))
+        assertEquals(choices.map { setOf("light", "dark", "nord") }, choices.map { themesNamedIn(listOf(it), themes) })
+        assertEquals(emptySet(), themesNamedIn(listOf(theme("getValue"), theme("name")), themes))
+    }
+
+    @Test
+    fun theThemeMapIsReadFromItsResourceWithoutItsHeaderOrEmptyLines() {
+        assertEquals(mapOf("Nord" to "nord", "Abyss" to "abyss"), themeMap("# header\n# more\nNord\tnord\n\nAbyss\tabyss\n"))
+    }
+
+    @Test
+    fun aStylesheetCarriesTheThemesOfItsDataThemeSelectorsMinifiedOrNot() {
+        val css = ":where(:root),[data-theme=light]{x:1}:root:has(input.theme-controller[value=nord]:checked),[data-theme=nord] {\n x: 1 }"
+        assertEquals(setOf("light", "nord"), themesCarriedBy(css))
+    }
+
+    @Test
+    fun theMissingThemesAreTheNamedOnesTheStylesheetLacksInOrder() {
+        assertEquals(listOf("abyss", "nord"), missingThemes(setOf("nord", "light", "abyss"), setOf("light", "dark")))
+    }
+
+    @Test
+    fun theWarningNamesTheMissingThemesAndWhereToAddThem() {
+        val expected = "kdaisyui: the code names themes the stylesheet does not carry: abyss, nord.\n" +
+            "  Add them to the themes of the entry's @plugin \"daisyui\" block: themes: …, abyss, nord;"
+        assertEquals(expected, themeWarning(listOf("abyss", "nord")))
+        assertEquals(null, themeWarning(emptyList()))
+    }
+
+    private fun theme(member: String) = MemberReference("io/github/ollin/kdaisyui/themes/DaisyTheme", member)
+}

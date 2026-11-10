@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { renderDaisyThemeEnum, themeNames } from '../src/themes.ts'
+import { renderDaisyThemeEnum, renderThemeMap, themeNames } from '../src/themes.ts'
 
 describe('renderDaisyThemeEnum', () => {
   it('declares one entry per theme, named by its capitalised name and carrying the name', () => {
@@ -25,5 +25,11 @@ describe('themeNames', () => {
 
   it('refuses a theme its entry rule cannot spell, naming the file', () => {
     assert.throws(() => themeNames(['nord.css', 'foo-bar.css']), /^Error: DaisyTheme cannot name foo-bar\.css: /)
+  })
+})
+
+describe('renderThemeMap', () => {
+  it('writes each theme as its entry and its value, tab-separated, under a header', () => {
+    assert.match(renderThemeMap(['abyss', 'nord']), /^# Per theme: [^\n]*\n# Gradle plugin\. Generated - do not edit\.\nAbyss\tabyss\nNord\tnord\n$/)
   })
 })

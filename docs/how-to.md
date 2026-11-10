@@ -341,7 +341,17 @@ That adds about 36 KB to a minified stylesheet. To offer fewer, name them:
 `themes: light --default, dark --prefersdark, nord;`.
 
 `DaisyTheme` lists every built-in theme whatever your stylesheet holds. A theme the stylesheet
-lacks does not fail: the element renders in the default theme. A theme of your own, made with
+lacks does not fail at runtime: the element renders in the default theme. With the Gradle plugin
+compiling your stylesheet, its task `kdaisyuiThemes` runs after every `kdaisyuiStylesheet` and
+warns when your code names a theme the stylesheet lacks — `DaisyTheme.Nord`, or every theme when
+the code chooses at runtime through `DaisyTheme.entries` or `daisyThemeOf`:
+
+```
+kdaisyui: the code names themes the stylesheet does not carry: nord.
+  Add them to the themes of the entry's @plugin "daisyui" block: themes: …, nord;
+```
+
+A theme of your own, made with
 `@plugin "daisyui/theme"`, has no entry; write it as `attributes["data-theme"] = "mytheme"`.
 
 **Step 2: render the page in the user's theme.** Without the attribute, DaisyUI follows the

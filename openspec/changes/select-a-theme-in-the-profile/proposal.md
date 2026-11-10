@@ -48,6 +48,10 @@ already typed. A7 puts that to Oliver.
   consumer's own theme is written as `attributes["data-theme"]`, and the how-to says so.
 - **A Gradle-plugin check** that the themes a build names are in its compiled stylesheet. Recorded
   as finding F1; its own change if adopted.
+- **The guaranteed Content-Security-Policy as a library value** (a constant and/or a Ktor plugin),
+  proposed by the Deploy-Radar on the agent board, 2026-11-10. The profile page only has to pass
+  today's policy (A6); shipping the policy is its own change, which would also replace
+  `CONTENT_SECURITY_POLICY` in `example-app/.../Application.kt:18`.
 - **A ready-made picker component or a Ktor cookie helper** in the library. Oliver chose the typed
   basics, 2026-11-10.
 

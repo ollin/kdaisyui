@@ -897,7 +897,7 @@ fun Tag.daisyTextareaClasses(color: ClassValues<TextareaColor>? = null, size: Cl
 DaisyUI theme controller toggle — renders `<input>`.
 
 ```kotlin
-fun FlowContent.daisyThemeController(id: HtmlId? = null, extraClasses: String? = null, block: (INPUT.() -> Unit) = {})
+fun FlowContent.daisyThemeController(id: HtmlId? = null, theme: DaisyTheme? = null, extraClasses: String? = null, block: (INPUT.() -> Unit) = {})
 fun Tag.daisyThemeControllerClasses()
 ```
 

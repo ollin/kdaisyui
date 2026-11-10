@@ -11,7 +11,16 @@
       "element": "INPUT",
       "class": "theme-controller",
       "text": false,
-      "parameters": [],
+      "parameters": [
+        {
+          "kind": "extra",
+          "name": "theme",
+          "type": "DaisyTheme?",
+          "default": "null",
+          "apply": "if (theme != null) this.value = theme.value",
+          "imports": ["io.github.ollin.kdaisyui.themes.DaisyTheme"]
+        }
+      ],
       "joinItem": true
     }
   ],

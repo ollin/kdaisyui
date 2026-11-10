@@ -1,6 +1,7 @@
 package io.github.ollin.kdaisyui.components
 
 import io.github.ollin.kdaisyui.core.htmlId
+import io.github.ollin.kdaisyui.themes.DaisyTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -58,7 +59,8 @@ class ThemeControllerCoverageTest {
 
     @Test
     fun themeController_all_flags() {
-        val html = allFlags(Expected("ThemeController all flags", "theme-controller zz-extra")) { daisyThemeController(id = ID, extraClasses = EXTRA, block = BLOCK) }
+        val html = allFlags(Expected("ThemeController all flags", "theme-controller zz-extra")) { daisyThemeController(id = ID, theme = DaisyTheme.Dark, extraClasses = EXTRA, block = BLOCK) }
+        assertTrue(html.contains("value=\""), "ThemeController sets value")
     }
 
     @Test

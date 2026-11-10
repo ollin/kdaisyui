@@ -7,6 +7,7 @@ package io.github.ollin.kdaisyui.components
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.ClassValues
 import io.github.ollin.kdaisyui.core.HtmlId
+import io.github.ollin.kdaisyui.themes.DaisyTheme
 import kotlinx.html.BUTTON
 import kotlinx.html.ButtonType
 import kotlinx.html.DIV
@@ -194,11 +195,13 @@ class JoinScope internal constructor(
     /** [daisyThemeController], marked `join-item` because the call sits directly in the join. */
     fun daisyThemeController(
         id: HtmlId? = null,
+        theme: DaisyTheme? = null,
         extraClasses: String? = null,
         block: (INPUT.() -> Unit) = {},
     ) {
         flow.daisyThemeController(
             id = id,
+            theme = theme,
             extraClasses = joinItem(extraClasses),
             block = block,
         )

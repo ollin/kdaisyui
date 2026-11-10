@@ -33,9 +33,9 @@ None. Block 1 is kept so the numbering matches the other changes.
 
 ## 4. Gate, adoption and archive
 
-- [ ] 4.1 Full green: `check` with E2E and the E2E result files asserted on disk,
+- [x] 4.1 Full green: `check` with E2E and the E2E result files asserted on disk,
   `koverVerify`, `:lib:testCodegen`, StrykerJS on the changed `codegen/src` lines,
   `:doc-snippets:compileSnippets`, `analyze_change_set`.
-- [ ] 4.2 `openspec validate name-the-class-sibling-in-every-kdoc --strict`.
-- [ ] 4.3 The evaluation under `tmp/name-the-class-sibling-in-every-kdoc/` for Oliver to adopt.
+- [x] 4.2 `openspec validate name-the-class-sibling-in-every-kdoc --strict`.
+- [x] 4.3 The evaluation under `tmp/name-the-class-sibling-in-every-kdoc/` for Oliver to adopt.
 - [ ] 4.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

@@ -2,6 +2,7 @@ package kdaisyui.e2e
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 
 class WebjarsAssetsTest : PlaywrightSpec() {
 
@@ -22,5 +23,29 @@ class WebjarsAssetsTest : PlaywrightSpec() {
             response.status() shouldBe 200
             response.headers()["content-type"]!! shouldContain "text/css"
         }
+
+        // Tailwind scans Kotlin sources as TEXT and cannot tell a comment from a call, so a
+        // composed class written in a doc comment used to become a candidate and get a rule. Two
+        // comments were doing it, and one of them kept lg:btn-lg alive in the stylesheet — which
+        // made the four tests in TailwindVariantTest pass whether or not extraClasses worked.
+        //
+        // dark:alert-info is the canary: no code in the example app can put it on a page, so a
+        // rule for it can only have come from prose. The first assertion is the calibration —
+        // without it, the second would pass just as happily against an empty response body.
+        test("the stylesheet carries no rule that only prose asked for") {
+            val response = page.request().get("$BASE_URL/static/app.css")
+            response.status() shouldBe 200
+            val stylesheet = response.text()
+
+            stylesheet shouldContain selectorFor("lg:btn-lg")
+            stylesheet shouldNotContain selectorFor("dark:alert-info")
+        }
     }
+
+    /**
+     * The selector Tailwind writes for a class, e.g. `dark:alert-info` -> `.dark\:alert-info`.
+     * Written once here, because a hand-escaped selector is one transcription away from one that
+     * matches nothing — which would make the absence check pass forever.
+     */
+    private fun selectorFor(cssClass: String): String = ".${cssClass.replace(":", "\\:")}"
 }

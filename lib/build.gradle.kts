@@ -23,7 +23,9 @@ tasks.withType<Jar> {
     }
 }
 
-abstract class CheckoutDaisyuiTag : DefaultTask() {
+// Moves a codegen submodule to the tag its catalog version names. One class for both submodules,
+// registered once per submodule so each `sync-*` recipe moves only its own.
+abstract class CheckoutSubmoduleTag : DefaultTask() {
     @get:Inject
     abstract val execOperations: ExecOperations
 
@@ -31,62 +33,37 @@ abstract class CheckoutDaisyuiTag : DefaultTask() {
     abstract val targetTag: Property<String>
 
     @get:InputDirectory
-    abstract val daisyuiDir: DirectoryProperty
+    abstract val submoduleDir: DirectoryProperty
 
     @TaskAction
     fun checkout() {
         val tag = targetTag.get()
-        logger.lifecycle("Ensuring DaisyUI submodule is on tag $tag...")
+        val directory = submoduleDir.get().asFile
+        logger.lifecycle("Ensuring the ${directory.name} submodule is on tag $tag...")
         execOperations.exec {
-            workingDir = daisyuiDir.get().asFile
+            workingDir = directory
             commandLine("git", "fetch", "--tags", "--quiet")
         }
         execOperations.exec {
-            workingDir = daisyuiDir.get().asFile
+            workingDir = directory
             commandLine("git", "checkout", tag, "--quiet")
         }
-        logger.lifecycle("DaisyUI submodule is on tag $tag")
+        logger.lifecycle("The ${directory.name} submodule is on tag $tag")
     }
 }
 
-val checkoutDaisyuiTag = tasks.register<CheckoutDaisyuiTag>("checkoutDaisyuiTag") {
+val checkoutDaisyuiTag = tasks.register<CheckoutSubmoduleTag>("checkoutDaisyuiTag") {
     group = "daisyui"
     description = "Checkout DaisyUI git submodule to tag v$daisyuiVersion"
     targetTag.set("v$daisyuiVersion")
-    daisyuiDir.set(rootProject.layout.projectDirectory.dir("daisyui"))
+    submoduleDir.set(rootProject.layout.projectDirectory.dir("daisyui"))
 }
 
-abstract class CheckoutHeroiconsTag : DefaultTask() {
-    @get:Inject
-    abstract val execOperations: ExecOperations
-
-    @get:Input
-    abstract val targetTag: Property<String>
-
-    @get:InputDirectory
-    abstract val heroiconsDir: DirectoryProperty
-
-    @TaskAction
-    fun checkout() {
-        val tag = targetTag.get()
-        logger.lifecycle("Ensuring Heroicons submodule is on tag $tag...")
-        execOperations.exec {
-            workingDir = heroiconsDir.get().asFile
-            commandLine("git", "fetch", "--tags", "--quiet")
-        }
-        execOperations.exec {
-            workingDir = heroiconsDir.get().asFile
-            commandLine("git", "checkout", tag, "--quiet")
-        }
-        logger.lifecycle("Heroicons submodule is on tag $tag")
-    }
-}
-
-val checkoutHeroiconsTag = tasks.register<CheckoutHeroiconsTag>("checkoutHeroiconsTag") {
+val checkoutHeroiconsTag = tasks.register<CheckoutSubmoduleTag>("checkoutHeroiconsTag") {
     group = "heroicons"
     description = "Checkout Heroicons git submodule to tag v$heroiconsVersion"
     targetTag.set("v$heroiconsVersion")
-    heroiconsDir.set(rootProject.layout.projectDirectory.dir("heroicons"))
+    submoduleDir.set(rootProject.layout.projectDirectory.dir("heroicons"))
 }
 
 // --- Generated sources from DaisyUI codegen ---

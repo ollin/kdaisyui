@@ -23,6 +23,9 @@ class DisabledStateCheck
 @Resource("/tabs")
 class TabsDemo
 
+@Resource("/profile")
+class ProfilePage
+
 @Resource("/fragments")
 class Fragments {
     @Resource("/stats")

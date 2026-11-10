@@ -23,6 +23,7 @@ fun Route.dashboardRoutes() {
     get<TailwindVariantCheck> { call.respondHtml(HttpStatusCode.OK) { tailwindVariantPage() } }
     get<DisabledStateCheck> { call.respondHtml(HttpStatusCode.OK) { disabledStatePage() } }
     get<TabsDemo> { call.respondHtml(HttpStatusCode.OK) { tabsPage() } }
+    get<ProfilePage> { call.respondHtml(HttpStatusCode.OK) { profilePage() } }
 
     get<Fragments.Stats> { call.respondHtmlFragment { statsFragment() } }
     get<Fragments.CardsRow1> { call.respondHtmlFragment { cardsRow1Fragment() } }

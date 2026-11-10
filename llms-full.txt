@@ -140,6 +140,25 @@ div {
 }
 ```
 
+## Themes
+
+`DaisyTheme` names DaisyUI's 35 built-in themes, generated from the pinned DaisyUI. The
+stylesheet decides which exist: a compiled one carries `light` and `dark` unless its entry says
+`@plugin "daisyui" { themes: all; }` or names them; a theme it lacks renders as the default.
+
+```kotlin
+import io.github.ollin.kdaisyui.themes.DaisyTheme
+import io.github.ollin.kdaisyui.themes.daisyTheme
+import io.github.ollin.kdaisyui.themes.daisyThemeOf
+
+fun Tag.daisyTheme(theme: DaisyTheme)          // writes data-theme="<theme.value>"
+fun daisyThemeOf(value: String): DaisyTheme?   // exact match on the value, else null
+
+html { daisyTheme(DaisyTheme.Nord) }                        // the whole page
+div { daisyTheme(DaisyTheme.Dracula) }                      // only this element: a preview
+daisyThemeController(theme = DaisyTheme.Dark) { type = InputType.checkBox }   // CSS-only switch
+```
+
 ## Components
 
 ### Alert

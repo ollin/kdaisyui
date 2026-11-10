@@ -1,6 +1,4 @@
 import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.api.provider.ValueSource
-import org.gradle.api.provider.ValueSourceParameters
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -15,23 +13,6 @@ val kotlinVersion = extensions
     .named("libs")
     .findVersion("kotlin").get().requiredVersion
 
-abstract class GitHashValueSource : ValueSource<String, GitHashValueSource.Parameters> {
-    interface Parameters : ValueSourceParameters {
-        val rootDir: DirectoryProperty
-    }
-
-    override fun obtain(): String {
-        val process = ProcessBuilder("git", "rev-parse", "HEAD")
-            .directory(parameters.rootDir.get().asFile)
-            .start()
-        return process.inputStream.bufferedReader().readLine()?.trim() ?: "unknown"
-    }
-}
-
-val gitHash: Provider<String> = providers.of(GitHashValueSource::class.java) {
-    parameters.rootDir.set(rootProject.layout.projectDirectory)
-}
-
 tasks.withType<Jar>().configureEach {
     manifest {
         attributes(
@@ -39,7 +20,6 @@ tasks.withType<Jar>().configureEach {
             "Implementation-Version" to project.version,
             "Implementation-Vendor" to "Oliver Nautsch",
             "Implementation-URL" to "https://github.com/ollin/kdaisyui",
-            "SCM-Revision" to gitHash.get(),
             "Kotlin-Version" to kotlinVersion,
             "Created-By" to "Gradle ${gradle.gradleVersion}",
         )

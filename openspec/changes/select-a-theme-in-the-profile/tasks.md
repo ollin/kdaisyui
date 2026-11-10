@@ -87,7 +87,7 @@ task 3.4.
   `DashboardRoutes.kt`, and `ProfilePage.kt` rendering `html` with `pageAssets()` and an `h1`;
   a new `profile.feature` asserts status 200 and the heading, in the shape of
   `popover_modal.feature:4-7`.
-- [ ] 3.2 `! F` A `form method=post` with one `daisyRadio(name = "theme")` per `DaisyTheme` and
+- [x] 3.2 `! F` A `form method=post` with one `daisyRadio(name = "theme")` per `DaisyTheme` and
   one `value="system"`, plus a Save `daisyButton`; ids in `Ids.kt`; the scenario counts 36 radios.
   `!` because form, ids and scenario exceed eight counted lines.
 - [ ] 3.3 `^ F` `app.css` says `themes: all`; an endpoint scenario asserts that `/static/app.css`

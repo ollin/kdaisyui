@@ -54,6 +54,16 @@ describe("a main function's extras", () => {
   })
 })
 
+describe('an extra with a sample', () => {
+  const extra = (name: string, type: string, sample?: string) => ({ kind: 'extra' as const, name, type, default: 'null', apply: `this.${name} = ${name}`, ...(sample ? { sample } : {}) })
+  const kotlin = coverageOf(component('wrap', 'Wrap', 'wrap', {}, { parameters: [extra('a', 'Foo?', 'Foo.Bar'), extra('b', 'Foo?'), { ...extra('c', 'Foo', 'Foo.Baz'), default: 'Foo.Qux' }] }))
+
+  test('is passed its sample in all flags, and only when it is nullable', () => {
+    assert.match(kotlin, /a = Foo\.Bar, /)
+    assert.doesNotMatch(kotlin, /b = |c = Foo\.Baz/)
+  })
+})
+
 describe('a DaisyTheme extra', () => {
   test('is passed a theme in all flags, and the test imports the enum', () => {
     const theme = { kind: 'extra', name: 'theme', type: 'DaisyTheme?', default: 'null', apply: 'if (theme != null) this.value = theme.value' } as const

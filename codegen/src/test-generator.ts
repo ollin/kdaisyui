@@ -383,6 +383,8 @@ const PARAM_KIND_RULES = [
   // component's own text parameter.
   [(c) => c.nullable && c.baseType === 'String' && c.name !== 'extraClasses', 'nullableString'],
   [(c) => c.nullable && c.enums[c.enumType], 'enumClass'],
+  // An extra the model gives a sample: the value it declares drives the branch.
+  [(c) => c.nullable && c.sample !== undefined, 'sampled'],
   [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
 ]
 
@@ -409,15 +411,15 @@ function groupEnumOf(baseType: string): string {
   return baseType.match(/ClassValues<(\w+)>/)?.[1] ?? baseType
 }
 
-function classifyParam({ name, type, cssClass, writes }: ParameterShape, enums) {
+function classifyParam({ name, type, cssClass, writes, sample }: ParameterShape, enums) {
   const nullable = type.endsWith('?')
   const baseType = nullable ? type.slice(0, -1) : type
   const enumType = groupEnumOf(baseType)
-  const kind = paramKind({ name, baseType, enumType, nullable, enums })
+  const kind = paramKind({ name, baseType, enumType, nullable, enums, sample })
   // The classes a Boolean adds when true: a toggle's own, or those an extra writes.
   const classes = cssClass === undefined ? [...(writes ?? [])] : [cssClass]
   // Read only for an enum parameter, where it is the enum's entries.
-  return { name, type, baseType, enumType, nullable, kind, classes, enumEntries: enums[enumType] }
+  return { name, type, baseType, enumType, nullable, kind, classes, enumEntries: enums[enumType], sample }
 }
 
 /** One overload on a generated scope, and what a test needs to call it. */
@@ -641,6 +643,7 @@ function allFlagsArgs(ctx, boolCss) {
     boolCss.push(...b.classes)
   }
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
+  for (const e of ctx.params.filter((p) => p.kind === 'sampled')) args.push(`${e.name} = ${e.sample}`)
   for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
   if (ctx.hasHatches) args.push('extraClasses = "zz-extra"', 'block = { attributes["data-block"] = "yes" }')
   return args

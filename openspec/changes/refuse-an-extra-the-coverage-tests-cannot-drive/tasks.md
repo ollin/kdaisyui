@@ -46,8 +46,8 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
 
 ## 3. Gate, adoption and archive
 
-- [ ] 3.1 Full green: `check`, `:lib:testCodegen`, StrykerJS on the changed `codegen/src/` lines
+- [x] 3.1 Full green: `check`, `:lib:testCodegen`, StrykerJS on the changed `codegen/src/` lines
   (the predicates of 2.3, 2.4 and 2.6 each pinned by a case above), `just generate` clean,
   CodeScene change set.
-- [ ] 3.2 The evaluation under `tmp/refuse-an-extra-the-coverage-tests-cannot-drive/`.
+- [x] 3.2 The evaluation under `tmp/refuse-an-extra-the-coverage-tests-cannot-drive/`.
 - [ ] 3.3 After adoption: archive on the implementation branch, Proposals table, `. d (internal)`.

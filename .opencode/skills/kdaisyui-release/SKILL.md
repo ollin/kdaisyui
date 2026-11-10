@@ -94,18 +94,18 @@ is a local directory, not a remote — the only remote upload path is JReleaser.
 
 ## What CI enforces before any of this
 
-`ci.yml` runs **six** jobs on pushes and PRs to `main`: `generated-sources-drift`,
-`codegen-tests`, `api-baseline`, `unit-tests` (including the aggregated 100% `koverVerify`
-gate), `mutation-tests` (100% test strength) and `e2e-tests`. See `kdaisyui-testing` for what
+`ci.yml` runs **five** test jobs on pushes and PRs to `main`: `generated-sources-drift`,
+`codegen-tests`, `unit-tests` (including the aggregated 100% `koverVerify` gate and the API
+baseline `checkKotlinAbi`), `mutation-tests` (100% test strength) and `e2e-tests`. See `kdaisyui-testing` for what
 each one needs; this page had the count wrong twice, so read `ci.yml` if it matters.
-**Not every pull request runs all six** (`ci-job-selection`, since `ci-run-only-affected-jobs`).
+**Not every pull request runs all five** (`ci-job-selection`, since `ci-run-only-affected-jobs`).
 A first job, `scope`, classifies the changed files with `.github/ci-scope/classify.sh`:
 
 | Scope | The pull request changes only | Jobs that run |
 |---|---|---|
 | `none` | planning and agent files: `openspec/`, `.opencode/`, `AGENTS.md`, the other workflows, … | none |
 | `prose` | those, or prose: `README.md`, `docs/` outside `docs/reference/`, the `llms` templates and files | `unit-tests`, `generated-sources-drift` |
-| `full` | anything else; every push to `main` | all six |
+| `full` | anything else; every push to `main` | all five |
 
 The lists are in the script; the controls that prove them are in `classify.test.sh`, which the
 `scope` job runs first. Three rules keep this from ever merging untested code:
@@ -161,7 +161,7 @@ passed" are different statements, and this is the case where they come apart.
 
 ## A breaking API change needs a migration note before the tag
 
-`lib`'s public API is committed at `lib/api/lib.api` and gated by the `api-baseline` CI job. A
+`lib`'s public API is committed at `lib/api/lib.api` and gated by `checkKotlinAbi`, which `check` runs in the `unit-tests` CI job. A
 change to it therefore cannot arrive silently — but a *failing gate* only says the surface moved,
 and a consumer needs to be told what to do about it.
 

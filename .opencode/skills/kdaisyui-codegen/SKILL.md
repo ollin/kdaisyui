@@ -67,7 +67,8 @@ and parameter, when one is missing.
 | `generateHeroiconTests` | `codegen/src/index-heroicon-tests.ts` | icon tests |
 | `generateReferenceDocs` | `codegen/src/index-docs.ts` | `docs/reference/`, `llms-full.txt`, `llms.txt` |
 
-All five declare `codegen/model` as an input. A new generator that reads the model must too, or a
+`:lib:generate` runs all five; `just generate` and the drift job call it, so a new generator
+is added to its `dependsOn` and nowhere else. All five declare `codegen/model` as an input. A new generator that reads the model must too, or a
 model edit leaves it UP-TO-DATE — that happened once, between the switch and the fix.
 
 The output is **committed**; compiling never regenerates. `just generate` is the only way, and

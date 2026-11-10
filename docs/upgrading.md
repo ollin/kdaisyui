@@ -67,7 +67,7 @@ div index 1 and shifted every panel by one — the indicator slid under the trig
 one whose panel was open.
 
 Note that `lib/api/lib.api` does not show this change: both lambda types erase to
-`Function1`, so the ABI dump — and the `api-baseline` CI gate that reads it — cannot see a
+`Function1`, so the ABI dump — and the CI gate that reads it — cannot see a
 changed lambda receiver. That gate catches removals and arity changes, not this.
 
 **Since 0.5.0 there is a second baseline that does see it** — `lib/api/components.api`, checked

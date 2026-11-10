@@ -123,7 +123,7 @@ task 3.4.
   describes `DaisyTheme`, `daisyTheme`, `daisyThemeOf`; `just generate`; tree clean afterwards.
 - [x] 4.3 `. d (internal)` `AGENTS.md`'s list of hand-written Kotlin gains `themes/DaisyThemes.kt`;
   `.opencode/skills/kdaisyui-codegen` names the theme step of `generateComponents`.
-- [ ] 4.4 `. d` `docs/upgrading.md`, 0.11.0: `daisyThemeController` gained `theme`; source
+- [x] 4.4 `. d` `docs/upgrading.md`, 0.11.0: `daisyThemeController` gained `theme`; source
   unchanged, binaries compiled against 0.10.x recompile (**How to migrate**: rebuild; optionally
   replace `value = "dark"` in the block by `theme = DaisyTheme.Dark`).
 

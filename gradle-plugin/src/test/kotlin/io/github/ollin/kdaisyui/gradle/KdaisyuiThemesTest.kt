@@ -18,7 +18,7 @@ class KdaisyuiThemesTest {
     init {
         // A class referring to DaisyTheme.Nord, as `daisyTheme(DaisyTheme.Nord)` compiles.
         compiled.resolve("App.class").writeBytes(
-            classFile(utf8("io/github/ollin/kdaisyui/themes/DaisyTheme"), className(1), utf8("Nord"), utf8("Lx;"), nameAndType(3, 4), fieldRef(2, 5)),
+            classFile(utf8("io/github/ollin/kdaisyui/themes/DaisyTheme"), className(slot(1)), utf8("Nord"), utf8("Lx;"), nameAndType(slot(3), slot(4)), reference(ReferenceKind.Field, slot(2), slot(5))),
         )
         task.classes.from(compiled)
         task.stylesheet.set(stylesheet)

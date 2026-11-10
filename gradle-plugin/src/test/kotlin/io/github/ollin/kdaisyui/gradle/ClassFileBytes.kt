@@ -1,21 +1,34 @@
 package io.github.ollin.kdaisyui.gradle
 
-/** A class file that is only its header and a constant pool of [entries], taking [slots] slots. */
-fun classFile(vararg entries: ByteArray, slots: Int = entries.size): ByteArray =
-    byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte(), 0, 0, 0, 65) + u2(slots + 1) + entries.fold(ByteArray(0), ByteArray::plus)
+/** An index into a constant pool, which starts at 1. */
+@JvmInline
+value class Slot(val index: Int) {
+    val bytes: ByteArray get() = byteArrayOf((index shr 8).toByte(), index.toByte())
+}
 
-fun utf8(text: String): ByteArray = byteArrayOf(1) + u2(text.length) + text.toByteArray()
+fun slot(index: Int): Slot = Slot(index)
 
-fun className(name: Int): ByteArray = byteArrayOf(7) + u2(name)
+/** One entry of a constant pool: its bytes, tag included, and how many slots it takes. */
+class PoolEntry(val bytes: ByteArray, val slots: Int = 1)
 
-fun nameAndType(name: Int, descriptor: Int): ByteArray = byteArrayOf(12) + u2(name) + u2(descriptor)
+/** A class file that is only its header and a constant pool of [entries]. */
+fun classFile(vararg entries: PoolEntry): ByteArray =
+    byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte(), 0, 0, 0, 65) +
+        Slot(entries.sumOf { it.slots } + 1).bytes + entries.fold(ByteArray(0)) { all, entry -> all + entry.bytes }
 
-fun fieldRef(owner: Int, nameAndType: Int): ByteArray = byteArrayOf(9) + u2(owner) + u2(nameAndType)
+fun utf8(text: String): PoolEntry = PoolEntry(byteArrayOf(1) + Slot(text.length).bytes + text.toByteArray())
 
-fun methodRef(owner: Int, nameAndType: Int, tag: Byte = 10): ByteArray = byteArrayOf(tag) + u2(owner) + u2(nameAndType)
+fun className(name: Slot): PoolEntry = PoolEntry(byteArrayOf(7) + name.bytes)
 
-fun long(): ByteArray = byteArrayOf(5, 0, 0, 0, 0, 0, 0, 0, 42)
+fun nameAndType(name: Slot, descriptor: Slot): PoolEntry = PoolEntry(byteArrayOf(12) + name.bytes + descriptor.bytes)
 
-fun integer(): ByteArray = byteArrayOf(3, 0, 0, 0, 42)
+/** The three kinds of member reference, by their tag. */
+enum class ReferenceKind(val tag: Byte) { Field(9), Method(10), InterfaceMethod(11) }
 
-private fun u2(value: Int): ByteArray = byteArrayOf((value shr 8).toByte(), value.toByte())
+fun reference(kind: ReferenceKind, owner: Slot, nameAndType: Slot): PoolEntry =
+    PoolEntry(byteArrayOf(kind.tag) + owner.bytes + nameAndType.bytes)
+
+/** A Long constant: two slots, as the class file format counts them. */
+fun long(): PoolEntry = PoolEntry(byteArrayOf(5, 0, 0, 0, 0, 0, 0, 0, 42), slots = 2)
+
+fun integer(): PoolEntry = PoolEntry(byteArrayOf(3, 0, 0, 0, 42))

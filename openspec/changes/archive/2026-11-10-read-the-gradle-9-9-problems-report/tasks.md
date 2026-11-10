@@ -28,4 +28,4 @@ block 3: 20, block 4: 10.
 
 ## 4. Archive
 
-- [ ] 4.1 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.
+- [x] 4.1 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

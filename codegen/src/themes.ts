@@ -11,5 +11,7 @@ export function themeNames(fileNames: readonly string[]): string[] {
 }
 
 function themeName(fileName: string): string {
-  return fileName.slice(0, -'.css'.length)
+  const name = fileName.slice(0, -'.css'.length)
+  if (/^[a-z]+$/.test(name)) return name
+  throw new Error(`DaisyTheme cannot name ${fileName}: a theme name must be lowercase letters only`)
 }

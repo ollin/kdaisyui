@@ -13,3 +13,7 @@ Feature: Profile
     Then the endpoint "/static/app.css" returns status 200
     And the response body contains "[data-theme=nord]"
     And the response body contains "[data-theme=abyss]"
+
+  Scenario: Every theme is previewed in itself
+    Given the user opens "/profile"
+    Then the 35 theme previews each compute their own "--color-primary"

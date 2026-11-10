@@ -137,6 +137,12 @@ describe('shapeFromModel', () => {
     assert.deepEqual(mainFunctionConfig(button).extras, [disabled])
   })
 
+  test('gives a sampled extra that declares no imports an empty list to import', () => {
+    const sampled = { kind: 'extra' as const, name: 'a', type: 'Foo?', default: 'null', apply: '', sample: 'Foo.A' }
+    const parameters = shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [sampled] }] }, DESCRIPTIONS).functions[0].parameters
+    assert.deepEqual(parameters.find(parameter => parameter.name === 'a')?.sampleImports, [])
+  })
+
   test("keeps an extra's sample out of the body config", () => {
     const theme = { name: 'theme', type: 'Foo?', default: 'null', apply: '' }
     const controller: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'extra', ...theme, sample: 'Foo.A' }] }] }

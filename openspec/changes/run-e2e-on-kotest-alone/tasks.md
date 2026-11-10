@@ -55,8 +55,11 @@ nothing else any more are deleted in the same run.
 - [x] 3.1 `webjars_assets.feature`' last scenario into `WebjarsAssetsTest`, which deletes the file.
   Control: the absence check pointed at `lg:btn-lg` failed the new test alone. The dead step
   bodies go with the rest of `steps/` in 4.1, not port by port, since Cucumber ignores unused ones.
-- [ ] 3.2 `tailwind_variant.feature` → `TailwindVariantTest` (4 tests). The stylesheet-rule
+- [x] 3.2 `tailwind_variant.feature` → `TailwindVariantTest` (4 tests). The stylesheet-rule
   lookup becomes a helper shared with 3.1 if both use it (D3).
+  They did not share it: the variant compares computed heights, so the helper is
+  `Page.computedStyle` in `ComputedStyle.kt`, for 3.4 and 3.5. Control: the tablet viewport
+  widened to 1280 failed both tablet tests.
 - [ ] 3.3 `content_security_policy.feature` → `ContentSecurityPolicyTest` (2 tests, plus one per
   example of the outline: 7).
 - [ ] 3.4 `disabled_state.feature` → `DisabledStateTest` (2).

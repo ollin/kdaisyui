@@ -14,7 +14,7 @@ None. Block 1 is kept so the numbering matches the other changes.
 
 ## 2. Codegen, under TCR at the repository root
 
-- [ ] 2.1 `! F (internal)` `renderKdoc` in `codegen/src/generator-new.ts` adds the sentence
+- [x] 2.1 `! F (internal)` `renderKdoc` in `codegen/src/generator-new.ts` adds the sentence
   as the comment's second line for every function for which `hasSibling(shape)` holds, and not
   otherwise. `codegen/test/generator-new.test.ts` asserts the exact string for a function with
   an own class, for one with only modifier classes or class-writing parameters, and its absence
@@ -23,7 +23,7 @@ None. Block 1 is kept so the numbering matches the other changes.
   regeneration (finding F3). Read the diff: in the 66 component files, 129 added sentences
   (`grep -c 'The same classes on another element'`), a one-line comment becoming a block where a
   part had one, and nothing else. `!`, because the regenerated comments are far over eight lines.
-- [ ] 2.2 Merged into 2.1 (finding F3).
+- [x] 2.2 Merged into 2.1 (finding F3).
 
 ## 3. Docs
 

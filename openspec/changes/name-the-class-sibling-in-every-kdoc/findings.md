@@ -30,3 +30,14 @@
   (`97e8abf`, `fc4e552`).
 - **Cause:** the plan split the steps by kind of file, not by what one green run needs.
 - **Cost:** about 5 minutes; no code was written against the old plan.
+
+## F4 - 135 sentences, not 129
+
+- **What happened:** at apply, 2026-11-10. The regeneration added 135 sentences in the 66 files,
+  where the proposal counted 129. The 129 was the sibling count of 2026-10-18 (task 2.2 of the
+  sibling change); today there are 138 siblings, 5 of them for class-only functions that render
+  nothing, and an overload such as `daisyDiffItem` gets one sentence per rendering function. Every
+  added sentence sits on a rendering function with a sibling; the rest of the diff is 69 one-line
+  comments turned into blocks.
+- **Cause:** the proposal copied a count from an older verification instead of counting.
+- **Cost:** about 5 minutes of counting; no rework.

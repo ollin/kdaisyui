@@ -43,7 +43,7 @@ forecast `2h 40min (5h DevOnly)` (ratio 0.52 over 177 runs).
 
 - [x] 2.1 `^ F (internal)` One step per gap from 1.1: the missing assertion added to the Kotest
   twin. None if 1.1 finds none. None: 1.1 found no gap.
-- [ ] 2.2 `. r (internal)` Delete `cards.feature`, `dashboard_shell.feature`, `forms.feature`,
+- [x] 2.2 `. r (internal)` Delete `cards.feature`, `dashboard_shell.feature`, `forms.feature`,
   `progressive_loading.feature`, `stats.feature`, `team.feature`, and `webjars_assets.feature`'s
   first two scenarios. The step definitions stay until no feature uses them.
 

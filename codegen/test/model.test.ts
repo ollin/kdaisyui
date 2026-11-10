@@ -137,6 +137,12 @@ describe('shapeFromModel', () => {
     assert.deepEqual(mainFunctionConfig(button).extras, [disabled])
   })
 
+  test("keeps an extra's sample out of the body config", () => {
+    const theme = { name: 'theme', type: 'Foo?', default: 'null', apply: '' }
+    const controller: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'extra', ...theme, sample: 'Foo.A' }] }] }
+    assert.deepEqual(mainFunctionConfig(controller).extras, [theme])
+  })
+
   test('a void element takes the same optional block, on its own element', () => {
     const image: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'IMG', parameters: [] }] }
 

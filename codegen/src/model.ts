@@ -254,7 +254,7 @@ export function mainFunctionConfig(model: ComponentModel): MainFunctionConfig {
   return {
     extras: main.parameters.flatMap(parameter => {
       if (parameter.kind !== 'extra') return []
-      const { kind, writes, ...extra } = parameter
+      const { kind, writes, sample, ...extra } = parameter
       return [extra]
     }),
     hasTextParam: main.text,

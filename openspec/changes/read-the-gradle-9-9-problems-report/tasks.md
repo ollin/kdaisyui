@@ -9,7 +9,7 @@ block 3: 20, block 4: 10.
 - [x] 1.1 `^ B (internal)` The listed diagnostics end at `id="problems-summary"` as well as at
   `"problemsReport"`. `GradleProblemTest` reads a 9.9-shaped report whose summary repeats a listed
   problem, and expects that problem once, with its plugin.
-- [ ] 1.2 `! B (internal)` A problem's id is its `documentationLink` anchor where it has one; a
+- [x] 1.2 `! B (internal)` A problem's id is its `documentationLink` anchor where it has one; a
   summary still matches a listed problem by name. `GradleProblemTest` asserts the anchor, the
   fallback, and the summary match. In the same step, `gradle/allowed-gradle-problems.txt` names
   `deprecate-visible-property` for both plugins.

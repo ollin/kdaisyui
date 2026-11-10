@@ -8,3 +8,13 @@
   without a branch and went green.
 - **Cause:** a fallback written for a case the reader never meets.
 - **Cost:** one TCR run, about 2 minutes.
+
+## F2 - The same trap again: a safe call before an elvis is a branch no test reaches
+
+- **What happened:** task 1.2, 2026-11-10. `anchor.find(entry)?.groupValues[1] ?: nameOf(entry)`
+  compiles to two null checks; the second, "the group is null", is unreachable, so `koverVerify`
+  failed and TCR reverted. `anchor.findAll(entry).map { it.groupValues[1] }.firstOrNull() ?: …`
+  has one null check, both sides covered, and went green.
+- **Cause:** the same kind of hidden branch as F1, and close kin of the dense-when trap that
+  `kdaisyui-testing` names; the skill does not name the `?.` + `?:` shape.
+- **Cost:** one TCR run, about 2 minutes.

@@ -119,6 +119,32 @@ daisyCard(extraClasses = "bg-base-100 shadow-xs") {
 
 Since every component is a `FlowContent` extension, they nest naturally inside each other.
 
+## Put a component's classes on another element
+
+Every function that writes a class has a sibling, `daisy<Name>Classes(…)`, which puts the same
+classes on the element you call it in, from the same typed parameters. Use it where the element
+is not the one the function renders: a badge or a button that is a link.
+
+<!-- snippet: in FlowContent -->
+```kotlin
+a(href = "/deployments/42") {
+    daisyBadgeClasses(color = BadgeColor.Info)
+    +"#42"
+}
+```
+
+<!-- snippet: in FlowContent -->
+```kotlin
+a(href = "/deployments/new") {
+    daisyButtonClasses(color = ButtonColor.Primary, size = ButtonSize.Sm)
+    +"New deployment"
+}
+```
+
+The sibling writes only classes: no attribute, no content. A button that opens a `<details>`
+dropdown is its `<summary>`, shown in [Add a dropdown](#add-a-dropdown). The KDoc of every
+function names its sibling, so completion in the IDE leads there too.
+
 ## Build a form
 
 Combine fieldsets, labels, inputs, and form controls:

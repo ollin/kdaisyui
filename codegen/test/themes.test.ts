@@ -7,6 +7,10 @@ describe('renderDaisyThemeEnum', () => {
   it('declares one entry per theme, named by its capitalised name and carrying the name', () => {
     assert.match(renderDaisyThemeEnum(['abyss', 'nord']), /enum class DaisyTheme\(val value: String\) \{\n    Abyss\("abyss"\),\n    Nord\("nord"\),\n\}\n$/)
   })
+
+  it('opens with the generated header, naming its source, and the themes package', () => {
+    assert.match(renderDaisyThemeEnum([]), /^\/\/ GENERATED — DO NOT EDIT\n\/\/ Source: daisyui\/packages\/daisyui\/src\/themes\/\*\.css\n.*\n\npackage io\.github\.ollin\.kdaisyui\.themes\n/)
+  })
 })
 
 describe('themeNames', () => {

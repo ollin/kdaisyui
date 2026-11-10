@@ -10,10 +10,19 @@ export function themeNames(fileNames: readonly string[]): string[] {
   return fileNames.filter((name) => name.endsWith('.css')).map(themeName).sort()
 }
 
+const HEADER = [
+  '// GENERATED — DO NOT EDIT',
+  '// Source: daisyui/packages/daisyui/src/themes/*.css',
+  '// Regenerate: cd codegen && npm run generate',
+  '',
+  'package io.github.ollin.kdaisyui.themes',
+  '',
+]
+
 /** The Kotlin source of `DaisyTheme`, one entry per theme, named by its capitalised name. */
 export function renderDaisyThemeEnum(names: readonly string[]): string {
   const entries = names.map((name) => `    ${name[0].toUpperCase()}${name.slice(1)}("${name}"),`)
-  return ['enum class DaisyTheme(val value: String) {', ...entries, '}', ''].join('\n')
+  return [...HEADER, 'enum class DaisyTheme(val value: String) {', ...entries, '}', ''].join('\n')
 }
 
 function themeName(fileName: string): string {

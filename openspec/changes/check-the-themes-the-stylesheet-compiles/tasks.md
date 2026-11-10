@@ -20,8 +20,10 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 
 - [x] 2.1 `^ F (internal)` `codegen/src/themes.ts`: `renderThemeMap(names)` — header and
   `Entry<TAB>value` lines; unit test for two names.
-- [ ] 2.2 `! F` `index-new.ts` writes `kdaisyui-themes.txt` beside the component map;
+- [x] 2.2 `! F` `index-new.ts` writes `kdaisyui-themes.txt` beside the component map;
   `lib/build.gradle.kts` declares it as an output; `just generate`; the 35-line resource committed.
+  Done with `lib/src/test/.../themes/ThemeMapTest.kt`: the packaged resource equals the enum's
+  entries and values, so it cannot stop being packaged silently.
 
 ## 3. The check, under TCR at the root
 

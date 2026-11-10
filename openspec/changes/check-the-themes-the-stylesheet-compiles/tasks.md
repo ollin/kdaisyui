@@ -44,7 +44,7 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 - [x] 3.10 `^ F (internal)` `missingThemes(named, carried)`.
 - [x] 3.11 `! F (internal)` `themeWarning(missing)`: the missing themes and where to add them,
   the entry's existing themes shown as `…` (finding F4).
-- [ ] 3.12 `! F` Task class `KdaisyuiThemes` (`@DisableCachingByDefault`, `@InputFiles` classes,
+- [x] 3.12 `! F` Task class `KdaisyuiThemes` (`@DisableCachingByDefault`, `@InputFiles` classes,
   `@InputFile` stylesheet, `@Classpath` runtime classpath); its action, called on a `ProjectBuilder`
   project with a hand-written stylesheet, returns the warning; without the resource it passes and
   says so at info level.

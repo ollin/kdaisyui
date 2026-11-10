@@ -17,9 +17,7 @@ dependencies {
     kover(project(":build-checks"))
 }
 
-// Aggregated coverage reports. The hard verify rule is added LAST (see the
-// staged rollout in design.md D5) — until then the build stays green: Kover is
-// present and reports are produced, but nothing fails on a shortfall.
+// Aggregated coverage reports, and the 100% gate on them.
 kover {
     reports {
         // Exclude the synthetic `$DefaultImpls` interface-default bridge classes
@@ -49,8 +47,7 @@ kover {
         total {
             html { onCheck = true }
             xml { onCheck = true }
-            // The hard gate (added LAST per the staged rollout, design.md D5):
-            // 100% LINE and 100% BRANCH for the aggregated in-scope modules, or
+            // The hard gate: 100% LINE and 100% BRANCH for the aggregated in-scope modules, or
             // the build fails. Bound to `check` via onCheck, so `./gradlew check`
             // (locally and in CI) fails on any shortfall — no separately named task.
             verify {

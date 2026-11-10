@@ -117,11 +117,6 @@ testing {
 // Coverage says a line ran; mutation testing says an assertion would have noticed if it
 // ran differently. Deliberately NOT bound to `check`: it forks a JVM per mutant and is far
 // too slow for the inner loop — it runs as `:lib:pitest`, and in CI as its own job.
-//
-// The scope starts at one class on purpose. Mutating all 63 generated components would
-// take hours and measure the generator rather than the code anyone wrote; it is widened
-// deliberately in a later step. No `mutationThreshold` yet — the gate is sharpened only
-// once the score is known to be 100%, so this stage cannot fail the build.
 pitest {
     // A wildcard, not a list of names. Kotlin compiles top-level functions into a
     // `<File>Kt` class and `by lazy` into synthetic ones, so a hand-maintained list would

@@ -410,6 +410,20 @@ val generateHeroicons = tasks.register<Exec>("generateHeroicons") {
     outputs.dir(outputDir)
 }
 
+// Every generator, under one name: `just generate` and CI's drift job both run this, so a new
+// generator is added here once and reaches both.
+tasks.register("generate") {
+    group = "codegen"
+    description = "Regenerate every committed generated output: components, tests, icons, reference docs"
+    dependsOn(
+        "generateComponents",
+        "generateComponentTests",
+        "generateHeroicons",
+        "generateHeroiconTests",
+        "generateReferenceDocs",
+    )
+}
+
 // Compilation deliberately does NOT depend on the generators. The generated
 // sources are committed, so a clone builds and tests with no Node, no npm and
 // no git submodules. Regeneration is explicit — `just generate` — and CI's

@@ -69,15 +69,6 @@ describe('an extra with a sample', () => {
   })
 })
 
-describe('a DaisyTheme extra', () => {
-  test('is passed a theme in all flags, and the test imports the enum', () => {
-    const theme = { kind: 'extra', name: 'theme', type: 'DaisyTheme?', default: 'null', apply: 'if (theme != null) this.value = theme.value' } as const
-    const kotlin = coverageOf(component('theme-controller', 'ThemeController', 'theme-controller', {}, { parameters: [theme] }))
-    assert.match(kotlin, /theme = DaisyTheme\.Dark, /)
-    assert.match(kotlin, /^import io\.github\.ollin\.kdaisyui\.themes\.DaisyTheme$/m)
-  })
-})
-
 describe('a scope member', () => {
   test('is called with no arguments, so every default of the member runs', () => {
     const join = component('join', 'Join', 'join')

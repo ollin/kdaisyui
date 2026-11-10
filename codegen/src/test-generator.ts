@@ -366,10 +366,6 @@ function documentedTestFor(componentName: string, page: string, model: Component
 // drive every branch of every function with assertions on the rendered HTML.
 
 
-// Enum types not declared in the component's source - kotlinx.html's, and the library's own
-// `DaisyTheme`: arms can't be enumerated, so the `!= null` branch is driven once with a known value.
-const EXTERNAL_ENUM_VALUES = { ButtonType: 'ButtonType.button', DaisyTheme: 'DaisyTheme.Dark' }
-const EXTERNAL_ENUM_IMPORTS = { ButtonType: 'import kotlinx.html.ButtonType', DaisyTheme: 'import io.github.ollin.kdaisyui.themes.DaisyTheme' }
 
 function lowerFirst(s) {
   return s.charAt(0).toLowerCase() + s.slice(1)
@@ -385,7 +381,6 @@ const PARAM_KIND_RULES = [
   [(c) => c.nullable && c.enums[c.enumType], 'enumClass'],
   // An extra the model gives a sample: the value it declares drives the branch.
   [(c) => c.nullable && c.sample !== undefined, 'sampled'],
-  [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
 ]
 
 function paramKind(ctx) {
@@ -404,8 +399,8 @@ function paramKind(ctx) {
  * TEST still has to name `ButtonSize` to write `ButtonSize.Lg`, so the wrapper is peeled here —
  * in one place, rather than at each of the three sites that need the enum's own name.
  *
- * A type that is not a holder is returned unchanged, which is what keeps `ButtonType` (a
- * kotlinx.html enum, never wrapped) matching its own rule.
+ * A type that is not a holder is returned unchanged, so `ButtonType` (a kotlinx.html enum, never
+ * wrapped) matches no generated enum and is driven by the sample its model declares.
  */
 function groupEnumOf(baseType: string): string {
   return baseType.match(/ClassValues<(\w+)>/)?.[1] ?? baseType
@@ -644,7 +639,6 @@ function allFlagsArgs(ctx, boolCss) {
   }
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
   for (const e of ctx.params.filter((p) => p.kind === 'sampled')) args.push(`${e.name} = ${e.sample}`)
-  for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
   if (ctx.hasHatches) args.push('extraClasses = "zz-extra"', 'block = { attributes["data-block"] = "yes" }')
   return args
 }
@@ -772,7 +766,7 @@ function scopeMemberTest(member): string {
 }
 
 /** What a coverage file needs: the fixed five, each non-flow wrapper, each external enum. */
-function coverageImports(funcs, enums): Set<string> {
+function coverageImports(funcs): Set<string> {
   const imports = new Set([
     'import io.github.ollin.kdaisyui.core.htmlId',
     'import kotlinx.html.div',
@@ -788,9 +782,6 @@ function coverageImports(funcs, enums): Set<string> {
     imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
     for (const declared of fn.parameters) {
       for (const sampleImport of declared.sampleImports ?? []) imports.add(`import ${sampleImport}`)
-      const parameter = classifyParam(declared, enums)
-      const external = EXTERNAL_ENUM_IMPORTS[parameter.baseType]
-      if (external) imports.add(external)
     }
   }
   return imports
@@ -854,7 +845,7 @@ function coverageTestFor(className: string, shape: ComponentShape, config: MainF
   const enums = enumTableOf(shape)
   const funcs = coverageFunctionsOf(shape, config)
 
-  const imports = coverageImports(funcs, enums)
+  const imports = coverageImports(funcs)
 
   let body = ''
   for (const fn of funcs) body += buildCoverageTests(fn, enums)

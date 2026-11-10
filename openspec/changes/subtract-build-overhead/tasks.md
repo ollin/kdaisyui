@@ -79,7 +79,7 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
 - [x] 4.2 `. d (internal)` `api-baseline` out of `AGENTS.md:323`, `docs/upgrading.md:70`, and the
   skills `kdaisyui-release` (98, 164), `kdaisyui-testing` (186), `kdaisyui-daisyui-upgrade`
   (6, 25, 103); `generate` in `kdaisyui-codegen` where it lists the five tasks.
-- [ ] 4.3 Remove the untracked `codegen-kotlin/`, `.playwright-mcp/` and `tmp/` from the working
+- [x] 4.3 Remove the untracked `codegen-kotlin/`, `.playwright-mcp/` and `tmp/` from the working
   tree. No commit: none of them is tracked.
 
 ## 5. Gates, pull request, ruleset, archive

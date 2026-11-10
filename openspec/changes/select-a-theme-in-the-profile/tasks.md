@@ -61,7 +61,7 @@ task 3.4.
   `Tag.daisyTheme(theme)` writes `data-theme`; a test in `lib/src/test/…/themes/` renders
   `html { daisyTheme(DaisyTheme.Nord) }` and asserts `data-theme="nord"`; `lib.api` re-dumped in
   the same run (gains `DaisyThemesKt.daisyTheme`).
-- [ ] 2.7 `! F` (finding F7) `daisyThemeOf(value)`: the test asserts `"nord"` gives `Nord`, `"Nord"` and `""`
+- [x] 2.7 `^ F` (eight counted lines with the re-dump, so the `!` of F7 was not needed) `daisyThemeOf(value)`: the test asserts `"nord"` gives `Nord`, `"Nord"` and `""`
   give `null`, and every entry round-trips (which also executes every enum entry for Kover);
   `lib.api` re-dumped in the same run (gains `daisyThemeOf`).
 - [ ] 2.8 `! F` `codegen/model/theme-controller.json` declares the `theme` extra (design,

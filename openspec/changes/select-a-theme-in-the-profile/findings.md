@@ -84,3 +84,12 @@
 - **Cause:** A9 named `button.json` as the precedent without reading how the generator reaches
   `ButtonType`; the table is a second place an external type must be named.
 - **Cost:** about 10 minutes, one extra commit; no revert.
+
+## F9 - A seventh copy of the demo page head, avoided by an enabling refactoring
+
+- **What happened:** 2026-11-10, start of block 3. Six standalone pages of the example app repeat
+  the same eight lines (`lang`, `head` with charset, title, viewport, `pageAssets()`, and the
+  padded `body`); the profile page would have been the seventh, and task 3.1 would have exceeded
+  eight counted lines with the copy alone. Task 3.0 extracts `demoPage` first.
+- **Cause:** unplanned; the duplication predates this change and the plan did not read the pages.
+- **Cost:** one `^ r` step, about 10 minutes.

@@ -23,10 +23,6 @@ tasks.withType<Jar> {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 abstract class CheckoutDaisyuiTag : DefaultTask() {
     @get:Inject
     abstract val execOperations: ExecOperations

@@ -6,13 +6,6 @@ plugins {
 
 group = "io.github.ollin.kdaisyui"
 
-// The root aggregates coverage at build time, so it must resolve Kover's own
-// runtime artifacts (the JVM coverage agent + reporter). The measured modules
-// declare their own repositories; the root needs its own for the Kover toolchain.
-repositories {
-    mavenCentral()
-}
-
 // Root-level coverage aggregation: merge the measured modules into one report. :lib and
 // :ktor-integration are the published code; :doc-snippets' extractor and :build-checks are
 // measured too, because the build relies on them. :example-app, :e2e-tests, and :bom are intentionally out of scope

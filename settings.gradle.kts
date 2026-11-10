@@ -18,6 +18,14 @@ plugins {
 
 rootProject.name = "kdaisyui"
 
+// The one place the root build's projects find their dependencies, the root's Kover toolchain
+// included. buildSrc and gradle-plugin are builds of their own and declare theirs.
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 include("lib")
 include("ktor-integration")
 include("bom")

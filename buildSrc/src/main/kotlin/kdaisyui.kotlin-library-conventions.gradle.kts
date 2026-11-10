@@ -46,10 +46,6 @@ tasks.withType<Jar>().configureEach {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
     jvmToolchain(21)
     compilerOptions {

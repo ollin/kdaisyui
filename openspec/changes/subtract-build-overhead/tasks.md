@@ -84,8 +84,12 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
 
 ## 5. Gates, pull request, ruleset, archive
 
-- [ ] 5.1 `pre_commit_code_health_safeguard` and the project values on CodeScene (`kdaisyui`, id 14)
+- [x] 5.1 `pre_commit_code_health_safeguard` and the project values on CodeScene (`kdaisyui`, id 14)
   before the push; the full suite, `./gradlew check` including E2E, green on the rebased branch.
+  2026-11-10: `./gradlew check koverXmlReport` (E2E included) and
+  `:build-checks:checkGradleProblems` green. CodeScene `analyze_change_set` against `origin/main`:
+  26 files modified, none Code Health eligible (build scripts, YAML, Markdown), gate passed. No
+  Kotlin under a PIT scope changed, so the mutation gate has nothing new to measure.
 - [ ] 5.2 Archive the change on this branch (`openspec archive subtract-build-overhead`), commit.
 - [ ] 5.3 Rebase onto `origin/main`, push, open the pull request through `github-mcp`
   (`chore: subtract build and CI overhead`). Wait for every job but the pending `api-baseline`.

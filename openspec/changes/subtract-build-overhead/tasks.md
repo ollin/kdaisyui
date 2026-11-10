@@ -74,7 +74,7 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
 
 ## 4. Leftovers and the texts that name the job
 
-- [ ] 4.1 `^ F (internal)` `git rm -r .codeseeker`; drop its pattern from `.github/ci-scope/classify.sh`
+- [x] 4.1 `^ F (internal)` `git rm -r .codeseeker`; drop its pattern from `.github/ci-scope/classify.sh`
   and its fixture from `classify.test.sh`; run `bash .github/ci-scope/classify.test.sh` by hand.
 - [ ] 4.2 `. d (internal)` `api-baseline` out of `AGENTS.md:323`, `docs/upgrading.md:70`, and the
   skills `kdaisyui-release` (98, 164), `kdaisyui-testing` (186), `kdaisyui-daisyui-upgrade`

@@ -55,7 +55,7 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
 
 ## 3. Build scripts
 
-- [ ] 3.1 `. r (internal)` One `CheckoutSubmoduleTag` class in `lib/build.gradle.kts`, registered
+- [x] 3.1 `! r (internal)` One `CheckoutSubmoduleTag` class in `lib/build.gradle.kts`, registered
   as `checkoutDaisyuiTag` and `checkoutHeroiconsTag` (D4).
 - [ ] 3.2 `! F (internal)` A `:lib:generate` task depending on the five generators; `justfile:20`
   and the drift job's *Regenerate* step call it (D3). Checked by `./gradlew :lib:generate --dry-run`

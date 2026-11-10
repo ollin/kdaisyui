@@ -115,7 +115,7 @@ task 3.4.
   `dashboardShell`: the drawer, sidebar and header become the frame every app page shares; the
   dashboard passes its htmx placeholders. Added after Oliver's review of the running page,
   2026-11-10 (finding F11).
-- [ ] 3.11 `! F` The profile renders inside `appShell`, heading "Profile"; the scenario finds the
+- [x] 3.11 `! F` The profile renders inside `appShell`, heading "Profile"; the scenario finds the
   sidebar's navigation on `/profile`.
 - [ ] 3.12 `! F` The sidebar's "Overview" links to the dashboard and is `menu-active` only there;
   the scenario goes from the profile to the dashboard through it.

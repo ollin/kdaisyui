@@ -41,7 +41,7 @@ state F1 recorded as a defect. Writing the `themes` line for the consumer is rej
 | A3 | A constant-pool reader of the plugin's own pairs a `Fieldref`/`Methodref` with its class and member in a size the 8-line steps can carry, rather than ASM | code | to check in task 1.1 - a probe over the `DaisyThemeTest.class` bytes, thrown away; it decides reader or ASM before block 2 |
 | A4 | The stylesheet carries a theme as `[data-theme=nord]` minified and in some form unminified | code | half confirmed at proposal - minified `,[data-theme=nord]{` (select-a-theme-in-the-profile task 1.1); unminified to check in task 1.2 |
 | A5 | No requirement of a main spec this builds on contradicts it: `css-delivery` ("A Gradle plugin narrows the class list…", "When in doubt the plugin writes the full list", "The narrowed stylesheet styles the example application"), `theme-selection` ("Every built-in DaisyUI theme is a typed value", "The documentation states which themes exist"), `generated-sources` | code | confirmed at proposal - read 2026-11-10 (the constraints list was not runnable in the review); the task adds a warning and a resource, and changes no output the specs describe |
-| A6 | A warning, not a failure | user | open - asked with this review round |
+| A6 | A warning, not a failure | user | confirmed by the user 2026-11-10 - warn |
 | A7 | A finalizer runs when `kdaisyuiStylesheet` is up to date or from cache, not only when it executes | code | to check in task 1.3 - a scratch build of the example app run twice |
 | A8 | Every `DaisyTheme` entry's value is its name lowercased today, but the plugin must not rely on it | code | confirmed at proposal - all 35 entries; hence the generated resource |
 

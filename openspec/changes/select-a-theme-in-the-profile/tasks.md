@@ -79,7 +79,7 @@ task 3.4.
 
 ## 3. The profile page and its scenarios, under TCR at the root
 
-- [ ] 3.0 `^ r` Extract `HTML.demoPage(pageTitle, block)` from the six standalone pages that repeat
+- [x] 3.0 `^ r` Extract `HTML.demoPage(pageTitle, block)` from the six standalone pages that repeat
   the same `lang`, `head` and padded `body` (`DisabledStatePage`, `DropdownPopoverPage`,
   `MegamenuReferencePage`, `PopoverModalPage`, `TabsPage`, `TailwindVariantPage`), so the profile
   page in 3.1 is a few lines instead of a seventh copy. Added at the start of block 3 (finding F9).

@@ -12,7 +12,7 @@ import java.net.URI
 
 /**
  * Singleton that manages the shared Ktor server and Chromium browser
- * for all E2E tests (both Kotest and Cucumber).
+ * for all E2E tests.
  *
  * Starts on first access, shuts down via JVM shutdown hook.
  */

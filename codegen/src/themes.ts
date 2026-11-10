@@ -25,8 +25,13 @@ const HEADER = [
 
 /** The Kotlin source of `DaisyTheme`, one entry per theme, named by its capitalised name. */
 export function renderDaisyThemeEnum(names: readonly string[]): string {
-  const entries = names.map((name) => `    ${name[0].toUpperCase()}${name.slice(1)}("${name}"),`)
+  const entries = names.map((name) => `    ${entryName(name)}("${name}"),`)
   return [...HEADER, 'enum class DaisyTheme(val value: String) {', ...entries, '}', ''].join('\n')
+}
+
+/** A theme's `DaisyTheme` entry: its name, capitalised. */
+function entryName(name: string): string {
+  return `${name[0].toUpperCase()}${name.slice(1)}`
 }
 
 function themeName(fileName: string): string {

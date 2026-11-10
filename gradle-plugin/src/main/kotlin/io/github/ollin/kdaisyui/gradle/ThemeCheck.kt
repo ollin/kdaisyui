@@ -13,6 +13,11 @@ fun themesNamedIn(references: List<MemberReference>, themes: Map<String, String>
 fun themeMap(resource: String): Map<String, String> =
     resource.lines().filter { it.isNotEmpty() && !it.startsWith("#") }.associate { it.substringBefore('\t') to it.substringAfter('\t') }
 
+/** The themes a compiled stylesheet carries: the names of its `[data-theme=…]` selectors, minified or not. */
+fun themesCarriedBy(css: String): Set<String> = DATA_THEME.findAll(css).map { it.groupValues[1] }.toSet()
+
+private val DATA_THEME = Regex("""\[data-theme=([a-z]+)]""")
+
 private const val DAISY_THEME = "io/github/ollin/kdaisyui/themes/DaisyTheme"
 
 /** Code reaching any of these can choose every theme at runtime: the whole set, or a stored value. */

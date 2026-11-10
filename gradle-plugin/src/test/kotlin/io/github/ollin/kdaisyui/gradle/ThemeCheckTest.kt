@@ -25,5 +25,11 @@ class ThemeCheckTest {
         assertEquals(mapOf("Nord" to "nord", "Abyss" to "abyss"), themeMap("# header\n# more\nNord\tnord\n\nAbyss\tabyss\n"))
     }
 
+    @Test
+    fun aStylesheetCarriesTheThemesOfItsDataThemeSelectorsMinifiedOrNot() {
+        val css = ":where(:root),[data-theme=light]{x:1}:root:has(input.theme-controller[value=nord]:checked),[data-theme=nord] {\n x: 1 }"
+        assertEquals(setOf("light", "nord"), themesCarriedBy(css))
+    }
+
     private fun theme(member: String) = MemberReference("io/github/ollin/kdaisyui/themes/DaisyTheme", member)
 }

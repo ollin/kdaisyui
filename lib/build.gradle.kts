@@ -157,6 +157,8 @@ pitest {
     targetClasses.set(
         setOf(
             "io.github.ollin.kdaisyui.core.*",
+            // The hand-written theme functions, and the generated enum they read.
+            "io.github.ollin.kdaisyui.themes.*",
             // Five of the 63 components, named individually rather than by wildcard:
             // `components.*` would mutate the whole generated surface for hours and would
             // mostly measure the generator, which emits one shape repeatedly. These five

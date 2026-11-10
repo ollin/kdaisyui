@@ -1,7 +1,19 @@
 package io.github.ollin.kdaisyui.buildchecks
 
-/** One problem Gradle reported: its most specific id, and the plugin it is attributed to, if any. */
-data class GradleProblem(val id: String, val pluginId: String?)
+/** One problem Gradle reported: its most specific id, and who caused it. */
+data class GradleProblem(val id: String, val source: Source)
+
+/** Who caused a Gradle problem: a plugin, or the build itself. */
+sealed interface Source {
+    data class Plugin(val id: String) : Source {
+        override fun toString() = id
+    }
+
+    /** The null object: a problem Gradle attributes to no plugin, which only this build can fix. */
+    data object ThisBuild : Source {
+        override fun toString() = "this build"
+    }
+}
 
 /**
  * The problems in Gradle's `build/reports/problems/problems-report.html`, read from its embedded JSON.
@@ -13,16 +25,19 @@ data class GradleProblem(val id: String, val pluginId: String?)
 fun problemsIn(report: String): List<GradleProblem> {
     val diagnostics = report.split(summaryStart, limit = 2).first()
     val entries = entriesOf(diagnostics)
-    val listed = entries.map { GradleProblem(idOf(it), pluginId.find(it)?.groupValues[1]) }
+    val listed = entries.map { GradleProblem(idOf(it), sourceOf(it)) }
     val listedNames = entries.map(::nameOf).toSet()
     val unlisted = entriesOf(report.removePrefix(diagnostics)).map(::nameOf).filter { it !in listedNames }
-    return listed + unlisted.map { GradleProblem(it, null) }
+    return listed + unlisted.map { GradleProblem(it, Source.ThisBuild) }
 }
 
 private fun entriesOf(json: String): List<String> = json.split("{\"problemId\":").drop(1)
 
 /** The anchor of the entry's documentation link, one per deprecation, else its most specific name. */
 private fun idOf(entry: String): String = anchor.findAll(entry).map { it.groupValues[1] }.firstOrNull() ?: nameOf(entry)
+
+private fun sourceOf(entry: String): Source =
+    pluginId.findAll(entry).map { Source.Plugin(it.groupValues[1]) }.firstOrNull() ?: Source.ThisBuild
 
 private fun nameOf(entry: String): String = name.findAll(entry.substringBefore("]")).last().groupValues[1]
 

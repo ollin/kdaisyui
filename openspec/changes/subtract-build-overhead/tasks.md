@@ -50,7 +50,7 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
 
 ## 2. The CI job
 
-- [ ] 2.1 `! F (internal)` Delete the `api-baseline` job from `.github/workflows/ci.yml`, and the
+- [x] 2.1 `! F (internal)` Delete the `api-baseline` job from `.github/workflows/ci.yml`, and the
   `mutation-tests` comment's reference to it (line 314).
 
 ## 3. Build scripts

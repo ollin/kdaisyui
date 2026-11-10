@@ -6,7 +6,7 @@ over 174 runs); 30 minutes developer-only is the frozen raw figure, one block.
 ## 1. The rules
 
 - [x] 1.1 `. d (internal)` The `tasks` rule of F3 in `openspec/config.yaml`.
-- [ ] 1.2 `. d (internal)` The `proposal` rule of F4.
+- [x] 1.2 `. d (internal)` The `proposal` rule of F4.
 
 ## 2. Gate and archive
 

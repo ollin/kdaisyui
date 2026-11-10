@@ -35,11 +35,13 @@ private fun constantPool(buffer: ByteBuffer): Map<Int, Entry> {
     return pool
 }
 
-private fun entry(tag: Int, buffer: ByteBuffer): Entry = when (tag) {
-    UTF8 -> Utf8(ByteArray(buffer.char.code).also { buffer.get(it) }.decodeToString())
-    CLASS -> ClassName(buffer.char.code)
-    NAME_AND_TYPE -> NameAndType(buffer.char.code).also { buffer.char }
-    FIELD_REF -> Reference(buffer.char.code, buffer.char.code)
+// Conditions, not `when (tag)`: dense tag values compile to a table switch whose every gap Kover
+// counts as a branch of its own, which no test of a real pool can reach.
+private fun entry(tag: Int, buffer: ByteBuffer): Entry = when {
+    tag == UTF8 -> Utf8(ByteArray(buffer.char.code).also { buffer.get(it) }.decodeToString())
+    tag == CLASS -> ClassName(buffer.char.code)
+    tag == NAME_AND_TYPE -> NameAndType(buffer.char.code).also { buffer.char }
+    tag in REFERENCE_TAGS -> Reference(buffer.char.code, buffer.char.code)
     else -> Other.also { buffer.position(buffer.position() + OTHER_SIZES.getValue(tag)) }
 }
 
@@ -47,7 +49,8 @@ private fun entry(tag: Int, buffer: ByteBuffer): Entry = when (tag) {
 private const val POOL_COUNT_OFFSET = 8
 private const val UTF8 = 1
 private const val CLASS = 7
-private const val FIELD_REF = 9
+/** Fieldref; the method references follow. */
+private val REFERENCE_TAGS = setOf(9)
 private const val NAME_AND_TYPE = 12
 
 /** The size after the tag of every entry this reader does not keep (JVMS 4.4). */

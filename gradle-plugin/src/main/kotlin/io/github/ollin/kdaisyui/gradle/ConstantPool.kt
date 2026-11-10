@@ -29,8 +29,9 @@ private fun constantPool(buffer: ByteBuffer): Map<Int, Entry> {
     val pool = HashMap<Int, Entry>()
     var index = 1
     while (index < count) {
-        pool[index] = entry(buffer.get().toInt(), buffer)
-        index += 1
+        val tag = buffer.get().toInt()
+        pool[index] = entry(tag, buffer)
+        index += if (tag in TWO_SLOT_TAGS) 2 else 1
     }
     return pool
 }
@@ -49,6 +50,9 @@ private fun entry(tag: Int, buffer: ByteBuffer): Entry = when {
 private const val POOL_COUNT_OFFSET = 8
 private const val UTF8 = 1
 private const val CLASS = 7
+/** Long and Double: each takes two slots of the pool (JVMS 4.4.5). */
+private val TWO_SLOT_TAGS = setOf(5, 6)
+
 /** Fieldref, Methodref and InterfaceMethodref. */
 private val REFERENCE_TAGS = setOf(9, 10, 11)
 private const val NAME_AND_TYPE = 12

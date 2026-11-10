@@ -93,7 +93,10 @@ nothing else any more are deleted in the same run.
   screenshot tests; `MegamenuWithoutJavaScriptTest` holds the markup test and the panel test
   (2 + 2). The four PNGs were written. Control: without the click, the panel test failed at its
   `shouldBeTrue` (`false should equal true`, line 33).
-- [ ] 3.10 `profile.feature` → `ProfileTest` (11).
+- [x] 3.10 `profile.feature` → `ProfileTest` (11).
+  `profile.feature` stayed until 4.1. Deleting the last feature makes `RunCucumberTest` fail with
+  `NoTestsDiscoveredException` (seen on the first run of this step, which TCR reverted nothing
+  for). Control: the dashboard's theme expected as `abyss` failed that test alone.
 
 ## 4. Cucumber out
 

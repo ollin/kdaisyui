@@ -7,5 +7,9 @@
 
 /** The theme names in a listing of DaisyUI's theme directory: the stems of its CSS files, sorted. */
 export function themeNames(fileNames: readonly string[]): string[] {
-  return fileNames.filter((name) => name.endsWith('.css')).map((name) => name.slice(0, -'.css'.length)).sort()
+  return fileNames.filter((name) => name.endsWith('.css')).map(themeName).sort()
+}
+
+function themeName(fileName: string): string {
+  return fileName.slice(0, -'.css'.length)
 }

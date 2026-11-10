@@ -16,7 +16,7 @@ import kdaisyui.example.team.*
 fun Route.dashboardRoutes() {
     get<DashboardPage> {
         call.respondHtml(HttpStatusCode.OK) {
-            dashboardShell(call.application)
+            dashboardShell(call.application, call.storedTheme())
         }
     }
 

@@ -3,12 +3,15 @@ package kdaisyui.example
 import io.github.ollin.kdaisyui.components.*
 import io.github.ollin.kdaisyui.core.addClassNames
 import io.github.ollin.kdaisyui.core.HtmlId
+import io.github.ollin.kdaisyui.themes.DaisyTheme
+import io.github.ollin.kdaisyui.themes.daisyTheme
 import io.ktor.server.application.Application
 import io.ktor.server.resources.href
 import kotlinx.html.*
 
-fun HTML.dashboardShell(application: Application) {
+fun HTML.dashboardShell(application: Application, theme: DaisyTheme?) {
     lang = "en"
+    if (theme != null) daisyTheme(theme)
     head {
         meta { charset = "utf-8" }
         title { +"DevTrack Overview" }

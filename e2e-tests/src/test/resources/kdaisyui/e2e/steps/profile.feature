@@ -26,3 +26,9 @@ Feature: Profile
 
   Scenario: A value that is not a theme is refused
     Then posting the theme "no-such-theme" to "/profile/theme" answers 400 and sets no cookie
+
+  Scenario: The saved theme is worn by the dashboard
+    Given the user opens "/profile"
+    When the user chooses the theme "nord" and saves
+    And the user opens "/"
+    Then the page wears the theme "nord"

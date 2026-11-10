@@ -44,4 +44,10 @@ class ThemeSteps(private val world: PlaywrightWorld) {
         val response = world.page.request().post("${SharedInfrastructure.BASE_URL}$path", form)
         check(response.status() == status && "set-cookie" !in response.headers()) { "Expected $status without a cookie, got ${response.status()} ${response.headers()}" }
     }
+
+    @Then("the page wears the theme {string}")
+    fun pageWearsTheme(theme: String) {
+        val actual = world.page.locator("html").getAttribute("data-theme")
+        check(actual == theme) { "Expected html data-theme=$theme, got $actual" }
+    }
 }

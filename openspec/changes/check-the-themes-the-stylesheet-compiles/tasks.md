@@ -55,8 +55,8 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 
 ## 4. Docs
 
-- [ ] 4.1 `. d` `docs/how-to.md`, "Let users choose a theme", Step 1: the warning and what to do.
-- [ ] 4.2 `. d` `codegen/llms-full-template.md` (plugin paragraph) names the warning; `just generate`.
+- [x] 4.1 `. d` `docs/how-to.md`, "Let users choose a theme", Step 1: the warning and what to do.
+- [x] 4.2 `. d` `codegen/llms-full-template.md` (plugin paragraph) names the warning; `just generate`.
 
 ## 5. Gate, adoption and archive
 

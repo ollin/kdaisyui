@@ -21,10 +21,17 @@ forecast `2h 40min (5h DevOnly)` (ratio 0.52 over 177 runs).
 
 ## 1. Open assumptions
 
-- [ ] 1.1 `. d (internal)` (A1) For each duplicated feature (`cards`, `dashboard_shell`, `forms`,
+- [x] 1.1 `. d (internal)` (A1) For each duplicated feature (`cards`, `dashboard_shell`, `forms`,
   `progressive_loading`, `stats`, `team`, `webjars_assets`' first two scenarios), list every
   `Then`/`And` step beside the twin's assertion that covers it. Record each gap here; each gap
   becomes a task in section 2.
+  A1 verified 2026-11-10: no gap. `cards`, `dashboard_shell`, `forms`, `stats` and `team` match
+  their twins step for step, with the same texts, roles, placeholders, timeouts (5, 8, 10 s) and
+  response-body strings. `progressive_loading` matches `HtmxProgressiveLoadingTest`: the same
+  3 s wait, at least 2 fragment responses, and the same six endpoints. `webjars_assets`' first two
+  scenarios match `WebjarsAssetsTest`. One difference that loses nothing: the Cucumber endpoint
+  scenarios also opened `/` first, and so put the dashboard under the console-error teardown
+  once more. Every twin spec still does that in its other test.
 - [ ] 1.2 `! F (internal)` (A2) `PlaywrightSpec(javaScriptEnabled: Boolean = true)` (D1), with a
   `WithoutJavaScriptTest` that opens the dashboard with JavaScript off and asserts that no
   `/fragments/` response arrives within 3 s. A positive control the other way round: the same
@@ -32,8 +39,8 @@ forecast `2h 40min (5h DevOnly)` (ratio 0.52 over 177 runs).
 
 ## 2. The duplicates
 
-- [ ] 2.1 `^ F (internal)` One step per gap from 1.1: the missing assertion added to the Kotest
-  twin. None if 1.1 finds none.
+- [x] 2.1 `^ F (internal)` One step per gap from 1.1: the missing assertion added to the Kotest
+  twin. None if 1.1 finds none. None: 1.1 found no gap.
 - [ ] 2.2 `. r (internal)` Delete `cards.feature`, `dashboard_shell.feature`, `forms.feature`,
   `progressive_loading.feature`, `stats.feature`, `team.feature`, and `webjars_assets.feature`'s
   first two scenarios. The step definitions stay until no feature uses them.

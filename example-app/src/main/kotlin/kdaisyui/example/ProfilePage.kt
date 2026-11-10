@@ -73,7 +73,7 @@ private fun FlowContent.tile(name: String, value: String, isCurrent: Boolean, mo
         mockup()
         div("flex items-center gap-2 px-1") {
             daisyRadio(name = "theme", color = RadioColor.Primary, size = RadioSize.Sm, checked = isCurrent) { this.value = value }
-            span("truncate text-sm font-medium") { +name }
+            span("text-sm leading-tight font-medium") { +name }
             if (isCurrent) daisyBadge("Current", size = BadgeSize.Sm, fillStyle = BadgeFillStyle.Soft, extraClasses = "ms-auto")
         }
     }

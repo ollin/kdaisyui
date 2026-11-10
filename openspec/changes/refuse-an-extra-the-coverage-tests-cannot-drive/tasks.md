@@ -25,7 +25,7 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
   present. `coverage-test-generator.test.ts` (`coverageOf`): a nullable `Foo?` with sample
   `Foo.Bar` is passed `Foo.Bar`; a nullable `Foo?` without a sample is not; a non-nullable extra
   with a sample is not.
-- [ ] 2.4 `^ F (internal)` The coverage test imports `sampleImports` of sampled extras; the fixture
+- [x] 2.4 `^ F (internal)` The coverage test imports `sampleImports` of sampled extras; the fixture
   asserts the import, and that an unsampled extra's `imports` do not appear.
 - [ ] 2.5 `^ r (internal)` Delete `EXTERNAL_ENUM_VALUES`, `EXTERNAL_ENUM_IMPORTS` and their rule;
   `just generate` leaves `lib/generated/test/**` byte-identical (A3), the snapshot tests stay green.

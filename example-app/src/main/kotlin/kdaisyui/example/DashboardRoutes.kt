@@ -27,7 +27,7 @@ fun Route.dashboardRoutes() {
     get<TailwindVariantCheck> { call.respondHtml(HttpStatusCode.OK) { tailwindVariantPage() } }
     get<DisabledStateCheck> { call.respondHtml(HttpStatusCode.OK) { disabledStatePage() } }
     get<TabsDemo> { call.respondHtml(HttpStatusCode.OK) { tabsPage() } }
-    get<ProfilePage> { call.respondHtml(HttpStatusCode.OK) { profilePage(call.application.href(ProfilePage.Theme()), call.storedTheme()) } }
+    get<ProfilePage> { call.respondHtml(HttpStatusCode.OK) { profilePage(call.application, call.storedTheme()) } }
     post<ProfilePage.Theme> {
         if (!call.storeTheme(call.receiveParameters()["theme"].orEmpty())) return@post call.respond(HttpStatusCode.BadRequest)
         call.response.headers.append(HttpHeaders.Location, call.application.href(ProfilePage()))

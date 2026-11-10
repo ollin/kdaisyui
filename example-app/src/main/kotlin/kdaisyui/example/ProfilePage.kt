@@ -8,23 +8,22 @@ import io.github.ollin.kdaisyui.components.daisyButton
 import io.github.ollin.kdaisyui.components.daisyRadio
 import io.github.ollin.kdaisyui.themes.DaisyTheme
 import io.github.ollin.kdaisyui.themes.daisyTheme
+import io.ktor.server.application.Application
+import io.ktor.server.resources.href
 import kotlinx.html.ButtonType
 import kotlinx.html.FlowContent
 import kotlinx.html.FormMethod
 import kotlinx.html.HTML
 import kotlinx.html.form
 import kotlinx.html.div
-import kotlinx.html.h1
 import kotlinx.html.id
 import kotlinx.html.label
 import kotlinx.html.span
 
 /** The user's profile, where a theme is chosen with a preview of each. */
-fun HTML.profilePage(saveUrl: String, current: DaisyTheme?) {
-    if (current != null) daisyTheme(current)
-    demoPage("Profile") {
-        h1("text-2xl font-light") { +"Profile" }
-        form(action = saveUrl, method = FormMethod.post) {
+fun HTML.profilePage(application: Application, current: DaisyTheme?) {
+    appShell(application, current, "Profile") {
+        form(action = application.href(ProfilePage.Theme()), method = FormMethod.post, classes = "col-span-12") {
             id = Profile.ThemeForm().id
             for (theme in DaisyTheme.entries) {
                 label("flex items-center gap-3") {

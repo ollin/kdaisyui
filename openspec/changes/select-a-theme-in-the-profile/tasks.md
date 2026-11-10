@@ -40,7 +40,7 @@ task 3.4.
 - [x] 2.2 `^ F (internal)` `themeNames` fails on a stem that is not lowercase letters only,
   naming the file, so the PascalCase rule of the spec cannot meet a hyphen or a digit unseen; the
   test passes `foo-bar.css`.
-- [ ] 2.3 `^ F (internal)` `renderDaisyThemeEnum(names)` returns the Kotlin source of
+- [x] 2.3 `^ F (internal)` `renderDaisyThemeEnum(names)` returns the Kotlin source of
   `DaisyTheme` in `io.github.ollin.kdaisyui.themes`, the GENERATED header the other outputs carry,
   one entry per name as `Nord("nord")`; asserted for two names.
 - [ ] 2.4 `. F (internal)` `lib/build.gradle.kts:254`: `generateComponents`, whose output is the

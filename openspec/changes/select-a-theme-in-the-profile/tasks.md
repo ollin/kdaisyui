@@ -4,7 +4,8 @@
 (ratio 0.52 over 168 runs); 510 minutes developer-only is the frozen raw figure. Block 1: 30,
 block 2: 210, block 3: 150, block 4: 60, block 5: 60. Ledger run
 `2026-11-10-kdaisyui-select-a-theme-in-the-profile`. Tasks 2.8 and 4.4 were added after the
-freeze by A7 (finding F3), and the review split 2.3 and 3.3 and added 2.2 (finding F4); the
+freeze by A7 (finding F3), the review split 2.3 and 3.3 and added 2.2 (finding F4), and the re-review folded the API
+re-dump into each step that changes the API (finding F5); the
 figure stands, the added time is recorded as unplanned.
 
 Ordered by uncertainty: A3 is the one thing only a compile can answer, so it runs before any
@@ -48,25 +49,28 @@ task 3.4.
 - [ ] 2.5 `! F` `index-new.ts` (the `generateComponents` entry point, so `just generate` and the
   drift job need no new task) writes `DaisyTheme.kt` into that directory from the submodule's
   `packages/daisyui/src/themes` via `submodules.ts`; `just generate`; the 35-entry file is
-  committed and the tree is clean afterwards. `!` because the committed generated file counts
+  committed, `./gradlew :lib:updateKotlinAbi` re-dumps `lib/api/lib.api` in the same run (it
+  gains `DaisyTheme` and nothing else; `checkKotlinAbi` runs in `check`, so a stale baseline
+  would revert the step), and the tree is clean afterwards. `!` because the committed generated file counts
   about 40 lines under the notation's counting, which does not exempt generated Kotlin here;
   nothing calls it yet.
 - [ ] 2.6 `^ F` `lib/src/main/kotlin/io/github/ollin/kdaisyui/themes/DaisyThemes.kt`:
   `Tag.daisyTheme(theme)` writes `data-theme`; a test in `lib/src/test/…/themes/` renders
-  `html { daisyTheme(DaisyTheme.Nord) }` and asserts `data-theme="nord"`.
+  `html { daisyTheme(DaisyTheme.Nord) }` and asserts `data-theme="nord"`; `lib.api` re-dumped in
+  the same run (gains `DaisyThemesKt.daisyTheme`).
 - [ ] 2.7 `^ F` `daisyThemeOf(value)`: the test asserts `"nord"` gives `Nord`, `"Nord"` and `""`
-  give `null`, and every entry round-trips (which also executes every enum entry for Kover).
+  give `null`, and every entry round-trips (which also executes every enum entry for Kover);
+  `lib.api` re-dumped in the same run (gains `daisyThemeOf`).
 - [ ] 2.8 `! F` `codegen/model/theme-controller.json` declares the `theme` extra (design,
   decision 7); `just generate`; `ThemeController.kt`, its generated tests,
-  `docs/reference/themeController.md` and `lib/api/components.api` follow, and `koverVerify` sees
+  `docs/reference/themeController.md` and `lib/api/components.api` follow (the parameter's name
+  and type), `lib/api/lib.api` is re-dumped in the same run (the one changed
+  `daisyThemeController` descriptor, read before committing), and `koverVerify` sees
   both branches of the `apply` (A9). One commit, not two: a model edit without its regenerated
   output fails `generated-sources-drift`, so neither half is a green commit alone. `!` because the
   two together exceed eight counted lines. If the test generator or Kover objects, revise first.
 - [ ] 2.9 `. F (internal)` `lib/build.gradle.kts`: `targetClasses` gains
   `io.github.ollin.kdaisyui.themes.*`; `./gradlew :lib:pitest` reports 100% test strength.
-- [ ] 2.10 `. d (internal)` `./gradlew :lib:updateKotlinAbi`; the diff of `lib/api/lib.api` is
-  read: additions (`DaisyTheme`, `DaisyThemesKt`) plus the one changed `daisyThemeController`
-  descriptor, and nothing else.
 
 ## 3. The profile page and its scenarios, under TCR at the root
 
@@ -74,14 +78,16 @@ task 3.4.
   `DashboardRoutes.kt`, and `ProfilePage.kt` rendering `html` with `pageAssets()` and an `h1`;
   a new `profile.feature` asserts status 200 and the heading, in the shape of
   `popover_modal.feature:4-7`.
-- [ ] 3.2 `^ F` A `form method=post` with one `daisyRadio(name = "theme")` per `DaisyTheme` and
+- [ ] 3.2 `! F` A `form method=post` with one `daisyRadio(name = "theme")` per `DaisyTheme` and
   one `value="system"`, plus a Save `daisyButton`; ids in `Ids.kt`; the scenario counts 36 radios.
+  `!` because form, ids and scenario exceed eight counted lines.
 - [ ] 3.3 `^ F` `app.css` says `themes: all`; an endpoint scenario asserts that `/static/app.css`
   holds a `[data-theme=` rule for `nord` and for `abyss` (A2, A3 on the served stylesheet).
-- [ ] 3.4 `^ F` Each theme's radio sits in a `label` with a card carrying `daisyTheme(theme)` and
+- [ ] 3.4 `! F` Each theme's radio sits in a `label` with a card carrying `daisyTheme(theme)` and
   the five swatches (design, decision 4); the scenario asserts, for every card but `light`'s, that
   its computed `--color-base-100` differs from the page's (A5 in a browser). If any card computes
-  the default, revise the change first.
+  the default, revise the change first. `!` because card, swatches and scenario exceed eight
+  counted lines.
 - [ ] 3.5 `^ F` `POST /profile/theme` with a theme sets the cookie and answers 303 to `/profile`
   (design, decision 5); the scenario chooses `nord`, saves, and asserts the URL and the cookie.
 - [ ] 3.6 `^ F` A value `daisyThemeOf` refuses answers 400 and sets no cookie; an endpoint scenario.

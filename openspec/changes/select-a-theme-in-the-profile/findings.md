@@ -24,7 +24,7 @@
 
 - **What happened:** 2026-11-10, after the proposal was committed. Asked at review whether
   `daisyThemeController` stays without a `theme` parameter, Oliver chose the parameter (A7),
-  after a detailed explanation with usage examples. Tasks 2.8 (model and regeneration; 2.6 when added) and 4.4
+  after a detailed explanation with usage examples. Tasks 2.8 (model and regeneration) and 4.4
   (the migration note for the binary change) were added; the frozen estimate stands.
 - **Cause:** the proposal had removed the parameter as subtraction, while the scope question at
   the start had offered it as part of the typed basics - the two said different things.
@@ -43,3 +43,14 @@
 - **Cause:** a reading of DaisyUI's source was recorded as confirmation of what a browser does;
   and `affected_areas` was not declared, so the constraints list had nothing to match.
 - **Cost:** one review round, about 25 minutes of rework.
+
+## F5 - The re-review found a wrong citation and an API baseline step too late
+
+- **What happened:** the re-review of 2026-11-10 found A9 citing `radio.json` for
+  `this.value = value`, which lives in `input.json:59`; and the `lib.api` re-dump planned as a
+  last task 2.10, although `checkKotlinAbi` is part of `check`, so root TCR would revert every
+  step that adds public API before it. Fixed: the citation; each API-changing step re-dumps the
+  baseline in its own run, and 2.10 is gone. Tasks 3.2 and 3.4 are planned `!` by their size.
+- **Cause:** the precedent was quoted from memory of the grep output instead of the file; the
+  baseline was treated as bookkeeping, not as part of the build TCR runs.
+- **Cost:** one more review round, about 10 minutes.

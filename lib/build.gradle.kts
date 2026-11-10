@@ -277,6 +277,7 @@ val generateComponents = tasks.register<Exec>("generateComponents") {
     outputs.dir(generatedMainDir.dir("io/github/ollin/kdaisyui/themes"))
     outputs.file(classList)
     outputs.file(generatedResourcesDir.file("kdaisyui-components.txt"))
+    outputs.file(generatedResourcesDir.file("kdaisyui-themes.txt"))
 }
 
 val generateComponentTests = tasks.register<Exec>("generateComponentTests") {

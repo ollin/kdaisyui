@@ -8,7 +8,7 @@ import { readComponentSet, type SkipReason } from './component-set.ts'
 import { classFindings, directoryFindings, extraSampleFindings, namingFindings, offeredClasses } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
 import { classListFile, componentMapFile, componentMapLine } from './component-map.ts'
-import { renderDaisyThemeEnum, themeNames } from './themes.ts'
+import { renderDaisyThemeEnum, renderThemeMap, themeNames } from './themes.ts'
 import { pinnedSubmodule } from './submodules.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
@@ -47,12 +47,17 @@ function writeClassList(classes: readonly string[]): number {
   return new Set(classes).size
 }
 
-/** `DaisyTheme`, in the themes package beside the components, from the names of DaisyUI's theme files. */
+/**
+ * `DaisyTheme`, in the themes package beside the components, and `kdaisyui-themes.txt` beside the
+ * component map, both from the names of DaisyUI's theme files.
+ */
 function writeDaisyTheme(): void {
   const themesDir = path.join(path.dirname(OUTPUT_DIR), 'themes')
   const fileNames = fs.readdirSync(path.join(pinnedSubmodule('daisyui'), 'packages/daisyui/src/themes'))
   fs.mkdirSync(themesDir, { recursive: true })
-  fs.writeFileSync(path.join(themesDir, 'DaisyTheme.kt'), renderDaisyThemeEnum(themeNames(fileNames)))
+  const names = themeNames(fileNames)
+  fs.writeFileSync(path.join(themesDir, 'DaisyTheme.kt'), renderDaisyThemeEnum(names))
+  fs.writeFileSync(path.join(path.dirname(CLASS_LIST_FILE), 'kdaisyui-themes.txt'), renderThemeMap(names))
 }
 
 function writeComponentMap(lines: readonly string[]): void {

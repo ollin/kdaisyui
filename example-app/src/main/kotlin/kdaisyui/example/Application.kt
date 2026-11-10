@@ -10,7 +10,9 @@ import io.ktor.server.webjars.*
 import io.ktor.server.plugins.defaultheaders.*
 
 fun main() {
-    embeddedServer(Netty, port = 8080) {
+    // The loopback address, not every interface: a demo needs no network, and a tunnel that holds
+    // 8080 on other 127.x addresses (lgtctl's does) then no longer blocks `just dev`.
+    embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
         configureRouting()
     }.start(wait = true)
 }

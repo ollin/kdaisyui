@@ -787,6 +787,7 @@ function coverageImports(funcs, enums): Set<string> {
     // `div` for FlowContent and Tag, which the set already holds.
     imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
     for (const declared of fn.parameters) {
+      for (const sampleImport of declared.sampleImports ?? []) imports.add(`import ${sampleImport}`)
       const parameter = classifyParam(declared, enums)
       const external = EXTERNAL_ENUM_IMPORTS[parameter.baseType]
       if (external) imports.add(external)

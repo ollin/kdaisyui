@@ -62,6 +62,11 @@ describe('an extra with a sample', () => {
     assert.match(kotlin, /a = Foo\.Bar, /)
     assert.doesNotMatch(kotlin, /b = |c = Foo\.Baz/)
   })
+
+  test("imports what a sampled extra declares, and nothing an unsampled one does", () => {
+    const imported = coverageOf(component('wrap', 'Wrap', 'wrap', {}, { parameters: [{ ...extra('a', 'Foo?', 'Foo.Bar'), imports: ['x.Foo'] }, { ...extra('b', 'Foo?'), imports: ['x.Bar'] }] }))
+    assert.deepEqual([/^import x\.Foo$/m.test(imported), /^import x\.Bar$/m.test(imported)], [true, false])
+  })
 })
 
 describe('a DaisyTheme extra', () => {

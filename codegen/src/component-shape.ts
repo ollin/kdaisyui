@@ -168,6 +168,8 @@ export interface ParameterShape {
   readonly writes?: readonly CssClass[]
   /** The value a coverage test passes to an extra the model gives a sample. Absent for every other one. */
   readonly sample?: string
+  /** What the sample needs imported, the extra's own `imports`; present exactly when `sample` is. */
+  readonly sampleImports?: readonly string[]
 }
 
 /**

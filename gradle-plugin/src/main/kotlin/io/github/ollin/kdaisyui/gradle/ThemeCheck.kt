@@ -9,6 +9,10 @@ fun themesNamedIn(references: List<MemberReference>, themes: Map<String, String>
     if (references.any { it in RUNTIME_CHOICES }) themes.values.toSet()
     else references.filter { it.owner == DAISY_THEME }.mapNotNull { themes[it.name] }.toSet()
 
+/** `kdaisyui-themes.txt` read back: each `DaisyTheme` entry and its `data-theme` value. */
+fun themeMap(resource: String): Map<String, String> =
+    resource.lines().filter { it.isNotEmpty() && !it.startsWith("#") }.associate { it.substringBefore('\t') to it.substringAfter('\t') }
+
 private const val DAISY_THEME = "io/github/ollin/kdaisyui/themes/DaisyTheme"
 
 /** Code reaching any of these can choose every theme at runtime: the whole set, or a stored value. */

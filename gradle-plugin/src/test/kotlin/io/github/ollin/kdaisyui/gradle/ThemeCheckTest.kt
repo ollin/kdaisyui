@@ -20,5 +20,10 @@ class ThemeCheckTest {
         assertEquals(emptySet(), themesNamedIn(listOf(theme("getValue"), theme("name")), themes))
     }
 
+    @Test
+    fun theThemeMapIsReadFromItsResourceWithoutItsHeaderOrEmptyLines() {
+        assertEquals(mapOf("Nord" to "nord", "Abyss" to "abyss"), themeMap("# header\n# more\nNord\tnord\n\nAbyss\tabyss\n"))
+    }
+
     private fun theme(member: String) = MemberReference("io/github/ollin/kdaisyui/themes/DaisyTheme", member)
 }

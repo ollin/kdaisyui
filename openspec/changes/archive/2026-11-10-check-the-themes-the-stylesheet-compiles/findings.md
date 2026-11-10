@@ -47,3 +47,14 @@ The change comes from `archive/2026-11-10-select-a-theme-in-the-profile/findings
 - **Cause:** the plan asked for "the entry line that adds them", which needs knowledge the plugin
   does not have.
 - **Cost:** one red run, about 5 minutes.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | none - record only: a review round doing its job |
+| F2 | The stylesheet task's output convention moves out of the directory it copies in as `classList` (e.g. `build/kdaisyui-css/app.css`), so its own output stops making it out of date; a plugin test asserts the output is not below `classList` | open |
+| F3 | A sentence in `kdaisyui-build` (or a `rules:` entry for tasks): a `when` over dense constant tags is a table switch whose gaps Kover counts as branches - use conditions or a set; and stash a reverted step's test before the refactoring that should precede it | open |
+| F4 | - | none - record only |

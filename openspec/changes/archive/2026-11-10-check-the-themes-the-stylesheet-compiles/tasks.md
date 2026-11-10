@@ -64,4 +64,4 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
   positive control), `koverVerify` and `:gradle-plugin`'s own Kover 100 % and `:gradle-plugin:pitest`
   100 %, StrykerJS on the changed `codegen/src/` lines, `just generate` clean, CodeScene change set.
 - [x] 5.2 The evaluation under `tmp/check-the-themes-the-stylesheet-compiles/`.
-- [ ] 5.3 After adoption: archive on the implementation branch, Proposals table, `. d (internal)`.
+- [x] 5.3 After adoption: archive on the implementation branch, Proposals table, `. d (internal)`.

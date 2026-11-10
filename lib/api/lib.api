@@ -3407,3 +3407,7 @@ public final class io/github/ollin/kdaisyui/themes/DaisyTheme : java/lang/Enum {
 	public static fun values ()[Lio/github/ollin/kdaisyui/themes/DaisyTheme;
 }
 
+public final class io/github/ollin/kdaisyui/themes/DaisyThemesKt {
+	public static final fun daisyTheme (Lkotlinx/html/Tag;Lio/github/ollin/kdaisyui/themes/DaisyTheme;)V
+}
+

@@ -27,7 +27,7 @@ None. Block 1 is kept so the numbering matches the other changes.
 
 ## 3. Docs
 
-- [ ] 3.1 `. d` `docs/how-to.md`, "Put a component's classes on another element": a badge that
+- [x] 3.1 `. d` `docs/how-to.md`, "Put a component's classes on another element": a badge that
   is a link and a button that is a link, each fence marked `<!-- snippet: in FlowContent -->`;
   the button as a `<summary>` links to "Add a dropdown", which shows it already.
 

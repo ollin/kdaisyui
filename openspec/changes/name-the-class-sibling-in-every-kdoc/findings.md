@@ -41,3 +41,12 @@
   comments turned into blocks.
 - **Cause:** the proposal copied a count from an older verification instead of counting.
 - **Cost:** about 5 minutes of counting; no rework.
+
+## F5 - llms.txt lists the how-to's recipes, and no task named it
+
+- **What happened:** at apply, 2026-11-10, task 3.1. `codegen/llms-template.md:20` describes the
+  how-to by its recipes, so the new section needed a mention there and a regenerated `llms.txt`.
+  `document-server-rendered-patterns` has a task for exactly this (its 3.5); this change did not.
+- **Cause:** the proposal's Impact said `llms.txt` would not change, reasoning about the sibling
+  (already documented there) and not about the how-to's description.
+- **Cost:** about 2 minutes, in the same commit as the section.

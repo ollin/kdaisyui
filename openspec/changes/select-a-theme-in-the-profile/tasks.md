@@ -98,7 +98,7 @@ task 3.4.
   the default, revise the change first. `!` because card, swatches and scenario exceed eight
   counted lines. Done asserting 35 distinct `--color-primary` values instead: ten themes share
   `light`'s base-100, so the planned comparison would have failed on correct cards (finding F10).
-- [ ] 3.5 `^ F` `POST /profile/theme` with a theme sets the cookie and answers 303 to `/profile`
+- [x] 3.5 `^ F` `POST /profile/theme` with a theme sets the cookie and answers 303 to `/profile`
   (design, decision 5); the scenario chooses `nord`, saves, and asserts the URL and the cookie.
 - [ ] 3.6 `^ F` A value `daisyThemeOf` refuses answers 400 and sets no cookie; an endpoint scenario.
 - [ ] 3.7 `^ F` `dashboardShell` and the profile page write `html { daisyTheme(…) }` from the

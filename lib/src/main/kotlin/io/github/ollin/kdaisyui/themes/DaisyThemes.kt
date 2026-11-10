@@ -12,3 +12,9 @@ import kotlinx.html.Tag
 fun Tag.daisyTheme(theme: DaisyTheme) {
     attributes["data-theme"] = theme.value
 }
+
+/**
+ * The theme whose `data-theme` value is [value], or `null` for any other string, such as a stored
+ * choice that is not, or no longer, one of DaisyUI's themes. Matches exactly: `"Nord"` is no theme.
+ */
+fun daisyThemeOf(value: String): DaisyTheme? = DaisyTheme.entries.firstOrNull { it.value == value }

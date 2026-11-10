@@ -14,10 +14,10 @@ that it cannot check, and passes. **Rejected: loading `DaisyTheme` from the clas
 loader over the consumer's runtime classpath inside the build for one table. **Rejected: deriving
 the value by lowercasing** the entry (A8): true today, not a contract.
 
-### 2. Parse the constant pool, unless the probe says otherwise
+### 2. Parse the constant pool (confirmed by the probe of task 1.1)
 
 A theme needs the class AND the member of a `Fieldref`, stored as indices into other pool entries.
-**Chosen, pending task 1.1:** a small reader (UTF-8, Class, NameAndType, Fieldref, Methodref).
+**Chosen:** a small reader (UTF-8, Class, NameAndType, Fieldref, Methodref).
 **Rejected: ASM** — an `implementation` dependency in every consumer's build classpath for one
 table; shading it would add a build step the plugin has none of. **Rejected: a regex for `Nord`
 near `DaisyTheme`** — the pool's order is the compiler's, not a contract.
@@ -50,5 +50,5 @@ mutation (`avoidCallsTo`), so tests assert the text, not the log.
 
 ## Risks / Trade-offs
 
-- [A7 false: the finalizer does not run on an up-to-date stylesheet] → the warning appears only
-  when the stylesheet is rebuilt; the design is revised in task 1.3 before block 2.
+- [A finalizer's behaviour on an up-to-date task changes in a later Gradle] → A7 was observed on
+  9.8; the plugin's own test asserts the `finalizedBy` wiring, not Gradle's scheduling.

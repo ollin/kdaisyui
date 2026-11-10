@@ -7,12 +7,12 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 
 ## 1. Open assumptions (probes, nothing committed but the row updates)
 
-- [ ] 1.1 A3: in `tmp/check-the-themes-the-stylesheet-compiles/`, a throwaway reader pairs the
+- [x] 1.1 A3: in `tmp/check-the-themes-the-stylesheet-compiles/`, a throwaway reader pairs the
   `Fieldref`s of `DaisyThemeTest.class` with class and member; its size and shape decide reader or
   ASM. `. d` updates A3 and design decision 2.
-- [ ] 1.2 A4: compile the example app's stylesheet with `minify = false` in a scratch copy and record
+- [x] 1.2 A4: compile the example app's stylesheet with `minify = false` in a scratch copy and record
   how `[data-theme=nord]` appears; `. d` updates A4 and, if quoted, the stylesheet reader's rule.
-- [ ] 1.3 A7: in a scratch copy of the example app, a finalizer of `kdaisyuiStylesheet` that prints
+- [x] 1.3 A7: in a scratch copy of the example app, a finalizer of `kdaisyuiStylesheet` that prints
   a line, run twice; does the second (up-to-date) run print? `. d` updates A7; if not, revise
   design decision 3 before block 2.
 

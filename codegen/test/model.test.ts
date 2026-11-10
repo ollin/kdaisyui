@@ -112,6 +112,12 @@ describe('shapeFromModel', () => {
     assert.deepEqual(joined.scope?.imports, ['kotlinx.html.ButtonType'])
   })
 
+  test("carries an extra's sample onto the shape only when it declares one", () => {
+    const extra = (name: string, sample?: string) => ({ kind: 'extra' as const, name, type: 'Foo?', default: 'null', apply: '', ...(sample ? { sample } : {}) })
+    const parameters = shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [extra('a', 'Foo.A'), extra('b')] }] }, DESCRIPTIONS).functions[0].parameters
+    assert.deepEqual(parameters.filter(parameter => parameter.name === 'a' || parameter.name === 'b').map(parameter => 'sample' in parameter && parameter.sample), ['Foo.A', false])
+  })
+
   test('hands the main function body its extras, text, role and input type', () => {
     const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
     const checkbox: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'INPUT', parameters: [disabled], role: 'switch', inputType: 'checkBox' }] }

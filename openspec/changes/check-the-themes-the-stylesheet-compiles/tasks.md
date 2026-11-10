@@ -34,7 +34,7 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 - [x] 3.2 (folded into 3.1)
 - [x] 3.3 `! F (internal)` Pool reader: Methodref and InterfaceMethodref resolved like Fieldref.
   After a `^ r` that picks an entry by conditions instead of `when (tag)` (finding F3).
-- [ ] 3.4 `^ F (internal)` Pool reader: Long and Double take two slots; the test also reads a real
+- [x] 3.4 `^ F (internal)` Pool reader: Long and Double take two slots; the test also reads a real
   class file of the plugin.
 - [ ] 3.5 `^ F (internal)` `themesNamedIn(classFile, map)`: an entry `Fieldref` gives its value.
 - [ ] 3.6 `^ F (internal)` `getEntries`, `values`, `valueOf` give every theme.

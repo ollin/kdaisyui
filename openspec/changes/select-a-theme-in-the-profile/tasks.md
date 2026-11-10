@@ -111,7 +111,7 @@ task 3.4.
 - [x] 3.9 `! F` The avatar menu's "Profile" links to `href(ProfilePage())`; the scenario opens the
   menu, clicks it, and lands on the profile.
 
-- [ ] 3.10 `^ r` Extract `HTML.appShell(application, theme, pageTitle, heading, content)` from
+- [x] 3.10 `^ r` Extract `HTML.appShell(application, theme, pageTitle, heading, content)` from
   `dashboardShell`: the drawer, sidebar and header become the frame every app page shares; the
   dashboard passes its htmx placeholders. Added after Oliver's review of the running page,
   2026-11-10 (finding F11).

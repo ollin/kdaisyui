@@ -13,5 +13,12 @@ class ThemeCheckTest {
         assertEquals(setOf("nord"), themesNamedIn(references, themes))
     }
 
+    @Test
+    fun aRuntimeChoiceNamesEveryThemeAndReadingAValueNamesNone() {
+        val choices = listOf(theme("getEntries"), theme("values"), theme("valueOf"), MemberReference("io/github/ollin/kdaisyui/themes/DaisyThemesKt", "daisyThemeOf"))
+        assertEquals(choices.map { setOf("light", "dark", "nord") }, choices.map { themesNamedIn(listOf(it), themes) })
+        assertEquals(emptySet(), themesNamedIn(listOf(theme("getValue"), theme("name")), themes))
+    }
+
     private fun theme(member: String) = MemberReference("io/github/ollin/kdaisyui/themes/DaisyTheme", member)
 }

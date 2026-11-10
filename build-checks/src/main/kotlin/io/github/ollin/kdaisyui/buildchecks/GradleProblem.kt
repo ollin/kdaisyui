@@ -5,7 +5,7 @@ data class GradleProblem(val id: String, val source: Source)
 
 /** Who caused a Gradle problem: a plugin, or the build itself. */
 sealed interface Source {
-    data class Plugin(val id: String) : Source {
+    data class Plugin(private val id: String) : Source {
         override fun toString() = id
     }
 

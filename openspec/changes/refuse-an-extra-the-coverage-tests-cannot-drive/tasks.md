@@ -11,10 +11,12 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
 
 ## 2. Under TCR (codegen at the root, regenerating first)
 
-- [ ] 2.1 `^ F (internal)` `ModelExtraParameter.sample`; `parameterShape` copies `sample` and the
+- [x] 2.1 `^ F (internal)` `ModelExtraParameter.sample`; `parameterShape` copies `sample` and the
   extra's `imports` (as `sampleImports`) onto the shape only when a sample is declared;
   `mainFunctionConfig` strips `sample`. `model.test.ts`: an extra with a sample carries both, one
   without carries neither and stays deep-equal to today's shape.
+  Done in two runs (`! F` 9 lines: the shape carries `sample`; `^ F`: the config strips it). The
+  extra's imports move to 2.4, the step that reads them, so no unread field is added here.
 - [ ] 2.2 `. r (internal)` `button.json` and `theme-controller.json` declare `"sample"`. Nothing
   reads it in generation yet: `committed-model.test.ts` stays green and `just generate` leaves the
   tree clean.

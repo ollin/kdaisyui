@@ -60,8 +60,10 @@ nothing else any more are deleted in the same run.
   They did not share it: the variant compares computed heights, so the helper is
   `Page.computedStyle` in `ComputedStyle.kt`, for 3.4 and 3.5. Control: the tablet viewport
   widened to 1280 failed both tablet tests.
-- [ ] 3.3 `content_security_policy.feature` → `ContentSecurityPolicyTest` (2 tests, plus one per
+- [x] 3.3 `content_security_policy.feature` → `ContentSecurityPolicyTest` (2 tests, plus one per
   example of the outline: 7).
+  Controls: a policy without `data:` failed the header test; `src="` instead of `src="http`
+  failed the image test for `/`.
 - [ ] 3.4 `disabled_state.feature` → `DisabledStateTest` (2).
 - [ ] 3.5 `tabs.feature` → `TabsTest` (2). The computed-style comparison is shared with 3.4 (D3).
 - [ ] 3.6 `dropdown_popover.feature` → `DropdownPopoverTest` and

@@ -35,9 +35,11 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
   `Boolean` or a `model.enums` type (bare or in `ClassValues<…>`) and has no sample yields
   `<component>: <function>.<parameter> needs a sample`; fixtures for each exemption;
   `committed-model.test.ts` asserts no finding for the committed models.
-- [ ] 2.7 `^ F (internal)` `index-new.ts` pushes the finding onto `modelFindings`; checked by hand
+- [x] 2.7 `^ F (internal)` `index-new.ts` pushes the finding onto `modelFindings`; checked by hand
   once with a scratch model without a sample (entry points are outside the mutation gate), the
-  output quoted in the evaluation.
+  output quoted in the evaluation. Done: without `theme-controller.json`'s sample, a scratch run of
+  `index-new.ts` exited 1 with `theme-controller: daisyThemeController.theme needs a sample`; the
+  heading above the findings names the samples now.
 - [ ] 2.8 `. d (internal)` `.opencode/skills/kdaisyui-codegen/SKILL.md`: the model file section
   names `sample`; the paragraph on `EXTERNAL_ENUM_VALUES` is replaced. A grep found the table names
   nowhere else.

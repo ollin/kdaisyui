@@ -129,12 +129,12 @@ task 3.4.
 
 ## 5. Gate, adoption and archive
 
-- [ ] 5.1 Full green: `./gradlew check` with E2E and its result files asserted on disk,
+- [x] 5.1 Full green: `./gradlew check` with E2E and its result files asserted on disk,
   `koverVerify`, `checkKotlinAbi`, `:lib:checkComponentApi`, `:doc-snippets:compileSnippets`,
   `:lib:pitest`, `./gradlew :lib:testCodegen`, `just generate` leaving the tree clean (what
   `generated-sources-drift` runs),
   StrykerJS on the added `codegen/src/` lines with no survivor, `analyze_change_set`. The
   evaluation says that no mutation tool covers `e2e-tests` or `example-app`.
-- [ ] 5.2 `openspec validate select-a-theme-in-the-profile --strict`.
-- [ ] 5.3 The evaluation under `tmp/select-a-theme-in-the-profile/` for Oliver to adopt.
+- [x] 5.2 `openspec validate select-a-theme-in-the-profile --strict`.
+- [x] 5.3 The evaluation under `tmp/select-a-theme-in-the-profile/` for Oliver to adopt.
 - [ ] 5.4 After adoption: archive on this branch, `. d (internal)`, the change's `tmp/` deleted.

@@ -29,6 +29,9 @@ runs on every pull request.
 only ran exactly the two (#443), and a broken snippet in a prose-only change still failed
 `unit-tests` (#444).
 
+The test jobs are five since `subtract-build-overhead` removed `api-baseline`, whose check
+`unit-tests` runs as part of `check`.
+
 *Wrong if:* a job that a `none` or `prose` pull request skipped fails on the next `full` run for a
 reason that pull request introduced.
 
@@ -42,7 +45,7 @@ reason that pull request introduced.
 
 - **WHEN** a pull request changes `README.md` and a file under `docs/tutorials/`
 - **THEN** `unit-tests` and `generated-sources-drift` run
-- **AND** `e2e-tests`, `mutation-tests`, `api-baseline` and `codegen-tests` are skipped
+- **AND** `e2e-tests`, `mutation-tests` and `codegen-tests` are skipped
 
 #### Scenario: A change to a generated reference page
 
@@ -118,4 +121,4 @@ cancel the previous merge's run. *Wrong if:* a run on `main` ends `cancelled`.
 #### Scenario: A merge to main
 
 - **WHEN** a pull request is merged
-- **THEN** the run on `main` runs all six jobs
+- **THEN** the run on `main` runs all five test jobs

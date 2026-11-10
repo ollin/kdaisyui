@@ -90,7 +90,7 @@ forecast `1h 50min (3h 30min DevOnly)` (ratio 0.52 over 177 runs).
   `:build-checks:checkGradleProblems` green. CodeScene `analyze_change_set` against `origin/main`:
   26 files modified, none Code Health eligible (build scripts, YAML, Markdown), gate passed. No
   Kotlin under a PIT scope changed, so the mutation gate has nothing new to measure.
-- [ ] 5.2 Archive the change on this branch (`openspec archive subtract-build-overhead`), commit.
+- [x] 5.2 Archive the change on this branch (`openspec archive subtract-build-overhead`), commit.
 - [ ] 5.3 Rebase onto `origin/main`, push, open the pull request through `github-mcp`
   (`chore: subtract build and CI overhead`). Wait for every job but the pending `api-baseline`.
 - [ ] 5.4 Oliver removes `api-baseline` from ruleset 14483746's required checks, or confirms the

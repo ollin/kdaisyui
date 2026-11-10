@@ -1,5 +1,6 @@
 package kdaisyui.e2e.steps
 
+import com.microsoft.playwright.Locator
 import com.microsoft.playwright.Page.GetByRoleOptions
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.options.AriaRole
@@ -78,5 +79,19 @@ class ProfileSteps(private val world: PlaywrightWorld) {
     fun openProfileFromAvatarMenu() {
         world.page.locator("#${Dashboard.Header.Avatar().id} [tabindex]").first().click()
         world.page.getByRole(AriaRole.LINK, GetByRoleOptions().setName("Profile")).click()
+    }
+
+    /** Side by side, not stacked: the second tile starts on the first one's row, to its right. */
+    @Then("the theme tiles sit side by side")
+    fun tilesSitSideBySide() {
+        val first = checkNotNull(form.locator("label").nth(0).boundingBox())
+        val second = checkNotNull(form.locator("label").nth(1).boundingBox())
+        check(first.y == second.y && second.x >= first.x + first.width) { "Expected two tiles in one row, got ${first.x},${first.y} and ${second.x},${second.y}" }
+    }
+
+    @Then("the theme {choice} is marked as current")
+    fun themeIsMarkedAsCurrent(choice: ThemeChoice) {
+        val tile = form.locator("label").filter(Locator.FilterOptions().setHas(world.page.locator("input[value=${choice.value}]")))
+        assertThat(tile).containsText("Current")
     }
 }

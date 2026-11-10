@@ -26,6 +26,7 @@ Feature: Profile
     And the browser keeps the theme "nord"
     And the page wears the theme "nord"
     And the theme choice "nord" is checked
+    And the theme "nord" is marked as current
 
   Scenario: A value that is not a theme is refused
     Then saving the theme "no-such-theme" is refused without a cookie
@@ -52,3 +53,7 @@ Feature: Profile
     Given the user opens "/profile"
     When the user clicks "Overview"
     Then the heading "Overview" is visible
+
+  Scenario: The themes are laid out as tiles, not stacked
+    Given the user opens "/profile"
+    Then the theme tiles sit side by side

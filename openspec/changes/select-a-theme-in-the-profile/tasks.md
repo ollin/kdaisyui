@@ -83,7 +83,7 @@ task 3.4.
   the same `lang`, `head` and padded `body` (`DisabledStatePage`, `DropdownPopoverPage`,
   `MegamenuReferencePage`, `PopoverModalPage`, `TabsPage`, `TailwindVariantPage`), so the profile
   page in 3.1 is a few lines instead of a seventh copy. Added at the start of block 3 (finding F9).
-- [ ] 3.1 `^ F` `@Resource("/profile") class ProfilePage` in `DashboardResources.kt`, a route in
+- [x] 3.1 `! F` (13 counted lines with the feature file) `@Resource("/profile") class ProfilePage` in `DashboardResources.kt`, a route in
   `DashboardRoutes.kt`, and `ProfilePage.kt` rendering `html` with `pageAssets()` and an `h1`;
   a new `profile.feature` asserts status 200 and the heading, in the shape of
   `popover_modal.feature:4-7`.

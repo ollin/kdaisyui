@@ -106,7 +106,7 @@ task 3.4.
   asserts `html[data-theme=nord]` and the body's computed background equals nord's base-100.
   Done asserting the attribute on both pages and the checked choice; that the attribute applies the
   theme's colours is what the preview scenario of 3.4 shows, so a second colour check was left out.
-- [ ] 3.8 `^ F` `system` deletes the cookie; the scenario saves `nord`, then "System default",
+- [x] 3.8 `! F` (preceded by a `^ r` moving the storing into `ThemeCookie.kt`) `system` deletes the cookie; the scenario saves `nord`, then "System default",
   and asserts `html` has no `data-theme`.
 - [ ] 3.9 `^ F` The avatar menu's "Profile" links to `href(ProfilePage())`; the scenario opens the
   menu, clicks it, and lands on the profile.

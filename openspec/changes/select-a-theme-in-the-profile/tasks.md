@@ -33,7 +33,7 @@ task 3.4.
 
 ## 2. The library API, under TCR
 
-- [ ] 2.1 `^ F (internal)` `codegen/src/themes.ts`: `themeNames(fileNames)` returns the stems of
+- [x] 2.1 `^ F (internal)` `codegen/src/themes.ts`: `themeNames(fileNames)` returns the stems of
   the `*.css` names, sorted; its `node --test` passes three CSS names out of order and one
   non-CSS name. A pure function over names: reading the directory belongs in the entry point
   (task 2.5), which the mutation gate leaves out (`kdaisyui-codegen`, Mutation testing).

@@ -8,6 +8,8 @@ import { readComponentSet, type SkipReason } from './component-set.ts'
 import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
 import { classListFile, componentMapFile, componentMapLine } from './component-map.ts'
+import { renderDaisyThemeEnum, themeNames } from './themes.ts'
+import { pinnedSubmodule } from './submodules.ts'
 
 // Committed generated root — a sibling of lib/src/, never inside it.
 // Gradle passes --output-dir explicitly; this default is for a bare `node` run.
@@ -43,6 +45,14 @@ function writeClassList(classes: readonly string[]): number {
   fs.mkdirSync(path.dirname(CLASS_LIST_FILE), { recursive: true })
   fs.writeFileSync(CLASS_LIST_FILE, classListFile(classes))
   return new Set(classes).size
+}
+
+/** `DaisyTheme`, in the themes package beside the components, from the names of DaisyUI's theme files. */
+function writeDaisyTheme(): void {
+  const themesDir = path.join(path.dirname(OUTPUT_DIR), 'themes')
+  const fileNames = fs.readdirSync(path.join(pinnedSubmodule('daisyui'), 'packages/daisyui/src/themes'))
+  fs.mkdirSync(themesDir, { recursive: true })
+  fs.writeFileSync(path.join(themesDir, 'DaisyTheme.kt'), renderDaisyThemeEnum(themeNames(fileNames)))
 }
 
 function writeComponentMap(lines: readonly string[]): void {
@@ -123,6 +133,7 @@ function main() {
 
   const classCount = writeClassList(allClasses)
   writeComponentMap(componentMap)
+  writeDaisyTheme()
 
   console.log(`\nGenerated ${componentSet.generated.length} components, skipped ${componentSet.skipped.length}`)
   console.log(`Output: ${OUTPUT_DIR}`)

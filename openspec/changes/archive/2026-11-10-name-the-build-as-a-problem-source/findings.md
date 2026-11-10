@@ -15,3 +15,12 @@
   "Access token is invalid or expired". The rest of the gate is green.
 - **Cause:** an expired token in the CodeScene MCP server's configuration; nothing in this change.
 - **Cost:** the CodeScene row of the gate stays open until Oliver renews the token.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | none - record only; PIT's NO_COVERAGE row is the check, and it named the getter |
+| F2 | - | none - record only; Oliver set the CodeScene token aside on 2026-11-10, and the change merged without its scan |

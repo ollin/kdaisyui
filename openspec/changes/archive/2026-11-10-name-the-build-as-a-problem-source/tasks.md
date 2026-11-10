@@ -12,6 +12,6 @@ developer-only is the frozen raw figure. Block 1: 30, block 2: 30.
 
 ## 2. Gate and archive
 
-- [ ] 2.1 `check` with E2E, `checkGradleProblems`, `:build-checks:pitest` at 100 % strength,
-  CodeScene on the changed files, `openspec validate --strict`.
-- [ ] 2.2 Archive on this branch, `. d (internal)`.
+- [x] 2.1 `check` with E2E, `checkGradleProblems`, `:build-checks:pitest` at 100 % strength,
+  CodeScene on the changed files (not run, F2), `openspec validate --strict`.
+- [x] 2.2 Archive on this branch, `. d (internal)`.

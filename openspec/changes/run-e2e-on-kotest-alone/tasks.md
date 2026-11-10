@@ -64,8 +64,10 @@ nothing else any more are deleted in the same run.
   example of the outline: 7).
   Controls: a policy without `data:` failed the header test; `src="` instead of `src="http`
   failed the image test for `/`.
-- [ ] 3.4 `disabled_state.feature` → `DisabledStateTest` (2).
-- [ ] 3.5 `tabs.feature` → `TabsTest` (2). The computed-style comparison is shared with 3.4 (D3).
+- [x] 3.4 `disabled_state.feature` → `DisabledStateTest` (2).
+  Control: the enabled button swapped for `disabled-class` failed the second test.
+- [x] 3.5 `tabs.feature` → `TabsTest` (2). The computed-style comparison is shared with 3.4 (D3).
+  Control: the inactive tab swapped for the active one failed the second test.
 - [ ] 3.6 `dropdown_popover.feature` → `DropdownPopoverTest` and
   `DropdownPopoverWithoutJavaScriptTest` (1 + 1). Control: the expected top edge moved by 80px
   (`daisyui-component-coverage`).

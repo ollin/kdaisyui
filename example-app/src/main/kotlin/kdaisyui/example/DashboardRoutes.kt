@@ -30,7 +30,8 @@ fun Route.dashboardRoutes() {
     get<TabsDemo> { call.respondHtml(HttpStatusCode.OK) { tabsPage() } }
     get<ProfilePage> { call.respondHtml(HttpStatusCode.OK) { profilePage(call.application.href(ProfilePage.Theme())) } }
     post<ProfilePage.Theme> {
-        val theme = daisyThemeOf(call.receiveParameters()["theme"].orEmpty())!!
+        val theme = daisyThemeOf(call.receiveParameters()["theme"].orEmpty())
+            ?: return@post call.respond(HttpStatusCode.BadRequest)
         call.response.cookies.append(themeCookie(theme))
         call.response.headers.append(HttpHeaders.Location, call.application.href(ProfilePage()))
         call.respond(HttpStatusCode.SeeOther)

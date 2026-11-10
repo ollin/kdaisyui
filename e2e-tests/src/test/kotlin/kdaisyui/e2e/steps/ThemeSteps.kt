@@ -2,8 +2,11 @@ package kdaisyui.e2e.steps
 
 import com.microsoft.playwright.Page.GetByRoleOptions
 import com.microsoft.playwright.options.AriaRole
+import com.microsoft.playwright.options.FormData
+import com.microsoft.playwright.options.RequestOptions
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import kdaisyui.e2e.SharedInfrastructure
 import kdaisyui.example.Profile
 
 /** Steps for the profile's theme picker. */
@@ -33,5 +36,12 @@ class ThemeSteps(private val world: PlaywrightWorld) {
     fun browserKeepsCookie(name: String, value: String) {
         val actual = world.context.cookies().firstOrNull { it.name == name }?.value
         check(actual == value) { "Expected cookie $name=$value, got $actual" }
+    }
+
+    @Then("posting the theme {string} to {string} answers {int} and sets no cookie")
+    fun postingTheme(theme: String, path: String, status: Int) {
+        val form = RequestOptions.create().setForm(FormData.create().set("theme", theme)).setMaxRedirects(0)
+        val response = world.page.request().post("${SharedInfrastructure.BASE_URL}$path", form)
+        check(response.status() == status && "set-cookie" !in response.headers()) { "Expected $status without a cookie, got ${response.status()} ${response.headers()}" }
     }
 }

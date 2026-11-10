@@ -23,3 +23,6 @@ Feature: Profile
     When the user chooses the theme "nord" and saves
     Then the heading "Profile" is visible
     And the browser keeps the cookie "theme" as "nord"
+
+  Scenario: A value that is not a theme is refused
+    Then posting the theme "no-such-theme" to "/profile/theme" answers 400 and sets no cookie

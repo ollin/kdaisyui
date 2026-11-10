@@ -40,7 +40,7 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
   output quoted in the evaluation. Done: without `theme-controller.json`'s sample, a scratch run of
   `index-new.ts` exited 1 with `theme-controller: daisyThemeController.theme needs a sample`; the
   heading above the findings names the samples now.
-- [ ] 2.8 `. d (internal)` `.opencode/skills/kdaisyui-codegen/SKILL.md`: the model file section
+- [x] 2.8 `. d (internal)` `.opencode/skills/kdaisyui-codegen/SKILL.md`: the model file section
   names `sample`; the paragraph on `EXTERNAL_ENUM_VALUES` is replaced. A grep found the table names
   nowhere else.
 

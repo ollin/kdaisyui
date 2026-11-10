@@ -54,10 +54,10 @@ A documented tag needs a builder: kotlinx.html's, or one the library defines in 
 `LIBRARY_ELEMENTS` in `component-shape.ts`, which also gives its HTML name and package. Today that is
 `CALENDAR_DATE`, the cally web component. Generation fails on a documented tag with neither.
 
-An `extra` whose type is a library enum outside the component's file, such as `DaisyTheme`, needs
-an entry in `test-generator.ts`'s `EXTERNAL_ENUM_VALUES` and `EXTERNAL_ENUM_IMPORTS`, beside
-kotlinx.html's `ButtonType`; without one the coverage test asserts the attribute and never passes
-a value, and fails.
+A nullable `extra` whose type is neither `String`, `Boolean` nor one of its component's enums —
+`ButtonType?`, `DaisyTheme?` — declares a `sample` in its model file, the value the coverage test
+passes to drive it; its `imports` are then imported there too. Generation fails, naming component
+and parameter, when one is missing.
 
 | Gradle task | Entry point | Output |
 |---|---|---|
@@ -114,6 +114,8 @@ CI's `generated-sources-drift` fails any commit whose output no longer matches i
 - **`attributes`**: written on every call (`popover`, `role="tablist"`).
 - **`role`, `inputType`**: main function only.
 - **`writes`** on an extra: the class its fragment emits, so the completeness gate counts it.
+- **`sample`** on an extra: the Kotlin expression the coverage tests pass to drive it, e.g.
+  `"DaisyTheme.Dark"` (above); never reaches the generated component.
 - **`joinScope`** on the join, **`joinItem`** on a main function: the join scope's members.
 - **`notOffered`**: frontmatter classes no function offers, each with its reason.
 - **`notExpressed`**: documented elements of this page no function expresses, by key, each with

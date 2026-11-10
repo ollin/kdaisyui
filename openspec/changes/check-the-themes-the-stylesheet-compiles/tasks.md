@@ -27,10 +27,14 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 
 ## 3. The check, under TCR at the root
 
-- [ ] 3.1 `^ F (internal)` Pool reader: entry count and UTF-8 entries (shape per 1.1).
-- [ ] 3.2 `^ F (internal)` Pool reader: Class and NameAndType entries.
-- [ ] 3.3 `^ F (internal)` Pool reader: Fieldref and Methodref resolved to owner, name.
-- [ ] 3.4 `^ F (internal)` Pool reader: skips the other tags by their sizes (Long/Double two slots).
+- [x] 3.1 `! F (internal)` Pool reader: entry count, UTF-8, Class, NameAndType and Fieldref entries,
+  every other tag skipped by its size; a `Fieldref` resolved to owner and name. One run instead of
+  the planned two: without the skip table the reader needs an `else` branch no test reaches, which
+  the 100 % branch gate refuses.
+- [x] 3.2 (folded into 3.1)
+- [ ] 3.3 `^ F (internal)` Pool reader: Methodref and InterfaceMethodref resolved like Fieldref.
+- [ ] 3.4 `^ F (internal)` Pool reader: Long and Double take two slots; the test also reads a real
+  class file of the plugin.
 - [ ] 3.5 `^ F (internal)` `themesNamedIn(classFile, map)`: an entry `Fieldref` gives its value.
 - [ ] 3.6 `^ F (internal)` `getEntries`, `values`, `valueOf` give every theme.
 - [ ] 3.7 `^ F (internal)` `DaisyThemesKt.daisyThemeOf` gives every theme; `getValue` gives none.

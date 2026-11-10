@@ -54,7 +54,9 @@ Central) writes `build/kdaisyui/kdaisyui-classes.txt` with the classes of the co
 compiled code uses. Its task `kdaisyuiStylesheet` compiles your entry stylesheet with the Tailwind
 and DaisyUI it pins, in a Node container reached through the Docker daemon alone, configured by
 `kdaisyui { stylesheet { entry.set(…) } }`; the entry names its inputs as
-`@source "../kdaisyui/kdaisyui-classes.txt"` and `@source "../sources/0-kotlin"`. Without Gradle,
+`@source "../kdaisyui/kdaisyui-classes.txt"` and `@source "../sources/0-kotlin"`. After it,
+`kdaisyuiThemes` warns when the compiled code names a `DaisyTheme` the stylesheet does not carry,
+and says which themes to add to the entry's `@plugin "daisyui"` block. Without Gradle,
 the jar's own `kdaisyui-classes.txt` lists every class. See the README's Quick start, step 3.
 
 ### Content-Security-Policy

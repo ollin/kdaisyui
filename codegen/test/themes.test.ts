@@ -13,7 +13,8 @@ describe('renderDaisyThemeEnum', () => {
   })
 
   it('opens with the generated header, naming its source, and the themes package', () => {
-    assert.match(renderDaisyThemeEnum([]), /^\/\/ GENERATED — DO NOT EDIT\n\/\/ Source: daisyui\/packages\/daisyui\/src\/themes\/\*\.css\n.*\n\npackage io\.github\.ollin\.kdaisyui\.themes\n/)
+    const header = renderDaisyThemeEnum([]).split('\n').slice(0, 7).join('\n')
+    assert.equal(header, '// GENERATED — DO NOT EDIT\n// Source: daisyui/packages/daisyui/src/themes/*.css\n// Regenerate: cd codegen && npm run generate\n\npackage io.github.ollin.kdaisyui.themes\n\n/**')
   })
 })
 

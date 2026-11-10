@@ -1,6 +1,7 @@
 package kdaisyui.e2e.steps
 
 import com.microsoft.playwright.Page.GetByRoleOptions
+import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.options.AriaRole
 import com.microsoft.playwright.options.FormData
 import com.microsoft.playwright.options.RequestOptions
@@ -49,5 +50,10 @@ class ThemeSteps(private val world: PlaywrightWorld) {
     fun pageWearsTheme(theme: String) {
         val actual = world.page.locator("html").getAttribute("data-theme")
         check(actual == theme) { "Expected html data-theme=$theme, got $actual" }
+    }
+
+    @Then("the theme choice {string} is checked")
+    fun themeChoiceIsChecked(theme: String) {
+        assertThat(world.page.locator("#${Profile.ThemeForm().id} input[name=theme][value=$theme]")).isChecked()
     }
 }

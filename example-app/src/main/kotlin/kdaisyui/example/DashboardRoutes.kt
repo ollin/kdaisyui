@@ -28,7 +28,7 @@ fun Route.dashboardRoutes() {
     get<TailwindVariantCheck> { call.respondHtml(HttpStatusCode.OK) { tailwindVariantPage() } }
     get<DisabledStateCheck> { call.respondHtml(HttpStatusCode.OK) { disabledStatePage() } }
     get<TabsDemo> { call.respondHtml(HttpStatusCode.OK) { tabsPage() } }
-    get<ProfilePage> { call.respondHtml(HttpStatusCode.OK) { profilePage(call.application.href(ProfilePage.Theme())) } }
+    get<ProfilePage> { call.respondHtml(HttpStatusCode.OK) { profilePage(call.application.href(ProfilePage.Theme()), call.storedTheme()) } }
     post<ProfilePage.Theme> {
         val theme = daisyThemeOf(call.receiveParameters()["theme"].orEmpty())
             ?: return@post call.respond(HttpStatusCode.BadRequest)

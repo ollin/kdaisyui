@@ -34,7 +34,7 @@ class KdaisyuiPlugin : Plugin<Project> {
                 runtimeClasspath.from(project.configurations.getByName(main.runtimeClasspathConfigurationName))
                 output.set(kdaisyuiDirectory.map { it.file("kdaisyui-classes.txt") })
             }
-            project.tasks.register("kdaisyuiStylesheet", KdaisyuiStylesheet::class.java) {
+            val stylesheetTask = project.tasks.register("kdaisyuiStylesheet", KdaisyuiStylesheet::class.java) {
                 description = "Compiles the stylesheet with the plugin's Tailwind and DaisyUI, in a Node container."
                 entry.set(stylesheet.entry)
                 sources.from(stylesheet.sources)
@@ -49,6 +49,15 @@ class KdaisyuiPlugin : Plugin<Project> {
                 minify.set(stylesheet.minify)
                 output.set(stylesheet.output)
             }
+            // A finalizer, not part of check: it runs whenever the stylesheet is built, up to date or
+            // not, and never in a build that configures no stylesheet.
+            val themesTask = project.tasks.register("kdaisyuiThemes", KdaisyuiThemes::class.java) {
+                description = "Warns when the code names a DaisyUI theme the compiled stylesheet does not carry."
+                classes.from(main.output.classesDirs)
+                this.stylesheet.set(stylesheetTask.flatMap { it.output })
+                runtimeClasspath.from(project.configurations.getByName(main.runtimeClasspathConfigurationName))
+            }
+            stylesheetTask.configure { finalizedBy(themesTask) }
         }
     }
 }

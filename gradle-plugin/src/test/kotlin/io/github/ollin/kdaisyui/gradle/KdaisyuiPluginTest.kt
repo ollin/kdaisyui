@@ -54,6 +54,19 @@ class KdaisyuiPluginTest {
     }
 
     @Test
+    fun theThemeCheckFinalizesTheStylesheetTaskReadingItsOutputAndIsNoPartOfCheck() {
+        project.pluginManager.apply("java")
+        project.pluginManager.apply("io.github.ollin.kdaisyui")
+        val themes = project.tasks.getByName("kdaisyuiThemes") as KdaisyuiThemes
+        val stylesheet = project.tasks.getByName("kdaisyuiStylesheet")
+        assertEquals(setOf(themes), stylesheet.finalizedBy.getDependencies(stylesheet))
+        assertEquals(project.layout.buildDirectory.file("kdaisyui/app.css").get().asFile, themes.stylesheet.get().asFile)
+        assertTrue(themes.classes.files.any { it.path.endsWith("classes/java/main") } && themes.description!!.startsWith("Warns when the code"))
+        val check = project.tasks.getByName("check")
+        assertTrue(check.taskDependencies.getDependencies(check).none { it.name.startsWith("kdaisyui") })
+    }
+
+    @Test
     fun withoutJavaThereIsNothingToScan() {
         project.pluginManager.apply("io.github.ollin.kdaisyui")
         assertNull(project.tasks.findByName("kdaisyuiClasses"))

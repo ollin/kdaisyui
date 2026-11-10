@@ -6,25 +6,42 @@ developer-only is the frozen raw figure. Ledger run
 
 ## 1. Open assumptions
 
-- [ ] 1.1 A2: read the path from `ModelExtraParameter` to `classifyParam`; record in the A2 row
-  which fields reach the coverage generator, `. d`. If `sample` cannot pass without a second
-  shape, revise the design first.
+None open in the code: A2 was settled at proposal by the review of 2026-11-10; A3 is checked by
+task 2.5, which deletes the tables only when the output stays byte-identical.
 
 ## 2. Under TCR (codegen at the root, regenerating first)
 
-- [ ] 2.1 `^ r (internal)` `sample` is an optional field of `ModelExtraParameter` and reaches the
-  shape; `model.test.ts` asserts it passes through.
-- [ ] 2.2 `^ r (internal)` `button.json` and `theme-controller.json` declare their samples.
-- [ ] 2.3 `^ r (internal)` The coverage generator reads `sample` and the extra's `imports`; the two
-  tables are deleted; `just generate` leaves `lib/generated/test/**` unchanged (A3).
-- [ ] 2.4 `^ F (internal)` `extraSampleFindings(model)` in `model-completeness.ts` fails a nullable
-  extra of another type without `sample`; unit test with a fixture model.
-- [ ] 2.5 `. d (internal)` `kdaisyui-codegen` skill: the model file section names `sample`, and the
-  paragraph about `EXTERNAL_ENUM_VALUES` is replaced.
+- [ ] 2.1 `^ F (internal)` `ModelExtraParameter.sample`; `parameterShape` copies `sample` and the
+  extra's `imports` (as `sampleImports`) onto the shape only when a sample is declared;
+  `mainFunctionConfig` strips `sample`. `model.test.ts`: an extra with a sample carries both, one
+  without carries neither and stays deep-equal to today's shape.
+- [ ] 2.2 `. r (internal)` `button.json` and `theme-controller.json` declare `"sample"`. Nothing
+  reads it in generation yet: `committed-model.test.ts` stays green and `just generate` leaves the
+  tree clean.
+- [ ] 2.3 `^ F (internal)` `classifyParam` receives `sample`; a rule after the generated-enum rule
+  classifies a nullable extra with a sample, and the all-flags arguments pass it. Tables still
+  present. `coverage-test-generator.test.ts` (`coverageOf`): a nullable `Foo?` with sample
+  `Foo.Bar` is passed `Foo.Bar`; a nullable `Foo?` without a sample is not; a non-nullable extra
+  with a sample is not.
+- [ ] 2.4 `^ F (internal)` The coverage test imports `sampleImports` of sampled extras; the fixture
+  asserts the import, and that an unsampled extra's `imports` do not appear.
+- [ ] 2.5 `^ r (internal)` Delete `EXTERNAL_ENUM_VALUES`, `EXTERNAL_ENUM_IMPORTS` and their rule;
+  `just generate` leaves `lib/generated/test/**` byte-identical (A3), the snapshot tests stay green.
+- [ ] 2.6 `^ F (internal)` `extraSampleFindings(model)`: a nullable extra that is not `String`,
+  `Boolean` or a `model.enums` type (bare or in `ClassValues<…>`) and has no sample yields
+  `<component>: <function>.<parameter> needs a sample`; fixtures for each exemption;
+  `committed-model.test.ts` asserts no finding for the committed models.
+- [ ] 2.7 `^ F (internal)` `index-new.ts` pushes the finding onto `modelFindings`; checked by hand
+  once with a scratch model without a sample (entry points are outside the mutation gate), the
+  output quoted in the evaluation.
+- [ ] 2.8 `. d (internal)` `.opencode/skills/kdaisyui-codegen/SKILL.md`: the model file section
+  names `sample`; the paragraph on `EXTERNAL_ENUM_VALUES` is replaced. A grep found the table names
+  nowhere else.
 
 ## 3. Gate, adoption and archive
 
-- [ ] 3.1 Full green: `check`, `:lib:testCodegen`, StrykerJS on the changed `codegen/src/` lines,
-  `just generate` clean, CodeScene change set.
+- [ ] 3.1 Full green: `check`, `:lib:testCodegen`, StrykerJS on the changed `codegen/src/` lines
+  (the predicates of 2.3, 2.4 and 2.6 each pinned by a case above), `just generate` clean,
+  CodeScene change set.
 - [ ] 3.2 The evaluation under `tmp/refuse-an-extra-the-coverage-tests-cannot-drive/`.
 - [ ] 3.3 After adoption: archive on the implementation branch, Proposals table, `. d (internal)`.

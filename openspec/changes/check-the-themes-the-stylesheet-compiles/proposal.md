@@ -4,54 +4,59 @@
 `@plugin "daisyui"` block names, `light` and `dark` by default. `daisyTheme(DaisyTheme.Nord)`
 against such a stylesheet renders the default theme, with no error anywhere — the silent gap the
 `css-delivery` capability exists to close for classes, open again for themes
-(`select-a-theme-in-the-profile`, finding F1, adopted by Oliver 2026-11-10).
+(`archive/2026-11-10-select-a-theme-in-the-profile/findings.md`, F1, adopted by Oliver 2026-11-10).
 
 ## What Changes
 
-- **A Gradle plugin task `kdaisyuiThemes`** reads which themes the build's compiled classes name
-  and which the compiled stylesheet carries, and **warns**, naming the missing themes and the
-  entry line that adds them. It runs after `kdaisyuiStylesheet` and joins `check`.
-- **What counts as naming a theme:** a reference to an entry (`DaisyTheme.Nord`, a `Fieldref` in
-  the class file) names that theme; a reference to the whole set (`DaisyTheme.getEntries`,
-  `values`, `valueOf`) or to `daisyThemeOf` names every theme, because the choice is made at
-  runtime. Reading `.value` names none.
-- **What counts as carrying one:** a `[data-theme=<name>]` selector in the compiled output.
-- The how-to's theme section names the warning.
+- **The library ships `kdaisyui-themes.txt`**, a generated resource beside `kdaisyui-components.txt`:
+  each `DaisyTheme` entry and its `data-theme` value. The plugin does not depend on the library,
+  so this is how it learns the themes of the library version a build uses.
+- **A plugin task `kdaisyuiThemes` finalizes `kdaisyuiStylesheet`**: whenever the stylesheet is
+  compiled (or found up to date), it compares the themes the compiled classes name with the
+  `[data-theme=…]` selectors of the output and **warns**, naming the missing themes and the entry
+  line that adds them. It is not added to `check`, so a build without a stylesheet entry, or one
+  using the webjar, is unaffected and no Docker compile is pulled into `check`.
+- **What names a theme:** a `Fieldref` to `DaisyTheme.<Entry>` names that entry's theme; a
+  reference to `DaisyTheme.getEntries`, `values`, `valueOf` or `DaisyThemesKt.daisyThemeOf` names
+  every theme; `getValue` names none.
+- The how-to's theme section and `llms-full-template.md`'s plugin paragraph name the warning.
 
 ### The subtractive option, stated
 
 Document the gap and check nothing, as `select-a-theme-in-the-profile` did. Rejected: that is the
-state F1 recorded as a defect; a consumer learns of a missing theme from a page that looks wrong.
-The alternative of **writing the `themes` line for the consumer** (a plugin option) is rejected in
-design.md: the entry is the consumer's file.
+state F1 recorded as a defect. Writing the `themes` line for the consumer is rejected in design.md.
 
 ## Out of scope
 
-- Custom themes (`@plugin "daisyui/theme"`) and `data-theme` strings written by hand: not
-  `DaisyTheme`, invisible to the check.
-- Failing the build. A warning, as the plugin's other "when in doubt" signals; making it fatal is a
-  later decision once the false-positive rate is known.
-- The webjar setup, which carries every theme.
+- Custom themes and `data-theme` strings written by hand: not `DaisyTheme`, invisible to the check.
+- Failing the build (A6).
+- Classes of the build's dependencies: the same scope as `kdaisyuiClasses`.
 
 ## Assumptions
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | An entry reference compiles to a `Fieldref` naming `io/github/ollin/kdaisyui/themes/DaisyTheme` and the entry | code | confirmed at proposal - `javap -v` of `lib/.../themes/DaisyThemeTest.class`: `Fieldref …DaisyTheme.Nord` and `…DaisyTheme.Dark`, 2026-11-10 |
-| A2 | Runtime choice compiles to `DaisyTheme.getEntries`, or a call to `DaisyThemesKt.daisyThemeOf`, and `.value` to `getValue` | code | confirmed at proposal - `javap -v` of the example app: `ProfilePageKt$appearance$2$1` names `DaisyTheme.getEntries`, `ThemeCookieKt` names `DaisyThemesKt.daisyThemeOf` and `DaisyTheme.getValue` |
-| A3 | Pairing a `Fieldref` with its class and name needs the constant pool parsed; the byte scan `componentClassesNamedIn` uses cannot pair them | code | to check in task 1.1 - a reader of the class-file constant pool in the plugin, no new dependency; if it exceeds ~80 lines, revise toward ASM |
-| A4 | The minified stylesheet keeps the selector as `[data-theme=nord]` | code | confirmed at proposal - the compile of `select-a-theme-in-the-profile` task 1.1 printed `,[data-theme=nord]{` |
-| A5 | No requirement of a main spec this builds on contradicts it: `css-delivery` ("When in doubt the plugin writes the full list", "The narrowed stylesheet styles the example application"), `theme-selection` ("The documentation states which themes exist") | code | confirmed at proposal - read 2026-11-10; the task adds a warning and changes no output |
-| A6 | A warning, not a failure | user | open - ask at review |
+| A1 | An entry reference compiles to a `Fieldref` naming `io/github/ollin/kdaisyui/themes/DaisyTheme` and the entry | code | confirmed at proposal - `javap -v` of `lib/.../themes/DaisyThemeTest.class`: `Fieldref …DaisyTheme.Nord`, `…DaisyTheme.Dark`, 2026-11-10 |
+| A2 | Runtime choice compiles to `DaisyTheme.getEntries` or `DaisyThemesKt.daisyThemeOf`, and `.value` to `getValue` | code | confirmed at proposal - `javap -v` of the example app: `ProfilePageKt$appearance$2$1` names `DaisyTheme.getEntries`, `ThemeCookieKt` names `DaisyThemesKt.daisyThemeOf` and `DaisyTheme.getValue` |
+| A3 | A constant-pool reader of the plugin's own pairs a `Fieldref`/`Methodref` with its class and member in a size the 8-line steps can carry, rather than ASM | code | to check in task 1.1 - a probe over the `DaisyThemeTest.class` bytes, thrown away; it decides reader or ASM before block 2 |
+| A4 | The stylesheet carries a theme as `[data-theme=nord]` minified and in some form unminified | code | half confirmed at proposal - minified `,[data-theme=nord]{` (select-a-theme-in-the-profile task 1.1); unminified to check in task 1.2 |
+| A5 | No requirement of a main spec this builds on contradicts it: `css-delivery` ("A Gradle plugin narrows the class list…", "When in doubt the plugin writes the full list", "The narrowed stylesheet styles the example application"), `theme-selection` ("Every built-in DaisyUI theme is a typed value", "The documentation states which themes exist"), `generated-sources` | code | confirmed at proposal - read 2026-11-10 (the constraints list was not runnable in the review); the task adds a warning and a resource, and changes no output the specs describe |
+| A6 | A warning, not a failure | user | open - asked with this review round |
+| A7 | A finalizer runs when `kdaisyuiStylesheet` is up to date or from cache, not only when it executes | code | to check in task 1.3 - a scratch build of the example app run twice |
+| A8 | Every `DaisyTheme` entry's value is its name lowercased today, but the plugin must not rely on it | code | confirmed at proposal - all 35 entries; hence the generated resource |
 
 ## Capabilities
 
 ### Modified Capabilities
 
-- `theme-selection`: the plugin warns when compiled code names a theme the stylesheet lacks.
+- `theme-selection`: the library ships its theme map, and the plugin warns when compiled code names
+  a theme the stylesheet lacks.
 
 ## Impact
 
-- `gradle-plugin/`: a constant-pool reader, theme references, a stylesheet-theme reader, the task,
-  its registration; tests incl. a TestKit run; Kover 100 % and pitest there as for the rest.
-- `docs/how-to.md`; `llms-full-template.md` if it names the plugin's tasks.
+- `codegen/` (`themes.ts`, `index-new.ts`), `lib/build.gradle.kts`, the generated
+  `lib/generated/main/resources/kdaisyui-themes.txt`.
+- `gradle-plugin/`: the pool reader, theme references, the theme map reader, the stylesheet
+  reader, the task, its wiring; tests in-process (`ProjectBuilder` and pure functions), under the
+  plugin's own Kover 100 % and pitest gates.
+- `docs/how-to.md`, `codegen/llms-full-template.md` and the regenerated `llms-full.txt`.

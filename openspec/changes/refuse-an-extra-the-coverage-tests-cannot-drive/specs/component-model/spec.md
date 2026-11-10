@@ -14,6 +14,12 @@ SHALL hold no table of such types of its own.
 - **WHEN** a model declares `{ "kind": "extra", "name": "x", "type": "Foo?", … }` with no `sample`
 - **THEN** `just generate` fails, naming the component and `x`
 
+#### Scenario: The generator takes the sample from the model
+
+- **WHEN** a fixture model declares `"sample": "Foo.Bar"` on a nullable extra of type `Foo?`
+- **THEN** the generated all-flags coverage test passes `x = Foo.Bar` and imports what the extra's
+  `imports` name, and an extra without a sample imports nothing of its `imports`
+
 #### Scenario: The sample drives the branch
 
 - **WHEN** `theme-controller.json` declares `"sample": "DaisyTheme.Dark"` for `theme`

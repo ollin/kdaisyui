@@ -4,3 +4,8 @@ affected_areas:
   - gradle-plugin/src/main/kotlin/io/github/ollin/kdaisyui/gradle
   - gradle-plugin/src/test/kotlin/io/github/ollin/kdaisyui/gradle
   - docs/how-to.md
+  - codegen/src/themes.ts
+  - codegen/src/index-new.ts
+  - lib/build.gradle.kts
+  - lib/generated/main/resources
+  - codegen/llms-full-template.md

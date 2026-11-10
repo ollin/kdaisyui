@@ -691,3 +691,9 @@ daisyThemeController(theme = io.github.ollin.kdaisyui.themes.DaisyTheme.Dark) { 
 
 `DaisyTheme`, `daisyTheme` and `daisyThemeOf` are new; see "Let users choose a theme" in the
 [how-to](how-to.md).
+
+**2. The plugin task `kdaisyuiStylesheet` takes the class list as a file.** Its `classList` was the
+directory `build/kdaisyui` and is now the file `build/kdaisyui/kdaisyui-classes.txt`; the container
+path, and so your entry's `@source "../kdaisyui/kdaisyui-classes.txt"`, is unchanged. Only a build
+that set the task's `classList` itself changes: set the file. The fix: with the directory as input,
+the task's own output (`build/kdaisyui/app.css`) made every compile out of date, so it ran twice.

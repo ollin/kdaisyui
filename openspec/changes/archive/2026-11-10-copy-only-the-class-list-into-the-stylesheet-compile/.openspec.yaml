@@ -1,0 +1,7 @@
+schema: spec-driven
+created: 2026-11-10
+affected_areas:
+  - gradle-plugin/src/main/kotlin/io/github/ollin/kdaisyui/gradle/KdaisyuiStylesheet.kt
+  - gradle-plugin/src/main/kotlin/io/github/ollin/kdaisyui/gradle/KdaisyuiPlugin.kt
+  - gradle-plugin/src/test/kotlin/io/github/ollin/kdaisyui/gradle
+  - docs/upgrading.md

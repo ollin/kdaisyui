@@ -92,11 +92,12 @@ task 3.4.
   `!` because form, ids and scenario exceed eight counted lines.
 - [x] 3.3 `^ F` `app.css` says `themes: all`; an endpoint scenario asserts that `/static/app.css`
   holds a `[data-theme=` rule for `nord` and for `abyss` (A2, A3 on the served stylesheet).
-- [ ] 3.4 `! F` Each theme's radio sits in a `label` with a card carrying `daisyTheme(theme)` and
+- [x] 3.4 `! F` Each theme's radio sits in a `label` with a card carrying `daisyTheme(theme)` and
   the five swatches (design, decision 4); the scenario asserts, for every card but `light`'s, that
   its computed `--color-base-100` differs from the page's (A5 in a browser). If any card computes
   the default, revise the change first. `!` because card, swatches and scenario exceed eight
-  counted lines.
+  counted lines. Done asserting 35 distinct `--color-primary` values instead: ten themes share
+  `light`'s base-100, so the planned comparison would have failed on correct cards (finding F10).
 - [ ] 3.5 `^ F` `POST /profile/theme` with a theme sets the cookie and answers 303 to `/profile`
   (design, decision 5); the scenario chooses `nord`, saves, and asserts the URL and the cookie.
 - [ ] 3.6 `^ F` A value `daisyThemeOf` refuses answers 400 and sets no cookie; an endpoint scenario.

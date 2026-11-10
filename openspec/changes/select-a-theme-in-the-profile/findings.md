@@ -93,3 +93,13 @@
   eight counted lines with the copy alone. Task 3.0 extracts `demoPage` first.
 - **Cause:** unplanned; the duplication predates this change and the plan did not read the pages.
 - **Cost:** one `^ r` step, about 10 minutes.
+
+## F10 - The planned preview assertion would have failed on correct cards
+
+- **What happened:** 2026-11-10, task 3.4. The task and the spec's falsifier compared each card's
+  `--color-base-100` with the page's. Read before writing the step: ten themes (`bumblebee`,
+  `cmyk`, `corporate`, `emerald`, `fantasy`, `lofi`, `pastel`, `winter`, `wireframe` and `light`)
+  share `oklch(100% 0 0)`, while every theme's `--color-primary` is unique. The scenario asserts
+  35 distinct primaries; the spec delta was corrected in the tick commit.
+- **Cause:** the property was chosen at proposal without reading the theme files' values.
+- **Cost:** about 5 minutes; caught before any run.

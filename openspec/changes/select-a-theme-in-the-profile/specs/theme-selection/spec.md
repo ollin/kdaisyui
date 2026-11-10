@@ -110,15 +110,14 @@ The example application SHALL serve a profile page, linked from the avatar menu,
 `DaisyTheme` and "System default" as radio choices, each built-in theme inside a card rendered
 in that theme. The page SHALL need no script.
 
-**Assumed** that the compiled stylesheet carries all 35 themes once the entry says `themes: all`.
-*Wrong if:* the card of a theme other than `light` computes the default `--color-base-100`, which
-the E2E scenario asserts for every card.
+**Verified** 2026-11-10 (task 3.4): the 35 preview cards compute 35 distinct `--color-primary`
+values. Every built-in theme has its own primary, while ten share `light`'s white base-100.
 
 #### Scenario: Every theme is previewed in itself
 
 - **WHEN** the profile page is open
 - **THEN** it offers one choice per `DaisyTheme` entry and one for the system default
-- **AND** each theme's card computes the background of its own theme
+- **AND** each theme's card computes its own theme's `--color-primary`, distinct from every other card's
 
 #### Scenario: Reached from the menu
 

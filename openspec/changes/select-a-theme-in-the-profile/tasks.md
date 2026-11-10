@@ -119,7 +119,7 @@ task 3.4.
   `daisyThemeController(theme = DaisyTheme.Dark)` beside the `daisyToggle` +
   `daisyThemeControllerClasses()` form; that `DaisyTheme` names every built-in theme
   while the stylesheet decides which exist; a custom theme as `attributes["data-theme"]`.
-- [ ] 4.2 `. d` `codegen/llms-template.md` names the recipe, `codegen/llms-full-template.md`
+- [x] 4.2 `. d` `codegen/llms-template.md` names the recipe, `codegen/llms-full-template.md`
   describes `DaisyTheme`, `daisyTheme`, `daisyThemeOf`; `just generate`; tree clean afterwards.
 - [ ] 4.3 `. d (internal)` `AGENTS.md`'s list of hand-written Kotlin gains `themes/DaisyThemes.kt`;
   `.opencode/skills/kdaisyui-codegen` names the theme step of `generateComponents`.

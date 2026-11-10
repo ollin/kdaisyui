@@ -50,4 +50,4 @@ task 2.5, which deletes the tables only when the output stays byte-identical.
   (the predicates of 2.3, 2.4 and 2.6 each pinned by a case above), `just generate` clean,
   CodeScene change set.
 - [x] 3.2 The evaluation under `tmp/refuse-an-extra-the-coverage-tests-cannot-drive/`.
-- [ ] 3.3 After adoption: archive on the implementation branch, Proposals table, `. d (internal)`.
+- [x] 3.3 After adoption: archive on the implementation branch, Proposals table, `. d (internal)`.

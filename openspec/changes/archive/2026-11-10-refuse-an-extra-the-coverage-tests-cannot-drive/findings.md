@@ -23,3 +23,12 @@ The change comes from `archive/2026-11-10-select-a-theme-in-the-profile/findings
 - **Cause:** the plan did not grep the tests for the tables' behaviour; and the second parallel
   start repeats the same slip from `select-a-theme-in-the-profile` (its evaluation noted it once).
 - **Cost:** about 5 minutes; no revert, nothing pushed in the wrong shape.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | none - record only: a review round doing its job |
+| F2 | The `mcp_Tcr` tool refuses to start while another git command holds the index (or the house rules forbid a commit in the same batch as a TCR run); the slip recurred from select-a-theme-in-the-profile | open |

@@ -32,10 +32,12 @@ forecast `2h 40min (5h DevOnly)` (ratio 0.52 over 177 runs).
   scenarios match `WebjarsAssetsTest`. One difference that loses nothing: the Cucumber endpoint
   scenarios also opened `/` first, and so put the dashboard under the console-error teardown
   once more. Every twin spec still does that in its other test.
-- [ ] 1.2 `! F (internal)` (A2) `PlaywrightSpec(javaScriptEnabled: Boolean = true)` (D1), with a
+- [x] 1.2 `! F (internal)` (A2) `PlaywrightSpec(javaScriptEnabled: Boolean = true)` (D1), with a
   `WithoutJavaScriptTest` that opens the dashboard with JavaScript off and asserts that no
   `/fragments/` response arrives within 3 s. A positive control the other way round: the same
   assertion in a JavaScript-enabled spec would fail, as `HtmxProgressiveLoadingTest` shows.
+  A2 verified 2026-11-10. Green under TCR, and the control: with `javaScriptEnabled = true` the
+  spec fails, `WithoutJavaScriptTest > the dashboard requests no fragment FAILED`.
 
 ## 2. The duplicates
 

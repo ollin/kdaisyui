@@ -23,6 +23,6 @@ A1 and A2 are checked by the step that needs them (2.1, 3.1); A3 and A4 were set
 
 ## 4. Gate, adoption and archive
 
-- [ ] 4.1 Full green: `check` with E2E, Kover (root and plugin), `:gradle-plugin:pitest`, CodeScene.
-- [ ] 4.2 The evaluation under `tmp/copy-only-the-class-list-into-the-stylesheet-compile/`.
+- [x] 4.1 Full green: `check` with E2E, Kover (root and plugin), `:gradle-plugin:pitest`, CodeScene.
+- [x] 4.2 The evaluation under `tmp/copy-only-the-class-list-into-the-stylesheet-compile/`.
 - [ ] 4.3 After adoption: archive on this branch, Proposals table, `. d (internal)`.

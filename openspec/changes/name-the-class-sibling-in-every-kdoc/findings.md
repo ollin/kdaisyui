@@ -20,3 +20,13 @@
 - **Cause:** A2 was confirmed from the sibling emitter's body instead of its call site.
 - **Cost:** about 10 minutes; the enabler task is gone, the change is smaller, and the exact
   emitted string is pinned in the design and the spec.
+
+## F3 - The emitter step and the regeneration cannot be two TCR runs
+
+- **What happened:** at apply, 2026-11-10. Tasks 2.1 (emitter and its unit test) and 2.2 (the
+  regeneration) were planned as two commits. `codegen/test/generator-snapshots.test.ts` compares
+  the emitter's output with the committed `lib/generated`, so the root TCR run of 2.1 alone goes
+  red on the snapshot. The two became one run, `! F`, as the earlier emitter changes were
+  (`97e8abf`, `fc4e552`).
+- **Cause:** the plan split the steps by kind of file, not by what one green run needs.
+- **Cost:** about 5 minutes; no code was written against the old plan.

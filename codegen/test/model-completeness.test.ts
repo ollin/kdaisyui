@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { classFindings, directoryFindings, namingFindings } from '../src/model-completeness.ts'
+import { classFindings, directoryFindings, extraSampleFindings, namingFindings } from '../src/model-completeness.ts'
 import type { ComponentModel } from '../src/model.ts'
 
 const MASK: ComponentModel = {
@@ -70,5 +70,19 @@ describe('namingFindings', () => {
     ] }
 
     assert.deepEqual(namingFindings(modal), [])
+  })
+})
+
+describe('extraSampleFindings', () => {
+  const extra = (name: string, type: string, sample?: string) => ({ kind: 'extra' as const, name, type, default: 'null', apply: '', ...(sample ? { sample } : {}) })
+  const withExtras = (...parameters: ReturnType<typeof extra>[]): ComponentModel => ({ ...MASK, functions: [{ ...MASK.functions[0], parameters }] })
+
+  it('names a nullable extra of another type that declares no sample', () => {
+    assert.deepEqual(extraSampleFindings(withExtras(extra('theme', 'Foo?'), extra('kind', 'Foo?', 'Foo.Bar'))), ['mask: daisyMask.theme needs a sample'])
+  })
+
+  it('accepts a String, a Boolean, a component enum bare or in ClassValues, and a non-nullable type', () => {
+    const driven = withExtras(extra('a', 'String?'), extra('b', 'Boolean?'), extra('c', 'MaskStyle?'), extra('d', 'ClassValues<MaskStyle>?'), extra('e', 'Foo'))
+    assert.deepEqual(extraSampleFindings(driven), [])
   })
 })

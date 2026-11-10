@@ -14,3 +14,10 @@ fun themeCookie(theme: DaisyTheme) =
 
 /** The theme the cookie names, or `null` for none or for a value that is no theme. */
 fun ApplicationCall.storedTheme(): DaisyTheme? = request.cookies["theme"]?.let(::daisyThemeOf)
+
+/** Keeps [value] as the profile's theme; `false`, keeping nothing, when it is no theme. */
+fun ApplicationCall.storeTheme(value: String): Boolean {
+    val theme = daisyThemeOf(value) ?: return false
+    response.cookies.append(themeCookie(theme))
+    return true
+}

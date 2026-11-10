@@ -12,6 +12,8 @@ fun nameAndType(name: Int, descriptor: Int): ByteArray = byteArrayOf(12) + u2(na
 
 fun fieldRef(owner: Int, nameAndType: Int): ByteArray = byteArrayOf(9) + u2(owner) + u2(nameAndType)
 
+fun methodRef(owner: Int, nameAndType: Int, tag: Byte = 10): ByteArray = byteArrayOf(tag) + u2(owner) + u2(nameAndType)
+
 fun integer(): ByteArray = byteArrayOf(3, 0, 0, 0, 42)
 
 private fun u2(value: Int): ByteArray = byteArrayOf((value shr 8).toByte(), value.toByte())

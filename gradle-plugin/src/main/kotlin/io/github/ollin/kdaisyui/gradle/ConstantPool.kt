@@ -49,9 +49,9 @@ private fun entry(tag: Int, buffer: ByteBuffer): Entry = when {
 private const val POOL_COUNT_OFFSET = 8
 private const val UTF8 = 1
 private const val CLASS = 7
-/** Fieldref; the method references follow. */
-private val REFERENCE_TAGS = setOf(9)
+/** Fieldref, Methodref and InterfaceMethodref. */
+private val REFERENCE_TAGS = setOf(9, 10, 11)
 private const val NAME_AND_TYPE = 12
 
 /** The size after the tag of every entry this reader does not keep (JVMS 4.4). */
-private val OTHER_SIZES = mapOf(3 to 4, 4 to 4, 5 to 8, 6 to 8, 8 to 2, 10 to 4, 11 to 4, 15 to 3, 16 to 2, 17 to 4, 18 to 4, 19 to 2, 20 to 2)
+private val OTHER_SIZES = mapOf(3 to 4, 4 to 4, 5 to 8, 6 to 8, 8 to 2, 15 to 3, 16 to 2, 17 to 4, 18 to 4, 19 to 2, 20 to 2)

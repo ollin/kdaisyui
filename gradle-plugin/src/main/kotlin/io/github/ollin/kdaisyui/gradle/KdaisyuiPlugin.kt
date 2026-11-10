@@ -38,7 +38,7 @@ class KdaisyuiPlugin : Plugin<Project> {
                 description = "Compiles the stylesheet with the plugin's Tailwind and DaisyUI, in a Node container."
                 entry.set(stylesheet.entry)
                 sources.from(stylesheet.sources)
-                classList.set(kdaisyuiDirectory)
+                classList.set(classesTask.flatMap { it.output })
                 dependsOn(classesTask)
                 nodeImage.set(stylesheet.nodeImage)
                 tailwind.set(KdaisyuiVersions.tailwind)

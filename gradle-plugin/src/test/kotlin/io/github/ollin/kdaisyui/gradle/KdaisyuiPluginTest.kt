@@ -28,7 +28,7 @@ class KdaisyuiPluginTest {
         project.extensions.getByType(KdaisyuiExtension::class.java).stylesheet { entry.set(project.file("src/main/css/app.css")) }
         val task = project.tasks.getByName("kdaisyuiStylesheet") as KdaisyuiStylesheet
         assertEquals(project.file("src/main/css/app.css"), task.entry.get().asFile)
-        assertEquals(project.layout.buildDirectory.dir("kdaisyui").get().asFile, task.classList.get().asFile)
+        assertEquals(project.layout.buildDirectory.file("kdaisyui/kdaisyui-classes.txt").get().asFile, task.classList.get().asFile)
         assertEquals(listOf(KdaisyuiVersions.tailwind, KdaisyuiVersions.daisyui), listOf(task.tailwind.get(), task.daisyui.get()))
         assertEquals(project.layout.buildDirectory.file("kdaisyui/app.css").get().asFile, task.output.get().asFile)
         assertTrue(task.taskDependencies.getDependencies(task).any { it.name == "kdaisyuiClasses" }, "the class list is written first")

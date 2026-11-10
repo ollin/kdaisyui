@@ -13,7 +13,7 @@ class KdaisyuiStylesheetTest {
     private val task = project.tasks.register("kdaisyuiStylesheet", KdaisyuiStylesheet::class.java).get().also {
         it.entry.set(dir.resolve("src/main/css/app.css"))
         it.sources.from(dir.resolve("src/main/kotlin"))
-        it.classList.set(dir.resolve("build/kdaisyui"))
+        it.classList.set(dir.resolve("build/kdaisyui/kdaisyui-classes.txt"))
         it.nodeImage.set("node:26.12.1-slim")
         it.tailwind.set("4.3.4")
         it.daisyui.set("5.7.50")
@@ -30,7 +30,7 @@ class KdaisyuiStylesheetTest {
                 command = StylesheetCompile.command("4.3.4", "5.7.50", minify = true),
                 copies = mapOf(
                     dir.resolve("src/main/css/app.css") to "/deps/project/css/app.css",
-                    dir.resolve("build/kdaisyui") to "/deps/project/kdaisyui",
+                    dir.resolve("build/kdaisyui/kdaisyui-classes.txt") to "/deps/project/kdaisyui/kdaisyui-classes.txt",
                     dir.resolve("src/main/kotlin") to "/deps/project/sources/0-kotlin",
                 ),
             ),

@@ -2,12 +2,10 @@ package io.github.ollin.kdaisyui.gradle
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
@@ -29,10 +27,13 @@ abstract class KdaisyuiStylesheet : DefaultTask() {
     @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val sources: ConfigurableFileCollection
 
-    /** Where `kdaisyuiClasses` writes its class list; copied in whole, so the entry names it by one path. */
-    @get:InputDirectory
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val classList: DirectoryProperty
+    /**
+     * The class list `kdaisyuiClasses` writes. The file, not its directory: the output's default lies
+     * in that directory, and a directory input would make every compile out of date its successor.
+     */
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val classList: RegularFileProperty
 
     @get:Input abstract val nodeImage: Property<String>
     @get:Input abstract val tailwind: Property<String>
@@ -53,7 +54,7 @@ abstract class KdaisyuiStylesheet : DefaultTask() {
         image = nodeImage.get(),
         npmrc = NpmConfig.npmrc(npmRegistry.get(), npmUser.orNull, npmPassword.orNull),
         command = StylesheetCompile.command(tailwind.get(), daisyui.get(), minify.get()),
-        copies = mapOf(entry.get().asFile to "/deps/project/css/app.css", classList.get().asFile to "/deps/project/kdaisyui") +
+        copies = mapOf(entry.get().asFile to "/deps/project/css/app.css", classList.get().asFile to "/deps/project/kdaisyui/kdaisyui-classes.txt") +
             StylesheetCompile.mountPoints(sources.files.toList()),
     )
 

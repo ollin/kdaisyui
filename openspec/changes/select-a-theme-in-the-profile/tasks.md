@@ -100,7 +100,7 @@ task 3.4.
   `light`'s base-100, so the planned comparison would have failed on correct cards (finding F10).
 - [x] 3.5 `^ F` `POST /profile/theme` with a theme sets the cookie and answers 303 to `/profile`
   (design, decision 5); the scenario chooses `nord`, saves, and asserts the URL and the cookie.
-- [ ] 3.6 `^ F` A value `daisyThemeOf` refuses answers 400 and sets no cookie; an endpoint scenario.
+- [x] 3.6 `^ F` A value `daisyThemeOf` refuses answers 400 and sets no cookie; an endpoint scenario.
 - [ ] 3.7 `^ F` `dashboardShell` and the profile page write `html { daisyTheme(…) }` from the
   cookie, and the profile checks the stored choice; the scenario saves `nord`, opens `/`, and
   asserts `html[data-theme=nord]` and the body's computed background equals nord's base-100.

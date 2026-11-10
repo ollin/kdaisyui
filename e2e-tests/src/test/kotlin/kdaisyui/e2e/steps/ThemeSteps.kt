@@ -56,4 +56,10 @@ class ThemeSteps(private val world: PlaywrightWorld) {
     fun themeChoiceIsChecked(theme: String) {
         assertThat(world.page.locator("#${Profile.ThemeForm().id} input[name=theme][value=$theme]")).isChecked()
     }
+
+    @Then("the page wears no theme of its own")
+    fun pageWearsNoTheme() {
+        val actual = world.page.locator("html").getAttribute("data-theme")
+        check(actual == null) { "Expected html without data-theme, got $actual" }
+    }
 }

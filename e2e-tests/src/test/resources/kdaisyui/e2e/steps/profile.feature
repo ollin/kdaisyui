@@ -34,3 +34,10 @@ Feature: Profile
     When the user chooses the theme "nord" and saves
     And the user opens "/"
     Then the page wears the theme "nord"
+
+  Scenario: The system default forgets the saved theme
+    Given the user opens "/profile"
+    When the user chooses the theme "nord" and saves
+    And the user chooses the theme "system" and saves
+    Then the page wears no theme of its own
+    And the theme choice "system" is checked

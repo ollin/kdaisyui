@@ -41,7 +41,7 @@ resource, the finalizer wiring and the probes; the figure stands, the added work
 - [x] 3.7 `^ F (internal)` `DaisyThemesKt.daisyThemeOf` gives every theme; `getValue` gives none.
 - [x] 3.8 `^ F (internal)` `themeMap(resource)`: the resource's lines read back.
 - [x] 3.9 `^ F (internal)` `themesCarriedBy(css)`: the `[data-theme=…]` names (both forms of 1.2).
-- [ ] 3.10 `^ F (internal)` `missingThemes(named, carried)`.
+- [x] 3.10 `^ F (internal)` `missingThemes(named, carried)`.
 - [ ] 3.11 `^ F (internal)` `themeWarning(missing)`: the text with the entry line.
 - [ ] 3.12 `! F` Task class `KdaisyuiThemes` (`@DisableCachingByDefault`, `@InputFiles` classes,
   `@InputFile` stylesheet, `@Classpath` runtime classpath); its action, called on a `ProjectBuilder`

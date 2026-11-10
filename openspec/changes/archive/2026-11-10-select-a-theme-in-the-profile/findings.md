@@ -124,3 +124,22 @@
 - **Cause:** the Blueprint server's process has no read access to the repository path; it is an
   environment problem, not one of this change.
 - **Cost:** about 10 minutes of manual review; the inspector's own findings are missing.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | The Gradle plugin warns when compiled code names a `DaisyTheme` entry the entry stylesheet's `themes` line does not compile, or writes that line itself from a `themes` option | open |
+| F2 | - | none - record only |
+| F3 | - | none - record only: a decision against a recommendation is the user's |
+| F4 | A `rules:` entry for proposals in `openspec/config.yaml`: an assumption about what a browser renders stays `to check` until a browser ran, however clearly the CSS source reads | open |
+| F5 | A `rules:` entry for tasks: a step that changes public API re-dumps `lib/api/lib.api` in its own run, because `checkKotlinAbi` is part of `check` | open |
+| F6 | A `rules:` entry for tasks: a codegen task names the pure function and the `index-*.ts` entry point that does its file I/O | open |
+| F7 | - | fixed - in this change (markers recounted at each step) |
+| F8 | Generation fails when a model `extra` has a type the coverage-test generator cannot drive (not Boolean, String, a generated enum or listed in `EXTERNAL_ENUM_VALUES`), naming the component and parameter | open |
+| F9 | - | fixed - in this change (task 3.0) |
+| F10 | - | none - record only |
+| F11 | A `rules:` entry for tasks: a change that adds or changes a page has a task to look at it rendered, at a phone and a desktop width, before the gate | open |
+| F12 | Give the daisyUI Blueprint MCP server read access to `~/dev/src` in the opencode configuration (chezmoi-openspace-dotfiles) | open |

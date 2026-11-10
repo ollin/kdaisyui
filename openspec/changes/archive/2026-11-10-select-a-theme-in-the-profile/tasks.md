@@ -155,4 +155,4 @@ task 3.4.
   evaluation says that no mutation tool covers `e2e-tests` or `example-app`.
 - [x] 5.2 `openspec validate select-a-theme-in-the-profile --strict`.
 - [x] 5.3 The evaluation under `tmp/select-a-theme-in-the-profile/` for Oliver to adopt.
-- [ ] 5.4 After adoption: archive on this branch, `. d (internal)`, the change's `tmp/` deleted.
+- [x] 5.4 After adoption: archive on this branch, `. d (internal)`, the change's `tmp/` deleted.

@@ -17,9 +17,9 @@ A1 and A2 are checked by the step that needs them (2.1, 3.1); A3 and A4 were set
 
 ## 3. Checks and docs
 
-- [ ] 3.1 A2: the example app's `kdaisyuiStylesheet` twice in a row; the second is UP-TO-DATE.
+- [x] 3.1 A2: the example app's `kdaisyuiStylesheet` twice in a row; the second is UP-TO-DATE.
   `. d` records it in the A2 row and the spec's Assumed line.
-- [ ] 3.2 `. d` `docs/upgrading.md`, 0.10.x section: the task's `classList` is a file now.
+- [x] 3.2 `. d` `docs/upgrading.md`, 0.10.x section: the task's `classList` is a file now.
 
 ## 4. Gate, adoption and archive
 

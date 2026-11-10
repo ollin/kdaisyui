@@ -6,7 +6,7 @@ The stylesheet task SHALL take the class list as a single file, so that its own 
 directory it is written to, is never one of its inputs, and a second run with unchanged inputs is
 up to date.
 
-**Assumed** until task 3.1: *wrong if* the example app's second run compiles again.
+**Verified** 2026-11-10 on the example app: after a compile the next run is UP-TO-DATE.
 
 #### Scenario: Two runs in a row
 

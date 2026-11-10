@@ -38,4 +38,4 @@ None. Block 1 is kept so the numbering matches the other changes.
   `:doc-snippets:compileSnippets`, `analyze_change_set`.
 - [x] 4.2 `openspec validate name-the-class-sibling-in-every-kdoc --strict`.
 - [x] 4.3 The evaluation under `tmp/name-the-class-sibling-in-every-kdoc/` for Oliver to adopt.
-- [ ] 4.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.
+- [x] 4.4 After adoption: archive on this branch, `. d (internal)`, `tmp/` of the change deleted.

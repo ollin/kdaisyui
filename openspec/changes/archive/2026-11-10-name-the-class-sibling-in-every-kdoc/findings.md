@@ -50,3 +50,15 @@
 - **Cause:** the proposal's Impact said `llms.txt` would not change, reasoning about the sibling
   (already documented there) and not about the how-to's description.
 - **Cost:** about 2 minutes, in the same commit as the section.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | fixed - in this change |
+| F2 | - | none - record only; the review caught it before any code |
+| F3 | A planning rule: a task that changes a generator includes the regeneration, since the snapshot tests compare the emitter with the committed output | open |
+| F4 | A planning rule: a count in a proposal is measured at proposal, with its command, never copied from an older verification | open |
+| F5 | `llms-index.ts` fails generation when a `## ` heading of `docs/how-to.md` is not named in the how-to's description in `codegen/llms-template.md` | open |

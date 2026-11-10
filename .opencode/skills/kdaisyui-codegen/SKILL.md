@@ -54,9 +54,14 @@ A documented tag needs a builder: kotlinx.html's, or one the library defines in 
 `LIBRARY_ELEMENTS` in `component-shape.ts`, which also gives its HTML name and package. Today that is
 `CALENDAR_DATE`, the cally web component. Generation fails on a documented tag with neither.
 
+An `extra` whose type is a library enum outside the component's file, such as `DaisyTheme`, needs
+an entry in `test-generator.ts`'s `EXTERNAL_ENUM_VALUES` and `EXTERNAL_ENUM_IMPORTS`, beside
+kotlinx.html's `ButtonType`; without one the coverage test asserts the attribute and never passes
+a value, and fails.
+
 | Gradle task | Entry point | Output |
 |---|---|---|
-| `generateComponents` | `codegen/src/index-new.ts` | components + `kdaisyui-classes.txt` |
+| `generateComponents` | `codegen/src/index-new.ts` | components + `kdaisyui-classes.txt` + `themes/DaisyTheme.kt` (from the file names of `daisyui/packages/daisyui/src/themes`, logic in `themes.ts`) |
 | `generateHeroicons` | `codegen/src/index-heroicons.ts` | icons |
 | `generateComponentTests` | `codegen/src/index-test-generator.ts` (logic in `test-generator.ts`) | component tests |
 | `generateHeroiconTests` | `codegen/src/index-heroicon-tests.ts` | icon tests |

@@ -27,7 +27,9 @@ Enablers: D1, D2, D3. Desired change: D4 (Cucumber leaves the build).
 
 **Chosen:** `abstract class PlaywrightSpec(javaScriptEnabled: Boolean = true)`. The `beforeTest`
 context uses the flag. A feature that mixes runs with and without JavaScript becomes two specs,
-for example `DropdownPopoverTest` and `DropdownPopoverWithoutJavaScriptTest`.
+for example `DropdownPopoverTest` and `DropdownPopoverWithoutJavaScriptTest`. *In the event no split was needed*: the scripted half of each such feature only fetched
+HTML, which does not depend on the browser's scripting, so each feature became one spec with
+scripting off.
 
 **Rejected: a per-test tag read in `beforeTest`.** It needs Kotest's test-config API inside a
 lifecycle hook, which nobody here has used yet, and it buys one class fewer for three features.

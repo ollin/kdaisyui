@@ -68,11 +68,19 @@ nothing else any more are deleted in the same run.
   Control: the enabled button swapped for `disabled-class` failed the second test.
 - [x] 3.5 `tabs.feature` → `TabsTest` (2). The computed-style comparison is shared with 3.4 (D3).
   Control: the inactive tab swapped for the active one failed the second test.
-- [ ] 3.6 `dropdown_popover.feature` → `DropdownPopoverTest` and
+- [x] 3.6 `dropdown_popover.feature` → `DropdownPopoverTest` and
   `DropdownPopoverWithoutJavaScriptTest` (1 + 1). Control: the expected top edge moved by 80px
   (`daisyui-component-coverage`).
-- [ ] 3.7 `popover_modal.feature` → `PopoverModalTest` and `PopoverModalWithoutJavaScriptTest`
+  One spec, `DropdownPopoverTest(javaScriptEnabled = false)`: the markup test only fetches HTML,
+  which scripting does not touch, so the split D1 foresaw was not needed. The open popover is
+  checked by `Page.isPopoverOpen` in `Popover.kt`, shared with 3.7. Control: the expected top
+  edge moved by 80px failed the second test.
+- [x] 3.7 `popover_modal.feature` → `PopoverModalTest` and `PopoverModalWithoutJavaScriptTest`
   (1 + 1).
+  One spec too, `PopoverModalTest(javaScriptEnabled = false)`. Control: `Shift` instead of
+  `Escape` failed the second test. That control ran beside a TCR run by mistake. The two Gradle
+  builds clashed on `build/test-results` and TCR went red with `NoSuchFileException`. TCR reverted
+  nothing, since every file was a test file, and the rerun alone was green.
 - [ ] 3.8 `! F (internal)` `saveScreenshot(name)` in `PlaywrightSpec` (D2), used by its first
   caller in 3.9.
 - [ ] 3.9 `megamenu_reference.feature` → `MegamenuReferenceTest` and

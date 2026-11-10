@@ -8,7 +8,12 @@ import io.kotest.core.spec.style.FunSpec
 import java.nio.file.Files
 import java.nio.file.Path
 
-abstract class PlaywrightSpec : FunSpec() {
+/**
+ * Pass `javaScriptEnabled = false` to run every test of a spec with scripting off. That is the only
+ * way to prove a component needs none: with scripting on, "no handler was wired" is an argument
+ * about the source rather than an observation of the browser.
+ */
+abstract class PlaywrightSpec(private val javaScriptEnabled: Boolean = true) : FunSpec() {
 
     private var _context: BrowserContext? = null
     private var _page: Page? = null
@@ -23,7 +28,7 @@ abstract class PlaywrightSpec : FunSpec() {
         beforeTest {
             val browser = SharedInfrastructure.browser
             _context = browser.newContext(
-                Browser.NewContextOptions().setBaseURL(BASE_URL)
+                Browser.NewContextOptions().setBaseURL(BASE_URL).setJavaScriptEnabled(javaScriptEnabled)
             )
             _context!!.setDefaultTimeout(10_000.0)
             _context!!.tracing().start(

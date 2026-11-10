@@ -1,0 +1,6 @@
+schema: spec-driven
+created: 2026-11-10
+affected_areas:
+  - gradle-plugin/src/main/kotlin/io/github/ollin/kdaisyui/gradle
+  - gradle-plugin/src/test/kotlin/io/github/ollin/kdaisyui/gradle
+  - docs/how-to.md

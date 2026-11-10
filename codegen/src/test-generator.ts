@@ -366,10 +366,6 @@ function documentedTestFor(componentName: string, page: string, model: Component
 // drive every branch of every function with assertions on the rendered HTML.
 
 
-// Enum types not declared in the component's source - kotlinx.html's, and the library's own
-// `DaisyTheme`: arms can't be enumerated, so the `!= null` branch is driven once with a known value.
-const EXTERNAL_ENUM_VALUES = { ButtonType: 'ButtonType.button', DaisyTheme: 'DaisyTheme.Dark' }
-const EXTERNAL_ENUM_IMPORTS = { ButtonType: 'import kotlinx.html.ButtonType', DaisyTheme: 'import io.github.ollin.kdaisyui.themes.DaisyTheme' }
 
 function lowerFirst(s) {
   return s.charAt(0).toLowerCase() + s.slice(1)
@@ -383,7 +379,8 @@ const PARAM_KIND_RULES = [
   // component's own text parameter.
   [(c) => c.nullable && c.baseType === 'String' && c.name !== 'extraClasses', 'nullableString'],
   [(c) => c.nullable && c.enums[c.enumType], 'enumClass'],
-  [(c) => c.nullable && EXTERNAL_ENUM_VALUES[c.baseType], 'enumExternal'],
+  // An extra the model gives a sample: the value it declares drives the branch.
+  [(c) => c.nullable && c.sample !== undefined, 'sampled'],
 ]
 
 function paramKind(ctx) {
@@ -402,22 +399,22 @@ function paramKind(ctx) {
  * TEST still has to name `ButtonSize` to write `ButtonSize.Lg`, so the wrapper is peeled here —
  * in one place, rather than at each of the three sites that need the enum's own name.
  *
- * A type that is not a holder is returned unchanged, which is what keeps `ButtonType` (a
- * kotlinx.html enum, never wrapped) matching its own rule.
+ * A type that is not a holder is returned unchanged, so `ButtonType` (a kotlinx.html enum, never
+ * wrapped) matches no generated enum and is driven by the sample its model declares.
  */
 function groupEnumOf(baseType: string): string {
   return baseType.match(/ClassValues<(\w+)>/)?.[1] ?? baseType
 }
 
-function classifyParam({ name, type, cssClass, writes }: ParameterShape, enums) {
+function classifyParam({ name, type, cssClass, writes, sample }: ParameterShape, enums) {
   const nullable = type.endsWith('?')
   const baseType = nullable ? type.slice(0, -1) : type
   const enumType = groupEnumOf(baseType)
-  const kind = paramKind({ name, baseType, enumType, nullable, enums })
+  const kind = paramKind({ name, baseType, enumType, nullable, enums, sample })
   // The classes a Boolean adds when true: a toggle's own, or those an extra writes.
   const classes = cssClass === undefined ? [...(writes ?? [])] : [cssClass]
   // Read only for an enum parameter, where it is the enum's entries.
-  return { name, type, baseType, enumType, nullable, kind, classes, enumEntries: enums[enumType] }
+  return { name, type, baseType, enumType, nullable, kind, classes, enumEntries: enums[enumType], sample }
 }
 
 /** One overload on a generated scope, and what a test needs to call it. */
@@ -641,7 +638,7 @@ function allFlagsArgs(ctx, boolCss) {
     boolCss.push(...b.classes)
   }
   for (const s of ctx.params.filter((p) => p.kind === 'nullableString')) args.push(`${s.name} = "x"`)
-  for (const e of ctx.params.filter((p) => p.kind === 'enumExternal')) args.push(`${e.name} = ${EXTERNAL_ENUM_VALUES[e.baseType]}`)
+  for (const e of ctx.params.filter((p) => p.kind === 'sampled')) args.push(`${e.name} = ${e.sample}`)
   if (ctx.hasHatches) args.push('extraClasses = "zz-extra"', 'block = { attributes["data-block"] = "yes" }')
   return args
 }
@@ -769,7 +766,7 @@ function scopeMemberTest(member): string {
 }
 
 /** What a coverage file needs: the fixed five, each non-flow wrapper, each external enum. */
-function coverageImports(funcs, enums): Set<string> {
+function coverageImports(funcs): Set<string> {
   const imports = new Set([
     'import io.github.ollin.kdaisyui.core.htmlId',
     'import kotlinx.html.div',
@@ -784,9 +781,7 @@ function coverageImports(funcs, enums): Set<string> {
     // `div` for FlowContent and Tag, which the set already holds.
     imports.add(`import kotlinx.html.${htmlTagFnFor(wrapperTagOf(fn.receiver))}`)
     for (const declared of fn.parameters) {
-      const parameter = classifyParam(declared, enums)
-      const external = EXTERNAL_ENUM_IMPORTS[parameter.baseType]
-      if (external) imports.add(external)
+      for (const sampleImport of declared.sampleImports ?? []) imports.add(`import ${sampleImport}`)
     }
   }
   return imports
@@ -850,7 +845,7 @@ function coverageTestFor(className: string, shape: ComponentShape, config: MainF
   const enums = enumTableOf(shape)
   const funcs = coverageFunctionsOf(shape, config)
 
-  const imports = coverageImports(funcs, enums)
+  const imports = coverageImports(funcs)
 
   let body = ''
   for (const fn of funcs) body += buildCoverageTests(fn, enums)

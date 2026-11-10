@@ -6,6 +6,7 @@ import os from 'os'
 import path from 'path'
 
 import { isSkipped, modelFileNames, readModel, shapeFromModel, type ComponentModel } from '../src/model.ts'
+import { extraSampleFindings } from '../src/model-completeness.ts'
 
 /**
  * Every committed model file reads and builds a shape. Needs no submodule, so it runs in the
@@ -25,6 +26,11 @@ describe('the committed model', () => {
       .map(model => [(model as ComponentModel).component, (model as ComponentModel).functions.filter(fn => fn.kind === 'main').length])
 
     assert.deepEqual(mains.filter(([, count]) => count !== 1), [])
+  })
+
+  it('gives every extra the coverage tests cannot drive alone a sample', () => {
+    const models = modelFileNames().map(file => readModel(file)).filter(model => !isSkipped(model))
+    assert.deepEqual(models.flatMap(model => extraSampleFindings(model as ComponentModel)), [])
   })
 
   it('gives every generated component its own class, which the shape types as always present', () => {

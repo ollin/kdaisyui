@@ -55,6 +55,8 @@ export interface ModelExtraParameter extends ExtraParameter {
   readonly kind: 'extra'
   /** The classes its fragment writes, e.g. `btn-disabled`, so the class counts as placed. */
   readonly writes?: readonly string[]
+  /** The Kotlin expression a generated coverage test passes to drive it, e.g. `DaisyTheme.Dark`. */
+  readonly sample?: string
 }
 
 export type ModelParameter = ModelEnumParameter | ModelToggleParameter | ModelExtraParameter
@@ -181,7 +183,7 @@ function toggleShape(model: ComponentModel, toggle: ModelToggleParameter, descri
 
 function parameterShape(model: ComponentModel, parameter: ModelParameter, descriptions: Descriptions): ParameterShape {
   if (parameter.kind === 'toggle') return toggleShape(model, parameter, descriptions)
-  if (parameter.kind === 'extra') return { name: parameter.name, type: parameter.type, default: parameter.default, doc: null, ...(parameter.writes ? { writes: parameter.writes as CssClass[] } : {}) }
+  if (parameter.kind === 'extra') return { name: parameter.name, type: parameter.type, default: parameter.default, doc: null, ...(parameter.writes ? { writes: parameter.writes as CssClass[] } : {}), ...(parameter.sample ? { sample: parameter.sample, sampleImports: parameter.imports ?? [] } : {}) }
   return {
     name: parameter.name,
     type: `ClassValues<${parameter.enum}>?`,
@@ -252,7 +254,7 @@ export function mainFunctionConfig(model: ComponentModel): MainFunctionConfig {
   return {
     extras: main.parameters.flatMap(parameter => {
       if (parameter.kind !== 'extra') return []
-      const { kind, writes, ...extra } = parameter
+      const { kind, writes, sample, ...extra } = parameter
       return [extra]
     }),
     hasTextParam: main.text,

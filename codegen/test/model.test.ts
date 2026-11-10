@@ -112,6 +112,12 @@ describe('shapeFromModel', () => {
     assert.deepEqual(joined.scope?.imports, ['kotlinx.html.ButtonType'])
   })
 
+  test("carries an extra's sample onto the shape only when it declares one", () => {
+    const extra = (name: string, sample?: string) => ({ kind: 'extra' as const, name, type: 'Foo?', default: 'null', apply: '', ...(sample ? { sample } : {}) })
+    const parameters = shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [extra('a', 'Foo.A'), extra('b')] }] }, DESCRIPTIONS).functions[0].parameters
+    assert.deepEqual(parameters.filter(parameter => parameter.name === 'a' || parameter.name === 'b').map(parameter => 'sample' in parameter && parameter.sample), ['Foo.A', false])
+  })
+
   test('hands the main function body its extras, text, role and input type', () => {
     const disabled = { kind: 'extra', name: 'disabled', type: 'Boolean', default: 'false', apply: 'if (disabled) this.disabled = true' } as const
     const checkbox: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], element: 'INPUT', parameters: [disabled], role: 'switch', inputType: 'checkBox' }] }
@@ -129,6 +135,18 @@ describe('shapeFromModel', () => {
     const button: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'extra', ...disabled, writes: ['btn-disabled'] }] }] }
 
     assert.deepEqual(mainFunctionConfig(button).extras, [disabled])
+  })
+
+  test('gives a sampled extra that declares no imports an empty list to import', () => {
+    const sampled = { kind: 'extra' as const, name: 'a', type: 'Foo?', default: 'null', apply: '', sample: 'Foo.A' }
+    const parameters = shapeFromModel({ ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [sampled] }] }, DESCRIPTIONS).functions[0].parameters
+    assert.deepEqual(parameters.find(parameter => parameter.name === 'a')?.sampleImports, [])
+  })
+
+  test("keeps an extra's sample out of the body config", () => {
+    const theme = { name: 'theme', type: 'Foo?', default: 'null', apply: '' }
+    const controller: ComponentModel = { ...KBD, enums: [], functions: [{ ...KBD.functions[0], parameters: [{ kind: 'extra', ...theme, sample: 'Foo.A' }] }] }
+    assert.deepEqual(mainFunctionConfig(controller).extras, [theme])
   })
 
   test('a void element takes the same optional block, on its own element', () => {

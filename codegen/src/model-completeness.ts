@@ -7,7 +7,7 @@
  * completeness check.
  */
 
-import type { ComponentModel, ModelEnumParameter, ModelFunction, ModelParameter } from './model.ts'
+import type { ComponentModel, ModelEnumParameter, ModelExtraParameter, ModelFunction, ModelParameter } from './model.ts'
 import { JOIN_ITEM_CLASS } from './join-scope.ts'
 import { toPascalCase } from './classifier.ts'
 
@@ -75,4 +75,20 @@ export function namingFindings(model: ComponentModel): string[] {
     })
     .filter(({ name, expected }) => name !== expected)
     .map(({ name, expected }) => `${model.component}: ${name} should be called ${expected}`)
+}
+
+/**
+ * A nullable extra the generated coverage tests cannot drive on their own: neither `String`,
+ * `Boolean` nor one of the component's enums, bare or in `ClassValues<…>`, and with no `sample`.
+ */
+export function extraSampleFindings(model: ComponentModel): string[] {
+  const enums = new Set(model.enums.map(declared => declared.name))
+  return model.functions.flatMap(fn => fn.parameters
+    .filter((parameter): parameter is ModelExtraParameter => parameter.kind === 'extra' && parameter.type.endsWith('?') && parameter.sample === undefined)
+    .filter(parameter => !drivenWithoutSample(parameter.type.slice(0, -1), enums))
+    .map(parameter => `${model.component}: ${fn.name}.${parameter.name} needs a sample`))
+}
+
+function drivenWithoutSample(type: string, enums: ReadonlySet<string>): boolean {
+  return type === 'String' || type === 'Boolean' || enums.has(type.match(/ClassValues<(\w+)>/)?.[1] ?? type)
 }

@@ -5,7 +5,7 @@ import { fencedHtmlBlocks } from './parser/documented-element.ts'
 import { gapFindings, gapsIn, pageFirst, tagFindings } from './documented-elements.ts'
 import { generateKotlinFile } from './generator-new.ts'
 import { readComponentSet, type SkipReason } from './component-set.ts'
-import { classFindings, directoryFindings, namingFindings, offeredClasses } from './model-completeness.ts'
+import { classFindings, directoryFindings, extraSampleFindings, namingFindings, offeredClasses } from './model-completeness.ts'
 import { mainFunctionConfig, modelFileNames, readModel, type ComponentModel } from './model.ts'
 import { classListFile, componentMapFile, componentMapLine } from './component-map.ts'
 import { renderDaisyThemeEnum, themeNames } from './themes.ts'
@@ -65,7 +65,7 @@ function writeComponentMap(lines: readonly string[]): void {
  */
 function reportIncompleteModels(findings: readonly string[]): void {
   if (findings.length === 0) return
-  console.error(`\nThe model disagrees with DaisyUI's classes, its documented elements or the naming rule:\n${findings.map(finding => `  ${finding}`).join('\n')}`)
+  console.error(`\nThe model disagrees with DaisyUI's classes, its documented elements, the naming rule or the coverage tests' samples:\n${findings.map(finding => `  ${finding}`).join('\n')}`)
   process.exitCode = 1
 }
 
@@ -127,7 +127,7 @@ function main() {
     // classes would put CSS in a consumer's bundle that this library can never produce.
     allClasses.push(...offeredClasses(component.model))
     componentMap.push(componentMapLine(componentName, classified.componentName, kotlin, offeredClasses(component.model)))
-    modelFindings.push(...classFindings(component.model, collectClasses(frontmatter.classnames)), ...namingFindings(component.model), ...documentedGapFindings(component.model, models, componentClasses))
+    modelFindings.push(...classFindings(component.model, collectClasses(frontmatter.classnames)), ...namingFindings(component.model), ...extraSampleFindings(component.model), ...documentedGapFindings(component.model, models, componentClasses))
     console.log(`  ✓ ${classified.componentName}.kt (${shape.functions[0].element})`)
   }
 

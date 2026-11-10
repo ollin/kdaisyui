@@ -54,12 +54,18 @@ describe("a main function's extras", () => {
   })
 })
 
-describe('a DaisyTheme extra', () => {
-  test('is passed a theme in all flags, and the test imports the enum', () => {
-    const theme = { kind: 'extra', name: 'theme', type: 'DaisyTheme?', default: 'null', apply: 'if (theme != null) this.value = theme.value' } as const
-    const kotlin = coverageOf(component('theme-controller', 'ThemeController', 'theme-controller', {}, { parameters: [theme] }))
-    assert.match(kotlin, /theme = DaisyTheme\.Dark, /)
-    assert.match(kotlin, /^import io\.github\.ollin\.kdaisyui\.themes\.DaisyTheme$/m)
+describe('an extra with a sample', () => {
+  const extra = (name: string, type: string, sample?: string) => ({ kind: 'extra' as const, name, type, default: 'null', apply: `this.${name} = ${name}`, ...(sample ? { sample } : {}) })
+  const kotlin = coverageOf(component('wrap', 'Wrap', 'wrap', {}, { parameters: [extra('a', 'Foo?', 'Foo.Bar'), extra('b', 'Foo?'), { ...extra('c', 'Foo', 'Foo.Baz'), default: 'Foo.Qux' }] }))
+
+  test('is passed its sample in all flags, and only when it is nullable', () => {
+    assert.match(kotlin, /a = Foo\.Bar, /)
+    assert.doesNotMatch(kotlin, /b = |c = Foo\.Baz/)
+  })
+
+  test("imports what a sampled extra declares, and nothing an unsampled one does", () => {
+    const imported = coverageOf(component('wrap', 'Wrap', 'wrap', {}, { parameters: [{ ...extra('a', 'Foo?', 'Foo.Bar'), imports: ['x.Foo'] }, { ...extra('b', 'Foo?'), imports: ['x.Bar'] }] }))
+    assert.deepEqual([/^import x\.Foo$/m.test(imported), /^import x\.Bar$/m.test(imported)], [true, false])
   })
 })
 

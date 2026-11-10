@@ -166,6 +166,10 @@ export interface ParameterShape {
    * `btn-disabled`. A class sibling offers them as a plain toggle. Absent for every other one.
    */
   readonly writes?: readonly CssClass[]
+  /** The value a coverage test passes to an extra the model gives a sample. Absent for every other one. */
+  readonly sample?: string
+  /** What the sample needs imported, the extra's own `imports`; present exactly when `sample` is. */
+  readonly sampleImports?: readonly string[]
 }
 
 /**

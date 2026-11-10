@@ -16,7 +16,8 @@
  * working directory, and the stylesheet would depend on more than these two sources.
  */
 @import "tailwindcss" source(none);
-@plugin "daisyui";
+/* Every built-in theme, so the profile can offer and preview each (DaisyUI's default is light and dark). */
+@plugin "daisyui" { themes: all; }
 
 @source "../sources/0-kotlin";
 @source "../kdaisyui/kdaisyui-classes.txt";

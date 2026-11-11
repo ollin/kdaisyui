@@ -22,7 +22,7 @@ checked with `openspec validate <spec> --type spec --strict` before its commit.
 - [x] 3.1 `api-change-detection` (1)
 - [x] 3.2 `ci-job-selection` (1)
 - [x] 3.3 `content-security-policy` (1)
-- [ ] 3.4 `css-delivery` (1)
+- [x] 3.4 `css-delivery` (1)
 - [ ] 3.5 `mutation-testing` (1)
 - [ ] 3.6 `generated-sources` (5)
 - [ ] 3.7 `component-model` (8)

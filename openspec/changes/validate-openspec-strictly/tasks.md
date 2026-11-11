@@ -6,7 +6,7 @@ checked with `openspec validate <spec> --type spec --strict` before its commit.
 
 ## 1. Open assumptions
 
-- [ ] 1.1 A5 and A6 answered by Oliver at review; record the answers in the proposal.
+- [x] 1.1 A5 and A6 answered by Oliver at review; record the answers in the proposal.
 
 ## 2. Evidence as one-line metadata (D1)
 

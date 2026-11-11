@@ -8,7 +8,7 @@ the specs the constraints list named (proposal, *Assumptions*).
 
 ## 2. Documentation
 
-- [ ] 2.1 `. d` The how-to's theme recipe shows a theme of one's own: replace the sentence at
+- [x] 2.1 `. d` The how-to's theme recipe shows a theme of one's own: replace the sentence at
   `docs/how-to.md:380-381` with the `@plugin "daisyui/theme"` block, a compiled Kotlin snippet
   (`ACME_THEME` on `html` and on a theme controller), and what `daisyThemeOf` and the theme check
   do not know. TCR at the repository root, which compiles the snippet.

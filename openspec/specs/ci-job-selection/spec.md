@@ -20,11 +20,9 @@ otherwise. Under `none` no test job SHALL run. Under `prose` exactly `unit-tests
 
 **Verified**: end to end on 2026-11-01 with probe PRs: planning only ran no test job (#441), prose only ran exactly the two (#443), and a broken snippet in a prose-only change still failed `unit-tests` (#444).
 
-The test jobs are five since `subtract-build-overhead` removed `api-baseline`, whose check
-`unit-tests` runs as part of `check`.
+**Why**: the test jobs are five since `subtract-build-overhead` removed `api-baseline`, whose check `unit-tests` runs as part of `check`.
 
-*Wrong if:* a job that a `none` or `prose` pull request skipped fails on the next `full` run for a
-reason that pull request introduced.
+**Wrong if**: a job that a `none` or `prose` pull request skipped fails on the next `full` run for a reason that pull request introduced.
 
 #### Scenario: A change to planning files only
 

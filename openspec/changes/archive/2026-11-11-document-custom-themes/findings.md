@@ -20,3 +20,12 @@
   result shows it.
 - **Cost:** about 10 minutes, no wait. Eleven other items already fail `validate --all --strict`
   on `main` for the same warning, so the repo-wide run could not show it either.
+
+## Proposals
+
+One row per finding (house rules §9).
+
+| Finding | Proposal | Status |
+|---|---|---|
+| F1 | - | none - record only: a scope question with three defensible answers |
+| F2 | `openspec validate --all --strict` fails CI, after the ten main specs over 500 characters are shortened, so a delta that grows a requirement past the limit is caught before archive | open |

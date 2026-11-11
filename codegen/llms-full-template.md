@@ -156,6 +156,17 @@ div { daisyTheme(DaisyTheme.Dracula) }                      // only this element
 daisyThemeController(theme = DaisyTheme.Dark) { type = InputType.checkBox }   // CSS-only switch
 ```
 
+A theme of one's own is DaisyUI CSS, `@plugin "daisyui/theme" { name: "acme"; … }` in the
+stylesheet entry, and a string in Kotlin. `DaisyTheme`, `daisyTheme`, `daisyThemeOf` and the
+plugin's `kdaisyuiThemes` check know only the built-in themes: there is no `DaisyTheme.Acme`,
+`daisyThemeOf("acme")` is `null`, and a misspelt name renders the default theme unwarned.
+
+```kotlin
+const val ACME_THEME = "acme"                                // the block's `name`
+html { attributes["data-theme"] = ACME_THEME }
+daisyThemeController { type = InputType.checkBox; value = ACME_THEME }
+```
+
 ## Components
 
 {{COMPONENTS}}

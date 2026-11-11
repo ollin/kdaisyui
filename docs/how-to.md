@@ -377,8 +377,38 @@ kdaisyui: the code names themes the stylesheet does not carry: nord.
   Add them to the themes of the entry's @plugin "daisyui" block: themes: …, nord;
 ```
 
-A theme of your own, made with
-`@plugin "daisyui/theme"`, has no entry; write it as `attributes["data-theme"] = "mytheme"`.
+**A theme of your own.** Declare it in the same entry, after `@plugin "daisyui"`. DaisyUI's
+[theme page](https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme) lists every variable
+a theme sets, and its [theme generator](https://daisyui.com/theme-generator/) writes them for you:
+
+```css
+@plugin "daisyui/theme" {
+  name: "acme";
+  color-scheme: light;
+  --color-base-100: oklch(98% 0.02 240);
+  --color-primary: oklch(55% 0.3 240);
+  --color-primary-content: oklch(98% 0.01 240);
+  /* …the remaining variables from DaisyUI's theme page */
+}
+```
+
+It has no `DaisyTheme` entry, so name it once in Kotlin and write that name where a built-in
+theme would go — on the page, on a preview, or as a theme controller's value:
+
+```kotlin
+const val ACME_THEME = "acme"   // the `name` of the @plugin "daisyui/theme" block
+
+fun HTML.acmePage() {
+    attributes["data-theme"] = ACME_THEME
+    body {
+        daisyThemeController { type = InputType.checkBox; value = ACME_THEME }
+    }
+}
+```
+
+Two things that know only the built-in themes do not know it: `daisyThemeOf("acme")` returns
+`null`, so a stored choice that may be your theme needs its own comparison, and `kdaisyuiThemes`
+does not check it, so a misspelt name renders the default theme without a warning.
 
 **Step 2: render the page in the user's theme.** Without the attribute, DaisyUI follows the
 browser's light or dark preference:

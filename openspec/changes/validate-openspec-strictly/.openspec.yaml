@@ -1,0 +1,11 @@
+schema: spec-driven
+created: 2026-11-11
+affected_areas:
+  - openspec/specs
+  - openspec/config.yaml
+  - openspec/changes/document-server-rendered-patterns/specs
+  - openspec/changes/archive/2026-11-01-snapshot-test-documented-elements/findings.md
+  - openspec/changes/archive/2026-11-01-snapshot-test-generators/findings.md
+  - openspec/changes/archive/2026-11-11-document-custom-themes/findings.md
+  - .github/openspec-config
+  - .github/workflows/ci.yml

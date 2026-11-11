@@ -44,6 +44,20 @@ jobs:
       - name: openspec/config.yaml parses
         run: bash .github/openspec-config/check.sh openspec/config.yaml
 
+      # Without --strict, a warning passes - and 56 requirements had grown past OpenSpec's
+      # 500-character limit before anything ran this (validate-openspec-strictly). Same job, so the
+      # required check covers it.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .tool-versions
+
+      - name: Prove the strict check can fail
+        run: bash .github/openspec-config/validate.test.sh
+
+      - name: openspec validate --all --strict
+        run: bash .github/openspec-config/validate.sh
+
   scope:
     name: scope
     runs-on: ubuntu-latest

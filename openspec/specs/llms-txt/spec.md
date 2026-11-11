@@ -16,13 +16,7 @@ Markdown list whose every item is a link `[name](url)` optionally followed by `:
 heading level and no other content SHALL appear after the first H2. The generator SHALL refuse to
 write an index that breaks this shape, naming the offending line.
 
-**Verified**: https://llmstxt.org/, section *Format*, read 2026-11-01: "An H1 with the name of the
-project or site. This is the only required section. A blockquote with a short summary of the
-project … Zero or more markdown sections (e.g. paragraphs, lists, etc) of any type except
-headings … Zero or more markdown sections delimited by H2 headers, containing 'file lists' of
-URLs … Each 'file list' is a markdown list, containing a required markdown hyperlink `[name](url)`,
-then optionally a `:` and notes about the file." The same section names `## Optional` as the
-conventional home of links an agent may skip.
+**Verified**: https://llmstxt.org/, section *Format*, read 2026-11-01: "An H1 with the name of the project or site. This is the only required section. A blockquote with a short summary of the project … Zero or more markdown sections (e.g. paragraphs, lists, etc) of any type except headings … Zero or more markdown sections delimited by H2 headers, containing 'file lists' of URLs … Each 'file list' is a markdown list, containing a required markdown hyperlink `[name](url)`, then optionally a `:` and notes about the file." The same section names `## Optional` as the conventional home of links an agent may skip.
 
 #### Scenario: The generated index
 
@@ -43,10 +37,7 @@ Every link in `llms.txt` SHALL be an absolute URL. A link into this repository S
 content host, `https://raw.githubusercontent.com/ollin/kdaisyui/main/<path>`, and the generator
 SHALL refuse a link whose `<path>` does not exist in the working tree, naming the link.
 
-**Verified**: `curl -I https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/button.md`
-on 2026-11-01 returned `HTTP/2 200` and `content-type: text/plain; charset=utf-8`. The
-specification's *Proposal* section asks that links "point to LLM-friendly content, such as the
-markdown versions of pages"; the HTML view under `github.com/…/blob/…` is not that.
+**Verified**: `curl -I https://raw.githubusercontent.com/ollin/kdaisyui/main/docs/reference/button.md` on 2026-11-01 returned `HTTP/2 200` and `content-type: text/plain; charset=utf-8`. The specification's *Proposal* section asks that links "point to LLM-friendly content, such as the markdown versions of pages"; the HTML view under `github.com/…/blob/…` is not that.
 
 #### Scenario: A component link
 
@@ -65,12 +56,7 @@ markdown versions of pages"; the HTML view under `github.com/…/blob/…` is no
 and SHALL link every generated component reference page, each with the component's one-line
 summary as its note. The generator SHALL fail when a page is not linked, naming the page.
 
-**Assumed**: every Markdown file under `docs/` outside `docs/reference/` is a page a reader is
-meant to find. Verified for today's tree on 2026-11-01 (`docs/reference.md`, `docs/how-to.md`,
-`docs/explanation.md`, `docs/tutorials/index.md`, `docs/tutorials/getting-started.md`,
-`docs/tutorials/build-a-dashboard.md`; `docs/screenshots/` holds no Markdown). *Wrong if:* a
-Markdown file is added under `docs/` that must not be linked, such as a draft; the gate would then
-need a declared exclusion, and the template is where it would be declared.
+**Assumed**: every Markdown file under `docs/` outside `docs/reference/` is a page a reader is meant to find. Verified for today's tree on 2026-11-01 (`docs/reference.md`, `docs/how-to.md`, `docs/explanation.md`, `docs/tutorials/index.md`, `docs/tutorials/getting-started.md`, `docs/tutorials/build-a-dashboard.md`; `docs/screenshots/` holds no Markdown). *Wrong if:* a Markdown file is added under `docs/` that must not be linked, such as a draft; the gate would then need a declared exclusion, and the template is where it would be declared.
 
 #### Scenario: A new documentation page
 
@@ -92,8 +78,7 @@ The complete generated API, in the form `llms.txt` held until this change, SHALL
 `llms-full.txt`, generated from the same component shapes in the same run as the reference pages,
 and `llms.txt` SHALL link it.
 
-**Verified**: `codegen/src/index-docs.ts:109-110` writes the file from `written.shapes` and
-`docSummaries`, the inputs of the pages written in the same `main()`.
+**Verified**: `codegen/src/index-docs.ts:109-110` writes the file from `written.shapes` and `docSummaries`, the inputs of the pages written in the same `main()`.
 
 #### Scenario: A tool fetches the full file
 

@@ -30,9 +30,7 @@ This is not a disclaimer. It is the fact that makes every other requirement here
 component can be generated correctly, pass every generated test, and render completely unstyled,
 because nothing in the library or its test suite ever evaluates CSS.
 
-**Verified:** the generated component tests assert rendered class strings, and until this change
-no test in any module evaluated a computed style except
-`NavigationSteps.firstNavHasBackground`, a single check on one element.
+**Verified**: the generated component tests assert rendered class strings, and until this change no test in any module evaluated a computed style except `NavigationSteps.firstNavHasBackground`, a single check on one element.
 
 #### Scenario: A consumer learns what they must supply
 - **WHEN** a developer reads the getting-started documentation
@@ -44,12 +42,7 @@ The documentation SHALL describe a CSS setup in which any Tailwind variant of a 
 `lg:btn-lg`, `max-sm:card-side`, `dark:alert-info` — actually applies, and the example application
 SHALL use that setup.
 
-**Verified by measurement.** The prebuilt `daisyui.css` webjar ships exactly five variant prefixes
-pre-generated — `sm:` `md:` `lg:` `xl:` (1198 rules each) and `hover:` (60) — and nothing else.
-Tailwind's browser build contributes no DaisyUI variants at all, because it can only generate
-variants of utilities it owns. So `lg:btn-lg` works and `max-sm:card-side` silently does nothing.
-Compiling with the DaisyUI plugin produces both; the example app's stylesheet is 23 KB against the
-webjar's 1123 KB, because a compile emits only what is reachable.
+**Verified by measurement**: The prebuilt `daisyui.css` webjar ships exactly five variant prefixes pre-generated — `sm:` `md:` `lg:` `xl:` (1198 rules each) and `hover:` (60) — and nothing else. Tailwind's browser build contributes no DaisyUI variants at all, because it can only generate variants of utilities it owns. So `lg:btn-lg` works and `max-sm:card-side` silently does nothing. Compiling with the DaisyUI plugin produces both; the example app's stylesheet is 23 KB against the webjar's 1123 KB, because a compile emits only what is reachable.
 
 **The failure this prevents is a wrong general rule, not a broken build.** A developer tries
 `lg:btn-lg`, sees it work, concludes that variants are supported, and later loses `dark:alert-info`
@@ -75,14 +68,9 @@ documentation SHALL show how.
 runtime from `ButtonVariant.Primary`, so it appears in no file a content scanner reads, and the
 published jar carries compiled classes and no Kotlin sources.
 
-**Verified end to end** from the published jar alone: extracting `kdaisyui-classes.txt`, compiling
-against it plus a consumer source file in which `btn-primary` occurs zero times, produces a
-stylesheet containing `.btn-primary`, `.btn-lg` and `.max-sm\:card-side`. 555 classes, 7 KB in the
-jar, 552 KB of resulting CSS.
+**Verified end to end**: from the published jar alone: extracting `kdaisyui-classes.txt`, compiling against it plus a consumer source file in which `btn-primary` occurs zero times, produces a stylesheet containing `.btn-primary`, `.btn-lg` and `.max-sm\:card-side`. 555 classes, 7 KB in the jar, 552 KB of resulting CSS.
 
-**Assumed:** that the list stays in step with the components. *Wrong if:* a regeneration changes
-the components without changing the list — which `generated-sources-drift` is what stands behind,
-since both are generated into `lib/generated/` by the same task.
+**Assumed**: the list stays in step with the components. *Wrong if:* a regeneration changes the components without changing the list — which `generated-sources-drift` is what stands behind, since both are generated into `lib/generated/` by the same task.
 
 #### Scenario: A class only reachable through an enum reaches the stylesheet
 - **WHEN** an application uses a generated component whose class name is assembled at runtime
@@ -117,8 +105,7 @@ The library SHALL publish a Gradle plugin whose task writes `build/kdaisyui/kdai
 with the CSS classes of exactly those components whose JVM classes the build's compiled code
 references.
 
-**Verified** that compiled code names them: a byte scan of `example-app`'s classes found the file
-class of each of the 20 components it uses, and the enums it names, 2026-10-31.
+**Verified**: compiled code names them: a byte scan of `example-app`'s classes found the file class of each of the 20 components it uses, and the enums it names, 2026-10-31.
 
 #### Scenario: Only the components called
 
@@ -147,12 +134,9 @@ the plugin SHALL write every class the library can emit and warn, naming the rea
 The example application SHALL build its stylesheet from the plugin's list, through the plugin's
 compile task and nothing else, and the E2E suite SHALL pass on it.
 
-**Verified** 2026-11-01: with the stylesheet built from the plugin's list of the app's 20
-components (55.5 KB gzip before, 27.3 KB after, unminified), all 53 E2E scenarios pass.
+**Verified**: 2026-11-01: with the stylesheet built from the plugin's list of the app's 20 components (55.5 KB gzip before, 27.3 KB after, unminified), all 53 E2E scenarios pass.
 
-**Verified** 2026-11-08 that the same scenarios pass on the stylesheet the plugin's task compiles,
-minified (150,330 bytes): 62 E2E tests, 0 failures, with the served `app.css` byte-identical to
-the task's output (change `compile-the-stylesheet-in-the-plugin`, task 5.1).
+**Verified**: 2026-11-08 that the same scenarios pass on the stylesheet the plugin's task compiles, minified (150,330 bytes): 62 E2E tests, 0 failures, with the served `app.css` byte-identical to the task's output (change `compile-the-stylesheet-in-the-plugin`, task 5.1).
 
 #### Scenario: The suite on the narrowed stylesheet
 
@@ -173,11 +157,7 @@ Node and no npm on the build host. It SHALL copy the inputs in and the styleshee
 bind mount, and SHALL place them at fixed paths so the entry's `@source` and `@import` lines
 are the same on every machine.
 
-**Verified** that the shape works where it is needed: the Deploy-Radar's `compileTailwind`
-(fwb-application, `fwb-deploy-radar/server/build.gradle.kts:128-174`) copies in, runs one-shot
-and copies out through Testcontainers in a CI job whose image has no docker CLI and no Node
-(its finding F14). **Assumed** that the plugin's task does the same on that runner; *wrong if*
-it fails there, which only the Deploy-Radar can observe.
+**Verified**: the shape works where it is needed: the Deploy-Radar's `compileTailwind` (fwb-application, `fwb-deploy-radar/server/build.gradle.kts:128-174`) copies in, runs one-shot and copies out through Testcontainers in a CI job whose image has no docker CLI and no Node (its finding F14). **Assumed** that the plugin's task does the same on that runner; *wrong if* it fails there, which only the Deploy-Radar can observe.
 
 #### Scenario: A compile through the daemon
 
@@ -202,9 +182,7 @@ configuration, so a build with no internet compiles from a mirror. A credential 
 the user or only the password is given SHALL fail the task, naming the missing half, before any
 container starts.
 
-**Verified** that the Deploy-Radar needs exactly this: its npm mirror refuses anonymous
-clients, and its build composes an `.npmrc` with the mirror and a base64 `_auth`
-(`server/build.gradle.kts:147-150`).
+**Verified**: the Deploy-Radar needs exactly this: its npm mirror refuses anonymous clients, and its build composes an `.npmrc` with the mirror and a base64 `_auth` (`server/build.gradle.kts:147-150`).
 
 #### Scenario: Behind a mirror
 
@@ -224,11 +202,7 @@ build, and the compile task SHALL use them. A build SHALL NOT need to state them
 SHALL warn when the `kdaisyui` jar on the build's runtime classpath is of another version than
 its own, naming both.
 
-**Verified** that the plugin's build reads the root's files, 2026-11-07:
-`gradle-plugin/settings.gradle.kts` takes the `libs` catalog from `../gradle/libs.versions.toml`;
-and that the plugin and the library carry one version number by decision
-(`gradle.properties`, last comment line), so a matched pair is the versions the components were
-generated against.
+**Verified**: the plugin's build reads the root's files, 2026-11-07: `gradle-plugin/settings.gradle.kts` takes the `libs` catalog from `../gradle/libs.versions.toml`; and that the plugin and the library carry one version number by decision (`gradle.properties`, last comment line), so a matched pair is the versions the components were generated against.
 
 #### Scenario: The versions match the catalog
 
@@ -252,7 +226,7 @@ The stylesheet task SHALL take the class list as a single file, so that its own 
 directory it is written to, is never one of its inputs, and a second run with unchanged inputs is
 up to date.
 
-**Verified** 2026-11-10 on the example app: after a compile the next run is UP-TO-DATE.
+**Verified**: 2026-11-10 on the example app: after a compile the next run is UP-TO-DATE.
 
 #### Scenario: Two runs in a row
 

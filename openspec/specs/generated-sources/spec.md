@@ -17,10 +17,7 @@ ordinary readable source, and its reference documentation as ordinary readable M
 Generated Markdown SHALL carry the same do-not-edit attribution the generated Kotlin carries,
 naming the input it was produced from.
 
-**Verified**: measured 2026-08-15 after the merge — 457 files under `lib/generated/`: 66
-components, 324 icon functions, 66 component tests, 66 branch-coverage tests and one icon
-render-coverage test. `:lib:test` runs 1488 tests from them and `koverVerify` passes at 100%
-line and branch.
+**Verified**: measured 2026-08-15 after the merge — 457 files under `lib/generated/`: 66 components, 324 icon functions, 66 component tests, 66 branch-coverage tests and one icon render-coverage test. `:lib:test` runs 1488 tests from them and `koverVerify` passes at 100% line and branch.
 
 The fourth category arrived with `rejoin-main`:
 `codegen/src/test-generator-heroicons.ts` produces `HeroIconsGeneratedTest.kt`. Without
@@ -36,14 +33,7 @@ A reference page's inputs are the parsed DaisyUI frontmatter, the classified com
 and a committed editorial summary per component. The summary is an input to the generator like
 any other, not an exception to generation.
 
-**Verified, and it refuted the assumption it replaces.** The original wording claimed every
-element of all 66 pages was derivable from the frontmatter and the model alone, naming the
-description among them. Measured over all 66 non-skipped components on 2026-09-12: no page
-carries a `##` heading, so there is no prose, example or note outside the template — but **0 of
-66 descriptions match the frontmatter `desc`**. All 66 are hand-written editorial summaries
-(`card`: "Content containers with body and title" against DaisyUI's "Cards are used to group and
-display content in a way that is easily readable"). The description is editorial, and no parser
-can derive it.
+**Verified, and it refuted the assumption it replaces**: The original wording claimed every element of all 66 pages was derivable from the frontmatter and the model alone, naming the description among them. Measured over all 66 non-skipped components on 2026-09-12: no page carries a `##` heading, so there is no prose, example or note outside the template — but **0 of 66 descriptions match the frontmatter `desc`**. All 66 are hand-written editorial summaries (`card`: "Content containers with body and title" against DaisyUI's "Cards are used to group and display content in a way that is easily readable"). The description is editorial, and no parser can derive it.
 
 It is not derivable and it cannot be dropped either, for a mechanical reason: `index.md` is a
 66-row table with a one-cell Description column, and DaisyUI's `desc` runs to 48 words for
@@ -104,10 +94,7 @@ Compiling and testing the library SHALL NOT invoke the code generators. `compile
 `compileTestKotlin` and the test tasks SHALL succeed with no Node.js, no npm and no
 initialised git submodules. Regeneration SHALL be an explicit task a person runs.
 
-**Verified**: `lib/build.gradle.kts:194-201` wires `compileKotlin` to `generateComponents`
-and `generateHeroicons`, and `compileTestKotlin` to `generateComponentTests`; those tasks
-shell out to `npm install --silent && node …` (`:156`, `:171`, `:187`) and depend on the
-submodule checkout tasks (`:152`, `:167`, `:183`).
+**Verified**: `lib/build.gradle.kts:194-201` wires `compileKotlin` to `generateComponents` and `generateHeroicons`, and `compileTestKotlin` to `generateComponentTests`; those tasks shell out to `npm install --silent && node …` (`:156`, `:171`, `:187`) and depend on the submodule checkout tasks (`:152`, `:167`, `:183`).
 
 #### Scenario: Building without the toolchain the generators need
 
@@ -127,8 +114,7 @@ Running the generators twice against identical inputs SHALL produce byte-identic
 independently of the machine, the filesystem's directory order, the active locale and the
 Node.js minor version.
 
-**Verified** (measured 2026-08-14, tasks 1.1-1.4). All 450 generated files, compared by
-aggregate SHA-256:
+**Verified**: (measured 2026-08-14, tasks 1.1-1.4). All 450 generated files, compared by aggregate SHA-256:
 
 - two consecutive runs on one machine — identical;
 - `LANG=C` and `LANG=de_DE.UTF-8` against the ambient `en_US.UTF-8` — identical;
@@ -161,14 +147,7 @@ committed. This replaces the guarantee the build-time dependency used to provide
 regeneration SHALL cover **every** generator, including the icon render tests, the reference
 documentation, **and the two agent-facing files `llms.txt` and `llms-full.txt`**.
 
-**Verified, in part**, and separately for each scope the requirement claims. Kotlin: the drift
-job was observed failing on a hand-edited generated file (PR #231, 2026-08-15) while the test
-jobs passed on the same commit. Reference documentation: the same observation was repeated for
-the extended scope on PR #339, 2026-09-12 — a hand-edited `docs/reference/megamenu.md` failed the
-job, which named the file, while `unit-tests`, `codegen-tests`, `mutation-tests` and
-`api-baseline` all passed on that commit. `llms.txt`: in the job's paths since 0.7.0
-(`.github/workflows/ci.yml`, the `git status --porcelain` line). `llms-full.txt`: the
-`llms-txt-index` change adds it to the same line and the same Gradle task's outputs.
+**Verified, in part**: and separately for each scope the requirement claims. Kotlin: the drift job was observed failing on a hand-edited generated file (PR #231, 2026-08-15) while the test jobs passed on the same commit. Reference documentation: the same observation was repeated for the extended scope on PR #339, 2026-09-12 — a hand-edited `docs/reference/megamenu.md` failed the job, which named the file, while `unit-tests`, `codegen-tests`, `mutation-tests` and `api-baseline` all passed on that commit. `llms.txt`: in the job's paths since 0.7.0 (`.github/workflows/ci.yml`, the `git status --porcelain` line). `llms-full.txt`: the `llms-txt-index` change adds it to the same line and the same Gradle task's outputs.
 
 The second observation is the one that measures the gap this requirement exists to close: four
 other gates read a page documenting the wrong lambda receiver and none of them objected.
@@ -232,8 +211,7 @@ kotlinx.html builder that opens it.
 An attribution that resolves to nothing is worse than none: it removes the reader's only way to
 check generated output against its input while looking as though it provides one.
 
-**Verified**, both halves, on 2026-09-12 against DaisyUI 5.7.17 — measuring what was wrong before
-this requirement existed. Both are now fixed:
+**Verified**: , both halves, on 2026-09-12 against DaisyUI 5.7.17 — measuring what was wrong before this requirement existed. Both are now fixed:
 
 - **10 of 66** generated component files cited a directory that does not exist — every multi-word
   component, because the header lower-cased the PascalCase name (`FileInput.kt` cited
@@ -267,9 +245,7 @@ types, parameter order and default values. CI SHALL fail when the dump differs f
 The baseline SHALL be rewritten only by an explicit task, and SHALL NOT be part of the ordinary
 regeneration command.
 
-**Verified** that the existing JVM baseline cannot carry these facts. `lib/api/lib.api` is a dump
-of JVM descriptors, which have no representation for receiver types, parameter names or default
-values. Measured 2026-09-12:
+**Verified**: the existing JVM baseline cannot carry these facts. `lib/api/lib.api` is a dump of JVM descriptors, which have no representation for receiver types, parameter names or default values. Measured 2026-09-12:
 
 ```
 daisyOtp (Lkotlinx/html/FlowContent;L…/HtmlId;L…/OtpVariant;L…/OtpSize;Z
@@ -280,9 +256,7 @@ Changing a lambda's receiver from `DIV` to `LABEL` is source-breaking for every 
 produces no diff there. In Kotlin, parameter names are equally part of the API because of named
 arguments, and are equally absent.
 
-**Verified** that the JVM baseline is not thereby useless: removing a parameter *is* visible, since
-a `Function1` disappears and the arity changes. The two baselines answer different questions and
-both are kept.
+**Verified**: the JVM baseline is not thereby useless: removing a parameter *is* visible, since a `Function1` disappears and the arity changes. The two baselines answer different questions and both are kept.
 
 The explicit-update rule is what makes the artefact a gate rather than a mirror: a baseline
 rewritten by the same command that regenerates the code would follow every change silently, which

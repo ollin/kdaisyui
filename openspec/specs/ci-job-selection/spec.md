@@ -14,20 +14,11 @@ planning or agent file, `prose` when every file is one of those or prose documen
 otherwise. Under `none` no test job SHALL run. Under `prose` exactly `unit-tests` and
 `generated-sources-drift` SHALL run. Under `full` all test jobs SHALL run.
 
-**Verified** that the two `prose` jobs are the only readers of prose documentation: the snippet
-compile in `doc-snippets/build.gradle.kts` runs in `check`, and the `llms.txt` coverage gate in
-`codegen/src/index-docs.ts` runs in `generateReferenceDocs`; every other hit for `README` or
-`docs/` in a build script, Kotlin or TypeScript source is a comment or a test fixture (grep,
-2026-11-01).
+**Verified**: the two `prose` jobs are the only readers of prose documentation: the snippet compile in `doc-snippets/build.gradle.kts` runs in `check`, and the `llms.txt` coverage gate in `codegen/src/index-docs.ts` runs in `generateReferenceDocs`; every other hit for `README` or `docs/` in a build script, Kotlin or TypeScript source is a comment or a test fixture (grep, 2026-11-01).
 
-**Verified** that the planning and agent files are read by no test job: every hit in build
-scripts, Kotlin and TypeScript is a comment (grep, 2026-11-01). The one job that reads one,
-`openspec-config`, parses `openspec/config.yaml` and is not selected by the classification: it
-runs on every pull request.
+**Verified**: the planning and agent files are read by no test job: every hit in build scripts, Kotlin and TypeScript is a comment (grep, 2026-11-01). The one job that reads one, `openspec-config`, parses `openspec/config.yaml` and is not selected by the classification: it runs on every pull request.
 
-**Verified** end to end on 2026-11-01 with probe PRs: planning only ran no test job (#441), prose
-only ran exactly the two (#443), and a broken snippet in a prose-only change still failed
-`unit-tests` (#444).
+**Verified**: end to end on 2026-11-01 with probe PRs: planning only ran no test job (#441), prose only ran exactly the two (#443), and a broken snippet in a prose-only change still failed `unit-tests` (#444).
 
 The test jobs are five since `subtract-build-overhead` removed `api-baseline`, whose check
 `unit-tests` runs as part of `check`.
@@ -62,9 +53,7 @@ reason that pull request introduced.
 A job SHALL be skipped only by its own job condition, never by a workflow-level path filter, so
 that the ruleset's required checks report success instead of staying pending.
 
-**Verified**: GitHub docs, *Troubleshooting required status checks*, read 2026-11-01, table
-*Handling skipped but required checks*: a workflow skipped by path filtering leaves its checks
-"Pending" and blocks merging; a job skipped by a conditional "reports 'Success'".
+**Verified**: GitHub docs, *Troubleshooting required status checks*, read 2026-11-01, table *Handling skipped but required checks*: a workflow skipped by path filtering leaves its checks "Pending" and blocks merging; a job skipped by a conditional "reports 'Success'".
 
 #### Scenario: A planning-only pull request is mergeable
 
@@ -79,14 +68,9 @@ SHALL count as both its old and its new path. The classifier SHALL check its own
 fixed paths with known answers before it classifies a pull request, and SHALL fail when one of
 them answers wrong.
 
-**Verified**: GitHub docs, same table: "A job depends on a failed job · The dependent job is
-skipped and may not block merging". Without this requirement a broken classifier would let a pull
-request merge with no test run at all. Observed on probe PR #442: the self-test failed, and all
-six jobs ran.
+**Verified**: GitHub docs, same table: "A job depends on a failed job · The dependent job is skipped and may not block merging". Without this requirement a broken classifier would let a pull request merge with no test run at all. Observed on probe PR #442: the self-test failed, and all six jobs ran.
 
-**Verified** 2026-11-01 on the probe PR #439: a `pull_request` run checks out the merge commit,
-whose first parent is `main`, and `git diff --no-renames --name-only HEAD^1 HEAD` listed exactly
-the two files the pull request changed.
+**Verified**: 2026-11-01 on the probe PR #439: a `pull_request` run checks out the merge commit, whose first parent is `main`, and `git diff --no-renames --name-only HEAD^1 HEAD` listed exactly the two files the pull request changed.
 
 #### Scenario: The classifier fails
 
@@ -109,9 +93,7 @@ the two files the pull request changed.
 A push to `main` SHALL run every job, unclassified. A newer push to the same pull request SHALL
 cancel that pull request's older, still running CI run.
 
-**Verified** for pull requests on 2026-11-01: a second push to probe PR #443 cancelled its first run.
-**Assumed** for `main`: each push there is its own group, keyed on the run id, so a merge cannot
-cancel the previous merge's run. *Wrong if:* a run on `main` ends `cancelled`.
+**Verified**: for pull requests on 2026-11-01: a second push to probe PR #443 cancelled its first run. **Assumed** for `main`: each push there is its own group, keyed on the run id, so a merge cannot cancel the previous merge's run. *Wrong if:* a run on `main` ends `cancelled`.
 
 #### Scenario: Two pushes to one pull request
 

@@ -25,12 +25,7 @@ parameter binding from the model, never from its own classification.
 Whether a function takes content stays derived from its declared element by the HTML
 specification's void-element list. That is a rule of HTML, not an inference about DaisyUI.
 
-**Verified** that the model carries every fact today's inferred shape holds, 2026-10-18 (task 1.4):
-the 68 committed model files rebuild all 66 component shapes deep-equal to the inferred ones, the
-join scope included, and reproduce every main function's extras, text flag, role and input type,
-every editorial summary and both skip reasons. A corrupted model file fails that test and names the
-component. Shape equality is what the emitters render from, so generation cannot differ; block 3
-still regenerates after every switch, because the emitters also read the configuration until then.
+**Verified**: the model carries every fact today's inferred shape holds, 2026-10-18 (task 1.4): the 68 committed model files rebuild all 66 component shapes deep-equal to the inferred ones, the join scope included, and reproduce every main function's extras, text flag, role and input type, every editorial summary and both skip reasons. A corrupted model file fails that test and names the component. Shape equality is what the emitters render from, so generation cannot differ; block 3 still regenerates after every switch, because the emitters also read the configuration until then.
 
 It took no field beyond the eleven listed in task 1.2 and 1.4, and 65 of 66 components round-tripped
 before the join scope was modelled.
@@ -76,21 +71,11 @@ offering one class twice.
 This replaces three guards with one set comparison: the unread-configuration guard, the
 offered-twice guard and the measured-group completeness check.
 
-**Verified** that the removal direction matters: `mask-square` stayed in the generated API from
-DaisyUI 5.0 until 5.7.19 removed it from the documentation, and was withdrawn in kdaisyui only on
-the 5.7.42 bump (`docs/upgrading.md`, "How to migrate from 0.5.x", item 12).
+**Verified**: the removal direction matters: `mask-square` stayed in the generated API from DaisyUI 5.0 until 5.7.19 removed it from the documentation, and was withdrawn in kdaisyui only on the 5.7.42 bump (`docs/upgrading.md`, "How to migrate from 0.5.x", item 12).
 
-**Verified** that the placed-twice direction matters: 0.6.0 shipped `daisyDropdown` with five
-placement booleans beside the enums that replaced them (`docs/upgrading.md`, "How to migrate from
-0.6.x", item 1).
+**Verified**: the placed-twice direction matters: 0.6.0 shipped `daisyDropdown` with five placement booleans beside the enums that replaced them (`docs/upgrading.md`, "How to migrate from 0.6.x", item 1).
 
-**Verified** that the frontmatter is a complete class source, measured 2026-10-18 at the pinned tag
-(task 1.1): of every `$$`-marked class in the fenced examples of all component pages, none is
-missing from every frontmatter. 291 marked classes are absent from their own page's frontmatter,
-and all of them are other components' classes used inside an example, such as `btn` inside a card.
-The only seven declared nowhere are not component classes: six variant-prefixed drawer tokens such
-as `is-drawer-close:$$tooltip`, which the parser reads as one token, and `rounded-box`, a DaisyUI
-utility.
+**Verified**: the frontmatter is a complete class source, measured 2026-10-18 at the pinned tag (task 1.1): of every `$$`-marked class in the fenced examples of all component pages, none is missing from every frontmatter. 291 marked classes are absent from their own page's frontmatter, and all of them are other components' classes used inside an example, such as `btn` inside a card. The only seven declared nowhere are not component classes: six variant-prefixed drawer tokens such as `is-drawer-close:$$tooltip`, which the parser reads as one token, and `rounded-box`, a DaisyUI utility.
 
 *Wrong if:* a later DaisyUI release marks a component class in an example that no frontmatter
 declares. The bump report's class delta is built from the frontmatter, so it would not name such a
@@ -132,12 +117,9 @@ edited by hand.
 The report compares DaisyUI with itself, not with the model, so a deliberate divergence such as
 `daisyBadge` rendering `<span>` (#356) needs no exception: it does not change between releases.
 
-**Verified** in part, 2026-10-18 (task 2.6): replaying the 5.7.17 to 5.7.42 bump reports exactly one
-change, `mask-square` removed from `mask`, which is the documentation defect that bump carried.
+**Verified**: in part, 2026-10-18 (task 2.6): replaying the 5.7.17 to 5.7.42 bump reports exactly one change, `mask-square` removed from `mask`, which is the documentation defect that bump carried.
 
-**Assumed** that these four kinds of delta keep naming what the deleted guards would have caught.
-*Wrong if:* a later bump surfaces a defect the deleted element cross-check would have caught and the
-report did not name.
+**Assumed**: these four kinds of delta keep naming what the deleted guards would have caught. *Wrong if:* a later bump surfaces a defect the deleted element cross-check would have caught and the report did not name.
 
 #### Scenario: A class is removed upstream
 
@@ -166,16 +148,9 @@ Which classes share an axis is a design decision recorded in the model, not a me
 members of one axis cannot be passed together in typed form; that combination stays reachable
 through `extraClasses`.
 
-**Verified** which combinations the declared axes give up, against `codegen/exclusivity.json` at
-DaisyUI 5.7.42 before it is deleted: 29 pairs measured `compose` and land on one axis. Seventeen
-are opposite values of one property, such as `chat-start` with `chat-end`, or two sides of a
-dropdown, which DaisyUI's examples never combine. Twelve combine two looks, such as `btn-outline`
-with `btn-ghost`, and those are the ones a caller might want. All 29 are listed in `design.md`.
+**Verified**: which combinations the declared axes give up, against `codegen/exclusivity.json` at DaisyUI 5.7.42 before it is deleted: 29 pairs measured `compose` and land on one axis. Seventeen are opposite values of one property, such as `chat-start` with `chat-end`, or two sides of a dropdown, which DaisyUI's examples never combine. Twelve combine two looks, such as `btn-outline` with `btn-ghost`, and those are the ones a caller might want. All 29 are listed in `design.md`.
 
-**Verified** as a decision, Oliver, 2026-10-18: compatibility with 0.7.x is not a constraint; one
-enum-typed parameter per axis with defaults;
-real on/off features stay booleans; a typed spelling for the pairs within one axis is given up in
-favour of `extraClasses`; a type-state builder was rejected for its error messages and API size.
+**Verified**: as a decision, Oliver, 2026-10-18: compatibility with 0.7.x is not a constraint; one enum-typed parameter per axis with defaults; real on/off features stay booleans; a typed spelling for the pairs within one axis is given up in favour of `extraClasses`; a type-state builder was rejected for its error messages and API size.
 
 #### Scenario: Two members of one axis
 
@@ -224,19 +199,11 @@ Generation SHALL fail when a main function, a part or an enum one of them choose
 otherwise. The check covered functions only until 2026-10-18, and the one rename that slipped
 through, the indicator item's two placement enums, is why it covers enums too.
 
-**Verified** that two declared stems suffice, run over the model on 2026-10-18 (task 4.1): the rule
-renames 13 functions, and the only rename that would be wrong is `daisyCalendar` to
-`daisyCally`, because the calendar's main class is `cally`, a class named after the Cally web
-component rather than after the calendar. `btn` is the other. `stats` and `tabs` are the names the
-rule should produce.
+**Verified**: two declared stems suffice, run over the model on 2026-10-18 (task 4.1): the rule renames 13 functions, and the only rename that would be wrong is `daisyCalendar` to `daisyCally`, because the calendar's main class is `cally`, a class named after the Cally web component rather than after the calendar. `btn` is the other. `stats` and `tabs` are the names the rule should produce.
 
-**Verified** that the 0.7.0 names break these rules, read from `lib/api/components.api` on
-2026-10-18: `daisyStatStat`, `daisyStatStatTitle`, `daisyStepsStep`, `daisyTabTab` repeat their
-component; 19 color parameters are called `variant`; six enums end in `Modifier`;
-`StepsVariant.StepNeutral` and `ChatVariant.BubbleNeutral` carry a class prefix inside the entry.
+**Verified**: the 0.7.0 names break these rules, read from `lib/api/components.api` on 2026-10-18: `daisyStatStat`, `daisyStatStatTitle`, `daisyStepsStep`, `daisyTabTab` repeat their component; 19 color parameters are called `variant`; six enums end in `Modifier`; `StepsVariant.StepNeutral` and `ChatVariant.BubbleNeutral` carry a class prefix inside the entry.
 
-**Verified** as a decision, Oliver, 2026-10-18: a clean API now outweighs compatibility with
-0.7.x.
+**Verified**: as a decision, Oliver, 2026-10-18: a clean API now outweighs compatibility with 0.7.x.
 
 *Wrong if:* a DaisyUI class name gives a function name that collides with another generated
 function. The generated sources then fail to compile, and the model declares a name for one of
@@ -291,19 +258,11 @@ Generation SHALL also fail on a declaration that no example of its page needs: o
 element on the page has any more, or whose elements have become expressible. Without that, a gap
 closed by a later model edit would stay listed as open.
 
-**Verified** the size of the gap before the composition rule, measured 2026-10-18: 39 keys, 12 a
-class no function offers on the element DaisyUI puts it on, 27 two components on one element
-(`dropdown-content menu`, `badge indicator-item`, `input validator`, `btn theme-controller`, …).
+**Verified**: the size of the gap before the composition rule, measured 2026-10-18: 39 keys, 12 a class no function offers on the element DaisyUI puts it on, 27 two components on one element (`dropdown-content menu`, `badge indicator-item`, `input validator`, `btn theme-controller`, …).
 
-**Verified** that no example puts two members of one axis on one element, measured the same day:
-the axis rule gives up nothing DaisyUI documents.
+**Verified**: no example puts two members of one axis on one element, measured the same day: the axis rule gives up nothing DaisyUI documents.
 
-**Verified** that under the composition rule, with the class-only functions, the moves and the
-four new functions of `express-every-documented-element`, no declaration remains, simulated
-2026-10-18 with those model edits applied in memory (task 1.1): 2,564 of 2,571 marked elements
-expressible, 117 of them as compositions, no gap, and no two own classes on one element offering
-the same modifier. The other seven count no class. Re-counted against the real model after block 5
-the same day (task 5.5): the same numbers, and no `notExpressed` declaration left in `codegen/model/`.
+**Verified**: under the composition rule, with the class-only functions, the moves and the four new functions of `express-every-documented-element`, no declaration remains, simulated 2026-10-18 with those model edits applied in memory (task 1.1): 2,564 of 2,571 marked elements expressible, 117 of them as compositions, no gap, and no two own classes on one element offering the same modifier. The other seven count no class. Re-counted against the real model after block 5 the same day (task 5.5): the same numbers, and no `notExpressed` declaration left in `codegen/model/`.
 
 #### Scenario: A part's element is expressible
 - **WHEN** an example shows `<div class="$$card-body">` and `daisyCardBody` offers `card-body`
@@ -366,25 +325,13 @@ declares, such as `lg:$$menu-horizontal`, are passed through `extraClasses` and 
 written. `join-item` is neither passed nor expected: only a join's content adds it, and the test
 calls the function on its own. Elements that yield the same call SHALL yield one test.
 
-**Verified** how often the tag differs, measured 2026-10-18 at the pinned tag before this
-requirement changed: of the tested elements, 2,196 sit on the tag their function renders, 357 in
-45 shapes on another (`mask` on `<input>` 60, `badge` on `<div>` 50, `btn` on `<div>`, `<a>` and
-`<input>` 86, `dropdown` on `<div>` 29, `tab` on `<input>` 19), and 11 are class-only. Every tag but
-`<calendar-date>` has a kotlinx.html builder; `li` needs `ul` or `ol` as its parent and `legend`
-needs `fieldSet`, `details` or `figure`, read the same day in kotlinx-html-jvm 0.12.0's sources.
+**Verified**: how often the tag differs, measured 2026-10-18 at the pinned tag before this requirement changed: of the tested elements, 2,196 sit on the tag their function renders, 357 in 45 shapes on another (`mask` on `<input>` 60, `badge` on `<div>` 50, `btn` on `<div>`, `<a>` and `<input>` 86, `dropdown` on `<div>` 29, `tab` on `<input>` 19), and 11 are class-only. Every tag but `<calendar-date>` has a kotlinx.html builder; `li` needs `ul` or `ol` as its parent and `legend` needs `fieldSet`, `details` or `figure`, read the same day in kotlinx-html-jvm 0.12.0's sources.
 
-**Verified** both adjustments against what the tests did before `test-every-documented-element`,
-read 2026-10-18 in `componentCallFor`: a prefixed class went to `extraClasses` and was expected,
-because `at()` is parked; `join-item`, being no class of the page's own frontmatter, was dropped.
+**Verified**: both adjustments against what the tests did before `test-every-documented-element`, read 2026-10-18 in `componentCallFor`: a prefixed class went to `extraClasses` and was expected, because `at()` is parked; `join-item`, being no class of the page's own frontmatter, was dropped.
 
-**Verified** that every function's receiver can be supplied in a generated test by a wrapping
-element, read from `codegen/model/` on 2026-10-18: the receivers are `FlowContent`, `UL` and
-`FIELDSET`, each one kotlinx.html builder.
+**Verified**: every function's receiver can be supplied in a generated test by a wrapping element, read from `codegen/model/` on 2026-10-18: the receivers are `FlowContent`, `UL` and `FIELDSET`, each one kotlinx.html builder.
 
-**Verified** that a function writes nothing on every call that DaisyUI's element omits, so "exactly
-the counted classes" holds, read 2026-10-18: the one function writing a second class on every
-call, `daisySkeletonText`, expresses only elements that carry both. A generated test that renders
-an extra class would be a defect in the model.
+**Verified**: a function writes nothing on every call that DaisyUI's element omits, so "exactly the counted classes" holds, read 2026-10-18: the one function writing a second class on every call, `daisySkeletonText`, expresses only elements that carry both. A generated test that renders an extra class would be a defect in the model.
 
 #### Scenario: A part becomes a test
 - **WHEN** an example shows `<div class="$$stat-title">`
@@ -435,27 +382,15 @@ A sibling puts one component's typed classes on an element another function rend
 element no function renders: `daisyMenu { daisyDropdownContentClasses() }`,
 `a { daisyButtonClasses(color = ButtonColor.Primary) }`.
 
-**Verified** that the names are free, read 2026-10-18 from `lib/generated/main`: no generated
-function ends in `Classes`, and the 132 rendering functions have 131 distinct names (`daisyDiffItem`
-is two overloads for two receivers). Generated 2026-10-18 (task 2.2): 129 siblings, because three
-structural wrappers write no class and get none.
+**Verified**: the names are free, read 2026-10-18 from `lib/generated/main`: no generated function ends in `Classes`, and the 132 rendering functions have 131 distinct names (`daisyDiffItem` is two overloads for two receivers). Generated 2026-10-18 (task 2.2): 129 siblings, because three structural wrappers write no class and get none.
 
-**Verified** that one extra parameter writes a class, read from `codegen/model/` the same day:
-`daisyButton`'s `disabled`, which sets `disabled` and writes `btn-disabled`. Every other extra sets
-a property and writes no class.
+**Verified**: one extra parameter writes a class, read from `codegen/model/` the same day: `daisyButton`'s `disabled`, which sets `disabled` and writes `btn-disabled`. Every other extra sets a property and writes no class.
 
-**Verified** that a sibling can be called in every function's `block`, read
-2026-10-18 in kotlinx-html-jvm 0.12.0's sources: every element class the model uses is an
-`HTMLTag`, and `HTMLTag` implements `Tag`.
+**Verified**: a sibling can be called in every function's `block`, read 2026-10-18 in kotlinx-html-jvm 0.12.0's sources: every element class the model uses is an `HTMLTag`, and `HTMLTag` implements `Tag`.
 
-**Verified** that the KDoc was the one place that did not name the sibling, read 2026-11-07:
-`docs/reference/badge.md` and `llms-full.txt:85,179` showed it, `lib/generated/main/.../Badge.kt`'s
-KDoc of `daisyBadge` did not; and that the omission cost a consumer nine raw class strings
-(the Deploy-Radar, fwb-application, proposal item 7 of 2026-11-07).
+**Verified**: the KDoc was the one place that did not name the sibling, read 2026-11-07: `docs/reference/badge.md` and `llms-full.txt:85,179` showed it, `lib/generated/main/.../Badge.kt`'s KDoc of `daisyBadge` did not; and that the omission cost a consumer nine raw class strings (the Deploy-Radar, fwb-application, proposal item 7 of 2026-11-07).
 
-**Verified** that it does now, generated 2026-11-10 by `name-the-class-sibling-in-every-kdoc`:
-135 sentences across the 66 component files, one per rendering function with a sibling, and
-`codegen/test/generator-new.test.ts` asserts the sentence and its absence on a structural wrapper.
+**Verified**: it does now, generated 2026-11-10 by `name-the-class-sibling-in-every-kdoc`: 135 sentences across the 66 component files, one per rendering function with a sibling, and `codegen/test/generator-new.test.ts` asserts the sentence and its absence on a structural wrapper.
 
 #### Scenario: A sibling adds the same classes as its function
 - **WHEN** `div { daisyButtonClasses(color = ButtonColor.Primary, active = true) }` is rendered
@@ -483,10 +418,7 @@ The model SHALL be able to declare a function with no own class and no element, 
 name. It generates no rendering function, only its class sibling, offering the classes DaisyUI puts
 on a child that carries no class of its own.
 
-**Verified** where DaisyUI puts the classes this is for, measured 2026-10-18 at the pinned tag:
-`menu-active` on the `<a>` inside a `<li>`; `menu-disabled` on a `<li>`; `dock-active` on a dock's
-`<button>` items; `rating-hidden` on the rating's first `<input>`; `list-col-grow` and
-`list-col-wrap` on the children of a `list-row`. None of these elements carries a class of its own.
+**Verified**: where DaisyUI puts the classes this is for, measured 2026-10-18 at the pinned tag: `menu-active` on the `<a>` inside a `<li>`; `menu-disabled` on a `<li>`; `dock-active` on a dock's `<button>` items; `rating-hidden` on the rating's first `<input>`; `list-col-grow` and `list-col-wrap` on the children of a `list-row`. None of these elements carries a class of its own.
 
 #### Scenario: A menu item's state
 - **WHEN** `li { a { daisyMenuItemClasses(active = true) } }` is rendered
@@ -503,7 +435,7 @@ declare a `sample`, the Kotlin expression the generated coverage tests pass to d
 generation SHALL fail, naming the component and the parameter, when it does not. The generator
 SHALL hold no table of such types of its own.
 
-**Verified** 2026-11-10: two extras need one today, `ButtonType?` and `DaisyTheme?`.
+**Verified**: 2026-11-10: two extras need one today, `ButtonType?` and `DaisyTheme?`.
 
 #### Scenario: An extra without a sample
 

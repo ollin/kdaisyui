@@ -13,10 +13,7 @@ supplies.
 Every element kdaisyui renders SHALL work under `Content-Security-Policy: default-src 'self'; img-src 'self' data:`.
 kdaisyui SHALL write no inline `style`, no inline event handler and no `data:` URL itself.
 
-**Verified** that `img-src` needs `data:`: DaisyUI 5.7.50 sets `data:` SVG masks in
-`loading.css`, `mask.css`, `chat.css`, `tooltip.css` and `mockup.css`, and the noise in
-`base/svg.css`; under `default-src 'self'` the suite logged their refusals, and under this policy
-none (F4, F5, A9).
+**Verified**: `img-src` needs `data:`: DaisyUI 5.7.50 sets `data:` SVG masks in `loading.css`, `mask.css`, `chat.css`, `tooltip.css` and `mockup.css`, and the noise in `base/svg.css`; under `default-src 'self'` the suite logged their refusals, and under this policy none (F4, F5, A9).
 
 Provenance, in part verified and in part assumed: `grep -rnE 'attributes\["(on|src|style)'` over
 `lib/generated/main` and `lib/src/main` finds no write since `csp-safe-popover-anchoring` (#477)
@@ -43,10 +40,7 @@ response, and every E2E scenario SHALL pass with it. It SHALL load nothing from 
 and link an icon of its own origin, so no page load logs a request the policy or the server
 refuses.
 
-**Verified** that it does not today, read 2026-11-07: `DashboardShell.kt` writes a `<style>`
-element, five files write an `https://picsum.photos` image (`DashboardShell.kt:94`,
-`TeamFragment.kt:82`, `RepoFragment.kt:51`, `FormSectionsFragment.kt:43`,
-`CardsRow2Fragment.kt:69`), and no page links an icon.
+**Verified**: it does not today, read 2026-11-07: `DashboardShell.kt` writes a `<style>` element, five files write an `https://picsum.photos` image (`DashboardShell.kt:94`, `TeamFragment.kt:82`, `RepoFragment.kt:51`, `FormSectionsFragment.kt:43`, `CardsRow2Fragment.kt:69`), and no page links an icon.
 
 #### Scenario: The header is on every response
 
@@ -65,9 +59,7 @@ a page error, and the failure SHALL quote every such message. Since `run-e2e-on-
 every E2E test is a Kotest spec built on `PlaywrightSpec`, whose teardown is the one place this
 is enforced; until then `CucumberHooks` enforced it a second time for the Cucumber scenarios.
 
-**Verified** in task 1.1 (Chromium 156): an inline style refused, a `data:` image refused and a
-404 each reach Playwright's `onConsoleMessage` as type `error` before the test ends; the 404's
-text names no URL, so the collector adds each message's location (finding F3).
+**Verified**: in task 1.1 (Chromium 156): an inline style refused, a `data:` image refused and a 404 each reach Playwright's `onConsoleMessage` as type `error` before the test ends; the 404's text names no URL, so the collector adds each message's location (finding F3).
 
 #### Scenario: An inline style is refused
 

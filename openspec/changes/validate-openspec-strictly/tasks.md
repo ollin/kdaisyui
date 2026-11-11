@@ -32,7 +32,7 @@ Counts from the measurement at proposal; 2.1 and 2.2 may lower them.
 
 ## 4. The rest of the strict failures
 
-- [ ] 4.1 `document-server-rendered-patterns`: its two overlong ADDED requirements, in that change's
+- [x] 4.1 `document-server-rendered-patterns`: its two overlong ADDED requirements, in that change's
   delta, the same way.
 - [ ] 4.2 Proposals tables: one row per finding with a valid status in
   `snapshot-test-documented-elements` and `snapshot-test-generators`; F2 of

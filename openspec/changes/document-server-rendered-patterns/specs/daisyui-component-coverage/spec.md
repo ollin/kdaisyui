@@ -7,11 +7,7 @@ in the document or swapped in by htmx, and a `form method="dialog"` button insid
 it, with no script beyond htmx. The example application SHALL render one on a demo route, the
 E2E suite SHALL assert the showing and the closing, and the how-to SHALL show the recipe.
 
-**Verified** in DaisyUI's CSS, `daisyui/packages/daisyui/src/components/modal.css`, 2026-11-07:
-`.modal` is `display: grid` and `invisible` (line 3), and the rule that makes it visible
-matches `&[open]` (lines 34-39); so a closed dialog is hidden by `visibility`, and removing
-`open` hides it again. **Assumed** for the htmx swap; *wrong if* task 2.2 does not see the
-dialog after the click, or 2.3 still sees it after Close.
+**Verified**: in DaisyUI's CSS, `daisyui/packages/daisyui/src/components/modal.css`, 2026-11-07: `.modal` is `display: grid` and `invisible` (line 3), and the rule that makes it visible matches `&[open]` (lines 34-39); so a closed dialog is hidden by `visibility`, and removing `open` hides it again. **Assumed** for the htmx swap; *wrong if* task 2.2 does not see the dialog after the click, or 2.3 still sees it after Close.
 
 #### Scenario: Served open
 

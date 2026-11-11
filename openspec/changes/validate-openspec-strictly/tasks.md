@@ -20,7 +20,7 @@ checked with `openspec validate <spec> --type spec --strict` before its commit.
 ## 3. Split the requirements still over 500 characters (D2), one commit per spec
 
 - [x] 3.1 `api-change-detection` (1)
-- [ ] 3.2 `ci-job-selection` (1)
+- [x] 3.2 `ci-job-selection` (1)
 - [ ] 3.3 `content-security-policy` (1)
 - [ ] 3.4 `css-delivery` (1)
 - [ ] 3.5 `mutation-testing` (1)

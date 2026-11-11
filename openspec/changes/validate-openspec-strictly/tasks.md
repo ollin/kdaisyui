@@ -10,7 +10,7 @@ checked with `openspec validate <spec> --type spec --strict` before its commit.
 
 ## 2. Evidence as one-line metadata (D1)
 
-- [ ] 2.1 Script: join every `**Verified**`/`**Assumed**` paragraph of `openspec/specs/*/spec.md`
+- [x] 2.1 Script: join every `**Verified**`/`**Assumed**` paragraph of `openspec/specs/*/spec.md`
   into one line with the colon; commit the result with the script's diff check (old text equals new
   text with newlines as spaces). Re-measure.
 - [ ] 2.2 By hand: evidence continued in an unmarked paragraph or a list (at least

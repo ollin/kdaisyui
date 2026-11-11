@@ -13,7 +13,7 @@ checked with `openspec validate <spec> --type spec --strict` before its commit.
 - [x] 2.1 Script: join every `**Verified**`/`**Assumed**` paragraph of `openspec/specs/*/spec.md`
   into one line with the colon; commit the result with the script's diff check (old text equals new
   text with newlines as spaces). Re-measure.
-- [ ] 2.2 By hand: evidence continued in an unmarked paragraph or a list (at least
+- [x] 2.2 By hand: evidence continued in an unmarked paragraph or a list (at least
   `component-model` "declared in a committed model", `generated-sources` lines 130 and 235) folded
   into its metadata line, or moved into a scenario where it is an example.
 
@@ -25,7 +25,7 @@ checked with `openspec validate <spec> --type spec --strict` before its commit.
 - [x] 3.4 `css-delivery` (1)
 - [x] 3.5 `mutation-testing` (1)
 - [x] 3.6 `generated-sources` (5)
-- [ ] 3.7 `component-model` (8)
+- [x] 3.7 `component-model` (8)
 - [ ] 3.8 `daisyui-component-coverage` (12)
 
 Counts from the measurement at proposal; 2.1 and 2.2 may lower them.

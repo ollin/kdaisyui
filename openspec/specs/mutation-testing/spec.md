@@ -37,7 +37,9 @@ The build SHALL run PIT mutation testing over the project's core-logic classes (
 ### Requirement: Test-strength threshold gate
 The build SHALL fail when the **test strength** for the scoped classes falls below the configured `testStrengthThreshold`, which SHALL be 100%. Test strength is `killed / (killed + survived)`: every mutant a test *reaches* must be killed.
 
-The gate SHALL NOT be expressed as `mutationThreshold`. That metric counts mutants no test can reach, and 100% is unreachable for this scope: Kotlin emits interface-default bridges into `AnnotatedIdBase` and `StringHtmlId` that no source-level test can call. PIT cannot exclude them surgically — `excludedMethods` matches by name alone, so excluding `getTarget` would also drop the killed mutant on `HtmlId::getTarget`, the one place the real logic lives — and removing the bridges requires `-Xjvm-default=no-compatibility`, an ABI change to a published artifact that `coverage-enforcement` already rejected for the same reason.
+The gate SHALL NOT be expressed as `mutationThreshold`.
+
+**Why**: that metric counts mutants no test can reach, and 100% is unreachable for this scope: Kotlin emits interface-default bridges into `AnnotatedIdBase` and `StringHtmlId` that no source-level test can call. PIT cannot exclude them surgically — `excludedMethods` matches by name alone, so excluding `getTarget` would also drop the killed mutant on `HtmlId::getTarget`, the one place the real logic lives — and removing the bridges requires `-Xjvm-default=no-compatibility`, an ABI change to a published artifact that `coverage-enforcement` already rejected for the same reason.
 
 **Verified**: 2026-09-09: 218 mutants, 214 killed, 0 survived, 4 without coverage; test strength 100%, mutation score 98% and unable to rise. The gate was proven to fail by weakening one assertion — PIT reported `Test strength score of 99 is below threshold of 100` and exited non-zero.
 

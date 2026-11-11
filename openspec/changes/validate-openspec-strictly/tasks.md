@@ -26,7 +26,7 @@ checked with `openspec validate <spec> --type spec --strict` before its commit.
 - [x] 3.5 `mutation-testing` (1)
 - [x] 3.6 `generated-sources` (5)
 - [x] 3.7 `component-model` (8)
-- [ ] 3.8 `daisyui-component-coverage` (12)
+- [x] 3.8 `daisyui-component-coverage` (12)
 
 Counts from the measurement at proposal; 2.1 and 2.2 may lower them.
 

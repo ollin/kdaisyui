@@ -43,7 +43,7 @@ Counts from the measurement at proposal; 2.1 and 2.2 may lower them.
 
 ## 5. Keep it passing
 
-- [ ] 5.1 `.github/openspec-config/validate.sh` and its control `validate.test.sh` (overlong
+- [x] 5.1 `.github/openspec-config/validate.sh` and its control `validate.test.sh` (overlong
   requirement fails, metadata form passes); both run locally with Node 26.13.0.
 - [ ] 5.2 Two steps in the `openspec-config` job of `.github/workflows/ci.yml`, after
   `actions/setup-node` with `.tool-versions`.

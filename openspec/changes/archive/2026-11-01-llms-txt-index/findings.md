@@ -44,6 +44,6 @@
 | Finding | Proposal | Status |
 |---|---|---|
 | F1 | - | none - record only |
-| F2 | The component note names the functions and their elements: `Context menus and action lists — daisyDropdown <details>, daisyDropdownContent <ul>, …`; measured first against A3's 16 KB | declined - Oliver, 2026-11-01: about 7.4 KB more would break A3's 16 KB bound, and the page is one fetch away. Open, unapplied: rule 3 of the index template could say a part's receiver may differ from its component's element |
+| F2 | The component note names the functions and their elements: `Context menus and action lists — daisyDropdown <details>, daisyDropdownContent <ul>, …`; measured first against A3's 16 KB | rejected - Oliver, 2026-11-01: about 7.4 KB more would break A3's 16 KB bound, and the page is one fetch away. Open, unapplied: rule 3 of the index template could say a part's receiver may differ from its component's element |
 | F3 | Move *Upgrading* below *Quick start* in README, or point the `README` note at the section | open - its own `docs` change |
 | F4 | Introduce StrykerJS with the `command` runner for `codegen/`, as its own change | open - a second dependency is a decision |

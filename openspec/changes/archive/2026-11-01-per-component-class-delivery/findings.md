@@ -54,7 +54,7 @@
 | Finding | Proposal | Status |
 |---|---|---|
 | F1 | Extend the testing skill's sentence on unreachable branches: `bufferedReader()`, `use {}`, `any {}` and `none {}` hide branches the same way `?.` and `?:` do | fixed - in the testing skill, 2026-11-01; `use {}` turned out innocent |
-| F2 | none - a fixture bypassing Gradle, recorded only | record only |
+| F2 | none - a fixture bypassing Gradle, recorded only | none - record only |
 | F3 | read the `runtimeClasspath` configuration, not the source set's | fixed - in this change |
 | F4 | pass `--add-opens java.base/java.lang=ALL-UNNAMED` to PIT's worker JVM | fixed - in this change |
 | F5 | state the fallback's reason in the written file's header | fixed - in this change |

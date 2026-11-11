@@ -47,7 +47,7 @@ Counts from the measurement at proposal; 2.1 and 2.2 may lower them.
   requirement fails, metadata form passes); both run locally with Node 26.13.0.
 - [x] 5.2 Two steps in the `openspec-config` job of `.github/workflows/ci.yml`, after
   `actions/setup-node` with `.tool-versions`.
-- [ ] 5.3 The planning rule for the `specs` artifact in `openspec/config.yaml`; `check.sh` passes.
+- [x] 5.3 The planning rule for the `specs` artifact in `openspec/config.yaml`; `check.sh` passes.
 - [ ] 5.4 The pull request's CI run: `openspec-config` green with both new steps (A4).
 
 ## 6. Verification

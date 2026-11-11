@@ -59,6 +59,14 @@ rules:
     - A count stated in a proposal is measured for that proposal, and the command that measured
       it is named beside it. A count copied from an older verification describes the code of
       that day (name-the-class-sibling-in-every-kdoc, finding F4).
+  specs:
+    - Keep each requirement's text within 500 characters; CI runs openspec validate --all
+      --strict, which fails on more. Split a requirement that states several behaviours, and
+      move examples into scenarios (validate-openspec-strictly).
+    - Write evidence as ONE unwrapped line that opens with a bold label and a colon after it,
+      such as Verified or Assumed with its wrong-if, and a reason or history that states no
+      behaviour as one such line labelled Why. OpenSpec does not count such a line; it counts
+      every line of a wrapped paragraph.
   design:
     - Record the alternatives considered for each decision and why they lost. A
       decision without its rejected alternative cannot be revisited later.

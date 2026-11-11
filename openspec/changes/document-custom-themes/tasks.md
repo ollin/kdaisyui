@@ -18,6 +18,6 @@ the specs the constraints list named (proposal, *Assumptions*).
 
 ## 3. Verification
 
-- [ ] 3.1 The full gate: `./gradlew check` including E2E, the snippet compile and
+- [x] 3.1 The full gate: `./gradlew check` including E2E, the snippet compile and
   `generated-sources` clean after `just generate`; no production code changes, so no mutation run
   and no CodeScene scan apply, stated in `tmp/document-custom-themes/EVALUATION-document-custom-themes.md`.

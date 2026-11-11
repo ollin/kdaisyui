@@ -60,8 +60,10 @@ element, five files write an `https://picsum.photos` image (`DashboardShell.kt:9
 
 ### Requirement: A page that logs an error fails its scenario
 
-The E2E suite SHALL fail any scenario, Cucumber or Kotest, whose page logged a console message
-of type `error` or raised a page error, and the failure SHALL quote every such message.
+The E2E suite SHALL fail any test whose page logged a console message of type `error` or raised
+a page error, and the failure SHALL quote every such message. Since `run-e2e-on-kotest-alone`
+every E2E test is a Kotest spec built on `PlaywrightSpec`, whose teardown is the one place this
+is enforced; until then `CucumberHooks` enforced it a second time for the Cucumber scenarios.
 
 **Verified** in task 1.1 (Chromium 156): an inline style refused, a `data:` image refused and a
 404 each reach Playwright's `onConsoleMessage` as type `error` before the test ends; the 404's

@@ -2,7 +2,7 @@
 name: kdaisyui-testing
 description: >-
   Writing or fixing kdaisyui tests - the three test layers (generated component tests,
-  hand-written kotlin-test units, and Kotest + Playwright + Cucumber E2E), how the in-process
+  hand-written kotlin-test units, and Kotest + Playwright E2E), how the in-process
   Ktor server and system Chromium are wired, and which task runs what.
 ---
 
@@ -89,22 +89,21 @@ aggregated Kover gate. The compiled snippets do not, because they are documentat
 
 ## 3. End-to-end — `:e2e-tests:test`
 
-Two styles coexist in one module, both on the JUnit Platform, both in the same `test` task.
-Exact Kotest, Cucumber and Playwright versions live in `e2e-tests/build.gradle.kts` — read them
-there rather than restating them here.
+One framework: every E2E test is a Kotest `FunSpec` extending `PlaywrightSpec`, on the JUnit
+Platform. Exact Kotest and Playwright versions live in `gradle/libs.versions.toml` — read them
+there rather than restating them here. Cucumber was removed by `run-e2e-on-kotest-alone`
+(2026-11-10); a scenario name from a `.feature` file lives on as a test name.
 
-**Kotest** specs:
-`PlaywrightSpec.kt`, `SharedInfrastructure.kt`, `DashboardShellTest.kt`,
-`CardsRow1FragmentTest.kt`, `FormsFragmentTest.kt`, `HtmxProgressiveLoadingTest.kt`,
-`StatsFragmentTest.kt`, `TeamFragmentTest.kt`, `WebjarsAssetsTest.kt`
-
-**Cucumber BDD**:
-- features: `e2e-tests/src/test/resources/kdaisyui/e2e/steps/*.feature` (7 files)
-- steps: `e2e-tests/src/test/kotlin/kdaisyui/e2e/steps/` — `CucumberHooks.kt`,
-  `FragmentSteps.kt`, `NavigationSteps.kt`, `PlaywrightWorld.kt`
-- runner: `e2e-tests/src/test/java/kdaisyui/e2e/steps/RunCucumberTest.java` (the only Java file
-  in the repo)
-- scenario naming: `cucumber.junit-platform.naming-strategy=long`
+- `SharedInfrastructure.kt` starts the example app's Ktor server and one Chromium, once per JVM.
+- `PlaywrightSpec.kt` gives each test its own browser context, a trace and a screenshot, and fails
+  a test whose page logged a console error (`ConsoleErrors.kt`). `PlaywrightSpec(javaScriptEnabled
+  = false)` runs a whole spec with scripting off: the only way to prove a component needs none.
+  `saveScreenshot(name)` writes `build/reports/screenshots/<name>.png` for a person to look at.
+- Helpers shared by two or more specs are top-level functions: `Page.computedStyle` in
+  `ComputedStyle.kt`, `Page.isPopoverOpen` in `Popover.kt`. A helper one spec uses stays private
+  in that spec.
+- List the specs with `ls e2e-tests/src/test/kotlin/kdaisyui/e2e/*Test.kt` rather than trusting a
+  list here.
 
 ### Environment
 

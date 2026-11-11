@@ -4,11 +4,17 @@ import com.microsoft.playwright.Browser
 import com.microsoft.playwright.BrowserContext
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Tracing
+import com.microsoft.playwright.options.ScreenshotAnimations
 import io.kotest.core.spec.style.FunSpec
 import java.nio.file.Files
 import java.nio.file.Path
 
-abstract class PlaywrightSpec : FunSpec() {
+/**
+ * Pass `javaScriptEnabled = false` to run every test of a spec with scripting off. That is the only
+ * way to prove a component needs none: with scripting on, "no handler was wired" is an argument
+ * about the source rather than an observation of the browser.
+ */
+abstract class PlaywrightSpec(private val javaScriptEnabled: Boolean = true) : FunSpec() {
 
     private var _context: BrowserContext? = null
     private var _page: Page? = null
@@ -23,7 +29,7 @@ abstract class PlaywrightSpec : FunSpec() {
         beforeTest {
             val browser = SharedInfrastructure.browser
             _context = browser.newContext(
-                Browser.NewContextOptions().setBaseURL(BASE_URL)
+                Browser.NewContextOptions().setBaseURL(BASE_URL).setJavaScriptEnabled(javaScriptEnabled)
             )
             _context!!.setDefaultTimeout(10_000.0)
             _context!!.tracing().start(
@@ -72,7 +78,26 @@ abstract class PlaywrightSpec : FunSpec() {
         }
     }
 
+    /**
+     * Writes the page to `build/reports/screenshots/<name>.png`, for a person to page through: a
+     * rendering fault an assertion was never going to catch is visible there. Animations are
+     * finished rather than waited out — DaisyUI transitions opacity, translate and scale over
+     * 200ms, and a popover caught half-faded reads like a layout fault that is not there.
+     */
+    protected fun saveScreenshot(name: String) {
+        Files.createDirectories(SCREENSHOT_DIR)
+        val target = SCREENSHOT_DIR.resolve("$name.png")
+        page.screenshot(
+            Page.ScreenshotOptions()
+                .setFullPage(true)
+                .setAnimations(ScreenshotAnimations.DISABLED)
+                .setPath(target)
+        )
+        println("Screenshot saved: ${target.toAbsolutePath()}")
+    }
+
     companion object {
         val BASE_URL: String get() = SharedInfrastructure.BASE_URL
+        private val SCREENSHOT_DIR: Path = Path.of("build/reports/screenshots")
     }
 }

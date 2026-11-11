@@ -15,18 +15,9 @@ dependencies {
 
     testImplementation(libs.playwright)
 
-    // Kotest (existing tests)
     testImplementation(libs.kotest.runner.junit5)
     testImplementation(libs.kotest.assertions.core)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    // Cucumber BDD
-    testImplementation(libs.cucumber.java)
-    testImplementation(libs.cucumber.junit.platform.engine)
-    testImplementation(libs.cucumber.picocontainer)
-
-    testImplementation(libs.junit.platform.suite)
-    testRuntimeOnly(libs.junit.platform.suite.engine)
 
     testImplementation(libs.logback.classic)
 }
@@ -55,9 +46,6 @@ tasks.test {
         showStandardStreams = true
     }
     dependsOn(":example-app:classes")
-
-    // Cucumber naming strategy for disambiguating scenarios in Gradle output
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
 
     environment("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD", "1")
     systemChromium.orNull?.let { environment("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH", it) }

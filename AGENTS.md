@@ -114,7 +114,7 @@ Package is `io.github.ollin.kdaisyui` — never `com.github.ollin`.
 | `lib` | the library — generated components + icons, hand-written core |
 | `ktor-integration` | Ktor Resources integration (`Resolvable`, context parameters) |
 | `example-app` | Ktor + htmx demo dashboard, port 8080 |
-| `e2e-tests` | Kotest + Playwright + Cucumber |
+| `e2e-tests` | Kotest + Playwright |
 | `bom` | `java-platform` BOM aligning `kdaisyui` and `kdaisyui-ktor-integration` |
 | `doc-snippets` | compiles every Kotlin snippet of `README.md` and `docs/`; not published |
 | `build-checks` | checks on the build itself, run by CI after `check`; not published |
@@ -243,7 +243,7 @@ after the push anyway, rebase and force-push once, before CI has finished the st
 |---|---|
 | Codegen, the component model, the naming rule, adding a component | `kdaisyui-codegen` |
 | Bumping DaisyUI, or a failure from the model gate / `generated-sources-drift` / `checkComponentApi` | `kdaisyui-daisyui-upgrade` (`/daisyui-upgrade`) |
-| Any test work, run configurations, `just` recipes, E2E wiring, Cucumber | `kdaisyui-testing` |
+| Any test work, run configurations, `just` recipes, E2E wiring | `kdaisyui-testing` |
 | Versioning, publishing, what CI does | `kdaisyui-release` |
 | The Gradle build itself — buildSrc, settings, toolchains, compiler flags, adding a plugin, any build warning | `kdaisyui-build` |
 

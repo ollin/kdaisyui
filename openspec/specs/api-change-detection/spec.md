@@ -59,16 +59,19 @@ It SHALL record that the check detects:
 - any change to a function's JVM descriptor, including a change in the number or types of its
   parameters, on both the function and its synthetic `$default` overload.
 
-It SHALL record that the check does **not** detect where in a signature a parameter was added,
-because parameter names are not part of an ABI. Inserting a parameter mid-signature and appending
-one produce the same diff.
-
 **Verified by measurement**: both probes recorded in `notes.md`: inserting `dummyProbe: Boolean = false` between `center` and `end` on `daisyTooltip` changed `ZZZZZZZZ` to `ZZZZZZZZZ` in the descriptor of the function and of `daisyTooltip$default`; deleting `TooltipVariant.Error` removed the line `public static final field Error Lio/github/ollin/kdaisyui/components/TooltipVariant;`.
 
 #### Scenario: A removed enum entry is caught
 - **WHEN** a regeneration drops an enum entry from the public API
 - **THEN** the baseline diff shows the entry's line removed
 - **AND** the check fails until the baseline is deliberately updated
+
+### Requirement: What the check does not detect is stated
+It SHALL record that the check does **not** detect where in a signature a parameter was added,
+because parameter names are not part of an ABI. Inserting a parameter mid-signature and appending
+one produce the same diff.
+
+**Verified by measurement**: the `daisyTooltip` probe recorded under the requirement above and in `notes.md`.
 
 #### Scenario: A shifted parameter list is caught, without being localised
 - **WHEN** a regeneration adds a parameter to an existing generated function

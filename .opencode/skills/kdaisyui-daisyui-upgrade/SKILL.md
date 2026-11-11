@@ -3,7 +3,7 @@ name: kdaisyui-daisyui-upgrade
 description: >-
   Moving kdaisyui to a new DaisyUI version, or reading a failure from one of the guards that
   fire when it moves - the model completeness gate, generated-sources-drift, checkComponentApi,
-  api-baseline. Covers the order the steps must run in, how to read `just daisyui-delta`, and
+  checkKotlinAbi. Covers the order the steps must run in, how to read `just daisyui-delta`, and
   how a new or removed DaisyUI class reaches codegen/model/. Read this before bumping `daisyui`
   in gradle/libs.versions.toml or before re-dumping anything a guard complained about.
 ---
@@ -22,7 +22,7 @@ Three committed artefacts are compared against their inputs:
 | Committed artefact | Guard | Regenerate with |
 |---|---|---|
 | `lib/generated/**`, `docs/reference/**`, `llms.txt`, `llms-full.txt` | `generated-sources-drift` | `just generate` |
-| `lib/api/lib.api` | `api-baseline` | `just update-api` |
+| `lib/api/lib.api` | `:lib:checkKotlinAbi`, in `unit-tests` | `just update-api` |
 | `lib/api/components.api` | `:lib:checkComponentApi` | `just update-api` |
 
 **A guard is not a chore.** Re-dumping an artefact to make a check green without reading its
@@ -100,7 +100,7 @@ needs, or declare the key with a reason.
 submodule. Run `just generate` and commit the result. It reports untracked files too, so a new
 component counts as drift.
 
-**`checkComponentApi` or `api-baseline` failed.** Read the diff before re-dumping. A breaking
+**`checkComponentApi` or `checkKotlinAbi` failed.** Read the diff before re-dumping. A breaking
 change needs a **How to migrate** entry in `docs/upgrading.md` before it is released.
 
 ## What CI checks

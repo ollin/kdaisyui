@@ -24,7 +24,7 @@ jobs:
   #
   #   none   only planning and agent files     no test job
   #   prose  plus prose documentation          unit-tests, generated-sources-drift
-  #   full   anything else, and every push     all six
+  #   full   anything else, and every push     all five
   #
   # A new test job gets `needs: scope` and the condition of its group, or it simply runs always.
   # A broken openspec/config.yaml is not an error to the OpenSpec CLI: it warns, ignores the file
@@ -126,7 +126,7 @@ jobs:
       # shape model to know which function emits which class. Beside the drift check rather
       # than in `check`, for the same reason the generators are: it reads the submodule.
       - name: Regenerate
-        run: ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs --build-cache --no-daemon
+        run: ./gradlew :lib:generate --build-cache --no-daemon
 
       # Beside the drift check rather than in `check`, for the same reason the generators are:
       # it reads the submodule and runs Node, and a clone must compile and test with neither.
@@ -226,36 +226,6 @@ jobs:
           path: codegen/reports/mutation/
           retention-days: 7
 
-  # The sibling of generated-sources-drift: both compare a committed artefact
-  # against what the build produces. Kept separate from unit-tests so an API
-  # change and a failing test are distinguishable in the checks list - and so
-  # this gate cannot be lost inside another job's task list. It needs no
-  # submodules; the ABI comes from the committed sources.
-  api-baseline:
-    name: api-baseline
-    needs: scope
-    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.full-jobs == 'true') }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Set up JDK
-        # The JDK that runs Gradle, from its one pin: .tool-versions, which asdf reads locally.
-        uses: ./.github/actions/setup-jdk
-
-      # Gradle's caches, the local build cache among them, written by main and only read by a pull
-      # request, so no branch can poison what another restores. The MIT provider, by decision.
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
-        with:
-          cache-provider: basic
-
-      - name: Fail if the public API no longer matches its baseline
-        # Run `./gradlew :lib:updateKotlinAbi` and commit lib/api/lib.api when the
-        # change is intended. A breaking change also needs a "How to migrate"
-        # entry in docs/upgrading.md before the release that ships it.
-        run: ./gradlew :lib:checkKotlinAbi --build-cache --no-daemon
-
   unit-tests:
     name: unit-tests
     needs: scope
@@ -311,10 +281,9 @@ jobs:
   # is deliberate — unit-tests enforces Kover at 100% line and branch, this enforces PIT at
   # 100% test strength, and neither implies the other.
   #
-  # Its own job rather than a step in unit-tests, for the same reason api-baseline is
-  # separate: a failing assertion and a surviving mutant are different problems and should
-  # be distinguishable in the checks list. It also forks a JVM per mutant, so it has no
-  # business in the inner loop or in `./gradlew check`.
+  # Its own job rather than a step in unit-tests: a failing assertion and a surviving mutant
+  # are different problems and should be distinguishable in the checks list. It also forks a
+  # JVM per mutant, so it has no business in the inner loop or in `./gradlew check`.
   #
   # No submodules — it builds from the committed generated sources like everything except
   # the drift job.

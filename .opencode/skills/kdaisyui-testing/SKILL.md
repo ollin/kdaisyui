@@ -176,15 +176,14 @@ thing that rewrites them.
 
 ## CI
 
-`.github/workflows/ci.yml`, **six** jobs. Earlier versions of this page said two, then four,
-then five — so check the file rather than trusting this count.
+`.github/workflows/ci.yml`, **five** test jobs. Earlier versions of this page said two, four,
+five and six — so check the file rather than trusting this count.
 
 | Job | Runs | Needs |
 |---|---|---|
-| `generated-sources-drift` | the five `:lib:generate*` tasks, `:lib:checkComponentApi`, and `git status --porcelain` | `submodules: recursive`, Node, JDK |
+| `generated-sources-drift` | `:lib:generate` (the five generators), `:lib:checkComponentApi`, and `git status --porcelain` | `submodules: recursive`, Node, JDK |
 | `codegen-tests` | `npm test` in `codegen/` (`node --test test/`), then StrykerJS on the lines the change adds under `codegen/src/`, at 100% | Node, `submodules: recursive` |
-| `api-baseline` | `:lib:checkKotlinAbi` | JDK |
-| `unit-tests` | `check -x :e2e-tests:test koverXmlReport`: everything `check` runs but the browser tests; then `:build-checks:checkGradleProblems` | JDK, Docker |
+| `unit-tests` | `check -x :e2e-tests:test koverXmlReport`: everything `check` runs but the browser tests, `:lib:checkKotlinAbi` included; then `:build-checks:checkGradleProblems` | JDK, Docker |
 | `mutation-tests` | `:lib:pitest :doc-snippets:pitest :build-checks:pitest :gradle-plugin:pitest`, each gated at 100% **test strength** | JDK |
 | `e2e-tests` | `playwrightInstall`, then `:e2e-tests:test` | JDK, **Docker** |
 

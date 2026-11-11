@@ -44,10 +44,7 @@ SHALL use that setup.
 
 **Verified by measurement**: The prebuilt `daisyui.css` webjar ships exactly five variant prefixes pre-generated — `sm:` `md:` `lg:` `xl:` (1198 rules each) and `hover:` (60) — and nothing else. Tailwind's browser build contributes no DaisyUI variants at all, because it can only generate variants of utilities it owns. So `lg:btn-lg` works and `max-sm:card-side` silently does nothing. Compiling with the DaisyUI plugin produces both; the example app's stylesheet is 23 KB against the webjar's 1123 KB, because a compile emits only what is reachable.
 
-**The failure this prevents is a wrong general rule, not a broken build.** A developer tries
-`lg:btn-lg`, sees it work, concludes that variants are supported, and later loses `dark:alert-info`
-with no error anywhere. The boundary between the two is not a contract — it is whatever DaisyUI
-chose to pre-generate in the pinned release.
+**Why**: The failure this prevents is a wrong general rule, not a broken build. A developer tries `lg:btn-lg`, sees it work, concludes that variants are supported, and later loses `dark:alert-info` with no error anywhere. The boundary between the two is not a contract — it is whatever DaisyUI chose to pre-generate in the pinned release.
 
 #### Scenario: A variant of a DaisyUI class applies
 - **WHEN** an element carries a Tailwind variant of a DaisyUI class

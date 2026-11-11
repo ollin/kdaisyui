@@ -15,13 +15,7 @@ kdaisyui SHALL write no inline `style`, no inline event handler and no `data:` U
 
 **Verified**: `img-src` needs `data:`: DaisyUI 5.7.50 sets `data:` SVG masks in `loading.css`, `mask.css`, `chat.css`, `tooltip.css` and `mockup.css`, and the noise in `base/svg.css`; under `default-src 'self'` the suite logged their refusals, and under this policy none (F4, F5, A9).
 
-Provenance, in part verified and in part assumed: `grep -rnE 'attributes\["(on|src|style)'` over
-`lib/generated/main` and `lib/src/main` finds no write since `csp-safe-popover-anchoring` (#477)
-removed the two anchor styles (2026-11-08); and the
-324 icon files that write SVG through `raw(` carry no `style=`, no `on…=` and no `data:`
-(`grep -rn 'raw(\|unsafe' | grep -E 'style=|on[a-z]+=|data:'`, empty, 2026-11-07). **Assumed**
-for the rest; *wrong if* the example application's suite under the header reports a message
-naming kdaisyui's output rather than the application's own markup.
+**Provenance, in part verified and in part assumed**: `grep -rnE 'attributes\["(on|src|style)'` over `lib/generated/main` and `lib/src/main` finds no write since `csp-safe-popover-anchoring` (#477) removed the two anchor styles (2026-11-08); and the 324 icon files that write SVG through `raw(` carry no `style=`, no `on…=` and no `data:` (`grep -rn 'raw(\|unsafe' | grep -E 'style=|on[a-z]+=|data:'`, empty, 2026-11-07). **Assumed** for the rest; *wrong if* the example application's suite under the header reports a message naming kdaisyui's output rather than the application's own markup.
 
 #### Scenario: A page of generated components under the header
 

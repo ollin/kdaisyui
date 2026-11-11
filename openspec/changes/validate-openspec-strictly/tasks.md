@@ -36,7 +36,9 @@ Counts from the measurement at proposal; 2.1 and 2.2 may lower them.
   delta, the same way.
 - [ ] 4.2 Proposals tables: one row per finding with a valid status in
   `snapshot-test-documented-elements` and `snapshot-test-generators`; F2 of
-  `document-custom-themes` becomes `adopted -> validate-openspec-strictly`.
+  `document-custom-themes` becomes `adopted -> validate-openspec-strictly`; and, found by the verify
+  run, `llms-txt-index` F2 (`declined` -> `rejected`) and `per-component-class-delivery` F2
+  (`record only` -> `none - record only`).
   `fwb_tasks.findings verify` passes.
 
 ## 5. Keep it passing

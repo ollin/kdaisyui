@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-11-11
+affected_areas:
+  - docs/how-to.md
+  - codegen/llms-template.md
+  - codegen/llms-full-template.md
+  - llms.txt
+  - llms-full.txt

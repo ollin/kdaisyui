@@ -53,8 +53,9 @@ sentence it replaces, and the reader's guess.
 
 ### Modified Capabilities
 
-- `theme-selection`: the documentation states how a theme of one's own is added and used, in the
-  how-to and in `llms-full.txt`.
+- `theme-selection`: two added requirements - the how-to shows a theme of one's own, and
+  `llms-full.txt` names custom themes. The existing requirement "The documentation states which
+  themes exist" stays as it is; its clause on custom themes remains true.
 
 ## Estimate
 

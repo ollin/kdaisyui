@@ -12,7 +12,7 @@ the specs the constraints list named (proposal, *Assumptions*).
   `docs/how-to.md:380-381` with the `@plugin "daisyui/theme"` block, a compiled Kotlin snippet
   (`ACME_THEME` on `html` and on a theme controller), and what `daisyThemeOf` and the theme check
   do not know. TCR at the repository root, which compiles the snippet.
-- [ ] 2.2 `. d` `llms-full.txt` and `llms.txt` name custom themes: edit
+- [x] 2.2 `. d` `llms-full.txt` and `llms.txt` name custom themes: edit
   `codegen/llms-full-template.md` (Themes section) and `codegen/llms-template.md` (the how-to's
   note), run `just generate`, commit templates and outputs together. TCR at the repository root.
 

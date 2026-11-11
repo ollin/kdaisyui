@@ -6,13 +6,6 @@ plugins {
 
 group = "io.github.ollin.kdaisyui"
 
-// The root aggregates coverage at build time, so it must resolve Kover's own
-// runtime artifacts (the JVM coverage agent + reporter). The measured modules
-// declare their own repositories; the root needs its own for the Kover toolchain.
-repositories {
-    mavenCentral()
-}
-
 // Root-level coverage aggregation: merge the measured modules into one report. :lib and
 // :ktor-integration are the published code; :doc-snippets' extractor and :build-checks are
 // measured too, because the build relies on them. :example-app, :e2e-tests, and :bom are intentionally out of scope
@@ -24,9 +17,7 @@ dependencies {
     kover(project(":build-checks"))
 }
 
-// Aggregated coverage reports. The hard verify rule is added LAST (see the
-// staged rollout in design.md D5) — until then the build stays green: Kover is
-// present and reports are produced, but nothing fails on a shortfall.
+// Aggregated coverage reports, and the 100% gate on them.
 kover {
     reports {
         // Exclude the synthetic `$DefaultImpls` interface-default bridge classes
@@ -56,8 +47,7 @@ kover {
         total {
             html { onCheck = true }
             xml { onCheck = true }
-            // The hard gate (added LAST per the staged rollout, design.md D5):
-            // 100% LINE and 100% BRANCH for the aggregated in-scope modules, or
+            // The hard gate: 100% LINE and 100% BRANCH for the aggregated in-scope modules, or
             // the build fails. Bound to `check` via onCheck, so `./gradlew check`
             // (locally and in CI) fails on any shortfall — no separately named task.
             verify {

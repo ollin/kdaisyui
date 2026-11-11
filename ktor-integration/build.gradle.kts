@@ -9,10 +9,6 @@ group = "io.github.ollin.kdaisyui"
 
 base.archivesName.set("kdaisyui-ktor-integration")
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     api(project(":lib"))
 

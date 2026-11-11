@@ -17,7 +17,7 @@ build:
 # committed output plus CI's drift check is what keeps both honest. Needs Node
 # and the git submodules.
 generate:
-    ./gradlew :lib:generateComponents :lib:generateComponentTests :lib:generateHeroicons :lib:generateHeroiconTests :lib:generateReferenceDocs
+    ./gradlew :lib:generate
     @echo
     @git status --short lib/generated docs/reference llms.txt llms-full.txt || true
     @git --no-pager diff --stat -- lib/generated docs/reference llms.txt llms-full.txt || true

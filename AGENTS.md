@@ -320,7 +320,7 @@ A change with no spec-level behaviour delta — pure tooling, refactoring or doc
 - Weakening an assertion to make a test pass — Kover cannot see it, `:lib:pitest` can
 - Swapping `testStrengthThreshold` for `mutationThreshold`: it cannot reach 100 here, and the
   build file says why
-- Re-dumping `lib/api/lib.api` to make the `api-baseline` job green without reading the diff —
+- Re-dumping `lib/api/lib.api` to make `checkKotlinAbi` green without reading the diff —
   and shipping a breaking change in it with no **How to migrate** entry in `docs/upgrading.md`
 - Package `com.github.ollin`
 - Shipping a UI change without E2E

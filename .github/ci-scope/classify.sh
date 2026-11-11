@@ -6,7 +6,7 @@
 set -u
 
 # Read by no CI job: planning, agent and editor files, and the workflows that are not ci.yml.
-planning='^(openspec/.*|\.opencode/.*|\.idea/.*|\.codeseeker/.*|AGENTS\.md|CLAUDE\.md|CREDITS\.md|LICENSE|opencode\.jsonc|renovate\.json|justfile|\.github/workflows/(release|renovate|pr-conventional-commits)\.yml)$'
+planning='^(openspec/.*|\.opencode/.*|\.idea/.*|AGENTS\.md|CLAUDE\.md|CREDITS\.md|LICENSE|opencode\.jsonc|renovate\.json|justfile|\.github/workflows/(release|renovate|pr-conventional-commits)\.yml)$'
 
 # Read only by the snippet compile (unit-tests) and the llms.txt gate (generated-sources-drift).
 # docs/reference/ is generated, so it is not prose.

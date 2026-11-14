@@ -29,4 +29,10 @@ class ConstantPoolTest {
         val classFile = checkNotNull(javaClass.classLoader.getResourceAsStream("io/github/ollin/kdaisyui/gradle/KdaisyuiClasses.class")).readBytes()
         assertContains(memberReferencesIn(classFile), MemberReference("io/github/ollin/kdaisyui/gradle/ComponentReferencesKt", "componentClassesNamedIn"))
     }
+
+    @Test
+    fun theStringConstantsOfARealClassFileAreItsLiterals() {
+        val classFile = checkNotNull(javaClass.classLoader.getResourceAsStream("io/github/ollin/kdaisyui/gradle/KdaisyuiThemes.class")).readBytes()
+        assertContains(stringConstantsIn(classFile), "kdaisyui-themes.txt")
+    }
 }

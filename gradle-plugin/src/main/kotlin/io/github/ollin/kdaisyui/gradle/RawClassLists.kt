@@ -21,5 +21,13 @@ fun rawClassListsIn(owner: String, classFile: ByteArray, map: ComponentMap): Lis
         if (components.isEmpty()) null else RawClassList(owner.substringBefore('$'), string, components)
     }
 
+/** The warning for [found], or null when there is none: one line per class and string, sorted, and what to use instead. */
+fun rawClassesWarning(found: List<RawClassList>): String? {
+    if (found.isEmpty()) return null
+    val lines = found.map { "  ${it.owner}: \"${it.string}\" (${it.components.sorted().joinToString()})" }.distinct().sorted()
+    return "kdaisyui: strings that write DaisyUI classes the typed API writes for you:\n" + lines.joinToString("\n") +
+        "\n  Use the component's function, or a { daisy<Component>Classes(…) } on another element."
+}
+
 private val SEPARATORS = Regex("""[\s\u0001]+""")
 private val CLASS_SHAPED = Regex("""[a-z0-9!:/\[\]().%_#-]+""")

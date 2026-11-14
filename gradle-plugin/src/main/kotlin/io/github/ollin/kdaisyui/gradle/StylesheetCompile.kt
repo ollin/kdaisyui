@@ -10,11 +10,11 @@ object StylesheetCompile {
      * `--prefer-offline` makes a second run a hit in npm's cache.
      */
     fun command(tailwind: String, daisyui: String, minify: Boolean): List<String> {
-        val install = "npm install --userconfig /deps/.npmrc --prefer-offline --no-fund --no-audit --silent"
+        val install = "npm install --userconfig /deps/.npmrc --no-fund --no-audit --silent"
         val packages = "@tailwindcss/cli@$tailwind tailwindcss@$tailwind daisyui@$daisyui"
         return listOf(
             "sh", "-c",
-            "cd /deps && $install $packages " +
+            "cd /deps && ($install --prefer-offline $packages || $install $packages) " +
                 "&& cd project && mkdir -p out && /deps/node_modules/.bin/tailwindcss --input css/app.css --output out/app.css" +
                 if (minify) " --minify" else "",
         )

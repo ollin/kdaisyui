@@ -18,6 +18,8 @@ fun classFile(vararg entries: PoolEntry): ByteArray =
 
 fun utf8(text: String): PoolEntry = PoolEntry(byteArrayOf(1) + Slot(text.length).bytes + text.toByteArray())
 
+fun string(text: Slot): PoolEntry = PoolEntry(byteArrayOf(8) + text.bytes)
+
 fun className(name: Slot): PoolEntry = PoolEntry(byteArrayOf(7) + name.bytes)
 
 fun nameAndType(name: Slot, descriptor: Slot): PoolEntry = PoolEntry(byteArrayOf(12) + name.bytes + descriptor.bytes)

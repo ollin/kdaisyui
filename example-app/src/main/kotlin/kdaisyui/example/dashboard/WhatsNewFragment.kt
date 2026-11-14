@@ -22,7 +22,8 @@ fun TagConsumer<*>.whatsNewFragment() {
 private fun TagConsumer<*>.auraCard() {
     section {
         id = Dashboard.WhatsNew().id
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Deploy Status")
             daisyAura(size = AuraSize.Lg, style = AuraStyle.Rainbow) {
@@ -39,7 +40,8 @@ private const val OTP_DIGITS = 6
 
 private fun TagConsumer<*>.otpCard() {
     section {
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Two-Factor Code")
             // Empty boxes and an input, which is DaisyUI's documented markup exactly — no
@@ -70,7 +72,8 @@ private fun TagConsumer<*>.otpCard() {
 
 private fun TagConsumer<*>.megamenuCard() {
     section {
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Navigation Preview")
             daisyMegamenu(id = Dashboard.WhatsNew.Megamenu(), width = MegamenuWidth.Wide) {

@@ -67,9 +67,8 @@ form `extraClasses = "lg:btn-lg"` is what works.
 The check SHALL run whenever the plugin's class-list task runs, is up to date, or comes from the
 cache. It SHALL NOT add a stylesheet compile to a build.
 
-**Assumed** by analogy with the theme check's finalizer (archived
-`check-the-themes-the-stylesheet-compiles`, A7). Wrong if a second build in a row, with the
-class list up to date, logs no warning.
+**Verified** by the probe of task 1.2, 2026-11-14 (proposal A5): a finalizer of the class-list
+task ran on four builds in a row, and those logged with task names show it up to date.
 
 #### Scenario: A library without the component map
 

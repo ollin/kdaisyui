@@ -16,9 +16,9 @@ Ordered by uncertainty:
 
 ## 1. Open assumptions and the tools that check them (nothing committed but `. d` updates)
 
-- [ ] 1.1 `. d` Record the probe: `tmp/warn-on-raw-daisyui-classes/probe.py`, the rule, and the
+- [x] 1.1 `. d` Record the probe: `tmp/warn-on-raw-daisyui-classes/probe.py`, the rule, and the
   counts it measured. It already sits in `tmp/`, so delete the `/tmp/opencode` copy.
-- [ ] 1.2 A5: in the example app's build, temporarily add a finalizer of `kdaisyuiClasses` that
+- [x] 1.2 A5: in the example app's build, temporarily add a finalizer of `kdaisyuiClasses` that
   prints one line, and run `:example-app:classes` twice. Does the second run print, with
   `kdaisyuiClasses` UP-TO-DATE? `. d` updates A5. If it does not print, revise design decision 3
   before block 2.

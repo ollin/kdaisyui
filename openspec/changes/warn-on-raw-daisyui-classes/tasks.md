@@ -80,35 +80,40 @@ Each step is `^ r` and must give an empty class-set diff (1.3) and a green E2E s
 live warning shrinks by the step's lines. Line counts count a changed line as one removed plus
 one added.
 
-- [ ] 4.1 `^ r` The drawer, `DashboardShell.kt:39,44,46,53,56` and the `drawer-button` of `:80`,
+- [x] 4.1 `^ r` The drawer, `DashboardShell.kt:39,44,46,53,56` and the `drawer-button` of `:80`,
   through the drawer siblings; `lg:drawer-open`, `z-10` and `lg:hidden` stay strings. About 14
   lines.
-- [ ] 4.2 `^ r` The buttons: `DashboardShell.kt:80` (`btn btn-square btn-ghost`) and `:96`
+- [x] 4.2 `^ r` The buttons: `DashboardShell.kt:80` (`btn btn-square btn-ghost`) and `:96`
   (`btn btn-circle btn-ghost`, an `extraClasses` of `daisyAvatar`, which moves into its block),
   through `daisyButtonClasses`. About 8 lines.
-- [ ] 4.3 `^ r` The loader `DashboardShell.kt:70` through `daisyLoading`, and the dropdown `:94`
+- [x] 4.3 `^ r` The loader `DashboardShell.kt:70` through `daisyLoading`, and the dropdown `:94`
   with the `ul` of `:102` (`menu` and `dropdown-content`) through the dropdown and menu
   siblings. About 10 lines.
-- [ ] 4.4 `^ r` `menu-active`, `DashboardShell.kt:123,125`: `daisyMenuItemClasses(active = …)`
+- [x] 4.4 `^ r` `menu-active`, `DashboardShell.kt:123,125`: `daisyMenuItemClasses(active = …)`
   inside the `a { }` block, since the `classes` argument has no typed form. The comment at
-  `:120-122` goes with the positional-`classes` trap it describes. About 8 lines.
-- [ ] 4.5 `^ r` The cards of `dashboard/CardsRow1Fragment.kt:16,63` and
+  `:120-122` goes with the positional-`classes` trap it describes. About 8 lines. Done: one
+  site, not two. The probe's second hit was `href="menu-active"` inside that comment, which a
+  source scan reads and a class file does not (finding F1).
+- [x] 4.5 `^ r` The cards of `dashboard/CardsRow1Fragment.kt:16,63` and
   `dashboard/CardsRow2Fragment.kt:17,39,54`, through `daisyCardClasses` beside the layout
   classes. About 10 lines.
-- [ ] 4.6 `^ r` The cards of `dashboard/WhatsNewFragment.kt:25,42,73` and
-  `repo/RepoFragment.kt:37,64`. About 10 lines.
-- [ ] 4.7 `^ r` `team/TeamFragment.kt:24,25,42` (two cards and `card-body`) and the mask at
+- [x] 4.6 `^ r` The cards of `dashboard/WhatsNewFragment.kt:25,42,73` and
+  `repo/RepoFragment.kt:37,64`. About 10 lines. Landed in the commit of 4.5: the edit ran while
+  that step's TCR run was committing (finding F2). The class-set diff after the commit was empty.
+- [x] 4.7 `^ r` `team/TeamFragment.kt:24,25,42` (two cards and `card-body`) and the mask at
   `:80`. About 8 lines.
-- [ ] 4.8 `^ r` `dashboard/StatsFragment.kt:13` through `daisyStatsClasses`, with
+- [x] 4.8 `^ r` `dashboard/StatsFragment.kt:13` through `daisyStatsClasses`, with
   `xl:stats-horizontal` kept as a string; `MegamenuReferencePage.kt:44,53` through
   `daisyMenuClasses`; and `DisabledStatePage.kt:54` through `daisyButtonClasses(disabled = true)`,
   which writes the class and not the attribute, as the page compares. About 8 lines.
-- [ ] 4.9 `^ r` Rename the id `tab-active` in `TabsPage.kt:18` and in
+- [x] 4.9 `^ r` Rename the id `tab-active` in `TabsPage.kt:18` and in
   `e2e-tests/.../TabsTest.kt:27`. The class-set diff shows only the id. The live warning is now
-  empty.
-- [ ] 4.10 `^ F` `example-app/build.gradle.kts` sets `rawClasses { failBuild = true }`. Checked
+  empty. Done with `tab-inactive` renamed too, to `inactive-tab`, so the two ids read alike;
+  `TabsTest` ran green on its own before the commit.
+- [x] 4.10 `^ F` `example-app/build.gradle.kts` sets `rawClasses { failBuild = true }`. Checked
   live: a raw `"btn btn-primary"` added to a page fails `:example-app:classes`, and with it
-  removed the build passes.
+  removed the build passes. Done as `. F (internal)`: the only users of this build are kdaisyui's
+  developers.
 
 ## 5. Docs
 

@@ -7,7 +7,9 @@ object StylesheetCompile {
     /**
      * Installs the pinned Tailwind and DaisyUI beside the project, so the entry's `@plugin "daisyui"`
      * resolves by walking up from `/deps/project`, then compiles `css/app.css` into `out/app.css`.
-     * `--prefer-offline` makes a second run a hit in npm's cache.
+     * `--prefer-offline` makes a second run a hit in npm's cache. It also trusts a cached package list
+     * older than the pinned version and then fails with ETARGET, so a failed install runs once more
+     * against the registry. `--loglevel=error` keeps npm quiet but lets that error reach the build log.
      */
     fun command(tailwind: String, daisyui: String, minify: Boolean): List<String> {
         val install = "npm install --userconfig /deps/.npmrc --no-fund --no-audit --loglevel=error"

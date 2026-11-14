@@ -27,7 +27,7 @@ expire. State the durable constraint; leave the number to `gradle/libs.versions.
 ### Requirement: DaisyUI version pinned to a webjar-backed release
 The pinned DaisyUI version SHALL be a version that has a published Maven webjar under `org.webjars.npm:daisyui`, and the build's DaisyUI submodule, the generated components, and the served webjar SHALL all derive from that same single version.
 
-**Corrected 2026-08-15:** this requirement originally fixed the version at `5.6.3`. Reality moved past it twice and the project is pinned at `5.7.16`. Naming a version in a requirement made the requirement expire; the webjar-backed constraint is the durable part and the only one kept.
+**Corrected 2026-08-15**: this requirement originally fixed the version at `5.6.3`. Reality moved past it twice and the project is pinned at `5.7.16`. Naming a version in a requirement made the requirement expire; the webjar-backed constraint is the durable part and the only one kept.
 
 #### Scenario: Pinned version has a published webjar
 - **WHEN** the `daisyui` version is set in `gradle/libs.versions.toml`
@@ -69,13 +69,9 @@ The library SHALL expose a generated, type-safe `FlowContent.daisyXxx()` DSL fun
 ### Requirement: New modifiers on existing components are exposed
 Regeneration against the pinned DaisyUI release SHALL surface every class DaisyUI adds to an existing component's frontmatter, by failing generation until the component model places it: as an axis member, which becomes an enum entry, as a toggle, which becomes a boolean, or as a class not offered with a stated reason. Call sites that do not use the new class SHALL compile unchanged.
 
-A *modifier* is a CSS class toggled on a component's existing element. An alternative *construction method*, which renders a different element, is not a modifier and cannot be expressed as a parameter; those are governed by the popover-modal requirement below.
+**Corrected by `declare-the-component-model`**: a new class used to reach the API by classification, as a boolean unless a measurement made it an enum member. It now fails generation until a human places it in the model, because a class placed by omission is how the 0.6.0 dropdown shipped its placements twice.
 
-**Corrected 2026-09-04:** this requirement previously also named "the `modal` popover attribute" among the modifiers to be surfaced. That was unbuildable: DaisyUI's popover modal is `<div class="modal" popover>`, a different root element from the `<dialog>` the wrapper emits, so no parameter on that wrapper could ever satisfy it. The clause was archived as satisfied while nothing implemented it, because no test and no drift check can detect a construction method that introduces no new class name.
-
-**Corrected by `declare-the-component-model`:** a new class used to reach the API by classification, as a boolean unless a measurement made it an enum member. It now fails generation until a human places it in the model, because a class placed by omission is how the 0.6.0 dropdown shipped its placements twice.
-
-**Assumed** that failing the generation run is the right strength for a new class. *Wrong if:* a routine DaisyUI patch release adds classes often enough that bumps stall on model edits nobody wanted to make.
+**Assumed**: failing the generation run is the right strength for a new class. *Wrong if:* a routine DaisyUI patch release adds classes often enough that bumps stall on model edits nobody wanted to make.
 
 #### Scenario: New modifier becomes available
 - **WHEN** a DaisyUI modifier class is declared in an existing component's frontmatter
@@ -86,6 +82,13 @@ A *modifier* is a CSS class toggled on a component's existing element. An altern
 #### Scenario: A new class nobody placed
 - **WHEN** a DaisyUI release adds a class the model does not place
 - **THEN** generation fails naming the component and the class
+
+### Requirement: A construction method is not a modifier
+A *modifier* is a CSS class toggled on a component's existing element. An alternative
+*construction method*, which renders a different element, is not a modifier and cannot be
+expressed as a parameter; those SHALL be governed by the popover-modal requirement below.
+
+**Corrected 2026-09-04**: this requirement previously also named "the `modal` popover attribute" among the modifiers to be surfaced. That was unbuildable: DaisyUI's popover modal is `<div class="modal" popover>`, a different root element from the `<dialog>` the wrapper emits, so no parameter on that wrapper could ever satisfy it. The clause was archived as satisfied while nothing implemented it, because no test and no drift check can detect a construction method that introduces no new class name.
 
 #### Scenario: A new construction method is not mistaken for a modifier
 - **WHEN** an upstream release adds a way to build a component from a different root element
@@ -116,9 +119,7 @@ Each new component SHALL be rendered by the example application and asserted by 
 ### Requirement: Popover modals are expressible from the DSL
 The library SHALL provide a generated wrapper that renders DaisyUI's HTML-popover modal — the `modal` class on a `div` element carrying the `popover` attribute — so that a modal can be opened and closed with no JavaScript. The wrapper SHALL be produced by the codegen pipeline, not hand-written, and SHALL NOT require callers to set the `popover` attribute themselves through the raw-attribute escape hatch.
 
-The existing `<dialog>`-based `daisyModal` SHALL remain unchanged and continue to be the recommended method.
-
-**Verified:** `daisyui/packages/docs/src/routes/(routes)/components/modal/+page.md:49` lists four modal methods; method 2 (Popover) is current, and only methods 3 (Checkbox) and 4 (Anchor Link) are marked Legacy. The same table records that popover opens and closes by HTML attributes rather than JavaScript.
+**Verified**: `daisyui/packages/docs/src/routes/(routes)/components/modal/+page.md:49` lists four modal methods; method 2 (Popover) is current, and only methods 3 (Checkbox) and 4 (Anchor Link) are marked Legacy. The same table records that popover opens and closes by HTML attributes rather than JavaScript.
 
 #### Scenario: Popover modal renders the documented markup
 - **WHEN** the popover-modal wrapper is rendered with content
@@ -130,6 +131,10 @@ The existing `<dialog>`-based `daisyModal` SHALL remain unchanged and continue t
 - **THEN** the rendered element carries that id
 - **AND** the id is the value a `popovertarget` control refers to
 
+### Requirement: The dialog modal stays the recommended method
+The existing `<dialog>`-based `daisyModal` SHALL remain unchanged and continue to be the
+recommended method.
+
 #### Scenario: The dialog method is unaffected
 - **WHEN** the existing `daisyModal` wrapper is rendered
 - **THEN** it still emits a `dialog` element carrying the `modal` class
@@ -138,7 +143,7 @@ The existing `<dialog>`-based `daisyModal` SHALL remain unchanged and continue t
 ### Requirement: Unsupported modal methods are named
 The specification SHALL record that DaisyUI's checkbox modal (method 3) and anchor-link modal (method 4) are deliberately not wrapped, so their absence is legible as a decision rather than an oversight.
 
-**Verified:** both are labelled Legacy in `daisyui/packages/docs/src/routes/(routes)/components/modal/+page.md:53` and `:54`, and neither locks background interaction nor closes on `Esc` per that table.
+**Verified**: both are labelled Legacy in `daisyui/packages/docs/src/routes/(routes)/components/modal/+page.md:53` and `:54`, and neither locks background interaction nor closes on `Esc` per that table.
 
 #### Scenario: A reader can tell absence from oversight
 - **WHEN** a contributor finds no wrapper for the checkbox or anchor-link modal
@@ -148,7 +153,7 @@ The specification SHALL record that DaisyUI's checkbox modal (method 3) and anch
 ### Requirement: The popover modal is covered like any other component
 The popover-modal wrapper SHALL be exercised by generated tests covering every branch it introduces, SHALL keep aggregated line and branch coverage at 100%, and SHALL be rendered by the example application and asserted by an end-to-end test.
 
-**Verified:** regenerating with the popover entry configured produced branch-complete tests without any change to the test generator's coverage path, and `koverVerify --rerun-tasks` held at 100% line and branch over 1491 tests. The reason is structural rather than lucky: a static attribute is emitted unconditionally, so it introduces no branch into the generated Kotlin at all.
+**Verified**: regenerating with the popover entry configured produced branch-complete tests without any change to the test generator's coverage path, and `koverVerify --rerun-tasks` held at 100% line and branch over 1491 tests. The reason is structural rather than lucky: a static attribute is emitted unconditionally, so it introduces no branch into the generated Kotlin at all.
 
 #### Scenario: Coverage gate holds
 - **WHEN** the suite runs after the popover wrapper is generated
@@ -167,24 +172,11 @@ a root carrying the `megamenu` class **and** the `popover` attribute, a mandator
 the DSL even though they carry no DaisyUI class. None of it SHALL require the caller to set the
 `popover` attribute through the raw-attribute escape hatch.
 
-**Verified:** `daisyui/skills/daisyui/components/megamenu.md:16` documents the root as
-`<div class="megamenu … {MODIFIER} …" id="my-megamenu-1" popover>`, `:19`-`:22` document each item
-as a `popovertarget` button paired with `<div id="item-1" popover>`, and `:62` states that the
-`megamenu-active` span is mandatory. Before this change `lib/generated/…/components/Megamenu.kt`
-emitted no `popover` attribute anywhere, so the component as generated could not open.
+**Verified**: `daisyui/skills/daisyui/components/megamenu.md:16` documents the root as `<div class="megamenu … {MODIFIER} …" id="my-megamenu-1" popover>`, `:19`-`:22` document each item as a `popovertarget` button paired with `<div id="item-1" popover>`, and `:62` states that the `megamenu-active` span is mandatory. Before this change `lib/generated/…/components/Megamenu.kt` emitted no `popover` attribute anywhere, so the component as generated could not open.
 
-**Verified** (was Assumed; settled by task 1.1): the root's `popover` is unconditional rather
-than viewport-dependent. DaisyUI's documented markup was rendered at 1280x800 and 390x844 and the
-screenshots reviewed — the root carries `popover` at both, and DaisyUI's own CSS is what makes it
-a visible horizontal bar on desktop. Checked in a browser rather than by reading, because
-`megamenu.css` is too intricate to settle that way.
+**Verified**: (was Assumed; settled by task 1.1): the root's `popover` is unconditional rather than viewport-dependent. DaisyUI's documented markup was rendered at 1280x800 and 390x844 and the screenshots reviewed — the root carries `popover` at both, and DaisyUI's own CSS is what makes it a visible horizontal bar on desktop. Checked in a browser rather than by reading, because `megamenu.css` is too intricate to settle that way.
 
-**Verified** (found while implementing): `megamenu-active` must be a `<span>`. Not for its own
-styling — it is `position: absolute` and styled by class alone — but because
-`megamenu.css` selects the open panel with `[popover]:nth-of-type(N)`, and `:nth-of-type` counts
-among siblings of the same tag. A `<div>` indicator takes div index 1 and shifts every
-`<div popover>` panel by one, anchoring the indicator to the wrong trigger. Measured on
-`/megamenu-reference`, which reported `--mm-anchor: --mm2` while panel one was open.
+**Verified**: (found while implementing): `megamenu-active` must be a `<span>`. Not for its own styling — it is `position: absolute` and styled by class alone — but because `megamenu.css` selects the open panel with `[popover]:nth-of-type(N)`, and `:nth-of-type` counts among siblings of the same tag. A `<div>` indicator takes div index 1 and shifts every `<div popover>` panel by one, anchoring the indicator to the wrong trigger. Measured on `/megamenu-reference`, which reported `--mm-anchor: --mm2` while panel one was open.
 
 #### Scenario: The documented markup is reachable
 - **WHEN** a megamenu is built from the generated wrappers
@@ -201,22 +193,9 @@ among siblings of the same tag. A `<div>` indicator takes div index 1 and shifts
 A generated wrapper for an alternative construction method SHALL be exercised by the example
 application and asserted end-to-end before the change that adds it is considered complete.
 
-This is stated as a requirement rather than left as practice because the failure it prevents has
-now occurred twice. A construction method that introduces no new CSS class is invisible to the
-generated tests, which assert class strings; to `generated-sources-drift`, which compares the
-generator's output against itself; and to the coverage gate, which cannot miss code that was
-never generated. A consumer is the only check that fails.
+**Why**: This is stated as a requirement rather than left as practice because the failure it prevents has now occurred twice. A construction method that introduces no new CSS class is invisible to the generated tests, which assert class strings; to `generated-sources-drift`, which compares the generator's output against itself; and to the coverage gate, which cannot miss code that was never generated. A consumer is the only check that fails.
 
-**Verified:** `modal`'s popover method was recorded as delivered by the archived
-`adapt-daisyui-5-6` while nothing implemented it, and `megamenu` carried the same defect until
-this change — the example app rendered it and the E2E asserted it, both passing, because both
-only looked at classes.
-
-This change produced a third instance of the same blind spot, which is why the requirement is
-worth its weight: turning `megamenu-active` into a `<span>` changed no class, and so was invisible
-to the generated tests, to `generated-sources-drift`, **and** to `api-baseline` — the last because
-`(DIV.() -> Unit)` and `(SPAN.() -> Unit)` both erase to `Function1`. Only an end-to-end
-assertion that measured the rendered page caught it.
+**Verified**: `modal`'s popover method was recorded as delivered by the archived `adapt-daisyui-5-6` while nothing implemented it, and `megamenu` carried the same defect until this change — the example app rendered it and the E2E asserted it, both passing, because both only looked at classes. This change produced a third instance of the same blind spot, which is why the requirement is worth its weight: turning `megamenu-active` into a `<span>` changed no class, and so was invisible to the generated tests, to `generated-sources-drift`, **and** to `api-baseline` — the last because `(DIV.() -> Unit)` and `(SPAN.() -> Unit)` both erase to `Function1`. Only an end-to-end assertion that measured the rendered page caught it.
 
 #### Scenario: Absence is detected by a consumer
 - **WHEN** a component gains a construction method that adds no new CSS class
@@ -225,81 +204,18 @@ assertion that measured the rendered page caught it.
 
 ### Requirement: A typed class can be applied at a Tailwind variant
 
-> **SCOPE, 2026-09-13: BUILT AND PARKED, NOT SHIPPED.** Everything this requirement describes
-> exists in `lib/src/…/core/Variants.kt` and is exercised by `VariantsTest.kt`, but `Variant`,
-> `Breakpoint`, `State`, `DrawerVariant`, `at` and `and` are `internal`. Only `ClassValues`, the
-> parameter type, is public. The scenarios below therefore describe a capability that compiles
-> inside the module and that **no consumer can reach**. See the refutation below for why, and the
-> gate for unparking.
-
 A DaisyUI class this library exposes as a typed value SHALL be applicable at a Tailwind variant —
 a breakpoint, a state, or DaisyUI's own — without leaving the type system for a raw string.
 
-Several applications of the SAME group SHALL be combinable, so that DaisyUI's documented
-responsive pattern is expressible. Combinations drawn from DIFFERENT groups SHALL NOT be
-expressible.
+**Scope, 2026-09-13**: BUILT AND PARKED, NOT SHIPPED. Everything this requirement describes exists in `lib/src/…/core/Variants.kt` and is exercised by `VariantsTest.kt`, but `Variant`, `Breakpoint`, `State`, `DrawerVariant`, `at` and `and` are `internal`. Only `ClassValues`, the parameter type, is public. The scenarios below therefore describe a capability that compiles inside the module and that **no consumer can reach**. See the refutation below for why, and the gate for unparking.
 
-**REFUTED 2026-09-13, by the thing this requirement exists to enable.** `at()` was built first and
-measured against the CSS afterwards. A call site of `at(Breakpoint.Xl, ButtonSize.Lg)` renders
-`class="btn xl:btn-lg"` and leaves the compiled stylesheet **byte-identical** — sha256 `3ac649e1`,
-412052 bytes, before and after. Tailwind emits CSS per candidate **string** found while scanning
-files as text; a class composed at run time from two halves appears in no file. `extraClasses =
-"lg:btn-lg"` works precisely because the literal IS the candidate.
+**Verified**: this is where the escape hatch is actually used. Measured 2026-09-12 over every `extraClasses` and `addClassNames` call in `example-app`, `e2e-tests`, `lib/src` and `docs`: of 47 distinct tokens, 12 are known DaisyUI classes and **10 of those 12 carry a variant prefix** — `lg:btn-lg`, `max-sm:megamenu-vertical`, `xl:stats-horizontal`. The remaining 35 are Tailwind utilities this library does not type.
 
-A public `at` would therefore hand a caller a class attribute that styles nothing, with no compile
-error and no log — the exact failure this library exists to prevent. Hence the parking.
+**Verified**: the alternative shape does not solve it. Of DaisyUI's 555 classes, **536 are already reachable** through an enum entry or boolean parameter on their own component, so an enum over all classes would restate the existing API and still not express a prefix.
 
-**The gate for unparking:** a build-time extractor over the CONSUMER's compiled classes, emitting
-only the combinations that consumer names. Verified feasible at its crux the same day — a
-consumer's constant pool carries a `Fieldref` to `ButtonSize.Lg` AND to `Breakpoint.Xl`, so no
-dataflow analysis is needed. It is its own change. Unparking is then a visibility flip, which is
-why `ClassValues` is public already.
+**Verified 2026-09-14**: (was Assumed) that the variant set can be closed. Measured over all 68 component pages: DaisyUI's documented examples apply 8 distinct variants to its own classes — `sm`, `md`, `lg`, `xl`, `max-sm`, `max-md`, `max-lg` and `is-drawer-close` — every one of them inside the closed set. No `group-*`, no `peer-*`, no arbitrary `data-[…]`. The assumption's *wrong if* did not fire.
 
-**Corrected 2026-09-14:** this requirement previously read *"Variants that Tailwind stacks SHALL be
-expressible together; combinations that cannot hold at once SHALL NOT be expressible."* Both
-clauses were wrong about what was built.
-
-Stacking a variant ON a variant — `at(Breakpoint.Lg, at(Breakpoint.Md, x))`, yielding `lg:md:x` —
-**is** expressible and was deliberately left so. Forbidding it would need a second type for the
-un-prefixed case, and under this change's asymmetric-cost rule permitting a useless combination is
-the cheap direction. `lg:md:x` styles nothing, which costs a caller a no-op; making a reachable
-combination inexpressible costs the library its purpose.
-
-What is actually prevented is a **cross-group** combination — `ButtonSize.Lg and
-ToastVerticalPlacement.Top`, a button size answered with a toast placement. `ClassValues<T>` is
-invariant in `T` for that reason; under `out T` the compiler infers the common supertype `Any` and
-the combination compiles. Checked both ways.
-
-**Corrected 2026-09-14:** the scenario *"Two variants that cannot hold at once — applying a class
-at two breakpoints does not compile"* asserted the opposite of both the built API and DaisyUI's own
-documentation. `btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl` is one class at five breakpoints
-and is the documented responsive pattern; `and` exists precisely to express it. The scenario is
-replaced by the two below.
-
-**Verified** that this is where the escape hatch is actually used. Measured 2026-09-12 over every
-`extraClasses` and `addClassNames` call in `example-app`, `e2e-tests`, `lib/src` and `docs`: of 47
-distinct tokens, 12 are known DaisyUI classes and **10 of those 12 carry a variant prefix** —
-`lg:btn-lg`, `max-sm:megamenu-vertical`, `xl:stats-horizontal`. The remaining 35 are Tailwind
-utilities this library does not type.
-
-**Verified** that the alternative shape does not solve it. Of DaisyUI's 555 classes, **536 are
-already reachable** through an enum entry or boolean parameter on their own component, so an enum
-over all classes would restate the existing API and still not express a prefix.
-
-**Verified 2026-09-14** (was Assumed) that the variant set can be closed. Measured over all 68
-component pages: DaisyUI's documented examples apply 8 distinct variants to its own classes — `sm`,
-`md`, `lg`, `xl`, `max-sm`, `max-md`, `max-lg` and `is-drawer-close` — every one of them inside the
-closed set. No `group-*`, no `peer-*`, no arbitrary `data-[…]`. The assumption's *wrong if* did not
-fire.
-
-**Resolved 2026-09-13** (was Assumed, *"that stacking is worth supporting"*): dropped. The
-measurement found no call site combining two variants on one class, so nothing supports it beyond
-the cost of forbidding it — and it is permitted rather than supported, which is a different claim.
-
-**Assumed:** that the ten breakpoints are the right closed set rather than the seven observed.
-*Wrong if:* a consumer needs a Tailwind variant this library does not name and, having no variant
-escape hatch by decision, cannot reach it — the failing report is the correction. `2xl` is in the
-set on exactly this reasoning and appears in no DaisyUI example.
+**Assumed**: the ten breakpoints are the right closed set rather than the seven observed. *Wrong if:* a consumer needs a Tailwind variant this library does not name and, having no variant escape hatch by decision, cannot reach it — the failing report is the correction. `2xl` is in the set on exactly this reasoning and appears in no DaisyUI example.
 
 #### Scenario: A size applied at a breakpoint
 
@@ -312,6 +228,24 @@ set on exactly this reasoning and appears in no DaisyUI example.
 - **WHEN** a caller names a breakpoint or state
 - **THEN** it is a typed value, so a misspelling is a compile error rather than a class that
   silently styles nothing
+
+#### Scenario: The escape hatch is unchanged
+
+- **WHEN** a caller passes a Tailwind utility such as `col-span-12`
+- **THEN** `extraClasses` accepts it exactly as before, because typing Tailwind's utilities is not
+  this library's business
+
+### Requirement: Applications of one group combine, of different groups do not
+
+Several applications of the SAME group SHALL be combinable, so that DaisyUI's documented
+responsive pattern is expressible. Combinations drawn from DIFFERENT groups SHALL NOT be
+expressible.
+
+**Why**: What is actually prevented is a **cross-group** combination — `ButtonSize.Lg and ToastVerticalPlacement.Top`, a button size answered with a toast placement. `ClassValues<T>` is invariant in `T` for that reason; under `out T` the compiler infers the common supertype `Any` and the combination compiles. Checked both ways.
+
+**Corrected 2026-09-14**: this requirement previously read *"Variants that Tailwind stacks SHALL be expressible together; combinations that cannot hold at once SHALL NOT be expressible."* Both clauses were wrong about what was built.
+
+**Corrected 2026-09-14**: the scenario *"Two variants that cannot hold at once — applying a class at two breakpoints does not compile"* asserted the opposite of both the built API and DaisyUI's own documentation. `btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl` is one class at five breakpoints and is the documented responsive pattern; `and` exists precisely to express it. The scenario is replaced by the two below.
 
 #### Scenario: One class at several breakpoints
 
@@ -326,11 +260,37 @@ set on exactly this reasoning and appears in no DaisyUI example.
   button size with a toast placement
 - **THEN** it does not compile
 
-#### Scenario: The escape hatch is unchanged
+### Requirement: A variant stacked on a variant stays expressible
 
-- **WHEN** a caller passes a Tailwind utility such as `col-span-12`
-- **THEN** `extraClasses` accepts it exactly as before, because typing Tailwind's utilities is not
-  this library's business
+Stacking a variant ON a variant — `at(Breakpoint.Lg, at(Breakpoint.Md, x))`, yielding `lg:md:x` —
+SHALL remain expressible; it was deliberately left so.
+
+**Why**: Forbidding it would need a second type for the un-prefixed case, and under this change's asymmetric-cost rule permitting a useless combination is the cheap direction. `lg:md:x` styles nothing, which costs a caller a no-op; making a reachable combination inexpressible costs the library its purpose.
+
+**Corrected 2026-09-14**: this requirement previously read *"Variants that Tailwind stacks SHALL be expressible together; combinations that cannot hold at once SHALL NOT be expressible."* Both clauses were wrong about what was built.
+
+**Resolved 2026-09-13**: (was Assumed, *"that stacking is worth supporting"*): dropped. The measurement found no call site combining two variants on one class, so nothing supports it beyond the cost of forbidding it — and it is permitted rather than supported, which is a different claim.
+
+#### Scenario: A variant on a variant compiles
+
+- **WHEN** a caller writes `at(Breakpoint.Lg, at(Breakpoint.Md, x))`
+- **THEN** it compiles and yields `lg:md:x`
+- **AND** `lg:md:x` styles nothing, which costs the caller a no-op
+
+### Requirement: The variant API is parked inside the library
+
+`Variant`, `Breakpoint`, `State`, `DrawerVariant`, `at` and `and` SHALL be `internal`; only
+`ClassValues`, the parameter type, SHALL be public.
+
+**The gate for unparking:** a build-time extractor over the CONSUMER's compiled classes, emitting
+only the combinations that consumer names. It is its own change. Unparking is then a visibility
+flip, which is why `ClassValues` is public already.
+
+**Why**: A public `at` would therefore hand a caller a class attribute that styles nothing, with no compile error and no log — the exact failure this library exists to prevent. Hence the parking.
+
+**REFUTED 2026-09-13, by the thing this requirement exists to enable**: `at()` was built first and measured against the CSS afterwards. A call site of `at(Breakpoint.Xl, ButtonSize.Lg)` renders `class="btn xl:btn-lg"` and leaves the compiled stylesheet **byte-identical** — sha256 `3ac649e1`, 412052 bytes, before and after. Tailwind emits CSS per candidate **string** found while scanning files as text; a class composed at run time from two halves appears in no file. `extraClasses = "lg:btn-lg"` works precisely because the literal IS the candidate.
+
+**Verified 2026-09-13**: the gate for unparking is feasible at its crux, the same day as the refutation — a consumer's constant pool carries a `Fieldref` to `ButtonSize.Lg` AND to `Breakpoint.Xl`, so no dataflow analysis is needed.
 
 #### Scenario: The parked API is unreachable from outside the library
 
@@ -356,23 +316,7 @@ set on exactly this reasoning and appears in no DaisyUI example.
 ### Requirement: A generated parameter is named after the DaisyUI class it emits
 
 A toggle SHALL be named by the DaisyUI class suffix it emits, converted to camelCase and nothing
-else: `hidden` for `rating-hidden`, `zebra` for `table-zebra`. An axis member SHALL be an enum
-entry named by its class suffix in PascalCase: `ButtonStyle.Ghost` for `btn-ghost`. The axis
-parameter and its enum are named by the rule in `component-model`, "Every generated name follows
-one naming rule". The codegen SHALL
-carry no mapping from a single class to a differently named parameter. The documentation of a
-toggle or an enum entry SHALL be DaisyUI's own description of the class.
-
-**Verified** the cost of renaming a class, read 2026-09-15: after `apply-classes-at-variants`
-renamed five booleans, the generated documentation for `clearOption` never named `rating-hidden`,
-so a reader holding DaisyUI's documentation had nothing to search for.
-
-**Verified** that DaisyUI's description already explains the cases a rename was meant to fix:
-`rating-hidden`'s `desc` reads "For the first radio to make it hidden so user can clear the
-rating" (`rating/+page.md:14`).
-
-**Verified** as a decision, Oliver, 2026-10-18: the axis name is a declared design choice. It
-names a group of classes, such as `style`, `shape` or `width`, and is never a renamed class.
+else: `hidden` for `rating-hidden`, `zebra` for `table-zebra`.
 
 *Wrong if:* a DaisyUI class suffix camelCases to a Kotlin keyword or collides with another
 parameter of the same function. Keywords are escaped; a collision fails compilation of the
@@ -383,9 +327,26 @@ generated sources, which is the correction.
 - **THEN** the parameter is the class suffix in camelCase, and its documentation is DaisyUI's
   description of that class
 
+### Requirement: An axis member is an enum entry named by its class suffix
+
+An axis member SHALL be an enum entry named by its class suffix in PascalCase: `ButtonStyle.Ghost`
+for `btn-ghost`. The axis parameter and its enum are named by the rule in `component-model`,
+"Every generated name follows one naming rule".
+
+**Verified**: as a decision, Oliver, 2026-10-18: the axis name is a declared design choice. It names a group of classes, such as `style`, `shape` or `width`, and is never a renamed class.
+
 #### Scenario: An axis member carries its class's name
 - **WHEN** a component declares an axis containing `btn-ghost`
 - **THEN** the enum has an entry `Ghost` documented with DaisyUI's description of `btn-ghost`
+
+### Requirement: No class is renamed, and DaisyUI's description documents it
+
+The codegen SHALL carry no mapping from a single class to a differently named parameter. The
+documentation of a toggle or an enum entry SHALL be DaisyUI's own description of the class.
+
+**Verified**: the cost of renaming a class, read 2026-09-15: after `apply-classes-at-variants` renamed five booleans, the generated documentation for `clearOption` never named `rating-hidden`, so a reader holding DaisyUI's documentation had nothing to search for.
+
+**Verified**: DaisyUI's description already explains the cases a rename was meant to fix: `rating-hidden`'s `desc` reads "For the first radio to make it hidden so user can clear the rating" (`rating/+page.md:14`).
 
 #### Scenario: No parameter is renamed by configuration
 - **WHEN** the component model is read
@@ -394,27 +355,9 @@ generated sources, which is the correction.
 ### Requirement: A join marks its items by the call, not by a parameter
 
 Inside the content of `daisyJoin`, calling a component function that the component model declares
-as a join item SHALL emit that component with `join-item`, with nothing further to write. Outside
-`daisyJoin`, and inside any lambda nested within a join's content, the same call SHALL emit no
-`join-item`, and there SHALL be no typed way to write `join-item` there.
+as a join item SHALL emit that component with `join-item`, with nothing further to write.
 
-The set of join items is declared in the model. It is bootstrapped from DaisyUI's markup, where
-it was derived until `declare-the-component-model`, and a DaisyUI release that changes it shows up
-in the bump's documentation delta.
-
-**Verified** what `join-item` does, from `packages/daisyui/src/utilities/join.css`: `.join`
-writes four corner-radius variables onto its direct children and `.join-item` reads them. Without
-an enclosing `.join` the class strips the element's own corners, so `join-item` outside a join is
-harmful, not inert.
-
-**Verified** the set, re-measured 2026-09-19 at v5.7.17: the component classes co-occurring with
-`join-item` are `btn`, `input`, `theme-controller`, `collapse`, `card`, `select` and `validator`.
-Of 72 direct children of a `.join`, 69 carry `join-item`; the 3 that do not are wrappers whose
-grandchild carries it.
-
-**Verified 2026-09-19 in the Kotlin REPL against the real `:lib` classpath:** a member function on
-the scope type takes precedence over the top-level extension; `@HtmlTagMarker` hides the scope
-inside a nested lambda; `this@daisyJoin.` still reaches the member.
+**Verified 2026-09-19 in the Kotlin REPL against the real `:lib` classpath**: a member function on the scope type takes precedence over the top-level extension; `@HtmlTagMarker` hides the scope inside a nested lambda; `this@daisyJoin.` still reaches the member.
 
 *Wrong if:* a nested `daisyButton` inside a join's content emits `join-item`, or `daisyButton`
 inside a join resolves ambiguously; the test pinning both is the correction.
@@ -422,6 +365,15 @@ inside a join resolves ambiguously; the test pinning both is the correction.
 #### Scenario: A component call inside a join is a join item
 - **WHEN** `daisyButton("A")` is called directly in the content of `daisyJoin`
 - **THEN** the rendered button carries `btn join-item`
+
+### Requirement: Outside a join's own content no call writes `join-item`
+
+Outside `daisyJoin`, and inside any lambda nested within a join's content, the same call to a join
+item SHALL emit no `join-item`, and there SHALL be no typed way to write `join-item` there.
+
+**Verified**: what `join-item` does, from `packages/daisyui/src/utilities/join.css`: `.join` writes four corner-radius variables onto its direct children and `.join-item` reads them. Without an enclosing `.join` the class strips the element's own corners, so `join-item` outside a join is harmful, not inert.
+
+**Verified 2026-09-19 in the Kotlin REPL against the real `:lib` classpath**: a member function on the scope type takes precedence over the top-level extension; `@HtmlTagMarker` hides the scope inside a nested lambda; `this@daisyJoin.` still reaches the member.
 
 #### Scenario: A nested call is not a join item
 - **WHEN** `daisyInput()` is called inside a `div { }` nested in the content of `daisyJoin`
@@ -431,6 +383,14 @@ inside a join resolves ambiguously; the test pinning both is the correction.
 #### Scenario: A join item cannot be written outside a join
 - **WHEN** code outside `daisyJoin` tries to obtain a join-marking component call
 - **THEN** it does not compile
+
+### Requirement: The set of join items is declared in the model
+
+The set of join items SHALL be declared in the model. It is bootstrapped from DaisyUI's markup,
+where it was derived until `declare-the-component-model`, and a DaisyUI release that changes it
+shows up in the bump's documentation delta.
+
+**Verified**: the set, re-measured 2026-09-19 at v5.7.17: the component classes co-occurring with `join-item` are `btn`, `input`, `theme-controller`, `collapse`, `card`, `select` and `validator`. Of 72 direct children of a `.join`, 69 carry `join-item`; the 3 that do not are wrappers whose grandchild carries it.
 
 #### Scenario: The item set follows DaisyUI
 - **WHEN** a DaisyUI release documents `join-item` beside a component class it did not before
@@ -447,16 +407,9 @@ Folded in from `tab-container-and-item-trade-places` (#342). The generator picke
 container from DaisyUI's first example, so the container wore the item's class and no item
 function existed.
 
-**Verified** the documented elements, counted 2026-10-18 at the pinned tag in
-`components/tab/+page.md`: `tabs` sits on `<div>` 17 times; `tab` on `<a>` 30 times, on
-`<input type="radio">` 19 times and on `<label>` 3 times. The radio form is the one DaisyUI's
-`tab-content` panels need without JavaScript.
+**Verified**: the documented elements, counted 2026-10-18 at the pinned tag in `components/tab/+page.md`: `tabs` sits on `<div>` 17 times; `tab` on `<a>` 30 times, on `<input type="radio">` 19 times and on `<label>` 3 times. The radio form is the one DaisyUI's `tab-content` panels need without JavaScript.
 
-**Verified** 2026-10-18 that two item functions, one rendering `<a role="tab">` and one rendering
-`<input type="radio" role="tab">`, cover what callers need: the example app renders no tabs before
-this change, and fwb-ssr's client detail page builds `<div role="tablist" class="tabs tabs-lift">`
-with `<a role="tab" class="tab tab-active">` items by hand. Neither uses the `<label>` form, which
-wraps a radio together with an icon; a caller that needs it is what would reopen this.
+**Verified**: 2026-10-18 that two item functions, one rendering `<a role="tab">` and one rendering `<input type="radio" role="tab">`, cover what callers need: the example app renders no tabs before this change, and fwb-ssr's client detail page builds `<div role="tablist" class="tabs tabs-lift">` with `<a role="tab" class="tab tab-active">` items by hand. Neither uses the `<label>` form, which wraps a radio together with an icon; a caller that needs it is what would reopen this.
 
 #### Scenario: The container and items trade places
 - **WHEN** a tab bar is built with the container function and two item functions
@@ -471,53 +424,51 @@ wraps a radio together with an icon; a caller that needs it is what would reopen
 
 Every generated rendering function SHALL render the one element its model entry declares. A class
 sibling and a class-only function render no element; they add classes to the one they are called
-on. A class a function writes on every call SHALL NOT also be offered as a parameter of another
-function.
-
-DaisyUI documents many classes on several elements. A function renders one of them; every other is
-reached typed through the function's class sibling on that element, such as
-`a { daisyButtonClasses() }`, and the generated test for each documented element renders and
-asserts DaisyUI's own tag, since `test-every-documented-tag`. Which tag a function renders by
-default stays a model decision.
+on.
 
 The authority stays the fenced ```html examples of
 `packages/docs/src/routes/(routes)/components/<name>/+page.md`, in which every daisyUI class is
 marked `$$`.
 
-Replaces "The model places each class on an element DaisyUI documents it on", which said the
-model records the divergences; it records none.
+**Why**: Replaces "The model places each class on an element DaisyUI documents it on", which said the model records the divergences; it records none.
 
-**Verified** how many, measured 2026-10-18 at the pinned tag: of 2,571 marked elements, 322 in 80
-distinct shapes carry classes a function expresses but sit on another element than that function
-renders. The largest are `mask` on `<input>` (60, the rating stars), `badge` on `<div>` (47), `btn`
-on `<a>`, `<input>`, `<label>`, `<div>` and `<summary>` (about 90 together), and `dropdown` on
-`<div>` (29, the popover form #357 asks for).
-
-**Verified** the defect this requirement was first written against, measured 2026-09-14 over all
-68 component pages: 13 classes across 5 components were parameters on the container while DaisyUI
-puts them on a child. That was fixed by `a-class-belongs-to-the-element-that-wears-it`.
-
-**Verified** that no class is both written on every call by one function and offered as a
-parameter by another, read from `codegen/model/` on 2026-10-18.
+**Verified**: the defect this requirement was first written against, measured 2026-09-14 over all 68 component pages: 13 classes across 5 components were parameters on the container while DaisyUI puts them on a child. That was fixed by `a-class-belongs-to-the-element-that-wears-it`.
 
 #### Scenario: A DaisyUI release moves a class to another element
 - **WHEN** the newer tag documents a class on a different set of elements
 - **THEN** the bump's documentation delta names the class and both element sets
 - **AND** the element a function renders changes only by an edit to the model
 
-#### Scenario: A construction writes a class, so no parameter offers it
-- **WHEN** a generated function writes a class on every call
-- **THEN** no other function offers that class as a parameter
+#### Scenario: The calendar renders its web component
+- **WHEN** `daisyCalendar { }` is rendered
+- **THEN** the output is `<calendar-date class="cally">`, the element the cally web component
+  defines, and not a `<div>`
+
+### Requirement: Every other documented element is reached through the class sibling
+
+DaisyUI documents many classes on several elements. A function renders one of them; every other
+SHALL be reached typed through the function's class sibling on that element, such as
+`a { daisyButtonClasses() }`, and the generated test for each documented element SHALL render and
+assert DaisyUI's own tag, since `test-every-documented-tag`. Which tag a function renders by
+default stays a model decision.
+
+**Verified**: how many, measured 2026-10-18 at the pinned tag: of 2,571 marked elements, 322 in 80 distinct shapes carry classes a function expresses but sit on another element than that function renders. The largest are `mask` on `<input>` (60, the rating stars), `badge` on `<div>` (47), `btn` on `<a>`, `<input>`, `<label>`, `<div>` and `<summary>` (about 90 together), and `dropdown` on `<div>` (29, the popover form #357 asks for).
 
 #### Scenario: A class on another element than DaisyUI's
 - **WHEN** DaisyUI shows `<a class="$$btn">` and `daisyButton` renders `<button>`
 - **THEN** generation succeeds, and the documented-element test writes `a { daisyButtonClasses() }`
   and asserts the `a` and its classes
 
-#### Scenario: The calendar renders its web component
-- **WHEN** `daisyCalendar { }` is rendered
-- **THEN** the output is `<calendar-date class="cally">`, the element the cally web component
-  defines, and not a `<div>`
+### Requirement: A class written on every call is offered by no parameter
+
+A class a function writes on every call SHALL NOT also be offered as a parameter of another
+function.
+
+**Verified**: no class is both written on every call by one function and offered as a parameter by another, read from `codegen/model/` on 2026-10-18.
+
+#### Scenario: A construction writes a class, so no parameter offers it
+- **WHEN** a generated function writes a class on every call
+- **THEN** no other function offers that class as a parameter
 
 ### Requirement: No function offers a class for an element it does not render
 
@@ -525,12 +476,9 @@ A generated function SHALL NOT offer, as a parameter, a class DaisyUI's examples
 another element than the one the function renders, such as a child. Such a class is offered by the
 function, class sibling or class-only function for that element.
 
-Written against #347. **Verified** the defect, read 2026-10-18: `daisyMenu` offers `active`,
-`disabled` and `dropdownShow`, `daisyDock` offers `active`, `daisyRating` offers `hidden`, and
-`daisyList` offers `column`. Each writes its class on the container, and DaisyUI puts every one of
-them on a child (`<a>` or `<li>` in a menu, the dock's `<button>`, the rating's first `<input>`,
-the children of a `list-row`), where its CSS applies. The gate's documented-element tests found
-all eight.
+**Why**: Written against #347.
+
+**Verified**: the defect, read 2026-10-18: `daisyMenu` offers `active`, `disabled` and `dropdownShow`, `daisyDock` offers `active`, `daisyRating` offers `hidden`, and `daisyList` offers `column`. Each writes its class on the container, and DaisyUI puts every one of them on a child (`<a>` or `<li>` in a menu, the dock's `<button>`, the rating's first `<input>`, the children of a `list-row`), where its CSS applies. The gate's documented-element tests found all eight.
 
 #### Scenario: A menu's active item
 - **WHEN** a caller marks the active entry of a menu
@@ -547,12 +495,7 @@ The library SHALL offer `daisyDropdownPopover`, generated from the model, render
 `<ul class="dropdown …" popover id="…">` with a required `id` and the dropdown's `side` and
 `align` axes. It SHALL write no `style` attribute and no anchor of any kind.
 
-**Verified** that this is the element DaisyUI documents for the method: the dropdown page of
-5.7.50, "Dropdown using popover API and anchor positioning", marks `<ul class="$$dropdown $$menu …"
-popover id="popover-1" style="position-anchor:--anchor-1">`. DaisyUI names the anchor in an
-inline style; kdaisyui names none, because an inline style is refused under
-`Content-Security-Policy: default-src 'self'`, and a popover opened by `popovertarget` is
-anchored to its invoker without one (see the requirement on opening beside the trigger).
+**Verified**: this is the element DaisyUI documents for the method: the dropdown page of 5.7.50, "Dropdown using popover API and anchor positioning", marks `<ul class="$$dropdown $$menu …" popover id="popover-1" style="position-anchor:--anchor-1">`. DaisyUI names the anchor in an inline style; kdaisyui names none, because an inline style is refused under `Content-Security-Policy: default-src 'self'`, and a popover opened by `popovertarget` is anchored to its invoker without one (see the requirement on opening beside the trigger).
 
 #### Scenario: The documented element is tested through the function
 
@@ -572,12 +515,6 @@ writes `popovertarget` with the popover's id and `popovertargetaction` when an a
 and nothing else: no `style` and no anchor name. The browser makes the trigger the popover's
 implicit anchor. A `style` the caller set SHALL stay untouched.
 
-The earlier `popoverTarget(popover, action, anchored)` SHALL remain, deprecated with a
-replacement, and render exactly what the two-parameter form renders, whatever `anchored` is.
-`HtmlId.anchorName` SHALL remain, deprecated: nothing in the library writes it.
-
-**Verified** that removing `anchored`'s effect breaks no anchoring: see the next requirement.
-
 #### Scenario: Trigger and popover agree on an id with a space
 
 - **WHEN** a trigger calls `popoverTarget(htmlId("main menu"))` and `daisyDropdownPopover(id = htmlId("main menu"))` renders
@@ -587,11 +524,6 @@ replacement, and render exactly what the two-parameter form renders, whatever `a
 
 - **WHEN** a trigger calls `popoverTarget(panel)`
 - **THEN** it writes no `anchor-name`, so the one DaisyUI's megamenu CSS sets is the one in effect
-
-#### Scenario: A deprecated anchored trigger writes no anchor
-
-- **WHEN** a trigger calls `popoverTarget(menu, anchored = true)`
-- **THEN** it carries `popovertarget` and no `style` and no `data-anchor-name`
 
 #### Scenario: A close button
 
@@ -603,22 +535,27 @@ replacement, and render exactly what the two-parameter form renders, whatever `a
 - **WHEN** a tag with `style="color:red"` calls `popoverTarget(menu)`
 - **THEN** its `style` is still exactly `color:red`
 
+### Requirement: The earlier anchoring API remains, deprecated
+
+The earlier `popoverTarget(popover, action, anchored)` SHALL remain, deprecated with a
+replacement, and render exactly what the two-parameter form renders, whatever `anchored` is.
+`HtmlId.anchorName` SHALL remain, deprecated: nothing in the library writes it.
+
+**Verified**: removing `anchored`'s effect breaks no anchoring: see the next requirement.
+
+#### Scenario: A deprecated anchored trigger writes no anchor
+
+- **WHEN** a trigger calls `popoverTarget(menu, anchored = true)`
+- **THEN** it carries `popovertarget` and no `style` and no `data-anchor-name`
+
 ### Requirement: The popover dropdown opens beside its trigger without JavaScript
 
 In the example application, clicking the trigger of a `daisyDropdownPopover` SHALL show the menu
 next to the trigger, with no script on the page and no inline style or anchor name in the markup.
 
-**Verified** 2026-11-07 by `e2e-tests/.../dropdown_popover.feature` in Chromium 156: with no
-anchor written anywhere, the open menu's top edge meets the trigger's bottom edge within 4px. The
-browser anchors it: MDN BCD 8.1.8 records the implicit anchor reference of `popovertarget` from
-Chrome 133, Safari 26 and Firefox 147. The check has been seen to fail: on 2026-10-31 a
-`position-anchor` naming an anchor that did not exist overrode the implicit one, and the menu
-opened 80px off.
+**Verified**: 2026-11-07 by `e2e-tests/.../dropdown_popover.feature` in Chromium 156: with no anchor written anywhere, the open menu's top edge meets the trigger's bottom edge within 4px. The browser anchors it: MDN BCD 8.1.8 records the implicit anchor reference of `popovertarget` from Chrome 133, Safari 26 and Firefox 147. The check has been seen to fail: on 2026-10-31 a `position-anchor` naming an anchor that did not exist overrode the implicit one, and the menu opened 80px off. `run-e2e-on-kotest-alone` ported that feature to a Kotest spec with the same two checks and the same 4px tolerance.
 
-`run-e2e-on-kotest-alone` ported that feature to a Kotest spec with the same two checks and the
-same 4px tolerance. **Assumed** for the port: *wrong if* the ported test still passes when the
-menu's expected top edge is moved by 80px, the offset the 2026-10-31 defect produced. The port's
-task runs that control and records the spec's name.
+**Assumed**: for the port: *wrong if* the ported test still passes when the menu's expected top edge is moved by 80px, the offset the 2026-10-31 defect produced. The port's task runs that control and records the spec's name.
 
 #### Scenario: Click opens it under the button
 
@@ -639,22 +576,7 @@ the element the function renders, and which defaults to doing nothing. It SHALL 
 last parameter, so a trailing lambda binds to it. No generated rendering function SHALL take a
 second lambda on the same element.
 
-The block SHALL run after the function has written its own id, attributes and classes and the
-caller's `extraClasses`, so an attribute or class the block writes is added to them. On an element
-that can hold children the block may also write them. On an HTML void element (`area`, `base`,
-`br`, `col`, `embed`, `hr`, `img`, `input`, `link`, `meta`, `param`, `source`, `track`, `wbr`) the
-block exists all the same and writes attributes only; whether the element is void SHALL still be
-derived from the element, never configured per component.
-
-**Verified** that this is the shape kotlinx.html gives its own builders, read 2026-11-02 in
-kotlinx-html-jvm 0.12.0's sources: `FlowContent.div` (`gen-tag-groups.kt:68`),
-`button` (`gen-tag-unions.kt:772`) and the void `input` (`gen-tag-unions.kt:896`) each take
-`block: T.() -> Unit = {}` as their last parameter.
-
-**Verified** that a block running after the function's own classes reaches the same element as
-`attrs` did, read 2026-11-02 in `codegen/src/generator-new.ts:236-238` and `:298-300`: `attrs()`
-already ran after `addClassNames(extraClasses)` and directly before `content()`, on the same
-receiver.
+**Verified**: this is the shape kotlinx.html gives its own builders, read 2026-11-02 in kotlinx-html-jvm 0.12.0's sources: `FlowContent.div` (`gen-tag-groups.kt:68`), `button` (`gen-tag-unions.kt:772`) and the void `input` (`gen-tag-unions.kt:896`) each take `block: T.() -> Unit = {}` as their last parameter.
 
 #### Scenario: A container takes a trailing block
 - **WHEN** `daisyCard { daisyCardBody { +"Hello" } }` is rendered
@@ -664,19 +586,33 @@ receiver.
 - **WHEN** `daisyCard()` is rendered
 - **THEN** an empty `<div class="card"></div>` is emitted and nothing fails
 
-#### Scenario: A void element takes attributes through its block
-- **WHEN** `daisyInput { name = "email" }` is rendered
-- **THEN** the `input.input` carries `name="email"` and the following sibling stays at the same
-  nesting level
+#### Scenario: No second lambda
+- **WHEN** the generated sources are compiled
+- **THEN** no generated rendering function declares a parameter named `attrs` or `content`
+
+### Requirement: The block runs after the function's own writes
+
+The block SHALL run after the function has written its own id, attributes and classes and the
+caller's `extraClasses`, so an attribute or class the block writes is added to them.
+
+**Verified**: a block running after the function's own classes reaches the same element as `attrs` did, read 2026-11-02 in `codegen/src/generator-new.ts:236-238` and `:298-300`: `attrs()` already ran after `addClassNames(extraClasses)` and directly before `content()`, on the same receiver.
 
 #### Scenario: The block adds to the function's classes
 - **WHEN** `daisyButton(color = ButtonColor.Primary, extraClasses = "w-full") { daisyMenuClasses() }`
   is rendered
 - **THEN** the button carries `btn btn-primary w-full menu`
 
-#### Scenario: No second lambda
-- **WHEN** the generated sources are compiled
-- **THEN** no generated rendering function declares a parameter named `attrs` or `content`
+### Requirement: A void element's block writes attributes only
+
+On an element that can hold children the block may also write them. On an HTML void element
+(`area`, `base`, `br`, `col`, `embed`, `hr`, `img`, `input`, `link`, `meta`, `param`, `source`,
+`track`, `wbr`) the block exists all the same and writes attributes only; whether the element is
+void SHALL still be derived from the element, never configured per component.
+
+#### Scenario: A void element takes attributes through its block
+- **WHEN** `daisyInput { name = "email" }` is rendered
+- **THEN** the `input.input` carries `name="email"` and the following sibling stays at the same
+  nesting level
 
 ### Requirement: A function's text and block add up
 
@@ -684,17 +620,9 @@ Where a generated function takes `text`, passing both `text` and a block SHALL r
 block runs first, then the text is appended to the element. Neither SHALL replace or drop the
 other.
 
-**Verified** why the block has to run first, read 2026-11-02 in kotlinx-html-jvm 0.12.0
-`commonMain/delayed-consumer.kt:14-23`: the consumers `createHTML` and `appendHTML` return
-(`stream.kt:147`, `:150`) delay a tag's start only until its first content, and an attribute set
-after that throws `IllegalStateException`. Text written before the block would make
-`daisyButton("Save") { popoverTarget(menu) }` throw.
+**Verified**: why the block has to run first, read 2026-11-02 in kotlinx-html-jvm 0.12.0 `commonMain/delayed-consumer.kt:14-23`: the consumers `createHTML` and `appendHTML` return (`stream.kt:147`, `:150`) delay a tag's start only until its first content, and an attribute set after that throws `IllegalStateException`. Text written before the block would make `daisyButton("Save") { popoverTarget(menu) }` throw.
 
-**Assumed** that appending the text after the block's children is what a caller who combines both
-wants, because the block's main use is attributes. *Wrong if:* a call site in the example app,
-the documentation or the tests passes `text` together with a block that writes children which
-must follow the text; such a call is then rendered in the wrong order, and the order has to be
-reconsidered before the change is built on.
+**Assumed**: appending the text after the block's children is what a caller who combines both wants, because the block's main use is attributes. *Wrong if:* a call site in the example app, the documentation or the tests passes `text` together with a block that writes children which must follow the text; such a call is then rendered in the wrong order, and the order has to be reconsidered before the change is built on.
 
 #### Scenario: Text with an attribute block
 - **WHEN** `daisyButton("Save") { attributes["data-probe"] = "yes" }` is rendered

@@ -12,11 +12,9 @@ CI makes that a failing, required check instead.
 Every CI run of a pull request and of a push to `main` SHALL fail when `openspec/config.yaml` is not
 valid YAML, and its log SHALL name the file and the parser's error.
 
-**Verified** that an unparsable file silently drops every project rule: finding F1 of
-`planning-rules-from-popover-anchoring`, `openspec instructions tasks` served 0 rules.
+**Verified**: an unparsable file silently drops every project rule: finding F1 of `planning-rules-from-popover-anchoring`, `openspec instructions tasks` served 0 rules.
 
-**Assumed**: the runner's `yq` rejects that case (A1). *Wrong if:* task 1.1's control passes the
-broken fixture.
+**Assumed**: the runner's `yq` rejects that case (A1). *Wrong if:* task 1.1's control passes the broken fixture.
 
 #### Scenario: A planning-only pull request breaks the file
 

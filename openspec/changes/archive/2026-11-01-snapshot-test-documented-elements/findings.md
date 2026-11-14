@@ -31,4 +31,6 @@
 | Finding | Proposal | Status |
 |---|---|---|
 | F1 | - | none - the remaining survivors are recorded; the gate covers changed lines |
-| F2-F4 | - | none - fixed in this change |
+| F2 | - | fixed - in this change |
+| F3 | - | fixed - in this change |
+| F4 | - | fixed - in this change |

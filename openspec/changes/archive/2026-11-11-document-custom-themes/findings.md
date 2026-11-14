@@ -28,4 +28,4 @@ One row per finding (house rules §9).
 | Finding | Proposal | Status |
 |---|---|---|
 | F1 | - | none - record only: a scope question with three defensible answers |
-| F2 | `openspec validate --all --strict` fails CI, after the ten main specs over 500 characters are shortened, so a delta that grows a requirement past the limit is caught before archive | open |
+| F2 | `openspec validate --all --strict` fails CI, after the ten main specs over 500 characters are shortened, so a delta that grows a requirement past the limit is caught before archive | adopted -> validate-openspec-strictly |

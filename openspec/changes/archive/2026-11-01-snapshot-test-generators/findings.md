@@ -44,6 +44,8 @@
 
 | Finding | Proposal | Status |
 |---|---|---|
-| F1 | The documented-element half of `test-generator.ts`, now testable the same way | open - its own change |
-| F2 | The remaining `../../daisyui` paths in `index-daisyui-delta.ts` and `test-generator.ts` through `submodules.ts` | open - with the documented-element change, which needs it |
-| F3-F5 | - | none - fixed in this change |
+| F1 | The documented-element half of `test-generator.ts`, now testable the same way | adopted -> snapshot-test-documented-elements |
+| F2 | The remaining `../../daisyui` path in `index-daisyui-delta.ts` through `submodules.ts`; `test-generator.ts`'s went with `snapshot-test-documented-elements` (its F2) | open |
+| F3 | - | fixed - in this change |
+| F4 | - | fixed - in this change |
+| F5 | - | fixed - in this change |

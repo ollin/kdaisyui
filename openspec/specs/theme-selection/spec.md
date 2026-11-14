@@ -16,8 +16,7 @@ The library SHALL offer an enum `DaisyTheme` with one entry per built-in theme o
 DaisyUI, each carrying its `data-theme` value, generated from DaisyUI's theme sources by
 `just generate`. `nord` gives `DaisyTheme.Nord`.
 
-**Verified** 2026-11-10 (A1): the 35 stems of `src/themes/*.css` equal the 35 names
-`themes: all` compiles (`functions/themeOrder.js`).
+**Verified**: 2026-11-10 (A1): the 35 stems of `src/themes/*.css` equal the 35 names `themes: all` compiles (`functions/themeOrder.js`).
 
 #### Scenario: The enum follows DaisyUI
 
@@ -29,8 +28,7 @@ DaisyUI, each carrying its `data-theme` value, generated from DaisyUI's theme so
 
 Generation SHALL fail on a theme name that is not lowercase letters only, naming its file.
 
-**Verified** that every name of the pinned DaisyUI passes: the 35 stems are lowercase letters only,
-2026-11-10.
+**Verified**: every name of the pinned DaisyUI passes: the 35 stems are lowercase letters only, 2026-11-10.
 
 #### Scenario: A theme name the rule cannot spell
 
@@ -42,9 +40,7 @@ Generation SHALL fail on a theme name that is not lowercase letters only, naming
 `DaisyTheme` and the functions beside it SHALL live in the package
 `io.github.ollin.kdaisyui.themes`, outside the package the Gradle plugin reads as components.
 
-**Verified** that this is necessary: the plugin treats every class under
-`io/github/ollin/kdaisyui/components/` as a component (`ComponentReferences.kt:11`), and one the
-map does not know makes it write the full class list (`ComponentMap.kt:12-15`, proposal A4).
+**Verified**: this is necessary: the plugin treats every class under `io/github/ollin/kdaisyui/components/` as a component (`ComponentReferences.kt:11`), and one the map does not know makes it write the full class list (`ComponentMap.kt:12-15`, proposal A4).
 
 #### Scenario: Using the enum keeps the stylesheet narrow
 
@@ -74,8 +70,7 @@ value equals its argument and `null` for any other string.
 `daisyThemeController` SHALL take a parameter `theme: DaisyTheme? = null`, declared in the
 component model, which writes the input's `value` when given and nothing when `null`.
 
-**Verified** that the value is what DaisyUI matches: the selector is
-`:root:has(input.theme-controller[value=<name>]:checked)` (`pluginOptionsHandler.js:27`).
+**Verified**: the value is what DaisyUI matches: the selector is `:root:has(input.theme-controller[value=<name>]:checked)` (`pluginOptionsHandler.js:27`).
 
 #### Scenario: A controller for one theme
 
@@ -105,8 +100,7 @@ The how-to SHALL state that `DaisyTheme` names every built-in theme while the st
 which exist, that a theme the stylesheet lacks renders as the default without an error, and that
 a custom theme is written as a `data-theme` attribute.
 
-**Verified** that the paths differ: the webjar's `themes.css` (tutorial, line 118) carries every
-theme; a compiled entry gets `light` and `dark` unless it names more (`pluginOptionsHandler.js:9`).
+**Verified**: the paths differ: the webjar's `themes.css` (tutorial, line 118) carries every theme; a compiled entry gets `light` and `dark` unless it names more (`pluginOptionsHandler.js:9`).
 
 #### Scenario: A reader compiles the themes they offer
 
@@ -120,8 +114,7 @@ The example application SHALL serve a profile page, linked from the avatar menu,
 `DaisyTheme` and "System default" as radio choices, each built-in theme inside a card rendered
 in that theme. The page SHALL need no script.
 
-**Verified** 2026-11-10 (task 3.4): the 35 preview cards compute 35 distinct `--color-primary`
-values. Every built-in theme has its own primary, while ten share `light`'s white base-100.
+**Verified**: 2026-11-10 (task 3.4): the 35 preview cards compute 35 distinct `--color-primary` values. Every built-in theme has its own primary, while ten share `light`'s white base-100.
 
 #### Scenario: Every theme is previewed in itself
 
@@ -177,7 +170,7 @@ The Gradle plugin SHALL warn, after compiling the stylesheet, naming each theme 
 classes name and the stylesheet has no `[data-theme=…]` selector for, and the `@plugin "daisyui"`
 line that adds them. An entry reference names its theme; the whole set or `daisyThemeOf` names all.
 
-**Verified** by `javap`, 2026-11-10: an entry is a `Fieldref` to `DaisyTheme.<Entry>`.
+**Verified**: by `javap`, 2026-11-10: an entry is a `Fieldref` to `DaisyTheme.<Entry>`.
 
 #### Scenario: A theme the stylesheet lacks
 
@@ -206,8 +199,7 @@ The how-to SHALL show the `@plugin "daisyui/theme"` block in the stylesheet entr
 `:doc-snippets` compiles that writes the theme's name as `data-theme` and as a theme controller's
 `value`, and SHALL state that `daisyThemeOf` and the plugin's theme check do not know the theme.
 
-**Verified** 2026-11-11 by the proposal's A1 (the block compiles to both selectors) and A2
-(`ThemeCheck.kt:7-10`).
+**Verified**: 2026-11-11 by the proposal's A1 (the block compiles to both selectors) and A2 (`ThemeCheck.kt:7-10`).
 
 #### Scenario: A reader adds a theme of their own
 
@@ -222,8 +214,7 @@ The how-to SHALL show the `@plugin "daisyui/theme"` block in the stylesheet entr
 `@plugin "daisyui/theme"` and written as a `data-theme` string, and that `DaisyTheme`,
 `daisyThemeOf` and the plugin's theme check know only the built-in themes.
 
-**Assumed**: an agent reading only `llms-full.txt` follows it. *Wrong if:* such an agent still
-writes `DaisyTheme.Acme` or `daisyTheme("acme")`.
+**Assumed**: an agent reading only `llms-full.txt` follows it. *Wrong if:* such an agent still writes `DaisyTheme.Acme` or `daisyTheme("acme")`.
 
 #### Scenario: An agent looks up custom themes
 

@@ -145,6 +145,39 @@ The sibling writes only classes: no attribute, no content. A button that opens a
 dropdown is its `<summary>`, shown in [Add a dropdown](#add-a-dropdown). The KDoc of every
 function names its sibling, so completion in the IDE leads there too.
 
+### Let the build point at classes written as strings
+
+The Gradle plugin checks your compiled code for DaisyUI classes written by hand, which the
+compiler cannot check. After `kdaisyuiClasses`, its task `kdaisyuiRawClasses` warns about every
+string it reports and names the components the classes belong to:
+
+```
+kdaisyui: strings that write DaisyUI classes the typed API writes for you:
+  com/example/LayoutKt: "btn btn-sm btn-ghost" (button)
+  com/example/LayoutKt: "card bg-base-100 col-span-12" (card)
+  Use the component's function, or a { daisy<Component>Classes(…) } on another element.
+```
+
+A string counts when every word in it is shaped like a CSS class, one of them holds `-` or `:`, and
+one without a variant prefix is a DaisyUI class. That leaves out three things:
+
+- **Variants**, such as `extraClasses = "lg:btn-lg"`: a string is how a variant is written.
+- **Single words**, such as `"dropdown"`: they cannot be told apart from text.
+- **Prose**, such as `"Open the link"`.
+
+An id or a `data-` value that looks like a class list is reported too. Rename it.
+
+To make the check a gate, let it fail the build:
+
+<!-- snippet: skip - a Gradle build script, not code against the library -->
+```kotlin
+kdaisyui {
+    rawClasses {
+        failBuild.set(true)
+    }
+}
+```
+
 ## Build a form
 
 Combine fieldsets, labels, inputs, and form controls:

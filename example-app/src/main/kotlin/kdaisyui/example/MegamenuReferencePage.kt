@@ -4,6 +4,7 @@ import io.github.ollin.kdaisyui.components.daisyButton
 import io.github.ollin.kdaisyui.components.daisyMegamenu
 import io.github.ollin.kdaisyui.components.daisyMegamenuActive
 import io.github.ollin.kdaisyui.components.daisyMegamenuPanel
+import io.github.ollin.kdaisyui.components.daisyMenuClasses
 import io.github.ollin.kdaisyui.core.HtmlId
 import io.github.ollin.kdaisyui.core.popoverTarget
 import kotlinx.html.*
@@ -41,7 +42,8 @@ fun HTML.megamenuReferencePage() {
 
             panelTrigger("Components", Megamenu.PanelOne())
             daisyMegamenuPanel(id = Megamenu.PanelOne()) {
-                ul("menu w-full") {
+                ul("w-full") {
+                    daisyMenuClasses()
                     li { a { +"Buttons" } }
                     li { a { +"Cards" } }
                     li { a { +"Modals" } }
@@ -50,7 +52,8 @@ fun HTML.megamenuReferencePage() {
 
             panelTrigger("Docs", Megamenu.PanelTwo())
             daisyMegamenuPanel(id = Megamenu.PanelTwo()) {
-                ul("menu w-full") {
+                ul("w-full") {
+                    daisyMenuClasses()
                     li { a { +"Getting started" } }
                     li { a { +"Codegen" } }
                 }

@@ -34,7 +34,8 @@ private fun TagConsumer<*>.createRepositoryFormSection() {
 
 private fun TagConsumer<*>.recentEventsCard() {
     section {
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-5")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-5")
         div("text-base-content/60 p-6 pb-0 text-center text-xs font-bold") { +"Recent events" }
         daisyMenu(extraClasses = "w-full") {
             for (event in listOf(
@@ -61,7 +62,8 @@ private fun TagConsumer<*>.recentEventsCard() {
 
 private fun TagConsumer<*>.quickStatsCard() {
     section {
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-3")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-3")
         daisyCardBody {
             daisyCardTitle("Quick stats")
             ul("space-y-2") {

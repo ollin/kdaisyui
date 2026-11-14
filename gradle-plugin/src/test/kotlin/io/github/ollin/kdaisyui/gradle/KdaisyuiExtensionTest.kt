@@ -24,6 +24,14 @@ class KdaisyuiExtensionTest {
     }
 
     @Test
+    fun theRawClassCheckWarnsByDefaultAndFailsTheBuildWhenAsked() {
+        val rawClasses = project.extensions.getByType(KdaisyuiExtension::class.java).rawClasses
+        assertFalse(rawClasses.failBuild.get())
+        project.extensions.getByType(KdaisyuiExtension::class.java).rawClasses { failBuild.set(true) }
+        assertTrue(rawClasses.failBuild.get())
+    }
+
+    @Test
     fun aBuildSetsItInABlock() {
         project.extensions.getByType(KdaisyuiExtension::class.java).stylesheet { entry.set(project.file("src/main/css/app.css")) }
         assertEquals(project.file("src/main/css/app.css"), stylesheet.entry.get().asFile)

@@ -1,6 +1,7 @@
 package kdaisyui.example
 
 import io.github.ollin.kdaisyui.components.daisyButton
+import io.github.ollin.kdaisyui.components.daisyButtonClasses
 import kotlinx.html.*
 
 /**
@@ -51,7 +52,8 @@ fun HTML.disabledStatePage() {
                 text = "Native",
                 disabled = true,
             ) { attributes["id"] = "disabled-native" }
-            button(classes = "btn btn-disabled") {
+            button {
+                daisyButtonClasses(disabled = true)
                 attributes["id"] = "disabled-class"
                 +"Class"
             }

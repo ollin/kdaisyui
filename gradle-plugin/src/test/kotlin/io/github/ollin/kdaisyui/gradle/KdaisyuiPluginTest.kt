@@ -67,6 +67,20 @@ class KdaisyuiPluginTest {
     }
 
     @Test
+    fun theRawClassCheckFinalizesTheClassListTakesTheOptionAndIsNoPartOfCheck() {
+        project.pluginManager.apply("java")
+        project.pluginManager.apply("io.github.ollin.kdaisyui")
+        project.extensions.getByType(KdaisyuiExtension::class.java).rawClasses { failBuild.set(true) }
+        val rawClasses = project.tasks.getByName("kdaisyuiRawClasses") as KdaisyuiRawClasses
+        val classList = project.tasks.getByName("kdaisyuiClasses")
+        assertEquals(setOf(rawClasses), classList.finalizedBy.getDependencies(classList))
+        assertTrue(rawClasses.failBuild.get() && rawClasses.classes.files.any { it.path.endsWith("classes/java/main") })
+        assertTrue(rawClasses.runtimeClasspath.none { it.path.contains("resources/main") } && rawClasses.description!!.startsWith("Warns about DaisyUI classes"))
+        val check = project.tasks.getByName("check")
+        assertTrue(check.taskDependencies.getDependencies(check).none { it.name.startsWith("kdaisyui") })
+    }
+
+    @Test
     fun withoutJavaThereIsNothingToScan() {
         project.pluginManager.apply("io.github.ollin.kdaisyui")
         assertNull(project.tasks.findByName("kdaisyuiClasses"))

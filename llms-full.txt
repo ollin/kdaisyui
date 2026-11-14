@@ -61,7 +61,10 @@ and DaisyUI it pins, in a Node container reached through the Docker daemon alone
 `kdaisyui { stylesheet { entry.set(…) } }`; the entry names its inputs as
 `@source "../kdaisyui/kdaisyui-classes.txt"` and `@source "../sources/0-kotlin"`. After it,
 `kdaisyuiThemes` warns when the compiled code names a `DaisyTheme` the stylesheet does not carry,
-and says which themes to add to the entry's `@plugin "daisyui"` block. Without Gradle,
+and says which themes to add to the entry's `@plugin "daisyui"` block. After `kdaisyuiClasses`,
+`kdaisyuiRawClasses` warns about each string of the compiled code that writes DaisyUI classes by
+hand, such as `"btn btn-sm"`. Variant-prefixed classes such as `lg:btn-lg` are left out, and
+`kdaisyui { rawClasses { failBuild.set(true) } }` turns the warning into a failure. Without Gradle,
 the jar's own `kdaisyui-classes.txt` lists every class. See the README's Quick start, step 3.
 
 ### Content-Security-Policy

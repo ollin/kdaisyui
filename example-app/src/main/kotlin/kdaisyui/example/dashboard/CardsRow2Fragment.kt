@@ -14,7 +14,8 @@ fun TagConsumer<*>.cardsRow2Fragment() {
 private fun TagConsumer<*>.repositoryActivityCard() {
     section {
         id = Dashboard.CardsRow2().id
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Repository Activity")
             ul("space-y-3") {
@@ -36,7 +37,8 @@ private fun TagConsumer<*>.repositoryActivityCard() {
 
 private fun TagConsumer<*>.issuesByStatusCard() {
     section {
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Issues by Status")
             ul("space-y-2") {
@@ -51,7 +53,8 @@ private fun TagConsumer<*>.issuesByStatusCard() {
 
 private fun TagConsumer<*>.teamActivityCard() {
     section {
-        addClassNames("card bg-base-100 col-span-12 shadow-xs xl:col-span-4")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 shadow-xs xl:col-span-4")
         daisyCardBody {
             daisyCardTitle("Team Activity")
             daisyMenu(extraClasses = "w-full") {

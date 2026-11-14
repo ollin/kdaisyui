@@ -10,7 +10,8 @@ import kotlinx.html.section
 fun TagConsumer<*>.statsFragment() {
     section {
         id = Dashboard.Stats().id
-        addClassNames("stats stats-vertical xl:stats-horizontal bg-base-100 col-span-12 w-full shadow-xs")
+        daisyStatsClasses(direction = StatsDirection.Vertical)
+        addClassNames("xl:stats-horizontal bg-base-100 col-span-12 w-full shadow-xs")
         val stats = listOf(
             Triple("Active Repositories", "142", "Across all organizations"),
             Triple("Open Issues", "1,847", "Live triage queue"),

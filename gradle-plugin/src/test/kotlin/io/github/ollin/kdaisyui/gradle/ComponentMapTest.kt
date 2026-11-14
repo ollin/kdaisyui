@@ -24,4 +24,9 @@ class ComponentMapTest {
     fun noComponentFoundGetsTheFullList() {
         assertEquals(Selection(all, "the compiled classes name no kdaisyui component"), map.select(emptySet()))
     }
+
+    @Test
+    fun aClassIsNamedByItsComponentAndAnUnknownClassByNone() {
+        assertEquals(listOf("card", null), listOf(map.componentOf("card-body"), map.componentOf("bg-base-100")))
+    }
 }

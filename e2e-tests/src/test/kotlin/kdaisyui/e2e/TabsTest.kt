@@ -24,8 +24,8 @@ class TabsTest : PlaywrightSpec() {
 
         test("An active tab looks different from an inactive one") {
             page.navigate("/tabs")
-            page.computedStyle("tab-active", "background-color") shouldNotBe
-                page.computedStyle("tab-inactive", "background-color")
+            page.computedStyle("active-tab", "background-color") shouldNotBe
+                page.computedStyle("inactive-tab", "background-color")
         }
     }
 }

@@ -15,8 +15,8 @@ import kotlinx.html.*
 fun HTML.tabsPage() {
     demoPage("Tabs") {
         daisyTabs(style = TabsStyle.Lift) {
-            daisyTab(active = true) { attributes["id"] = "tab-active"; +"Overview" }
-            daisyTab { attributes["id"] = "tab-inactive"; +"Portfolios" }
+            daisyTab(active = true) { attributes["id"] = "active-tab"; +"Overview" }
+            daisyTab { attributes["id"] = "inactive-tab"; +"Portfolios" }
         }
     }
 }

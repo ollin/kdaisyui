@@ -36,24 +36,27 @@ fun HTML.appShell(application: Application, theme: DaisyTheme?, heading: String,
         pageAssets()
         script { src = "/webjars/htmx.org/dist/htmx.min.js" }
     }
-    body("drawer bg-base-200 lg:drawer-open min-h-screen") {
+    body("bg-base-200 lg:drawer-open min-h-screen") {
+        daisyDrawerClasses()
         val drawerId: HtmlId = Dashboard.Drawer()
         input {
             id = drawerId.id
             type = InputType.checkBox
-            classes = setOf("drawer-toggle")
+            daisyDrawerToggleClasses()
         }
-        main("drawer-content") {
+        main {
+            daisyDrawerContentClasses()
             id = Dashboard.Content().id
             div("grid grid-cols-12 grid-rows-[min-content] gap-y-12 p-4 lg:gap-x-12 lg:p-10") {
                 shellHeader(application.href(ProfilePage()), heading)
                 pageContent()
             }
         }
-        aside("drawer-side z-10") {
+        aside("z-10") {
+            daisyDrawerSideClasses()
             label {
                 htmlFor = drawerId.id
-                classes = setOf("drawer-overlay")
+                daisyDrawerOverlayClasses()
             }
             shellSidebar(application.href(DashboardPage()), overviewActive = heading == "Overview")
         }
@@ -67,7 +70,7 @@ private fun FlowContent.htmxPlaceholder(url: String, trigger: String, extraClass
         hxTrigger(trigger)
         hxSwap("outerHTML")
         div("flex justify-center py-12 col-span-12") {
-            span("loading loading-spinner loading-lg") {}
+            daisyLoading(size = LoadingSize.Lg, style = LoadingStyle.Spinner)
         }
     }
 }
@@ -77,7 +80,9 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
         id = Dashboard.Header().id
         label {
             htmlFor = Dashboard.Drawer().id
-            classes = setOf("btn", "btn-square", "btn-ghost", "drawer-button", "lg:hidden")
+            classes = setOf("lg:hidden")
+            daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Square)
+            daisyDrawerButtonClasses()
             +"☰"
         }
         div("grow") {
@@ -91,15 +96,19 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
                 extraClasses = "rounded-full max-sm:w-24",
             )
         }
-        div("dropdown dropdown-end z-10") {
+        div("z-10") {
+            daisyDropdownClasses(align = DropdownAlign.End)
             id = Dashboard.Header.Avatar().id
-            daisyAvatar(placeholder = true, extraClasses = "btn btn-circle btn-ghost") {
+            daisyAvatar(placeholder = true) {
+                daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle)
                 attributes["tabindex"] = "0"
                 div("bg-neutral text-neutral-content w-10 rounded-full") { span { +"DT" } }
             }
             ul {
                 attributes["tabindex"] = "0"
-                classes = setOf("menu", "dropdown-content", "rounded-box", "bg-base-100", "mt-3", "w-52", "p-2", "shadow-2xl")
+                classes = setOf("rounded-box", "bg-base-100", "mt-3", "w-52", "p-2", "shadow-2xl")
+                daisyMenuClasses()
+                daisyDropdownContentClasses()
                 li { a(href = profileUrl) { +"Profile" } }
                 li {
                     a {
@@ -119,10 +128,7 @@ private fun FlowContent.shellSidebar(dashboardUrl: String, overviewActive: Boole
         id = Dashboard.Sidebar().id
         div("mx-4 flex items-center gap-2 font-black") { +"DevTrack" }
         daisyMenu(id = Dashboard.Sidebar.Menu(), extraClasses = "w-full") {
-            // `classes` NAMED, because kotlinx.html's `a` is a(href, target, referrerPolicy,
-            // classes): the positional form set href="menu-active", so this item linked to a
-            // route that does not exist and never got the active styling either.
-            li { a(href = dashboardUrl, classes = if (overviewActive) "menu-active" else null) { +"Overview" } }
+            li { a(href = dashboardUrl) { daisyMenuItemClasses(active = overviewActive); +"Overview" } }
             sidebarSubmenu("Repositories", listOf("All Repos", "New Repository", "Archived"))
             li { a { +"Issues" } }
             li { a { +"Pull Requests" } }

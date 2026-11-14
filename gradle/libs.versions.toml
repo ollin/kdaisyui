@@ -19,7 +19,7 @@ pitest-junit5 = "1.2.3"
 
 # Codegen submodule tags (drive `git checkout` of the daisyui/heroicons submodules).
 # Renovate tracks daisyui on npm through a custom manager (renovate.json), not a library entry.
-daisyui = "5.7.50"
+daisyui = "5.8.0"
 heroicons = "2.2.0"
 
 # DaisyUI 5 is a Tailwind v4 plugin; this is the exact tailwind version the pinned

@@ -6,8 +6,9 @@ import kotlin.test.assertEquals
 
 class StylesheetCompileTest {
 
-    private val install = "cd /deps && npm install --userconfig /deps/.npmrc --prefer-offline --no-fund --no-audit --silent " +
-        "@tailwindcss/cli@4.3.4 tailwindcss@4.3.4 daisyui@5.7.50 " +
+    private val npm = "npm install --userconfig /deps/.npmrc --prefer-offline --no-fund --no-audit --silent"
+    private val packages = "@tailwindcss/cli@4.3.4 tailwindcss@4.3.4 daisyui@5.7.50"
+    private val install = "cd /deps && $npm $packages " +
         "&& cd project && mkdir -p out && /deps/node_modules/.bin/tailwindcss --input css/app.css --output out/app.css"
 
     @Test

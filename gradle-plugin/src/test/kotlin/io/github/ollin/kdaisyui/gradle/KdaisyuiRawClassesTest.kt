@@ -1,9 +1,11 @@
 package io.github.ollin.kdaisyui.gradle
 
+import org.gradle.api.GradleException
 import org.gradle.testfixtures.ProjectBuilder
 import kotlin.io.path.createTempDirectory
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 
 class KdaisyuiRawClassesTest {
@@ -40,5 +42,12 @@ class KdaisyuiRawClassesTest {
     @Test
     fun aLibraryWithoutTheComponentMapIsNotChecked() {
         assertNull(task.warning())
+    }
+
+    @Test
+    fun aBuildThatAsksForItFailsWithTheWarning() {
+        resources.resolve(COMPONENT_MAP).writeText("button\tButtonKt\tbtn btn-sm\n")
+        task.failBuild.set(true)
+        assertEquals(task.warning(), assertFailsWith<GradleException> { task.check() }.message)
     }
 }

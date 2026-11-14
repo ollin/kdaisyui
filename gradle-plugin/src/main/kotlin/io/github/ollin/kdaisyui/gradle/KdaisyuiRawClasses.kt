@@ -1,8 +1,11 @@
 package io.github.ollin.kdaisyui.gradle
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Classpath
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -26,9 +29,19 @@ abstract class KdaisyuiRawClasses : DefaultTask() {
     @get:Classpath
     abstract val runtimeClasspath: ConfigurableFileCollection
 
+    /** Fails the build with the warning's text instead of logging it. */
+    @get:Input
+    abstract val failBuild: Property<Boolean>
+
+    init {
+        failBuild.convention(false)
+    }
+
     @TaskAction
     fun check() {
-        warning()?.let(logger::warn)
+        val warning = warning() ?: return
+        if (failBuild.get()) throw GradleException(warning)
+        logger.warn(warning)
     }
 
     /** The warning this build deserves, or null; null too for a library without the component map. */

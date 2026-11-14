@@ -16,6 +16,10 @@ kdaisyui {
     stylesheet {
         entry.set(layout.projectDirectory.file("src/main/css/app.css"))
     }
+    // The example is what consumers copy: a DaisyUI class written as a string fails its build.
+    rawClasses {
+        failBuild.set(true)
+    }
 }
 
 // The compiled stylesheet ships as a classpath resource, so the running application

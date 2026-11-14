@@ -21,8 +21,10 @@ private fun TagConsumer<*>.teamHeader() {
 
 private fun TagConsumer<*>.inviteTeamMemberForm() {
     section {
-        addClassNames("card bg-base-100 col-span-12 xl:col-span-5")
-        form(classes = "card-body") {
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 xl:col-span-5")
+        form {
+            daisyCardBodyClasses()
             id = Dashboard.Team.Invite.Form().id
             action = ""
             daisyAlert(color = AlertColor.Success) {
@@ -39,7 +41,8 @@ private fun TagConsumer<*>.inviteTeamMemberForm() {
 private fun TagConsumer<*>.activeTeamMembersTable() {
     section {
         id = Dashboard.Team.Table().id
-        addClassNames("card bg-base-100 col-span-12 overflow-hidden shadow-xs xl:col-span-7")
+        daisyCardClasses()
+        addClassNames("bg-base-100 col-span-12 overflow-hidden shadow-xs xl:col-span-7")
         daisyCardBody(extraClasses = "grow-0") {
             daisyCardTitle("Active team members")
         }
@@ -77,7 +80,8 @@ private fun TBODY.teamMemberRow(
         td {
             div("flex items-center gap-4") {
                 daisyAvatar(placeholder = true) {
-                    div("mask mask-squircle bg-neutral text-neutral-content h-10 w-10") {
+                    div("bg-neutral text-neutral-content h-10 w-10") {
+                        daisyMaskClasses(style = MaskStyle.Squircle)
                         span { +name.split(" ").joinToString("") { it.take(1) } }
                     }
                 }

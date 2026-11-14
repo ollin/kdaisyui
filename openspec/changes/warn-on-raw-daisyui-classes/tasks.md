@@ -125,12 +125,14 @@ one added.
 
 ## 6. Gate, adoption and archive
 
-- [ ] 6.1 Full green: `check` with E2E, `koverVerify`, `:gradle-plugin`'s own Kover 100%,
+- [x] 6.1 Full green: `check` with E2E, `koverVerify`, `:gradle-plugin`'s own Kover 100%,
   `:gradle-plugin:pitest` at 100% test strength, `:doc-snippets:compileSnippets`,
-  `analyze_change_set`, and the touched hotspots on the CodeScene server.
-- [ ] 6.2 `openspec validate warn-on-raw-daisyui-classes --strict`.
-- [ ] 6.3 `findings.md` of the change: one entry per finding, and the Proposals table.
-- [ ] 6.4 The evaluation under `tmp/warn-on-raw-daisyui-classes/` for Oliver to adopt. It includes
+  `analyze_change_set`, and the touched hotspots on the CodeScene server. Done but for the
+  server's hotspots, which come before the push. PIT reached 100% only after the refactoring of
+  finding F4.
+- [x] 6.2 `openspec validate warn-on-raw-daisyui-classes --strict`.
+- [x] 6.3 `findings.md` of the change: one entry per finding, and the Proposals table.
+- [x] 6.4 The evaluation under `tmp/warn-on-raw-daisyui-classes/` for Oliver to adopt. It includes
   the hand-over for the Deploy-Radar: the probe re-run by the agent over fwb-application's
   `fwb-deploy-radar/server/src/main/kotlin`, read-only, listing the 14 sites with `file:line`.
   The migration there stays fwb-application's change.

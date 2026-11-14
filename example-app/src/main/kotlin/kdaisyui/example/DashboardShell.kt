@@ -70,7 +70,7 @@ private fun FlowContent.htmxPlaceholder(url: String, trigger: String, extraClass
         hxTrigger(trigger)
         hxSwap("outerHTML")
         div("flex justify-center py-12 col-span-12") {
-            span("loading loading-spinner loading-lg") {}
+            daisyLoading(size = LoadingSize.Lg, style = LoadingStyle.Spinner)
         }
     }
 }
@@ -96,7 +96,8 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
                 extraClasses = "rounded-full max-sm:w-24",
             )
         }
-        div("dropdown dropdown-end z-10") {
+        div("z-10") {
+            daisyDropdownClasses(align = DropdownAlign.End)
             id = Dashboard.Header.Avatar().id
             daisyAvatar(placeholder = true) {
                 daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle)
@@ -105,7 +106,9 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
             }
             ul {
                 attributes["tabindex"] = "0"
-                classes = setOf("menu", "dropdown-content", "rounded-box", "bg-base-100", "mt-3", "w-52", "p-2", "shadow-2xl")
+                classes = setOf("rounded-box", "bg-base-100", "mt-3", "w-52", "p-2", "shadow-2xl")
+                daisyMenuClasses()
+                daisyDropdownContentClasses()
                 li { a(href = profileUrl) { +"Profile" } }
                 li {
                     a {

@@ -41,10 +41,9 @@ diff throws away the one signal the repository has.
 8. ./gradlew check                      plus ./gradlew :lib:pitest
 ```
 
-Step 1 has a constraint stated in `libs.versions.toml` itself: the version must have a
-**published webjar**, because README tells consumers who want DaisyUI's prebuilt stylesheet to add
-`org.webjars.npm:daisyui` at this version. Renovate finds DaisyUI updates through that webjar
-coordinate, the `webjar-daisyui` alias, which no module depends on; it is there for Renovate.
+Step 1 needs no published webjar: no module depends on one, and the stylesheet is compiled from
+npm. Renovate finds DaisyUI updates on npm through a custom regex manager in `renovate.json`
+and never automerges one; its PR moves only the version, so finish it with the steps above.
 
 Steps 3 and 4 come before generation because generation fails until the model matches.
 

@@ -23,8 +23,8 @@ context: |
   The package is io.github.ollin.kdaisyui — never com.github.ollin.
 
   gradle/libs.versions.toml is the single source of truth for every version:
-  the daisyui entry drives the submodule tag, the codegen input AND the webjar
-  CSS at once, so it must stay at a version that has a published webjar.
+  the daisyui entry drives the submodule tag, the codegen input AND the DaisyUI
+  the plugin compiles the stylesheet from.
   gradle.properties holds only the project version. Never hardcode a version
   elsewhere.
 

@@ -72,7 +72,7 @@ setting of the check would need the group anyway.
 ### 6. The warning text
 
 ```
-kdaisyui: 2 strings write DaisyUI classes the typed API writes for you:
+kdaisyui: strings that write DaisyUI classes the typed API writes for you:
   kdaisyui/example/DashboardShellKt: "btn btn-circle btn-ghost" (button)
   kdaisyui/example/team/TeamFragmentKt: "card-body" (card)
   Use the component's function, or a { daisy<Component>Classes(…) } on another element.

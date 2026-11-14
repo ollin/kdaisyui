@@ -31,21 +31,26 @@ Ordered by uncertainty:
 
 ## 2. Detection, under TCR at the repository root
 
-- [ ] 2.1 `^ F (internal)` `ConstantPool.kt`: tag 8 is kept as a string constant, and
+- [x] 2.1 `^ F (internal)` `ConstantPool.kt`: tag 8 is kept as a string constant, and
   `stringConstantsIn(classFile)` returns the UTF-8 text of each. `8 to 2` leaves `OTHER_SIZES`,
   where it would be dead (an unreachable entry under Kover, a survivor under pitest). The test
-  reads a real class file of the plugin's own tests that holds a known literal.
-- [ ] 2.2 `^ r (internal)` `ComponentMap`: expose `componentOf(cssClass): String?` from the
+  reads a real class file of the plugin's own tests that holds a known literal. Done as `! F`:
+  12 counted lines.
+- [x] 2.2 `^ r (internal)` `ComponentMap`: expose `componentOf(cssClass): String?` from the
   parsed lines, which the map already reads (`ComponentMap.kt:22-25`, private today). `select`
-  is unchanged.
-- [ ] 2.3 `^ F (internal)` `classTokens(string)` splits on whitespace and `\u0001`, and returns
-  null unless every token is class-shaped.
-- [ ] 2.4 `^ F (internal)` `daisyComponentsIn(tokens, map)`: the components of the bare tokens.
+  is unchanged. Done as two runs: `^ r` keeps each component's name, then `^ F` adds
+  `componentOf`, since a new public function is behaviour.
+- [x] 2.3 `^ F (internal)` `classTokens(string)` splits on whitespace and `\u0001`, and returns
+  null unless every token is class-shaped. Done as `! F`: 11 counted lines.
+- [x] 2.4 `^ F (internal)` `daisyComponentsIn(tokens, map)`: the components of the bare tokens.
   Empty when no token holds `-` or `:`; a variant-prefixed token never counts.
-- [ ] 2.5 `^ F (internal)` `rawClassLists(owner, classFile, map)`: the owner without `$…`, each
-  string once, with its components.
-- [ ] 2.6 `! F (internal)` `rawClassesWarning(found)`: null for none; otherwise the text of design
-  decision 6, sorted and with equal lines once.
+- [x] 2.5 `^ F (internal)` `rawClassLists(owner, classFile, map)`: the owner without `$…`, each
+  string once, with its components. Done as `! F`, named `rawClassListsIn`; a pool holds each
+  string once already, so no `distinct`. The safe-call chain of the first draft left a branch
+  Kover could not reach and became a local and an `if`.
+- [x] 2.6 `! F (internal)` `rawClassesWarning(found)`: null for none; otherwise the text of design
+  decision 6, sorted and with equal lines once. The header carries no count, which would need a
+  singular form.
 
 ## 3. The task, under TCR at the repository root
 

@@ -136,4 +136,4 @@ one added.
   the hand-over for the Deploy-Radar: the probe re-run by the agent over fwb-application's
   `fwb-deploy-radar/server/src/main/kotlin`, read-only, listing the 14 sites with `file:line`.
   The migration there stays fwb-application's change.
-- [ ] 6.5 After adoption: archive on this branch, `. d (internal)`, the change's `tmp/` deleted.
+- [x] 6.5 After adoption: archive on this branch, `. d (internal)`, the change's `tmp/` deleted.

@@ -80,7 +80,8 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
         id = Dashboard.Header().id
         label {
             htmlFor = Dashboard.Drawer().id
-            classes = setOf("btn", "btn-square", "btn-ghost", "lg:hidden")
+            classes = setOf("lg:hidden")
+            daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Square)
             daisyDrawerButtonClasses()
             +"☰"
         }
@@ -97,7 +98,8 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
         }
         div("dropdown dropdown-end z-10") {
             id = Dashboard.Header.Avatar().id
-            daisyAvatar(placeholder = true, extraClasses = "btn btn-circle btn-ghost") {
+            daisyAvatar(placeholder = true) {
+                daisyButtonClasses(style = ButtonStyle.Ghost, shape = ButtonShape.Circle)
                 attributes["tabindex"] = "0"
                 div("bg-neutral text-neutral-content w-10 rounded-full") { span { +"DT" } }
             }

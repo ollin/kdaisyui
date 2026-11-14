@@ -22,11 +22,12 @@ Ordered by uncertainty:
   prints one line, and run `:example-app:classes` twice. Does the second run print, with
   `kdaisyuiClasses` UP-TO-DATE? `. d` updates A5. If it does not print, revise design decision 3
   before block 2.
-- [ ] 1.3 A6's tool: `tmp/warn-on-raw-daisyui-classes/class-sets.py`. It fetches every page and
+- [x] 1.3 A6's tool: `tmp/warn-on-raw-daisyui-classes/class-sets.py`. It fetches every page and
   fragment route of the running example app (`DashboardResources.kt`) and writes, per route, each
   element's tag, id and `class` attribute as a sorted set. Run it once on `main`'s state; that
   snapshot is the baseline every block 4 step is diffed against. `. d` names the tool in the
-  change.
+  change. Done: 15 routes and 1172 elements in `baseline.json`. Positive control: a
+  baseline with `card-body` removed from `/fragments/team` made the diff exit 1, naming the element.
 
 ## 2. Detection, under TCR at the repository root
 

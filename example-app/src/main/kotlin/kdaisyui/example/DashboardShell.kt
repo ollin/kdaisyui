@@ -36,24 +36,27 @@ fun HTML.appShell(application: Application, theme: DaisyTheme?, heading: String,
         pageAssets()
         script { src = "/webjars/htmx.org/dist/htmx.min.js" }
     }
-    body("drawer bg-base-200 lg:drawer-open min-h-screen") {
+    body("bg-base-200 lg:drawer-open min-h-screen") {
+        daisyDrawerClasses()
         val drawerId: HtmlId = Dashboard.Drawer()
         input {
             id = drawerId.id
             type = InputType.checkBox
-            classes = setOf("drawer-toggle")
+            daisyDrawerToggleClasses()
         }
-        main("drawer-content") {
+        main {
+            daisyDrawerContentClasses()
             id = Dashboard.Content().id
             div("grid grid-cols-12 grid-rows-[min-content] gap-y-12 p-4 lg:gap-x-12 lg:p-10") {
                 shellHeader(application.href(ProfilePage()), heading)
                 pageContent()
             }
         }
-        aside("drawer-side z-10") {
+        aside("z-10") {
+            daisyDrawerSideClasses()
             label {
                 htmlFor = drawerId.id
-                classes = setOf("drawer-overlay")
+                daisyDrawerOverlayClasses()
             }
             shellSidebar(application.href(DashboardPage()), overviewActive = heading == "Overview")
         }
@@ -77,7 +80,8 @@ private fun FlowContent.shellHeader(profileUrl: String, heading: String) {
         id = Dashboard.Header().id
         label {
             htmlFor = Dashboard.Drawer().id
-            classes = setOf("btn", "btn-square", "btn-ghost", "drawer-button", "lg:hidden")
+            classes = setOf("btn", "btn-square", "btn-ghost", "lg:hidden")
+            daisyDrawerButtonClasses()
             +"☰"
         }
         div("grow") {

@@ -5,12 +5,11 @@
 Keeping the Kotlin DSL faithful to the DaisyUI release it is pinned to — and keeping every
 part of the build that has an opinion about that version agreeing on one number.
 
-Four things must name the same DaisyUI version: the git submodule the generator reads, the
-generated components, the webjar `:example-app` serves, and the entry in
-`gradle/libs.versions.toml`. They can drift independently and the failure is quiet — a
-component emitting a class the served CSS does not define renders as unstyled markup, with
-no test failing. The webjar-backed constraint exists because only a subset of DaisyUI
-releases publish one, so the newest tag is usually not a usable version.
+Three things must name the same DaisyUI version: the git submodule the generator reads, the
+generated components, and the entry in `gradle/libs.versions.toml`, which is also the version
+the plugin compiles the stylesheet from. They can drift independently and the failure is
+quiet — a component emitting a class the CSS does not define renders as unstyled markup, with
+no test failing.
 
 This capability also carries what regeneration **cannot** see. The class-based safety net —
 generated tests, `generated-sources-drift`, `api-baseline` — keys on class names, so a new
@@ -24,20 +23,14 @@ expire. State the durable constraint; leave the number to `gradle/libs.versions.
 
 ## Requirements
 
-### Requirement: DaisyUI version pinned to a webjar-backed release
-The pinned DaisyUI version SHALL be a version that has a published Maven webjar under `org.webjars.npm:daisyui`, and the build's DaisyUI submodule, the generated components, and the served webjar SHALL all derive from that same single version.
+### Requirement: One DaisyUI version for submodule and generated code
+The build's DaisyUI submodule and the generated components SHALL derive from the single `daisyui` version in `gradle/libs.versions.toml`.
 
-**Corrected 2026-08-15:** this requirement originally fixed the version at `5.6.3`. Reality moved past it twice and the project is pinned at `5.7.16`. Naming a version in a requirement made the requirement expire; the webjar-backed constraint is the durable part and the only one kept.
+**Corrected 2026-11-14:** this requirement also demanded a published `org.webjars.npm:daisyui` artifact for the pinned version. That held while `:example-app` served the webjar's stylesheet. Since the stylesheet is compiled from npm no module depends on the webjar, and the constraint only delayed bumps: 5.8.0 had no webjar two days after its release.
 
-#### Scenario: Pinned version has a published webjar
-- **WHEN** the `daisyui` version is set in `gradle/libs.versions.toml`
-- **THEN** that exact version is available as `org.webjars.npm:daisyui:<version>` on Maven Central
-- **AND** the `webjar-daisyui` library entry resolves to the same version via `version.ref`
-
-#### Scenario: Submodule, generated code, and webjar agree
+#### Scenario: Submodule and generated code agree
 - **WHEN** components are regenerated for the pinned DaisyUI version
 - **THEN** the `daisyui` git submodule is checked out at the tag matching the pinned version
-- **AND** every generated CSS class is present in the served webjar of that same version
 
 ### Requirement: New DaisyUI 5.6 components are wrapped
 The library SHALL expose a generated, type-safe `FlowContent.daisyXxx()` DSL function for each new non-skipped component introduced in the pinned DaisyUI release: `aura`, `otp`, and `megamenu`. These wrappers SHALL be produced by the codegen pipeline, not hand-written.

@@ -219,6 +219,7 @@ link { rel = "stylesheet"; href = "/webjars/daisyui/daisyui.css" }
 Take `DAISYUI_VERSION` from `daisyui` in [`gradle/libs.versions.toml`](gradle/libs.versions.toml)
 at the release tag you depend on. That is the version the components were generated from, so
 it is the version whose stylesheet has every class they emit; a newer DaisyUI 5 normally does too.
+Not every DaisyUI release is published as a webjar: when that one is not, take the nearest that is.
 
 This works and needs no toolchain. **What it cannot do is Tailwind variants of DaisyUI classes,
 beyond the five prefixes DaisyUI pre-generates.** Measured against 5.7.17:

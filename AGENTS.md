@@ -125,8 +125,8 @@ The root `build.gradle.kts` carries the release (JReleaser → Maven Central) an
 coverage gate; per-module configuration lives in the subprojects and `buildSrc`.
 
 `daisyui` in `gradle/libs.versions.toml` is the single source of truth for the submodule tag,
-the codegen input and the webjar CSS. It must stay at a version that also has a published
-webjar, so generated components never reference CSS the webjar lacks.
+the codegen input and the DaisyUI the plugin compiles the stylesheet from. It needs no published
+webjar: no module depends on one.
 
 ## RED is two steps, and the second is not optional
 

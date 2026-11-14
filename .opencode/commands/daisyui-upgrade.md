@@ -12,8 +12,7 @@ If omitted, ask — do not guess, and do not read "latest" from the network with
 
 **Steps**
 
-1. **Check the version is usable.** It must have a published `org.webjars.npm:daisyui`
-   artifact. State which version you are moving from and to, then set `daisyui` in
+1. **Name the version.** State which version you are moving from and to, then set `daisyui` in
    `gradle/libs.versions.toml`, the single source of every version.
 
 2. **Sync the submodule.**

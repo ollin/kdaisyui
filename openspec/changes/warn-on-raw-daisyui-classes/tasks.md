@@ -54,19 +54,24 @@ Ordered by uncertainty:
 
 ## 3. The task, under TCR at the repository root
 
-- [ ] 3.1 `! F` `KdaisyuiRawClasses` (`@DisableCachingByDefault`, `@InputFiles` classes,
+- [x] 3.1 `! F` `KdaisyuiRawClasses` (`@DisableCachingByDefault`, `@InputFiles` classes,
   `@Classpath` runtime classpath). The action returns the warning on a `ProjectBuilder` project
-  whose classes hold a raw string.
-- [ ] 3.2 `^ F` Without `kdaisyui-components.txt` on the runtime classpath, the action logs at
-  info level and returns null.
-- [ ] 3.3 `! F` `@Input failBuild`: the action throws a `GradleException` with the warning text,
+  whose classes hold a raw string. Done together with 3.2 as one `! F`: without the
+  no-map path, Kover's branch gate refused the step (the classpath loop and the null warning had
+  no test).
+- [x] 3.2 `^ F` Without `kdaisyui-components.txt` on the runtime classpath, the action logs at
+  info level and returns null. Folded into 3.1.
+- [x] 3.3 `! F` `@Input failBuild`: the action throws a `GradleException` with the warning text,
   and passes without the map even then. `RawClassesSettings` is nested in `KdaisyuiExtension`,
-  with the convention `false`.
-- [ ] 3.4 `! F` Registration and `kdaisyuiClasses.finalizedBy(kdaisyuiRawClasses)`, the option
+  with the convention `false`. Done as `! F`, the option on the task only; the extension went
+  into 3.4 with the wiring that reads it.
+- [x] 3.4 `! F` Registration and `kdaisyuiClasses.finalizedBy(kdaisyuiRawClasses)`, the option
   wired into the task. `KdaisyuiPluginTest` asserts the finalizer, the wiring, and that `check`
   depends on neither task.
-- [ ] 3.5 `. d` Live on the example app, run twice: both runs log the warning. It should hold 27
+- [x] 3.5 `. d` Live on the example app, run twice: both runs log the warning. It should hold 27
   lines, by the probe's count of distinct (file, string) pairs. Record the text in the evaluation.
+  Done: 27 lines on both runs, `kdaisyuiClasses` UP-TO-DATE each time; the text is in
+  `tmp/warn-on-raw-daisyui-classes/warning-before-block-4.txt`.
 
 ## 4. The example app, under TCR at the repository root (E2E included)
 

@@ -14,7 +14,9 @@ import org.gradle.api.tasks.SourceSetContainer
  */
 class KdaisyuiPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val stylesheet = project.extensions.create("kdaisyui", KdaisyuiExtension::class.java).stylesheet
+        val extension = project.extensions.create("kdaisyui", KdaisyuiExtension::class.java)
+        val stylesheet = extension.stylesheet
+        extension.rawClasses.failBuild.convention(false)
         stylesheet.apply {
             sources.convention(project.layout.projectDirectory.dir("src/main/kotlin"))
             output.convention(project.layout.buildDirectory.file("kdaisyui/app.css"))
@@ -34,6 +36,13 @@ class KdaisyuiPlugin : Plugin<Project> {
                 runtimeClasspath.from(project.configurations.getByName(main.runtimeClasspathConfigurationName))
                 output.set(kdaisyuiDirectory.map { it.file("kdaisyui-classes.txt") })
             }
+            val rawClassesTask = project.tasks.register("kdaisyuiRawClasses", KdaisyuiRawClasses::class.java) {
+                description = "Warns about DaisyUI classes the compiled code writes as strings, which the typed API writes for it."
+                classes.from(main.output.classesDirs)
+                runtimeClasspath.from(project.configurations.getByName(main.runtimeClasspathConfigurationName))
+                failBuild.set(extension.rawClasses.failBuild)
+            }
+            classesTask.configure { finalizedBy(rawClassesTask) }
             val stylesheetTask = project.tasks.register("kdaisyuiStylesheet", KdaisyuiStylesheet::class.java) {
                 description = "Compiles the stylesheet with the plugin's Tailwind and DaisyUI, in a Node container."
                 entry.set(stylesheet.entry)

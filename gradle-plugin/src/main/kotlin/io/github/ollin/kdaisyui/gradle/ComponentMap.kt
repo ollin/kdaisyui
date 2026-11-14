@@ -19,10 +19,10 @@ class ComponentMap(text: String) {
 
     private fun classesOf(selected: List<Component>): List<String> = selected.flatMap { it.cssClasses }.distinct().sorted()
 
-    private class Component(val jvmClasses: Set<String>, val cssClasses: List<String>)
+    private class Component(val name: String, val jvmClasses: Set<String>, val cssClasses: List<String>)
 
     private fun component(line: String): Component =
-        line.split("\t").let { (_, jvm, css) -> Component(jvm.split(" ").toSet(), css.split(" ")) }
+        line.split("\t").let { (name, jvm, css) -> Component(name, jvm.split(" ").toSet(), css.split(" ")) }
 }
 
 /** The classes to write, and why they are all of them when they are. */

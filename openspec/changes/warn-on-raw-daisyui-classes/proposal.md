@@ -7,8 +7,9 @@ after 0.11.0 put the class sibling into every KDoc and while `docs/how-to.md` "A
 showed the typed form.
 
 Its agents copied neighbouring code, and the code they started from is ours. Its
-`add-deploy-radar` F14 records that task 2.3 copied kdaisyui's example app. That app writes 33
-raw DaisyUI strings itself, every one with a typed equivalent. Only a check that runs in the
+`add-deploy-radar` F14 records that task 2.3 copied kdaisyui's example app. That app writes 32
+raw DaisyUI string literals itself, on 30 lines in 9 files, and every one has a typed
+equivalent. Only a check that runs in the
 consumer's build reaches a consumer who does not read the docs.
 
 ## What Changes
@@ -27,7 +28,7 @@ consumer's build reaches a consumer who does not read the docs.
 - **Opt-in failure:** `kdaisyui { rawClasses { failBuild = true } }` turns the warning into a
   build failure carrying the same text. The default is to warn.
 - **The constant-pool reader keeps `CONSTANT_String` entries**, which it skips today.
-- **The example app uses the typed API everywhere**: 33 sites in 10 files move to the component
+- **The example app uses the typed API everywhere**: 32 literals in 9 files move to the component
   functions or their `…Classes` siblings. Its id `tab-active` is renamed, and the app sets
   `failBuild = true`, so kdaisyui's own build is the gate that the check stays quiet on code
   written as the docs teach.
@@ -37,7 +38,7 @@ consumer's build reaches a consumer who does not read the docs.
 ### The subtractive option, stated
 
 Do nothing more, since the siblings are documented. Rejected: the measurement above shows the
-documentation was available and not used. What this change removes is 33 raw strings from the
+documentation was available and not used. What this change removes is 32 raw strings from the
 example app, the source consumers copy.
 
 ## Out of scope
@@ -56,12 +57,12 @@ example app, the source consumers copy.
 
 | ID | Assumption | Checked by | Status |
 |---|---|---|---|
-| A1 | A Kotlin string literal in main code reaches its class file as a `CONSTANT_String` naming a UTF-8 entry, and no kdaisyui call inlines a class string into the consumer's class file | code | confirmed at proposal: `javap -v` over `example-app/build/classes/kotlin/main`, 2026-11-14 (`/tmp/opencode/warn-on-raw-daisyui-classes/probe.py … classes`). The 27 hits are all literals of the app's own sources, and none comes from the library |
-| A2 | The rule finds the raw DaisyUI strings of real consumer code and nothing else | code | confirmed at proposal with the same probe over the sources. **Deploy-Radar** `server/src/main/kotlin`: 14 hits in 789 literals, all real. **Example app**: 33 hits in 582 literals, one false (`TabsPage.kt:18`, the id `tab-active`). The class files of the example app give 27, because a class pools equal strings once |
+| A1 | A Kotlin string literal in main code reaches its class file as a `CONSTANT_String` naming a UTF-8 entry, and no kdaisyui call inlines a class string into the consumer's class file | code | confirmed at proposal: `javap -v` over `example-app/build/classes/kotlin/main`, 2026-11-14 (`/tmp/opencode/warn-on-raw-daisyui-classes/probe.py … classes`). The 27 constants it finds are all literals of the app's own sources, and none comes from the library |
+| A2 | The rule finds the raw DaisyUI strings of real consumer code and nothing else | code | confirmed at proposal with the same probe over the sources. **Deploy-Radar** `server/src/main/kotlin`: 14 hits in 789 literals, all real. **Example app**: 33 hits in 582 literals, one false (`TabsPage.kt:18`, the id `tab-active`). Every site is listed with `file:line` in `tasks.md` block 4. The class files give 27 constants, because a class pools equal strings once |
 | A3 | The miss of a single bare word is acceptable | user | confirmed by Oliver 2026-11-14: the scope "warning + clean example" was chosen with the measured miss stated |
 | A4 | Warn by default, fail by opt-in | user | confirmed by Oliver 2026-11-14 |
-| A5 | A finalizer of `kdaisyuiClasses` runs when that task is up to date or from cache | code | confirmed by analogy: `check-the-themes-the-stylesheet-compiles` A7 observed the same Gradle mechanism for `kdaisyuiStylesheet`; re-checked live in task 3.3 |
-| A6 | Every one of the 33 example sites has a typed equivalent that renders the same classes | code | confirmed at proposal: `grep "fun Tag.daisy*Classes"` in `lib/generated/main/…/components/` lists siblings for card, drawer, dropdown, loading, mask, menu item, megamenu, stats and button. A changed class *order* is what task block 4 must keep the E2E suite green through |
+| A5 | A finalizer of `kdaisyuiClasses` runs when that task is up to date or from cache | code | assumed: `check-the-themes-the-stylesheet-compiles` A7 observed the same Gradle mechanism for `kdaisyuiStylesheet`, which is an analogy and not a check. Checked first, by the probe of task 1.2. What is already read: `example-app/build.gradle.kts:23-25` makes `processResources` take `kdaisyuiStylesheet`, which `dependsOn` `kdaisyuiClasses` (`KdaisyuiPlugin.kt:37-42`), so `:example-app:classes` runs it |
+| A6 | Every one of the 32 example literals has a typed call that renders the same class set | code | assumed. What is confirmed at proposal: `grep "fun Tag.daisy*Classes"` in `lib/generated/main/…/components/` lists siblings for card, drawer, dropdown, loading, mask, menu item, megamenu, stats and button. That a sibling exists does not show that each call site's arguments reproduce its string. Checked per step by the class-set diff of task 1.3, because the E2E suite asserts few of these classes. Wrong if any step's diff is not empty |
 | A7 | No requirement of a main spec this builds on contradicts it: `css-delivery` ("A Gradle plugin narrows the class list…") and `theme-selection` ("The plugin warns when code names a theme the stylesheet lacks") | code | confirmed at proposal: the task adds a warning and an option, and changes no output those specs describe |
 
 ## Capabilities
@@ -80,6 +81,6 @@ None.
 - `gradle-plugin/`: the pool reader (`ConstantPool.kt`), the detection functions, the task, the
   option in `KdaisyuiExtension.kt` and the wiring in `KdaisyuiPlugin.kt`. Tests run in-process
   under the plugin's own 100% Kover and `:gradle-plugin:pitest` gates.
-- `example-app/`: 10 files under `src/main/kotlin/kdaisyui/example/`, plus `build.gradle.kts` for
+- `example-app/`: 10 files (9 with raw literals, plus `TabsPage.kt`) under `src/main/kotlin/kdaisyui/example/`, plus `build.gradle.kts` for
   `failBuild`. `e2e-tests/` changes only where a step names the renamed id.
 - `docs/how-to.md`, `codegen/llms-full-template.md` and the regenerated `llms-full.txt`.

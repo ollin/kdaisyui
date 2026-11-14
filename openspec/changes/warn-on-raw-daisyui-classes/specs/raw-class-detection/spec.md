@@ -7,7 +7,7 @@ is a class list holding a class of a kdaisyui component. The warning SHALL name 
 the string, and the components.
 
 **Verified** by measurement, 2026-11-14 (proposal A1, A2): 14 of the Deploy-Radar's 789 literals
-and 33 of the example app's 582 match.
+and 33 of the example app's 582 match, one of them falsely.
 
 #### Scenario: A button written as a string
 
@@ -33,6 +33,16 @@ example app's one false match is the id `tab-active`.
 - **WHEN** main code holds the string `"Open the link"` or `"the link"`
 - **THEN** no warning names it
 
+#### Scenario: A utility marks the list
+
+- **WHEN** main code writes `classes = "link font-mono"`
+- **THEN** the warning names that string and the component `link`
+
+#### Scenario: A single bare word is not reported
+
+- **WHEN** main code writes `details("dropdown")`
+- **THEN** no warning names it, because no token holds `-` or `:` (proposal A3)
+
 ### Requirement: A variant-prefixed DaisyUI class is not reported
 
 The plugin SHALL NOT count a DaisyUI class carrying a Tailwind variant prefix, because a string is
@@ -50,7 +60,7 @@ form `extraClasses = "lg:btn-lg"` is what works.
 #### Scenario: A variant beside a bare class
 
 - **WHEN** main code writes `"stats stats-vertical xl:stats-horizontal"`
-- **THEN** the warning names the string, for `stats` and `stats-vertical`
+- **THEN** the warning names the string and the component `stat`
 
 ### Requirement: The check runs with every class list it narrows
 
@@ -60,6 +70,11 @@ cache. It SHALL NOT add a stylesheet compile to a build.
 **Assumed** by analogy with the theme check's finalizer (archived
 `check-the-themes-the-stylesheet-compiles`, A7). Wrong if a second build in a row, with the
 class list up to date, logs no warning.
+
+#### Scenario: A library without the component map
+
+- **WHEN** the runtime classpath holds no `kdaisyui-components.txt`
+- **THEN** the check logs at info level that it cannot check, and passes, even with `failBuild`
 
 #### Scenario: An up-to-date build still warns
 
@@ -91,7 +106,7 @@ fails kdaisyui's own build.
 
 **Assumed**: every one of its raw sites has a typed equivalent that renders the same classes
 (proposal A6). Wrong if a site needs markup no component function or `…Classes` sibling writes,
-or if the E2E suite turns red after the move.
+or if a page's rendered class sets differ after the move.
 
 #### Scenario: The example builds clean
 

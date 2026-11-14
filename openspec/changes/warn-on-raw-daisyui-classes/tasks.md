@@ -117,10 +117,10 @@ one added.
 
 ## 5. Docs
 
-- [ ] 5.1 `. d` `docs/how-to.md`, "Put a component's classes on another element": the warning,
+- [x] 5.1 `. d` `docs/how-to.md`, "Put a component's classes on another element": the warning,
   what it reports and misses (a single bare word), the variant exemption, and `failBuild`, in a
   compiled snippet where it is Kotlin.
-- [ ] 5.2 `. d` `codegen/llms-full-template.md`, plugin paragraph: names the check. Then
+- [x] 5.2 `. d` `codegen/llms-full-template.md`, plugin paragraph: names the check. Then
   `just generate`, so `llms-full.txt` is regenerated and the working tree is clean.
 
 ## 6. Gate, adoption and archive

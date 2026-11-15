@@ -22,7 +22,7 @@ Frozen 2026-11-15 before implementation, raw developer-only minutes. Ledger run
 ## 2. The checker in `:build-checks`, one behaviour per TCR run
 
 - [x] 2.1 A title without `!` and a diff without a removed API line gives no finding. `! F (internal)`
-- [ ] 2.2 A removed line in either API baseline under a title without `!` gives "title lacks `!`". `! F (internal)`
+- [x] 2.2 A removed line in either API baseline under a title without `!` gives "title lacks `!`". `! F (internal)`
 - [ ] 2.3 A breaking pull request whose last paragraph does not start with `BREAKING CHANGE:` gives
   "body lacks the footer", including a footer followed by another paragraph. `! F (internal)`
 - [ ] 2.4 A footer that names no `How to migrate from <x>`, or one `docs/upgrading.md` lacks,

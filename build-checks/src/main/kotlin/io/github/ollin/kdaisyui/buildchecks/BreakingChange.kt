@@ -39,4 +39,4 @@ private val breakingTitle = Regex("""^\w+(\(.+\))?!:""")
 private fun PullRequest.titleSaysBreaking() = breakingTitle.containsMatchIn(title)
 
 /** A removed line of a unified diff, not its `---` file header. */
-private fun PullRequest.removesApi() = apiDiff.lines().any { it.startsWith("-") && !it.startsWith("---") }
+private fun PullRequest.removesApi() = apiDiff.lineSequence().any { it.startsWith("-") && !it.startsWith("---") }

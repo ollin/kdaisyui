@@ -39,7 +39,7 @@ Frozen 2026-11-15 before implementation, raw developer-only minutes. Ledger run
 
 ## 4. Documentation
 
-- [ ] 4.1 `kdaisyui-release`: the footer is part of "ready to merge", and the gate says so. `. d (internal)`
+- [x] 4.1 `kdaisyui-release`: the footer is part of "ready to merge", and the gate says so. `. d (internal)`
 
 ## 5. Gates, archive, first live run
 

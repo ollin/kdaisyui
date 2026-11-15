@@ -16,3 +16,11 @@
   `null` from `find` reaches, and that path already returned.
 - **Cause:** the step bundled two behaviours, the heading check and the full-stop handling.
 - **Cost:** one TCR run (about 1 minute). The full stop moved into the regex, with no branch.
+
+## F3 - PIT mutated the inlined stdlib `any` into an equivalent
+
+- **What happened:** `:build-checks:pitest` reported 98%: one negated conditional on a line past
+  the end of `BreakingChange.kt`, the `is Collection && isEmpty()` fast path of `Iterable.any`,
+  inlined into the check. No test can tell it apart.
+- **Cause:** an inline stdlib function on a `List` carries a branch the caller cannot observe.
+- **Cost:** about 2 minutes; `lineSequence().any` has no such path, and PIT went to 100%.

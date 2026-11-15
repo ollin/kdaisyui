@@ -1,0 +1,1 @@
+chore: declare 0.12.0 as the next release

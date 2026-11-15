@@ -1,0 +1,1 @@
+feat: let users choose a DaisyUI theme, typed, with a themed profile picker in the example app

@@ -27,7 +27,7 @@ Frozen 2026-11-15 before implementation, raw developer-only minutes. Ledger run
   "body lacks the footer", including a footer followed by another paragraph. `! F (internal)`
 - [x] 2.4 A footer that names no `How to migrate from <x>`, or one `docs/upgrading.md` lacks,
   gives "heading missing" with its text. `! F (internal)`
-- [ ] 2.5 Pin #471, #492 and #515 as fixtures: the first two fail with the findings they would
+- [x] 2.5 Pin #471, #492 and #515 as fixtures: the first two fail with the findings they would
   have had, the third passes. `. r (internal)`
 - [ ] 2.6 `main` reads the four files, prints each finding and exits 1 on any;
   `:build-checks:checkBreakingChange` runs it. `! F (internal)`

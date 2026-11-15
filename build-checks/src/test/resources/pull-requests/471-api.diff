@@ -1,0 +1,4 @@
+--- a/lib/api/components.api
++++ b/lib/api/components.api
+-fun FlowContent.daisyAlert(id: HtmlId? = null, color: ClassValues<AlertColor>? = null, style: ClassValues<AlertStyle>? = null, direction: ClassValues<AlertDirection>? = null, soft: Boolean = false, extraClasses: String? = null, attrs: (DIV.() -> Unit)? = null, content: (DIV.() -> Unit))
++fun FlowContent.daisyAlert(id: HtmlId? = null, color: ClassValues<AlertColor>? = null, style: ClassValues<AlertStyle>? = null, direction: ClassValues<AlertDirection>? = null, soft: Boolean = false, extraClasses: String? = null, block: (DIV.() -> Unit) = {})

@@ -6,8 +6,21 @@ class PullRequest(val title: String, val body: String, val apiDiff: String, val 
 /** Each way a breaking pull request fails to say so, in words a pull request author can act on. */
 fun breakingChangeFindings(pullRequest: PullRequest): List<String> = buildList {
     if (pullRequest.removesApi() && !pullRequest.titleSaysBreaking()) add(MISSING_BANG)
-    if (pullRequest.isBreaking() && !pullRequest.lastParagraph().startsWith(FOOTER)) add(MISSING_FOOTER)
+    if (pullRequest.isBreaking()) addAll(pullRequest.footerFindings())
 }
+
+/** The footer has to be last, and has to point at a migration heading `docs/upgrading.md` has. */
+private fun PullRequest.footerFindings(): List<String> {
+    val footer = lastParagraph()
+    if (!footer.startsWith(FOOTER)) return listOf(MISSING_FOOTER)
+    val heading = migrationHeading.find(footer) ?: return listOf(MISSING_HEADING)
+    val headings = upgrading.lines().map { it.trimEnd() }
+    return if ("## ${heading.value}" in headings) emptyList() else listOf("docs/upgrading.md has no heading `## ${heading.value}`.")
+}
+
+internal const val MISSING_HEADING = "The footer names no `How to migrate from <version>` heading of docs/upgrading.md."
+
+private val migrationHeading = Regex("""How to migrate from [^\s"`]+""")
 
 internal const val MISSING_BANG = "The title lacks `!`, although lib/api loses a line."
 

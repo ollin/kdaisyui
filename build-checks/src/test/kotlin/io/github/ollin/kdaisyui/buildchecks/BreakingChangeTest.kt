@@ -40,4 +40,24 @@ class BreakingChangeTest {
     fun aFooterLastInACrlfBodyIsAFooter() {
         assertEquals(false, MISSING_FOOTER in breakingChangeFindings(breakingWith("Changes it.\r\n\r\nBREAKING CHANGE: it changed.\r\n")))
     }
+
+    private val upgrading = "# Upgrading\r\n\r\n## How to migrate from 0.12.x \r\n\r\nRename it.\r\n"
+
+    private fun footed(footer: String) = PullRequest(title = "feat!: change a thing", body = "Changes it.\n\n$footer", apiDiff = "", upgrading = upgrading)
+
+    @Test
+    fun aFooterNamingNoMigrationHeadingSaysSo() {
+        assertEquals(listOf(MISSING_HEADING), breakingChangeFindings(footed("BREAKING CHANGE: it changed.")))
+    }
+
+    @Test
+    fun aFooterNamingAHeadingUpgradingLacksNamesTheHeading() {
+        val findings = breakingChangeFindings(footed("BREAKING CHANGE: see \"How to migrate from 0.13.x\" in docs/upgrading.md."))
+        assertEquals(listOf("docs/upgrading.md has no heading `## How to migrate from 0.13.x`."), findings)
+    }
+
+    @Test
+    fun aCompleteBreakingPullRequestPasses() {
+        assertEquals(emptyList(), breakingChangeFindings(footed("BREAKING CHANGE: see \"How to migrate from 0.12.x\" in docs/upgrading.md.")))
+    }
 }

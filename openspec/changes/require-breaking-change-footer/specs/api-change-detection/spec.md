@@ -39,9 +39,9 @@ breaking footer on the release page (`build.gradle.kts`, `conventionalCommitBrea
 day over every merge from `v0.9.0~1` to `origin/main`: #471 (`!`, 396 removed API lines, no
 footer) and #492 (no `!`, 5 removed API lines, no footer).
 
-**Assumed** that a removed API line is breaking even when Kotlin call sites still compile, such as
-a new parameter with a default (#492). *Wrong if:* Oliver decides that only source-breaking
-changes count; then the check needs a way to tell the two apart before it can be required.
+**Verified** by decision that a removed API line is breaking even when Kotlin call sites still
+compile, such as a new parameter with a default (#492): a binary break counts (Oliver,
+2026-11-15).
 
 #### Scenario: A breaking title without a footer
 - **WHEN** a pull request titled `feat!: …` has a body that does not end with `BREAKING CHANGE:`

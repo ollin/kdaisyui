@@ -14,10 +14,10 @@ Frozen 2026-11-15 before implementation, raw developer-only minutes. Ledger run
 
 ## 1. Open assumptions
 
-- [ ] 1.1 A5: in a scratch clone, run the job's git steps by hand against PR #471 and #492
+- [x] 1.1 A5: in a scratch clone, run the job's git steps by hand against PR #471 and #492
   (`git fetch origin refs/pull/<n>/head`, `git diff`, `git show <head>:docs/upgrading.md`) and
   record that they need no checkout of the head. `. d (internal)`
-- [ ] 1.2 A4: put it to Oliver at review; record the answer in proposal.md. `. d (internal)`
+- [x] 1.2 A4: put it to Oliver at review; record the answer in proposal.md. `. d (internal)`
 
 ## 2. The checker in `:build-checks`, one behaviour per TCR run
 

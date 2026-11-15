@@ -33,9 +33,11 @@ only.
 
 ### 2. The diff comes from git, not from GitHub's files API
 
-The job checks out `main` (the default for `pull_request_target`), fetches
+The job checks out `main` (the default for `pull_request_target`) with full history, fetches
 `refs/pull/<n>/head`, and reads `git diff <base>...<head> -- lib/api` and
-`git show <head>:docs/upgrading.md`. Nothing from the head is checked out into the working tree or
+`git show <head>:docs/upgrading.md`, where `<base>` and `<head>` are the event's
+`pull_request.base.sha` and `pull_request.head.sha`. Not `refs/pull/<n>/merge`: task 1.1 found it
+does not exist once a pull request is merged, and it is not needed. Nothing from the head is checked out into the working tree or
 executed: the program and the workflow both come from `main`.
 
 *Rejected:* `pulls/<n>/files`. On #471 it returned `lib/api/lib.api` with no patch and stopped at
@@ -64,8 +66,6 @@ The footer must contain `How to migrate from <x>` and `docs/upgrading.md` must c
 - [The new job cannot run on its own pull request] → it runs from `main` (A6). The program's tests
   run in `unit-tests` and `mutation-tests` on this PR; the first live run is the next pull request,
   task 5.4.
-- [A4 decided the other way] → the check would block a defaulted-parameter addition. The footer
-  is cheap to write, so strict is the safe default until Oliver says otherwise.
 - [Renovate's major bumps] → a dependency PR touches no API baseline and its title has no `!`, so
   it passes. Measured over A3's range: no Renovate merge removed an API line.
 

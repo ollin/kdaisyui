@@ -29,7 +29,7 @@ Frozen 2026-11-15 before implementation, raw developer-only minutes. Ledger run
   gives "heading missing" with its text. `! F (internal)`
 - [x] 2.5 Pin #471, #492 and #515 as fixtures: the first two fail with the findings they would
   have had, the third passes. `. r (internal)`
-- [ ] 2.6 `main` reads the four files, prints each finding and exits 1 on any;
+- [x] 2.6 `main` reads the four files, prints each finding and exits 1 on any;
   `:build-checks:checkBreakingChange` runs it. `! F (internal)`
 
 ## 3. The workflow job

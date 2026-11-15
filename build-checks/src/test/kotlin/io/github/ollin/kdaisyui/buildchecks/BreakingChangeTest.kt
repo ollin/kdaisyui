@@ -15,13 +15,13 @@ class BreakingChangeTest {
     @Test
     fun aRemovedApiLineUnderATitleWithoutBangNamesTheMissingBang() {
         val removing = PullRequest(title = "feat: change a thing", body = "", apiDiff = "-old line\n+new line\n", upgrading = "")
-        assertEquals(true, "The title lacks `!`, although lib/api loses a line." in breakingChangeFindings(removing))
+        assertEquals(true, MISSING_BANG in breakingChangeFindings(removing))
     }
 
     @Test
     fun aScopedBreakingTitleSaysBreaking() {
         val removing = PullRequest(title = "feat(lib)!: change a thing", body = "", apiDiff = "-old line\n", upgrading = "")
-        assertEquals(false, "The title lacks `!`, although lib/api loses a line." in breakingChangeFindings(removing))
+        assertEquals(false, MISSING_BANG in breakingChangeFindings(removing))
     }
 
     private fun breakingWith(body: String) = PullRequest(title = "feat!: change a thing", body = body, apiDiff = "", upgrading = "")

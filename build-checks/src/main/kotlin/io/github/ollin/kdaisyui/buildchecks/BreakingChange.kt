@@ -5,9 +5,11 @@ class PullRequest(val title: String, val body: String, val apiDiff: String, val 
 
 /** Each way a breaking pull request fails to say so, in words a pull request author can act on. */
 fun breakingChangeFindings(pullRequest: PullRequest): List<String> = buildList {
-    if (pullRequest.removesApi() && !pullRequest.titleSaysBreaking()) add("The title lacks `!`, although lib/api loses a line.")
+    if (pullRequest.removesApi() && !pullRequest.titleSaysBreaking()) add(MISSING_BANG)
     if (pullRequest.isBreaking() && !pullRequest.lastParagraph().startsWith(FOOTER)) add(MISSING_FOOTER)
 }
+
+internal const val MISSING_BANG = "The title lacks `!`, although lib/api loses a line."
 
 private const val FOOTER = "BREAKING CHANGE:"
 

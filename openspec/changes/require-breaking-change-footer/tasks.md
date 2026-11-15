@@ -34,7 +34,7 @@ Frozen 2026-11-15 before implementation, raw developer-only minutes. Ledger run
 
 ## 3. The workflow job
 
-- [ ] 3.1 `breaking-change-footer` in `pr-conventional-commits.yml`: checkout of `main`, fetch of
+- [x] 3.1 `breaking-change-footer` in `pr-conventional-commits.yml`: checkout of `main`, fetch of
   the head, the four files, the Gradle task. Body and title through `env:` only. `! F (internal)`
 
 ## 4. Documentation

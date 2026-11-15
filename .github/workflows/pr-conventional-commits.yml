@@ -18,3 +18,51 @@ jobs:
       - uses: amannn/action-semantic-pull-request@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # A breaking pull request has to say so where the release note reads it: `!` in the title, and
+  # a `BREAKING CHANGE:` footer as the body's last paragraph, naming a "How to migrate" heading
+  # that docs/upgrading.md has. Breaking means `!` in the title or a removed line in lib/api. The
+  # decision is :build-checks:checkBreakingChange; openspec/specs/api-change-detection holds why.
+  #
+  # pull_request_target, so this runs main's workflow and main's code, and re-runs when only the
+  # body is edited. Nothing of the pull request is checked out or executed: its head is fetched as
+  # objects, and read with `git diff` and `git show`. Title and body reach the shell through env
+  # only, never through `${{ }}` in a script, which would let any author inject commands.
+  breaking-change-footer:
+    name: breaking-change-footer
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up JDK
+        uses: ./.github/actions/setup-jdk
+
+      # Read-only: this job runs on behalf of any pull request, so it must not write main's cache.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+          cache-read-only: true
+
+      - name: Read the pull request
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "refs/pull/$PR_NUMBER/head"
+          mkdir -p build/breaking-change
+          printf '%s\n' "$PR_TITLE" > build/breaking-change/title.txt
+          printf '%s' "$PR_BODY" > build/breaking-change/body.md
+          git diff "$BASE_SHA...$HEAD_SHA" -- lib/api > build/breaking-change/api.diff
+          git show "$HEAD_SHA:docs/upgrading.md" > build/breaking-change/upgrading.md
+
+      - name: Check that a breaking pull request says so
+        run: ./gradlew :build-checks:checkBreakingChange --no-daemon

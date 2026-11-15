@@ -60,4 +60,9 @@ class BreakingChangeTest {
     fun aCompleteBreakingPullRequestPasses() {
         assertEquals(emptyList(), breakingChangeFindings(footed("BREAKING CHANGE: see \"How to migrate from 0.12.x\" in docs/upgrading.md.")))
     }
+
+    @Test
+    fun aHeadingThatEndsTheSentenceLosesItsFullStop() {
+        assertEquals(emptyList(), breakingChangeFindings(footed("BREAKING CHANGE: see How to migrate from 0.12.x.")))
+    }
 }

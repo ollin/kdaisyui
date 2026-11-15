@@ -8,3 +8,11 @@
 - **Cause:** the rule lived in a skill read at tag time; nothing checked a pull request.
 - **Cost:** none in this change; it widened the gate from "footer on `!` titles" to "a removed API
   line also requires `!`".
+
+## F2 - The heading step was reverted once, for a branch no test could reach
+
+- **What happened:** task 2.4 went green in the tests and red in `koverVerify`: 99.95% branch
+  coverage. `find(...)?.value?.trimEnd('.')` compiles a second null check whose null branch only a
+  `null` from `find` reaches, and that path already returned.
+- **Cause:** the step bundled two behaviours, the heading check and the full-stop handling.
+- **Cost:** one TCR run (about 1 minute). The full stop moved into the regex, with no branch.

@@ -20,7 +20,8 @@ private fun PullRequest.footerFindings(): List<String> {
 
 internal const val MISSING_HEADING = "The footer names no `How to migrate from <version>` heading of docs/upgrading.md."
 
-private val migrationHeading = Regex("""How to migrate from [^\s"`]+""")
+/** The heading's version may close the footer's sentence, so it never ends on a full stop. */
+private val migrationHeading = Regex("""How to migrate from [^\s"`]*[^\s"`.]""")
 
 internal const val MISSING_BANG = "The title lacks `!`, although lib/api loses a line."
 

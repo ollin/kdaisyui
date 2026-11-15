@@ -24,3 +24,14 @@
   inlined into the check. No test can tell it apart.
 - **Cause:** an inline stdlib function on a `List` carries a branch the caller cannot observe.
 - **Cost:** about 2 minutes; `lineSequence().any` has no such path, and PIT went to 100%.
+
+## Proposals
+
+One row per finding (house rules §9). `openspec/config.yaml` declares no `findings:` causes, so
+each cause is named in plain words.
+
+| Finding | Proposal | Status | Cause |
+|---|---|---|---|
+| F1 | JReleaser's changelog template appends a link to docs/upgrading.md after every 🚨 line, beside the gate | open | rule enforced by nobody |
+| F2 | - | none - record only; TCR caught it as designed | step bundled two behaviours |
+| F3 | - | fixed - in this change (`lineSequence().any`) | equivalent mutant in inlined stdlib |

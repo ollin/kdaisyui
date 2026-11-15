@@ -45,7 +45,7 @@ Frozen 2026-11-15 before implementation, raw developer-only minutes. Ledger run
 
 - [x] 5.1 `./gradlew check`, `:build-checks:pitest` at 100% test strength.
 - [x] 5.2 CodeScene on the changed files, the server's values before the push.
-- [ ] 5.3 Archive on this branch. `. d (internal)`
+- [x] 5.3 Archive on this branch. `. d (internal)`
 - [ ] 5.4 A6: after the merge, the next pull request shows a `breaking-change-footer` run; record
   it in findings.md.
 - [ ] 5.5 Oliver adds `breaking-change-footer` to the required checks of ruleset 14483746.

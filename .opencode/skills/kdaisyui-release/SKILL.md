@@ -175,8 +175,9 @@ recollection, which is the habit this rule replaces.
   `just update-api` and the diff was read;
 - every removal or signature change in that diff is either non-breaking or has its `docs/upgrading.md`
   migration entry;
-- the PR body's `BREAKING CHANGE:` footer points at that entry — see the next section for why
-  its position matters;
+- the merged pull request had `!` in its title and a `BREAKING CHANGE:` footer naming that entry.
+  By tag time this can no longer be fixed: a merge commit is not edited. So it is checked **before
+  the merge**, by the required check `breaking-change-footer` (next section);
 - **`llms.txt` and `llms-full.txt` know every feature the tag ships.** List the `feat` merges
   since the last tag (`git log --oneline --merges v<last>..main | grep feat`). A generated
   component is already in both files, and the drift job proves it. A **hand-written** feature is
@@ -202,6 +203,22 @@ reading a diff, and documented afterwards.
 
 The merge commit's message is what JReleaser renders on the release page, so the PR body is
 release-notes copy, not review chatter.
+
+**A breaking pull request cannot merge without saying so.** The required check
+`breaking-change-footer` (`pr-conventional-commits.yml`, decided by `:build-checks:checkBreakingChange`)
+calls a pull request breaking when its title has `!` or it removes a line from `lib/api/lib.api` or
+`lib/api/components.api` — a binary break counts, by decision. A breaking pull request needs `!` in
+its title, a last paragraph starting `BREAKING CHANGE:`, and in it a `How to migrate from <x>`
+heading that `docs/upgrading.md` has. It re-runs when the body is edited, so fixing the body is
+enough. It exists because v0.9.0 (#471) shipped without the footer and v0.11.0 (#492) without the
+`!`, and a release note cannot be repaired after the merge.
+
+A body that passes looks like this at its end:
+
+```
+BREAKING CHANGE: `attrs` is gone; pass its statements in the trailing block. See
+"How to migrate from 0.8.x" in docs/upgrading.md.
+```
 
 One rule decides whether it reads well: **`BREAKING CHANGE:` must be the last paragraph.** Per
 the Conventional Commits spec the footer runs to the end of the body, so everything after it —

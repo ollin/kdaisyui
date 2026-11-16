@@ -1,0 +1,1 @@
+feat!: one optional block per generated function, and text rendered after it

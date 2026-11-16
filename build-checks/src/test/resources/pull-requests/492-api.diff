@@ -1,0 +1,4 @@
+--- a/lib/api/components.api
++++ b/lib/api/components.api
+-fun FlowContent.daisyThemeController(id: HtmlId? = null, extraClasses: String? = null, block: (INPUT.() -> Unit) = {})
++fun FlowContent.daisyThemeController(id: HtmlId? = null, theme: DaisyTheme? = null, extraClasses: String? = null, block: (INPUT.() -> Unit) = {})

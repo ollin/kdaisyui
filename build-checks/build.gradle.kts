@@ -29,3 +29,15 @@ tasks.register<JavaExec>("checkGradleProblems") {
         rootProject.file("gradle/allowed-gradle-problems.txt").absolutePath,
     )
 }
+
+// Reads four files the `breaking-change-footer` job of pr-conventional-commits.yml writes from the
+// pull request: its title, its body, the diff of lib/api, and docs/upgrading.md at its head. Fails
+// when the pull request is breaking and its title, footer or migration heading does not say so.
+tasks.register<JavaExec>("checkBreakingChange") {
+    description = "Fails when a breaking pull request lacks its !, its BREAKING CHANGE footer or its migration heading."
+    group = "verification"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("io.github.ollin.kdaisyui.buildchecks.CheckBreakingChange")
+    val inputs = rootProject.layout.buildDirectory.dir("breaking-change").get().asFile
+    args(listOf("title.txt", "body.md", "api.diff", "upgrading.md").map { inputs.resolve(it).absolutePath })
+}

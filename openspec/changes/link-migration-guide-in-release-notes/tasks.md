@@ -13,7 +13,7 @@ The probe behind A1 and A2 ran before the estimate and is excluded.
 
 ## 1. The changelog line
 
-- [ ] 1.1 Append the link to the breaking line in `build.gradle.kts`'s changelog `format`; re-run
+- [x] 1.1 Append the link to the breaking line in `build.gradle.kts`'s changelog `format`; re-run
   `jreleaserChangelog --rerun` on the current range and record that no line changed (no breaking
   commit since v0.12.0). `! F (internal)`
 

@@ -103,7 +103,12 @@ jreleaser {
                         "{{#conventionalCommitScope}}**{{conventionalCommitScope}}**: {{/conventionalCommitScope}}" +
                         "{{conventionalCommitDescription}}" +
                         "{{#conventionalCommitBreakingChangeContent}} - *{{conventionalCommitBreakingChangeContent}}*" +
-                        "{{/conventionalCommitBreakingChangeContent}}{{/commitIsConventional}}" +
+                        "{{/conventionalCommitBreakingChangeContent}}" +
+                        // Every breaking line links the migration guide, whatever its footer says.
+                        // `main`, because a commit's template has no tag: {{tagName}} and
+                        // {{projectVersion}} render empty here (link-migration-guide-in-release-notes).
+                        "{{#conventionalCommitIsBreakingChange}} — [How to migrate](https://github.com/ollin/kdaisyui/blob/main/docs/upgrading.md)" +
+                        "{{/conventionalCommitIsBreakingChange}}{{/commitIsConventional}}" +
                         "{{^commitIsConventional}}{{commitTitle}}{{/commitIsConventional}}",
                 )
                 contributors {

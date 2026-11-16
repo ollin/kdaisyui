@@ -20,7 +20,7 @@ The probe behind A1 and A2 ran before the estimate and is excluded.
 ## 2. Declare 0.12.1, archive
 
 - [x] 2.1 `gradle.properties`: 0.12.1, and what it ships. `. d (internal)`
-- [ ] 2.2 Mark F1 of `require-breaking-change-footer` adopted; archive this change. `. d (internal)`
+- [x] 2.2 Mark F1 of `require-breaking-change-footer` adopted; archive this change. `. d (internal)`
 
 ## 3. Pull request and release
 

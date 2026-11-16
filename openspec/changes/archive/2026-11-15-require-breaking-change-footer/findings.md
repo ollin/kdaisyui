@@ -32,6 +32,6 @@ each cause is named in plain words.
 
 | Finding | Proposal | Status | Cause |
 |---|---|---|---|
-| F1 | JReleaser's changelog template appends a link to docs/upgrading.md after every 🚨 line, beside the gate | open | rule enforced by nobody |
+| F1 | JReleaser's changelog template appends a link to docs/upgrading.md after every 🚨 line, beside the gate | adopted -> link-migration-guide-in-release-notes | rule enforced by nobody |
 | F2 | - | none - record only; TCR caught it as designed | step bundled two behaviours |
 | F3 | - | fixed - in this change (`lineSequence().any`) | equivalent mutant in inlined stdlib |

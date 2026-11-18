@@ -25,7 +25,7 @@ heroicons = "2.2.0"
 # DaisyUI 5 is a Tailwind v4 plugin; this is the exact tailwind version the pinned
 # daisyui release was built against, so the two are known-compatible.
 webjar-tailwindcss-browser = "4.3.4"
-webjar-htmx = "4.0.1"
+webjar-htmx = "4.0.2"
 
 # E2E test stack
 playwright = "1.65.0"

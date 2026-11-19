@@ -28,7 +28,7 @@ webjar-tailwindcss-browser = "4.3.4"
 webjar-htmx = "4.0.2"
 
 # E2E test stack
-playwright = "1.65.0"
+playwright = "1.65.1"
 kotest = "6.2.7"
 testcontainers = "2.0.5"
 
